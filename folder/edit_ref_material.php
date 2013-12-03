@@ -79,7 +79,7 @@ $result->close();
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>New Reference Material</title>
+  <title>Rog&#333;: New Reference Material</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -94,6 +94,7 @@ $result->close();
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     $(function () {
       $('#theform').validate({
@@ -118,12 +119,19 @@ $result->close();
 </head>
 
 <body>
+<?php
+  require '../include/toprightmenu.inc';
 
+	echo draw_toprightmenu();
+?>
 <table class="header" cellspacing="0" cellpadding="0" border="0" style="font-size:80%">
-<tr><th>
+<tr>
+<th>
   <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?module=<?php echo $_GET['module']; ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div style="font-size:220%; font-weight:bold; margin-left:10px">Reference Material</div>
-</th></tr>
+</th>
+<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+</tr>
 </table>
 
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?refID=' . $_GET['refID']; ?>" method="post" charset="UTF-8">

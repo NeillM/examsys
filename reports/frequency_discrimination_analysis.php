@@ -1128,22 +1128,22 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "</td></tr>\n";
         }
 				
-          if (isset($freq_log[$q_id][1]['a'])) {
-            $t = number_format(($freq_log[$q_id][1]['a']/$user_total)*100,0);
-          } else {
-            $t = 0;
-          }
-          if (isset($top_log[$q_id][1]['a'])) {
-            $u = number_format(($top_log[$q_id][1]['a']/$candidate_no)*100,0);
-          } else {
-            $u = 0;
-          }
-          if (isset($bottom_log[$q_id][1]['a'])) {
-            $l = number_format(($bottom_log[$q_id][1]['a']/$candidate_no)*100,0);
-          } else {
-            $l = 0;
-          }
-            echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td style=\"color:#C00000\">&lt;abstain&gt;</td></tr>\n";
+				if (isset($freq_log[$q_id][1]['a'])) {
+					$t = number_format(($freq_log[$q_id][1]['a']/$user_total)*100,0);
+				} else {
+					$t = 0;
+				}
+				if (isset($top_log[$q_id][1]['a'])) {
+					$u = number_format(($top_log[$q_id][1]['a']/$candidate_no)*100,0);
+				} else {
+					$u = 0;
+				}
+				if (isset($bottom_log[$q_id][1]['a'])) {
+					$l = number_format(($bottom_log[$q_id][1]['a']/$candidate_no)*100,0);
+				} else {
+					$l = 0;
+				}
+				echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td style=\"color:#C00000\">&lt;abstain&gt;</td></tr>\n";
 					
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
         echo "<tr><td>" . pStats($tmp_correct_no/$user_total, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
@@ -1685,7 +1685,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
-
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 	<!-- HTML5 part start -->
 	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
 	<script type="text/javascript" src="../js/html5.images.js"></script>
@@ -1736,6 +1736,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 </head>
 
 <body>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(154);
+?>
 <form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <table class="header" style="font-size:90%">
 <?php
@@ -1876,7 +1881,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-    echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(154); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+    echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
     echo "</table>\n";
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['PaperNotAttempted'] . "</td></tr></table>\n";
   } else {
@@ -1917,7 +1922,7 @@ SQL;
         }
         echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-        echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(154); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+        echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
         echo "</table>\n";
 
         echo '<br /><div class="key">';

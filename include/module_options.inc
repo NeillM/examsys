@@ -51,7 +51,6 @@ $session = date_utils::get_current_academic_year();
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform">
-<br />
 
 <div class="submenuheading" id="currentmodule"><?php echo $string['currentmodule']; ?></div>
 <div id="menu1a" style="font-size:90%">

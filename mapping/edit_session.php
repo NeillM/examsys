@@ -146,7 +146,7 @@ if (isset($_POST['Edit'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-    <title>Rogō: <?php echo $string['manageobjectives'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <title>Rog&#333;: <?php echo $string['manageobjectives'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -157,9 +157,11 @@ if (isset($_POST['Edit'])) {
       .field {text-align:right; font-weight:bold}
       .note {width:90%}
     </style>
+		
     <script src="../js/staff_help.js" type="text/javascript"></script>
     <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+		<script type="text/javascript" src="../js/toprightmenu.js"></script>
     <script type="text/javascript">
       $(function () {
         $('#theform').validate({
@@ -239,10 +241,13 @@ if (isset($_POST['Edit'])) {
   <body onclick="hideSessCopyMenu(event);">
 <?php
 require '../include/sessions_options.inc';
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu();
 
 echo '<div id="content" class="content" style="font-size:80%">';
 echo "<table class=\"header\">\n";
-echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$moduleID&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$moduleID&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 echo '</table>';
 
 echo "<br /><form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=$moduleID&calendar_year=$calendar_year\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";

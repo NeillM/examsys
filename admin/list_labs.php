@@ -29,7 +29,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['computerlabs']; ?></title>
+  <title>Rog&#333;: <?php echo $string['computerlabs']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -39,6 +39,7 @@
 
   <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">
     function selLab(labID,labNo,evt) {
       tmp_ID = $('#oldLabNo').val();
@@ -81,13 +82,16 @@
 <body>
 <?php
   require '../include/lab_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(231);
 ?>
 <div id="content" class="content">
 
 <table class="header">
 <tr>
 <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['computerlabs']; ?></div></th>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(231); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th>
+<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 </table>
 

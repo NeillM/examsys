@@ -245,6 +245,7 @@ if (isset($_GET['paperID'])) {
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     function addUserID(ID, clearall) {
       if (clearall) {
@@ -301,6 +302,10 @@ if (isset($_GET['paperID'])) {
 </head>
 
 <?php
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu(92);
+	
   if (isset($_GET['submit']) or isset($_GET['paperID']) or isset($_GET['moduleID'])) {
     echo "<body>\n";
 
@@ -314,7 +319,7 @@ if (isset($_GET['paperID'])) {
 
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
-    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(92); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" /></a></th></tr>";
+    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
     echo "</table>\n</div>\n</body></html>\n";
     exit;
   }
@@ -341,7 +346,7 @@ if (isset($_GET['paperID'])) {
 } elseif (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '%') {
   echo $_GET['calendar_year'];
 }
-echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(92); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
 if ($ordering == 'asc') {
   $new_order = 'desc';

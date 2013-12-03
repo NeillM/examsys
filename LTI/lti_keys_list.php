@@ -32,7 +32,7 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
   
-  <title><?php echo $string['ltikeys'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['ltikeys'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css"/>
@@ -42,6 +42,7 @@ require '../include/sysadmin_auth.inc';
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">
     function edit(lineID) {
       document.location.href = './edit_LTIkeys.php?LTIkeysid=' + lineID;
@@ -51,7 +52,10 @@ require '../include/sysadmin_auth.inc';
 
 <body>
 <?php
-require '../include/lti_keys_options.inc';
+	require '../include/lti_keys_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
 
@@ -60,7 +64,7 @@ require '../include/lti_keys_options.inc';
       <th colspan="3">
         <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-"/>&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div>
         <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['ltikeys']; ?></th>
-      <th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(233); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0"/></a></th>
+      <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
     </tr>
     <tr>
       <th>

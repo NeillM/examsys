@@ -427,6 +427,7 @@ if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . 
 ?>
 <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
+<script type="text/javascript" src="../../js/toprightmenu.js"></script>
 <?php
 endif;
 if ($question != null and $question->requires_flash()):
@@ -472,11 +473,15 @@ endif;
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 </head>
 <body>
+<?php
+  require '../../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+?>
   <div id="debug" class="debug"></div>
 	<div id="page-header">
-		<div id="page-help">
-			<a href="#" onclick="launchHelp(1); return false;"><img src="../../artwork/small_help_icon.gif" alt="Help" height="16" width="16" />
-			</a>
+		<div id="page-help" style="text-align:right; vertical-align:top">
+			<img src="../../artwork/toprightmenu.gif" id="toprightmenu_icon">
 		</div>
 		<div id="page-header-inner">
 			<h1><strong><?php

@@ -160,34 +160,39 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title><?php echo $string['hofstee'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+	<title>Rog&#333;: <?php echo $string['hofstee'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-<style type="text/css">
-body {font-size:85%}
-h1 {margin-left:10px; font-size:140%}
-input[type="text"] {border: 1px solid #C0C0C0}
-.pass {color:#538135}
-.fail {color:#C00000}
-</style>
+	<link rel="stylesheet" type="text/css" href="../css/body.css" />
+	<link rel="stylesheet" type="text/css" href="../css/header.css" />
+	<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+	<style type="text/css">
+		body {font-size:90%}
+		h1 {margin-left:10px; font-size:140%}
+		input[type="text"] {border: 1px solid #C0C0C0}
+		.pass {color:#538135}
+		.fail {color:#C00000}
+	</style>
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/staff_help.js"></script>
-
+	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+?>
 <form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post">
 <?php
 	$results_cache = new ResultsCache($mysqli);
 	$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
 	$stats = array_values($results_cache->get_paper_cache($paperID));
   
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n";
+  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
   echo "<tr><th class=\"h\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
@@ -197,7 +202,7 @@ input[type="text"] {border: 1px solid #C0C0C0}
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="index.php?paperID=' . $paperID . '&module=&folder=">' . $string['standardssetting'] . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['hofstee'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['hofstee'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
   echo "</table>\n";
   
   echo "<table style=\"margin:10px\">";

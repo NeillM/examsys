@@ -80,8 +80,7 @@ Adam Clarke<br />
 <tr><td style="vertical-align:top"><?php echo $string['graphics']; ?></td><td><a href="http://www.iconfinder.com/" target="_blank">www.iconfinder.com</a><br />
 <a href="http://www.psdgraphics.com/" target="_blank">www.psdgraphics.com</a><br />
 <a href="http://pixel-mixer.com/" target="_blank">pixel-mixer.com</a><br />
-<a href="http://www.icons-land.com" target="_blank">www.icons-land.com</a><br />
-<a href="http://p.yusukekamiyamane.com/" target="_blank">p.yusukekamiyamane.com</a></td></tr>
+<a href="http://www.icons-land.com" target="_blank">www.icons-land.com</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td><?php echo $string['calculator']; ?></td><td><em><?php echo $string['calcmsg']; ?></em><br />
 <a href="http://www.calculator.org/default.aspx" target="_blank">http://www.calculator.org</a></td></tr>

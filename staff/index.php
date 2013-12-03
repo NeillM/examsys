@@ -122,13 +122,6 @@ require_once '../include/staff_auth.inc';
       }
     }
 
-    function displayCredits(){
-      notice=window.open("../credits/index.php","credits","width=696,innerwidth=708,height=510,innerheight=560,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-      notice.moveTo(screen.width/2-350,screen.height/2-255)
-      if (window.focus) {
-        notice.focus();
-      }
-    }
   </script>
 </head>
 
@@ -138,6 +131,8 @@ require_once '../include/staff_auth.inc';
   require '../include/options_menu.inc';
   require '../include/toprightmenu.inc';
   require '../include/icon_display.inc';
+	
+	echo draw_toprightmenu();
 ?>
 
 <div id="content" class="content">
@@ -164,7 +159,7 @@ require_once '../include/staff_auth.inc';
     <div style="color:#4A74B9; font-size:9pt; position:relative; top:-3px"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
     </th>
-    <th style="text-align:right; vertical-align:top; padding-right:10px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+    <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
   </tr>
 </table>
 <?php

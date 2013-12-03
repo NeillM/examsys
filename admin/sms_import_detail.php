@@ -49,7 +49,7 @@ function get_list($list, $db) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	
-  <title>SMS Update Summary<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: SMS Update Summary<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -59,11 +59,17 @@ function get_list($list, $db) {
   tr {vertical-align:top}
   .no {text-align:right}
   </style>
+	
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
 <?php
   require '../include/admin_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 ?>
 
 <div id="content" class="content" style="font-size:80%">
@@ -71,7 +77,7 @@ function get_list($list, $db) {
 <tr>
 <th colspan="5"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./list_modules.php"><?php echo $string['modules']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
 <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4); ?></th>
-<th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(1); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" /></a></th>
+<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 <tr><th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th><th class="vert_div"><?php echo $string['enrolements']; ?></th><th class="vert_div"><?php echo $string['enrolementdetails']; ?></th><th class="vert_div"><?php echo $string['deletions']; ?></th><th class="vert_div"><?php echo $string['deletiondetails']; ?></th><th class="vert_div"><?php echo $string['importtype']; ?></th></tr>
 

@@ -56,6 +56,7 @@ if (!$module) {
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
     function selSession(divID, identifier, session, VLE, evt) {
       hideSessCopyMenu(evt);
@@ -79,7 +80,7 @@ if (!$module) {
       $('#session').val(session);
       $('#VLE').val(VLE);
 
-      $('#' + divID).css('background-color', '#B3C8E8');
+      $('#' + divID).css('background-color', '#FFBD69');
       evt.cancelBubble = true;
     }
 
@@ -89,7 +90,7 @@ if (!$module) {
 
     function highlight(lineID) {
       if (lineID != $('#oldDivID').val()) {
-        $('#' + lineID).css('background-color', '#EEEEEE');
+        $('#' + lineID).css('background-color', '#FFE7A2');
       }
     }
 
@@ -110,11 +111,14 @@ if (!$module) {
 <body>
 <?php
   require '../include/sessions_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
 <?php  
   echo "<table class=\"header\">\n";
-  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=" . $_GET['module'] . "\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(0); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['help'] . "\" border=\"0\" /></a></th></tr>\n";
+  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=" . $_GET['module'] . "\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
   echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "</th>\n";
   echo "<th class=\"vert_div\">" . $string['name'] . "</th>\n";
   echo "<th class=\"vert_div\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";

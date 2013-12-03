@@ -5,7 +5,6 @@ html, body {
 
 body {
 	background-color: #F1F5FB;
-	font-family: Arial,sans-serif;
 	font-size: 100%;
 	margin: 0px
 }
@@ -28,10 +27,6 @@ h3 {
   font-size: 90%;
   margin-top:0px;
   margin-bottom: 4px;
-}
-
-img {
-	border: 0;
 }
 
 table {
@@ -216,8 +211,8 @@ td.separated:last-child {
 
 #page-header {
 	width: 100%;
-	padding: 4px 0 0 0;
-  background: #dfecff url('../artwork/edit_question_small.png') no-repeat 8px 2px;
+	padding: 0;
+  background: #dfecff url('../artwork/edit_question_small.png') no-repeat 6px 2px;
   position: fixed;
   top: 0;
   z-index: 25;
@@ -234,7 +229,7 @@ td.separated:last-child {
 
 #page-help {
 	float: right;
-	margin: 2px 5px 0 0;
+	margin: 0px 6px 0 0;
 }
 
 .question-stats {
@@ -247,6 +242,7 @@ td.separated:last-child {
 .tab-bar {
   height: 34px;
   background-color: #1e3c7b;
+	margin-top: 4px;
 }
 
 .tab-holder {
