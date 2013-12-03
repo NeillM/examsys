@@ -38,8 +38,9 @@ require '../include/staff_auth.inc';
 <div id="main">
 <?php
 
-
-  $result = $mysqli->prepare("SELECT id, body, title, type FROM rogo.staff_help ORDER BY id;");
+	$target = 'staff';
+	if (isset($_GET['target'])) $target=$_GET['target'];
+  $result = $mysqli->prepare("SELECT id, body, title, type FROM rogo.".$target."_help ORDER BY id;");
   $result->execute();  
 	$help_toc = array();
 	$help_img = array();
@@ -54,6 +55,8 @@ require '../include/staff_auth.inc';
   }
   $result->close();
   $mysqli->close();
+	echo '<a href="help_test.php?target=staff">staff</a> ';
+	echo '<a href="help_test.php?target=student">student</a>';
   echo '<h1>Help pages internal consistency test</h1>';
 	
 	//internal links
@@ -70,7 +73,7 @@ require '../include/staff_auth.inc';
 				if (isset($help_toc[$link])) {
 					$help_toc[$link]['links'] .= $help_item['id'].',';
 				} else {
-					$result .= 'link reference is missing in: "<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$text.'" (id='.$link.')<br />';
+					$result .= 'link reference is missing in: "<strong><a href="/help/'.$target.'/index.php?id='.$help_item['id'].'">'.$help_item['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong>) to: "'.$text.'" (id='.$link.')<br />';
 				}	
 			}
 		}
@@ -104,11 +107,11 @@ require '../include/staff_auth.inc';
 	$result_array_3 = Array();
 	$i=0;
 	foreach ($help_img as $img_item => $img_ids) {
-		$img_size = @getimagesize("../help/staff/".$img_item);
+		$img_size = @getimagesize("../help/".$target."/".$img_item);
 		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
 		foreach ($img_ids as $item_id => $item_val) {
 			$i++;
-			if (!$img_size && $item_val!='') $result1 .= '"<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)';
+			if (!$img_size && $item_val!='') $result1 .= '"<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)';
 			if ($img_size) {
 				array_push($help_img[$img_item][$item_id],$img_size[0],$img_size[1]);
 				if (($help_img[$img_item][$item_id][1]*1!=$help_img[$img_item][$item_id][3]) || ($help_img[$img_item][$item_id][2]*1!=$help_img[$img_item][$item_id][4])) 
@@ -116,12 +119,12 @@ require '../include/staff_auth.inc';
 					if ($help_img[$img_item][$item_id][1]=='-1' || $help_img[$img_item][$item_id][2]=='-1') {
 						$result3 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
 						$result3 .= 'not fully set ';
-						$result3 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+						$result3 .= 'in: "<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
 						$result_array_3[$item_val[0]*1000+$i]=$result3;
 					}else{
 						$result2 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
 						$result2 .= 'set to ( width="'.$help_img[$img_item][$item_id][1].'" height="'.$help_img[$img_item][$item_id][2].'" ) ';
-						$result2 .= 'in: "<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/staff/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+						$result2 .= 'in: "<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
 						$result_array_2[$item_val[0]*1000+$i]=$result2;
 					}
 				}
@@ -149,9 +152,10 @@ require '../include/staff_auth.inc';
 			$j++;
 			echo '</ol></td><td><ol start='.$i.'>';
 		}
-		echo '<li><a href="/help/staff/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
+		echo '<li><a href="/help/'.$target.'/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
 	}
 	echo '</ol></td></tr></table>';
+	
 ?>
 </div>
 </body>
