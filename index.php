@@ -114,7 +114,6 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     <style type="text/css">
         body {
             font-size: 90%;
-            background-color: #FCFCFC;
             color: #575757;
 						margin-top: 8px;
         }
@@ -207,11 +206,11 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     </style>
   <?php
   echo "</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:10px; top:10px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/exclamation_64.png\" width=\"64\" height=\"64\" /></div>\n";
+  echo "<div style=\"position:absolute; left:20px; top:10px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
   echo "<h1 class=\"dkblue_header\" style=\"margin-left:90px\">" . $string['cannotfindexams'] . "</h1>\n";
 
   if ($userObject->has_role('Staff')) {
-    echo "<p style=\"margin-left:90px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"12\" height=\"12\" /> <a href=\"staff/index.php\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
+    echo "<p style=\"margin-left:90px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"11\" height=\"11\" /> <a href=\"staff/index.php\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
   }
 
   echo "<hr noshade=\"noshade\" style=\"margin-left:90px; border:0px; height:1px; color:#C0C0C0; background-color:#C0C0C0; width:500px\" align=\"left\" />\n<p style=\"margin-left:90px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
@@ -224,7 +223,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   $ip_info->bind_result($computer_lab, $computer_lab_short);
   $ip_info->fetch();
   if ($ip_info->num_rows() == 0) {
-    $computer_lab = $computer_lab_short = '<span style="color:red">' . $string['unknownIp'] . '</span>';
+    $computer_lab = $computer_lab_short = '<span style="color:#C00000">' . $string['unknownIp'] . '</span>';
   }
   $computer_lab_short = ($computer_lab_short == '') ? $computer_lab : $computer_lab_short;
   $ip_info->close();
@@ -233,7 +232,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   echo "<li>" . $string['yearofstudy'] . " - ";
 
   if ($userObject->get_year() == '') {
-    echo '<span style="color:red">' . $string['noyear'] . '</span>';
+    echo '<span style="color:#C00000">' . $string['noyear'] . '</span>';
   } else {
     echo $userObject->get_year();
   }
@@ -249,7 +248,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   $info->bind_result($user_moduleID, $user_calendar_year);
   $info->store_result();
   if ($info->num_rows() == 0) {
-    echo '<span style="color:red">' . $string['nomodules'] . '</span>';
+    echo '<span style="color:#C00000">' . $string['nomodules'] . '</span>';
   } else {
     while ($info->fetch()) {
       if ($last_cal_year != $user_calendar_year) {
@@ -269,7 +268,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     if ($ur != 'Student') {
       $ur = str_replace('Demo', '', $ur);
       if ($ur != '') {
-        echo '<span style="color:red">' . $string[strtolower($ur)] . '</span>';
+        echo '<span style="color:#C00000">' . $string[strtolower($ur)] . '</span>';
         if ($key < count($userRolesArray) - 1) {
           echo ',';
         }

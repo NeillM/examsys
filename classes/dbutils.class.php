@@ -44,7 +44,7 @@ Class DBUtils {
     if ($mysqli->connect_error == '') {
       $mysqli->set_charset($charset);
     } else {
-      $notice->display_notice('Database Error', "Unable to connect to database using $dbclass.", '/artwork/db_no_connect.png', '#FF7600');
+      $notice->display_notice('Database Error', "Unable to connect to database using $dbclass.", '/artwork/db_no_connect.png', '#C00000');
       exit;
     }
 

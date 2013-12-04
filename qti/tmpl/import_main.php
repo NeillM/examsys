@@ -48,6 +48,8 @@
     .screen_head {font-size:120%}
   </style>
   
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/toprightmenu.js"></script>
   <script language="JavaScript">
     // Popup window code
     function newPopup(url) {
@@ -63,6 +65,10 @@
 // paper_options.inc modifies result!  Store it temporarily
 $import_result = $result;
 require '../include/paper_options.inc';
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu();
+
 $result = $import_result;
 ?>
 <div id="content" class="content">
@@ -78,7 +84,7 @@ if ($module != '') {
   echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
 }
 echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</th><th style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></th></tr>\n";
+echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 echo "</table>";
 ?>
 <br/>

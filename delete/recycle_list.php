@@ -63,6 +63,7 @@ if (isset($_GET['folder'])) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
     function addQID(qID, clearall) {

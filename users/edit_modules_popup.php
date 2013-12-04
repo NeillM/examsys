@@ -42,9 +42,9 @@ function drawTabs($current_tab) {
   $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
   for ($i=1; $i<=3; $i++) {
     if ($i == $current_tab) {
-      $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_on.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
+      $html .= "<td class=\"tabon\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
     } else {
-      $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(../artwork/tab_off.gif)\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
+      $html .= "<td class=\"taboff\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
     }
   }
   $html .= "</tr></table>\n";
@@ -92,22 +92,11 @@ if (isset($_POST['submit'])) {
   for ($attempt=1; $attempt<=3; $attempt++) {
     // Clear the student of all modules.
     UserUtils::clear_student_modules_by_userID($_POST['userID'], $_POST['session'], $attempt, $mysqli);
-/*
-    $result = $mysqli->prepare("DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?");
-    $result->bind_param('isi', $_POST['userID'], $_POST['session'], $attempt);
-    $result->execute();
-    $result->close();
-    */
+
     // Insert a record for each module.
     for ($i=0; $i<=$_POST['mod_count']; $i++) {
       if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
         UserUtils::add_student_to_module($_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $attempt, $_POST['session'], $mysqli, 0);
-/*
-        $result = $mysqli->prepare( 'INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, 0)' );
-        $result->bind_param('iisi', $_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $_POST['session'], $attempt);
-        $result->execute();
-        $result->close();
-        */
       }
     }
   }
@@ -118,7 +107,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
+  <title>Rog&#333;: <?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
 
   <script type="text/javascript">
     function closeWindow() {
@@ -143,9 +132,10 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $session; ?> Modules</title>
+  <title>Rog&#333;: <?php echo $session; ?> Modules</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
     td {font-size:90%}

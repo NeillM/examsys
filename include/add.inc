@@ -24,28 +24,11 @@
 //todo remove file as nothing includes it
 require_once 'add_edit.inc';
 
-function displayEditTab() {
-  global $string,  $configObject;
-
-  $html = "<div id=\"editortab\" style=\"font-size:100%\">\n";
-  $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; width:100%; background-color:#D6DFF7\">\n<tr><td>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:90%; width:252px\">\n<tr>";
-  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_on.gif)\">" . $string['editor'] . "</td>\n";
-  if (isset($_GET['paperID']) and $_GET['paperID'] != '') {
-    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">" . $string['mapping'] . "</td>\n";
-  } else {
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; background-image:url(/artwork/tab_disabled.gif)\">" . $string['mapping'] . "</td>\n";
-  }
-  $html .= "</tr></table>\n</td><td style=\"width:100%; background-color:#DFECFF; text-align:right; font-size:90%\"><strong>" . $string['created'] . "</strong>&nbsp;" . date(str_replace('%','', $configObject->get('cfg_short_date'))) . "&nbsp;</td></tr>\n";
-  $html .= "<tr><td colspan=\"2\" style=\"background-color:#1E3C7B\">&nbsp;</td></tr>\n</table>\n";
-
-  return $html;
-}
-
 function redirect($p_id) {
   global $mysqli;
   
   if (substr($p_id,0,5) == 'list:') {
-    $type = substr($p_id,5);
+    $type = substr($p_id, 5);
     header("location: " . $configObject->get('cfg_root_path') . "/question/list.php");
   } elseif ($p_id != '') {
     header("location: " . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$p_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder']);
@@ -60,14 +43,7 @@ function redirect($p_id) {
 
 function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $status, $option_order) { //todo delete function as nothing calls it
   global $mysqli;
-  
-  //$theme = htmlspecialchars($theme);
-  //$scenario = htmlspecialchars($scenario);
-  //$leadin = htmlspecialchars($leadin);
-  //$correct_fback = htmlspecialchars($correct_fback);
-  //$incorrect_fback = htmlspecialchars($incorrect_fback);
-  //$notes = htmlspecialchars($notes);
-  
+
   $scenario_plain = trim(strip_tags($scenario));
   $leadin_plain = trim(strip_tags($leadin));
   // Make bloom field safe for MySQL strict mode
@@ -84,9 +60,10 @@ function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fba
   return $mysqli->insert_id;
 }
 
-function insert_into_papers($p_id, $q_id, $branching_question=false) {
+function insert_into_papers($p_id, $q_id, $branching_question = false) {
   global $mysqli;
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper=?");
+
+  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->bind_result($screen, $display_pos);
@@ -98,7 +75,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
   
   if ($branching_question == true) {
     //Get the Question ID of the source question
-    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id=?");
+    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id = ?");
     $result->bind_param('i', $q_id);
     $result->execute();
     $result->bind_result($scenario);
@@ -106,7 +83,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
     $result->close();
     
     //Get the screen number of the source question on the paper
-    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper=? AND question=?");
+    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper = ? AND question = ?");
     $result->bind_param('ii', $p_id, $scenario);
     $result->execute();
     $result->bind_result($source_screen);
@@ -117,12 +94,12 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
   }
   
   //force random mark to recaculate
-  $result = $mysqli->prepare("UPDATE properties SET random_mark=NULL, total_mark=NULL WHERE property_id=?");
+  $result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
   $result->bind_param('i', $p_id);
   $result->execute();  
   $result->close();
 
-  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL,?,?,?,?)")) {
+  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
     $result->bind_param('iiii', $p_id, $q_id, $screen, $display_pos);
     $result->execute();
     $result->close();
