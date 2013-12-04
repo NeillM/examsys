@@ -78,8 +78,9 @@ require '../include/staff_auth.inc';
 			}
 		}
 	}
+	echo '<h3>Broken internal links:</h3>';
 	echo $result;
-	if ($result=='') echo 'Missing internal links - not detected.';
+	if ($result=='') echo ' - not detected.';
 	echo '<hr>';
 	
 	//incorporated images
@@ -111,7 +112,7 @@ require '../include/staff_auth.inc';
 		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
 		foreach ($img_ids as $item_id => $item_val) {
 			$i++;
-			if (!$img_size && $item_val!='') $result1 .= '"<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)';
+			if (!$img_size && $item_val!='') $result1 .= '"<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)';
 			if ($img_size) {
 				array_push($help_img[$img_item][$item_id],$img_size[0],$img_size[1]);
 				if (($help_img[$img_item][$item_id][1]*1!=$help_img[$img_item][$item_id][3]) || ($help_img[$img_item][$item_id][2]*1!=$help_img[$img_item][$item_id][4])) 
@@ -119,12 +120,12 @@ require '../include/staff_auth.inc';
 					if ($help_img[$img_item][$item_id][1]=='-1' || $help_img[$img_item][$item_id][2]=='-1') {
 						$result3 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
 						$result3 .= 'not fully set ';
-						$result3 .= 'in: "<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+						$result3 .= 'in: "<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)<br />';
 						$result_array_3[$item_val[0]*1000+$i]=$result3;
 					}else{
 						$result2 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
 						$result2 .= 'set to ( width="'.$help_img[$img_item][$item_id][1].'" height="'.$help_img[$img_item][$item_id][2].'" ) ';
-						$result2 .= 'in: "<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a></strong>" (id=<strong><a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a></strong>)<br />';
+						$result2 .= 'in: "<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)<br />';
 						$result_array_2[$item_val[0]*1000+$i]=$result2;
 					}
 				}
@@ -132,14 +133,16 @@ require '../include/staff_auth.inc';
 		}
 		if (!$img_size) $result1 .= '<br />';
 	}
+	echo '<h3>Missing images:</h3>';
 	echo $result1;
-	if ($result1=='') echo 'Missing images - not detected.<br />';
+	if ($result1=='') echo ' - not detected.<br />';
 	echo '<hr>';
+	echo '<h3>Image dimensions\' inconsistencies:</h3>';
 	ksort($result_array_2);
 	foreach ($result_array_2 as $result2) echo $result2;
 	ksort($result_array_3);
 	foreach ($result_array_3 as $result3) echo $result3;
-	if (count($result_array_3)==0 && count($result_array_2)==0) echo 'dimensions inconsitencies - not detected.<br />';
+	if (count($result_array_3)==0 && count($result_array_2)==0) echo ' - not detected.<br />';
 	
 	
 	echo '<hr><h2>Help pages ids:</h2>';
@@ -152,7 +155,7 @@ require '../include/staff_auth.inc';
 			$j++;
 			echo '</ol></td><td><ol start='.$i.'>';
 		}
-		echo '<li><a href="/help/'.$target.'/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></li>';
+		echo '<li><strong><a href="/help/'.$target.'/index.php?id='.$help_item['id'].'">'.$help_item['id'].'</a></strong></li>';
 	}
 	echo '</ol></td></tr></table>';
 	
