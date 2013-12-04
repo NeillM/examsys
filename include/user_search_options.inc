@@ -161,9 +161,9 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(3);"><?php
     if (isset($state['advanced']) and $state['advanced'] == 'block') {
-      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" border=\"0\" />";
+      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" border=\"0\" />";
+      echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
@@ -268,7 +268,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
     if ($userObject->has_role('SysAdmin')) {
-      echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/delete_user_16_grey.png" alt="' . $string['deleteuser'] . '" />' . $string['deleteuser'] . '</div>';
+      echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="' . $string['deleteuser'] . '" />' . $string['deleteuser'] . '</div>';
     }
   }
 ?>
@@ -292,7 +292,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
   }
   if ($userObject->has_role('SysAdmin')) {
-    echo '<div class="menuitem" onclick="deleteUser()"><img class="sidebar_icon" src="../artwork/delete_user_16.png" alt="' . $string['deleteuser'] . '" /><a href="#" onclick="return false">' . $string['deleteuser'] . '</a></div>';
+    echo '<div class="menuitem" onclick="deleteUser()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#" onclick="return false">' . $string['deleteuser'] . '</a></div>';
   }
 ?>
 </div>

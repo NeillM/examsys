@@ -32,10 +32,7 @@ require_once '../classes/userutils.class.php';
 
 $notice = UserNotices::get_instance();
 
-//$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
-
-require_once '../include/debug.inc';
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, 'debug_mysqli');
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 $password = $password_confirm = $email = '';
 $message = '';
@@ -163,7 +160,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 	<br />
 	<div align="center">
   	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">
-    	<tr style="height:70px; width:100%; background-image:url(../artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="../artwork/key_48.png" width="48" height="48" alt="modules" /></td><td style="text-align:left">&nbsp;&nbsp;<?php echo $string['resetpassword'] ?></td></tr>
+    	<tr style="height:70px; width:100%; background-color:#EAEAEA; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="../artwork/fingerprint_48.png" width="48" height="48" alt="fingerprint" /></td><td style="text-align:left">&nbsp;&nbsp;<?php echo $string['resetpassword'] ?></td></tr>
 <?php
 if($message == '') {
 ?>
