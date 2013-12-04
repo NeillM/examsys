@@ -97,7 +97,7 @@ if (isset($_POST['save_changes'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
   
-  <title>Edit Help File</title>
+  <title>Rog&#333;: Edit Help File</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
@@ -155,7 +155,7 @@ if (isset($_POST['save_changes'])) {
     $edit_id = $pageid;
   }
 
-  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></p>\n";
+  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></p>\n";
   echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" .  htmlspecialchars($body, ENT_NOQUOTES) . "</textarea>\n";
 
   // Check for lockout.

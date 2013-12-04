@@ -466,7 +466,7 @@ class Authentication {
           $string['Authentication_issue1'],
           sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
           sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
-          '/artwork/user_info_48.png', '#C00000',
+          '/artwork/authentication_issue.png', '#C00000',
           true,
           true);
       }
@@ -558,7 +558,7 @@ class Authentication {
           $string['Authentication_notloggedin1'],
           sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
           sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
-          '/artwork/user_info_48.png',
+          '/artwork/authentication_issue.png',
           '#C00000',
           true,
           true);

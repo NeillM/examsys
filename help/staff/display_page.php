@@ -156,7 +156,7 @@ if ($_GET['id'] == 1) {
 } else {
   echo "<a name=\"top\"></a>";
   echo "<div class=\"path\">" . getPath($tmp_title, $string) . "</div>";
-  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . getTitle($tmp_title) . "</div>\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n";
+  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . getTitle($tmp_title) . "</div>\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n";
   echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
 }
 
