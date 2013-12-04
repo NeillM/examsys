@@ -34,7 +34,7 @@ check_var('title', 'GET', true, false, false);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Help and Support Center</title>
+  <title>Rog&#333;: Help and Support Center</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
@@ -72,24 +72,19 @@ check_var('title', 'GET', true, false, false);
   $search_results->store_result();
   $search_results->bind_result($id, $title, $type);
 
-  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . $_GET['title'] . "</div>\n";
+  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . $_GET['title'] . "</div>\n";
   
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n<tr><td style=\"width:20px\">&nbsp;</td><td>";
   
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  echo "<tr><td style=\"border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-color: #81A9D4; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "</td><td style=\"border-top: 1px solid #6B82B2; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2; background-color: #81A9D4; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
+  echo "<tr><td style=\"background-color: #295AAD; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "</td><td style=\"background-color: #295AAD; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
   echo "</table>\n";
 
   echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
   $row_no = 0;
   while ($search_results->fetch()) {
     $row_no++;
-    if ($row_no % 2) {
-      echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
-    } else {
-      echo "<tr><td style=\"width:24px; background-color:#F2F2F2\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></td><td style=\"background-color:#F2F2F2\" class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/','',$title) . "</a></td></tr>\n";
-    }
-
+    echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
   }
   $search_results->close();
   $mysqli->close();

@@ -34,16 +34,17 @@
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
-    html {width:100%; height:100%; overflow:hidden}
-    body {width:100%; height:100%; overflow:hidden; font-size:75%; background-color:#F1F5FB; color:#154A93}
+    html {margin:0px; padding:0px; width:100%; height:100%; overflow:hidden}
+    body {margin:0px; padding:0px; width:100%; height:100%; overflow:hidden; font-size:75%; background-color:#EAEAEA; color:black}
     div {line-height:180%}
-    a:link.book {color:#154A93}
-    a:visited.book {color:#154A93}
-    a:link {color:#003DB2}
-    a:visited {color:#003DB2}
-    #main {height:100%; width:100%; overflow:scroll; border-left:2px solid #7699C7; border-right:2px solid #7699C7; border-bottom:2px solid #7699C7; padding:2px}
+    a:link.book {color:black}
+    a:visited.book {color:black}
+    a:link {color:black}
+    a:visited {color:black}
+    #main {height:100%; width:100%; overflow:scroll; margin:0px; padding:0px}
   </style>
 
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../../js/help_toc.js"></script>
 </head>
 <body onload="resizeTOC()" onresize="resizeTOC()">

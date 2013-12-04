@@ -57,7 +57,7 @@ if (isset($_POST['submit'])) {
 ?>
 <html>
 <head>
-  <title>Help and Support Center</title>
+  <title>Rog&#333;: Help and Support Center</title>
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
   body {font-size:85%}
@@ -83,7 +83,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body onload="resizeTOC()">
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<p style="margin-left:20px"><input type="text" style="color:#7598C4; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." /></p>
+<p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." /></p>
 
 <div id="toc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">
 <?php

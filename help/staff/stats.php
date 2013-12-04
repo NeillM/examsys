@@ -38,7 +38,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
@@ -52,8 +52,8 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
     .num {text-align:right; border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2}
     .txt {border-bottom: 1px solid #6B82B2; border-right: 1px solid #6B82B2}
     .stats {border-collapse:collapse}
-    .stats th {color:white; background-image:url(../search_bar_background.png); background-repeat:repeat-x; border: 1px solid #6893CD}
-    .stats td {border: 1px solid #6893CD}
+    .stats td {vertical-align:top; border-bottom: 1px solid #295AAD; border-right: 1px solid #295AAD}
+		th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
   <script type="text/javascript">
     function displayPage(targetID, page_no) {
@@ -179,7 +179,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
 	 echo "</select>\n";
   echo " <input type=\"submit\" value=\" " . $string['filter'] . " \" name=\"Filter\" /></form></td></tr>\n";
 
-  echo "<tr style=\"width:49%; font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\"><td>" . $string['pagehits'] . "</td><td style=\"width:2%\"></td><td width=\"49%\">" . $string['searches'] . "</td></tr>\n";
+  echo "<tr style=\"width:49%; font-size:130%; font-weight:bold; color:#295AAD\"><td>" . $string['pagehits'] . "</td><td style=\"width:2%\"></td><td width=\"49%\">" . $string['searches'] . "</td></tr>\n";
   echo "<tr ><td>&nbsp;</td><td></td><td>&nbsp;</td></tr>\n";
 
   echo "<tr><td style=\"vertical-align:top\">";
@@ -191,7 +191,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   if ($search_results->num_rows == 0) {
     echo "<p>" . $string['nohits'] . "</p>\n";
   } else {
-    echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
+    echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border-left: #295AAD 1px solid\">\n";
     echo "<tr><th>" . $string['page'] . "</th><th>" . $string['hits'] . "</th></tr>\n";
     while ($search_results->fetch()) {
       echo "<tr><td class=\"txt\">$title</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
@@ -211,7 +211,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   if ($search_results->num_rows == 0) {
     echo "<p>" . $string['nosearches'] . "</p>\n";
   } else {
-    echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
+    echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border-left: #295AAD 1px solid\">\n";
     echo "<tr><th>" . $string['searches'] . "</th><th>" . $string['term'] . "</th><th>" . $string['results'] . "</th></tr>\n";
     while ($search_results->fetch()) {
       if ($hits == 0) {
@@ -224,24 +224,6 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   }
   $search_results->free_result();
   $search_results->close();
-  echo "<br /><div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#7598C4\">" . $string['tutorialstats'] . "</div>";
-  $tutorial_results = $mysqli->prepare("SELECT COUNT(id) AS num, tutorial FROM help_tutorial_log WHERE type='staff' AND accessed > '$start_date' AND accessed < '$end_date' GROUP BY tutorial ORDER BY id DESC");
-  $tutorial_results->execute();
-  $tutorial_results->store_result();
-  $tutorial_results->bind_result($hits, $tutorial);
-  $total_hits = $tutorial_results->num_rows;
-  if ($tutorial_results->num_rows == 0) {
-    echo "<p>" . $string['notutorials'] . "</p>\n";
-  } else {
-    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:100%; border:1px solid #6B82B2; border-collapse:collapse\">\n";
-    echo "<tr style=\"text-align:center; border-top: 1px solid #6B82B2; border-bottom:1px solid #6B82B2; border-left:1px solid #6B82B2; background-image:url(../search_bar_background.png); background-repeat:repeat-x; height:23px; color:white; font-weight:bold\"><td style=\"border-right: 1px solid #6B82B2\">" . $string['tutorial'] . "</td><td>" . $string['hits'] . "</td></tr>\n";
-    while ($tutorial_results->fetch()) {
-        echo "<tr><td class=\"txt\">" . $tutorial . "</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
-    }
-    echo "</table>\n";
-  }
-  $tutorial_results->free_result();
-  $tutorial_results->close();
 
   echo "</td></tr></table>\n";
 
