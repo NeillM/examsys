@@ -3,7 +3,7 @@ $(document).ready(function() {
 		$('#toprightmenu').toggle();
 	});
 	
-	$('#logout').click(function() {
+	$('#signout').click(function() {
 	  location.href = cfgRootPath + '/logout.php';
 	});
 
