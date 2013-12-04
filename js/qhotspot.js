@@ -387,7 +387,7 @@ function qh_redraw_canvas() {
       this.context.strokeRect(0.5,pan_y+0.5,300,pan_h); 
       //color bar
 			if (this.hotSpots[i][2]!=undefined) this.context.fillStyle= this.hotSpots[i][2];
-  		this.context.fillRect(3.5,pan_y+3.5,300-6,3);
+  		this.context.fillRect(3,pan_y+3,300-5,4);
 			var pos_x = 15;
 			if (this.qmode == 'script' && this.display_students_response && !this.allUnaswered) {
 				this.imgdata = menuImages['toolbar/ico_tick_g.png'];
