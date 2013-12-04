@@ -156,6 +156,13 @@ require '../include/staff_auth.inc';
 	}
 	echo '</ol></td></tr></table>';
 	
+	if (isset($_GET['content']) && $_GET['content']=='show') {
+		echo '<he>';
+		foreach ($help_toc as $help_item) {
+			echo '<h3>'. $help_item['title'] .'('. $help_item['id'] .')</h3>';
+			echo $help_item['body'];
+		}	
+	}
 ?>
 </div>
 </body>
