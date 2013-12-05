@@ -79,7 +79,7 @@ function returnTrueFalse($value) {
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['bulkmoduleimport']; ?></span></td>
+        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['bulkmoduleimport']; ?></span></td>
         </tr>
         <tr>
         <td align="left" style="background-color:#F1F5FB">
@@ -182,7 +182,7 @@ function returnTrueFalse($value) {
 ?>
 <table border="0" cellpadding="4" cellspacing="0" style="width:650px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/import_48.gif" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['bulkmoduleimport']; ?></span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['bulkmoduleimport']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">
