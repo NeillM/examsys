@@ -54,10 +54,23 @@ require '../include/staff_auth.inc';
     $help_toc[$id]['links'] = '';
   }
   $result->close();
-  $mysqli->close();
+  //$mysqli->close();
+	
 	echo '<a href="help_test.php?target=staff">staff</a> ';
 	echo '<a href="help_test.php?target=student">student</a>';
   echo '<h1>Help pages internal consistency test</h1>';
+	
+	//reading image files' names
+	$avail_images = Array();
+	$pubs  = getcwd();
+	$slash = '/';if (strrpos($pubs, '/') < strrpos($pubs, '\\')) $slash = '\\';
+	$pubs  = substr($pubs, 0, strrpos($pubs, $slash));
+	$pubs .= '/help/'.$target.'/images/';
+	if ($handle = opendir($pubs)) {
+		while (false !== ($file = readdir($handle))) 
+			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[strtolower('images/'.$file)] = 1;
+		closedir($handle);
+	}
 	
 	//internal links
 	$result = '';
@@ -85,6 +98,7 @@ require '../include/staff_auth.inc';
 	
 	//incorporated images
 	foreach ($help_toc as $help_item) {
+		//search for <img scr=
 		$test = explode(' src=',$help_item['body']);
 		if (count($test)>1) {
 			for ($i=1;$i<count($test);$i++) {
@@ -94,6 +108,18 @@ require '../include/staff_auth.inc';
 					if (trim($cv)=='width=' && $w==-1) $w=$code[$ci+1];
 					if (trim($cv)=='height=' && $h==-1) $h=$code[$ci+1];
 				}
+				if (!isset($help_img[strtolower($code[1])])) $help_img[strtolower($code[1])] = Array();
+				if (count($code)>=2) {
+					array_push($help_img[strtolower($code[1])],Array($help_item['id'],$w,$h));
+				}
+			}
+		}
+		//search for background-image: url
+		$test = explode(' url(',$help_item['body']);
+		if (count($test)>1) {
+			for ($i=1;$i<count($test);$i++) {
+				$code = preg_split("/\'|\"/",$test[$i]);
+				$w=-2;$h=-2;
 				if (!isset($help_img[$code[1]])) $help_img[$code[1]] = Array();
 				if (count($code)>=2) {
 					array_push($help_img[$code[1]],Array($help_item['id'],$w,$h));
@@ -122,7 +148,7 @@ require '../include/staff_auth.inc';
 						$result3 .= 'not fully set ';
 						$result3 .= 'in: "<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)<br />';
 						$result_array_3[$item_val[0]*1000+$i]=$result3;
-					}else{
+					}else if ($help_img[$img_item][$item_id][1]!='-2') {
 						$result2 = 'Dimensions ( width="'.$help_img[$img_item][$item_id][3].'" height="'.$help_img[$img_item][$item_id][4].'" ) for image "'.$img_item.'" are ';
 						$result2 .= 'set to ( width="'.$help_img[$img_item][$item_id][1].'" height="'.$help_img[$img_item][$item_id][2].'" ) ';
 						$result2 .= 'in: "<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)<br />';
@@ -145,6 +171,36 @@ require '../include/staff_auth.inc';
 	if (count($result_array_3)==0 && count($result_array_2)==0) echo ' - not detected.<br />';
 	
 	
+	foreach ($help_img as $img_item => $img_ids) $avail_images[$img_item] = 2;
+	
+	foreach ($avail_images as $img_item => $img_use) { 
+		$result = $mysqli->prepare("SELECT id FROM rogo.".$target."_help WHERE body LIKE '%$img_item%' ;");
+		$result->execute();  
+		$result->bind_result($id);
+		$result->fetch();
+		if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
+		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
+		$result->close();
+	}
+		$mysqli->close();
+	
+	echo '<hr>';
+	echo 'Number of used images:'.(count($help_img)).'<br />';
+	echo 'Number of available images:'.(count($avail_images)).'<br />';
+	echo 'Number of unused images:'.(count($avail_images)-count($help_img)).'<br />';
+	
+	echo '<h3>Unused images:</h3>';
+	$result = '';
+	foreach ($avail_images as $img_item => $img_use) if ($img_use==1) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a></li>";
+	echo '<ol>'.$result.'</ol>';
+	if ($result=='') echo ' - not found.<br />';
+	
+	echo "<h3>'Unusually' used files:</h3>";
+	$result = '';
+	foreach ($avail_images as $img_item => $img_use) if ($img_use>=100) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-100)."'>#".($img_use-100)."</a></li>";
+	echo '<ol>'.$result.'</ol>';
+	if ($result=='') echo ' - not found.<br />';	
+
 	echo '<hr><h2>Help pages ids:</h2>';
 	$div_num = round(count($help_toc)/15);
 	echo '<table><tr><td><ol>';
