@@ -49,7 +49,7 @@ class Config extends RogoStaticSingleton {
 */
 
   function __Clone() {
-    print "conf cloned";
+ //   print "conf cloned";
 
   }
 
@@ -66,7 +66,7 @@ class Config extends RogoStaticSingleton {
   }
 
   function error_handling() {
-    print "<br>confobj:errorfuncrun<br>";
+ //   print "<br>confobj:errorfuncrun<br>";
     return "config Object: hidden for security";
   }
 

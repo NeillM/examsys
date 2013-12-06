@@ -219,6 +219,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
         }
       }
     }
+
     if (isset($context) and !empty($context)) {
       if(is_array($context)) {
         $context1=array();
