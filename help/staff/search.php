@@ -61,14 +61,14 @@ function drawHeader($tmp_page_no) {
     }
   }
   if ($tmp_page_no > 1) {
-    echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" border="0" />&nbsp;';
+    echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" />&nbsp;';
   } else {
     echo '&nbsp;<img src="../previous_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
   }
   if ($tmp_page_no < $page_total) {
     echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">' . $string['next'] . '</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
   } else {
-    echo '&nbsp;&nbsp;' . $string['next'] . '&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" border="0" />&nbsp;';
+    echo '&nbsp;&nbsp;' . $string['next'] . '&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" />&nbsp;';
   }
   echo "</td></tr></table>\n";
 }
@@ -79,7 +79,7 @@ function drawHeader($tmp_page_no) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogo<</title>
+  <title>Rog&#333;</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help_search.css" />

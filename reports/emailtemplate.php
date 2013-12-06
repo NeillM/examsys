@@ -22,25 +22,24 @@
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../include/add_edit.inc';  // needed for the WYSIWYG editor
+require '../include/staff_auth.inc';
 
-  $message = '';
-  if (file_exists("../email_templates/" . $userObject->get_user_ID() . ".txt")) {
-    $file = fopen("../email_templates/" . $userObject->get_user_ID() . ".txt",'r');
-    $from = fgets($file, 64000);
-    $ccaddress = fgets($file, 64000);
-    $bccaddress = fgets($file, 64000);
-    $subject = fgets($file, 64000);
-    while (!feof($file)) {
-      $message .= fgets($file, 64000);
-    }
-  } else {
-    $from = '';
-    $ccaddress = '';
-    $bccaddress = '';
-    $subject = '';
-  }
+$message = '';
+if (file_exists("../email_templates/" . $userObject->get_user_ID() . ".txt")) {
+	$file = fopen("../email_templates/" . $userObject->get_user_ID() . ".txt",'r');
+	$from = fgets($file, 64000);
+	$ccaddress = fgets($file, 64000);
+	$bccaddress = fgets($file, 64000);
+	$subject = fgets($file, 64000);
+	while (!feof($file)) {
+		$message .= fgets($file, 64000);
+	}
+} else {
+	$from = '';
+	$ccaddress = '';
+	$bccaddress = '';
+	$subject = '';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -48,7 +47,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Email Template<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: Email Template<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -89,14 +88,14 @@
 <td>&nbsp;&nbsp;<?php echo $string['subject'];?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject; ?>" /></td>
 </tr>
 <tr>
-<td colspan="3"><p><?php echo wysiwyg_editor('oEdit1', 'template', $message, 782, 350); ?></p></td>
+<td colspan="3"><textarea class="mceEditor" id="template" name="template" style="width:782px; height:350px"><?php echo  htmlspecialchars($message, ENT_NOQUOTES); ?></textarea></p>
 </tr>
 <tr><td colspan="3">&nbsp;</td></tr>
 <tr>
 <td colspan="3" style="text-align: center">
 <input type="submit" style="width:120px" name="submit" value="<?php echo $string['email_class'];?>" />&nbsp;<input type="button" name="cancel" style="width: 120px" value="<?php echo $string['cancel'];?>" onclick="window.close();" />
 <?php
-  $result = $mysqli->prepare("SELECT email FROM users WHERE id=?");
+  $result = $mysqli->prepare("SELECT email FROM users WHERE id = ?");
   $result->bind_param('i',$userObject->get_user_ID());
   $result->execute();
   $result->bind_result($from);

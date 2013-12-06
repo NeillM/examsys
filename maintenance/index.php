@@ -33,16 +33,16 @@
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">
-    body {font-size:90%}
+    body {font-size:90%; margin-top:10px}
     .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
 </head>
 
 <body>
 	<div align="center">
-  	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">
-    	<tr style="height:70px; width:100%; background-image:url(artwork/grey_bar.png); background-repeat:repeat-x; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="artwork/optimize_tables_icon.png" width="48" height="48" alt="Under maintenance" /></td><td style="text-align:left">&nbsp;&nbsp;Undergoing Maintenance</td></tr>
-    	<tr><td colspan="2" style="padding-top:4px; padding-left:6px;"><p>Rogo is currently undergoing routine maintenance. Please try again later.</p></td></tr>
+  	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C00000 solid">
+    	<tr style="height:70px; width:100%; color:#C00000; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="artwork/exclamation_48.png" width="48" height="48" alt="Under maintenance" /></td><td style="text-align:left">&nbsp;&nbsp;Undergoing Maintenance</td></tr>
+    	<tr><td colspan="2" style="padding-top:4px; padding-left:6px; background-color:#FFDDDD"><p>Rog&#333; is currently undergoing routine maintenance. Please try again later.</p></td></tr>
     </table>
   </div>
 </body>

@@ -22,46 +22,44 @@
 * @package
 */
 
-  require '../../include/staff_auth.inc';    // Only let staff create pages.
-  require '../../include/errors.inc';
-  require '../../include/help.inc';
+require '../../include/staff_auth.inc';    // Only let staff create pages.
+require '../../include/errors.inc';
+require '../../include/help.inc';
 
-  header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
+header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
-  if (isset($_POST['save_changes'])) {
-    $tmp_title = $_POST['title'];
-      
-    // Update help file record
-    $tmp_body = $_POST['edit1'];
-    $tmp_body_plain = strip_tags($tmp_body);
+if (isset($_POST['save_changes'])) {
+	$tmp_title = $_POST['title'];
+		
+	// Update help file record
+	$tmp_body = $_POST['edit1'];
+	$tmp_body_plain = strip_tags($tmp_body);
 
-    $result = $mysqli->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL)");
-    $result->bind_param('ssss', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['page_roles']);
-    $result->execute();  
-    $result->close();
+	$result = $mysqli->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL)");
+	$result->bind_param('ssss', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['page_roles']);
+	$result->execute();  
+	$result->close();
 
-    $page_id = $mysqli->insert_id;
-    $mysqli->close();
-    ?>
-    <html>
-    <head>
-    <title>Rogo</title>
-    <script language="JavaScript">
-      function reloadHelp() {
-        window.top.location='<?php echo $configObject->get('cfg_root_path') ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
-      }
-    </script>
-    </head>
-    <body onload="reloadHelp()">
-    </body>
-    </html>
-    
-    <?php
-  } else {
+	$page_id = $mysqli->insert_id;
+	$mysqli->close();
+	?>
+	<html>
+	<head>
+	<title>Rogo</title>
+	<script language="JavaScript">
+		function reloadHelp() {
+			window.top.location='<?php echo $configObject->get('cfg_root_path') ?>/help/staff/index.php?id=<?php echo $page_id; ?>';
+		}
+	</script>
+	</head>
+	<body onload="reloadHelp()">
+	</body>
+	</html>
+	
+	<?php
+} else {
 ?>
-<!DOCTYPE html
-PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -113,7 +111,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return checkForm();">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
-  <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#7598C4; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" /></td>
+  <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#295AAD; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" /></td>
   <td style="text-align:right"><select name="page_roles"><option value="Staff">Staff</option><option value="Admin">Admin</option><option value="SysAdmin">SysAdmin</option></select></td>
   </tr>
   </table>

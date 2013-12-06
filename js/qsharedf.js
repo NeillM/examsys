@@ -532,18 +532,18 @@ function menuRebuild(ctx,bar) {
     if (state!=0 && this.buttonBox[n][7]!='-') {
 			this.context.fillStyle = '#ffd389';
 			if (state == 1) this.context.fillStyle = '#ffeab7';
-      this.context.fillRect(this.buttonBox[n][1]-0.5,this.buttonBox[n][2]-0.5,this.buttonBox[n][3]+1,this.buttonBox[n][4]+2);
+      this.context.fillRect(this.buttonBox[n][1],this.buttonBox[n][2],this.buttonBox[n][3]+1,this.buttonBox[n][4]+1);
 			//this.context.drawImage(this.menu_img,imgdatab.left+0.5,imgdatab.top,imgdatab.width-1,imgdatab.height,this.buttonBox[n][1],this.buttonBox[n][2],this.buttonBox[n][3],this.buttonBox[n][4]);
       //this.context.strokeStyle = '#000000';
       //this.context.strokeRect(this.buttonBox[n][1]+0.5,this.buttonBox[n][2]+0.5,this.buttonBox[n][3],this.buttonBox[n][4]);
     }
-		bpad = 2; if (this.buttonBox[n][8] == '') bpad = 0;
+		bpad = 1; if (this.buttonBox[n][8] == '') bpad = 0;
     this.context.drawImage(this.menu_img,imgdata.left,imgdata.top,imgdata.width,imgdata.height,this.buttonBox[n][1]+1+bpad,this.buttonBox[n][2]+1,iwidth-2,imgdata.height);
     if (this.buttonBox[n][8]!='') {
       this.context.textAlign="left";
       this.context.fillStyle='#000000';
       this.context.font="13px Arial";
-      this.context.fillText(this.buttonBox[n][8],this.buttonBox[n][1]+20,this.buttonBox[n][2]+15);
+      this.context.fillText(this.buttonBox[n][8],this.buttonBox[n][1]+20+bpad,this.buttonBox[n][2]+15);
     }
   }  
   this.context.lineWidth = tmp_lw;

@@ -30,6 +30,13 @@ if ($index %2 == 0) {
 }
 $spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
+
+$min_value = $option->get_min();
+if (substr($min_value, 0, 4) == 'var$') {
+  $link_icon = '../../artwork/variable_link_off.png';
+} else {
+  $link_icon = '../../artwork/variable_link_on.png';
+}
 ?>
           <tbody class="option">
             <tr<?php echo $alt_c ?>>
@@ -37,13 +44,13 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
               <td class="align-left<?php echo $spaced ?>">
                 <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
                 <input type="text" id="option_min<?php echo $index ?>" name="option_min<?php echo $index ?>" value="<?php echo $option->get_min() ?>" class="calc-min form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
-                <a href="#" class="variable-link<?php echo $dis_class ?>" rel="option_min<?php echo $index ?>"><img id="minicon<?php echo $index ?>" src="../../artwork/variable_link_off.png" width="23" height="22" alt="Link" class="form-img" /></a>
+                <a href="#" class="variable-link<?php echo $dis_class ?>" rel="option_min<?php echo $index ?>"><img id="minicon<?php echo $index ?>" src="<?php echo $link_icon ?>" width="23" height="22" alt="Link" class="form-img" /></a>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
               </td>
               <td class="align-left<?php echo $spaced ?>">
                 <label for="option_max<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['maximum'];?></label>
                 <input type="text" id="option_max<?php echo $index ?>" name="option_max<?php echo $index ?>" value="<?php echo $option->get_max() ?>" class="form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
-                <a href="#" class="variable-link<?php echo $dis_class ?>" rel="option_max<?php echo $index ?>"><img id="maxicon<?php echo $index ?>" src="../../artwork/variable_link_off.png" width="23" height="22" alt="Link" class="form-img" /></a>
+                <a href="#" class="variable-link<?php echo $dis_class ?>" rel="option_max<?php echo $index ?>"><img id="maxicon<?php echo $index ?>" src="<?php echo $link_icon ?>" width="23" height="22" alt="Link" class="form-img" /></a>
               </td>
               <td class=" align-left<?php echo $spaced ?>">
                 <label for="option_decimals<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['decimals'];?></label>

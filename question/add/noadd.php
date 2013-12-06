@@ -43,7 +43,7 @@ function englishDate($orig_date) {
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 	<style type="text/css">
-    body {background-color:#EAEAEA; font-size:90%; margin:10px}
+    body {font-size:90%; margin:10px}
     .date {color:#C00000; font-weight: bold}
   </style>
   
@@ -60,7 +60,7 @@ function englishDate($orig_date) {
 <body>
 <form>
 <table cellpadding="0" cellspacing="5" border="0" style="width:100%; text-align:left">
-<tr><td style="width:56px"><img src="../../artwork/clock48.png" width="48" height="48" border="0" alt="Clock" /></td>
+<tr><td style="width:56px"><img src="../../artwork/summative_scheduling.png" width="48" height="48" alt="Clock" /></td>
 <td style="font-size: 160%; font-weight: bold"><?php echo $string['activepaper']; ?></td></tr>
 <tr><td></td><td><hr width="100%" style="border: 0px; color: #808080; background-color: #808080" noshade="noshade" size="1" /></td></tr>
 <tr><td>&nbsp;</td><td><span class="date"><?php echo englishDate($_GET['start_date']); ?></span> <?php echo $string['to']; ?> <span class="date"><?php echo englishDate($_GET['end_date']); ?></span>.</td></tr>

@@ -121,7 +121,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-	<title><?php echo $string['standardssetting'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+	<title>Rog&#333;: <?php echo $string['standardssetting'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -129,8 +129,8 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style>
-  table {table-layout:auto}
-  #maincontent {height:auto}
+		table {table-layout:auto}
+		#maincontent {height:auto}
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -140,7 +140,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-	
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 	<!-- HTML5 part start -->
 	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
 	<script type="text/javascript" src="../js/html5.images.js"></script>
@@ -151,6 +151,12 @@ $paper_prologue = $propertyObj->get_paper_prologue();
 	<!-- HTML5 part end -->
 </head>
 <body>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(98);
+
+?>
   <div id="maincontent">
 	<form method="post" name="questions" action="record_review.php?group=true">
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -164,9 +170,8 @@ $paper_prologue = $propertyObj->get_paper_prologue();
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
   }
   echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
-  $helpID = 98;
   echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:90%">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp($helpID); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" border=\"0\" /></a></th></tr>\n";
+  echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
   echo "</table>\n";
 ?>
   <br />

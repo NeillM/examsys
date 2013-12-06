@@ -398,7 +398,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo $logo_html;
 
   if (($start_of_day_ts > $review_deadline or time() > $start_date) and $start_date != '') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:50px; height:32px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"28\" height=\"28\" alt=\"Locked\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:50px; height:32px; text-align:right\"><img src=\"../artwork/late_warning_icon.png\" style=\"padding-top:2px\" width=\"32\" height=\"32\" alt=\"Locked\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
   }
 
   $previous_duration = 0;

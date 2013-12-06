@@ -15,5 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 //require '../../lang/' . $language . '/help/staff/index.php';
-$string['createlink'] = 'Create Link';
+$string['createlink'] = 'Utwórz łącze';
 ?>

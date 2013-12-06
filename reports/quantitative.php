@@ -395,18 +395,17 @@
     echo "</td></tr>\n";
   }
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['quantitativereport']; ?></title>
+  <title>Rog&#333;: <?php echo $string['quantitativereport']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
     body {font-size:90%}
     h1 {margin-left:15px; font-size:18pt; color:#316AC5}
@@ -553,8 +552,7 @@
             $table_on = 0;
           }
         if ($screen > 1) {
-          echo '<br /><table cellpadding="2" cellspacing="0" border="0" style="width:100%; height:70px; border-top:1px solid #B5C4DF; background-image:url(\'../artwork/screen_no_background.gif\'); background-repeat:repeat-x">';
-          echo "<tr>\n<td colspan=\"2\" style=\"padding-left:20px; vertical-align:top; font-size:90%; font-weight:bold; color:#15428B\">" . $string['screen'] . "&nbsp;$screen</td>\n</tr>\n";
+				  echo '<br /><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
         }
       }
       $options_buffer = array();

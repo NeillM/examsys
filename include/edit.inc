@@ -24,30 +24,6 @@
 
 require_once 'add_edit.inc';
 
-function displayEditTab($created, $modified, $locked) {
-  global $string;
-
-  $html = "<div id=\"editortab\" style=\"background-color:#F1F5FB; display:block; font-size:100%\">\n";
-  $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"editortab\" style=\"font-size:90%; background-color:#DFECFF\">\n";
-  $html .= "<tr><td>\n";
-  $html .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:504px; font-size:90%\">\n<tr>\n";
-  $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_on.gif)\">Editor</td>\n";
-  $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('changestab');\">" . $string['changes'] . "</td>\n";
-  $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('commentstab');\">" . $string['comments'] . "</td>\n";
-  if (!isset($_GET['paperID']) or strpos($_SERVER['PHP_SELF'],'info.php') !== false or strpos($_SERVER['PHP_SELF'],'likert.php') !== false) {  // Disabled the mapping tab.
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">" . $string['mapping'] . "</td>\n";
-  } elseif (substr($_GET['paperID'],0,5) == 'find:') {
-    $html .= "<td style=\"width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_disabled.gif)\">" . $string['mapping'] . "</td>\n";
-  } else {
-    $html .= "<td style=\"cursor:pointer; width:126px; height:21px; color:white; text-align:center; font-weight:bold; font-size:110%; background-image:url(/artwork/tab_off.gif)\" onclick=\"showTab('mappingtab');\">" . $string['mapping'] . "</td>\n";
-  }
-  $html .= "</tr></table>\n";
-  $html .= "<td style=\"width:100%; background-color:#DFECFF; text-align:right\"><strong>" . $string['created'] . "</strong>&nbsp;$created&nbsp;&nbsp;&nbsp;&nbsp;<strong>" . $string['modified'] . "</strong>&nbsp;$modified&nbsp;";
-  if ($locked != '') $html .= '&nbsp;&nbsp;&nbsp;&nbsp;<strong>Locked:</strong>&nbsp;' . $locked . '&nbsp;';
-  $html .= "</td></td></tr>\n<tr><td colspan=\"5\" style=\"background-color:#1E3C7B\">&nbsp;</td></tr>\n</table>";
-  return $html;
-}
-
 function check_fullSave($q_id, $mysqli) {
   if ($_POST['submit'] == 'Limited Save') {
     return false;

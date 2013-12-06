@@ -530,7 +530,7 @@ if ($language != 'en') {
       <td colspan="<?php echo $cols ?>">
         <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td class="redwarn" style="width:32px"><img src="../artwork/temp_account_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td class="redwarn" style="width:40px"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="Warning" /></td>
             <td class="redwarn"><?php echo $string['temporaryaccountswarning'] ?></td>
           </tr>
         </table>
@@ -545,7 +545,7 @@ if ($language != 'en') {
       <td colspan="<?php echo $cols ?>">
         <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td class="redwarn" style="width:32px"><img src="../artwork/late_warning_icon.png" width="28" height="28" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
+            <td class="redwarn" style="width:40px"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
             <td class="redwarn"><?php echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $string['moredetails'] . '</a>)'; ?></td>
 					</tr>
 				</table>
@@ -560,7 +560,7 @@ if ($language != 'en') {
       <td colspan="<?php echo $cols ?>">
         <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td class="redwarn" style="width:32px"><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
             <td class="redwarn"><?php echo $string['unmarkedenhancedcalc'] ?></td>
           </tr>
         </table>
@@ -575,7 +575,7 @@ if ($language != 'en') {
       <td colspan="<?php echo $cols ?>">
         <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
           <tr>
-            <td class="redwarn" style="width:32px"><img src="../artwork/unmarked_questions_warning.png" width="28" height="28" alt="Warning" /></td>
+            <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
             <td class="redwarn"><?php echo $string['unmarkedtextbox'] ?></td>
           </tr>
         </table>
@@ -1069,7 +1069,7 @@ if ($language != 'en') {
       if ($paper_type < 2) {
         echo "<div>\n";
         echo "<form name=\"theform\" method=\"post\">\n";
-        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" />\n";
+        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
         echo '<input type="hidden" name="from" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';

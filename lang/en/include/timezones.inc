@@ -41,6 +41,7 @@ $timezone_array = array(
   'Asia/Dhaka' => '(UTC+06:00) Dhaka',
   'Asia/Rangoon' => '(UTC+06:30) Yango (Rangoon)',
   'Asia/Bangkok' => '(UTC+07:00) Bangkok, Hanoi, Jakarta',
+  'Asia/Kuala_Lumpur' => '(UTC+07:00) Bangkok, Hanoi, Jakarta',
   'Asia/Hong_Kong' => '(UTC+08:00) Beijing, Chongqing, Hong Kong',
   'Asia/Tokyo' => '(UTC+09:00) Osaka, Sapporo, Tokyo',
   'Australia/Adelaide' => '(UTC+09:30) Adelaide',
