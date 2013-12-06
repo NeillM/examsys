@@ -31,6 +31,7 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['credits']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
     body {background-image:url('./background.jpg'); line-height:100%}
   </style>
@@ -38,9 +39,9 @@
 <body>
 
 <div style="position:absolute; top:12px; left:25px; width:300px">
-  <img src="../artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
-  <div style="color:#4A74B9; font-size:30pt; font-weight:bold; line-height:110%; position:relative; top:-6px">Rog&#333;</div>
-  <div style="color:#4A74B9; font-size:9pt; position:relative; top:-6px">eAssessment Management System</div>
+  <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
+  <div class="logo_lrg_txt">Rog&#333;</div>
+  <div class="logo_small_txt">eAssessment Management System</div>
 </div>
 
 <div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="University of Nottingham" /></div>

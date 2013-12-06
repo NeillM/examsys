@@ -48,6 +48,7 @@ $old_version = $configObject->get('rogo_version');
     <title>Rog&#333; <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
     <link rel="stylesheet" type="text/css" href="../css/updater.css"/>
 
@@ -58,10 +59,10 @@ $old_version = $configObject->get('rogo_version');
   <table class="header">
     <tr>
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-          <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px"/>
+          <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
 
-          <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
-          <div style="color:#1F497D; font-size:9pt">Update Utility (<?php echo $old_version . ' to ' . $version; ?>)</div>
+          <div class="logo_lrg_txt">Rog&#333;</div>
+          <div class="logo_small_txt">Update Utility (<?php echo $old_version . ' to ' . $version; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" /></th>
     </tr>
