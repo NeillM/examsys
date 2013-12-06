@@ -1655,7 +1655,7 @@ QUERY;
         `mean_percent` decimal(10,5) DEFAULT NULL,
         `stdev_mark` decimal(10,5) DEFAULT NULL,
         `stdev_percent` decimal(10,5) DEFAULT NULL,
-        UNIQUE KEY `paperID` (`paperID`)
+        PRIMARY KEY (`paperID`)
       ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1665,7 +1665,8 @@ QUERY;
         `userID` int(10) unsigned NOT NULL DEFAULT '0',
         `mark` decimal(10,5) DEFAULT NULL,
         `percent` decimal(10,5) DEFAULT NULL,
-        PRIMARY KEY (`paperID`,`userID`)
+        PRIMARY KEY (`paperID`,`userID`),
+        KEY `idx_userID` (`userID`)
       ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

@@ -4,6 +4,7 @@ tinyMCE.init({
   theme : "advanced",
   skin : "default",
   plugins : "table,visualchars,nonbreaking,xhtmlxtras,emailtags",
+	theme_advanced_blockformats : "p,div,h1,h2,h3,h4,h5",
   // Theme options
   theme_advanced_buttons1 : "emailtags,|,cut,copy,paste,|,undo,|,bold,italic,|,sub,sup,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols,|,code",
   theme_advanced_buttons2 : "",

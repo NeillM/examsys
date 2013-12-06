@@ -150,7 +150,7 @@ if ($vle_api == '') {
 </div>
 
 <div style="font-size:90%; display:none" id="menu1b">
-<div class="menuitem" onclick="hideSessCopyMenu(event); addSession()"><img class="sidebar_icon" src="../artwork/new_session_16.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
+<div class="menuitem" onclick="hideSessCopyMenu(event); addSession()"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
   echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
@@ -171,7 +171,7 @@ else {
 </div>
 
 <div style="font-size:90%; display:none" id="menu1c">
-<div class="menuitem" onclick="hideSessCopyMenu(event); addSession();"><img class="sidebar_icon" src="../artwork/new_session_16.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
+<div class="menuitem" onclick="hideSessCopyMenu(event); addSession();"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
   echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';

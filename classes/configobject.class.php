@@ -47,15 +47,27 @@ class Config extends RogoStaticSingleton {
     return self::$inst;
   }
 */
-function __toString() {
-  return "ConfigObject!";
-}
+
+  function __Clone() {
+    print "conf cloned";
+
+  }
+
+  function __toString() {
+    return "ConfigObject!";
+  }
+
   protected function __construct() {
     $conf_file = __DIR__ . '/../config/config.inc.php';
     if (file_exists($conf_file)) {
       include $conf_file;
     }
     $this->data = get_defined_vars();
+  }
+
+  function error_handling() {
+    print "<br>confobj:errorfuncrun<br>";
+    return "config Object: hidden for security";
   }
 
   function export_all() {

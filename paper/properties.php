@@ -605,7 +605,8 @@ if (isset($_POST['Submit'])) {
     if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] != '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '0') {
       $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
       $editProperties->bind_param('i', $paperID);
-      $editProperties->execute();
+      $editProperties->exeache_
+      cute();
       $editProperties->close();
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'feedback');
