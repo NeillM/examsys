@@ -115,7 +115,7 @@ function error_handling($context = null) {
       $context1[$key] = clone $value;
     } elseif (is_array($value)) {
       //inner loop
-      $context1[$key] = $this->error_handling($value);
+      $context1[$key] = error_handling($value);
     } else {
       $context1[$key] = $value;
     }
