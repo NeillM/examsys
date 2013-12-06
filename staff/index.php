@@ -57,6 +57,7 @@ require_once '../include/staff_auth.inc';
   <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
@@ -154,9 +155,9 @@ require_once '../include/staff_auth.inc';
   <tr>
     <th style="padding-left:16px; padding-top:5px">
 
-    <img src="../artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
-    <div style="color:#4A74B9; font-size:28pt; font-weight:bold; position:relative; top:-6px">Rog&#333;</div>
-    <div style="color:#4A74B9; font-size:9pt; position:relative; top:-3px"><?php echo $string['eassessmentmanagementsystem']; ?></div>
+    <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
+    <div class="logo_lrg_txt">Rog&#333;</div>
+    <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
     </th>
     <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
