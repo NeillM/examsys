@@ -547,10 +547,10 @@
       }
       if ($old_screen < $screen) {
         $display_respondents = 1;
-          if ($table_on == 1) {
-            echo "</table>\n";
-            $table_on = 0;
-          }
+				if ($table_on == 1) {
+					echo "</table>\n";
+					$table_on = 0;
+				}
         if ($screen > 1) {
 				  echo '<br /><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
         }
