@@ -90,11 +90,11 @@ Class user_notices extends RogoStaticSingleton {
    *
    */
   public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
-    $user = UserObject::get_instance();
+    $userObj = UserObject::get_instance();
     if (!is_null($mysqli)) {
-      if ($user !== null and $user->get_user_ID() > 0) {
+      if ($userObj !== null and $userObj->get_user_ID() > 0) {
         $logger = new Logger($mysqli);
-        $logger->record_access_denied($user->get_user_ID(), $title, $reason); // Record attempt in access denied log against userID.
+        $logger->record_access_denied($userObj->get_user_ID(), $title, $reason); // Record attempt in access denied log against userID.
       } else {
         $logger = new Logger($mysqli);
         $logger->record_access_denied(0, $title, $reason); // Record attempt in access denied log, userID set to zero.

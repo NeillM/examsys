@@ -273,6 +273,30 @@ class Authentication {
     }
   }
 
+
+  function error_handling($context = null) {
+    $context1 = array();
+    if (is_null($context)) {
+      // if no array set get currently define variables in this object
+      $context = get_defined_vars($this);
+    }
+    foreach ($context as $key => $value) {
+      if ($key == 'this') {
+      } elseif (is_object($value) and method_exists($value, 'error_handling')) {
+        $context1[$key] = $value->error_handling();
+      } elseif (is_object($value)) {
+        $context1[$key] = clone $value;
+      } elseif (is_array($value)) {
+        //inner loop
+        $context1[$key] = $this->error_handling($value);
+      } else {
+        $context1[$key] = $value;
+      }
+    }
+    return $context1;
+  }
+
+
   /**
    * @return bool if authentication was successful
    */
@@ -281,7 +305,6 @@ class Authentication {
     $this->debug[] = 'Starting authentication';
 
     $preauthobj = new stdClass();
-
 
     if (isset($this->callbackregister['preauth'])) {
       foreach ($this->callbackregister['preauth'] as $number => $callback) {
@@ -580,7 +603,18 @@ class Authentication {
     return $getauthobj->userObj;
   }
 
+  function clear_configObj() {
+    $this->config = 'Config Object: removed for security';
+    $this->configObj = 'Config Object: removed for security';
+  }
 
+  function __Clone() {
+   // $this->configObj='ll';//clone $this->configObj;
+    print "<br>CLONEDa<br>";
+ //   var_dump($this);
+    $this->config = 'Config Object: removed for security';
+    $this->configObj = 'Config Object: removed for security';
+  }
   function version_info($formatted = false, $advanced = false) {
     $data = new stdClass();
     $data->plugins = array();
