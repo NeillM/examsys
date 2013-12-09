@@ -91,11 +91,12 @@ $password                   = $propertyObj->get_password();
 
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 
-if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and isset($_GET['log_type'])) {
-  $log_type = $_GET['log_type'];  // Override from the GET if member of staff.
-} else {
-  $log_type = $paper_type;    // Use current paper type.
+$log_type = $paper_type;    // Set log_type to current type of the paper.
+
+if (isset($_GET['log_type']) and (($_GET['log_type'] == '0' or $_GET['log_type'] == '1') or $userObject->has_role(array('SysAdmin', 'Admin', 'Staff')))) {  // If paper Formative/Progress Test allow override by $_GET.
+  $log_type = $_GET['log_type'];
 }
+
 $low_bandwidth = 0;
 
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);

@@ -44,24 +44,24 @@ check_var('id', 'GET', true, false, false);
 function load_attempts($test_type, $paperID, $userObj, $db) {
   $prev_attempts = array();
 
-  $result = $db->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log$test_type l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
+  $result = $db->prepare("SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log$test_type l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
   $result->bind_param('iii', $test_type, $paperID, $userObj->get_user_ID());
   $result->execute();
-  $result->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+  $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
   while ($result->fetch()) {
-    $prev_attempts[$log_started] = array('max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
+    $prev_attempts[$log_started] = array('metadataID'=>$metadataID, 'max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
   }
   $result->close();
 
   if ($test_type == '0') {
     // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
-    $result = $db->prepare("SELECT MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
+    $result = $db->prepare("SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, 1 AS paper_type, DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? GROUP BY started DESC");
     $result->bind_param('ii', $paperID, $userObj->get_user_ID());
     $result->execute();
-    $result->bind_result($log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+    $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
     while ($result->fetch()) {
       if ($log_max_screen > 0) {
-        $prev_attempts[$log_started] = array('max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
+        $prev_attempts[$log_started] = array('metadataID'=>$metadataID, 'max_screen'=>$log_max_screen, 'max_mark'=>$log_mark, 'paper_type'=>$log_paper_type, 'temp_date'=>$log_temp_date);
       }
     }
     $result->close();
@@ -118,13 +118,13 @@ function display_duration($normal, $extra_time_mins, $special_needs_percentage) 
   return $mins;
 }
 
-function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_style, $disDate, $type) {
-  global $rerun_date, $total_marks, $low_bandwidth;
+function displayPrevTake($markTotal, $adjPercent, $totalRandomMark, $marking_style, $disDate, $type, $metadataID) {
+  global $total_marks, $low_bandwidth;
 
   if ($low_bandwidth == 0) {
-    echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"\" onclick=\"reviewPaper('$rerun_date',$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
+    echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
   } else {
-    echo "<tr><td><a href=\"\" onclick=\"reviewPaper('$rerun_date',$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
+    echo "<tr><td><a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
   }
   if ($total_marks > 0) {
     if ($markTotal > 0) {
@@ -321,8 +321,8 @@ if ($exam_duration !== null) {
     document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
 
-  function reviewPaper(started, type) {
-    exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&previous="+started+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+  function reviewPaper(metadataID, type) {
+    exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&metadataID="+metadataID+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
     }
@@ -351,7 +351,7 @@ if ($textsize > 120) {
   }
   echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:52px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . $timed_filename . '.png" width="48" height="48" alt="Icon" />';
   echo "</td><td><span class=\"title\">$paper_title</span>";
-  echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
+  echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"width:100px; padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
   echo "</td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
@@ -533,6 +533,7 @@ if ($textsize > 120) {
         $log_mark       = $prev_details['max_mark'];
         $log_paper_type = $prev_details['paper_type'];
         $log_temp_date  = $prev_details['temp_date'];
+				$metadataID			= $prev_details['metadataID'];
         if ($temp_no == 0) {
           $old_started = $log_started;
           echo '<hr />';
@@ -543,7 +544,7 @@ if ($textsize > 120) {
         if ($old_started != $log_started and $old_started != '') {
           $old_screen = 0;
           if ($test_type == 0) {
-            displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type);
+            displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type, $metadataID);
           } else {
             if ($low_bandwidth == 0) {
               echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$display_date</span></td><td>&nbsp;</td></tr>\n";
@@ -563,7 +564,7 @@ if ($textsize > 120) {
       }
 
       if ($test_type == 0) {
-        displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type);
+        displayPrevTake($mark_total, $adj_percent, $total_random_mark, $marking, $display_date, $paper_type, $metadataID);
       } else {
         if ($low_bandwidth == 0) {
           echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$display_date";
