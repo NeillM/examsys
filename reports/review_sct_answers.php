@@ -119,9 +119,8 @@ function display_question($question, &$question_no, $reviews, &$string) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-size:90%}
     li {margin-left:15px;margin-right:15px;font-size:100%}
-    table {font-size:100%}
+    table {font-size:90%}
     pre {font-family:Arial,sans-serif; font-size:100%}
     .q_no {width:40px; text-align:right;vertical-align:top}
     .theme {font-size:150%; padding-left:4px;font-weight:bold;color:#316AC5}
@@ -131,10 +130,16 @@ function display_question($question, &$question_no, $reviews, &$string) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
 <body>
 <?php
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
+
   $stmt = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
   $stmt->bind_param('i',$_GET['paperID']);
   $stmt->execute();
@@ -155,7 +160,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
     $result->close();
   }
 
-  echo "<table class=\"header\">\n";
+  echo "<table class=\"header\" style=\"font-size:90%\">\n";
   echo "<tr><th>";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if ($folder != '') {
@@ -165,7 +170,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></th><th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(30); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"{$string['help']}\" /></a></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 ?>
 
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -175,7 +180,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
   $reviewer_data = array();
   $reviewer_list = array();
 
-  $stmt = $mysqli->prepare("SELECT reviewer_name, q_id, answer, reason FROM sct_reviews WHERE paperID=?");
+  $stmt = $mysqli->prepare("SELECT reviewer_name, q_id, answer, reason FROM sct_reviews WHERE paperID = ?");
   $stmt->bind_param('i', $_GET['paperID']);
   $stmt->execute();
   $stmt->store_result();

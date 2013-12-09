@@ -61,7 +61,7 @@ $mysqli->close();
 
 <body class="dialog_body">
 <table cellpadding="2" cellspacing="0" style="width:100%">
-<tr><td class="dialog_header header_line" style="width:54px"><img src="../artwork/user_info_48.png" width="48" height="48" /></td><td class="dialog_header header_line" style="width:90%"><?php echo $string['passwordreset']; ?></td></tr>
+<tr><td class="dialog_header header_line"><img src="../artwork/fingerprint_48.png" width="48" height="48" style="padding-right:8px" /></td><td class="dialog_header header_line" style="width:90%"><?php echo $string['passwordreset']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</tr>
 <tr><td colspan="2" class="msg"><?php echo $string['msg']; ?> <span class="passwd"><?php echo $new_password; ?></span></tr>
 <tr><td colspan="2">&nbsp;</tr>

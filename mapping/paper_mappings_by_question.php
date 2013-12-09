@@ -138,8 +138,8 @@ $paper_type = $propertyObj->get_paper_type();
   }
   if ($year_in_title == true) {
     if ($tmp_match != $session) {
-      echo "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" style=\"width:100%\">\n";
-      echo "<tr><td class=\"redwarn\" style=\"padding: 4px 0 4px 8px\"><img src=\"../artwork/non_owner_icon.png\" width=\"25\" height=\"30\" alt=\"Warning\" />&nbsp;&nbsp;</td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;&nbsp;";
+      echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:90%; width:100%; font-size:100%\">\n";
+      echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
       printf($string['nomatchsession'], $tmp_match, $session);
       echo "</td></tr>\n</table>\n";
     }

@@ -93,13 +93,11 @@ if (isset($_POST['submit'])) {
     }
 
     function lon(lineID) {
-      $('#' + lineID).css('background-color', '#EBF3FD');
-      $('#' + lineID).css('border', '1px solid #B8D6FB');
+      $('#' + lineID).css('background-color', '#FFE7A2');
     }
 
     function loff(lineID) {
       $('#' + lineID).css('background-color', 'white');
-      $('#' + lineID).css('border', '1px solid white');
     }
     
     function do_resize() {
@@ -183,7 +181,7 @@ if ($target_userID == '') {
   $result->close();
 }
 
-echo "<p style=\"color:#0033BC\">" . str_replace('user','Temporary Account ',$temp_username) . " " . $string['msg3'] . ":</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID\">\n<table border=\"0\" style=\"width:100%\">\n";
+echo "<p>" . str_replace('user','Temporary Account ',$temp_username) . " " . $string['msg3'] . ":</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID\">\n<table border=\"0\" style=\"width:100%\">\n";
 echo "<tr><th>" . $string['Title'] . "</th><th>" . $string['Last Name'] . "</th><th>" . $string['First Names'] . "</th><th>" . $string['Student ID'] . "</th><th></th></tr>\n";
 echo "<tr><td><input type=\"text\" name=\"title\" value=\"$temp_title\" size=\"5\" /></td><td><input type=\"text\" name=\"surname\" value=\"$temp_surname\" size=\"15\" /></td><td><input type=\"text\" name=\"first_names\" value=\"$temp_first_names\" size=\"15\" /></td><td><input type=\"text\" name=\"student_id\" value=\"$temp_student_id\" size=\"6\" /></td><td><input type=\"submit\" name=\"submit\" value=\"" . $string['search'] . "\" style=\"width:80px\" /></tr>\n";
 echo "</table>\n</form>\n";
@@ -191,10 +189,10 @@ echo "</table>\n</form>\n";
 if (count($target_student) == 0) {
   echo "<div>" . $string['msg4'] . ".</div>\n";
 } else {
-  echo "<br /><div style=\"color:#0033BC\">" . $string['Reassign answers'] . " " . str_replace('user','Temporary Account ',$temp_username) . " " . $string['to following user'] . ":</div>\n<div id=\"userlist\" style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
+  echo "<br /><div>" . $string['Reassign answers'] . " " . str_replace('user','Temporary Account ',$temp_username) . " " . $string['to following user'] . ":</div>\n<div id=\"userlist\" style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
   foreach ($target_student as $individualID=>$individual) {
     if ($individual['title'] == 'Mr') {
-      $user_icon = 'user_male_64.png';
+      $user_icon = 'user_male_48.png';
     } elseif ($individual['title'] == 'Dr') {
       if ($individual['gender'] == 'female') {
         $user_icon = 'user_female_48.png';
