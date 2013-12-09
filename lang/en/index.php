@@ -48,7 +48,7 @@ $string['requirespassword'] = 'This paper requires a password.';
 $string['mins'] = 'mins';
 $string['summativetesting'] = 'Summative Exams for Testing';
 $string['summativetestmsg'] = '<strong>Staff only &ndash; this section is not visible to students.</strong> These are the summative exams scheduled for your teams in the next six weeks.';
-$string['nodurationwarning'] = 'Warning: duration not set';
-$string['startwarning'] = 'Warning: paper starts before %d:00';
-$string['nolabswarning'] = 'Warning: no labs set';
+$string['nodurationwarning'] = 'Exam duration not set';
+$string['startwarning'] = 'Paper starts before %d:00';
+$string['nolabswarning'] = 'No labs set';
 ?>

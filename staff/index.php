@@ -191,7 +191,7 @@ require_once '../include/staff_auth.inc';
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 
   // -- Display top 10 recent papers ----------------------------------
-  $result = $mysqli->prepare("SELECT paperID, paper_title, accessed, paper_type FROM (recent_papers, properties) WHERE userID=? AND recent_papers.paperID=properties.property_id ORDER BY accessed DESC LIMIT 10");
+  $result = $mysqli->prepare("SELECT paperID, paper_title, accessed, paper_type FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($paperID, $paper_title, $accessed, $paper_type);

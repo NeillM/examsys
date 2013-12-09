@@ -72,8 +72,8 @@ $is_question_preview_mode = ( isset($_GET['q_id']) );
 * Set the default colour scheme for this paper and allow current users' special settings to override
 * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
 */
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color);
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 
 $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
@@ -139,7 +139,7 @@ if ($is_question_preview_mode == false) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogo</title>
+  <title>Rog&#333;</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
@@ -163,10 +163,10 @@ if ($is_question_preview_mode == false) {
   <p style="text-align:center"><strong><?php echo $string['bottom_msg']; ?> </strong><input type="submit" name="next" value="<?php echo $string['continue']; ?>" /></p>
 <?php
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"" . ($_POST['current_screen'] - 1) . "\" />\n";
-  if (!$_POST['sessionid']) {
-    echo "<input type=\"hidden\" name=\"sessionid\" value=\"" . date("YmdHis", time()) . "\" />\n";
-  } else {
+  if (isset($_POST['sessionid'])) {
     echo "<input type=\"hidden\" name=\"sessionid\" value=\"" . $_POST['sessionid'] . "\" />\n";
+  } else {
+    echo "<input type=\"hidden\" name=\"sessionid\" value=\"" . date("YmdHis", time()) . "\" />\n";
   }
   echo "<input type=\"hidden\" name=\"page_start\" value=\"" . date("YmdHis", time()) . "\" />\n";
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($_POST['current_screen'] - 1) . "\" />\n";

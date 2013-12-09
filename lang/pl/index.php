@@ -48,7 +48,7 @@ $string['requirespassword'] = 'Ten arkusz wymaga podania hasła.';
 $string['mins'] = 'min.';
 $string['summativetesting'] = 'Egzaminy końcowe dla testowania';
 $string['summativetestmsg'] = '<strong>Tylko dla kadry &ndash; ta sekcja nie jest widoczna dla studentów.</strong> Na najbliższe sześć tygodni zaplanowano dla twojego zespołu następujące egzaminy końcowe.'; 
-$string['nodurationwarning'] = 'Uwaga: nie określono czasu trwania egzaminu'; 
-$string['startwarning'] = 'Uwaga: arkusz zaplanowano na czas wcześniejszy niż %d:00'; 
-$string['nolabswarning'] = 'Uwaga: nie określono pracowni'; 
+$string['nodurationwarning'] = 'Nie określono czasu trwania egzaminu'; 
+$string['startwarning'] = 'Arkusz zaplanowano na czas wcześniejszy niż %d:00'; 
+$string['nolabswarning'] = 'Nie określono pracowni'; 
 ?>

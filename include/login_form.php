@@ -1,18 +1,18 @@
 <?php
-// This file is part of Rogo
+// This file is part of Rogō
 //
-// Rogo is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogo is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
@@ -25,6 +25,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
   <title>Rog&#333; - <?php echo $string['signin']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/warnings.css" />
 
@@ -77,10 +78,10 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
 <form method="post" id="theform">
     <div class="mainbox">
 
-        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" width="47" height="51" alt="logo" style="float:left; padding-right:8px" />
+        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
-        <div style="color:#4A74B9; font-size:28pt; font-weight:bold; position:relative; top:-6px">Rog&#333;</div>
-        <div style="color:#4A74B9; font-size:9pt; position:relative; top:-4px">e-Assessment Management System</div>
+        <div class="logo_lrg_txt">Rog&#333;</div>
+        <div class="logo_small_txt">e-Assessment Management System</div>
 
         <br/>
         <br/>

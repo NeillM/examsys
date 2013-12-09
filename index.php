@@ -40,9 +40,10 @@ if ($userObject->has_role('External Examiner')) {
   exit();
 }
 
-function display_duration($duration, $string) {
+function display_duration($duration, $string, &$warnings) {
   if ($duration == '' or $duration == 0) {
-    $html = display_warning($string['nodurationwarning']);
+		$warnings[] = $string['nodurationwarning'];
+		$html = '';
   } else {
     $html = $duration . $string['mins'];
   }
@@ -51,7 +52,7 @@ function display_duration($duration, $string) {
 }
 
 function display_warning($text) {
-  return '<img class="warning-img" width="12" height="11" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
+  return '<img class="warning-img" alt="' . $text . '" title="' . $text . '" src="artwork/small_yellow_warning_icon.gif" />';
 }
 
 function get_labs($mysqli, $lablist) {
@@ -69,9 +70,10 @@ function get_labs($mysqli, $lablist) {
   return $lab_list;
 }
 
-function display_labs($labs, $computer_lab, $string) {
+function display_labs($labs, $computer_lab, $string, &$warnings) {
   if (count($labs) == 0) {
-    $html = display_warning($string['nolabswarning']);
+		$warnings[] = $string['nolabswarning'];
+		$html = '';
   } else {
     $html = ', <span class="labs">';
     $first = true;
@@ -113,95 +115,102 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     <link rel="stylesheet" type="text/css" href="./css/header.css"/>
     <style type="text/css">
         body {
-            font-size: 90%;
-            color: #575757;
-						margin-top: 8px;
+					font-size: 90%;
+					color: #575757;
+					margin-top: 8px;
         }
 
         h1 {
-            font-weight: normal;
-            font-size: 140%
+					font-weight: normal;
+					font-size: 140%
         }
 
         #summ_test {
-            margin: 36px 0 0 90px;
+					margin: 36px 0 0 90px;
         }
 
         #summ_test  a {
-            text-decoration: none
+					text-decoration: none
         }
 
         .file {
-            float: left;
-            width: 375px;
-            height: 74px;
-            padding-left: 12px
+					float: left;
+					width: 375px;
+					height: 74px;
+					padding-left: 12px
         }
 
         a.blacklink:link {
-            color: #000000
+					color: #000000
         }
 
         a.blacklink:visited {
-            color: #000000
+					color: #000000
         }
 
         #summ_test a.blacklink:hover {
-            color: #000000;
-            text-decoration: underline
+					color: #000000;
+					text-decoration: underline
         }
 
         #summ_test, .file td, .mod-header td {
-            font-size: 90%;
+					font-size: 90%;
         }
 
         #summ_test h2 {
-            font-weight: normal;
-            font-size: 140%;
+					font-weight: normal;
+					font-size: 140%;
         }
 
         #summ_test p {
-            font-size: 100%;
-            color: black;
+					font-size: 100%;
+					color: black;
         }
 
         table.mod-header {
-            border: 0;
-            padding: 6px 0 2px 0;
-            width: 100%;
-            color: #1E3287;
-            margin-bottom: 8px;
+					border: 0;
+					padding: 6px 0 2px 0;
+					width: 100%;
+					color: #1E3287;
+					margin-bottom: 8px;
         }
 
         table.map-session td {
-            white-space: nowrap;
+					white-space: nowrap;
         }
 
         hr.head-line {
-            border: 0;
-            height: 1px;
-            color: #E5E5E5;
-            background-color: #E5E5E5;
-            width: 100%
+					border: 0;
+					height: 1px;
+					color: #E5E5E5;
+					background-color: #E5E5E5;
+					width: 100%
         }
 
         .subtext {
-            color: #808080;
-            line-height: 18px;
+					color: #808080;
+					line-height: 18px;
         }
 
         .warning-img {
-            vertical-align: text-top;
-            margin-top: -2px
+					vertical-align: text-top;
+					margin-top: -2px;
+					width: 12pg;
+					height: 11px;
+					padding-right: 5px;
         }
+				
+				.warning {
+				  color: #C55A11;
+				}
 
         .labs {
-            color: #ff6300;
+					color: #ff6300;
         }
 
         .labs .current {
-            color: #fff;
-            background-color: #ff6300;
+					color: #fff;
+					background-color: #ff6300;
         }
     </style>
   <?php
@@ -313,22 +322,29 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
           echo "<table style=\"clear:both; font-size:100%\"><tr><td class=\"subsect\"><nobr>$moduleID</nobr></td><td style=\"width:98%\"><hr class=\"head-line\" /></td></tr></table>\n";
         }
         foreach ($paper_list as $paper) {
+					$warnings = array();
+					
           $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';
           $start_hour = substr($paper['start_date'], 11, 2);
-          $start_warning = (intval($start_hour) < $configObject->get('cfg_hour_warning')) ? display_warning(sprintf($string['startwarning'], $configObject->get('cfg_hour_warning'))) : '';
+					if (intval($start_hour) < $configObject->get('cfg_hour_warning')) {
+					  $warnings[] = sprintf($string['startwarning'], $configObject->get('cfg_hour_warning'));
+					}
 
           $labs = get_labs($mysqli, $paper['labs']);
-          $lab_html = display_labs($labs, $computer_lab_short, $string);
+          $lab_html = display_labs($labs, $computer_lab_short, $string, $warnings);
           ?>
             <div class="file">
                 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
                     <tr>
-                        <td style="width:60px" align="center"><a class="blacklink" href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" rel="<?php echo $paper['fullscreen'] ?>"><img src="artwork/summative.png" width="48" height="48" alt="Type: Summative Exam" border="0"/></a></td>
+                        <td style="width:60px; vertical-align:top"><a class="blacklink" href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" rel="<?php echo $paper['fullscreen'] ?>"><img src="artwork/summative.png" width="48" height="48" alt="Type: Summative Exam" border="0"/></a></td>
                         <td>
-                            <a href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview"
-                               class="blacklink"
-                               rel="<?php echo $paper['fullscreen'] ?>"><?php echo $paper['title'] ?></a><br/>
-                            <span class="subtext"><?php echo $paper['screens'] . ' ' . ucfirst($string[$screen_plural]) . '<br />' . $start_warning . $paper['start_date'] . ', ' . display_duration($paper['duration'], $string) ?></span><?php echo $lab_html ?>
+                            <a href="user_index.php?id=<?php echo $paper['crypt_name'] ?>&mode=preview" class="blacklink" rel="<?php echo $paper['fullscreen'] ?>"><?php echo $paper['title'] ?></a><br />
+                            <span class="subtext"><?php echo $paper['screens'] . ' ' . ucfirst($string[$screen_plural]) . '<br />' . $paper['start_date'] . ', ' . display_duration($paper['duration'], $string, $warnings) ?></span><?php
+														echo $lab_html;
+														foreach ($warnings as $warning) {
+														  echo "<div class=\"warning\">" . display_warning($warning) . "$warning</div>\n";
+														}
+														?>
                         </td>
                     </tr>
                 </table>
@@ -349,8 +365,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
 <html>
   <head>
       <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-      <meta http-equiv="content-type"
-            content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
+      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
 
       <title><?php echo $string['exams']; ?></title>
 
@@ -360,10 +375,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
               font-weight: bold;
               font-size: 180%;
               padding: 10px;
-              background: -moz-linear-gradient(top, #EAEAEA, #C0C0C0);
-              background: -webkit-linear-gradient(top, #EAEAEA, #C0C0C0);
-              background-image: -ms-linear-gradient(top, #EAEAEA 0%, #C0C0C0 100%);
-              filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#EAEAEA', endColorstr = '#C0C0C0');
+              background-color: #EAEAEA;
           }
       </style>
   </head>
@@ -377,10 +389,10 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   for ($i = 0; $i < $paper_no; $i++) {
     if ($paper_display[$i]['password'] == '') {
       echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . Paper_utils::displayIcon($paper_display[$i]['paper_type'], '', '', '', '', '') . "</a></td>\n";
-      echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+      echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . $paper_display[$i]['paper_title'] . "</a>";
     } else {
       echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . Paper_utils::displayIcon($paper_display[$i]['paper_type'], '', '', '', '', '') . "</a></td>\n";
-      echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\" style=\"color:blue\">" . $paper_display[$i]['paper_title'] . "</a>";
+      echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . $paper_display[$i]['paper_title'] . "</a>";
       echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
     }
     echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];
