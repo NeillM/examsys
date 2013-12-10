@@ -1535,11 +1535,14 @@ class PaperProperties {
 		}
 		
 		$enhancedcalc_ids = array();
-		foreach ($this->questions as $question) {
-		  if ($question['type'] == 'enhancedcalc') {
-				$enhancedcalc_ids[] = $question['q_id'];
-			}
-		}
+
+    if (is_array($this->questions) and count($this->questions) > 0) {
+      foreach ($this->questions as $question) {
+        if ($question['type'] == 'enhancedcalc') {
+          $enhancedcalc_ids[] = $question['q_id'];
+        }
+      }
+    }
 		
 		if (count($enhancedcalc_ids) > 0) {
 			$paperID = $this->get_property_id();
