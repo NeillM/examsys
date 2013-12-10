@@ -125,7 +125,7 @@ class Rserve_Connection {
 			throw new Rserve_Exception("Unable to create socket<pre>" . socket_strerror(socket_last_error()) . "</pre>");
 		}
     //cczsa1 added next block to shorten timeout on sockect connection
-    if (!is_null($options)) {
+    if (!is_null($options) and PHP_OS != 'SunOS') {
       $valur=socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
       $valur=socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
     }
