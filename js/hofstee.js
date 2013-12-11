@@ -70,7 +70,7 @@ function hofstee_plot(canvas_id,result_type) {
 	canvas = document.getElementById(canvas_id);
 
 	if (canvas && canvas.getContext){
-		document.onmouseup   = g_mouseDragUp;
+		canvas.onmouseup   = g_mouseDragUp;
 		canvas.onmousedown = g_mouseDragDown;
 		canvas.onmousemove = g_mouseDragMove;
 		var intervalID = window.setInterval(g_redraw_canvas, 10);
@@ -295,7 +295,7 @@ function hofstee_plot(canvas_id,result_type) {
 		var ym = e.clientY;
 		x = xm - loc_lft;
 		y = ym - loc_top; 
-
+		if (!testWithin(x, y, graph_x-25, canvas.height-graph_y-graph_h-25, graph_w+50, graph_h+50)) g_mouseDragUp(e);
 		if (dragging) {
 			if (active_line==1 || active_line==2) boundaries[active_line-1] = (x-graph_x)/graph_w*100;
 			if (active_line==3 || active_line==4) boundaries[active_line-1] = (canvas.height-y-graph_y)/graph_h*100;
