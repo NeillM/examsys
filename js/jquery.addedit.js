@@ -113,7 +113,8 @@ function addVariableLinks() {
 function variableLink(event) {
   var questionID = $('#question_id').val();
   var paperID = $('#paperID').val();
-  window.open("variable_link.php?paperID=" + paperID + "&elementID=" + event.data.elementID + "&q_id=" + questionID + "&iconID=" + event.data.iconID + "","paper","width=600,height=400,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+	var winHeight = screen.height - 100;
+  window.open("variable_link.php?paperID=" + paperID + "&elementID=" + event.data.elementID + "&q_id=" + questionID + "&iconID=" + event.data.iconID + "","paper","width=750,height=" + winHeight + ",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
   return false;
 }
 

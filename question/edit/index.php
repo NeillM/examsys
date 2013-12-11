@@ -389,7 +389,7 @@ if ($critical_error == '') {
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
