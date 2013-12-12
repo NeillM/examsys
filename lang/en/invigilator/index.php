@@ -65,4 +65,5 @@ $string['time'] = 'Time';
 $string['timedexam'] = 'Timed Exam:';
 $string['timeerror'] = 'Time Error';
 $string['timeerrormsg'] = 'Exam must be at least %d minutes in length';
+$string['examquestionclarifications'] = 'Exam question clarifications';
 ?>

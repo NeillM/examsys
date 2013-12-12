@@ -170,7 +170,7 @@ if (isset($_POST['submit'])) {
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
 	<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 	<style type="text/css">
-		body {font-size:90%}
+		body {font-size:100%}
 		h1 {margin-left:10px; font-size:140%}
 		input[type="text"] {border: 1px solid #C0C0C0}
 		.pass {color:#538135}
@@ -187,6 +187,7 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu();
 ?>
+<div id="maincontent" style="font-size:90%">
 <form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post">
 <?php
 	$results_cache = new ResultsCache($mysqli);
@@ -287,5 +288,6 @@ for ($i=0; $i<3; $i++) {
 <br />
 <div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
 </form>
+</div>
 </body>
 </html>

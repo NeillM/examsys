@@ -10,7 +10,7 @@ $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
 $exam_announcements = $exam_announcementObj->get_announcements();
 
 if (count($exam_announcements) == 0) {
-  echo '<span class="blankclarification">Exam question clarifications</span>';
+  echo '<span class="blankclarification">' . $string['examquestionclarifications'] . '</span>';
   exit();
 }
 

@@ -65,4 +65,5 @@ $string['time'] = 'Czas';
 $string['timedexam'] = 'Egzamin odmierzany czasowo:';
 $string['timeerror'] = 'Błąd czasu'; 
 $string['timeerrormsg'] = 'Egzamin musi trwać co najmniej %d minut'; 
+$string['examquestionclarifications'] = 'Exam question clarifications';
 ?>

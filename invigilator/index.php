@@ -41,7 +41,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
 
   // Get any student notes;
   $notes_array = array();
-  $notes_results = $db->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id=?");
+  $notes_results = $db->prepare("SELECT note_id, userID FROM student_notes WHERE paper_id = ?");
   $notes_results->bind_param('i', $paperID);
   $notes_results->execute();
   $notes_results->store_result();
@@ -278,7 +278,7 @@ $properties_list = array();
 $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -723,7 +723,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
               </table>
 
-              <p class="tight"><a href="" onclick="newPaperNote(<?php echo $property_id; ?>); return false;" style="color:blue">
+              <p class="tight"><a href="" onclick="newPaperNote(<?php echo $property_id; ?>); return false;">
                 <?php echo $string['papernote']; ?>
               </a></p>
 
@@ -740,7 +740,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
           </div>
         <?php
         if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
-          echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">Exam question clarifications</span></div>\n";
+          echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">" . $string['examquestionclarifications'] . "</span></div>\n";
         }
         $modules = implode('\',\'', $modules);
 

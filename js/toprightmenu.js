@@ -1,6 +1,10 @@
-$(document).ready(function() {
+$(document).ready(function(event) {
 	$('#toprightmenu_icon').click(function() {
-		$('#toprightmenu').toggle();
+		if ($('#toprightmenu').is(':visible')) {
+			$('#toprightmenu').fadeOut();
+		} else {
+			$('#toprightmenu').fadeIn();
+		}
 	});
 	
 	$('#signout').click(function() {
@@ -13,10 +17,6 @@ $(document).ready(function() {
 	
 	$('#aboutrogo').click(function() {
 		opencredits();
-	});
-	
-	$('#toprightmenu').click(function() {
-		$('#toprightmenu').toggle();
 	});
 	
 	function opencredits() {
