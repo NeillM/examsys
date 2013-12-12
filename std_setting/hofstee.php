@@ -29,6 +29,7 @@ require_once '../include/errors.inc';
 require_once '../classes/results_cache.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/class_totals.class.php';
+require_once '../classes/folderutils.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);

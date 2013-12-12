@@ -58,6 +58,7 @@ class VLE_UoNCM implements iVLEAPI {
         $objectives = $this->transformCMResponse($res, $session);
         break;
     }
+		
     return $objectives;
   }
 

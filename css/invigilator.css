@@ -66,6 +66,11 @@ fieldset {
   height:100px;
   overflow:auto;
 }
+.blankclarification {
+	color:#C0C0C0;
+	font-size:200%;
+	font-weight:bold;
+}
 .q_no {
   font-weight:bold;
   vertical-align:top;

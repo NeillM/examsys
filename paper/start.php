@@ -456,7 +456,12 @@ if ($propertyObj->get_paper_type() == '_late') {
   $log_data->close();
 }
 // Get user answers from whichever log is pointed to by log$paper_type
-$log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
+if ($propertyObj->get_paper_type() == '5') {
+  // There is no user answer in Log5 (offline papers) so put NULL instead.
+	$log_data = $mysqli->prepare("SELECT id, q_id, NULL AS user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
+} else {
+	$log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
+}
 $log_data->bind_param('i', $metadataID);
 $log_data->execute();
 $log_data->store_result();
@@ -1214,15 +1219,17 @@ if ($css != '') {
 
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
-  //display the questions
+  // Display the questions
   $calculator = $propertyObj->get_calculator(); //GLABAL NEEDS FIXING
   foreach ($questions_array as &$question) {
     if ($question['screen'] == $current_screen) {
       if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
       if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $propertyObj->get_paper_prologue() . '</td></tr>';
       if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-      display_question($question, $propertyObj->get_paper_type(), $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
-      $previous_q_type = $question['q_type'];
+      
+			display_question($question, $propertyObj->get_paper_type(), $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+      
+			$previous_q_type = $question['q_type'];
       $q_displayed++;
     }
   }

@@ -248,7 +248,7 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
  */
 
 $objsBySession_cache = array();
-$vle_api_cache = array(); // cache the vle api to save some queries
+$vle_api_cache = array(); // Cache the vle api to save some queries
 
 function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $scope = 'latest') {
   global $objsBySession_cache, $vle_api_cache,  $configObject;
@@ -270,9 +270,10 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     if ($vle_api != '') {
       // Get objectives from the VLE via REST request
       if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
-        $vle = VLEFactory::GetVLEAPI($vle_api);
+				$vle = VLEFactory::GetVLEAPI($vle_api);
         $vle->setMappingLevel($map_level);
         $resp = $vle->getObjectives($thisModuleid, $session);
+				
         if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
         }

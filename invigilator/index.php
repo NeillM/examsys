@@ -493,7 +493,7 @@ if ($language != 'en') {
 ?>
 
 <div id="menudiv"
-     style="width:<?php echo $popup_width; ?>px; background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; box-shadow:2px 2px 2px rgba(100, 100, 100, 0.50)"
+     style="width:<?php echo $popup_width; ?>px; background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px"
      onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
     <table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
         <tr>
@@ -740,7 +740,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
           </div>
         <?php
         if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
-          echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span style=\"color:#C0C0C0; font-size:200%; font-weight:bold\">Exam question clarifications</span></div>\n";
+          echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">Exam question clarifications</span></div>\n";
         }
         $modules = implode('\',\'', $modules);
 

@@ -22,7 +22,10 @@
 * @package
 */
 
-  require '../../include/staff_student_auth.inc';
+require '../../include/staff_student_auth.inc';
+require '../include/errors.inc';
+
+$tutorial = check_var('tutorial', 'GET', true, false, true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,11 +40,11 @@
 <body>
 <?php
 
-   echo "<embed width=\"100%\" height=\"100%\" src='./images/" . $_GET['tutorial'] . "' />";
+   echo "<embed width=\"100%\" height=\"100%\" src='./images/" . $tutorial . "' />";
 
    if (!$userObject->has_role(array('SysAdmin', 'External'))) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL, ?, ?, NOW(), ?)");
-    $result->bind_param('sis', 'student', $userObject->get_user_ID(), $_GET['tutorial']);
+    $result->bind_param('sis', 'student', $userObject->get_user_ID(), $tutorial);
     $result->execute();
     $result->close();
   }

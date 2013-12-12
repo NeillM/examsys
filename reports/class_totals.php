@@ -303,8 +303,14 @@ ob_start();
       }
     });
   }
-
-  document.onmousedown = mouseSelect;
+	
+	
+	$(document).ready(function(){
+	  $('#maindata').click(function() {
+		  $('#menudiv').hide();
+		});
+	});
+  //document.onmousedown = mouseSelect;
 </script>
 </head>
 
@@ -451,7 +457,7 @@ if ($language != 'en') {
 
   $cols = count($table_order);
 
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+  echo "<table id=\"maindata\" class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
   if ($paper_type == '2') {
     echo "<tr><th class=\"h\" colspan=\"" . ($cols - 1) . "\">";
   } else {

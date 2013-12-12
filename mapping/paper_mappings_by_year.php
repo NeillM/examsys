@@ -46,7 +46,7 @@ function getPaper($paperID) {
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($paper_title,  $session, $start_date, $end_date, $paper_type);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
      $temp_array['paper_title'] = $paper_title;
      $temp_array['session'] = $session;
   }
@@ -58,7 +58,7 @@ function getPaper($paperID) {
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $parts);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $excluded[$q_id] = $parts;
   }
   $result->close();
@@ -115,7 +115,7 @@ function getPaper($paperID) {
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -244,7 +244,7 @@ foreach ($objsBySession as $p_id => $module) {
 }
 
 //display
-echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
+echo "<table style=\"border-collapse:collapse\">\n";
 //table heading
 echo "<tr><th colspan=\"2\"></th>";
 $pcount = 0;

@@ -465,7 +465,7 @@ if ($properties->get_paper_type() == '2') {
 
 <div class="submenuheading"><?php echo $string['summativechecklist']; ?></div>
 
-<table style="font-size:90%; width:185px; margin-left:9px; border-spacing:4px">
+<table style="font-size:90%; width:185px; margin-left:9px">
 <?php
   // Session
   $year_in_title = false;
@@ -619,6 +619,7 @@ if ($properties->get_paper_type() == '2') {
 
     $objIDs = array();
 
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $objsBySession = getObjectives($moduleIDs, $tmp_session, $paperID, $tmp_question_list, $mysqli);
     foreach ($objsBySession as $moduleCode) {
       foreach ($moduleCode as $sessionID) {

@@ -230,7 +230,7 @@ $paper_type = $propertyObj->get_paper_type();
 
     $moduleIDs = Paper_utils::get_modules($paperID,$mysqli);
     $objByModule = getObjectivesByMapping($moduleIDs, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
-    if(array_key_exists($temp_array[$x]['q_id'],$excluded)) {
+    if (array_key_exists($temp_array[$x]['q_id'], $excluded)) {
       $class = 'mapping_exclueded';
     } else {
       $class = '';

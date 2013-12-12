@@ -70,7 +70,7 @@ if (!$propertyObj) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-//check the feedback has been released !!!
+// Check the feedback has been released !!!
 if ($userObject->has_role('Student')) {
   if (!$propertyObj->is_objective_fb_released()) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -102,7 +102,7 @@ if ($userObject->has_role('Student')) {
 }
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
-//check the user sat the paper!
+// Check the user sat the paper!
 $bound = false;
 if ($paper_type == '0' or $paper_type == '1') {
   $result = $mysqli->prepare("SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND paperID = ? AND userID = ? UNION SELECT DATE_FORMAT(started,'%H:%i:%s') AS started, DATE_FORMAT(updated,'%H:%i:%s') AS updated FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND paperID = ? AND userID = ? LIMIT 1");
@@ -177,7 +177,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
     </table>
   <?php
-  echo "<div style=\"position:absolute; top:0px; left:0px\">\n";
+  echo "<div style=\"position:absolute; top:0px; left:0px; width:100%\">\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
@@ -186,13 +186,12 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";
   }
 
-
-  //get Cohort Data
+  // Get Cohort Data
   $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
   $tmp_end_date    = DateTime::createFromFormat('U', $end_date);
   $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date->format('YmdHis'), $tmp_end_date->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
 
-  //get users log data excluding exclued questions
+  // Get users log data excluding exclued questions
   $qid_list = '';
   $question_data = array();
 
@@ -306,12 +305,12 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   }
 
   if (count($objectives) == 0) {
-    echo "<tr><td class=\"redwarn\" style=\"height:30px; padding-left:10px\">" . $string['notmapped'] . "</td></tr></table>\n</body>\n</html>\n";
+    echo "<tr><td class=\"redwarn\" style=\"width:100%; height:30px; padding-left:10px\">" . $string['notmapped'] . "</td></tr></table>\n</body>\n</html>\n";
     exit;
   }
   echo "</table>\n";
 
-  //Display the feedback
+  // Display the feedback
   ?>
   <h1><?php echo $string['learningobjectives']; ?></h1>
   <p><?php echo $string['explanation']; ?></p>
@@ -331,7 +330,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 
     if ($obj_data['mark_sum'] == '') $obj_data['mark_sum'] = 0;
 
-    //cohort performance comparison
+    // Cohort performance comparison
     if ($objectives[$id]['chort_totalpos_sum'] == 0) {
       $comparison = 0;
     } else {
@@ -354,7 +353,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   echo "<tr><td>" . $string['papertitle'] . "</td><td>$paper_title</td></tr>\n";
   echo "<tr><td>" . $string['startedat'] . "</td><td>$started</td></tr>\n";
 
-  //display student marks
+  // Display student marks
   if ($paper_type < '3') {
     echo "<tr><td>" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
     echo "<tr><td>" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";

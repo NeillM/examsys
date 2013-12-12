@@ -40,9 +40,16 @@ function popMenu(option_no, e) {
   $('#menudiv').css('top', top_pos);
   
   isMenu = true;
+	cancelBubble(e);
   return false;
 }
 
+function cancelBubble(e) {
+  var evt = e ? e:window.event;
+	if (evt.stopPropagation)		evt.stopPropagation();
+	if (evt.cancelBubble!=null)	evt.cancelBubble = true;
+}
+ 
 function menuRowOn(rowID) {
   // Left menu column
   $('#item'+rowID+'a').css('background-color', '#FFE7A2');
