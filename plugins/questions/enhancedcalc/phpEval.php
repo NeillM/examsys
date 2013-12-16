@@ -28,7 +28,7 @@
 
 require_once('rserve/Connection.php');
 
-class EnhancedCalcphpEval {
+class EnhancedCalc_phpEval {
 
   protected $impliments_api_calc_version = 1;
   static protected $cnx = false;
