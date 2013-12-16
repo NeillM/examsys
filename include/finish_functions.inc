@@ -2083,8 +2083,8 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
             if (substr($tmp_exclude,$i,1) == '0') {
-              $x = $tmp_second_split[$label_no-2];
-              $y = $tmp_second_split[$label_no-1] - 25;
+              $x = round($tmp_second_split[$label_no-2], 2);
+              $y = round($tmp_second_split[$label_no-1] - 25, 2);
               $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'));
               $tmp_pos = strpos($correct_labels[$x . 'x' . $y], '~');
               if ($tmp_pos !== false) {
@@ -2126,15 +2126,16 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
         $answered = false;
         if (isset($paper[$question]['user_answer'])) {
-          $user_split1 = explode(';',$paper[$question]['user_answer']);
+          $user_split1 = explode(';',$paper[$question]['user_answer']);			
+					
           if ($user_split1[1] != '') {
             $answered = true;
             $user_split2 = explode('$',$user_split1[1]);
 
             $i = 0;
             for ($a=0; $a<count($user_split2)-3; $a+=4) {
-              $x = $user_split2[$a];
-              $y = $user_split2[$a+1];
+              $x = round($user_split2[$a], 2);
+              $y = round($user_split2[$a+1], 2);
               if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a+2]) {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 $correct_no++;
