@@ -2952,6 +2952,12 @@ QUERY;
     $updater_utils->execute_query($sql, true);
   }
 
+    //cczsa1 16/12/2013 - Add new grants for student users needing select from properties_modules
+    if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT, INSERT', 'modules_student', $cfg_db_host)) {
+      $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
+      $updater_utils->execute_query($sql, true);
+    }
+
   //brzsw 02/01/2013 - Add new grants for staff users needing change properties_modules
   if (!$updater_utils->has_grant($cfg_db_staff_user, 'SELECT, INSERT, UPDATE, DELETE', 'properties_modules', $cfg_db_host)) {
     $sql = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".properties_modules TO '" . $cfg_db_staff_user . "'@'" . $cfg_db_host . "'";
@@ -3994,7 +4000,7 @@ SQL;
   }
   
   //brzab3 15/04/2013 - Add new grants for student users needing SELECT, INSERT from modules_student
-  if (!$updater_utils->has_grant($cfg_db_inv_username, 'SELECT', 'modules_student', $cfg_db_host)) {
+  if (!$updater_utils->has_grant($cfg_db_student_user, 'SELECT', 'modules_student', $cfg_db_host)) {
     $sql = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_student TO '" . $cfg_db_student_user . "'@'" . $cfg_db_host . "'";
     $updater_utils->execute_query($sql, true);
   }
