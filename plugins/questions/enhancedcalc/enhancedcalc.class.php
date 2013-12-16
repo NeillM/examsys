@@ -572,7 +572,7 @@ class EnhancedCalc extends Question implements questionInterface {
     } else {
       echo '<td></td>';
     }
-    $string
+
     if ($saved_response_clean == '') {
 
       echo '<td>';
