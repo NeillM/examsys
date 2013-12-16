@@ -80,44 +80,24 @@ if (isset($_POST['save_changes'])) {
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
+  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
-    function getSize() {
-      if (parseInt(navigator.appVersion)>3) {
-        if (navigator.appName=="Netscape") {
-          winH = window.innerHeight;
-        }
-        if (navigator.appName.indexOf("Microsoft")!=-1) {
-          winH = parent.document.getElementById("content").height;
-        }
-      }
-      winH = winH - 155;
-      return winH + 'px';
-    }
-    
-    function cleartext() {
-      if (document.add_form.title.value == "Page Title...") {
-        document.add_form.title.value = '';
-      }
-    }
-    
-    function checkForm() {
-      if (document.add_form.title.value == "" || document.add_form.title.value == " ") {
-        alert ("Please enter a title for this new help page.");
-        return false;
-      }
-    }
-    
+    $(document).ready(function() {
+		  var docHeight = $(document).height();
+			docHeight = docHeight - 100;
+		  $('#edit1').css('height', docHeight + 'px');
+		});
   </script>
 </head>
 
 <body>
 
-<form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="return checkForm();">
+<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
-  <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#295AAD; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." onfocus="cleartext();" /></td>
+  <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#295AAD; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" required /></td>
   </tr>
   </table>
   <br />

@@ -8,19 +8,7 @@ function launchHelp(pageID) {
   if (window.focus) {
     helpwin.focus();
   }
-  hideUM();
+	$('#toprightmenu').hide();
   
   return false;
-}
-
-function showUM() {
-  if (document.getElementById('user_menu').style.display == 'block') {
-    hideUM();
-  } else {
-    document.getElementById('user_menu').style.display = 'block';
-  }
-}
-
-function hideUM() {
-  $('#user_menu').hide();
 }

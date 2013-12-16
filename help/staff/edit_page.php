@@ -89,10 +89,10 @@ if (isset($_POST['save_changes'])) {
   exit;
 } else {
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="X-UA-Compatible" content="IE=7,9,10" >
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
 
   <title>Rog&#333;: Edit Help File</title>
@@ -101,45 +101,21 @@ if (isset($_POST['save_changes'])) {
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
 
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
+  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
-    function getSize() {
-      if (parseInt(navigator.appVersion)>3) {
-        if (navigator.appName=="Netscape") {
-          winH = window.innerHeight;
-        }
-        if (navigator.appName.indexOf("Microsoft")!=-1) {
-          winH = parent.document.getElementById("content").height;
-        }
-      }
-      winH = winH - 155;
-      return winH + 'px';
-    }
-
-    function checkForm() {
-      if (document.add_form.title.value == "" || document.add_form.title.value == " ") {
-        alert ('<?php echo $string['entertitle']; ?>');
-        return false;
-      }
-    }
-
-    function toScreenHeight(id, minus) {
-      var height;
-      if (typeof(window.innerHeight) == "number") //non-IE
-        height = window.innerHeight;
-      else if (document.documentElement && document.documentElement.clientHeight) //IE 6+ strict mode
-        height = document.documentElement.clientHeight;
-      else if (document.body && document.body.clientHeight) //IE 4 compatible / IE quirks mode
-        height = document.body.clientHeight;
-        document.getElementById(id).style.height = (height - minus) + "px";
-    }
+    $(document).ready(function() {
+		  var docHeight = $(document).height();
+			docHeight = docHeight - 100;
+		  $('#edit1').css('height', docHeight + 'px');
+		});
   </script>
 </head>
 
-<body onload="toScreenHeight('edit1',120)" onresize="toScreenHeight('edit1',120)">
+<body>
 
-<form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>" onsubmit="return checkForm();">
+<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>">
 <?php
   if ($type == 'pointer') {
     $edit_id = $body;
@@ -155,7 +131,7 @@ if (isset($_POST['save_changes'])) {
     $edit_id = $_GET['id'];
   }
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"padding-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></td><td style=\"text-align:right\"><select name=\"page_roles\">\n";
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"padding-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" required /></td><td style=\"text-align:right\"><select name=\"page_roles\">\n";
   $categories = array('Staff', 'Admin', 'SysAdmin');
   foreach ($categories as $category) {
     if ($category == $roles) {
@@ -174,7 +150,7 @@ if (isset($_POST['save_changes'])) {
   $disabled = '';
   if ($userObject->get_user_ID() != $page_checkout_authorID) {
     if ($page_checkout_time != '' and $current_time - $page_checkout_time < 10000) {
-      $editor = $mysqli->prepare("SELECT title, initials, surname FROM users WHERE id=?");
+      $editor = $mysqli->prepare("SELECT title, initials, surname FROM users WHERE id = ?");
       $editor->bind_param('i', $page_checkout_authorID);
       $editor->execute();
       $editor->bind_result($title, $initials, $surname);
@@ -187,7 +163,7 @@ if (isset($_POST['save_changes'])) {
       $disabled = ' disabled';
     } else {
       // Set the lock to the current time/author.
-      $result = $mysqli->prepare("UPDATE staff_help SET checkout_time=NOW(), checkout_authorID=? WHERE id=?");
+      $result = $mysqli->prepare("UPDATE staff_help SET checkout_time = NOW(), checkout_authorID = ? WHERE id = ?");
       $result->bind_param('ii', $userObject->get_user_ID(), $edit_id);
       $result->execute();
       $result->close();
