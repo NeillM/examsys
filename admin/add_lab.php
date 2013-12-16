@@ -142,16 +142,20 @@ if (count($bad_addresses) > 0) {
 <div><strong><?php echo $string['name']; ?></strong></div>
 <div><input type="text" size="40" maxlength="255" name="lab_name" id="lab_name" value="" required /></div>
 <?php
-  echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n<option value=\"\"></option>\n";
+  echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
   foreach ($cfg_campus_list as $choice) {
-    echo "<option value=\"$choice\">$choice</option>\n";
-  }
+	  if ($configObject->get('cfg_campus_default')) {
+			echo "<option value=\"$choice\" selected>$choice</option>\n";
+		} else {
+			echo "<option value=\"$choice\">$choice</option>\n";
+		}
+	}
   echo "</select></div>\n";
 ?>
 <br /><div><strong><?php echo $string['building']; ?></strong></div>
-<div><input type="text" size="40" maxlength="255" name="building" value="" /></div>
+<div><input type="text" size="40" maxlength="255" name="building" value="" required /></div>
 <br /><div><strong><?php echo $string['roomnumber']; ?></strong></div>
-<div><input type="text" size="10" maxlength="255" name="room_no" value="" /></div>
+<div><input type="text" size="10" maxlength="255" name="room_no" value="" required /></div>
 <br /><div><strong><?php echo $string['bandwidth']; ?></strong></div><div><input type="radio" name="low_bandwidth" value="1" /><?php echo $string['low']; ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="low_bandwidth" value="0" checked /><?php echo $string['high']; ?></div>
 <br /><div><strong><?php echo $string['timetabling']; ?></strong></div>
 <div><textarea name="timetabling" rows="3" cols="100"></textarea></div>

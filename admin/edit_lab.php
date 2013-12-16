@@ -176,8 +176,8 @@ if (isset($_POST['submit'])) {
     }
   }
   echo "</select></div>\n";
-  echo "<br /><div><strong>" . $string['building'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"building\" value=\"$building\" /></div>\n";
-  echo "<br /><div><strong>" . $string['roomnumber'] . "</strong></div>\n<div><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"room_no\" value=\"$room_no\" /></div>\n";
+  echo "<br /><div><strong>" . $string['building'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"building\" value=\"$building\" required /></div>\n";
+  echo "<br /><div><strong>" . $string['roomnumber'] . "</strong></div>\n<div><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"room_no\" value=\"$room_no\" required /></div>\n";
   echo "<br /><div><strong>" . $string['bandwidth'] . "</strong></div>\n<div><input type=\"radio\" name=\"low_bandwidth\" value=\"1\"";
   if ($low_bandwidth == 1) echo ' checked';
   echo " />" . $string['low'] . "&nbsp;&nbsp;&nbsp;<input type=\"radio\" name=\"low_bandwidth\" value=\"0\" ";
