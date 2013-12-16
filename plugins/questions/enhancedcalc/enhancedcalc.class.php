@@ -42,6 +42,31 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->settings = $data;
   }
 
+
+  function error_handling($context = null) {
+    $context1 = array();
+    if (is_null($context)) {
+      // if no array set get currently define variables in this object
+      $context = get_defined_vars($this);
+    }
+    foreach ($context as $key => $value) {
+      if ($key == 'this') {
+      } elseif (is_object($value) and method_exists($value, 'error_handling')) {
+        $context1[$key] = $value->error_handling();
+      } elseif (is_object($value)) {
+        $context1[$key] = clone $value;
+      } elseif (is_array($value)) {
+        //inner loop
+        $context1[$key] = $this->error_handling($value);
+      } else {
+        $context1[$key] = $value;
+      }
+    }
+    return $context1;
+  }
+
+
+
   /**
    * Split answer into number and units if applicable
    * @param  string $input User answer
@@ -547,7 +572,7 @@ class EnhancedCalc extends Question implements questionInterface {
     } else {
       echo '<td></td>';
     }
-
+    $string
     if ($saved_response_clean == '') {
 
       echo '<td>';
