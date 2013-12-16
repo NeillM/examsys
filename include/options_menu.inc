@@ -37,7 +37,6 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 <br />
 
 <div id="general" style="font-size:90%; margin-left:-8px">
-	<div class="menuitem" onclick="launchHelp(1)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_help_icon.gif" alt="Help" /><a href="#" onclick="launchHelp(1); return false;"><?php echo $string['helpsupport']; ?></a></div>
 	<?php
 		if ($userObject->has_role('SysAdmin')) {
 			echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/admin/index.php"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/admin_icon_16.gif" alt="Admin" />' . $string['admintools'] . '</a></div>';

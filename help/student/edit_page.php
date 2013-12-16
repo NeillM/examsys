@@ -104,43 +104,19 @@ if (isset($_POST['save_changes'])) {
   <?php echo $configObject->get('cfg_js_root') ?>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_student.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
-    function getSize() {
-      if (parseInt(navigator.appVersion)>3) {
-        if (navigator.appName=="Netscape") {
-          winH = window.innerHeight;
-        }
-        if (navigator.appName.indexOf("Microsoft")!=-1) {
-          winH = parent.document.getElementById("content").height;
-        }
-      }
-      winH = winH - 155;
-      return winH + 'px';
-    }
-    
-    function checkForm() {
-      if (document.add_form.title.value == "" || document.add_form.title.value == " ") {
-        alert ('<?php echo $string['entertitle']; ?>');
-        return false;
-      }
-    }
-
-    function toScreenHeight(id, minus) {
-      var height;
-      if (typeof(window.innerHeight) == "number") //non-IE
-        height = window.innerHeight;
-      else if (document.documentElement && document.documentElement.clientHeight) //IE 6+ strict mode
-        height = document.documentElement.clientHeight;
-      else if (document.body && document.body.clientHeight) //IE 4 compatible / IE quirks mode
-        height = document.body.clientHeight;
-        document.getElementById(id).style.height = (height - minus) + "px";
-    }
+    $(document).ready(function() {
+		  var docHeight = $(document).height();
+			docHeight = docHeight - 100;
+		  $('#edit1').css('height', docHeight + 'px');
+		});
   </script>
 </head>
 
-<body onload="toScreenHeight('edit1',120)" onresize="toScreenHeight('edit1',120)">
+<body>
 
-<form name="add_form" charset="UTF-8" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>" onsubmit="return checkForm();">
+<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>">
 <?php
   if ($type == 'pointer') {
     $edit_id = $body;
@@ -155,7 +131,7 @@ if (isset($_POST['save_changes'])) {
     $edit_id = $pageid;
   }
 
-  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" /></p>\n";
+  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" required /></p>\n";
   echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" .  htmlspecialchars($body, ENT_NOQUOTES) . "</textarea>\n";
 
   // Check for lockout.

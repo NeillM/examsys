@@ -8,14 +8,17 @@ $(document).ready(function(event) {
 	});
 	
 	$('#signout').click(function() {
+		$('#toprightmenu').hide();
 	  location.href = cfgRootPath + '/logout.php';
 	});
 
 	$('#displaycredits').click(function() {
+		$('#toprightmenu').hide();
 		opencredits();
 	});
 	
 	$('#aboutrogo').click(function() {
+		$('#toprightmenu').hide();
 		opencredits();
 	});
 	

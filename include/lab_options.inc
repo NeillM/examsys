@@ -45,13 +45,13 @@
 <br />
 
 <div style="font-size:90%" id="menu1a">
-	<div class="menuitem"><a href="create_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
+	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['vieweditdetails']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletelab']; ?></div>
 </div>
 
 <div style="font-size:90%; display:none" id="menu1b">
-	<div class="menuitem"><a href="create_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
+	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
 	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['vieweditdetails']; ?></a></div>
 	<div class="menuitem" onclick="deleteLab()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletelab']; ?></a></div>
 </div>
