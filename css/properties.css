@@ -1,5 +1,5 @@
 body {
-  background-color:#F1F5FB
+  background-color:#F0F0F0;
 }
 table {
   text-align:left
@@ -32,4 +32,11 @@ select {
 }
 input[type="text"] {
   margin:0px;
+}
+extarea, input[type=text], select, textarea, input[type=password] {
+  border: 1px solid #ABADB3;
+}
+.headbar {
+  background-color: #EEEEEE;
+	border-bottom: 1px solid #E2E4E7;
 }

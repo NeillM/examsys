@@ -13,18 +13,25 @@ function dateCopy() {
       $("#tyear").val($("#fyear").val());
       highlight = 'tyear';
       break;
-    case "ftime":
-      var from = $("#ftime").val().replace(':', '');
-      var to = $("#ttime").val().replace(':', '');
-      if (from > to) {
-        $("#ttime").val($("#ftime").val());
-        highlight = 'ttime';
+    case "fhour":
+      if ($("#fhour").val() > $("#thour").val()) {
+        $("#thour").val($("#fhour").val());
+        highlight = 'thour';
+				if ($("#fminute").val() > $("#tminute").val()) {
+					$("#tminute").val($("#fminute").val());
+				}
+      }
+      break;
+    case "fminute":
+      if ($("#fminute").val() > $("#tminute").val() && $("#fhour").val() >= $("#thour").val()) {
+        $("#tminute").val($("#fminute").val());
+        highlight = 'tminute';
       }
       break;
     case "tday":
       $("#fday").val($("#tday").val());
       highlight = 'fday';
-    break;
+			break;
     case "tmonth":
       $("#fmonth").val($("#tmonth").val());
       highlight = 'fmonth';
@@ -33,12 +40,16 @@ function dateCopy() {
       $("#fyear").val($("#tyear").val());
       highlight = 'fyear';
       break;
-    case "ttime":
-      var to = $("#ttime").val().replace(':', '');
-      var from = $("#ftime").val().replace(':', '');
-      if (to < from) {
-        $("#ftime").val($("#ttime").val());
-        highlight = 'ftime';
+    case "thour":
+      if ($("#thour").val() < $("#fhour").val()) {
+        $("#fhour").val($("#thour").val());
+        highlight = 'fhour';
+      }
+      break;
+    case "tminute":
+      if ($("#tminute").val() < $("#fminute").val() && $("#fhour").val() >= $("#thour").val()) {
+        $("#fminute").val($("#tminute").val());
+        highlight = 'fminute';
       }
       break;
   }

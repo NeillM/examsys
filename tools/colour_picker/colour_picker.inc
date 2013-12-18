@@ -108,7 +108,7 @@
   $row[7] = array('#C00000','#FF0000','#FFC000','#FFFF00','#92D050','#00B050','#00B0F0','#0070C0','#002060','#7030A0');
   
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
-  echo "<tr><td colspan=\"21\" style=\"padding-left:10px; background-color:#DDE7EE; color:#00156E; font-size:70%; font-weight:bold; border-bottom:1px solid #C5C5C5\">".$string['themecolours']."</td></tr>";
+  echo "<tr><td colspan=\"21\" style=\"padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold\">".$string['themecolours']."</td></tr>";
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
   foreach ($row[1] as $colour) {
@@ -135,7 +135,7 @@
     echo "</tr>\n";
   }
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
-  echo "<tr><td colspan=\"21\" style=\"padding-left:10px; background-color:#DDE7EE; color:#00156E; font-size:70%; font-weight:bold; border-bottom:1px solid #C5C5C5\">".$string['standardcolours']."</td></tr>";
+  echo "<tr><td colspan=\"21\" style=\"padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold\">".$string['standardcolours']."</td></tr>";
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
   
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";

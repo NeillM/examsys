@@ -276,7 +276,6 @@ $room_name = $lab_object->get_name();
 $properties_list = array();
 
 $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
-
 ?>
 <!DOCTYPE html>
 <html>
