@@ -43,6 +43,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     a:hover {color:black}
     .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
     .f {float:left; width:375px; padding-left:12px; font-size:90%}
+		img {padding:5px}
   </style>
 </head>
 

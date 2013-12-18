@@ -34,9 +34,11 @@
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
     html {height:100%}
-    body {height:100%; background-color:#DFECFF; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
+    body {height:100%; background-color:#F0F0F0; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
+		.tab {height:25px; cursor:default}
   </style>
 
+	<script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     var selectedButton = 'unused';
   
@@ -44,44 +46,44 @@
       parent.qlist.iframeurl.location = scriptName;
       parent.qlist.previewurl.location = 'preview_default.php'
       
-      document.getElementById('button_unused').style.background='';
-      document.getElementById('button_alphabetic').style.background='';
-      document.getElementById('button_keywords').style.background='';
-      document.getElementById('button_status').style.background='';
-      document.getElementById('button_papers').style.background='';
-      document.getElementById('button_team').style.background='';
-      document.getElementById('button_search').style.background='';
+      $('#button_unused').css('backgroundColor','white');
+      $('#button_alphabetic').css('backgroundColor','white');
+      $('#button_keywords').css('backgroundColor','white');
+      $('#button_status').css('backgroundColor','white');
+      $('#button_papers').css('backgroundColor','white');
+      $('#button_team').css('backgroundColor','white');
+      $('#button_search').css('backgroundColor','white');
 
-      document.getElementById('button_'+sectionID).style.background='url(../../artwork/2007_button_on.png)';
+      $('#button_'+sectionID).css('backgroundColor','#FFBD69');
       selectedButton = sectionID;
     }
 
     function buttonover(buttonID) {
       if (buttonID != selectedButton) {
-        document.getElementById('button_'+buttonID).style.backgroundImage='url(../../artwork/2007_button_over.png)';
+        $('#button_'+buttonID).css('backgroundColor','#FFE7A2');
       }
     }
 
     function buttonout(buttonID) {
       if (buttonID != selectedButton) {
-        document.getElementById('button_'+buttonID).style.backgroundImage='';
+        $('#button_'+buttonID).css('backgroundColor','white');
       }
     }
   </script>
 </head>
 <body>
 
-<table cellspacing="0" cellpadding="0" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #95AEC8">
+<table cellspacing="0" cellpadding="0" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #828790">
 <tr><td style="vertical-align:top; text-align:center" valign="top">
 
 <table cellspacing="0" cellpadding="0" style="padding:2px; font-size:90%; width:144px; background-white; text-align:left">
-<tr><td id="button_unused" style="background-image:url('../../artwork/2007_button_on.png'); height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('unused')" onmouseout="buttonout('unused')" onclick="buttonclick('unused','add_questions_list.php?type=unused')">&nbsp;<?php echo $string['myunused']; ?></td></tr>
-<tr><td id="button_alphabetic" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('alphabetic')" onmouseout="buttonout('alphabetic')" onclick="buttonclick('alphabetic','add_questions_list.php?type=all')">&nbsp;<?php echo $string['allmyquestions']; ?></td></tr>
-<tr><td id="button_keywords" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('keywords')" onmouseout="buttonout('keywords')" onclick="buttonclick('keywords','add_questions_keywords_frame.php')">&nbsp;<?php echo $string['bykeywords']; ?></td></tr>
-<tr><td id="button_status" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('status')" onmouseout="buttonout('status')" onclick="buttonclick('status','add_questions_by_status.php')">&nbsp;<?php echo $string['bystatus']; ?></td></tr>
-<tr><td id="button_papers" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('papers')" onmouseout="buttonout('papers')" onclick="buttonclick('papers','add_questions_paper_types.php')">&nbsp;<?php echo $string['bypaper']; ?></td></tr>
-<tr><td id="button_team" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('team')" onmouseout="buttonout('team')" onclick="buttonclick('team','add_questions_team_list.php')">&nbsp;<?php echo $string['byteam']; ?></td></tr>
-<tr><td id="button_search" style="height:25px; color:#00156E; cursor:default" valign="middle" onmouseover="buttonover('search')" onmouseout="buttonout('search')" onclick="buttonclick('search','add_questions_list_search.php')">&nbsp;<?php echo $string['search']; ?></td></tr>
+<tr><td id="button_unused" class="tab" style="background-color:#FFBD69" onmouseover="buttonover('unused')" onmouseout="buttonout('unused')" onclick="buttonclick('unused','add_questions_list.php?type=unused')">&nbsp;<?php echo $string['myunused']; ?></td></tr>
+<tr><td id="button_alphabetic" class="tab" onmouseover="buttonover('alphabetic')" onmouseout="buttonout('alphabetic')" onclick="buttonclick('alphabetic','add_questions_list.php?type=all')">&nbsp;<?php echo $string['allmyquestions']; ?></td></tr>
+<tr><td id="button_keywords" class="tab" onmouseover="buttonover('keywords')" onmouseout="buttonout('keywords')" onclick="buttonclick('keywords','add_questions_keywords_frame.php')">&nbsp;<?php echo $string['bykeywords']; ?></td></tr>
+<tr><td id="button_status" class="tab" onmouseover="buttonover('status')" onmouseout="buttonout('status')" onclick="buttonclick('status','add_questions_by_status.php')">&nbsp;<?php echo $string['bystatus']; ?></td></tr>
+<tr><td id="button_papers" class="tab" onmouseover="buttonover('papers')" onmouseout="buttonout('papers')" onclick="buttonclick('papers','add_questions_paper_types.php')">&nbsp;<?php echo $string['bypaper']; ?></td></tr>
+<tr><td id="button_team" class="tab" onmouseover="buttonover('team')" onmouseout="buttonout('team')" onclick="buttonclick('team','add_questions_team_list.php')">&nbsp;<?php echo $string['byteam']; ?></td></tr>
+<tr><td id="button_search" class="tab" onmouseover="buttonover('search')" onmouseout="buttonout('search')" onclick="buttonclick('search','add_questions_list_search.php')">&nbsp;<?php echo $string['search']; ?></td></tr>
 </table>
 
 </td></tr>

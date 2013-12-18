@@ -29,22 +29,23 @@ require '../../include/staff_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō</title>
+  <title>Rog&#333;</title>
   
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+	
   <style>
     html {height:99.2%}
-    body {height:100%; margin-top:4px; margin-left:0px; margin-right:6px; margin-bottom:2px; background-color:#DFECFF}
+    body {height:100%; margin-top:4px; margin-left:0px; margin-right:6px; margin-bottom:2px; background-color:#F0F0F0}
   </style>
 </head>
 
 <body>
 
-<iframe src="add_questions_list.php?type=unused" name="iframeurl" width="100%" height="60%" style="border:1px solid #95AEC8" frameborder="0">
+<iframe src="add_questions_list.php?type=unused" name="iframeurl" width="100%" height="60%" style="border:1px solid #828790" frameborder="0">
   <p><?php echo $string['browsererr'];?></p>
 </iframe>
 
-<iframe src ="preview_default.php" name="previewurl" width="100%" height="39%" style="border:1px solid #95AEC8" frameborder="0">
+<iframe src ="preview_default.php" name="previewurl" width="100%" height="39%" style="border:1px solid #828790" frameborder="0">
   <p><?php echo $string['browsererr'];?></p>
 </iframe>
 </body>
