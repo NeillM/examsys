@@ -340,7 +340,7 @@ if ($textsize > 120) {
   $button_width = 115;
 }
 ?>
-<table cellpadding="3" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
+<table cellpadding="0" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
 <tr>
 <?php
   $icon_types = array('formative', 'progress', 'summative', 'survey');
@@ -349,7 +349,7 @@ if ($textsize > 120) {
   } else {
     $timed_filename = '_timed';
   }
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="vertical-align:top; width:52px">&nbsp;<img src="./artwork/' . $icon_types[$test_type] . $timed_filename . '.png" width="48" height="48" alt="Icon" />';
+  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="./artwork/' . $icon_types[$test_type] . $timed_filename . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
   echo "</td><td><span class=\"title\">$paper_title</span>";
   echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"width:100px; padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
   echo "</td>\n</tr></table></td></tr>";
@@ -588,7 +588,6 @@ if ($textsize > 120) {
     <script src="js/jquery.flash_q.js" /></script>
     <script src="tools/mee/mee/js/mee_src.js" /></script>
     <div class="mee" style="position:absolute; left:-100px">\int sin(x)dx\pi</div>
-    <link rel="stylesheet" type="text/css" href="css/start.css" />
     <img class="noimg" src="artwork/calc.gif" />
     <img class="noimg" src="artwork/no_save.png" />
     <img class="noimg" src="artwork/fire_exit.png" />
