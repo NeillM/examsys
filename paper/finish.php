@@ -153,6 +153,8 @@ $is_question_preview_mode = (isset($_GET['q_id']));
 
 $is_exam_review_mode = ($userObject->has_role('Staff') and isset($_GET['userID']) and $_GET['userID'] != $userObject->get_user_ID());
 
+$is_formative_review = (isset($_GET['metadataID']) and $paper_type == '0');
+
 if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_mode) {
   // Turn on all feedback if staff and a student exam script is being reviewed.
   $display_correct_answer     = 1;
@@ -181,7 +183,9 @@ if (isset($_GET['metadataID'])) {
   $metadataid = $log_metadata->get_metadata_id();
 }
 
-if (!$is_exam_review_mode and !$is_question_preview_mode) {
+var_dump($is_exam_review_mode, $is_question_preview_mode, $is_formative_review);
+
+if (!$is_exam_review_mode and !$is_question_preview_mode and !$is_formative_review) {
   //only update log metadata if we are ending an exam
   $log_metadata->set_completed_to_now();
 }

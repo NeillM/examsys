@@ -67,6 +67,24 @@ Class PaperUtils {
   * @param $db Database connection
   */
   public function add_question($paperID, $questionID, $screen_no, $display_pos, $db) {
+    $display_pos_free = false;
+
+    $result = $db->prepare("SELECT p_id FROM papers WHERE paper = ? AND display_pos = ?");
+    while (!$display_pos_free) {
+      // Look up the maximum display_pos here for safety.
+      $result->bind_param('ii', $property_id, $display_pos);
+      $result->execute();
+      $result->bind_result($p_id);
+      $result->store_result();
+      $result->fetch();
+      if ($result->num_rows > 0) {
+        $display_pos++;
+      } else {
+        $display_pos_free = true;
+      }
+    }
+    $result->close();
+
     $result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
     $result->bind_param('iiii', $paperID, $questionID, $screen_no, $display_pos);
     $result->execute();

@@ -588,7 +588,8 @@ $result->close();
       $neg_marking = true;
     }
 
-    if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
+    //if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
+		if ($old_p_id != $p_id or $old_display_pos != $display_pos) {
       // Check for status that's excluded from marking
       $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
 
@@ -663,6 +664,7 @@ $result->close();
         $excluded[$q_id] = NULL;
       }
     }
+		$old_p_id						= $p_id;
     $old_q_id           = $q_id;
     $old_display_pos    = $display_pos;
     $old_q_type         = $q_type;

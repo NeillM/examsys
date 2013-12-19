@@ -59,8 +59,6 @@ $(function () {
       $('.qline').css('background-color', '#fff');
       var order = $('#sortable tbody').sortable('serialize', { attribute: 'data-order' });
       var newpos = $(ui.item).parent().children('.qline:not(.breakline)').index(ui.item) + 1;
-//      $('#response').load('../ajax/paper/order-questions.php?paperID=' + paperID + '&' + order);
-
       $.get('../ajax/paper/order-questions.php?paperID=' + paperID + '&' + order, function(data) {
         if (data == 'ERROR') {
           showAJAXError();

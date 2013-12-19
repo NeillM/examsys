@@ -61,6 +61,7 @@ if (isset($_POST['submit'])) {
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 <title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
     input[type=checkbox] {margin-right:8px}
@@ -80,7 +81,7 @@ if (isset($_POST['submit'])) {
     }
     
     function resizeList() {
-      winH = $(window).height() - 105;
+      winH = $(window).height() - 120;
 
       $('#list').css('height', winH + 'px');
     }
@@ -90,7 +91,7 @@ if (isset($_POST['submit'])) {
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/team_members.png" width="32" height="32 alt="Members" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teams']; ?></strong></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/user_accounts_icon.png" width="48" height="48" alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teams']; ?></strong></td></tr>
   </table>
 
 <?php

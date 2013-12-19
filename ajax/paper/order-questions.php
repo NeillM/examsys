@@ -31,22 +31,16 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
   $new_order = process_new($_GET['link']);
   $old_order = array();
 
-  $result = $mysqli->prepare("SELECT p_id, question, screen, display_pos FROM papers WHERE paper=? ORDER BY display_pos;");
+  $result = $mysqli->prepare("SELECT p_id, question, screen, display_pos FROM papers WHERE paper = ? ORDER BY display_pos;");
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();
   $result->bind_result($p_id, $question, $screen, $display_pos);
 
   while ($result->fetch()) {
-      $old_order[$display_pos] = array('screen' => $screen, 'p_id' => $p_id, 'q_id' => $question);
+    $old_order[$display_pos] = array('screen' => $screen, 'p_id' => $p_id, 'q_id' => $question);
   }
   $result->close();
-
-//  echo '<pre>';
-//  print_r($new_order);
-//  echo '<br /><br />';
-//  print_r($old_order);
-//  echo '</pre>';
 
   $screen_inc = array();
   $screen_dec = array();
@@ -74,20 +68,6 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
     }
   }
 
-//  echo '<pre>Screen Dec:';
-//  print_r($screen_dec);
-//  echo '<br /><br />Screen Inc:';
-//  print_r($screen_inc);
-//  echo '<br /><br />Screen Update:';
-//  print_r($screen_update);
-//  echo '<br /><br />Pos Dec:';
-//  print_r($position_dec);
-//  echo '<br /><br />Pos Inc:';
-//  print_r($position_inc);
-//  echo '<br /><br />Pos Update:';
-//  print_r($position_update);
-//  echo '</pre>';
-
   $ok = true;
 
   if (($decs = count($screen_dec)) > 0) {
@@ -98,7 +78,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
       $dec_list .= $screen_dec[$i]['p_id'];
     }
 
-    $result = $mysqli->prepare("UPDATE papers SET screen=screen-1 WHERE p_id IN (" . $dec_list . ")");
+    $result = $mysqli->prepare("UPDATE papers SET screen = screen-1 WHERE p_id IN (" . $dec_list . ")");
     if ($result) {
       $result->execute();
       $result->close();
@@ -115,7 +95,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
       $inc_list .= $screen_inc[$i]['p_id'];
     }
 
-    $result = $mysqli->prepare("UPDATE papers SET screen=screen+1 WHERE p_id IN (" . $inc_list . ")");
+    $result = $mysqli->prepare("UPDATE papers SET screen = screen+1 WHERE p_id IN (" . $inc_list . ")");
     if ($result) {
       $result->execute();
       $result->close();
@@ -128,7 +108,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
     for ($i = 0; $i < $upds; $i++) {
       $new_screen = $screen_update[$i]['new_screen'];
       $upd_id = $screen_update[$i]['p_id'];
-      $result = $mysqli->prepare("UPDATE papers SET screen=? WHERE p_id=?");
+      $result = $mysqli->prepare("UPDATE papers SET screen = ? WHERE p_id = ?");
       if ($result) {
         $result->bind_param('ii', $new_screen, $upd_id);
         $result->execute();
@@ -147,7 +127,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
       $dec_list .= $position_dec[$i]['p_id'];
     }
 
-    $result = $mysqli->prepare("UPDATE papers SET display_pos=display_pos-1 WHERE p_id IN (" . $dec_list . ")");
+    $result = $mysqli->prepare("UPDATE papers SET display_pos = display_pos-1 WHERE p_id IN (" . $dec_list . ")");
     if ($result) {
       $result->execute();
       $result->close();
@@ -164,7 +144,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
       $inc_list .= $position_inc[$i]['p_id'];
     }
 
-    $result = $mysqli->prepare("UPDATE papers SET display_pos=display_pos+1 WHERE p_id IN (" . $inc_list . ")");
+    $result = $mysqli->prepare("UPDATE papers SET display_pos = display_pos+1 WHERE p_id IN (" . $inc_list . ")");
     if ($result) {
       $result->execute();
       $result->close();
@@ -177,7 +157,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
     for ($i = 0; $i < $upds; $i++) {
       $new_pos = $position_update[$i]['new_pos'];
       $upd_id = $position_update[$i]['p_id'];
-      $result = $mysqli->prepare("UPDATE papers SET display_pos=? WHERE p_id=?");
+      $result = $mysqli->prepare("UPDATE papers SET display_pos = ? WHERE p_id = ?");
       $result->bind_param('ii', $new_pos, $upd_id);
       $result->execute();
       $result->close();

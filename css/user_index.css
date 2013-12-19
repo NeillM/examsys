@@ -56,3 +56,8 @@ a.logout {
   padding-right:8px;
   line-height:100%;
 }
+.bullet {
+  width:16px;
+	height:16px;
+  padding-right:8px;
+}

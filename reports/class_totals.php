@@ -632,8 +632,12 @@ if ($language != 'en') {
         } else {
           $class = 'greyln';
           $temp_location = round($user_results[$i]['percent']);
-          $distribution[$temp_location]++;
-          $scatter_data .= $temp_location . "\n" . $user_results[$i]['duration'] . "\n";
+          if (isset($distribution[$temp_location])) {
+						$distribution[$temp_location]++;
+          } else {
+						$distribution[$temp_location] = 1;
+					}
+					$scatter_data .= $temp_location . "\n" . $user_results[$i]['duration'] . "\n";
         }
         if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
           $role_css = 'staff';

@@ -980,9 +980,9 @@ if ($css != '') {
                                       FROM
                                           papers, questions LEFT JOIN options ON questions.q_id = options.o_id
                                       WHERE
-                                        paper=? AND
-                                        q_id=? AND
-                                        papers.question=questions.q_id
+                                        paper = ? AND
+                                        q_id = ? AND
+                                        papers.question = questions.q_id
                                       ORDER BY
                                       display_pos,
                                       id_num");
@@ -1015,8 +1015,8 @@ if ($css != '') {
                                         FROM
                                             papers, questions LEFT JOIN options ON questions.q_id = options.o_id
                                         WHERE
-                                          paper=? AND
-                                          papers.question=questions.q_id
+                                          paper = ? AND
+                                          papers.question = questions.q_id
                                         ORDER BY
                                         display_pos,
                                         id_num");
