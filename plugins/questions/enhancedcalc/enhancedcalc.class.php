@@ -173,7 +173,7 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     foreach($this->useranswer['vars'] as $key => $variablessplit) {
-      if ($variablessplit == 'ERROR') {
+      if ($variablessplit === 'ERROR') {
         $this->error = "variable $key is ERROR";
         $this->qmark = 0;
         return Q_MARKING_UNANSWERABLE;

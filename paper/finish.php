@@ -183,8 +183,6 @@ if (isset($_GET['metadataID'])) {
   $metadataid = $log_metadata->get_metadata_id();
 }
 
-var_dump($is_exam_review_mode, $is_question_preview_mode, $is_formative_review);
-
 if (!$is_exam_review_mode and !$is_question_preview_mode and !$is_formative_review) {
   //only update log metadata if we are ending an exam
   $log_metadata->set_completed_to_now();

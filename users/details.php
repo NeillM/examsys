@@ -122,13 +122,16 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $tmp_first_names = $_POST['first_names'];
   $tmp_surname = $_POST['surname'];
   $tmp_email = $_POST['email'];
+	$tmp_gender = $_POST['gender'];
+	
+	if ($tmp_gender == '') $tmp_gender = NULL;
 
   if (isset($_POST['password']) and $_POST['password'] != '') {
     $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, password = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
-    $result->bind_param('sssssisssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $_POST['password'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['old_userID']);
+    $result->bind_param('sssssisssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $_POST['password'], $tmp_email, $tmp_first_names, $tmp_gender, $_POST['old_userID']);
   } else {
     $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
-    $result->bind_param('sssssissssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $tmp_email, $tmp_first_names, $_POST['gender'], $_POST['old_userID']);
+    $result->bind_param('sssssissssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $tmp_email, $tmp_first_names, $tmp_gender, $_POST['old_userID']);
   }
   $result->execute();
   $result->close();
@@ -158,7 +161,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $result->execute();
     $result->close();
   }
-} elseif (isset($_POST['updateadmin'])) {
+} elseif (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   UserUtils::clear_admin_access($_GET['userID'], $mysqli);
 
   for ($i=0; $i<$_POST['admin_school_no']; $i++) {
@@ -892,7 +895,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   }
   $results->close();
   echo "</table>\n</td></tr>\n";
-  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+  if ($userObject->has_role('SysAdmin')) {
     echo '<tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="' . $string['save'] . '" style="width:100px" /><input type="hidden" name="admin_school_no" value="' . $admin_school_no . '" /></td></tr>';
   }
   ?>

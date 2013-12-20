@@ -34,6 +34,7 @@ require_once '../classes/lang.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/dateutils.class.php';
+require_once '../classes/usernotices.class.php';
 
 if (strcmp($configObject->get('cfg_install_type'), 'demo') != 0) { // If the installation type is not set to 'demo' then exit.
   header("HTTP/1.0 404 Not Found");
@@ -42,9 +43,8 @@ if (strcmp($configObject->get('cfg_install_type'), 'demo') != 0) { // If the ins
 
 $userroles = 'SysAdmin';
 //$cfg_db_admin_user, $cfg_db_admin_passwd
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
-
-db_change_user($mysqli);
+$notice = UserNotices::get_instance();
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 function my_ucwords($s) {
   $s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", 'fixcase_callback', $s);
@@ -72,6 +72,7 @@ function fixcase_callback($word) {
 
 function adduser($tmp_roles, $new_username) {
   global $mysqli, $cfg_encrypt_salt;
+	
   $initials = '';
   $first_names_array = explode(' ', $_POST['new_first_names']);
   foreach ($first_names_array as $individual_name) {
@@ -81,21 +82,20 @@ function adduser($tmp_roles, $new_username) {
 
   $new_password = encpw($cfg_encrypt_salt, $_POST['new_username'], trim($_POST['new_password']));
   $new_surname = my_ucwords(trim($_POST['new_surname']));
+	$new_title = $_POST['new_users_title'];
 
   $new_email = trim($_POST['new_email']);
   $new_first_names = my_ucwords(trim($_POST['new_first_names']));
+	$new_year = $_POST['new_year'];
+	$new_gender = $_POST['new_gender'];
 
-  $result = $mysqli->prepare("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NULL, 0, ?)");
-  $result->bind_param('ssssssssssi', $new_password, $_POST['new_grade'], $new_surname, $initials, $_POST['new_users_title'], $new_username, $new_email, $tmp_roles, $new_first_names, $_POST['new_gender'], $_POST['new_year']);
-  $result->execute();
-  $result->close();
-  $userid = $mysqli->insert_id;
+  $userid = UserUtils::create_user($new_username, $new_password, $new_title, $new_first_names, $new_surname, $new_email, $course, $new_gender, $new_year, $tmp_roles, '', $mysqli, $initials);
 
   return $userid;
 }
 
 $unique_username = true;
-$unique_module = true;
+		$unique_module = true;
 
 if (isset($_POST['submit'])) {
   $new_moduleid = '';
@@ -113,7 +113,8 @@ if (isset($_POST['submit'])) {
   $new_moduleid = $new_moduleid . $maxmodid;
 
   // replace with module utils function
-  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid=?");
+	/*
+  $result = $mysqli->prepare("SELECT moduleid FROM modules WHERE moduleid = ?");
   $result->bind_param('s', $_POST['new_moduleid']);
   $result->execute();
   $result->store_result();
@@ -122,9 +123,23 @@ if (isset($_POST['submit'])) {
   if ($result->num_rows > 0) $unique_module = false;
   $result->free_result();
   $result->close();
+	*/
+	
+	if (module_utils::module_exists($new_moduleid, $mysqli)) {
+		$unique_module = false;
+	} else {
+		$unique_module = true;
+	}
 
   // Check for unique username
-  $result = $mysqli->prepare("SELECT id, username FROM users WHERE username=? or username=?");
+	if (UserUtils::username_exists($_POST['new_username'], $mysqli) or UserUtils::username_exists($_POST['new_username'] . '-stu', $mysqli)) {
+		$unique_username = false;
+	} else {
+		$unique_username = true;
+	}
+	
+  /*
+	$result = $mysqli->prepare("SELECT id, username FROM users WHERE username = ? or username = ?");
   $newname = $_POST['new_username'] . '-stu';
   $result->bind_param('ss', $_POST['new_username'], $newname);
   $result->execute();
@@ -134,6 +149,7 @@ if (isset($_POST['submit'])) {
   if ($result->num_rows > 0) $unique_username = false;
   $result->free_result();
   $result->close();
+	*/
 
 
   if ($unique_module == true) {
@@ -167,11 +183,9 @@ if (isset($_POST['submit'])) {
 
   $session = date_utils::get_current_academic_year();
 
-  UserUtils::add_student_to_module($userid, $new_moduleid, 1, $session, $mysqli);
+  UserUtils::add_student_to_module($useridstf, $new_moduleid, 1, $session, $mysqli);
 
-  $result = $mysqli->prepare("INSERT INTO teams VALUES (NULL, ?, ?, NULL, 'System')");
-  $result->bind_param('si', $new_moduleid, $useridstf);
-  $result->execute();
+	module_utils::add_staff_to_module_by_modulecode($useridstf, $new_moduleid, $mysqli);
 
   $nm = 'DEMO';
   $result->bind_param('si', $nm, $useridstf);
@@ -183,7 +197,7 @@ if (isset($_POST['submit'])) {
 
   // Send out email welcome.
   if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
-    $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
+    $result = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
     $result->bind_param('s', $_SERVER['PHP_AUTH_USER']);
     $result->execute();
     $result->bind_result($tmp_email);
@@ -245,14 +259,13 @@ MESSAGE;
   <?php
 } else {
   ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
->
+<!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rogō: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
     <link rel="stylesheet" type="text/css" href="../css/submenu.css"/>
@@ -328,8 +341,7 @@ MESSAGE;
                     <td>
                         <table border="0" cellspacing="6" cellpadding="0" width="100%" style="background-color:white">
                             <tr>
-                                <td width="32"><img src="../artwork/user_female_32.png" width="32" height="32"
-                                                    alt="User Icon"/></td>
+                                <td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td>
                                 <td class="title"><?php echo $string['register']; ?></td>
                             </tr>
                         </table>
@@ -359,19 +371,16 @@ MESSAGE;
                             </tr>
                             <tr>
                                 <td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td>
-                                <td><input type="text" id="new_first_names" name="new_first_names" size="40"
-                                           value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>"/>
+                                <td><input type="text" id="new_first_names" name="new_first_names" size="40" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" />
                                 </td>
                             </tr>
                             <tr>
                                 <td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td>
-                                <td><input type="text" id="new_surname" name="new_surname" size="40"
-                                           value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>"/></td>
+                                <td><input type="text" id="new_surname" name="new_surname" size="40" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" /></td>
                             </tr>
                             <tr>
                                 <td align="right"><span class="field"><?php echo $string['email']; ?></span></td>
-                                <td><input type="text" id="new_email" name="new_email" size="40"
-                                           value="<?php if (isset($_POST['email'])) {
+                                <td><input type="text" id="new_email" name="new_email" size="40" value="<?php if (isset($_POST['email'])) {
                                              echo $_POST['email'];
                                            } else {
                                              echo '';
@@ -379,8 +388,7 @@ MESSAGE;
                             </tr>
                             <tr>
                                 <td align="right"><span class="field"><?php echo $string['username']; ?></span></td>
-                                <td><input type="text" id="new_username" name="new_username"
-                                           size="12" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?>/>
+                                <td><input type="text" id="new_username" name="new_username" size="12" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?>/>
                                     &nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span>
                                     <input type="text" id="new_password" name="new_password" value="<?php
                                       if (isset($_POST['password'])) {

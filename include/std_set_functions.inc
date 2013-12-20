@@ -137,7 +137,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       break;
     case 'mcq':
       $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-      $scale_html = reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
+      $scale_html = reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
       if ($options[0]['display_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other') {
         if ($options[0]['display_method'] == 'vertical_other') {
           echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
@@ -171,7 +171,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $search = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J');
       $replace = array('<span class="fback">$A</span>', '<span class="fback">$B</span>', '<span class="fback">$C</span>', '<span class="fback">$D</span>', '<span class="fback">$E</span>', '<span class="fback">$F</span>', '<span class="fback">$G</span>', '<span class="fback">$H</span>', '<span class="fback">$I</span>', '<span class="fback">$J</span>');
       echo "<div";
-      if (isset($exclude[$q_id])) echo ' style="color:red; text-decoration:line-through"';
+      if (substr($tmp_exclude,0,1)) echo ' style="color:red; text-decoration:line-through"';
       echo ">" . str_ireplace($search, $replace, $current_leadin) . "</div>\n<br />";
 
       if ($settings['show_units']) {
@@ -187,7 +187,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       }
       echo "</div>\n<br />\n";
       echo "<div>";
-      echo reviewScale($question_no, '', $settings['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
+      echo reviewScale($question_no, '', $settings['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
       echo "</div>\n";
       $marks = $settings['marks_correct'];
 
@@ -356,7 +356,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       if ($options[0]['score_method'] == 'Mark per Question') {
         //$stdID = 1;
         $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-        echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, (isset($exclude[$q_id])), $review_val, $stdID, $std_excluded, $is_group);
+        echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
         $marks += $options[0]['marks_correct'];
       }
       echo '<input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" /><input type="hidden" name="multimatching' . $question_no . '_correct_no" value="' . $marks . '" />';
