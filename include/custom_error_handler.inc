@@ -102,17 +102,34 @@ function exceptionHandler($exception) {
 
 
 function error_handling($context = null) {
+  $configObject = Config::get_instance();
   $context1 = array();
-  if (is_null($context)) {
+  if (is_null($context) or !isset($context)) {
     // if no array set get currently define variables in this object
-    $context = get_defined_vars($this);
-  }
+    return 'NOTHING PARSED TO DECODE';
+      }
   foreach ($context as $key => $value) {
     if ($key == 'this') {
     } elseif (is_object($value) and method_exists($value, 'error_handling')) {
       $context1[$key] = $value->error_handling();
+    } elseif(is_object($value) and get_class($value) === 'mysqli' ) {
+      $context1[$key]='MYSQLi Object';
+    } elseif(is_object($value) and get_class($value) === 'mysqli_stmt') {
+      $context1[$key]='MYSQLi statement Object';
     } elseif (is_object($value)) {
       $context1[$key] = clone $value;
+    } elseif(is_array($value) and $key === 'string' and (!($configObject->get('debug_lang_string') === true)) ) {
+      $context1[$key]= 'Language Abstraction String - hidden by config option';
+    } elseif(is_array($value) and ( $key === '_POST' or $key === '_REQUEST' )) {
+      $tmp=array();
+      foreach ($value as $key1 => $value1) {
+        if ($key != 'ROGO_PW') {
+          $tmp[$key1]=$value1;
+        } else {
+          $tmp[$key1] = "<HIDDEN>";
+        }
+      }
+      $context1[$key]=$tmp;
     } elseif (is_array($value)) {
       //inner loop
       $context1[$key] = error_handling($value);
@@ -221,7 +238,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     if (isset($context) and !empty($context)) {
-      if(is_array($context)) {
+/*      if(is_array($context)) {
         $context1=array();
         foreach ($context as $key => $value) {
           if($key == 'this') {
@@ -237,9 +254,11 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
           }
         }
         $context = $context1;
-      }
+      }*/
 
+$context=error_handling($context);
 
+      var_dump($context);
 
       try {
         $variables = base64_encode(serialize($context));
