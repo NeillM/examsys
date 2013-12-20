@@ -258,7 +258,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
 
 $context=error_handling($context);
 
-      var_dump($context);
+  //    var_dump($context);
 
       try {
         $variables = base64_encode(serialize($context));
