@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
   require '../include/load_config.php';
@@ -62,7 +62,7 @@ Josef Martiňák<br />
 <strong>HTML5</strong><br />
 Dr Nikodem Miranowicz<br />
 <br />
-<strong>Translations</strong><br />
+<strong><?php echo $string['languagepacks'] ?></strong><br />
 Zuzana<br />
 <br />
 <strong>QTI</strong><br />

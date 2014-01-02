@@ -18,9 +18,10 @@
  *
  * @author Simon Wilkinson
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+ 
 require_once '../include/invigilator_auth.inc';
 require_once '../classes/usernotices.class.php';
 require_once '../include/errors.inc';

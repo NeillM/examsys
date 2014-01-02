@@ -21,9 +21,10 @@
  *
  * @author Simon Atack
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+ 
 require_once 'outline_authentication.class.php';
 
 class internaldb_auth extends outline_authentication {

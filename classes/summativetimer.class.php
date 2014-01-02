@@ -18,7 +18,7 @@
 * Class containing the timer logic for summative exams
 * @author Ben Parish
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
