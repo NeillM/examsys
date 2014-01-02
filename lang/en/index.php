@@ -36,7 +36,6 @@ $string['sysadmin'] = 'Sysadmin';
 $string['admin'] = 'Admin';
 $string['graduate'] = 'Graduate';
 $string['inactive'] = 'Inactive';
-$string['external examiner '] = 'External Examiner ';
 $string['multipleExams'] = 'Multiple Exams Found';
 $string['selectOne'] = 'Please select the one you are required to take:';
 $string['passwordRequired'] = 'password required';
