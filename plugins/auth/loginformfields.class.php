@@ -17,7 +17,7 @@
 
 /**
  *
- * Handles Guest account access in rogo
+ * Handles extra fields at login
  *
  * @author Simon Atack
  * @version 1.0

@@ -17,7 +17,7 @@
 
 /**
  *
- * The already logged in authentication class
+ * The apache module authentication class
  *
  * @author Simon Atack
  * @version 1.0

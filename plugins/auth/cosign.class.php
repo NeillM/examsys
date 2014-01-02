@@ -17,7 +17,7 @@
 
 /**
  *
- * The already logged in authentication class
+ * The cosign authentication class
  *
  * @author Simon Atack
  * @version 1.0

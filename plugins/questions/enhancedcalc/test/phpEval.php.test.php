@@ -16,7 +16,7 @@
 
 /**
 * 
-* Rogō caculation question unit tests for Rserve.
+* Rogō caculation question unit tests for phpeval.
 * 
 * @author Anthony Brown
 * @version 1.0
@@ -25,17 +25,16 @@
 */
 
 global $cfg_web_root;
-require $cfg_web_root . 'plugins/questions/enhancedcalc/rserve.php';
+require $cfg_web_root . 'plugins/questions/enhancedcalc/phpEval.php';
 
-class RserveTests extends \Enhance\TestFixture
+class phpEvalTests extends \Enhance\TestFixture
 {
 
   private $target;    
 
   // SetUp
   public function setUp() {
-    $enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>6311,'timeout'=>5);
-    $this->target = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalcRrserve', array($enhancedcalculation));
+    $this->target = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalc_phpEval', array(array()));
   }
 
   // TearDown

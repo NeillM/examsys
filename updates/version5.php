@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
+ * update script updates any V5 Rogo to latest V5 Rogo
  * @author Simon Wilkinson
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
@@ -675,7 +675,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 04/07/2013 (cczsa1) - enhanced question type config
-  $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);\n");
+  $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);\n\n//but use phpEval as default for enhanced calculation questions\n\$enhancedcalc_type = 'phpEval'; //set the enhanced calculation to use php for maths \n\$enhancedcalculation = array(); //no config options for phpEval enhancedcalc plugin");
 
   $target_line = '$cfg_password_expire';
   $updater_utils->add_line($string, '$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);

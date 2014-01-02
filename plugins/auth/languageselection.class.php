@@ -16,7 +16,7 @@
 
 
 /**
- *
+ * handles language selection at login
  * Adds a language selection box to the login form
  *
  * @author Anthony Brown, Josef Martinak

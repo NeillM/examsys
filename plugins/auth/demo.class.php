@@ -17,7 +17,7 @@
 
 /**
  *
- * The internaldb authentication function.
+ * Handles demo functionality at login.
  *
  * @author Simon Atack
  * @version 1.0
