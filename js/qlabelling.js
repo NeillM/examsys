@@ -587,7 +587,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			this.context.fillStyle='#f7f7f7';
 			this.context.fillRect(Math.round(tmp_dim[0])+tmp_halfpoint,Math.round(tmp_dim[1])+tmp_halfpoint,Math.round(tmp_dim[2]),Math.round(tmp_dim[3]));
 			this.context.strokeRect(Math.round(tmp_dim[0])+tmp_halfpoint,Math.round(tmp_dim[1])+tmp_halfpoint,Math.round(tmp_dim[2]),Math.round(tmp_dim[3]));
-			
+
 			//dropdown combo triangle sign
 			this.context.lineWidth = 1
 			this.context.strokeStyle='#000';
@@ -599,10 +599,10 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			//drop down list
 			if (i == this.active_box_id && this.qmode == 'answer') {
 				var tmp_height = this.labelHeightEffect*this.menuBox.length;
-				var tmp_trans = this.lineThickness;
-				if ((temp_y+tmp_height)>this.canvas.height) tmp_trans = -tmp_height-this.labelHeightEffect-2;
+				var tmp_trans = this.lineThickness-1;
+				if ((temp_y+tmp_height)>this.canvas.height) tmp_trans = -tmp_height-this.labelHeightEffect;
 				this.context.fillStyle='#fff';
-				this.context.fillRect(temp_x+1.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect-2,tmp_height);
+				this.context.fillRect(temp_x+0.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect,tmp_height);
 				
 				//finding the one already selected
 				this.menu_line = 1;
@@ -617,37 +617,11 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				
 				this.context.fillStyle = this.currentColours[0];
 				if (this.context.fillStyle == '#ffffff') this.context.fillStyle='#ddd'
-				this.context.fillRect(temp_x+4.5,temp_y+tmp_trans+this.labelHeightEffect+0.5+(this.menu_line-1)*this.labelHeightEffect,this.labelWidthEffect-8,this.labelHeightEffect);
+				this.context.fillRect(temp_x+1,temp_y+tmp_trans+this.labelHeightEffect+1+(this.menu_line-1)*this.labelHeightEffect,this.labelWidthEffect-1,this.labelHeightEffect-1);
 
 				var tmp_colour = this.currentColours[1];
 				this.context.strokeStyle = tmp_colour;
-				this.context.strokeRect(temp_x+1.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect-2,tmp_height);
-
-				//bottom + right
-				this.context.lineWidth = 1;
-				this.context.beginPath();
-				var degra = 0.5;
-				tmp_colour = '#'+
-					(256-Math.round(degra*(256-parseInt(tmp_colour.substr(1,2),16)))).toString(16)+
-					(256-Math.round(degra*(256-parseInt(tmp_colour.substr(3,2),16)))).toString(16)+
-					(256-Math.round(degra*(256-parseInt(tmp_colour.substr(5,2),16)))).toString(16);
-				this.context.strokeStyle = tmp_colour;
-				this.context.moveTo(temp_x+2.5+this.labelWidthEffect-4-this.lineThickness/2,temp_y+tmp_trans+this.labelHeightEffect+1.5+this.lineThickness/2);
-				this.context.lineTo(temp_x+2.5+this.labelWidthEffect-4-this.lineThickness/2,temp_y+tmp_trans+this.labelHeightEffect+1.5+tmp_height-2-this.lineThickness/2);
-				this.context.lineTo(temp_x+2.5+this.lineThickness/2,temp_y+tmp_trans+this.labelHeightEffect+1.5+tmp_height-2-this.lineThickness/2);
-			  this.context.stroke();
-				
-				//top and left
-			  this.context.beginPath();
-				tmp_colour = '#'+
-					(256-Math.round(degra*(256-parseInt(tmp_colour.substr(1,2),16)))).toString(16)+
-					(256-Math.round(degra*(256-parseInt(tmp_colour.substr(3,2),16)))).toString(16)+
-					(256-Math.round(degra*(256-parseInt(tmp_colour.substr(5,2),16)))).toString(16);
-				this.context.strokeStyle=tmp_colour;
-				this.context.moveTo(temp_x+2.5+this.labelWidthEffect-4-this.lineThickness/2,temp_y+tmp_trans+this.labelHeightEffect+1.5+this.lineThickness/2);
-				this.context.lineTo(temp_x+2.5+this.lineThickness/2,temp_y+tmp_trans+this.labelHeightEffect+1.5+this.lineThickness/2);
-				this.context.lineTo(temp_x+2.5+this.lineThickness/2,temp_y+tmp_trans+this.labelHeightEffect+1.5+tmp_height-2-this.lineThickness/2);
-			  this.context.stroke();
+				this.context.strokeRect(temp_x+0.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect,tmp_height);
 
 				this.context.textAlign="left"; //menu
 				this.context.fillStyle=this.currentColours[2];
@@ -657,8 +631,8 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				}
 			}
 		this.context.lineWidth = this.lineThickness;
-		this.context.strokeStyle=this.currentColours[1];
-		this.context.fillStyle=this.currentColours[0];
+		this.context.strokeStyle = this.currentColours[1];
+		this.context.fillStyle = this.currentColours[0];
 		}
   }
 	
@@ -1189,10 +1163,12 @@ function ql_redraw_canvas() {
 		if (this.qType == "menu" && (this.qmode == 'answer' || this.qmode == 'script')) {		
 			//menus
 			for (i=this.answerBox.length-1;i>=0;i--) {
-				if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220) {
+				if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220&& i != this.active_box_id) {
 					this.ql_draw_box(i,99,this.pholderBox[i][5],this.pholderBox[i][6]);
 				}
 			}
+			//draw the active menu list on top of others
+			if (this.active_box_id!=-1) this.ql_draw_box(this.active_box_id,99,this.pholderBox[this.active_box_id][5],this.pholderBox[this.active_box_id][6])
 		}
 		
 		//images and labels
@@ -1832,7 +1808,11 @@ function ql_mouseDragUp(){
 			this.edit_box_id = -1;
 			this.edit_box_combo = -1;
 		}
-		this.active_box_id = this.drag_box_id;
+		if (this.active_box_id!=this.drag_box_id) {
+			this.active_box_id = this.drag_box_id;
+		}else{
+			this.active_box_id = -1;
+		}
 		this.active_box_combo = this.drag_box_combo;
 	}
 	this.dragging = false;
@@ -1904,7 +1884,7 @@ function ql_mouseDragUp(){
 		}
 		if (this.qType == "menu") dest_box = this.drag_box_id;
 	}	
-	
+
 	if (this.pholder_access_id>-1) dest_box = this.pholder_access_id;
 	
 	//verify if the label being dragged is not the same as already there
