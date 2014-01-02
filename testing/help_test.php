@@ -54,7 +54,7 @@ require '../include/staff_auth.inc';
     $help_toc[$id]['links'] = '';
   }
   $result->close();
-  //$mysqli->close();
+  $mysqli->close();
 	
 	echo '<a href="help_test.php?target=staff">staff</a> ';
 	echo '<a href="help_test.php?target=student">student</a>';
@@ -95,7 +95,7 @@ require '../include/staff_auth.inc';
 	echo $result;
 	if ($result=='') echo ' - not detected.';
 	echo '<hr>';
-	
+	echo 'x';
 	//incorporated images
 	foreach ($help_toc as $help_item) {
 		//search for <img scr=
@@ -113,20 +113,22 @@ require '../include/staff_auth.inc';
 					array_push($help_img[strtolower($code[1])],Array($help_item['id'],$w,$h));
 				}
 			}
-		}
-		//search for background-image: url
-		$test = explode(' url(',$help_item['body']);
-		if (count($test)>1) {
-			for ($i=1;$i<count($test);$i++) {
-				$code = preg_split("/\'|\"/",$test[$i]);
-				$w=-2;$h=-2;
-				if (!isset($help_img[$code[1]])) $help_img[$code[1]] = Array();
-				if (count($code)>=2) {
-					array_push($help_img[$code[1]],Array($help_item['id'],$w,$h));
+		}else{
+			//search for background-image: url
+			$test = explode(' url(',$help_item['body']);
+			if (count($test)>1) {
+				for ($i=1;$i<count($test);$i++) {
+					$code = preg_split("/\'|\"/",$test[$i]);
+					$w=-2;$h=-2;
+					if (!isset($help_img[$code[1]])) $help_img[$code[1]] = Array();
+					if (count($code)>=2) {
+						array_push($help_img[$code[1]],Array($help_item['id'],$w,$h));
+					}
 				}
 			}
 		}
 	}
+	echo 'x';
 	$result1 = '';
 	$result2 = '';
 	$result3 = '';
@@ -134,8 +136,12 @@ require '../include/staff_auth.inc';
 	$result_array_3 = Array();
 	$i=0;
 	foreach ($help_img as $img_item => $img_ids) {
-		$img_size = @getimagesize("../help/".$target."/".$img_item);
-		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
+		$path = "../help/".$target."/";
+		if (substr($img_item,0,4)=='http') $path = '';
+		if (substr($img_item,0,3)=='../') {$path = '';$img_item = substr($img_item,3);}
+		var_dump($path.$img_item);
+		if (!($img_size = (getimagesize($path.$img_item)))) $img_size = false;
+/*		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
 		foreach ($img_ids as $item_id => $item_val) {
 			$i++;
 			if (!$img_size && $item_val!='') $result1 .= '"<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)';
@@ -158,6 +164,7 @@ require '../include/staff_auth.inc';
 			}
 		}
 		if (!$img_size) $result1 .= '<br />';
+*/
 	}
 	echo '<h3>Missing images:</h3>';
 	echo $result1;
@@ -182,7 +189,7 @@ require '../include/staff_auth.inc';
 		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
 		$result->close();
 	}
-		$mysqli->close();
+	$mysqli->close();
 	
 	echo '<hr>';
 	echo 'Number of used images:'.(count($help_img)).'<br />';
