@@ -15,9 +15,9 @@
 
 /**
  *
- * The caculation question
+ * The enhanced calculation question
  *
- * @author Anthony Brown
+ * @author Anthony Brown, Simon Atack
  * @version 1.0
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
@@ -166,7 +166,7 @@ class EnhancedCalc extends Question implements questionInterface {
     if (!is_null($enhancedcalcType)) {
       require_once $enhancedcalcType . '.php';
       $name = 'enhancedcalc_' . $enhancedcalcType;
-      $enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
+      $enhancedcalcObj = new $name($this->configObj->getbyref('enhancedcalculation'));
     } else {
       require_once 'rserve.php';
       $enhancedcalcObj = new EnhancedCalcRrserve($this->configObj->getbyref('enhancedcalculation'));

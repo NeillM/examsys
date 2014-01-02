@@ -18,7 +18,7 @@
 
 /**
  *
- * R based maths functions  for calculation  questions
+ * php based maths functions  for calculation  questions
  *
  * @author Simon Atack, Anthony Brown
  * @version 1.0
@@ -61,14 +61,23 @@ class EnhancedCalc_phpEval {
 
   // from php manual http://php.net/round
   function RoundSigDigs($number, $sigdigs) {
+    $i=0;
+    if($number === 0) {
+      return $number;
+    }
     $multiplier = 1;
     while ($number < 0.1) {
       $number *= 10;
       $multiplier /= 10;
+   //   print "Anumb::" . $number ."  multi:" .$multiplier . '<br>';
+      if($i>30) return($number); $i++;
     }
+    $i=0;
     while ($number >= 1) {
       $number /= 10;
       $multiplier *= 10;
+    // print "Bnumb::" . $number ."\<br>multi:" .$multiplier;
+      if($i>30) return($number); $i++;
     }
     return round($number, $sigdigs) * $multiplier;
   }
@@ -83,7 +92,7 @@ class EnhancedCalc_phpEval {
     
     $correctanswer = eval( "return (" . $formula_vars_subed . ");");
    
-    return $correctanswer;
+    return (string)$correctanswer;
   }
   
   function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision) {

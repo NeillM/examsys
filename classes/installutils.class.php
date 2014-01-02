@@ -1417,7 +1417,11 @@ require \$root . '/include/path_functions.inc.php';
 );
 \$cfg_password_expire = 30;    // Set in days
 
-\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5);
+\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5); //default enhancedcalc Rserve config options
+
+//but use phpEval as default for enhanced calculation questions
+\$enhancedcalc_type = 'phpEval'; //set the enhanced calculation to use php for maths
+\$enhancedcalculation = array(); //no config options for phpEval plugin
 
 //Lookup settings
 \$lookup = array(
@@ -1487,6 +1491,10 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   \$dbclass = 'mysqli';
 
   //\$display_auth_debug = true; // set this to deisplay debug on failed authentication
+
+  //used for debugging
+  \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
+
   ?>
 CONFIG;
 
