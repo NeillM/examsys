@@ -5,7 +5,7 @@
  *
  * @author Ben Parish
  * @version 1.0
- * @copyright Copyright (c) 2012 string University of Nottingham
+ * @copyright Copyright (c) 2014 string University of Nottingham
  * @package
  */
 

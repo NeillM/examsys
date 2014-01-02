@@ -19,9 +19,9 @@
  * handles language selection at login
  * Adds a language selection box to the login form
  *
- * @author Anthony Brown and Josef Martinak
+ * @author Anthony Brown, Josef Martinak
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  * 
  *  To enable add the following to the Authentication settings ($authentication) in config.inc.php

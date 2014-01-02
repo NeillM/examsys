@@ -158,10 +158,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 
 		this.imagesLoaded 	= 0;
 		var blank_count = 0;
+		var max_mli_index = 0;
     if (typeof(this.existingLabelInfo)!='undefined') {
 			for (i=0; i<this.existingLabelInfo.length; i++) {
 				var myLabelInfo = this.existingLabelInfo[i].split("$"); //divides each bit of info about label
-				var mli_index = (myLabelInfo[0]!=''?Number(myLabelInfo[0]):i); 	//index
+				var mli_index = (myLabelInfo[0]!=''?Number(myLabelInfo[0]):(max_mli_index+1)); 	//index
+				if (max_mli_index<mli_index) max_mli_index = mli_index;
 				var yes_to_add = true;
 				if (typeof(myLabelInfo[4]) == 'undefined') yes_to_add = false;
 				if (this.qmode == 'analysis' && myLabelInfo[4] == '') yes_to_add = false;

@@ -36,7 +36,6 @@ $string['sysadmin'] = 'Administrator systemu';
 $string['admin'] = 'Administrator';  //cognate
 $string['graduate'] = 'Absolwent';
 $string['inactive'] = 'Nieaktywny';
-$string['external examiner '] = 'Egzaminator zewnętrzny ';
 $string['multipleExams'] = 'Znaleziono wiele egzaminów';
 $string['selectOne'] = 'Wybierz proszę ten, do który masz przystąpić:';
 $string['passwordRequired'] = 'wymagane hasło';

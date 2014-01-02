@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -60,7 +60,7 @@ SQL;
   $result->bind_param('isss', $paperID, $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($user_ID, $username, $title, $surname, $initials, $grade, $gender, $started, $q_id, $rating);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $log_array[$user_ID]['student_id'] = $user_ID;
     $log_array[$user_ID]['username'] = $username;
     $log_array[$user_ID][$q_id] = $rating;
@@ -79,7 +79,7 @@ SQL;
   $result->bind_param('iss', $paperID, $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($user_ID, $overall_rating, $numeric_score, $feedback, $year, $title, $surname, $initials);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $log_array[$user_ID]['year'] = $year;
     $log_array[$user_ID]['examiner'] = $title . ' ' .  $initials . ' ' . $surname;
     $log_array[$user_ID]['feedback'] = $feedback;

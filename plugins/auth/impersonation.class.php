@@ -17,14 +17,13 @@
 
 /**
  *
- * Handles impersonation functionality at login.
+ * Handles 'impersonation' whereby a SysAdmin user can log in as someone else.
  *
  * @author Simon Atack
  * @version 1.0
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-
 require_once 'outline_authentication.class.php';
 
 class impersonation_auth extends outline_authentication {

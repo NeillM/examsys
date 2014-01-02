@@ -22,7 +22,7 @@ require_once __DIR__ . '/../classes/rogostaticsingleton.class.php';
  *
  * @author Simon Atack
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  *
  * Designed to hold the config options in a class for easier access.
