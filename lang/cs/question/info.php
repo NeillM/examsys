@@ -16,7 +16,7 @@
 
 $string['questioninformation'] = 'Informace o úloze';
 $string['author'] = 'Autor';
-$string['status'] = 'Status';
+$string['status'] = 'Status'; //cognate
 $string['created'] = 'Vytvořena';
 $string['modified'] = 'Upravena';
 $string['locked'] = 'Uzamčena';

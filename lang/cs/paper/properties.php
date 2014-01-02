@@ -40,7 +40,7 @@ $string['generaltab'] = 'Celkem';
 $string['generalheading'] = 'Název dokumentu, známkování a možnosti zobrazení';
 $string['paperdetails'] = 'Detaily dokumentu';
 $string['onlyonexamday'] = '(pouze v den zkoušky)';
-$string['url'] = 'URL';
+$string['url'] = 'URL'; //cognate
 $string['name'] = 'Název';
 $string['type'] = 'Typ';
 $string['folder'] = 'Složka';
@@ -156,7 +156,7 @@ $string['themecolours'] = 'Barevné motivy';
 $string['standardcolours'] = 'Standardní barvy';
 $string['more'] = 'Více...';
 $string['cancel'] = 'Zrušit';
-$string['OK'] = 'OK';
+$string['OK'] = 'OK'; //cognate
 
 $string['markingguidance'] = 'Pokyny pro zkoušejícího';
 $string['cohortperformancefeedback'] = 'Komentář k výkonu skupiny';

@@ -22,5 +22,5 @@ $string['themecolours'] = 'Barevné motivy';
 $string['standardcolours'] = 'Standardní barvy';
 $string['more'] = 'Více...';
 $string['cancel'] = 'Zrušit';
-$string['OK'] = 'OK';
+$string['OK'] = 'OK'; //cognate
 ?>

@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['copyontopaper'] = 'Kopírovat do dokumentu';
-$string['ok'] = 'OK';
+$string['ok'] = 'OK'; //cognate
 $string['cancel'] = 'Zrušit';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';

@@ -23,7 +23,7 @@ $string['objectivesbased'] = 'Komentáře dle cílů<br />v hodnocení na';
 $string['questionsbased'] = 'Komentáře dle úloh<br />v hodnocení na';
 $string['screen'] = 'Obrazovka';
 $string['screens'] = 'Obrazovky';
-$string['eassessmentmanagementsystem'] = 'Nastavení e-hodnocení';;
+$string['eassessmentmanagementsystem'] = 'Systém Elektronického Testování';;
 $string['passwordRequired'] = 'Vyžadováno heslo';
 $string['performsummary'] = 'Přehled výsledků';
 ?>

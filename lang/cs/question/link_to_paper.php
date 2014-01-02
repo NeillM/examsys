@@ -16,7 +16,7 @@
 
 $string['linktopaper'] = 'Odkaz na dokument';
 $string['addtopaper'] = 'Přidat do dokumentu';
-$string['ok'] = 'OK';
+$string['ok'] = 'OK'; //cognate
 $string['cancel'] = 'Zrušit';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';

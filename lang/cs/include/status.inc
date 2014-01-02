@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['status'] = 'Status';
+$string['status'] = 'Status'; //cognate
 $string['anystatus'] = '(libovolný status)';
 $string['anynonretiredstatus'] = '(libovolný platný status)';
 $string['normal'] = 'Normální';

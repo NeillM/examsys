@@ -20,5 +20,5 @@ $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
 $string['screen'] = 'Obrazovka';
-$string['status'] = 'Status'
+$string['status'] = 'Status' //cognate
 ?>

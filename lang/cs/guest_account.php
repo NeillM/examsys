@@ -22,7 +22,7 @@ $string['username'] = 'Uživatelské jméno';
 $string['password'] = 'Heslo';
 $string['login'] = 'Uživatelské jméno';
 $string['guestaccountreg'] = 'Registrace dočasného účtu';
-$string['ok'] = 'OK';
+$string['ok'] = 'OK'; //cognate
 $string['title'] = 'Titul';
 $string['firstname'] = 'Jméno';
 $string['surname'] = 'Příjmení';
@@ -32,4 +32,6 @@ $string['cannotfindexams'] = 'Rogō žádnou zkoušku nanalezlo';
 $string['msg'] = 'Zapište si přihlašovací údaje uvedené níže, pro případ, že budete nuceni v polovině zkoušky počítač restartovat .';
 $string['enterfirstname'] = "Zadejte, prosím, své jméno.";
 $string['entersurname'] = "Zadejte, prosím, své příjmení.";
+$string['error'] = 'Chyba';
+$string['mandatory'] = 'Mandatory data missing.';
 ?>

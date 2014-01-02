@@ -17,7 +17,7 @@
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 
-$string['editor'] = 'Editor';
+$string['editor'] = 'Editor'; //cognate
 $string['changes'] = 'Změny';
 $string['comments'] = 'Poznámky';
 $string['mapping'] = 'Mapování';

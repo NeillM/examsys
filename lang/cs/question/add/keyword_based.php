@@ -19,7 +19,7 @@ require '../../lang/' . $language . '/include/status.inc';
 //require '../../lang/' . $language . '/include/question_types.inc';
 //require '../../lang/' . $language . '/question/sct_shared.php';
 
-$string['editor'] = 'Editor';
+$string['editor'] = 'Editor'; //cognate
 $string['changes'] = 'Změny';
 $string['comments'] = 'Poznámky';
 $string['mapping'] = 'Mapování';

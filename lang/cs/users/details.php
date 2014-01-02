@@ -18,7 +18,7 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Nastavení uživatelů';
-$string['status'] = 'Status';
+$string['status'] = 'Status'; //cognate
 $string['student'] = 'Student';
 $string['Students'] = 'Studenti';
 $string['externalexaminer'] = 'Oponenti';

@@ -18,6 +18,6 @@ $string['administrativetools'] = 'Nastavení';
 $string['deniedlogwarnings'] = 'Upozornění na zamítnutá přihlášení';
 $string['date'] = 'Datum';
 $string['user'] = 'Uživatel';
-$string['url'] = 'URL';
+$string['url'] = 'URL'; //cognate
 $string['message'] = 'Vzkaz';
 ?>

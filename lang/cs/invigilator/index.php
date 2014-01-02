@@ -65,4 +65,5 @@ $string['time'] = 'Čas';
 $string['timedexam'] = 'Zkouška s časovým limitem:';
 $string['timeerror'] = 'Chyba v čase';
 $string['timeerrormsg'] = 'Zkouška musí trvat minimálně %d minut.';
+$string['examquestionclarifications'] = 'Exam question clarifications';
 ?>

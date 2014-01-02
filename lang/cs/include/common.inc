@@ -18,7 +18,6 @@ $string['helpsupport'] = 'Help &amp; Support';
 $string['aboutrogo'] = 'O programu Rogo %s';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Stránka nebyla nalezena';
-$string['signinmsg'] = 'Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
 $string['signinmsg'] = '<span style="color:#1f497d;font-weight:bold;">Vítejte v systému elektronického testování</span><br />
 	V případě zájmu o vytvoření účtu kontaktujte <a href="mailto:ovt@lf1.cuni.cz">ovt@lf1.cuni.cz</a>.<hr /><br />
 	Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
@@ -30,7 +29,7 @@ $string['home'] = 'Domů';
 $string['help'] = 'Pomoc';
 $string['line'] = 'Řádek';
 $string['cancel'] = 'Zrušit';
-$string['ok'] = 'OK';
+$string['ok'] = 'OK'; //cognate
 $string['save'] = 'Uložit';
 $string['accessdenied'] = 'Přístup odepřen';
 $string['accessdeniedadmin'] = '<strong>Přístup odepřen</strong><br />pokoušíte se vstoupit na správcovskou stránku.';
