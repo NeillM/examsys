@@ -14,6 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ *
+ * outline authentication class.
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
+
 $configObject = Config::get_instance();
 
 class outline_authentication {

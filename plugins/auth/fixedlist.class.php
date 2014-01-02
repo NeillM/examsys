@@ -17,7 +17,7 @@
 
 /**
  *
- * The internaldb authentication function.
+ * The fixedlist authentication function.
  *
  * @author Simon Atack
  * @version 1.0
