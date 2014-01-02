@@ -19,7 +19,6 @@ require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['allmodules'] = 'Všechny moduly';
 $string['bymodulecode'] = 'Podle kódu modulu';
-$string['helpsupport'] = 'Nápověda';
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['usermanagement'] = 'Nastavení uživatelů';

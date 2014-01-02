@@ -17,7 +17,6 @@
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['helpsupport'] = 'Nápověda';
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['usermanagement'] = 'Nastavení uživatelů';
@@ -56,7 +55,6 @@ $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['duplicatefoldername'] = 'Duplicitní název složky, použijte, prosím, jiný.';
 $string['loggedinas'] = 'Jste přihlášen/a jako';
-$string['eassessmentmanagementsystem'] = 'Nastavení e-hodnocení';
 $string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, prosím, kontaktujte:';
 $string['papersforreview'] = 'Dokumenty k rezenci';
 $string['deadline'] = 'Uzávěrka:';

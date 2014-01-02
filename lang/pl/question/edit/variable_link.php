@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['variablelink'] = 'Variable Link';
-$string['screen'] = 'Screen';
+$string['variablelink'] = 'Łącznik zmiennej';
+$string['screen'] = 'Ekran';
 ?>

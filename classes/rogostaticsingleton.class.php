@@ -31,6 +31,7 @@ Class RogoStaticSingleton {
   * Create and return the Global instance of parent::$class_name for use in 
   * the Local scope.
   */
+
   public static function get_instance() {
     //some objects are global and need parameters these are constructed using
     //a stranded constructor and need parameters passing. if they have not been 
@@ -75,6 +76,12 @@ Class RogoStaticSingleton {
   		throw new Exception($name . " not implemented by " . static::$class_name); 
   	}
   }
+
+  public function error_handling($context = null) {
+    return error_handling($this);
+  }
+
+  
 }
 
 ?>

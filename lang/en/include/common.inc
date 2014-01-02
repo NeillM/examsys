@@ -15,8 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['helpsupport'] = 'Help &amp; Support';
-$string['signout'] = 'Sign out';
-$string['aboutrogo'] = 'About Rogo %s';
+$string['aboutrogo'] = 'About Rog&#333; %s';
 $string['html5warn'] = 'Rog&#333; needs HTML5 support, please upgrade your browser.';
 $string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Page not Found';
@@ -105,4 +104,5 @@ $string['register'] = 'Register as Staff User';
 $string['register1'] = 'Register as ';
 $string['demomodule'] = 'Demo Module';
 $string['name'] = 'Name';
+$string['eassessmentmanagementsystem'] = 'eAssessment Management System';
 ?>

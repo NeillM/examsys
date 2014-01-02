@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['helpsupport'] = 'Help &amp; Support';
-$string['aboutrogo'] = 'About Rogo %s';
+$string['helpsupport'] = 'Nápověda a podpora';
+$string['aboutrogo'] = 'About Rog&#333; %s';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Stránka nebyla nalezena';
 $string['signinmsg'] = 'Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
@@ -99,4 +99,5 @@ $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
 $string['register1'] = 'Registrovat jako ';
+$string['eassessmentmanagementsystem'] = 'Nastavení e-hodnocení';
 ?>

@@ -41,14 +41,14 @@
 <div style="position:absolute; top:12px; left:25px; width:300px">
   <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
   <div class="logo_lrg_txt">Rog&#333;</div>
-  <div class="logo_small_txt">eAssessment Management System</div>
+  <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 </div>
 
 <div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="University of Nottingham" /></div>
 
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:10px">
 <br />
-<p>Rogō <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
+<p>Rog&#333; <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
 <table cellpadding="0" cellspacing="0" border="0" style="width:650px">
 <tr><td style="vertical-align:top; width:240px">
 <strong><?php echo $string['designprogramming']; ?></strong><br />
@@ -57,9 +57,13 @@ Dr Rob Ingram<br />
 Anthony Brown<br />
 Simon Atack<br />
 Ben Parish<br />
+Josef Martiňák<br />
 <br />
 <strong>HTML5</strong><br />
 Dr Nikodem Miranowicz<br />
+<br />
+<strong>Translations</strong><br />
+Zuzana<br />
 <br />
 <strong>QTI</strong><br />
 Adam Clarke<br />

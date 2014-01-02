@@ -17,7 +17,6 @@
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['helpsupport'] = 'Pomoc i wsparcie';
 $string['admintools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
@@ -56,7 +55,6 @@ $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['duplicatefoldername'] = 'Ta nazwa folderu jest już wykorzystywana, użyj innej.';
 $string['loggedinas'] = 'Jesteś zalogowany jako';
-$string['eassessmentmanagementsystem'] = 'System zarządzania oceną';
 $string['deadline'] = 'Termin finalizacji:';
 $string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';
 $string['papersforreview'] = 'Arkusze do recenzji';  

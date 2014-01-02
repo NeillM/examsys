@@ -81,7 +81,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
         <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
         <div class="logo_lrg_txt">Rog&#333;</div>
-        <div class="logo_small_txt">e-Assessment Management System</div>
+        <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
         <br/>
         <br/>
