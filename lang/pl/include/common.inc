@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['helpsupport'] = 'Help &amp; Support';
-$string['signout'] = 'Sign out';
-$string['aboutrogo'] = 'About Rogo %s';
+$string['helpsupport'] = 'Pomoc i wsparcie';
+$string['aboutrogo'] = 'O Rogo %s';
 $string['html5warn'] = 'Rog&#333; wymaga obsługi HTML5 - uaktualnij swoją przegladarkę.';
 $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się z: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Strony nie odnaleziono';

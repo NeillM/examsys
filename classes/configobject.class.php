@@ -65,7 +65,7 @@ class Config extends RogoStaticSingleton {
     $this->data = get_defined_vars();
   }
 
-  function error_handling() {
+  function error_handling($context = null) {
  //   print "<br>confobj:errorfuncrun<br>";
     return "config Object: hidden for security";
   }

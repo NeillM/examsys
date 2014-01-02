@@ -92,7 +92,7 @@ if ($configObject->get('cfg_secure_connection')) {
 
 $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
 $authentication->do_authentication($string);
-$getauthobj = new stdClass();
+$getauthobj = new auth_obj();
 $authentication->get_auth_obj($getauthobj);
 
 $userObject = UserObject::get_instance();
