@@ -17,7 +17,6 @@
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['helpsupport'] = 'Nápověda';
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['usermanagement'] = 'Nastavení uživatelů';

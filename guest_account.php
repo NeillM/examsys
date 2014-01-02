@@ -16,12 +16,12 @@
 
 /**
 *
-* Looks up the next free temporary account and reserves it for the current user.
-* Use 'class_totals.php' to reassign marks after the exam.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+ * Looks up the next free temporary account and reserves it for the current user.
+ * Use 'class_totals.php' to reassign marks after the exam.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 

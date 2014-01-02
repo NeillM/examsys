@@ -100,4 +100,5 @@ $string['register'] = 'Zarejestruj się jako Pracownik';
 $string['register1'] = 'Zarejestruj się jako ';
 $string['demomodule'] = 'Moduł Demonstracyjny';
 $string['name'] = 'Nazwa';
+$string['eassessmentmanagementsystem'] = 'System Zarządzaniem Oceną';
 ?>

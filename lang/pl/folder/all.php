@@ -19,7 +19,6 @@ require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['allmodules'] = 'Wszystkie moduły';
 $string['bymodulecode'] = 'wg. kodu modułu';
-$string['helpsupport'] = 'Pomoc i wsparcie';
 $string['admintools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
