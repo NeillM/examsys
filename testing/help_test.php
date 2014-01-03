@@ -142,11 +142,10 @@ require '../include/staff_auth.inc';
 		}elseif (substr($img_item,0,3)=='../') {
 			$path = '../help/'.substr($img_item,3);
 		}
-		
 		if (file_exists ($path)) {
-			if (!(getimagesize($path))) $img_size = false;
+			if (!($img_size = getimagesize($path))) $img_size = false;
 		}
-		
+
 		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
 		foreach ($img_ids as $item_id => $item_val) {
 			$i++;
