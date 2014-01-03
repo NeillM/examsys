@@ -98,5 +98,5 @@ $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
 $string['register1'] = 'Registrovat jako ';
-$string['eassessmentmanagementsystem'] = 'Nastavení e-hodnocení';
+$string['eassessmentmanagementsystem'] = 'Systém Elektronického Testování';
 ?>

@@ -40,21 +40,19 @@ require '../include/staff_auth.inc';
 
 	$target = 'staff';
 	if (isset($_GET['target'])) $target=$_GET['target'];
-  $result = $mysqli->prepare("SELECT id, body, title, type FROM rogo.".$target."_help ORDER BY id;");
-  $result->execute();  
+  $dbresult = $mysqli->prepare("SELECT id, body, title, type FROM rogo.".$target."_help ORDER BY id;");
+  $dbresult->execute();  
 	$help_toc = array();
 	$help_img = array();
-	
-  $result->bind_result($id, $body, $title, $type);
-  while ($result->fetch()) {
+  $dbresult->bind_result($id, $body, $title, $type);
+  while ($dbresult->fetch()) {
     $help_toc[$id]['id'] = $id;
     $help_toc[$id]['body'] = $body;
     $help_toc[$id]['type'] = $type;
     $help_toc[$id]['title'] = $title;
     $help_toc[$id]['links'] = '';
   }
-  $result->close();
-  $mysqli->close();
+  $dbresult->close();
 	
 	echo '<a href="help_test.php?target=staff">staff</a> ';
 	echo '<a href="help_test.php?target=student">student</a>';
@@ -68,7 +66,7 @@ require '../include/staff_auth.inc';
 	$pubs .= '/help/'.$target.'/images/';
 	if ($handle = opendir($pubs)) {
 		while (false !== ($file = readdir($handle))) 
-			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[strtolower('images/'.$file)] = 1;
+			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[('images/'.$file)] = 1;
 		closedir($handle);
 	}
 	
@@ -95,7 +93,6 @@ require '../include/staff_auth.inc';
 	echo $result;
 	if ($result=='') echo ' - not detected.';
 	echo '<hr>';
-	echo 'x';
 	//incorporated images
 	foreach ($help_toc as $help_item) {
 		//search for <img scr=
@@ -108,9 +105,9 @@ require '../include/staff_auth.inc';
 					if (trim($cv)=='width=' && $w==-1) $w=$code[$ci+1];
 					if (trim($cv)=='height=' && $h==-1) $h=$code[$ci+1];
 				}
-				if (!isset($help_img[strtolower($code[1])])) $help_img[strtolower($code[1])] = Array();
+				if (!isset($help_img[($code[1])])) $help_img[($code[1])] = Array();
 				if (count($code)>=2) {
-					array_push($help_img[strtolower($code[1])],Array($help_item['id'],$w,$h));
+					array_push($help_img[($code[1])],Array($help_item['id'],$w,$h));
 				}
 			}
 		}else{
@@ -128,7 +125,6 @@ require '../include/staff_auth.inc';
 			}
 		}
 	}
-	echo 'x';
 	$result1 = '';
 	$result2 = '';
 	$result3 = '';
@@ -136,17 +132,27 @@ require '../include/staff_auth.inc';
 	$result_array_3 = Array();
 	$i=0;
 	foreach ($help_img as $img_item => $img_ids) {
-		$path = "../help/".$target."/";
-		if (substr($img_item,0,4)=='http') $path = '';
-		if (substr($img_item,0,3)=='../') {$path = '';$img_item = substr($img_item,3);}
-		var_dump($path.$img_item);
-		if (!($img_size = (getimagesize($path.$img_item)))) $img_size = false;
-/*		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
+		$path = "../help/".$target."/".$img_item;
+		$img_size = false;
+		if (substr($img_item,0,4)=='http') {
+			$path = '';
+		}
+		if (substr($img_item,0,6)=='../../') {
+			$path = '../'.substr($img_item,6);
+		}elseif (substr($img_item,0,3)=='../') {
+			$path = '../help/'.substr($img_item,3);
+		}
+		if (file_exists ($path)) {
+			if (!($img_size = getimagesize($path))) $img_size = false;
+		}
+
+		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing - ';
 		foreach ($img_ids as $item_id => $item_val) {
 			$i++;
-			if (!$img_size && $item_val!='') $result1 .= '"<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>)';
+			if (!$img_size && $item_val!='') $result1 .= '"<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>) ';
 			if ($img_size) {
 				array_push($help_img[$img_item][$item_id],$img_size[0],$img_size[1]);
+				
 				if (($help_img[$img_item][$item_id][1]*1!=$help_img[$img_item][$item_id][3]) || ($help_img[$img_item][$item_id][2]*1!=$help_img[$img_item][$item_id][4])) 
 				{
 					if ($help_img[$img_item][$item_id][1]=='-1' || $help_img[$img_item][$item_id][2]=='-1') {
@@ -164,7 +170,6 @@ require '../include/staff_auth.inc';
 			}
 		}
 		if (!$img_size) $result1 .= '<br />';
-*/
 	}
 	echo '<h3>Missing images:</h3>';
 	echo $result1;
@@ -181,20 +186,27 @@ require '../include/staff_auth.inc';
 	foreach ($help_img as $img_item => $img_ids) $avail_images[$img_item] = 2;
 	
 	foreach ($avail_images as $img_item => $img_use) { 
-		$result = $mysqli->prepare("SELECT id FROM rogo.".$target."_help WHERE body LIKE '%$img_item%' ;");
-		$result->execute();  
-		$result->bind_result($id);
-		$result->fetch();
-		if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
-		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
-		$result->close();
+		$dbresult2 = $mysqli->prepare("SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_item%' ;");
+		$dbresult2->execute(); 
+		$dbresult2->bind_result($id,$del);
+		while ($dbresult2->fetch()) {
+			//echo $img_use.$img_item.' : '.$id.':'.$del.':<br>';
+			//var_dump($del);
+			if ($id!=null && $avail_images[$img_item]<5) $avail_images[$img_item] = ($avail_images[$img_item] * 10 + 1);
+			if ($avail_images[$img_item] == 11) $avail_images[$img_item] = (1*$id+1000);
+			if ($del!=null) $avail_images[$img_item] = (1*$id+2000);
+		}
+  	$dbresult2->close();
 	}
-	$mysqli->close();
+	
+	$img_count = 0;
+	foreach ($help_img as $img_item => $img_ids) if (strpos($img_item,'images') > -1) $img_count++;
 	
 	echo '<hr>';
-	echo 'Number of used images:'.(count($help_img)).'<br />';
-	echo 'Number of available images:'.(count($avail_images)).'<br />';
-	echo 'Number of unused images:'.(count($avail_images)-count($help_img)).'<br />';
+	echo 'Number of images used from "images" folder:'.($img_count).'<br />';
+	echo 'Number of images available from "images" folder:'.(count($avail_images)).'<br />';
+	echo 'Number of unused images from "images" folder:'.(count($avail_images)-count($help_img)).'<br />';
+	echo 'Number of images used from other locations:'.(count($help_img)-$img_count).'<br />';
 	
 	echo '<h3>Unused images:</h3>';
 	$result = '';
@@ -202,9 +214,15 @@ require '../include/staff_auth.inc';
 	echo '<ol>'.$result.'</ol>';
 	if ($result=='') echo ' - not found.<br />';
 	
+	echo "<h3>files from deleted pages:</h3>";
+	$result = '';
+	foreach ($avail_images as $img_item => $img_use) if ($img_use>=2000) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-2000)."'>#".($img_use-2000)."</a></li>";
+	echo '<ol>'.$result.'</ol>';
+	if ($result=='') echo ' - not found.<br />';	
+
 	echo "<h3>'Unusually' used files:</h3>";
 	$result = '';
-	foreach ($avail_images as $img_item => $img_use) if ($img_use>=100) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-100)."'>#".($img_use-100)."</a></li>";
+	foreach ($avail_images as $img_item => $img_use) if ($img_use>=1000 && $img_use<2000) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-1000)."'>#".($img_use-1000)."</a></li>";
 	echo '<ol>'.$result.'</ol>';
 	if ($result=='') echo ' - not found.<br />';	
 
@@ -229,6 +247,7 @@ require '../include/staff_auth.inc';
 			echo $help_item['body'];
 		}	
 	}
+	$mysqli->close();
 ?>
 </div>
 </body>
