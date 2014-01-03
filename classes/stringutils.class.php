@@ -42,7 +42,7 @@ class StringUtils {
     return substr_compare($string, $test, -$testlen) === 0;
   }
 
-  public static function ordinal_suffix($number, $language='en') {
+  public static function ordinal_suffix($number, $language = 'en') {
     $suffix = ($number === 0) ? 'N/A' : $number;
     if ($language == 'en') {
       if ($number !== '') {
@@ -125,4 +125,28 @@ class StringUtils {
     $str = str_replace($wordChr, $utf8Chr, $str);
     return $str;
   }
+	
+	public static function my_ucwords($s) {
+		$s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", 'StringUtils::fixcase_callback', $s);
+		return $s;
+	}
+
+	public static function fixcase_callback($word) {
+		$word = $word[1];
+		$word = mb_strtolower($word, 'UTF-8');
+
+		if ($word == "de") return $word;
+
+		$word = mb_ucasefirst($word);
+
+		if (mb_substr($word, 1, 1, 'UTF-8') == "'") {
+			if (mb_substr($word, 0, 1, 'UTF-8') == "D") {
+				$word = mb_strtolower($word, 'UTF-8');
+			}
+			$next = mb_substr($word, 2, 1, 'UTF-8');
+			$next = mb_strtoupper($next, 'UTF-8');
+			$word = mb_substr_replace($word, $next, 2, 1, 'UTF-8');
+		}
+		return $word;
+	}	
 }

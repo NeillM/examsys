@@ -49,7 +49,7 @@
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:10px">
 <br />
 <p>Rog&#333; <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
-<table cellpadding="0" cellspacing="0" border="0" style="width:650px">
+<table cellpadding="0" cellspacing="0" border="0" style="width:660px">
 <tr><td style="vertical-align:top; width:240px">
 <strong><?php echo $string['designprogramming']; ?></strong><br />
 Dr Simon Wilkinson<br />
@@ -63,7 +63,7 @@ Josef Martiňák<br />
 Dr Nikodem Miranowicz<br />
 <br />
 <strong><?php echo $string['languagepacks'] ?></strong><br />
-Zuzana<br />
+Zuzana Džupinková, Bohumil Havel<br />(1st Faculty of Medicine, Charles University)<br />
 <br />
 <strong>QTI</strong><br />
 Adam Clarke<br />
@@ -72,7 +72,7 @@ Adam Clarke<br />
 <td style="vertical-align:top">
 <strong><?php echo $string['3rdparty']; ?></strong><br />
 <table cellpaddding="0" cellspacing="0" border="0">
-<tr><td style="width:110px"><?php echo $string['editor']; ?></td><td>TinyMCE 3.5.7 - <a href="http://tinymce.moxiecode.com/" target="_blank">tinymce.moxiecode.com</a></td></tr>
+<tr><td style="width:100px"><?php echo $string['editor']; ?></td><td>TinyMCE 3.5.7 - <a href="http://tinymce.moxiecode.com/" target="_blank">tinymce.moxiecode.com</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td><?php echo $string['javascriptlibrary']; ?></td><td>jQuery 1.6.1 - <a href="http://jquery.com/" target="_blank">jquery.com/</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>

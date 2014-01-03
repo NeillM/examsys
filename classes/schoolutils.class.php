@@ -28,10 +28,15 @@
 Class SchoolUtils {
 
   static function add_school($facultyID, $school, $db) {
-    if ($facultyID == '' or $school == '') {
+    if ($facultyID === '' or $school === '') {
       return false;
     }
-  
+		
+		$schoolID = SchoolUtils::school_name_exists($school, $db);
+		if ($schoolID !== false) {
+		  return $schoolID;
+		}
+
     $result = $db->prepare("INSERT INTO schools(school, facultyID) VALUES (?, ?)");
     $result->bind_param('si', $school, $facultyID);
     $result->execute();
@@ -111,73 +116,98 @@ Class SchoolUtils {
   }
 
 
-/**
- * Get the schools a member of staff with 'Admin' rights has access to.
- * @param int $admin_userid - ID of the member of staff user
- * @param object $db        - Link to mysqli
- * @return array            - List of schools the member of staff has access to.
- */
-  static function get_admin_schools($admin_userid, $db) {
-    $school_list = array();
+	/**
+	 * Get the schools a member of staff with 'Admin' rights has access to.
+	 * @param int $admin_userid - ID of the member of staff user
+	 * @param object $db        - Link to mysqli
+	 * @return array            - List of schools the member of staff has access to.
+	 */
+	static function get_admin_schools($admin_userid, $db) {
+		$school_list = array();
 
-    $stmt = $db->prepare("SELECT schools_id FROM admin_access WHERE userID = ?");
-    $stmt->bind_param('i', $admin_userid);
-    $stmt->execute();
-    $stmt->bind_result($school);
-    while ($stmt->fetch()) {
-      $school_list[] = $school;
-    }
-    $stmt->close();
+		$stmt = $db->prepare("SELECT schools_id FROM admin_access WHERE userID = ?");
+		$stmt->bind_param('i', $admin_userid);
+		$stmt->execute();
+		$stmt->bind_result($school);
+		while ($stmt->fetch()) {
+			$school_list[] = $school;
+		}
+		$stmt->close();
 
-    return $school_list;
-  }
+		return $school_list;
+	}
 
-/**
- * Check if a school name exists in a given Faculty
- * @param int $facultyID  - ID of faculty to check
- * @param string $school  - School name to check
- * @param object $db      - Link to mysqli
- * @return bool           - True if school name already exists for the faculty
- */
-  static function school_exists_in_faculty($facultyID, $school, $db) {
-    $row_no = 0;
+	/**
+	 * Check if a school name exists in a given Faculty
+	 * @param int $facultyID  - ID of faculty to check
+	 * @param string $school  - School name to check
+	 * @param object $db      - Link to mysqli
+	 * @return bool           - True if school name already exists for the faculty
+	 */
+	static function school_exists_in_faculty($facultyID, $school, $db) {
+		$row_no = 0;
+
+		$query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ?';
+		$stmt = $db->prepare($query);
+		$stmt->bind_param('si', $school, $facultyID);
+		$stmt->execute();
+		$stmt->store_result();
+		$row_no = $stmt->num_rows;
+		$stmt->close();
+
+		return $row_no > 0;
+	 }
   
-    $query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ?';
-    $stmt = $db->prepare($query);
-    $stmt->bind_param('si', $school, $facultyID);
-    $stmt->execute();
-    $stmt->store_result();
-    $row_no = $stmt->num_rows;
-    $stmt->close();
+	/**
+	 * Check if a school ID exists
+	 * @param int $schoolID - ID of the school to check
+	 * @param object $db    - Link to mysqli
+	 * @return bool         - True if the school ID is found
+	 */
+	static function schoolid_exists($schoolID, $db) {
+		$row_no = 0;
 
-    return $row_no > 0;
-  }
-  
-/**
- * Check if a school ID exists
- * @param int $schoolID - ID of the school to check
- * @param object $db    - Link to mysqli
- * @return bool         - True if the school ID is found
- */
- static function schoolid_exists($schoolID, $db) {
-    $row_no = 0;
-    
-    $query = 'SELECT id FROM schools WHERE id = ?';
-    $stmt = $db->prepare($query);
-    $stmt->bind_param('i', $schoolID);
-    $stmt->execute();
-    $stmt->store_result();
-    $row_no = $stmt->num_rows;
-    $stmt->close();
+		$query = 'SELECT id FROM schools WHERE id = ?';
+		$stmt = $db->prepare($query);
+		$stmt->bind_param('i', $schoolID);
+		$stmt->execute();
+		$stmt->store_result();
+		$row_no = $stmt->num_rows;
+		$stmt->close();
 
-    return $row_no > 0;
-  }
+		return $row_no > 0;
+	}
 
-/**
- * Delete a school by setting a flag
- * @param int $schoolID - ID of the school to delete
- * @param object $db    - Link to mysqli
- */
+	/**
+	 * Check if a school name already exists
+	 * @param int $school   - Name of the school to check
+	 * @param object $db    - Link to mysqli
+	 * @return bool         - True if the school name is found
+	 */
+	static function school_name_exists($school, $db) {
+		$schoolID = 0;
+		$row_no = 0;
+
+		$stmt = $db->prepare('SELECT id FROM schools WHERE school = ?');
+		$stmt->bind_param('s', $school);
+		$stmt->execute();
+		$stmt->store_result();
+    $stmt->bind_result($schoolID);
+		$row_no = $stmt->num_rows;
+		$stmt->close();
+		
+		if ($row_no > 0) {
+			return $schoolID;
+		} else {
+		  return false;
+		}
+	}
+
+	/**
+	 * Delete a school by setting a flag
+	 * @param int $schoolID - ID of the school to delete
+	 * @param object $db    - Link to mysqli
+	 */
  static function delete_school($schoolID, $db) {
     if ($schoolID == '') {
       return false;

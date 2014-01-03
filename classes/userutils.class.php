@@ -487,7 +487,7 @@ Class UserUtils {
       if ($db->errno != 0) {
         return false;
       }
-      if ($tmp_userID === $userObject->get_user_ID()) {
+      if (!is_null($userObject) and $tmp_userID === $userObject->get_user_ID()) {
         $userObject->load_student_modules();
       }
 
@@ -563,7 +563,7 @@ Class UserUtils {
       $result = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod)");
       $result->bind_param('i', $tmp_userID);
     } else {
-      $sql="SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?";
+      $sql = "SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?";
       $result = $db->prepare($sql);
       $result->bind_param('is', $tmp_userID, $session);
     }
