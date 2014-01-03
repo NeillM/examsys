@@ -40,10 +40,13 @@ function shutdownHandler() {
 
 
 function exceptionHandler($exception) {
+  $configObject = Config::get_instance();
+  $notice = UserNotices::get_instance();
+  $userObject = UserObject::get_instance();
 
   // these are our templates
   $traceline = "#%s %s(%s): %s(%s)";
-  $msg = "PHP Fatal error:  Uncaught exception '%s' with message '%s' in %s:%s\nStack trace:\n%s\n  thrown in %s on line %s";
+  $msg = "Uncaught Exception error:  Uncaught exception '%s' with message '%s' in %s:%s\nStack trace:\n%s\n  thrown in %s on line %s";
 
   // alter your trace as you please, here
   $trace = $exception->getTrace();
@@ -97,7 +100,56 @@ function exceptionHandler($exception) {
 
   // log or echo as you please
   error_log($msg);
-  trigger_error($msg, E_USER_WARNING);
+
+  $paperID = null;
+  if (isset($_GET['paperID'])) {
+    $paperID = $_GET['paperID'];
+  } elseif (isset($_POST['paperID'])) {
+    $paperID = $_POST['paperID'];
+  }
+
+  $post_data = '';
+  if (isset($_POST)) {
+    foreach ($_POST as $key => $value) {
+      if ($key != 'ROGO_PW') {
+        if (is_array($value)) {
+          $value = var_export($value, true);
+        }
+        if ($post_data == '') {
+          $post_data = "$key=$value";
+        } else {
+          $post_data .= ", $key=$value";
+        }
+      } else {
+        $post_data .= ", $key=<HIDDEN>";
+      }
+    }
+  }
+  $variables='exception handler: therefore unknown';
+  $error_type = "Application Error";
+  $errstr=$msg;
+  $userid = 0;
+  $username = 'PRE LOGIN';
+  if (isset($userObject)) {
+    $userid = $userObject->get_user_ID();
+    $username = $userObject->get_username();
+  }
+  $valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown','Application Error');
+  if (!in_array($error_type, $valid_errors)) {
+    $error_type='Unknown';
+  }
+
+  global $mysqli;
+  if (isset($mysqli)) {
+    if (isset($mysqli->error)) {
+      if (!($mysqli->error == '' or is_null($mysqli->error))) {
+        $errstr = $errstr . "\r\n<br />MySQLi Error:\r\n<br />" . $mysqli->error;
+      }
+    }
+  }
+
+  log_error($userid, $username, $error_type, $errstr, $exception->getFile(), $exception->getLine(), $paperID, $post_data, $variables, $exception->getTraceAsString(), $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
+  //trigger_error($msg, E_USER_WARNING);
 }
 
 
@@ -113,14 +165,16 @@ function error_handling($context = null) {
     } elseif (is_object($value) and method_exists($value, 'error_handling')) {
       $context1[$key] = $value->error_handling();
     } elseif(is_object($value) and get_class($value) === 'mysqli' ) {
-      $context1[$key]='MYSQLi Object';
-    } elseif(is_object($value) and get_class($value) === 'mysqli_stmt') {
-      $context1[$key]='MYSQLi statement Object';
+      $context1[$key] = 'MYSQLi Object';
+    } elseif (is_object($value) and get_class($value) === 'mysqli_stmt') {
+      $context1[$key] = 'MYSQLi statement Object';
+    } elseif (is_object($value) and get_class($value) === 'ErrorException') {
+      $context1[$key] = 'ErrorException Object';
     } elseif (is_object($value)) {
       $context1[$key] = clone $value;
-    } elseif(is_array($value) and $key === 'string' and (!($configObject->get('debug_lang_string') === true)) ) {
-      $context1[$key]= 'Language Abstraction String - hidden by config option';
-    } elseif(is_array($value) and ( $key === '_POST' or $key === '_REQUEST' )) {
+    } elseif (is_array($value) and $key === 'string' and (!($configObject->get('debug_lang_string') === true))) {
+      $context1[$key] = 'Language Abstraction String - hidden by config option';
+    } elseif (is_array($value) and ( $key === '_POST' or $key === '_REQUEST' )) {
       $tmp=array();
       foreach ($value as $key1 => $value1) {
         if ($key != 'ROGO_PW') {
@@ -277,7 +331,7 @@ $context=error_handling($context);
       $userid = $userObject->get_user_ID();
       $username = $userObject->get_username();
     }
-		$valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown');
+		$valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown','Application Warning','Application Error');
     if (!in_array($error_type, $valid_errors)) {
       $error_type='Unknown';
     }

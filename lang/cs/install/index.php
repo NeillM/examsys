@@ -17,7 +17,7 @@
 $string['company'] = 'Společnost';
 $string['companyname'] = 'Jméno společnosti';
 $string['databaseadminuser'] = 'Administrátor databáze';
-$string['server'] = 'Server';
+$string['server'] = 'Server'; //cognate
 $string['tempdirectory'] = 'Dočasný adresář';
 $string['needusername'] = 'Pro vytvoření databáze a potřebné tabulky, potřebujete uživatelské jméno a heslo od administrátora MySQL . Toto uživatelské jméno je použito pouze v instalačním skriptu a není na serveru uloženo.';
 $string['dbusername'] = 'Databázové uživatelské jméno';
@@ -52,7 +52,7 @@ $string['allowlookupXML'] = 'Použít XML (Značkovací jazyk, bude potřeba př
 $string['rdbbasename'] = 'Základní část uživatelského jména';
 
 $string['useldap'] = 'Použít LDAP';
-$string['ldapserver'] = 'LDAP server';
+$string['ldapserver'] = 'LDAP server'; //cognate
 $string['searchdn'] = 'Hledat dn';
 $string['bindusername'] = 'Svázat uživatelské jméno';
 $string['bindpassword'] = 'Přiřadit heslo';
@@ -108,10 +108,10 @@ $string['errors16'] = 'Rogo vyžaduje schopnost tvořit jeho konfigurační soub
 $string['installscript'] = 'Instalační skript Rogō ';
 $string['systeminstallation'] = 'Instalace systému';
 
-$string['flash'] = "Adobe Flash";
+$string['flash'] = "Adobe Flash"; //cognate
 $string['hostname'] = "Machine hostname";
 $string['webhost'] = 'WebServer host';
-$string['html5'] = "HTML5";
+$string['html5'] = "HTML5"; //cognate
 
 $string['labsecuritytype'] = "Zabezpečení učebny";
 $string['IP'] = "IP addresa";

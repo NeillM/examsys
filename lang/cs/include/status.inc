@@ -21,5 +21,5 @@ $string['normal'] = 'Normální';
 $string['retired'] = 'Neplatný';
 $string['incomplete'] = 'Nedokončeno';
 $string['experimental'] = 'Pokusný';
-$string['beta'] = 'Beta ';
+$string['beta'] = 'Beta '; //cognate
 ?>

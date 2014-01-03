@@ -1582,7 +1582,7 @@ function ql_mouseDragMove(e){
   //this.freehand draw end  
 	
 	if (this.qmode == 'answer'){
-		if (this.char_code == ' ') { //space
+		if (this.char_code == ' ' || this.key_code == 13) { //space
 			if (this.qType=='menu') {
 				if (this.active_box_id == this.answer_access_id) {
 					this.active_box_id = -1;
@@ -1783,6 +1783,11 @@ function ql_mouseDragDown(e){
 }
 
 function ql_mouseDragUp(){
+	//help link
+	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
+		window.open('/help/staff/index.php?id=60');
+	}	
+	
 	//dropdown labels 
 	if (this.menu_line>-1 && this.active_box_id>-1 && this.active_box_combo>-1){
 		this.answerBox[this.active_box_id][this.active_box_combo][2] = this.menuBox[this.menu_line-1];
@@ -1792,28 +1797,24 @@ function ql_mouseDragUp(){
 		} else {
 			this.answerBox[this.active_box_id][this.active_box_combo][3] = 'f'
 		}
-	}
-	
-	//help link
-	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
-		window.open('/help/staff/index.php?id=60');
-	}
-
-	if (this.qmode!='script') {
-		if (this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo) {
-			this.edit_box_id = this.drag_box_id;
-			this.edit_box_combo = this.drag_box_combo;
+		this.active_box_id = -1;
+	} else { //open new dropdown only if it is NOT while answering other
+		if (this.qmode!='script') {
+			if (this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo) {
+				this.edit_box_id = this.drag_box_id;
+				this.edit_box_combo = this.drag_box_combo;
+			}
+			if (this.edit_box_id == this.active_box_id && this.edit_box_combo == this.active_box_combo && !(this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo)) {			
+				this.edit_box_id = -1;
+				this.edit_box_combo = -1;
+			}
+			if (this.active_box_id!=this.drag_box_id) {
+				this.active_box_id = this.drag_box_id;
+			}else{
+				this.active_box_id = -1;
+			}
+			this.active_box_combo = this.drag_box_combo;
 		}
-		if (this.edit_box_id == this.active_box_id && this.edit_box_combo == this.active_box_combo && !(this.drag_box_id == this.active_box_id && this.drag_box_combo == this.active_box_combo)) {			
-			this.edit_box_id = -1;
-			this.edit_box_combo = -1;
-		}
-		if (this.active_box_id!=this.drag_box_id) {
-			this.active_box_id = this.drag_box_id;
-		}else{
-			this.active_box_id = -1;
-		}
-		this.active_box_combo = this.drag_box_combo;
 	}
 	this.dragging = false;
 	this.active_box_handler = -1;

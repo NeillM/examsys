@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['student'] = 'Student:';
+$string['student'] = 'Student:'; //cognate
 $string['examiner'] = 'Zkoušející:';
 $string['overallclassification'] = 'Celková klasifikace';
 $string['feedback'] = 'Komentář';
