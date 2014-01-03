@@ -189,11 +189,14 @@ require '../include/staff_auth.inc';
 		$dbresult2 = $mysqli->prepare("SELECT id FROM rogo.".$target."_help WHERE body LIKE '%$img_item%' ;");
 		$dbresult2->execute(); 
 		$dbresult2->bind_result($id);
-		$dbresult2->fetch();
-		if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
-		echo ' - '.$img_item.':'.$id.':'.$avail_images[$img_item].'<br />';
+		//$dbresult2->fetch();
+		echo ' --- '.$img_item.':'.$avail_images[$img_item].'<br />';
+		while ($dbresult2->fetch()) {
+			if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
+			echo ' - '.$id;
 		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
-		$dbresult2->close();
+		}
+  	$dbresult2->close();
 	}
 	
 	$img_count = 0;
