@@ -66,7 +66,7 @@ require '../include/staff_auth.inc';
 	$pubs .= '/help/'.$target.'/images/';
 	if ($handle = opendir($pubs)) {
 		while (false !== ($file = readdir($handle))) 
-			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[strtolower('images/'.$file)] = 1;
+			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[('images/'.$file)] = 1;
 		closedir($handle);
 	}
 	
@@ -105,9 +105,9 @@ require '../include/staff_auth.inc';
 					if (trim($cv)=='width=' && $w==-1) $w=$code[$ci+1];
 					if (trim($cv)=='height=' && $h==-1) $h=$code[$ci+1];
 				}
-				if (!isset($help_img[strtolower($code[1])])) $help_img[strtolower($code[1])] = Array();
+				if (!isset($help_img[($code[1])])) $help_img[($code[1])] = Array();
 				if (count($code)>=2) {
-					array_push($help_img[strtolower($code[1])],Array($help_item['id'],$w,$h));
+					array_push($help_img[($code[1])],Array($help_item['id'],$w,$h));
 				}
 			}
 		}else{
