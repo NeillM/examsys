@@ -20,6 +20,6 @@ $string['calendaryear'] = 'Kalendářní rok';
 $string['questionno'] = 'Úloha číslo';
 $string['datetaken'] = 'Dne';
 $string['cohort'] = 'Skupina';
-$string['p'] = 'P';
-$string['d'] = 'D';
+$string['p'] = 'P'; //cognate
+$string['d'] = 'D'; //cognate
 ?>

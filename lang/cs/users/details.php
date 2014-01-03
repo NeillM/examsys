@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Nastavení uživatelů';
 $string['status'] = 'Status'; //cognate
-$string['student'] = 'Student';
+$string['student'] = 'Student'; //cognate
 $string['Students'] = 'Studenti';
 $string['externalexaminer'] = 'Oponenti';
 $string['graduate'] = 'Absolvent';
@@ -41,7 +41,7 @@ $string['modules'] = 'Moduly';
 $string['notes'] = 'Poznámky';
 $string['admin'] = 'Správce';
 $string['accessibility'] = 'Přístupnost';
-$string['metadata'] = 'Metadata';
+$string['metadata'] = 'Metadata'; //cognate
 $string['papername'] = 'Název dokumentu';
 $string['type'] = 'Typ';
 $string['started'] = 'Zahájeno';
