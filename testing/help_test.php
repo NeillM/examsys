@@ -146,7 +146,7 @@ require '../include/staff_auth.inc';
 			if (!($img_size = getimagesize($path))) $img_size = false;
 		}
 
-		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing from: ';
+		if (!$img_size) $result1 .= 'image "'.$img_item.'" is missing - ';
 		foreach ($img_ids as $item_id => $item_val) {
 			$i++;
 			if (!$img_size && $item_val!='') $result1 .= '"<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$help_toc[$item_val[0]]['title'].'</a>" (id=<a href="/help/'.$target.'/index.php?id='.$item_val[0].'">'.$item_val[0].'</a>) ';
@@ -191,13 +191,19 @@ require '../include/staff_auth.inc';
 		$dbresult2->bind_result($id);
 		$dbresult2->fetch();
 		if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
+		var_dump($img_item.':'.$id.':'.$avail_images[$img_item]);
 		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
 		$dbresult2->close();
 	}
+	
+	$img_count = 0;
+	foreach ($help_img as $img_item => $img_ids) if (strpos($img_item,'images') > -1) $img_count++;
+	
 	echo '<hr>';
-	echo 'Number of used images:'.(count($help_img)).'<br />';
-	echo 'Number of available images:'.(count($avail_images)).'<br />';
-	echo 'Number of unused images:'.(count($avail_images)-count($help_img)).'<br />';
+	echo 'Number of images used from "images" folder:'.($img_count).'<br />';
+	echo 'Number of images available from "images" folder:'.(count($avail_images)).'<br />';
+	echo 'Number of unused images from "images" folder:'.(count($avail_images)-count($help_img)).'<br />';
+	echo 'Number of images used from other locations:'.(count($help_img)-$img_count).'<br />';
 	
 	echo '<h3>Unused images:</h3>';
 	$result = '';
