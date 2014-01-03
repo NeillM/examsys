@@ -187,14 +187,11 @@ require '../include/staff_auth.inc';
 	
 	foreach ($avail_images as $img_item => $img_use) { 
 		$img_items = preg_replace('/_/','\\_',$img_item);
-		$sql = "SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_items%' ";
-		var_dump ($sql);
+		$sql = "SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_items%' Collate latin1_general_cs; ";
 		$dbresult2 = $mysqli->prepare($sql);
 		$dbresult2->execute(); 
 		$dbresult2->bind_result($id,$del);
 		while ($dbresult2->fetch()) {
-			//echo $img_use.$img_item.' : '.$id.':'.$del.':<br>';
-			//var_dump($del);
 			if ($id!=null && $avail_images[$img_item]<5) $avail_images[$img_item] = ($avail_images[$img_item] * 10 + 1);
 			if ($avail_images[$img_item] == 11) $avail_images[$img_item] = (1*$id+1000);
 			if ($del!=null) $avail_images[$img_item] = (1*$id+2000);
