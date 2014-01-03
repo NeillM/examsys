@@ -1582,7 +1582,7 @@ function ql_mouseDragMove(e){
   //this.freehand draw end  
 	
 	if (this.qmode == 'answer'){
-		if (this.char_code == ' ') { //space
+		if (this.char_code == ' ' || this.key_code == 13) { //space
 			if (this.qType=='menu') {
 				if (this.active_box_id == this.answer_access_id) {
 					this.active_box_id = -1;
