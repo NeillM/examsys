@@ -191,7 +191,7 @@ require '../include/staff_auth.inc';
 		$dbresult2->bind_result($id);
 		$dbresult2->fetch();
 		if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
-		var_dump($img_item.':'.$id.':'.$avail_images[$img_item]);
+		echo ' - '.$img_item.':'.$id.':'.$avail_images[$img_item].'<br />';
 		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
 		$dbresult2->close();
 	}
