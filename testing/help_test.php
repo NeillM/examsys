@@ -186,15 +186,15 @@ require '../include/staff_auth.inc';
 	foreach ($help_img as $img_item => $img_ids) $avail_images[$img_item] = 2;
 	
 	foreach ($avail_images as $img_item => $img_use) { 
-		$dbresult2 = $mysqli->prepare("SELECT id FROM rogo.".$target."_help WHERE body LIKE '%$img_item%' ;");
+		$dbresult2 = $mysqli->prepare("SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_item%' ;");
 		$dbresult2->execute(); 
-		$dbresult2->bind_result($id);
-		//$dbresult2->fetch();
-		echo ' --- '.$img_item.':'.$avail_images[$img_item].'<br />';
+		$dbresult2->bind_result($id,$del);
 		while ($dbresult2->fetch()) {
-			if ($id!=null) $avail_images[$img_item] = $avail_images[$img_item] * 10 + 1;
-			echo ' - '.$id;
-		if ($avail_images[$img_item] == 11) $avail_images[$img_item] = 100+$id;
+			//echo $img_use.$img_item.' : '.$id.':'.$del.':<br>';
+			//var_dump($del);
+			if ($id!=null && $avail_images[$img_item]<5) $avail_images[$img_item] = ($avail_images[$img_item] * 10 + 1);
+			if ($avail_images[$img_item] == 11) $avail_images[$img_item] = (1*$id+1000);
+			if ($del!=null) $avail_images[$img_item] = (1*$id+2000);
 		}
   	$dbresult2->close();
 	}
@@ -214,9 +214,15 @@ require '../include/staff_auth.inc';
 	echo '<ol>'.$result.'</ol>';
 	if ($result=='') echo ' - not found.<br />';
 	
+	echo "<h3>files from deleted pages:</h3>";
+	$result = '';
+	foreach ($avail_images as $img_item => $img_use) if ($img_use>=2000) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-2000)."'>#".($img_use-2000)."</a></li>";
+	echo '<ol>'.$result.'</ol>';
+	if ($result=='') echo ' - not found.<br />';	
+
 	echo "<h3>'Unusually' used files:</h3>";
 	$result = '';
-	foreach ($avail_images as $img_item => $img_use) if ($img_use>=100) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-100)."'>#".($img_use-100)."</a></li>";
+	foreach ($avail_images as $img_item => $img_use) if ($img_use>=1000 && $img_use<2000) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-1000)."'>#".($img_use-1000)."</a></li>";
 	echo '<ol>'.$result.'</ol>';
 	if ($result=='') echo ' - not found.<br />';	
 
