@@ -186,7 +186,7 @@ require '../include/staff_auth.inc';
 	foreach ($help_img as $img_item => $img_ids) $avail_images[$img_item] = 2;
 	
 	foreach ($avail_images as $img_item => $img_use) { 
-		//$img_items = preg_replace('/_/','\\_',$img_item);
+		$img_items = $img_item;//preg_replace('/_/','\\_',$img_item);
 		//var_dump ("SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_items%' COLLATE latin1_bin; ");
 		$dbresult2 = $mysqli->prepare("SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_items%' COLLATE latin1_bin;");
 		$dbresult2->execute(); 
