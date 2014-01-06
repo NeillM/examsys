@@ -81,12 +81,6 @@ if (isset($_POST['submit'])) {
   }
   $new_moduleid = $new_moduleid . $maxmodid;
 
-	if (module_utils::module_exists($new_moduleid, $mysqli)) {
-		$unique_module = false;
-	} else {
-		$unique_module = true;
-	}
-
   // Check for unique username
 	if (UserUtils::username_exists($_POST['new_username'], $mysqli) or UserUtils::username_exists($_POST['new_username'] . '-stu', $mysqli)) {
 		$unique_username = false;
@@ -94,13 +88,11 @@ if (isset($_POST['submit'])) {
 		$unique_username = true;
 	}
 	
-  if ($unique_module == true) {
-		$schoolID = SchoolUtils::add_school(1, 'School of Practice', $mysqli);   			// Make sure the 'School of Practice' school exists.
+	$schoolID = SchoolUtils::add_school(1, 'School of Practice', $mysqli);   			// Make sure the 'School of Practice' school exists.
 
-		CourseUtils::add_course($schoolID, 'A10DEMO', 'Demonstration BSc', $mysqli);  // Make sure demo course exists.
-		
-    $new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1);
-  }
+	CourseUtils::add_course($schoolID, 'A10DEMO', 'Demonstration BSc', $mysqli);  // Make sure demo course exists.
+	
+	$new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1);
 
   if ($unique_username == true) {
     $_POST['new_grade'] = $new_moduleid;

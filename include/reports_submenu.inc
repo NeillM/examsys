@@ -36,7 +36,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     } else {
       completerpt = 0;
     }
-    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_time').val() + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_time').val() + "&repcourse=" + $('#repcourse').val() + "&repyear=" + $('#repyear').val() + "&sortby=surname&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&complete=" + completerpt;
+    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repcourse=" + $('#repcourse').val() + "&repyear=" + $('#repyear').val() + "&sortby=surname&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&complete=" + completerpt;
     evt.cancelBubble = true;
     return false;
   }
@@ -52,7 +52,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
 
     $('#stats_menu').hide();
-    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_time').val() + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_time').val() + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + extra_data + "&module=<?php echo $module_list[0]; ?>";
+    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + extra_data + "&module=<?php echo $module_list[0]; ?>";
   }
   <?php
   } else {
@@ -76,7 +76,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     } else {
       studentsonly = '&studentsonly=0';
     }
-    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_time').val() + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_time').val() + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + "&sortby=name&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&percent=" + $('#percent').val() + absent + studentsonly + "&ordering=" + $('#direction').val() + extra_data;
+    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + "&sortby=name&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&percent=" + $('#percent').val() + absent + studentsonly + "&ordering=" + $('#direction').val() + extra_data;
     
     evt.cancelBubble = true;
     return false;
@@ -120,18 +120,14 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   $start_year = date("Y", $target_start_date);
   $start_month = date("m", $target_start_date);
   $start_day = date("d", $target_start_date);
-  $start_time = date("H", $target_start_date) . '0000';
-
+  $start_hour = date("H", $target_start_date);
+  $start_minute = date("i", $target_start_date);
+	
   $end_year = date("Y", $target_end_date);
   $end_month = date("m", $target_end_date);
   $end_day = date("d", $target_end_date);
-  $end_hour = date("G", $target_end_date);
+  $end_hour = date("H", $target_end_date);
   $end_minute = date("i", $target_end_date);
-  if ($end_hour < 23) {
-    $end_hour++;
-    if ($end_hour < 10) $end_hour = '0' . $end_hour;
-  }
-  $end_time = $end_hour . $end_minute . '00';
 
   if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
     $end_day = date('d');
@@ -198,14 +194,33 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
   }
   echo "</select>";
-  // Start Time
-  echo "<select name=\"start_time\" id=\"start_time\">\n";
-  $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
-  foreach ($times as $key => $value) {
-    if ($key == intval($start_time)) {
-      echo "<option value=\"" . $key . "\" selected>" . $value . "</option>\n";
+  // Start Hour
+  echo "<select name=\"start_hour\" id=\"start_hour\">\n";
+	for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
+		if ($tmp_hour < 10) {
+			$display_hour = '0' . $tmp_hour;
+		} else {
+			$display_hour = $tmp_hour;
+		}
+    if ($start_hour == $tmp_hour) {
+      echo "<option value=\"" . $display_hour . "\" selected>" . $display_hour . "</option>\n";
     } else {
-      echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
+      echo "<option value=\"" . $display_hour . "\">" . $display_hour . "</option>\n";
+    }
+  }
+  echo "</select>\n";
+  // Start Minute
+  echo "<select name=\"start_minute\" id=\"start_minute\">\n";
+	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
+		if ($tmp_minute < 10) {
+			$display_minute = '0' . $tmp_minute;
+		} else {
+			$display_minute = $tmp_minute;
+		}
+    if ($start_minute == $tmp_minute) {
+      echo "<option value=\"" . $display_minute . "\" selected>" . $display_minute . "</option>\n";
+    } else {
+      echo "<option value=\"" . $display_minute . "\">" . $display_minute . "</option>\n";
     }
   }
   echo "</select>\n";
@@ -233,32 +248,11 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     $end_year = $date_array['year'];
     $end_month = $date_array['mon'];
     $end_day = $date_array['mday'];
-    $target_hours = $date_array['hours'];
-    if ($target_hours < 23) $target_hours++;
-    if ($target_hours < 10) {
-      $end_time = '0' . $target_hours . '0000';
-    } else {
-      $end_time = $target_hours . '0000';
-    }
   } elseif ($end_month > $date_array['mon'] and $end_year == $date_array['year']) {
     $end_month = $date_array['mon'];
     $end_day = $date_array['mday'];
-    $target_hours = $date_array['hours'];
-    if ($target_hours < 23) $target_hours++;
-    if ($target_hours < 10) {
-      $end_time = '0' . $target_hours . '0000';
-    } else {
-      $end_time = $target_hours . '0000';
-    }
   } elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
     $end_day = $date_array['mday'];
-    $target_hours = $date_array['hours'];
-    if ($target_hours < 23) $target_hours++;
-    if ($target_hours < 10) {
-      $end_time = '0' . $target_hours . '0000';
-    } else {
-      $end_time = $target_hours . '0000';
-    }
   }
   echo "<select name=\"end_month\" id=\"end_month\">\n";
   for ($i=0; $i<12; $i++) {
@@ -279,14 +273,34 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
   }
   echo "</select>";
-  // End Time
-  echo "<select name=\"end_time\" id=\"end_time\">\n";
-  $times = array('000000'=>'00:00','003000'=>'00:30','010000'=>'01:00','013000'=>'01:30','020000'=>'02:00','023000'=>'02:30','030000'=>'03:00','033000'=>'03:30','040000'=>'04:00','043000'=>'04:30','050000'=>'05:00','053000'=>'05:30','060000'=>'06:00','063000'=>'06:30','070000'=>'07:00','073000'=>'07:30','080000'=>'08:00','083000'=>'08:30','090000'=>'09:00','093000'=>'09:30','100000'=>'10:00','103000'=>'10:30','110000'=>'11:00','113000'=>'11:30','120000'=>'12:00','123000'=>'12:30','130000'=>'13:00','133000'=>'13:30','140000'=>'14:00','143000'=>'14:30','150000'=>'15:00','153000'=>'15:30','160000'=>'16:00','163000'=>'16:30','170000'=>'17:00','173000'=>'17:30','180000'=>'18:00','183000'=>'18:30','190000'=>'19:00','193000'=>'19:30','200000'=>'20:00','203000'=>'20:30','210000'=>'21:00','213000'=>'21:30','220000'=>'22:00','223000'=>'22:30','230000'=>'23:00','233000'=>'23:30');
-  foreach ($times as $key => $value) {
-    if ($key == intval($end_time)) {
-      echo "<option value=\"" . $key . "\" selected>" . $value . "</option>\n";
+  // End Hour
+  echo "<select name=\"end_hour\" id=\"end_hour\">\n";
+	for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
+		if ($tmp_hour < 10) {
+			$display_hour = '0' . $tmp_hour;
+		} else {
+			$display_hour = $tmp_hour;
+		}
+    if ($end_hour == $tmp_hour) {
+      echo "<option value=\"$display_hour\" selected>$display_hour</option>\n";
     } else {
-      echo "<option value=\"" . $key . "\">" . $value . "</option>\n";
+      echo "<option value=\"$display_hour\">$display_hour</option>\n";
+    }
+  }
+  echo "</select>";
+	
+  // End Minute
+  echo "<select name=\"end_minute\" id=\"end_minute\">\n";
+	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
+		if ($tmp_minute < 10) {
+			$display_minute = '0' . $tmp_minute;
+		} else {
+			$display_minute = $tmp_minute;
+		}
+    if ($end_minute == $tmp_minute) {
+      echo "<option value=\"$display_minute\" selected>$display_minute</option>\n";
+    } else {
+      echo "<option value=\"$display_minute\">$display_minute</option>\n";
     }
   }
   echo "</select>\n</td></tr>\n";

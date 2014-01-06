@@ -191,8 +191,8 @@ Class SchoolUtils {
 		$stmt = $db->prepare('SELECT id FROM schools WHERE school = ?');
 		$stmt->bind_param('s', $school);
 		$stmt->execute();
-		$stmt->store_result();
     $stmt->bind_result($schoolID);
+		$stmt->store_result();
 		$row_no = $stmt->num_rows;
 		$stmt->close();
 		
