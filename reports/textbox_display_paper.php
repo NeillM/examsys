@@ -146,7 +146,7 @@ $stmt->close();
           $q_no++;
           echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
         }
-        if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.gif" width="18" height="24" alt="Calculator" border="0" /></a>';
+        if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.png" width="18" height="24" alt="Calculator" border="0" /></a>';
         echo "</td><td>$scenario<br />\n<br />";
         $li_set = 1;
       }
