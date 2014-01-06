@@ -458,14 +458,16 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   this.context.lineWidth = templw;
 
   //mark intersections
-  for (var m =1; m < tpi.length; m++) {
-    this.context.strokeStyle = '#ff0000';    
-    this.context.beginPath();
-    this.context.arc(tpi[m][0],tpi[m][1],3, 0, Math.PI*2, true); 
-    this.context.closePath();
-    this.context.stroke();
-    any_overlaping = true;
-  }
+  if (mode != 'a' && mode != 't') {
+		for (var m =1; m < tpi.length; m++) {
+			this.context.strokeStyle = '#ff0000';    
+			this.context.beginPath();
+			this.context.arc(tpi[m][0],tpi[m][1],3, 0, Math.PI*2, true); 
+			this.context.closePath();
+			this.context.stroke();
+			any_overlaping = true;
+		}
+	}
   this.context.strokeStyle = css;
   this.context.fillStyle = cfs;
 }
