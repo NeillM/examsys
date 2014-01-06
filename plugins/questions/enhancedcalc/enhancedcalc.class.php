@@ -718,8 +718,10 @@ class EnhancedCalc extends Question implements questionInterface {
 
   public function generate_variables () {
     
-    //create an empty array to hold the generated variables
-    $this->useranswer['vars'] = array();
+    if (!isset($this->useranswer['vars']) or !is_array($this->useranswer['vars'])) {
+        //create an empty array to hold the generated variables
+        $this->useranswer['vars'] = array();
+    }
     
     //check to see if variables have been previously generated if not put them in an array to be generated
     foreach ($this->settings['vars'] as $key => $value) {
