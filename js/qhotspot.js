@@ -345,6 +345,7 @@ function qh_redraw_canvas() {
     //test against label fields  
     if (this.do_the_test && this.qmode!='script') {
 			this.qh_test('answers');
+			this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 		}
 		
 		//return;
