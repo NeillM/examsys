@@ -66,14 +66,17 @@ $data->lookupdata = $newdata;
 $info = $lookup->userlookup($data);
 
 echo "<h2>Info</h2>";
-var_dump($info);
+print "<pre>";
+var_dump($info->lookupdata);
+print "</pre>";
 echo "<br>\r\n";
-
+echo "<h2>Lookup Debug</h2>";
 $lookupdebug = $lookup->debug_as_array();
 
 echo "<pre>";
 foreach ($lookupdebug as $line) {
   print $line ."\r\n";
 }
-
+print "<br>\r\n<h2>dump of return</h2>";
+var_dump($info);
 echo "</pre>";
