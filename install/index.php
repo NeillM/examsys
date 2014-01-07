@@ -16,7 +16,7 @@
 
 /**
 * 
-* Installation script for inital setup of Rogo.
+* Installation script for inital setup of Rogō.
 * 
 * @author Simon Wilkinson
 * @version 1.0
@@ -46,7 +46,7 @@ $cfg_web_root = get_root_path() . '/';
 $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
 require $cfg_web_root . 'classes/installutils.class.php';
-$version = '5.1';
+$version = '5.1.1';
 
 set_time_limit(0);
 
