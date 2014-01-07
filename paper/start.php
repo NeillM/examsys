@@ -458,7 +458,7 @@ if ($propertyObj->get_paper_type() == '_late') {
 // Get user answers from whichever log is pointed to by log$paper_type
 if ($propertyObj->get_paper_type() == '5') {
   // There is no user answer in Log5 (offline papers) so put NULL instead.
-	$log_data = $mysqli->prepare("SELECT id, q_id, NULL AS user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
+	$log_data = $mysqli->prepare("SELECT id, q_id, NULL AS user_answer, NULL AS duration, NULL AS screen, NULL AS dismiss, NULL AS option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
 } else {
 	$log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
 }
@@ -720,9 +720,9 @@ if ($css != '') {
   }
 <?php
   }
-?>
 
-  <?php //Bind save function to the screen for fault tolerant form saving ?>
+if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
+	//Bind save function to the screen for fault tolerant form saving ?>
   var usingAjax = false;
   var submitType = '';
   var autoSaveRef = '';
@@ -934,6 +934,9 @@ if ($css != '') {
     }
     ajaxSave();
   }
+<?php
+}
+?>	
 </script>
 <script type="text/javascript" src="../js/start.js"></script>
 </head>
@@ -1265,8 +1268,10 @@ if ($css != '') {
   echo '<div id="saveError"><img src="/artwork/no_save.png" width="60" height="60" alt="Warning" /> <div><span style="color:#C42828; font-weight:bold">' .  $string['savefailed'] . '</span><br />' . $string['tryagain'] . '</div></div>';
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
-    echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";
-    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
+    if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
+			echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";
+    }
+		echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
   } else {
     echo $bottom_html;
     ?>
@@ -1299,8 +1304,8 @@ if ($css != '') {
     }
     echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
     if ($current_screen > $no_screens) {
-      echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;";
-    } else {
+			echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;";
+		} else {
       echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;";
     }
     echo '</td></tr></table>';
