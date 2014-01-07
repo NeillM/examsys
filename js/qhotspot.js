@@ -230,15 +230,17 @@ function qh_test(type) {
   this.handle_over = -1;
   this.context.globalAlpha = 1;
 	this.context.lineWidth = 1;
- 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 	for (i in this.hotSpots) {
     var fields = this.hotSpots[i][3];
+		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     //drawing all the fileds for that label
     for (j=0; j<fields;j++) {
       var f_type = this.hotSpots[i][(3+j*6+1)];
       this.HsCo = this.hotSpots[i][(3+j*6+2)].split(',');
-      var col1 = this.hotSpots[i][2];
-      var col2 = this.hotSpots[i][2];
+			//var col1 = this.hotSpots[i][2];
+      //var col2 = this.hotSpots[i][2];
+      var col1 = this.layerColours[i];
+      var col2 = this.layerColours[i];
 
 			if (type == 'cursor') this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 			this.draw_limit = new Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
@@ -282,16 +284,19 @@ function qh_test(type) {
 			for (j=0;j<this.answers[i].length;j++) {        
 				this.answers[i][j][0] = '0';
 				if (typeof this.answers[i][j][1]!='undefined' && this.answers[i][j][1]!='' && this.answers[i][j][1]!='false') {
-					var timgd = this.context.getImageData((1*this.answers[i][j][1]+300-0.5),(1*this.answers[i][j][2]+25-0.5-this.yOffset),1,1);
-					var timgp = timgd.data;
-					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == this.hotSpots[i][2].toUpperCase()) {
+					tx = (1*this.answers[i][j][1]+300+4.5);
+					ty = (1*this.answers[i][j][2]+25-0.5-this.yOffset);
+					timgd = this.context.getImageData(tx,ty,1,1);					
+					timgp = timgd.data;
+					//if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == this.layerColours[i].toUpperCase()) {
+					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000') {
 						this.answers[i][j][0] = '1';
 					}
 				}
 			}
 		}	
   }
-	
+	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
   if (type == 'answers' && (this.qmode == 'answer' || this.qmode == 'edit' || this.qmode == 'correction')) this.qh_ReturnInfo();
   if (type == 'cursor') return this.hotspot_over;
 }
@@ -345,7 +350,6 @@ function qh_redraw_canvas() {
     //test against label fields  
     if (this.do_the_test && this.qmode!='script') {
 			this.qh_test('answers');
-			this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
 		}
 		
 		//return;
