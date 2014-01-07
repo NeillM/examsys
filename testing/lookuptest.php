@@ -25,6 +25,9 @@
  * @package
  */
 
+ini_set('xdebug.var_display_max_depth',10);
+ini_set('xdebug.var_display_max_children',1024);
+
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . '/../include/auth.inc';
