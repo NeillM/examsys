@@ -158,10 +158,10 @@ class XML_lookup extends outline_lookup {
 
     $lookupobj = $this->xmlsearch($xml, $lookupobj, 'userlookup');
 
-    if ($overrideallset == true) {
+    if (isset($overrideallset) and $overrideallset == true) {
       unset($lookupobj->settings->overrideall);
     }
-    if ($overrideset == true) {
+    if (isset($overrideset) and $overrideset == true) {
       unset($lookupobj->settings->override);
     }
 
@@ -313,6 +313,9 @@ class XML_lookup extends outline_lookup {
       if (isset($datablock[$key][0]) and !isset($lookupdatas->$reverse_attribute)) {
         $lookupdatas->$reverse_attribute = $datablock[$key][0];
       }
+    }
+    if(!isset($lookupdatas)) {
+      $lookupdatas=new stdClass();
     }
     $lookupobj->lookupdatas[] = $lookupdatas;
 
