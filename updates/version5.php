@@ -15,7 +15,8 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * update script updates any V5 Rogo to latest V5 Rogo
+ * Update script updates any V5 Rogō to latest V5 Rogō.
+ *
  * @author Simon Wilkinson
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
@@ -31,7 +32,7 @@ require_once '../classes/dbutils.class.php';
 require_once '../classes/stringutils.class.php';
 require_once '../include/std_set_shared_functions.inc';
 
-$version = '5.1';
+$version = '5.1.1';
 $migration_path = 'version5';
 
 set_time_limit(0);

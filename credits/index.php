@@ -63,7 +63,7 @@ Josef Martiňák<br />
 Dr Nikodem Miranowicz<br />
 <br />
 <strong><?php echo $string['languagepacks'] ?></strong><br />
-Zuzana Džupinková, Bohumil Havel<br />(1st Faculty of Medicine, Charles University)<br />
+1st Faculty of Medicine, Charles University (Prague)<br />
 <br />
 <strong>QTI</strong><br />
 Adam Clarke<br />
