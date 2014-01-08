@@ -36,6 +36,7 @@ class XML_lookup extends outline_lookup {
 
   function register_callback_routines() {
     $callbackarray[] = array(array($this, 'userlookup'), 'userlookup', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'modulelookup'), 'modulelookup', $this->number, $this->name);
 
 
     return $callbackarray;
@@ -47,12 +48,135 @@ class XML_lookup extends outline_lookup {
     return array('userlookupxmltranslate');
   }
 
+  function modulelookup($lookupobj) {
+
+
+    $this->savetodebug('The XML modulelookup function has been called');
+
+    if (isset($this->settings['modulelookup']['mandatoryurlfields'])) {
+      // mandatory fields required!
+      foreach ($this->settings['modulelookup']['mandatoryurlfields'] as $index) {
+        if (!isset($lookupobj->lookupdata->$index)) {
+          //mandatory field not found
+          $this->savetodebug("Mandatory field of $index required for this search but not found");
+
+          return $lookupobj;
+        }
+      }
+    }
+
+    // if the lookup doesnt have these set and the default for the module configuration exist use them
+    if (!isset($lookupobj->settings->override)) {
+      if (isset($this->settings['modulelookup']['override'])) {
+        $overrideset = true;
+        foreach ($this->settings['modulelookup']['override'] as $key => $value) {
+          $lookupobj->settings->override[$key] = $value;
+        }
+        $this->savetodebug('Overriding settings from modulelookup as none supplied');
+      } elseif (isset($this->settings['override'])) {
+        $overrideset = true;
+        foreach ($this->settings['override'] as $key => $value) {
+          $lookupobj->settings->override[$key] = $this->settings['override'][$value];
+        }
+        $this->savetodebug('Overriding settings from xml plugin as none supplied');
+      }
+    }
+    if (!isset($lookupobj->settings->overrideall)) {
+      if (isset($this->settings['modulelookup']['overrideall'])) {
+        $overrideallset = true;
+        $lookupobj->settings->overrideall = $this->settings['modulelookup']['overrideall'];
+        $this->savetodebug('Overriding all settings from modulelookup as none supplied');
+      } elseif (isset($this->settings['overrideall'])) {
+        $overrideallset = true;
+        $lookupobj->settings->overrideall = $this->settings['overrideall'];
+        $this->savetodebug('Overriding all settings  from xml plugin as none supplied');
+      }
+    }
+
+
+
+    $url = $this->settings['baseurl'];
+    if (isset($this->settings['modulelookup']['url'])) {
+      $url .= $this->settings['modulelookup']['url'];
+    }
+    if (isset($this->settings['modulelookup']['urlfields'])) {
+      foreach ($this->settings['modulelookup']['urlfields'] as $urlparam => $index) {
+        //$this->savetodebug('appending url ' . 'urlparam' . ' :: ' . $index);
+        if (isset($lookupobj->lookupdata->$index)) {
+          //a field that can be supplied as argument
+          $url .= '&' . $urlparam . '=' . $lookupobj->lookupdata->$index;
+        }
+      }
+    }
+
+    $this->savetodebug('URL is: ' . $url);
+
+
+    //setting options for curl retrieval eg username/password or form submission
+
+    $usefile = true;
+
+    if ($usefile == true) {
+      $returned_data = @file_get_contents($url);
+      $xml = false;
+      if ($returned_data !== false) {
+        try {
+          $xml = new SimpleXMLElement($returned_data);
+        } catch (Exception $e) {
+          throw new Exception('SimpleXMLElemnt creation has thrown', 0, $e);
+        }
+      }
+    }
+    if ($xml == false) {
+      $this->savetodebug('No valid XML received');
+
+      return $lookupobj;
+    }
+
+
+    list($callbacklist, $callbackregisterdatalist) = $this->get_callback('modulelookupxmltranslate');
+
+    //  run any appropriate translation callbacks
+
+    if (is_array(($callbacklist))) {
+      //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
+      foreach ($callbacklist as $number => $callback) {
+
+        $xml = call_user_func_array($callback, array($xml));
+        $objid = key($callbackregisterdatalist[$number]);
+        $new_messages = $this->get_new_debug_messages($objid);
+        foreach ($new_messages as $key => $value) {
+          $info1 = $this->get_module_authinfo($objid);
+          $info = key($info1) . ':' . current($info1);
+          $this->savetodebug("User Lookup XML Translate:authObj($info)[$number:$key]: $value");
+        }
+      }
+    }
+
+
+    $this->savetodebug('XML is: ' . var_export($xml, true));
+
+    $lookupobj = $this->xmlsearch($xml, $lookupobj, 'modulelookup');
+
+    if (isset($overrideallset) and $overrideallset == true) {
+      unset($lookupobj->settings->overrideall);
+    }
+    if (isset($overrideset) and $overrideset == true) {
+      unset($lookupobj->settings->override);
+    }
+
+
+    return $lookupobj;
+
+
+  }
+
   function userlookup($lookupobj) {
     $searchsuccess = false;
     $usefile = false;
 
 
-    $this->savetodebug('The UoNSaturn userlookup function has been called');
+    $this->savetodebug('The XML userlookup function has been called');
 
 
 //    $this->savetodebug('Received data:' . var_export($lookupobj, true));

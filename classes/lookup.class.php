@@ -166,6 +166,107 @@ class Lookup extends RogoStaticSingleton {
     $this->debug[] = 'Loaded Config for lookup';
   }
 
+  function modulelookup($data) {
+    if (!isset($data->searchorder)) {
+      if (isset($this->settings->searchorder)) {
+        $data->searchorder = $this->settings->searchorder;
+      } else {
+        $this->debug[] = 'Setting default search order as none supplied';
+        $data->searchorder = array('modulecode'));
+      }
+    }
+
+    if (!isset($data->lookupdata)) {
+      return new stdClass();
+    }
+
+    $premodulelookupobj = new stdClass();
+    $premodulelookupobj->lookupdata = $data->lookupdata;
+    $premodulelookupobj->searchorder = $data->searchorder;
+    if (isset($this->callbackregister['premodulelookup'])) {
+      foreach ($this->callbackregister['premodulelookup'] as $number => $callback) {
+        $premodulelookupobj = call_user_func_array($callback, array($premodulelookupobj));
+        $objid = key($this->callbackregisterdata['premodulelookup'][$number]);
+        $this->append_lookup_object_debug($objid);
+      }
+    }
+
+
+    $modulelookupobj = new stdClass();
+    $modulelookupobj->lookupdata = $premodulelookupobj->lookupdata;
+    $modulelookupobj->searchorder = $premodulelookupobj->searchorder;
+
+    if (isset($this->callbackregister['modulelookup'])) {
+      foreach ($this->callbackregister['modulelookup'] as $number => $callback) {
+        $modulelookupobj = call_user_func_array($callback, array($modulelookupobj));
+        $objid = key($this->callbackregisterdata['modulelookup'][$number]);
+        $this->append_lookup_object_debug($objid);
+
+        if (isset($this->callbackregister['usertranslatelookup'])) {
+          foreach ($this->callbackregister['usertranslatelookup'] as $number => $callback) {
+            $modulelookupobj = call_user_func_array($callback, array($modulelookupobj));
+            $objid = key($this->callbackregisterdata['usertranslatelookup'][$number]);
+            $this->append_lookup_object_debug($objid);
+          }
+        }
+
+      }
+    }
+
+    if (isset($data->settings->recursive) and $data->settings->recursive == true) {
+      $modulelookupobj->lookupdatasrec = array();
+      foreach ($modulelookupobj->lookupdatas as $key => $lkdsvalue) {
+        $block = new stdClass();
+        $block->lookupdata =& $modulelookupobj->lookupdatas[$key];
+        if (isset($data->settings->recursive_searchorder)) {
+          $block->searchorder = $data->settings->recursive_searchorder;
+        }
+        if (isset($data->settings->recursive_overrideall)) {
+          $block->overrideall = $data->settings->recursive_overrideall;
+        }
+        if (isset($data->settings->recursive_override)) {
+          $block->override = $data->settings->recursive_override;
+        }
+        $modulelookupobj->lookupdatasrec[$key] = clone $block;
+        $this->debug[] = 'Now running recursively on data search results';
+
+        $modulelookupobj->lookupdatasrec[$key] = $this->modulelookup($modulelookupobj->lookupdatasrec[$key]);
+
+        if (isset($data->settings->recursive_max) and $key > $data->settings->recursive_max) {
+          $this->debug[] = 'max recursive number for search exceeded ' . $key > $data->settings->recursive_max . ' Total # records: ' . count($modulelookupobj->lookupdatas);
+          break;
+        }
+      }
+    }
+
+    $postmodulelookupobj = new stdClass();
+    $postmodulelookupobj->lookupobj = $modulelookupobj;
+    if (isset($this->callbackregister['postmodulelookup'])) {
+      foreach ($this->callbackregister['postmodulelookup'] as $number => $callback) {
+        $postmodulelookupobj = call_user_func_array($callback, array($postmodulelookupobj));
+        $objid = key($this->callbackregisterdata['postmodulelookup'][$number]);
+        $this->append_lookup_object_debug($objid);
+      }
+    }
+    $modulelookupobj = $postmodulelookupobj->lookupobj;
+
+    if (!isset($modulelookupobj->lookupdatas)) {
+      $modulelookupobj->failed = true;
+      $modulelookupobj->success = false;
+    } else {
+      $modulelookupobj->failed = false;
+      $modulelookupobj->success = true;
+    }
+
+
+    if (isset($modulelookupobj->multiple) and $modulelookupobj->multiple == true) {
+      $modulelookupobj->lookupdata->unreliable = true;
+    }
+
+    return $modulelookupobj;
+
+
+  }
 
   function userlookup($data) {
     if (!isset($data->searchorder)) {
@@ -180,6 +281,7 @@ class Lookup extends RogoStaticSingleton {
     if (!isset($data->lookupdata)) {
       return new stdClass();
     }
+
     $preuserlookupobj = new stdClass();
     $preuserlookupobj->lookupdata = $data->lookupdata;
     $preuserlookupobj->searchorder = $data->searchorder;
