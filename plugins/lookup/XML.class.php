@@ -66,6 +66,42 @@ class XML_lookup extends outline_lookup {
       }
     }
 
+    //check if restrict is set
+    $restrict=$this->get_setting('restrict','modulelookup');
+
+    $restrictstop = false;
+    if (!is_null($restrict)) {
+      foreach($restrict as $key => $value) {
+        if (!isset($lookupobj->lookupdata->$key)) {
+          $restrictstop = true;
+        }
+        if (strpos($value, '|') === false) {
+          //condition
+          if ($lookupobj->lookupdata->$key !== $value) {
+            $restrictstop = true;
+          }
+        } else {
+          // OR condition
+          $restrictstop1 = 0;
+          $exp=explode('|',$value);
+          foreach ($exp as $value1) {
+            if ($lookupobj->lookupdata->$key === $value1) {
+              $restrictstop1++;
+            }
+          }
+          if($restrictstop1 == 0) {
+            $restrictstop = true;
+          }
+
+        }
+
+      }
+    }
+
+    if($restrictstop !== false) {
+      return $lookupobj;
+    }
+
     // if the lookup doesnt have these set and the default for the module configuration exist use them
     if (!isset($lookupobj->settings->override)) {
       if (isset($this->settings['modulelookup']['override'])) {
