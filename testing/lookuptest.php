@@ -82,7 +82,13 @@ $data->lookupdata = $newdata;
 $funcname=$_REQUEST['lookuptesttype'] . 'lookup';
 $info = $lookup->$funcname($data);
 
-echo "<h2>Info</h2>";
+
+echo "<h2>Info in</h2>";
+print "<pre>";
+var_dump($data->lookupdata);
+print "</pre>";
+
+echo "<h2>Info back</h2>";
 print "<pre>";
 var_dump($info->lookupdata);
 print "</pre>";

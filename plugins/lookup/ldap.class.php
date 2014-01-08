@@ -75,14 +75,16 @@ class ldap_lookup extends outline_lookup {
     $searchsuccess = false;
     foreach ($lookupobj->searchorder as $keyno => $orderitem) {
       $filter = '';
-
+      $this->savetodebug("search order item no $keyno started");
 
       if (is_array($orderitem)) {
+        $this->savetodebug('search order item is an array');
         $countcheck = 0;
         $countcheck2 = 0;
         $count = count($orderitem);
         $filter = '(&';
         foreach ($orderitem as $item) {
+          $this->savetodebug('search order item array contains a search for: ' . $item);
           if (count(array_keys($ldap_attributes, $item)) > 0) {
             //searching item exists in ldap attribute so we can search
             $countcheck++;
@@ -102,6 +104,7 @@ class ldap_lookup extends outline_lookup {
 
         //multiple filter option use and
       } else {
+        $this->savetodebug('search order item is a single item');
         //single filter option
         if (count(array_keys($ldap_attributes, $orderitem)) > 0) {
           //searching item exists in ldap attribute so we can search
