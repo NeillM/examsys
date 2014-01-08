@@ -397,6 +397,7 @@ class XML_lookup extends outline_lookup {
 
         foreach ($xmlsearched as $numb => $datablock) {
           $this->savetodebug("Saving Entry #$numb");
+          $this->savetodebug('Datablock IS NOW: ' . var_export($datablock, true));
           $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, $section);
 
         }
