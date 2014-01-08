@@ -383,6 +383,7 @@ class XML_lookup extends outline_lookup {
         $lookupobj->multiple = true;
       }
       $attributes = $this->get_setting('xmlfields', $section);
+      $rawattributes = $this->get_setting('rawxmlfields', $section);
 
       $this->savetodebug("Found $count records");
       if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == true) {
@@ -402,7 +403,7 @@ class XML_lookup extends outline_lookup {
         foreach ($xmlsearched as $numb => $datablock) {
           $this->savetodebug("Saving Entry #$numb");
           $this->savetodebug('Datablock IS NOW: ' . var_export($datablock, true));
-          $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, $section);
+          $lookupobj = $this->store_in_data($datablock, $rawattributes, $lookupobj, $section);
 
         }
       }
@@ -418,7 +419,7 @@ class XML_lookup extends outline_lookup {
 
   }
 
-  function store_in_data($datablock, $attributes, $lookupobj, $section) {
+  function store_in_data($datablock, $attributes, $lookupobj, $section, $raw = false) {
     $prepend = '';
     if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == true)) {
       $this->savetodebug('Setting attributes to lowercase');
@@ -443,7 +444,11 @@ class XML_lookup extends outline_lookup {
       if (isset($datablock->$key) and (((isset($lookupobj->lookupdata->$reverse_attribute)) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true) or (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == true)))) or (!isset($lookupobj->lookupdata->$reverse_attribute)))) {
         // store data to lookup if XML attribute listed and ( not set or if set and ( overrideall or override value or override inverse ldap se+t))
 
-        $lookupobj->lookupdata->$reverse_attribute = (string)$datablock->$key;
+        if($raw === false) {
+          $lookupobj->lookupdata->$reverse_attribute = (string)$datablock->$key;
+        } else {
+          $lookupobj->lookupdata->$reverse_attribute = $datablock->$key;
+        }
         $this->savetodebug("saving value for $reverse_attribute using XML attribute: $key");
 
       }
@@ -474,10 +479,18 @@ class XML_lookup extends outline_lookup {
 
         if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
           // store data to datablock store if not set or if set and ( overrideall or override value set)
-          $lookupobj->datablockstore[$prepend . $key] = (string)$value;
+          if($raw === false) {
+            $lookupobj->datablockstore[$prepend . $key] = (string)$value;
+          } else {
+            $lookupobj->datablockstore[$prepend . $key] = $value;
+          }
         }
 
-        $datablockstore[$prepend . $key] = (string)$value;
+        if($raw === false) {
+          $datablockstore[$prepend . $key] = (string)$value;
+        } else {
+          $datablockstore[$prepend . $key] = $value;
+        }
       }
 
 
