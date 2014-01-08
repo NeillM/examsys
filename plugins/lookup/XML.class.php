@@ -73,11 +73,13 @@ class XML_lookup extends outline_lookup {
     if (!is_null($restrict)) {
       foreach($restrict as $key => $value) {
         if (!isset($lookupobj->lookupdata->$key)) {
+          $this->savetodebug("Restriction stopped debug $key not found");
           $restrictstop = true;
         }
         if (strpos($value, '|') === false) {
           //condition
           if ($lookupobj->lookupdata->$key !== $value) {
+            $this->savetodebug("Restriction stopped debug $key !== $value");
             $restrictstop = true;
           }
         } else {
@@ -90,6 +92,7 @@ class XML_lookup extends outline_lookup {
             }
           }
           if($restrictstop1 == 0) {
+            $this->savetodebug("Restriction stopped debug one of the ORs of $value in the key $key");
             $restrictstop = true;
           }
 
@@ -99,6 +102,7 @@ class XML_lookup extends outline_lookup {
     }
 
     if($restrictstop !== false) {
+      $this->savetodebug("Restriction stopped function running");
       return $lookupobj;
     }
 
