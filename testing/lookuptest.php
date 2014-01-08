@@ -60,6 +60,7 @@ $lookup = Lookup::get_instance($configObj, $mysqli);
 //$authobj->data contains lookup info;
 $newdata = new stdClass();
 
+var_dump($newdata);
 if(!isset($_REQUEST['lookuptesttype'])) {
   $_REQUEST['lookuptesttype']='user';
 }
@@ -80,13 +81,17 @@ $data = new stdClass();
 $data->lookupdata = $newdata;
 
 $funcname=$_REQUEST['lookuptesttype'] . 'lookup';
-$info = $lookup->$funcname($data);
-
 
 echo "<h2>Info in</h2>";
 print "<pre>";
 var_dump($data->lookupdata);
 print "</pre>";
+
+
+$info = $lookup->$funcname($data);
+
+
+
 
 echo "<h2>Info back</h2>";
 print "<pre>";
