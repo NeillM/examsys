@@ -172,7 +172,7 @@ class Lookup extends RogoStaticSingleton {
         $data->searchorder = $this->settings->searchorder;
       } else {
         $this->debug[] = 'Setting default search order as none supplied';
-        $data->searchorder = array('modulecode'));
+        $data->searchorder = array('modulecode');
       }
     }
 
