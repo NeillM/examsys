@@ -365,6 +365,10 @@ class XML_lookup extends outline_lookup {
     } else {
       $filter = '//*/parent::*';
     }
+    $filter1=$this->get_setting('filter', $section);
+    if(!is_null($filter1)) {
+      $filter = $filter1;
+    }
     $this->savetodebug("Using search filter: $filter");
     $xmlsearched = $xml->xpath($filter);
 
