@@ -45,7 +45,7 @@ class XML_lookup extends outline_lookup {
   //need function to register the extracallback
   function register_callback_sections() {
     //this is blank so that classes that dont register anything dont break
-    return array('userlookupxmltranslate');
+    return array('userlookupxmltranslate','modulelookupxmltranslate');
   }
 
   function modulelookup($lookupobj) {

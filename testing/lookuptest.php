@@ -60,7 +60,7 @@ $lookup = Lookup::get_instance($configObj, $mysqli);
 //$authobj->data contains lookup info;
 $newdata = new stdClass();
 
-var_dump($newdata);
+
 if(!isset($_REQUEST['lookuptesttype'])) {
   $_REQUEST['lookuptesttype']='user';
 }
@@ -71,8 +71,6 @@ foreach ($_REQUEST as $key => $value) {
     $list = $list . " $key = $value";
   }
 }
-
-$newdata->$_REQUEST['fieldname'] = $_REQUEST['fieldcontent'];
 
 echo "use lookuptesttype to set type of lookup anything else taken as a key value pair<br>";
 echo "<h1>looking up via $_REQUEST[lookuptesttype] for $list</h1>";
