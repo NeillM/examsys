@@ -56,9 +56,10 @@ class XML_lookup extends outline_lookup {
     if (isset($this->settings['modulelookup']['mandatoryurlfields'])) {
       // mandatory fields required!
       foreach ($this->settings['modulelookup']['mandatoryurlfields'] as $index) {
-        if (!isset($lookupobj->lookupdata->$index)) {
+        $fieldname = $this->settings['modulelookup']['urlfields'][$index];
+        if (!isset($lookupobj->lookupdata->$fieldname)) {
           //mandatory field not found
-          $this->savetodebug("Mandatory field of $index required for this search but not found");
+          $this->savetodebug("Mandatory field of $fieldname for $index required for this search but not found");
 
           return $lookupobj;
         }
@@ -191,9 +192,10 @@ class XML_lookup extends outline_lookup {
     if (isset($this->settings['userlookup']['mandatoryurlfields'])) {
       // mandatory fields required!
       foreach ($this->settings['userlookup']['mandatoryurlfields'] as $index) {
-        if (!isset($lookupobj->lookupdata->$index)) {
+        $fieldname = $this->settings['userlookup']['urlfields'][$index];
+        if (!isset($lookupobj->lookupdata->$fieldname)) {
           //mandatory field not found
-          $this->savetodebug("Mandatory field of $index required for this search but not found");
+          $this->savetodebug("Mandatory field of $fieldname for $index required for this search but not found");
 
           return $lookupobj;
         }
