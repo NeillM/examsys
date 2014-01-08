@@ -40,7 +40,7 @@ require_once '../classes/dateutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .sechead {background-color:#EBF2F7; color:#00156E; border-bottom: 1px solid #CFDBEB}
+    .sechead {background-color:#EAEAEA}
   </style>
   
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -69,7 +69,19 @@ for ($i=1; $i<$plugin_no; $i++) {
   $settinginfo = '';
   foreach ($authinfo->plugins[$i]->settings as $setting => $value) {
     if ($settinginfo != '') $settinginfo .= ', &nbsp; ';
-    $settinginfo .= $setting . '=' . $value ;
+		if (is_array($value)) {
+			$sub_info = '';
+			foreach ($value as $sub_key => $sub_value) {
+			  if ($sub_info == '') {
+					$sub_info = "$sub_key = > $sub_value";
+				} else {
+					$sub_info .= ", $sub_key = > $sub_value";
+				}
+			}
+			$settinginfo .= $setting . "=array($sub_info)";
+		} else {
+			$settinginfo .= $setting . '=' . $value;
+		}
   }
   
   echo "<tr><td>" . $authinfo->plugins[$i]->number . ".</td><td><nobr>" . $authinfo->plugins[$i]->name . "</nobr></td><td>" . $authinfo->plugins[$i]->classname . "</td><td>" . $authinfo->plugins[$i]->version . "</td><td>$settinginfo</td></tr>\n";
