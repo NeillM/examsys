@@ -123,7 +123,7 @@ if ($log_metadata->get_record() === false) {
 $metadataid = $log_metadata->get_metadata_id();
 
 try {
-  $ret = record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $userObject->get_grade(), $userObject->get_year(), $attempt, $userObject->list_user_roles(), $metadataid, $preview_q_id);
+  $ret = record_marks($propertyObj->get_property_id(), $mysqli, $propertyObj->get_paper_type(), $metadataid, $preview_q_id);
 } catch (RandomQuestionNotFound $ex) {
   $ret = false;
 }

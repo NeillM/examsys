@@ -374,7 +374,7 @@ if (!$is_first_launch) {
     $current_screen = $_POST['current_screen'] - 2;
   } elseif ($_POST['button_pressed'] == 'jump_screen') {
     $current_screen = $_POST['jump_screen'];
-  } elseif ($_POST['fire_alarm'] == 1) {
+  } elseif ($is_fire_alarm) {
     $current_screen = $_POST['current_screen'];
   }
 }
@@ -421,7 +421,7 @@ if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($p
 */
 if ($is_question_preview_mode == false) {
   if (!$is_first_launch and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($paperID, $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles, $metadataID);
+    record_marks($paperID, $mysqli, $propertyObj->get_paper_type(), $metadataID);
   }
 }
 
@@ -1250,7 +1250,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   echo "<input type=\"hidden\" name=\"page_start\" value=\"" . date("YmdHis", time()) . "\" />\n";
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
-  echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
+  echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"next\" />\n";
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
   if (isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview') {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";

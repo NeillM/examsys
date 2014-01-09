@@ -135,14 +135,13 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
  * @param mixed $paper_id
  * @param mixed $screen_no
  * @param mixed $dblink
- * @param mixed $userid
+
  * @param mixed $paper_type T
- * @param mixed $student_grade
- * @param mixed $student_year
- * @param mixed $userroles
+ * @param mixed $metadataID
+
  *
  */
-function record_marks($paper_id, $db, $userid, $paper_type, $student_grade, $student_year, $attempt, $userroles, $metadataID, $preview_q_id = null) {
+function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = null) {
   global $original_paper_type; //TODO: move this into the function definition
   $screen_no = $_POST['old_screen'];
   $extra_duration = $_POST['previous_duration'];
