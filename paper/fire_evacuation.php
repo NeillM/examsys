@@ -121,6 +121,7 @@ if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 $sessionid = $log_metadata->get_session_id();
 
+$metadataID = $log_metadata->get_metadata_id();
 /*
 * Save any posted answers
 *
@@ -129,7 +130,7 @@ $sessionid = $log_metadata->get_session_id();
 */
 if ($is_question_preview_mode == false) {
   if ((isset($_POST['old_screen']) and $_POST['old_screen'] != '') and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
-    record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles);
+    record_marks($propertyObj->get_property_id(), $mysqli, $userObject->get_user_ID(), $propertyObj->get_paper_type(), $grade, $year, $attempt, $userroles, $metadataID);
   }
 }
 ?>
