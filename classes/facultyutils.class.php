@@ -16,7 +16,7 @@
 
 /**
  *
- * Utility class for installer related functionality
+ * Utility class for Faculty related functionality
  *
  * @author Anthony Brown, Simon Wilkinson
  * @version 1.0
@@ -51,7 +51,6 @@ Class FacultyUtils {
     return $exist;
   }
 
-
   /**
    * Checks if a faculty name already exists.
    * @param string $facultyname - The ID of the faculty to be checked
@@ -75,8 +74,6 @@ Class FacultyUtils {
 
     return $exist;
   }
-
-
 
   /**
    * gets faculty id by namename already exists.

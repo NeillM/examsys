@@ -27,6 +27,14 @@
 
 Class SchoolUtils {
 
+	/**
+	 * Adds a new school to the 'schools' table and returns its new ID.
+	 * @param int $facultyID    - ID of the faculty to which the new school belongs.
+	 * @param string $school    - Name of the new school
+	 * @param object $db        - Link to mysqli
+	 *
+	 * @return int              - The ID of the school.
+	 */
   static function add_school($facultyID, $school, $db) {
     if ($facultyID === '' or $school === '') {
       return false;
@@ -48,7 +56,13 @@ Class SchoolUtils {
     return $db->insert_id;
   }
 
-  static function get_school_list_by_id($db) {
+	/**
+	 * Returns an array of schools (that are not deleted).
+	 * @param object $db        - Link to mysqli
+	 *
+	 * @return array            - An array of schools keyed by ID and holding school name and faculty ID.
+	 */
+	 static function get_school_list_by_id($db) {
     $school_list = array();
 
     $stmt = $db->prepare("SELECT id, school, facultyID FROM schools WHERE deleted IS NULL");
@@ -63,20 +77,13 @@ Class SchoolUtils {
     return $school_list;
   }
 
-  static function get_school_list_by_name($db) {
-    $school_list = array();
-
-    $stmt = $db->prepare("SELECT id, school FROM schools WHERE deleted IS NULL");
-    $stmt->execute();
-    $stmt->bind_result($id, $school);
-    while ($stmt->fetch()) {
-      $school_list['school'] = $id;
-    }
-    $stmt->close();
-
-    return $school_list;
-  }
-
+	/**
+	 * Returns the ID of a school from a provided name.
+	 * @param int $school_name  - Name of the school to be looked up.
+	 * @param object $db        - Link to mysqli
+	 *
+	 * @return int              - ID of the school.
+	 */
   static function get_school_id_by_name($school_name, $db) {
     if ($school_name == '') {
       return false;
@@ -120,6 +127,7 @@ Class SchoolUtils {
 	 * Get the schools a member of staff with 'Admin' rights has access to.
 	 * @param int $admin_userid - ID of the member of staff user
 	 * @param object $db        - Link to mysqli
+	 *
 	 * @return array            - List of schools the member of staff has access to.
 	 */
 	static function get_admin_schools($admin_userid, $db) {
@@ -142,6 +150,7 @@ Class SchoolUtils {
 	 * @param int $facultyID  - ID of faculty to check
 	 * @param string $school  - School name to check
 	 * @param object $db      - Link to mysqli
+	 *
 	 * @return bool           - True if school name already exists for the faculty
 	 */
 	static function school_exists_in_faculty($facultyID, $school, $db) {
@@ -162,6 +171,7 @@ Class SchoolUtils {
 	 * Check if a school ID exists
 	 * @param int $schoolID - ID of the school to check
 	 * @param object $db    - Link to mysqli
+	 *
 	 * @return bool         - True if the school ID is found
 	 */
 	static function schoolid_exists($schoolID, $db) {
@@ -182,6 +192,7 @@ Class SchoolUtils {
 	 * Check if a school name already exists
 	 * @param int $school   - Name of the school to check
 	 * @param object $db    - Link to mysqli
+	 *
 	 * @return bool         - True if the school name is found
 	 */
 	static function school_name_exists($school, $db) {
@@ -207,6 +218,8 @@ Class SchoolUtils {
 	 * Delete a school by setting a flag
 	 * @param int $schoolID - ID of the school to delete
 	 * @param object $db    - Link to mysqli
+	 *
+	 * @return bool         - Return false if no schoolID is passed.
 	 */
  static function delete_school($schoolID, $db) {
     if ($schoolID == '') {

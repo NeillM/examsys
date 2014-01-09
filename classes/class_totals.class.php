@@ -123,7 +123,6 @@ class ClassTotals {
   }
 
   function error_handling($context = null) {
-
     return error_handling($this);
   }
 
@@ -190,6 +189,7 @@ class ClassTotals {
       $rval .= $status . ': ';
       $rval .= implode(', ', $questions) . '<br />';
     }
+		
     return $rval;
   }
 
@@ -201,6 +201,10 @@ class ClassTotals {
     return $this->user_no;
   }
 
+	/**
+	 * Initiates the building of the main Class Totals report.
+	 * @param bool $recache - True = will force paper caches to be updated.
+	 */
   public function compile_report($recache) {
     $results_cache = new ResultsCache($this->db);
     if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
@@ -253,11 +257,18 @@ class ClassTotals {
     }
   }
 
+	/**
+	 * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
+	 * @param string $original - The date that needs to be convered.
+	 */
   public function nicedate($original) {
     return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
   }
 
-  private function adjust_marks() {
+	/**
+	 * Works out if marks need scaling (monkey mark or standards setting) and will apply necessary conversions.
+	 */
+	 private function adjust_marks() {
     $user_no = count($this->user_results);
 
     if ($this->marking == '1') {                              // Monkey mark
@@ -273,6 +284,11 @@ class ClassTotals {
     }
   }
 
+	/**
+	 * Load question data for a random question.
+	 * @param int $questionID - Question ID of the random question to be loaded.
+	 * @return int						- Question ID of the 'original' or parent random question.
+	 */
   private function getRandomDetails($questionID) {
     $this->random_q_ids[] = $questionID;
 
@@ -371,7 +387,13 @@ class ClassTotals {
     }
   }
 
-  private function checkDisplayExcluded($exclude, $q_no, $q_type) {
+	/**
+	 * Builds up a list of excluded questions for display at the bottom of the report.
+	 * @param array $exclude - Array of which questions on the paper are excluded.
+	 * @param int $q_no			 - ID of the question to be checked.
+	 * @param string $q_type - Type of the question to be checked.
+	 */
+	 private function checkDisplayExcluded($exclude, $q_no, $q_type) {
     $subpart = '';
 
     if ($q_type != 'mrq' and $q_type != 'rank' and strlen($exclude) > 1) {
@@ -395,7 +417,12 @@ class ClassTotals {
     }
   }
 
-  private function displayExperimental($q_no, $status) {
+	/**
+	 * Builds up a list of questions with non-marked (i.e. experimental) status for display at the bottom of the report.
+	 * @param int $q_no			 - ID of the question to be checked.
+	 * @param string $status - Name of the status to be checked.
+	 */
+	 private function displayExperimental($q_no, $status) {
     if (!isset($this->display_experimental[$status])) {
       $this->display_experimental[$status] = array('Q' . $q_no);
     } else {
@@ -403,6 +430,9 @@ class ClassTotals {
     }
   }
 
+	/**
+	 * Calculates what the Standard Setting pass mark is.
+	 */
   private function set_ss_pass() {
     $mark_parts = explode(',', $this->marking);
 
@@ -418,6 +448,9 @@ class ClassTotals {
     }
   }
 
+	/**
+	 * Sets the Standard Setting honours mark to the top 20 percentile of student performance on the paper.
+	 */
   private function set_ss_hon() {
     $user_no = count($this->user_results);
 
@@ -429,8 +462,13 @@ class ClassTotals {
     $this->ss_hon = MathsUtils::percentile($marks_data, 0.2);
   }
 
-  private function crankMark($percent) {
-    if ($this->ss_hon > 0 and $this->ss_hon < 100) {
+	/**
+	 * Converts 'cranks' a percentage using either a pass and honours mark or just a pass mark.
+	 * @param int $percent	 - The percentage to be converted.
+	 * @return int           - The cranked value.
+	 */
+	 private function crankMark($percent) {
+    if ($this->ss_hon > 0 and $this->ss_hon < 100) {    // Two point cranking
       if ($percent < $this->ss_pass) {
         $cranked = $this->pass_mark  - ($this->pass_mark - 0) * (($this->ss_pass - $percent) / ($this->ss_pass - 0));
       } elseif ($percent >= $this->ss_pass and $percent < $this->ss_hon) {
@@ -439,7 +477,7 @@ class ClassTotals {
         $cranked = 100 - (100 - $this->distinction_mark) * ((100 - $percent) / (100 - $this->ss_hon));
       }
     } else {
-      if ($percent < $this->ss_pass) {
+      if ($percent < $this->ss_pass) {                 // One point cranking
         $cranked = $this->pass_mark  - ($this->pass_mark - 0) * (($this->ss_pass - $percent) / ($this->ss_pass - 0));
       } else {
         $cranked = 100 - (100 - $this->pass_mark) * ((100 - $percent) / (100 - $this->ss_pass));
@@ -448,6 +486,14 @@ class ClassTotals {
     return $cranked;
   }
 
+	/**
+	 * Builds up a master array 'user_results' of data about users.
+	 * @param int $user_number					- ID from log_metadata table
+	 * @param int $tmp_user_mark	 			- Mark of the user
+	 * @param int $tmp_user_mark_array	- Array of individual question marks
+	 * @param int $tmp_user_duration	 	- Total paper duration in seconds
+	 * @param int $marking_comp					- 1 = marking is complete, 0 = marking incomplete (i.e. waiting on textbox or calculation question)
+	 */
   private function writeUserResults($user_number, $tmp_user_mark, $tmp_user_mark_array, $tmp_user_duration, $marking_comp) {
     $this->user_results[$user_number]['mark'] = round($tmp_user_mark, 1);
     $this->user_results[$user_number]['mark_array'] = $tmp_user_mark_array;
@@ -817,7 +863,12 @@ class ClassTotals {
     return $tmp_mark;
   }
 
-  public function formatsec($seconds) {
+	/**
+	 * Formats a number of seconds as hours, minutes and seconds.
+	 * @param int $seconds - Number of seconds to be converted.
+	 * @return string  	 	 - Seconds formatted into hour, minutes and seconds.
+	 */
+	 public function formatsec($seconds) {
     $diff_hour = ($seconds / 60) / 60;
     $tmp_position = strpos($diff_hour, '.');
     if ($tmp_position > 0) $diff_hour = substr($diff_hour, 0, $tmp_position);
@@ -840,9 +891,9 @@ class ClassTotals {
 
   /**
    * Check if a record exists in the student cohort array created when showing absent candidates. If found, remove the entry
-   * @param  array  $student_cohort All (remaining) students in the cohort
-   * @param  string $username       Username to look for
-   * @return array                  Cohort array with current user removed if found
+   * @param array $student_cohort - All (remaining) students in the cohort
+   * @param string $username      - Username to look for
+   * @return array                - Cohort array with current user removed if found
    */
   private function check_and_clear_cohort($username) {
     $tmp_cohort_size = count($this->student_cohort);
@@ -990,7 +1041,10 @@ class ClassTotals {
     $result->close();
   }
 
-  private function load_absent() {
+  /**
+   * Work out which students are on the module of the paper but who have not take it.
+   */
+	 private function load_absent() {
     if ($this->absent == 1) {
       // Get students in the cohort.
 

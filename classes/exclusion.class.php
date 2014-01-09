@@ -28,7 +28,11 @@ class Exclusion {
   private $db;
   private $paper_id;   
 
-  public function __construct($paperID, $db) {
+	/**
+	 * @param int $paperID  - ID of the current paper.
+	 * @param object $db    - Link to mysqli
+	 */
+	 public function __construct($paperID, $db) {
   	$this->db = $db;
     $this->paper_id = $paperID;  		
   }

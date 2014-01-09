@@ -16,7 +16,7 @@
 
 /**
  *
- * Utility class for folder related functionality
+ * Utility class for Folder related functionality
  *
  * @author Simon Wilkinson
  * @version 1.0
@@ -51,7 +51,7 @@ Class folder_utils {
   *
   * @param $folder_name The name of the folder
   * @param $userObj The userObject of the currently logged in user
-  * @param $db 
+  * @param $db - Mysqli object
   * @return string the name of the folder.
   */
   static function create_folder($folder_name, $userObj, $db) {
@@ -64,6 +64,15 @@ Class folder_utils {
     }
   }
   
+  /**
+  * Returns whether a personal staff folder exists or not.
+  *
+  * @param $folder_name The name of the folder
+  * @param $folder_name - The name of the folder to be searched for.
+  * @param $userObj 		- Currently logged in user object.
+  * @param $db					- Mysqli object
+  * @return bool				- True = folder exists, False = it does not exist.
+  */
   static function folder_exists($folder_name, $userObj, $db) {
     $result = $db->prepare("SELECT name FROM folders WHERE ownerID = ? AND name = ?");
     $result->bind_param('is', $userObj->get_user_ID(), $folder_name);
@@ -79,6 +88,12 @@ Class folder_utils {
     return $duplicate;
   }
   
+  /**
+  * Returns a list of all folders.
+  *
+  * @param $db		- Mysqli object
+  * @return array	- Array of folders keyed by the ID of the folder in the database.
+  */
   static function get_all_folders($db) {
     $folders = array();
   

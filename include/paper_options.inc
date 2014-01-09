@@ -449,7 +449,7 @@ if ($properties->get_summative_lock() == true) {
 			echo "<div class=\"menuitem cascade\" id=\"team\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','banktasks','team',myOptions1,myURLs1,event)\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/question_list_icon.gif\" alt=\"" . $string['questionsbyteam'] . "\" /><a href=\"#\" onclick=\"return false;\">" . $string['questionsbyteam'] . "</a></div>\n";
 		}
 		if (count($keywords_array) == 0) {
-			echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon.gif\" alt=\"{$string['questionsbykeyword']}\" />" . $string['questionsbykeyword'] . "</div>\n";
+			echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon_grey.gif\" alt=\"{$string['questionsbykeyword']}\" />" . $string['questionsbykeyword'] . "</div>\n";
 		} else {
 			echo "<div class=\"menuitem cascade\" id=\"keyword\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','banktasks','keyword',myOptions2,myURLs2,event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon.gif\" alt=\"{$string['questionsbykeyword']}\" /><a href=\"#\" onclick=\"return false\">{$string['questionsbykeyword']}</a></div>\n";
 		}
