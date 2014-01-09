@@ -17,7 +17,7 @@
 
 /**
  *
- * The internaldb authentication function.
+ * An authentication checking page.
  *
  * @author Simon Atack
  * @version 1.0

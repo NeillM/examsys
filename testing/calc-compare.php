@@ -56,8 +56,8 @@ echo "Start";
   $name = 'enhancedcalc_' . $enhancedcalcType;
   $enhancedcalcObj1 = new $name($enhancedcalcType);
 
-  require_once $cfg_web_root . '/plugins/questions/enhancedcalc/' .  'rserve.php';
-  $enhancedcalcObj2 = new EnhancedCalcRrserve($configObject->getbyref('enhancedcalculation'));
+  require_once $cfg_web_root . '/plugins/questions/enhancedcalc/' .  'Rrserve.php';
+  $enhancedcalcObj2 = new EnhancedCalc_Rrserve($configObject->getbyref('enhancedcalculation'));
 
 $numbers[]=0;
 $numbers[]=10;

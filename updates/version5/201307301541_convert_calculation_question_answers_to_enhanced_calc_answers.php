@@ -25,8 +25,8 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
     $name = 'enhancedcalc_' . $enhancedcalcType;
     $enhancedcalcObj = new $name($configObj->getbyref('enhancedcalculation'));
   } else {
-    require_once $root . '/plugins/questions/enhancedcalc/rserve.php';
-    $enhancedcalcObj = new EnhancedCalcRrserve($configObj->getbyref('enhancedcalculation'));
+    require_once $root . '/plugins/questions/enhancedcalc/Rrserve.php';
+    $enhancedcalcObj = new EnhancedCalc_Rrserve($configObj->getbyref('enhancedcalculation'));
   }
 
 
