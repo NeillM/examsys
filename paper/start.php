@@ -41,6 +41,12 @@ require_once '../classes/exam_announcements.class.php';
 
 $userObject = UserObject::get_instance();
 
+if ($userObject->has_role('External Examiner')) {    // External examiners have their own separate UI.
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', '#C00000', true, true);
+}
+
+
 check_var('id', 'GET', true, false, false);
 
 function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $db, $string) {
