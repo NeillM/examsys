@@ -66,7 +66,14 @@ class Authentication {
   public $initobj, $lookupuserobj, $preauthobj, $authobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
 
-  function __construct(&$configObj, &$db, &$request, &$session) {
+	/**
+	 * @param object $configObj - Configuration object
+	 * @param object $db    		- Link to mysqli
+	 * @param array $request    - Usually made up of $_REQUEST data
+	 * @param array $session    - $_SESSION data passed in
+	 *
+	 */
+	 function __construct(&$configObj, &$db, &$request, &$session) {
 
     $this->db = & $db;
     $this->configObj = & $configObj;
@@ -83,7 +90,7 @@ class Authentication {
   }
 
   /*
-   * verify the config file contains vlaid authentication settings
+   * Verify the config file contains vlaid authentication settings.
    *
    * @return bool
    */
@@ -106,7 +113,7 @@ class Authentication {
   }
 
   /*
-   *  Parse the config and register the relevant callbacks in the auth plugins
+   *  Parse the config and register the relevant callbacks in the auth plugins.
    */
   private function setup() {
     $notfound = true;
@@ -190,6 +197,10 @@ class Authentication {
     }
   }
 
+  /*
+   * Add extra callbacks sections.
+   * @param array $section - Array of callback types.
+   */
   function register_callback_section($section) {
     foreach ($section as $addition) {
       if (!in_array($addition, $this->callbacktypes)) {
@@ -198,6 +209,14 @@ class Authentication {
     }
   }
 
+  /*
+   * Registers a single callback.
+   * @param callable $callback 	- Contains function to run.
+	 * @param string $section			- Which section to register itself into.
+	 * @param int $number					- Internal identifier for the plugin.
+	 * @param string $name				- Internal name of the plugin.
+	 * @param bool $insert				- True  = insert at the top of the list, False = append to the end.
+   */
   function register_callback($callback, $section, $number, $name, $insert = false) {
     global $string;
     if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
@@ -221,12 +240,17 @@ class Authentication {
     return true;
   }
 
-  function get_callback($section) {
+  /*
+   * Get a list of available callbacks for the section.
+	 * @param string $section	- Name of the section.
+   */
+	 function get_callback($section) {
     return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
   }
 
   /*
    * Disply the standard Rogo login form
+	 * @param string $string	- Language strings.
    */
   function display_std_form($string) {
     $displaystdformobj = new stdClass();
@@ -248,7 +272,11 @@ class Authentication {
     }
   }
 
-  function display_error_form($display = true) {
+  /*
+   * Disply the standard Rogo login form
+	 * @param bool $display	- True = display form after failing to log in, False = no form displayed but still runs callback routines.
+   */
+	 function display_error_form($display = true) {
     $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
 
     $displayerrformobj = new stdClass();
@@ -274,12 +302,18 @@ class Authentication {
   }
 
 
-  function error_handling($context = null) {
+  /**
+   * Custom error handler
+	 * @param array $context	- Unused.
+	 * @return array 					- List of the current object's variables.
+   */
+	 function error_handling($context = null) {
     return error_handling($this);
   }
 
 
   /**
+	 * @param string $string	- Language strings.
    * @return bool if authentication was successful
    */
   function do_authentication($string) {
@@ -503,21 +537,32 @@ class Authentication {
     $this->store_data_in_session();
   }
 
+  /**
+   * Stores data in the session
+   */
   function store_data_in_session() {
     $this->session['authenticationObj']['loggedin']['userid'] = $this->get_userid();
     $this->session['authenticationObj']['loggedin']['time'] = time();
     $this->session['authenticationObj']['attempt'] = 0;
   }
 
-
+  /**
+   * Return the user ID.
+   */
   function get_userid() {
     return $this->userid;
   }
 
+  /**
+   * Return the password as entered by the user.
+   */
   function get_password() {
     return $this->form['std']->password;
   }
 
+  /**
+   * Return the username as entered by the user.
+   */
   function get_username() {
     if(isset($this->username) and $this->username != '') {
       return $this->username;
@@ -525,6 +570,11 @@ class Authentication {
     return false;
   }
 
+  /**
+   * Adds information to debugging log.
+	 * @param int $number		- Internal plugin identifier.
+	 * @param string $desc	- Description of the internal plugin.
+   */
   function append_auth_object_debug($number, $desc = '') {
     $new_messages = $this->authPluginObj[$number]->get_new_debug_messages();
     foreach ($new_messages as $key => $value) {
@@ -534,15 +584,27 @@ class Authentication {
     }
   }
 
+  /**
+   * Display debugging log.
+   */
   function display_debug() {
     var_dump($this->debug);
   }
 
+  /**
+   * Return debugging log.
+	 * @return string - Debugging log.
+   */
   function debug_to_string() {
     return implode('<br />', $this->debug);
   }
 
-  function get_auth_obj(&$getauth) {
+  /**
+   * Returns a user object.
+	 * @param object $getauth - Normally empty auth_obj but can be used to request a specific user.
+	 * @return object - User object.
+   */
+	 function get_auth_obj(&$getauth) {
     global $string;
     if (!is_object($getauth)) {
 
@@ -551,9 +613,9 @@ class Authentication {
       $getauthobj->userObj->load($getauth);
     } else {
       $getauthobj = & $getauth;
+			
       if (!isset($getauthobj->userObj)) {
-
-        //serious error
+        // Serious error - we have no user object.
         $getauthobj->userObj = new UserObject($this->configObj, $this->db);
       }
       if ($this->get_userid() < 1) {
@@ -571,7 +633,6 @@ class Authentication {
       }
       $getauthobj->userObj->load($this->get_userid());
     }
-    //$uID = $this->get_userID();
 
     if (isset($this->callbackregister['getauthobj'])) {
       foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
@@ -585,17 +646,28 @@ class Authentication {
     return $getauthobj->userObj;
   }
 
-  function clear_configObj() {
+  /**
+   * Clears the config object.
+   */
+	 function clear_configObj() {
     $this->config = 'Config Object: removed for security';
     $this->configObj = 'Config Object: removed for security';
   }
 
+  /**
+   * Clears the config object.
+   */
   function __Clone() {
-   // $this->configObj='ll';//clone $this->configObj;
- //   var_dump($this);
     $this->config = 'Config Object: removed for security';
     $this->configObj = 'Config Object: removed for security';
   }
+	
+  /**
+   * Returns information about all the authentication plugins.
+	 * @param bool $formatted - True = return HTML formated data, False = array of data.
+	 * @param bool $advanced	- Not yet written.
+	 * @return array/string		- Information about the plugins.
+   */
   function version_info($formatted = false, $advanced = false) {
     $data = new stdClass();
     $data->plugins = array();
@@ -644,7 +716,7 @@ class Authentication {
       }
 
     } else {
-      //advanced view
+      //advanced view - Not yet written.
 
     }
 
@@ -653,8 +725,8 @@ class Authentication {
 
   /**
    * Check if the authentication stack is using a plugin of a given type
-   * @param  string  $type The class name of the plugin for which to check
-   * @return boolean       True if the plugin is loaded in the current authentication stack
+   * @param string $type - The class name of the plugin for which to check
+   * @return boolean     - True if the plugin is loaded in the current authentication stack
    */
   function has_plugin_type($type) {
     $found = false;
@@ -671,6 +743,9 @@ class Authentication {
   }
 }
 
+/**
+ * Stores a status for a plugin. One per plugin gets created.
+ */
 class authtypereturn {
   public $success, $rogoid, $url, $message;
 
@@ -700,17 +775,18 @@ class authobjreturn {
   public $username;
 
   function __construct() {
-    $this->returned = ROGO_AUTH_OBJ_FAILED;
-    $this->returneds = array();
-    $this->statuses = array();
-    $this->rogoid = 0;
-    $this->rogoids = array();
-    $this->data = new stdClass();
-    $this->datas = array();
+    $this->returned		= ROGO_AUTH_OBJ_FAILED;
+    $this->returneds	= array();
+    $this->statuses		= array();
+    $this->rogoid			= 0;
+    $this->rogoids		= array();
+    $this->data				= new stdClass();
+    $this->datas			= array();
   }
 
   /*
    * set the authobjreturn objet to fail state
+	 * @param int $number - Internal ID of the plugin in the stack.
    */
   function fail($number) {
     $this->returned = ROGO_AUTH_OBJ_FAILED;
@@ -720,7 +796,9 @@ class authobjreturn {
   }
 
   /*
-   * set the authobjreturn objet to success state
+   * Set the authobjreturn object to success state
+	 * @param int $number - Internal ID of the plugin in the stack.
+	 * @param int $rogoid - User ID of the successful user.
    */
   function success($number, $rogoid) {
     $this->rogoid = $rogoid;
@@ -728,9 +806,13 @@ class authobjreturn {
     $this->returned = ROGO_AUTH_OBJ_SUCCESS;
     $this->returneds[] = $this->returned;
     $this->statuses[$number] = $this->returned;
-
   }
 
+  /*
+   * Set the authobjreturn object to lookup state
+	 * @param int $number  - Internal ID of the plugin in the stack.
+	 * @param object $data - Data for user to be looked up.
+   */
   function lookupmissing($number, $data) {
     $this->rogoid = 0;
     $this->returned = ROGO_AUTH_OBJ_LOOKUPONLY;
@@ -742,6 +824,9 @@ class authobjreturn {
 
 }
 
+/*
+ * Passed through the postauthfail callbacks. Stores settings of what it does when it finishes the callback.
+ */
 class postauthfailreturn extends stdClass {
   public $attempt;
   public $form;
@@ -757,6 +842,9 @@ class postauthfailreturn extends stdClass {
   }
 }
 
+/*
+ * Contains the settings for standard log-in form.
+ */
 class displaystdformmessage extends stdClass {
 	public $pretext;
 	public $posttext;
@@ -772,7 +860,9 @@ class displaystdformmessage extends stdClass {
 
 }
 
-
+/*
+ * Settings for buttons on the log-in form.
+ */
 class displaystdformobjbutton extends stdClass {
   public $pretext;
   public $posttext;
@@ -792,6 +882,9 @@ class displaystdformobjbutton extends stdClass {
 
 }
 
+/*
+ * Settings for additional fields on the log-in form. E.G. Dropdown menu for changing language uses this.
+ */
 class displaystdformobjfield extends stdClass {
   public $description;
   public $type;
@@ -808,6 +901,9 @@ class displaystdformobjfield extends stdClass {
 
 }
 
+/*
+ * Stores data about the current user object.
+ */
 class auth_obj extends stdClass {
 
   function error_handling($context = null) {

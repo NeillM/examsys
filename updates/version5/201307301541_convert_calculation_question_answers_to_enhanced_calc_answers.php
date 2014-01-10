@@ -21,12 +21,12 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
 
   $enhancedcalcType = $configObj->get('enhancedcalc_type');
   if (!is_null($enhancedcalcType)) {
-    require_once $enhancedcalcType . '.php';
+    require_once $root . '/plugins/questions/enhancedcalc/' . $enhancedcalcType . '.php';
     $name = 'enhancedcalc_' . $enhancedcalcType;
     $enhancedcalcObj = new $name($configObj->getbyref('enhancedcalculation'));
   } else {
-    require_once $root . '/plugins/questions/enhancedcalc/rserve.php';
-    $enhancedcalcObj = new EnhancedCalcRrserve($configObj->getbyref('enhancedcalculation'));
+    require_once $root . '/plugins/questions/enhancedcalc/Rrserve.php';
+    $enhancedcalcObj = new EnhancedCalc_Rrserve($configObj->getbyref('enhancedcalculation'));
   }
 
 

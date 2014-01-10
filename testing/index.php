@@ -69,6 +69,7 @@ require '../include/sysadmin_auth.inc';
 		<li><a href="./database_grants.php">Database grants</a></li>
 		<li><a href="./database_indexes.php">Database indexes</a></li>
 		<li><a href="./database_structure.php">Database structure</a></li>
+    <li><a href="./checkenhancedcalc.php">Check enhancedcalc setup</a></li>
 	</ol>
 </div>
 </body>

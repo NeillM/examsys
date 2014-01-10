@@ -168,8 +168,8 @@ class EnhancedCalc extends Question implements questionInterface {
       $name = 'enhancedcalc_' . $enhancedcalcType;
       $enhancedcalcObj = new $name($this->configObj->getbyref('enhancedcalculation'));
     } else {
-      require_once 'rserve.php';
-      $enhancedcalcObj = new EnhancedCalcRrserve($this->configObj->getbyref('enhancedcalculation'));
+      require_once 'Rrserve.php';
+      $enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
     }
 
     foreach($this->useranswer['vars'] as $key => $variablessplit) {
@@ -1000,8 +1000,8 @@ class EnhancedCalc extends Question implements questionInterface {
         $name = 'enhancedcalc_' . $enhancedcalcType;
         $enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
       } else {
-        require_once 'rserve.php';
-        $enhancedcalcObj = new EnhancedCalcRrserve($this->configObj->getbyref('enhancedcalculation'));
+        require_once 'Rrserve.php';
+        $enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
       }
 
       if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {

@@ -52,7 +52,7 @@ require_once '../classes/dateutils.class.php';
 
 <body>
 <?php
-  include '../include/admin_options.inc';
+  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();

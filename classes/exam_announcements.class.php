@@ -16,6 +16,8 @@
 
 /**
 *
+* Utility class for mid-exam announcement related functionality.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,13 +30,23 @@ class ExamAnnouncements {
   private $paperID;
   private $string;
 
-  public function __construct($paperID, $db, $string) {
+	/**
+	 * @param int $paperID    - ID of the exam paper we are dealing with
+	 * @param object $db      - Link to mysqli
+	 * @param string $string  - Language translations
+	 */
+	 public function __construct($paperID, $db, $string) {
   	$this->db = $db;
     $this->paperID = $paperID;
     $this->string = $string;
   }
 
-  public function get_announcements() {
+	/**
+	 * Return an array of the mid-exam announcements for the current paper.
+	 *
+	 * @return array         - Array of announcments keyed on Q_ID.
+	 */
+	 public function get_announcements() {
     $configObject = Config::get_instance();
 
     $announcements = array();
@@ -51,6 +63,13 @@ class ExamAnnouncements {
     return $announcements;
   }
 
+	/**
+	 * Add or update a mid-exam announcement for a particular question ID.
+	 * @param int $q_id      - The ID of question the announcment pertains to.
+	 * @param int $q_number  - The number of the question on the paper.
+	 * @param int $screen    - The number of the screen the question belongs to.
+	 * @param string $msg    - The content of the announcement message.
+	 */
   public function replace_announcement($q_id, $q_number, $screen, $msg) {
     if ($msg == '') {
       return false;
@@ -61,6 +80,9 @@ class ExamAnnouncements {
     $result->execute();
   }
   
+	/**
+	 * Output HTML for mid-exam announcements for the current paper.
+	 */
   public function display_student_announcements() {
     $exam_announcements = $this->get_announcements();
     

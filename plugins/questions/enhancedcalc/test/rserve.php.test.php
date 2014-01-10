@@ -25,7 +25,7 @@
 */
 
 global $cfg_web_root;
-require $cfg_web_root . 'plugins/questions/enhancedcalc/rserve.php';
+require $cfg_web_root . 'plugins/questions/enhancedcalc/Rrserve.php';
 
 class RserveTests extends \Enhance\TestFixture
 {
@@ -35,7 +35,7 @@ class RserveTests extends \Enhance\TestFixture
   // SetUp
   public function setUp() {
     $enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>6311,'timeout'=>5);
-    $this->target = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalcRrserve', array($enhancedcalculation));
+    $this->target = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalc_Rrserve', array($enhancedcalculation));
   }
 
   // TearDown

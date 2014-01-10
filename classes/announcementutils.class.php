@@ -16,7 +16,7 @@
 
 /**
 * 
-* Utility class for reference material related functionality
+* Utility class for announcement related functionality.
 * 
 * @author Simon Wilkinson
 * @version 1.0
@@ -29,6 +29,9 @@ Class announcement_utils {
  
   /**
    * See if an announcement ID actually exists.
+	 * @param int $announcementID - The ID of the announcement to be located.
+	 * @param object $db          - Link to mysqli
+	 *
    * @return true or false.
    */
   static function announcement_exist($announcementID, $db) {
@@ -46,7 +49,12 @@ Class announcement_utils {
     return $row_no > 0;
   }
   
-  static function delete($announcementID, $db) {
+	/**
+	 * Sets a mid-exam announcement to deleted.
+	 * @param int $announcementID - The ID of the announcement to be deleted.
+	 * @param object $db          - Link to mysqli
+	 */
+	 static function delete($announcementID, $db) {
     $result = $db->prepare("UPDATE announcements SET deleted = NOW() WHERE id = ?");
     $result->bind_param('i', $announcementID);
     $result->execute();  

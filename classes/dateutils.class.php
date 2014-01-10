@@ -49,8 +49,9 @@ Class date_utils {
 
 	/**
 	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2010/11'
-	 * @param string $date A date in a format that can be accepted by strtotime
-	 * @return string
+	 * @param string $date - A date in a format that can be accepted by strtotime
+	 *
+	 * @return string - The current academic year.
 	 */
 	static function get_academic_year($date) {
     global  $configObject;
@@ -70,7 +71,14 @@ Class date_utils {
 		return $session;
 	}
   
-  static function timedate_select($prefix, $imput_date='') {
+	/**
+	 * Creates HTML dropdown menus to select day, month, year and hour (in half hour increments).
+	 * @param string $prefix 			- Prefix string to make the name of the selector.
+	 * @param string $input_date	- Default time/date to populate the selector.
+	 *
+	 * @return string - The HTML of the time/date selector.
+	 */
+	 static function timedate_select($prefix, $imput_date = '') {
     global $string;
     
     $split_year = substr($imput_date,0,4);
