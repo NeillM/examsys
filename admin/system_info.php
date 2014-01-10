@@ -137,7 +137,65 @@ require_once '../classes/dateutils.class.php';
   }
   echo "</table>\n<br />\n";
 
-  $authinfo = $authentication->version_info(true, false);
+// get info on authentication stack
+$authinfo = $authentication->version_info(true, false);
+
+// get info about enhanced calculation plugin
+$enhancedc1 = $configObject->get('enhancedcalc_type');
+$enhancedc2 = $configObject->get('enhancedcalculation');
+if (is_null($enhancedc1)) {
+  $enhancedc1 = 'BLANK therefore Rrserve';
+}
+$enhancedc3 = '';
+foreach ($enhancedc2 as $key => $value) {
+  $enhancedc3 .= "$key => $value<br />";
+}
+
+$enhancedPlugininfo = "Type: $enhancedc1<br />Settings:-<br />$enhancedc3";
+
+
+// Get info on error handling
+$ErrorLogSettings = '';
+$e1 = $configObject->get('display_auth_debug');
+$e2 = $configObject->get('debug_lang_string');
+$e3 = $configObject->get('displayerrors');
+$e4 = $configObject->get('displayallerrors');
+$e5 = $configObject->get('errorshutdownhandling');
+$e6 = $configObject->get('errorcontexthandling');
+
+function tickorcross($status, $string) {
+  if($status) {
+    $string .= '&nbsp;<img width="17" height="16" alt="Tick" src="../artwork/tick.gif"></img>';
+  } else {
+    $string .= '&nbsp;<img width="17" height="16" alt="Cross" src="../artwork/cross.gif"></img>';
+  }
+  return $string;
+}
+
+$ErrorLogSettings .='Display Auth Debug:';
+$ErrorLogSettings = tickorcross(($e1 === true), $ErrorLogSettings);
+
+$ErrorLogSettings .='<br />Display Errors to screen:';
+$ErrorLogSettings = tickorcross(($e3 === true), $ErrorLogSettings);
+
+$ErrorLogSettings .='<br />Display Errors for Notices:';
+$ErrorLogSettings = tickorcross(($e4 === true), $ErrorLogSettings);
+
+$ErrorLogSettings .='<br />Run Error Handling @Shutdown:';
+$ErrorLogSettings = tickorcross(($e5 === true), $ErrorLogSettings);
+
+$ErrorLogSettings .='<br />Method of Capturing Variable at error:';
+if($e6 == 'improved') {
+  $ErrorLogSettings .= '&nbsp;<img width="17" height="16" alt="Tick" src="../artwork/tick.gif"></img>';
+  $ErrorLogSettings .='<br />Display Language Strings in debug:';
+  $ErrorLogSettings = tickorcross(($e2 === true), $ErrorLogSettings);
+
+} elseif($e6 == 'basic') {
+  $ErrorLogSettings .= '&nbsp;<img width="17" height="16" alt="Tick" src="../artwork/tick_half.gif"></img>';
+} else {
+  $ErrorLogSettings .= '&nbsp;<img width="17" height="16" alt="Cross" src="../artwork/cross.gif"></img>';
+}
+
 ?>
 </td>
 <td style="width:50px">&nbsp;</td>
@@ -151,6 +209,8 @@ require_once '../classes/dateutils.class.php';
 <tr><td><?php echo $string['interactivequestions']; ?></td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
 <tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
+<tr><td><?php echo $string['EnhancedCalcPlugin']; ?></td><td><?php echo $enhancedPlugininfo ?></td></tr>
+<tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 
 <tr><td colspan="2" class="sechead"><?php echo $string['serverinformation']; ?></td></tr>

@@ -59,4 +59,6 @@ $string['freespace'] = '%s free of %s';
 $string['More details'] = 'More details...';
 $string['lookups'] = 'Lookups';
 $string['interactivequestions'] = 'Interactive Questions';
+$string['EnhancedCalcPlugin'] = 'Enhanced Calculation question plugin';
+$string['ErrorLogSettings'] = 'Error Log settings';
 ?>
