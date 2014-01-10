@@ -94,6 +94,7 @@ $string['password'] = 'Password';
 $string['timezone'] = 'Time Zone';
 $string['modules'] = 'Modules';
 $string['duration'] = 'Duration';
+$string['hrs'] = 'hrs';
 $string['mins'] = 'mins';
 $string['availablefrom'] = 'Available from';
 $string['to'] = 'to';

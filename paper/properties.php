@@ -450,10 +450,19 @@ if (isset($_POST['Submit'])) {
         $calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
         $properties->set_calendar_year($calendar_year);
       }
-      if (isset($_POST['exam_duration'])) {
-        $exam_duration = ($_POST['exam_duration'] == 'NULL') ? NULL : $_POST['exam_duration'];
+      if (isset($_POST['exam_duration_hours']) or isset($_POST['exam_duration_mins'])) {
+			  $exam_duration = 0;
+				if (isset($_POST['exam_duration_hours'])) {
+					$exam_duration += ($_POST['exam_duration_hours'] * 60);
+				}
+				if (isset($_POST['exam_duration_mins'])) {
+					$exam_duration += $_POST['exam_duration_mins'];
+				}
         $properties->set_exam_duration($exam_duration);
-      }
+      } else {
+				$exam_duration = NULL;
+        $properties->set_exam_duration($exam_duration);
+			}
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
         if (isset($_POST["lab$i"])) {
@@ -999,7 +1008,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
           alert ("<?php echo $string['msg2']; ?>");
           return false;
         }
-        if ($('#exam_duration').val() == 'NULL') {
+        if ($('#exam_duration_hours').val() == 'NULL' || $('#exam_duration_mins').val() == 'NULL') {
           alert ("<?php echo $string['msg3']; ?>");
           return false;
         }
@@ -1511,16 +1520,42 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
     }
     echo '</select></td>';
-
-    echo "<td align=\"right\">" . $string['duration'] . "</td><td><select id=\"exam_duration\" name=\"exam_duration\"$sum_disabled>";
-    $minutes = array('NULL'=>$string['na'],'5'=>'5','15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
-    foreach ($minutes as $key => $value) {
-      echo "<option value=\"" . $key . "\"";
-      if ($properties->get_exam_duration() == $key) echo 'selected="selected"';
-      echo ">";
-      echo $value . "</option>\n";
-    }
-    echo "</select> " . $string['mins'] . "</td></tr>\n";
+	
+		$exam_duration = $properties->get_exam_duration();
+		if ($exam_duration == NULL) {
+			$duration_hours = 'NULL';
+			$duration_mins = 'NULL';
+		} else {
+			$duration_hours = (int)floor($exam_duration / 60);
+			$duration_mins = (int)$exam_duration - ($duration_hours * 60);
+		}
+		echo "<td align=\"right\">" . $string['duration'] . "</td><td><select id=\"exam_duration_hours\" name=\"exam_duration_hours\"$sum_disabled>";
+		if ($duration_hours == 'NULL') {
+			echo '<option value="NULL" selected>N/A</option>';
+		} else {
+			echo '<option value="NULL">N/A</option>';
+ 		}
+		for ($i=0; $i<=12; $i++) {
+		  if ($i === $duration_hours) {
+				echo "<option value=\"$i\" selected>$i</option>\n";
+			} else {
+				echo "<option value=\"$i\">$i</option>\n";
+			}
+		}
+    echo "</select> " . $string['hrs'] . " <select id=\"exam_duration_mins\" name=\"exam_duration_mins\"$sum_disabled>";
+		if ($duration_mins == 'NULL') {
+			echo '<option value="NULL" selected>N/A</option>'; 
+		} else {
+			echo '<option value="NULL">N/A</option>'; 
+		}
+		for ($i=0; $i<60; $i++) {
+		  if ($i === $duration_mins) {
+				echo "<option value=\"$i\" selected>$i</option>\n";
+			} else {
+				echo "<option value=\"$i\">$i</option>\n";
+			}
+		}
+		echo "</select> " . $string['mins'] . "</td></tr>\n";
     echo "<tr><td align=\"right\" valign=\"top\">" . $string['availablefrom'] . "</td><td>";
 
     // Split the start date if available

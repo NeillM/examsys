@@ -93,6 +93,7 @@ $string['password'] = 'Heslo';
 $string['timezone'] = 'Časová zóna';
 $string['modules'] = 'Modul(y)';
 $string['duration'] = 'Trvání';
+$string['hrs'] = 'Hodin';
 $string['mins'] = 'Minut';
 $string['availablefrom'] = 'Dostupné od';
 $string['to'] = 'do';

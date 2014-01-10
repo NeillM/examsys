@@ -38,6 +38,7 @@ $string['wholecohort'] = 'whole cohort';
 $string['sittings'] = 'Sittings';
 $string['campus'] = 'Campus';
 $string['notes'] = 'Notes';
+$string['hrs'] = 'hrs';
 $string['mins'] = 'mins';
 
 $string['msg7'] = 'WARNING: You must specify which date you require the exam to run in.';

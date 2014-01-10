@@ -36,6 +36,7 @@ $string['wholecohort'] = 'Celá skupina';
 $string['sittings'] = 'Směna';
 $string['campus'] = 'Kampus';
 $string['notes'] = 'Poznámky';
+$string['hrs'] = 'Hodin';
 $string['mins'] = 'Minut';
 $string['msg7'] = 'Varování: Je potřeba vyplnit datum konání zkoušky.';
 $string['msg8'] = 'Varování: Je potřeba vyplnit délku trvání zkoušky v minutách.';
