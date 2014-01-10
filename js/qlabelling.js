@@ -282,6 +282,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			}
 		}
 		
+		//reducing list of pholders for menu
+		if (this.qType == 'menu') {
+			for (i=this.pholderBox.length-1;i>=0;i--) 
+				if (this.pholderBox[i][5] == -500) this.pholderBox.splice(i,1);
+		}
+		
 		//calculating order number of the pholderBox for analysis as [7]
 		var nr = 0;
 		for (i=0;i<this.pholderBox.length;i++) 
