@@ -47,5 +47,5 @@
 <form name="errorsMenu">
 <input type="hidden" name="lineID" id="lineID" value="" />
 </form>
-
+</div>
 
