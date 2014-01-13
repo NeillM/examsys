@@ -66,7 +66,7 @@ if(!isset($_REQUEST['lookuptesttype'])) {
 }
 $list='';
 foreach ($_REQUEST as $key => $value) {
-  if ($key != 'lookuptesttype') {
+  if ($key != 'lookuptesttype' or $key != 'ROGO_PW') {
     $newdata->$key = $value;
     $list = $list . " $key = $value";
   }
