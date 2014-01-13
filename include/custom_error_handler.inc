@@ -33,7 +33,9 @@ register_shutdown_function("shutdownHandler");
 
 function shutdownHandler() {
   $isError = false;
-  if ($error = error_get_last()) {
+  $configObject = Config::get_instance();
+  $erratshut=$configObject->get('errorshutdownhandling');
+  if ($error = error_get_last() and $erratshut !== false) {
     customErrorHandler($error['type'], 'At Shutdown:: ' . $error['message'], $error['file'], $error['line'], array());
   }
 }
@@ -154,43 +156,56 @@ function exceptionHandler($exception) {
 
 
 function error_handling($context = null) {
-  $configObject = Config::get_instance();
-  $context1 = array();
   if (is_null($context) or !isset($context)) {
     // if no array set get currently define variables in this object
     return 'NOTHING PARSED TO DECODE';
-      }
-  foreach ($context as $key => $value) {
-    if ($key == 'this') {
-    } elseif (is_object($value) and method_exists($value, 'error_handling')) {
-      $context1[$key] = $value->error_handling();
-    } elseif(is_object($value) and get_class($value) === 'mysqli' ) {
-      $context1[$key] = 'MYSQLi Object';
-    } elseif (is_object($value) and get_class($value) === 'mysqli_stmt') {
-      $context1[$key] = 'MYSQLi statement Object';
-    } elseif (is_object($value) and get_class($value) === 'ErrorException') {
-      $context1[$key] = 'ErrorException Object';
-    } elseif (is_object($value)) {
-      $context1[$key] = clone $value;
-    } elseif (is_array($value) and $key === 'string' and (!($configObject->get('debug_lang_string') === true))) {
-      $context1[$key] = 'Language Abstraction String - hidden by config option';
-    } elseif (is_array($value) and ( $key === '_POST' or $key === '_REQUEST' )) {
-      $tmp=array();
-      foreach ($value as $key1 => $value1) {
-        if ($key != 'ROGO_PW') {
-          $tmp[$key1]=$value1;
-        } else {
-          $tmp[$key1] = "<HIDDEN>";
-        }
-      }
-      $context1[$key]=$tmp;
-    } elseif (is_array($value)) {
-      //inner loop
-      $context1[$key] = error_handling($value);
-    } else {
-      $context1[$key] = $value;
-    }
   }
+
+  $configObject = Config::get_instance();
+  $context1 = array();
+
+  $errorcontexthandling = $configObject->get('errorcontexthandling');
+
+  if ($errorcontexthandling == 'basic') {
+    $context1 = $context;
+
+  } elseif ($errorcontexthandling == 'improved' or is_null($errorcontexthandling)) {
+
+    foreach ($context as $key => $value) {
+      if ($key == 'this') {
+      } elseif (is_object($value) and method_exists($value, 'error_handling')) {
+        $context1[$key] = $value->error_handling();
+      } elseif (is_object($value) and get_class($value) === 'mysqli') {
+        $context1[$key] = 'MYSQLi Object';
+      } elseif (is_object($value) and get_class($value) === 'mysqli_stmt') {
+        $context1[$key] = 'MYSQLi statement Object';
+      } elseif (is_object($value) and (get_class($value) === 'ErrorException' or get_class($value) === 'Exception')) {
+        $context1[$key] = 'ErrorException Object';
+      } elseif (is_object($value)) {
+        $context1[$key] = clone $value;
+      } elseif (is_array($value) and $key === 'string' and (!($configObject->get('debug_lang_string') === true))) {
+        $context1[$key] = 'Language Abstraction String - hidden by config option';
+      } elseif (is_array($value) and ($key === '_POST' or $key === '_REQUEST')) {
+        $tmp = array();
+        foreach ($value as $key1 => $value1) {
+          if ($key != 'ROGO_PW') {
+            $tmp[$key1] = $value1;
+          } else {
+            $tmp[$key1] = "<HIDDEN>";
+          }
+        }
+        $context1[$key] = $tmp;
+      } elseif (is_array($value)) {
+        //inner loop
+        $context1[$key] = error_handling($value);
+      } else {
+        $context1[$key] = $value;
+      }
+    }
+  } else  { // eg $errorcontexthandling=='none'
+    $context1='Config option errorcontexthandling disabled capturing this';
+  }
+
   return $context1;
 }
 
@@ -200,6 +215,15 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
   $userObject = UserObject::get_instance();
+
+  $disperrors=$configObject->get('displayerrors');
+  $dispallerrors=$configObject->get('displayallerrors');
+
+  if ($disperrors === true) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+  }
 
   if (isset($debug_pagestart)) {
     //we are in a debug session do not log errors to db just display them
@@ -229,7 +253,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   }
 
   // Errors we do not want to log.
-  if ($error_type == 'Warning') {
+  if ($error_type == 'Warning' and $dispallerrors !== true) {
     if (strpos($errstr, 'mysqli::mysqli()') !== false) {
       return true;
     } elseif (strpos($errstr, 'The device is not ready.') !== false) {
@@ -247,10 +271,10 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   }
 
 
-  if ($error_type != 'Notice') { // Record errors that are not notices.
+  if ($dispallerrors === true or $error_type != 'Notice') { // Record errors that are not notices.
 
     if (strpos($errstr,'customErrorHandler') !== false and strpos($errstr,"Couldn't fetch mysqli") !== false ) {
-      return true;
+      return true; // DO NOT REMOVE THIS STOPS mysqli error when retreiving mysqli->error in some situations
     }
 
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
@@ -292,23 +316,6 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     if (isset($context) and !empty($context)) {
-/*      if(is_array($context)) {
-        $context1=array();
-        foreach ($context as $key => $value) {
-          if($key == 'this') {
-            //do nothing else could loop
-          } elseif (is_object($value) and method_exists($value, 'error_handling')) {
-            $context1[$key] = $value->error_handling();
-          } elseif (is_object($value)) {
-            $context1[$key] = clone $value;
-          } elseif(is_array($value)) {
-            $context1[$key] = error_handling($value);
-          } else {
-            $context1[$key] = $value;
-          }
-        }
-        $context = $context1;
-      }*/
 
 $context=error_handling($context);
 
@@ -318,11 +325,13 @@ $context=error_handling($context);
         $variables = base64_encode(serialize($context));
       } catch (Exception $e) {
         try {
-          $context = array('had a problem with the capture context due to exception:: ' . $e->getMessage(),'using alternative method var_export to string instead',var_export($context, TRUE));
+          $context = array( 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($context, TRUE) );
+          $variables = base64_encode(serialize($context));
         } catch (Exception $e) {
-          $context = 'Couldnt capture context due to exception:: ' . $e->getMessage();
+          $context = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();
+          $variables = base64_encode(serialize($context));
         }
-        $variables = base64_encode(serialize($context));
+
       }
     }
     $userid = 0;
@@ -336,9 +345,10 @@ $context=error_handling($context);
       $error_type='Unknown';
     }
 
+
     global $mysqli;
-    if (isset($mysqli)) {
-      if (isset($mysqli->error)) {
+    if (isset($mysqli) and is_object($mysqli)  ) {
+      if ($error_type != 'Notice' and isset($mysqli->error)) {
         if (!($mysqli->error == '' or is_null($mysqli->error))) {
           $errstr = $errstr . "\r\n<br />MySQLi Error:\r\n<br />" . $mysqli->error;
         }

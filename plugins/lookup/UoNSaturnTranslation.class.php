@@ -38,10 +38,41 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
   function register_callback_routines() {
     $callbackarray[] = array(array($this, 'usertranslatelookup'), 'usertranslatelookup', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'modulelookupxmltranslate'), 'modulelookupxmltranslate', $this->number, $this->name);
 
 
     return $callbackarray;
   }
+  function modulelookupxmltranslate($modulelookupobj) {
+
+    $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
+
+    // this is on the search data (also used for 1 record lookup)
+    $modulelookupobj->lookupdata = $this->moduletranslate($modulelookupobj->lookupdata);
+
+
+    //this is for multiple blocks
+    if (isset($modulelookupobj->lookupdatas)) {
+      foreach ($modulelookupobj->lookupdatas as $key => $value) {
+        $modulelookupobj->lookupdatas[$key] = $this->moduletranslate($modulelookupobj->lookupdatas[$key]);
+      }
+    }
+
+    return $modulelookupobj;
+  }
+
+  function moduletranslate($datapart) {
+
+    if (isset($datapart->rawschools)) {
+      //detect raw xml school info
+      $xml=$datapart->rawschools->xpath('School');
+      var_dump($xml);
+
+    }
+
+    return $datapart;
+  }
+
 
   function usertranslatelookup($userlookupobj) {
 

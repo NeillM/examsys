@@ -203,10 +203,10 @@ class Lookup extends RogoStaticSingleton {
         $objid = key($this->callbackregisterdata['modulelookup'][$number]);
         $this->append_lookup_object_debug($objid);
 
-        if (isset($this->callbackregister['usertranslatelookup'])) {
-          foreach ($this->callbackregister['usertranslatelookup'] as $number => $callback) {
+        if (isset($this->callbackregister['moduletranslatelookup'])) {
+          foreach ($this->callbackregister['moduletranslatelookup'] as $number => $callback) {
             $modulelookupobj = call_user_func_array($callback, array($modulelookupobj));
-            $objid = key($this->callbackregisterdata['usertranslatelookup'][$number]);
+            $objid = key($this->callbackregisterdata['moduletranslatelookup'][$number]);
             $this->append_lookup_object_debug($objid);
           }
         }

@@ -16,19 +16,22 @@
 
 /**
 *
+* This is a homepage for External Examiners to land on.
+* It looks up and presents only papers that they have been
+* selected to review and are in the future.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  require '../config/index.inc';  // Get the logo
-  require_once '../classes/paperutils.class.php';
+require '../include/staff_auth.inc';
+require '../config/index.inc';  // Get the logo
+require_once '../classes/paperutils.class.php';
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -37,6 +40,7 @@
   <title><?php echo $string['externalexaminerarea']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
     body {font-size:90%}
     p {line-height:150%}
@@ -65,9 +69,9 @@
 <table cellspacing="0" cellpadding="0" border="0" style="width:100%; background-color:#F1F5FB">
 <tr>
 <td><div style="padding-left:15px">
-  <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" border="0" style="float:left; padding-right:8px" />
-  <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
-  <div style="color:#1F497D; font-size:9pt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
+  <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
+  <div class="logo_lrg_txt">Rog&#333;</div>
+  <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
 </div>
 </td>
 <td align="right"><?php echo $logo_html; ?></td>
@@ -85,7 +89,6 @@
   $start_of_day_ts = strtotime('midnight');
 
   $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, crypt_name FROM (properties, properties_reviewers, papers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() OR start_date IS NULL) AND properties.property_id = papers.paper AND reviewerID = ? GROUP BY paper ORDER BY paper_title");
-  echo $mysqli->error;
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->store_result();

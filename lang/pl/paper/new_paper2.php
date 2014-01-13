@@ -38,6 +38,7 @@ $string['wholecohort'] = 'cała grupa';
 $string['sittings'] = 'Posiedzenia'; 
 $string['campus'] = 'Kampus';
 $string['notes'] = 'Notatki';
+$string['hrs'] = 'Godziny';
 $string['mins'] = 'min.';
 
 $string['msg7'] = 'Uwaga: Musisz określić datę przeprowadzenia egzaminu.';

@@ -106,6 +106,7 @@ class Config extends RogoStaticSingleton {
       }
     }
 
-    return null;
+    $fake = null;
+    return $fake;
   }
 }

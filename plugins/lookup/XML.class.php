@@ -71,31 +71,31 @@ class XML_lookup extends outline_lookup {
 
     $restrictstop = false;
     if (!is_null($restrict)) {
-      foreach($restrict as $key => $value) {
+      foreach ($restrict as $key => $value) {
         if (!isset($lookupobj->lookupdata->$key)) {
-          $this->savetodebug("Restriction stopped debug $key not found");
+          $this->savetodebug("Restriction stopped debug key: $key not found");
           $restrictstop = true;
-        }
-        if (strpos($value, '|') === false) {
-          //condition
-          if ($lookupobj->lookupdata->$key !== $value) {
-            $this->savetodebug("Restriction stopped debug $key !== $value");
-            $restrictstop = true;
-          }
         } else {
-          // OR condition
-          $restrictstop1 = 0;
-          $exp=explode('|',$value);
-          foreach ($exp as $value1) {
-            if ($lookupobj->lookupdata->$key === $value1) {
-              $restrictstop1++;
+          if (strpos($value, '|') === false) {
+            //condition
+            if (!isset($lookupobj->lookupdata->$key) or (isset($lookupobj->lookupdata->$key) and $lookupobj->lookupdata->$key !== $value)) {
+              $this->savetodebug("Restriction stopped debug key: $key !== $value");
+              $restrictstop = true;
+            }
+          } else {
+            // OR condition
+            $restrictstop1 = 0;
+            $exp = explode('|', $value);
+            foreach ($exp as $value1) {
+              if ($lookupobj->lookupdata->$key === $value1) {
+                $restrictstop1++;
+              }
+            }
+            if ($restrictstop1 == 0) {
+              $this->savetodebug("Restriction stopped debug one of the ORs of $value in the key $key");
+              $restrictstop = true;
             }
           }
-          if($restrictstop1 == 0) {
-            $this->savetodebug("Restriction stopped debug one of the ORs of $value in the key $key");
-            $restrictstop = true;
-          }
-
         }
 
       }
@@ -189,7 +189,7 @@ class XML_lookup extends outline_lookup {
         foreach ($new_messages as $key => $value) {
           $info1 = $this->get_module_authinfo($objid);
           $info = key($info1) . ':' . current($info1);
-          $this->savetodebug("User Lookup XML Translate:authObj($info)[$number:$key]: $value");
+          $this->savetodebug("Module Lookup XML Translate:authObj($info)[$number:$key]: $value");
         }
       }
     }

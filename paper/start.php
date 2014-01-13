@@ -49,13 +49,24 @@ if ($userObject->has_role('External Examiner')) {    // External examiners have 
 
 check_var('id', 'GET', true, false, false);
 
+/**
+ * @param object $configObj - Configuration object
+ * @param array $random_q_data - Holds question information about the parent random question.
+ * @param array $user_answers - Holds a list of user answers by question ID.
+ * @param array $screen_data - Holds a list of question types and IDs used on all screens in the paper.
+ * @param array $used_questions - 
+ * @param object $db    	- Mysqli object
+ * @param array $string   - Contains language translations.
+ *
+ */
 function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $db, $string) {
+  var_dump($random_q_data, $user_answers, $screen_data, $used_questions);
   $selected_q_id = '';
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
 
   if (isset($user_answers[$current_screen])) {
-    //match user's answers with random question ID.
+    // Match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
     $selected_q_id = current($question_on_screen);
     for ($i=1; $i<$q_no; $i++) {
@@ -249,13 +260,17 @@ $paperID = $propertyObj->get_property_id();
  * Setup some feature related flags
  *
  */
-//are we in a staff test and preview mode?
+ 
+// Are we in a staff test and preview mode?
 $is_preview_mode = ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview');
-// Are we on the first screen
+
+// Are we on the first screen?
 $is_first_launch = !isset($_POST['current_screen']);
-//are we in a staff test and preview mode and on the first screen?
+
+// Are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
-//are we in a staff single question testmode
+
+// Are we in a staff single question test mode?
 $is_question_preview_mode = (isset($_GET['q_id']));
 
 if (!$is_first_launch) require '../include/marking_functions.inc';
@@ -720,40 +735,52 @@ if ($css != '') {
     }
   }
   var jumpScreen = function () {
-      document.questions.button_pressed.value='jump_screen';
-      $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
-      return userSubmit(null);
+		document.questions.button_pressed.value='jump_screen';
+		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+		return userSubmit(null);
   }
 <?php
   }
 
 if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
-	//Bind save function to the screen for fault tolerant form saving ?>
+	// Bind save function to the screen for fault tolerant form saving ?>
   var usingAjax = false;
   var submitType = '';
   var autoSaveRef = '';
   var last_saved_user_awnsers = null;    <?php //holds the data of the last successful auto save ?>
-  $(document).ready(function () {
-      <?php  //we have javascript replace the form submit buttons to enable ajax saving ?>
-      usingAjax = true;
-      $('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
-      $('#next').click(userSubmit);
+  
+    $(document).ready(function () {
+		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
+		usingAjax = true;
+		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
+		$('#next').click(userSubmit);
 
-      $('#prevous').replaceWith('<?php echo "<input id=\"prevous\" type=\"button\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 1) . "&nbsp;\" />&nbsp;";?>');
-      $('#prevous').click(userSubmit);
+		$('#prevous').replaceWith('<?php echo "<input id=\"prevous\" type=\"button\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 1) . "&nbsp;\" />&nbsp;";?>');
+		$('#prevous').click(userSubmit);
 
-      $('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />&nbsp;";?>');
-      $('#finish').click(userSubmit);
+		$('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />&nbsp;";?>');
+		$('#finish').click(userSubmit);
 
-      <?php //attach ui events ?>
-      $('.rankselect').change(rankCheck);
-      $(".calc-answer").keydown(filterKeypress);
+		<?php // Attach UI events ?>
+		$('.rankselect').change(rankCheck);
+		$(".calc-answer").keydown(filterKeypress);
 
-       <?php //setup autosave ?>
-      startAutoSave();
+		 <?php // Setup autosave ?>
+		startAutoSave();
+                
+                <?php // Stop forms being submitted with ENTER  ?>
+                $('input[type=text]').keydown(function (event) {
+                    event = event || window.event;            
+                    if (event.keyCode == 13) {
+                      event.preventDefault();
+                      return false;
+                    } else {
+                      return true;
+                    }
+                });
   });
 
-  <?php //normal user submit by clicking on next, prevous, finish or jump screen ?>
+  <?php // Normal user submit by clicking on next, prevous, finish or jump screen ?>
   var userSubmit = function (event) {
     submitType = 'userSubmit';
     stopAutoSave();
@@ -764,9 +791,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       $('#saveError').fadeOut('slow');
       $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
 
-      <?php //log which method the users submitted the page via ?>
+      <?php // Log which method the users submitted the page via ?>
       if (!!event) {
-        if(event.target.id == 'finish') {
+        if (event.target.id == 'finish') {
           $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
         } else {
           $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
@@ -776,7 +803,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     }
   }
 
-  <?php  //called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
+  <?php  // Called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
   var forceSave = function() {
     stopAutoSave();
     submitType = 'forcedSubmit';
@@ -784,32 +811,31 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     ajaxSave();
   }
 
-  <?php  //called on auto save time out ?>
+  <?php  // Called on auto save time out ?>
   var autoSave = function() {
     submitType = 'autoSave';
 
-    <?php //this could take longer than the autosave timeout stop auto save to stop duplicate events ?>
+    <?php // This could take longer than the autosave timeout stop auto save to stop duplicate events. ?>
     stopAutoSave();
 
-    <?php //save any data from wysiwyg  ?>
+    <?php // Save any data from wysiwyg  ?>
     if(typeof(tinyMCE) != "undefined"){
       tinyMCE.triggerSave();
     }
     var formData = $('#qForm').serialize();
 
-    <?php //only auto save if the data has changed ?>
+    <?php // Only auto save if the data has changed ?>
     if (last_saved_user_awnsers !== formData) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
-      //$('#savemsg').html("<img src=\"../artwork/floppy_disk.gif\" width=\"34\" height=\"34\" />")
       ajaxSave();
     } else {
-      <?php //rereister the autosave timer ?>
+      <?php // Re-register the autosave timer ?>
       startAutoSave();
     }
   }
 
   var startAutoSave = function () {
-    clearTimeout(autoSaveRef);<?php //Cancel any outstanding timeouts to make sure only one auto save is ever registered?>
+    clearTimeout(autoSaveRef);<?php // Cancel any outstanding timeouts to make sure only one auto save is ever registered. ?>
     autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_frequency') + rand(-5,5)) * 1000); ?>);
   }
 
@@ -818,13 +844,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   var ajaxSave = function () {
-    <?php //hide any errors ?>
+    <?php // Hide any errors ?>
     $('#saveError').fadeOut('fast');
-    <?php //random page ID to stop IE caching results. arrrggg ?>
+    <?php // Random page ID to stop IE caching results. ?>
     date = new Date();
     randomPageID = date.getTime();
     $('#randomPageID').val(randomPageID);
-    if(typeof(tinyMCE) != "undefined"){
+    if (typeof(tinyMCE) != "undefined"){
       tinyMCE.triggerSave();
     }
     $.ajax({
@@ -833,9 +859,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           data: $('#qForm').serialize(),
           dataType: 'html',
           timeout: <?php
-                        //set the time out of one requst to be the maximum total time plus 5s for network latency
-                        //php handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
-                        //weird happens
+                        // Set the time out of one requst to be the maximum total time plus 5s for network latency
+                        // PHP handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
+                        // weird happens.
                         echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
                    ?>,
           cache: false,
@@ -854,8 +880,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           error: function(xhr, textStatus, errorThrown) {
             if (textStatus == 'timeout' ) {
               <?php
-              //we have timed out either  the server has gone away or somthing went wrong in the network
-              //get the user to retry
+              // We have timed out either  the server has gone away or somthing went wrong in the network
+              // Get the user to retry
               ?>
               saveFail();
               return;
@@ -872,7 +898,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           },
           success: function (ret_data, jqXHR, textStatus) {
               if (ret_data == randomPageID) {
-                  <?php //cache the form data to look for changes on next auto save ?>
+                  <?php // Cache the form data to look for changes on next auto save ?>
                   last_saved_user_awnsers = this.data;
                   saveSuccess();
                   return;
@@ -885,10 +911,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               }
           },
           retry: function (){
-            <?php //retry if we can ?>
+            <?php // Retry if we can ?>
             this.tryCount++;
             if (this.tryCount <= this.retryLimit) {
-              <?php //indicate the retry on the url ?>
+              <?php // Indicate the retry on the url ?>
               if(this.tryCount == 1) {
                 this.url = this.url + "&retry=" + this.tryCount;
               } else {
@@ -904,7 +930,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   var saveSuccess = function () {
-    <?php //rereister the autosave timer ?>
+    <?php // Re-register the autosave timer ?>
     startAutoSave();
     if (submitType == 'userSubmit') {
       $('#qForm').submit();
@@ -919,7 +945,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   var saveFail = function () {
-    <?php //rereister the autosave timer ?>
+    <?php // Re-register the autosave timer ?>
     startAutoSave();
 
     $('#saveError').fadeIn('fast');
@@ -1041,7 +1067,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   $assigned_number = 0;
   $no_on_screen = 0;
   $old_screen = 0;
-  //build the questions_array
+  // Build the questions_array
   $tmp_questions_array = array();
   while ($question_data->fetch()) {
     if ($q_no == 0 or $tmp_questions_array[$q_no]['q_id'] != $q_id or $tmp_questions_array[$q_no]['display_pos'] != $display_pos) {
@@ -1078,7 +1104,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
   $question_data->close();
 
-  //look for random questions and overwrite as needed
+  // Look for random questions and overwrite as needed
   $questions_array = array();
   $hidden_html = '';
   foreach ($tmp_questions_array as $question) {
@@ -1119,7 +1145,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     // Summative type. Time is only active in live.
     if (($propertyObj->get_paper_type() == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
 
-      //has the student been allotted extra time by an invigilator
+      // Has the student been allotted extra time by an invigilator?
       $student_object['user_ID'] = $userObject->get_user_ID();
       $student_object['special_needs_percentage'] = $special_needs_percentage;
       $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
@@ -1346,15 +1372,5 @@ if ($unanswered) {
   echo "</script>\n";
 }
 ?>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
