@@ -748,7 +748,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var submitType = '';
   var autoSaveRef = '';
   var last_saved_user_awnsers = null;    <?php //holds the data of the last successful auto save ?>
-  $(document).ready(function () {
+  
+    $(document).ready(function () {
 		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
 		usingAjax = true;
 		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
@@ -766,6 +767,17 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
 		 <?php // Setup autosave ?>
 		startAutoSave();
+                
+                <?php // Stop forms being submitted with ENTER  ?>
+                $('input[type=text]').keydown(function (event) {
+                    event = event || window.event;            
+                    if (event.keyCode == 13) {
+                      event.preventDefault();
+                      return false;
+                    } else {
+                      return true;
+                    }
+                });
   });
 
   <?php // Normal user submit by clicking on next, prevous, finish or jump screen ?>
