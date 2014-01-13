@@ -73,13 +73,13 @@ class XML_lookup extends outline_lookup {
     if (!is_null($restrict)) {
       foreach ($restrict as $key => $value) {
         if (!isset($lookupobj->lookupdata->$key)) {
-          $this->savetodebug("Restriction stopped debug $key not found");
+          $this->savetodebug("Restriction stopped debug key: $key not found");
           $restrictstop = true;
         } else {
           if (strpos($value, '|') === false) {
             //condition
             if (!isset($lookupobj->lookupdata->$key) or (isset($lookupobj->lookupdata->$key) and $lookupobj->lookupdata->$key !== $value)) {
-              $this->savetodebug("Restriction stopped debug $key !== $value");
+              $this->savetodebug("Restriction stopped debug key: $key !== $value");
               $restrictstop = true;
             }
           } else {
