@@ -78,7 +78,7 @@ class XML_lookup extends outline_lookup {
         }
         if (strpos($value, '|') === false) {
           //condition
-          if ($lookupobj->lookupdata->$key !== $value) {
+          if (!isset($lookupobj->lookupdata->$key) or (isset($lookupobj->lookupdata->$key) and $lookupobj->lookupdata->$key !== $value)) {
             $this->savetodebug("Restriction stopped debug $key !== $value");
             $restrictstop = true;
           }
