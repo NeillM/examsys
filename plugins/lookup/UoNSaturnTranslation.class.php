@@ -63,6 +63,9 @@ print "****&&&***";
 
   function moduletranslate($datapart) {
     print "{}{}{}{}";
+    var_dump(isset($datapart->rawschools));
+    var_dump($datapart);
+    print "}{}{}{}{";
     if (isset($datapart->rawschools)) {
       //detect raw xml school info
       $xml=$datapart->rawschools->xpath('School');
