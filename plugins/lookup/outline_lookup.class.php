@@ -160,8 +160,8 @@ class outline_lookup {
    *
    * @return mixed
    */
-  function get_module_authinfo($objid) {
-    return $this->calling_object->authinfo[$objid];
+  function get_module_lookupinfo($objid) {
+    return $this->calling_object->lookupinfo[$objid];
   }
 
 
