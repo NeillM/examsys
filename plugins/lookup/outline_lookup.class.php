@@ -151,7 +151,7 @@ class outline_lookup {
 
       return $returnarray;
     } else {
-      return $this->calling_object->authPluginObj[$number]->get_new_debug_messages();
+      return $this->calling_object->lookupPluginObj[$number]->get_new_debug_messages();
     }
   }
 
