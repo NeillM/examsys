@@ -38,12 +38,12 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
   function register_callback_routines() {
     $callbackarray[] = array(array($this, 'usertranslatelookup'), 'usertranslatelookup', $this->number, $this->name);
-    $callbackarray[] = array(array($this, 'moduletranslatelookup'), 'moduletranslatelookup', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'modulelookupxmltranslate'), 'modulelookupxmltranslate', $this->number, $this->name);
 
 
     return $callbackarray;
   }
-  function moduletranslatelookup($modulelookupobj) {
+  function modulelookupxmltranslate($modulelookupobj) {
 
     $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
 

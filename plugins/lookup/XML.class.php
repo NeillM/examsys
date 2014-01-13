@@ -189,7 +189,7 @@ class XML_lookup extends outline_lookup {
         foreach ($new_messages as $key => $value) {
           $info1 = $this->get_module_authinfo($objid);
           $info = key($info1) . ':' . current($info1);
-          $this->savetodebug("User Lookup XML Translate:authObj($info)[$number:$key]: $value");
+          $this->savetodebug("Module Lookup XML Translate:authObj($info)[$number:$key]: $value");
         }
       }
     }
