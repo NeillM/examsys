@@ -46,7 +46,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
   function modulelookupxmltranslate($modulelookupobj) {
 
     $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
-
+print "****&&&***";
     // this is on the search data (also used for 1 record lookup)
     $modulelookupobj->lookupdata = $this->moduletranslate($modulelookupobj->lookupdata);
 
@@ -62,12 +62,13 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
   }
 
   function moduletranslate($datapart) {
-
+    print "{}{}{}{}";
     if (isset($datapart->rawschools)) {
       //detect raw xml school info
       $xml=$datapart->rawschools->xpath('School');
+      print "()()()()";
       var_dump($xml);
-
+      $this->savetodebug('UoN Saturn Translate deb ' . var_export($xml,true));
     }
 
     return $datapart;
