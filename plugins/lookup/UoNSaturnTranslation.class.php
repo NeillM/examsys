@@ -38,19 +38,20 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
   function register_callback_routines() {
     $callbackarray[] = array(array($this, 'usertranslatelookup'), 'usertranslatelookup', $this->number, $this->name);
-    $callbackarray[] = array(array($this, 'modulelookupxmltranslate'), 'modulelookupxmltranslate', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'moduletranslatelookup'), 'moduletranslatelookup', $this->number, $this->name);
 
 
     return $callbackarray;
   }
-  function modulelookupxmltranslate($modulelookupobj) {
+  function moduletranslatelookup($modulelookupobj) {
 
     $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
-print "****&&&***";
-    var_dump($modulelookupobj);
-    // this is on the search data (also used for 1 record lookup)
-    $modulelookupobj->lookupdata = $this->moduletranslate($modulelookupobj->lookupdata);
 
+    // this is on the search data (also used for 1 record lookup)
+    if(isset($modulelookupobj->lookupdata)) {
+
+    $modulelookupobj->lookupdata = $this->moduletranslate($modulelookupobj->lookupdata);
+    }
 
     //this is for multiple blocks
     if (isset($modulelookupobj->lookupdatas)) {
@@ -63,17 +64,49 @@ print "****&&&***";
   }
 
   function moduletranslate($datapart) {
-    print "{}{}{}{}";
-    var_dump(isset($datapart->rawschools));
-    var_dump($datapart);
-    print "}{}{}{}{";
+
     if (isset($datapart->rawschools)) {
       //detect raw xml school info
-      $xml=$datapart->rawschools->xpath('School');
-      print "()()()()";
-      var_dump($xml);
-      $this->savetodebug('UoN Saturn Translate deb ' . var_export($xml,true));
+
+      foreach ($datapart->rawschools->School as $v) {
+        if (isset($v->AdministeredBy)) {
+          $school = (string)$v->AdministeredBy;
+          break;
+        }
+        if (isset($v->ContributedToBy)) {
+          $school = (string)$v->ContributedToBy;
+        }
+      }
+
+      if (isset($school)) {
+
+        $datapart->school = $school;
+        $this->savetodebug('School Set to ' . $school);
+      }
     }
+
+    if(isset($datapart->rawmembership)) {
+
+      $fields=array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus','Faculty' => 'faculty', 'ReasonForLeaving' => 'reasonforleaving', 'Username' => 'username');
+      $students=array();
+      foreach($datapart->rawmembership->Student as $v) {
+$studenti=new stdClass();
+        foreach($fields as $keyf => $keyo) {
+          if(isset($v->$keyf)) {
+            $studenti->$keyo = (string)$v->$keyf;
+          }
+        }
+        $studenti= $this->usertranslate($studenti);
+
+        $students[]=$studenti;
+      }
+
+      if(count($students) >0) {
+        $datapart->students=$students;
+      }
+
+    }
+
 
     return $datapart;
   }

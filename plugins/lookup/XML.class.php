@@ -164,7 +164,7 @@ class XML_lookup extends outline_lookup {
         try {
           $xml = new SimpleXMLElement($returned_data);
         } catch (Exception $e) {
-          throw new Exception('SimpleXMLElemnt creation has thrown', 0, $e);
+          throw new Exception('SimpleXMLElement creation has thrown', 0, $e);
         }
       }
     }

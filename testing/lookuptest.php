@@ -27,15 +27,20 @@
 
 
 if (isset($_REQUEST['var_display_max_depth'])) {
-  ini_set('xdebug.var_display_max_depth', $_REQUEST['var_display_max_depth']);
+  $max_depth = $_REQUEST['var_display_max_depth'];
 } else {
-  ini_set('xdebug.var_display_max_depth', 1024);
+  $max_depth = 1024;
 }
+ini_set('xdebug.var_display_max_depth', $max_depth);
+print 'xdebug.var_display_max_depth: ' . $max_depth . '<br />';
+
 if (isset($_REQUEST['var_display_max_children'])) {
-  ini_set('xdebug.var_display_max_children', $_REQUEST['var_display_max_children']);
+  $max_chldrn = $_REQUEST['var_display_max_children'];
 } else {
-  ini_set('xdebug.var_display_max_children', 10);
+  $max_chldrn = 10;
 }
+ini_set('xdebug.var_display_max_depth', $max_chldrn);
+print 'xdebug.var_display_max_depth: ' . $max_chldrn . '<br />';
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . '/../include/auth.inc';
