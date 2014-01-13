@@ -47,6 +47,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup {
 
     $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
 print "****&&&***";
+    var_dump($modulelookupobj);
     // this is on the search data (also used for 1 record lookup)
     $modulelookupobj->lookupdata = $this->moduletranslate($modulelookupobj->lookupdata);
 
