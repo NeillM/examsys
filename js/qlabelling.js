@@ -1324,7 +1324,7 @@ function ql_redraw_canvas() {
 		}
 				
 		//cursor blink
-		if (this.qmode == 'edit' && this.mov_id == -1 && this.edit_box_id>-1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
+		if (this.qmode == 'edit' && this.mov_id == -1 && this.edit_box_id>-1 && typeof(this.answerBox[this.active_box_id])!='undefined' && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
 			this.edit_box_blink++;
 			if (this.edit_box_blink>60) this.edit_box_blink=0;
 			if (this.edit_box_blink>30) {
@@ -1918,7 +1918,7 @@ function ql_mouseDragUp(){
 			next_combo_nr = -1;
 		}	
 		//if new - create new instance of the dragged label with new next_combo_nr 
-		if (this.pholder_access_id>-1 || (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && dest_box>-1)) {
+		if (this.pholder_access_id>-1 || (this.x>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && dest_box>-1)) {
 			var that_box = this.answerBox[this.drag_box_id][this.drag_box_combo].slice(0);
 			that_box[4] = next_combo_nr;
 			//reset copy
