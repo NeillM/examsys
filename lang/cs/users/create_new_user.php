@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/user_search_options.inc';
-require '../lang/' . $language . '/include/titles.inc';
+require $cfg_web_root . '/lang/' . $language . '/include/user_search_options.inc';
+require $cfg_web_root . '/lang/' . $language . '/include/titles.inc';
 
 $string['createnewuser'] = 'Nový uživatel';
 $string['getldapdetails'] = 'Získat detaily LDAP ';

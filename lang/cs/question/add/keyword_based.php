@@ -15,9 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../../lang/' . $language . '/include/status.inc';
-//require '../../lang/' . $language . '/include/blooms.inc';
-//require '../../lang/' . $language . '/include/question_types.inc';
-//require '../../lang/' . $language . '/question/sct_shared.php';
 
 $string['editor'] = 'Editor'; //cognate
 $string['changes'] = 'Změny';

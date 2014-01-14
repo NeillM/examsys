@@ -458,7 +458,15 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 
   $paper_type = $_POST['paper_type'];      // Override the paper type with what is posted.
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
-    $tmp_exam_duration = $_POST['duration'];
+    //$tmp_exam_duration = $_POST['duration'];
+		$duration = 0;
+		if (isset($_POST['duration_hours'])) {
+			$duration += ($_POST['duration_hours'] * 60);
+		}
+		if (isset($_POST['duration_mins'])) {
+			$duration += $_POST['duration_mins'];
+		}
+		$tmp_exam_duration = $duration;
   } else {
     $tmp_exam_duration = $exam_duration;
   }
@@ -467,6 +475,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
     if ($configObject->get('cfg_summative_mgmt')) {
       $tmp_start_date = NULL;
       $tmp_end_date = NULL;
+			$labs = NULL;
     } else {
       $tmp_start_date = '20200505090000';
       $tmp_end_date = '20200505100000';

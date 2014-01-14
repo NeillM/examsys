@@ -49,7 +49,7 @@ require_once '../classes/dateutils.class.php';
         return false;
       }
       
-      if ($('#duration').val() == '') {
+     if ($('#duration_hours').val() == '' || $('#duration_mins').val() == '') {
         alert ("<?php echo $string['msg8']; ?>");
         return false;
       }
@@ -175,13 +175,18 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
   }
   echo "</select></td>\n";
 
-  echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td><select name="duration" id="duration">';
-  $minutes = array('15'=>'15','20'=>'20','25'=>'25','30'=>'30','35'=>'35','40'=>'40','45'=>'45','50'=>'50','55'=>'55','60'=>'60','65'=>'65','70'=>'70','75'=>'75','80'=>'80','85'=>'85','90'=>'90','95'=>'95','100'=>'100','110'=>'110','120'=>'120','150'=>'150','180'=>'180');
-  echo "<option value=\"\"></option>\n";
-  foreach ($minutes as $key => $value) {
-    echo "<option value=\"" . $key . "\">$value</option>\n";
-  }
-  echo '</select> ' . $string['mins'] . '</td></tr>';
+  echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
+	echo '<select name="duration_hours" id="duration_hours">';
+	echo "<option value=\"\"></option>\n";
+	for ($i=0; $i<=12; $i++) {
+		echo "<option value=\"$i\">$i</option>\n";
+	}
+	echo '</select> ' . $string['hrs'] . ' <select name="duration_mins" id="duration_mins">';
+	echo "<option value=\"\"></option>\n";
+	for ($i=0; $i<60; $i++) {
+		echo "<option value=\"$i\">$i</option>\n";
+	}
+	echo '</select> ' . $string['mins'] . '</td></tr>';
   echo '<tr><td style="text-align:right">' . $string['daterequired'] . '</td><td><select name="period" id="period">';
   $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
   echo "<option value=\"\"></option>\n";

@@ -1,18 +1,18 @@
 <?php
-// This file is part of Rogō
+// This file is part of Rogo
 //
-// Rogō is free software: you can redistribute it and/or modify
+// Rogo is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogō is distributed in the hope that it will be useful,
+// Rogo is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
@@ -20,9 +20,9 @@ require '../lang/' . $language . '/include/paper_types.inc';
 $string['propertiestitle'] = 'Vlastnosti';
 $string['edittitle'] = 'Upravit';
 $string['warning'] = 'Varování: název dokumentu je již použit pro jiné hodnocení!';
-$string['availablefromyear'] = 'Rok Od je větší než rok Do - nelogické!';
-$string['availablefrommonth'] = 'Měsíc "Od" je větší než měsíc "D"o - nelogické!';
-$string['availablefromday'] = 'Den "Od" je větší než den "Do" - nelogické!';
+$string['availablefromyear'] = 'Rok OD je větší než rok DO - nelogické!';
+$string['availablefrommonth'] = 'Měsíc OD je větší než měsíc DO - nelogické!';
+$string['availablefromday'] = 'Den OD je větší než den DO - nelogické!';
 $string['availablefromhour'] = 'The available from hour is greater than the available to hour - this is illogical!';
 $string['availablefromminute'] = 'The available from minute is greater than the available to minute - this is illogical!';
 $string['msg1'] = 'Nejsou vybrány žádné moduly. Dokument musí být přiřazen nejméně k jednomu modulu.';
@@ -34,6 +34,7 @@ $string['msg6a'] = 'Zadali jste recenzenty, ale nazadali jste lhůtu.';
 $string['msg6'] = 'Zadali jste externí recenzenty, ale nazadali jste lhůtu.';
 $string['msg7'] = 'Zadejte, prosím, název dokumentu.';
 $string['msg8'] = 'Jedná se o uzavřenou zkoušku, tedy bez použití pomůcek. Studenti nesmí používat jiných zdrojů (včetně souseda), než kterých je užito v dokumentu. Nelze používat žádná jiná elektronická zařízení, než počítač ke zkoušce určený. Slovníky <em>nejsou</em> povoleny s jedinnou výjimkou. Ti, kteří <em>nemají</em> češtinu jako rodný jazyk, mohou používat pro překlad do češtiny slovník. Za podmínky, že ani jeden z jazyků není předmětem zkoušky. Odborné slovníky jsou zakázány. Během zkoušky a ani po jejím ukončení není dovoleno z učebny odnášet jakékoliv dokumenty a poznámky. Veškeré poznámky, které si zapíšete v průběhu zkoušky budou shromážděny Dohlížejícím a zlikvidovány.';
+
 
 // General tab
 $string['generaltab'] = 'Celkem';
@@ -93,7 +94,6 @@ $string['password'] = 'Heslo';
 $string['timezone'] = 'Časová zóna';
 $string['modules'] = 'Modul(y)';
 $string['duration'] = 'Trvání';
-$string['hrs'] = 'Hodin';
 $string['mins'] = 'Minut';
 $string['availablefrom'] = 'Dostupné od';
 $string['to'] = 'do';
@@ -123,7 +123,7 @@ $string['postscriptheading'] = "Text zobrazený po kliknutí na 'Konec'.";
 // Záložka Referenčního materiálu
 $string['referencematerial'] = 'Referenční materiál';
 $string['referenceheading'] = 'Určit, které referenční materiály jsou v dokumentu k dispozici.';
-$string['nomaterials'] = 'K tomuto dokumentu nejsou dostupné žádné referenční materiály.<br /><br />Referenční materiál může být doplněn kliknutím na volbu \'Referenční materiáll\' v modulu (<a href="" style="color:blue" onclick="launchHelp(296); chybový návrat;">viz nápověda</a>).';
+$string['nomaterials'] = 'K tomuto dokumentu nejsou dostupné žádné referenční materiály.<br /><br />Referenční materiál může být doplněn kliknutím na volbu \'Referenční materiáll\' v modulu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">viz nápověda</a>).';
 
 // Záložka zpětné vazby
 $string['feedbackheading'] = 'Komentář dostupný studentům';

@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/include/months.inc';
+require_once '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['moreinformation'] = 'Podrobnější informace';
 $string['viewdetails'] = 'Zobrazit detaily';

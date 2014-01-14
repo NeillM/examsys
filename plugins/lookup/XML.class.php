@@ -164,7 +164,7 @@ class XML_lookup extends outline_lookup {
         try {
           $xml = new SimpleXMLElement($returned_data);
         } catch (Exception $e) {
-          throw new Exception('SimpleXMLElemnt creation has thrown', 0, $e);
+          throw new Exception('SimpleXMLElement creation has thrown', 0, $e);
         }
       }
     }
@@ -187,7 +187,7 @@ class XML_lookup extends outline_lookup {
         $objid = key($callbackregisterdatalist[$number]);
         $new_messages = $this->get_new_debug_messages($objid);
         foreach ($new_messages as $key => $value) {
-          $info1 = $this->get_module_authinfo($objid);
+          $info1 = $this->get_module_lookupinfo($objid);
           $info = key($info1) . ':' . current($info1);
           $this->savetodebug("Module Lookup XML Translate:authObj($info)[$number:$key]: $value");
         }
@@ -319,7 +319,7 @@ class XML_lookup extends outline_lookup {
         $objid = key($callbackregisterdatalist[$number]);
         $new_messages = $this->get_new_debug_messages($objid);
         foreach ($new_messages as $key => $value) {
-          $info1 = $this->get_module_authinfo($objid);
+          $info1 = $this->get_module_lookupinfo($objid);
           $info = key($info1) . ':' . current($info1);
           $this->savetodebug("User Lookup XML Translate:authObj($info)[$number:$key]: $value");
         }
