@@ -104,7 +104,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 <tr>
 
 <?php
-  $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':00:00';
+  $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
   $now_time = date('U', strtotime($now_data));
   if ($properties->get_start_date() > $now_time) {
     $target_start_date = $properties->get_created();
@@ -128,7 +128,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   $end_day = date("d", $target_end_date);
   $end_hour = date("H", $target_end_date);
   $end_minute = date("i", $target_end_date);
-
+	
   if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
     $end_day = date('d');
     $end_month = date('m');
