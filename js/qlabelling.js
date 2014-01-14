@@ -517,7 +517,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			if (this.qmode == 'script' && this.display_correct_answer) {
 				if ((this.drag_pho_id == i && j == 99) || (this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
 					for (var a=0;a<this.pholderBox.length;a++) 
-						if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
+						if (Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) this.tmp_text = this.pholderBox[a][2];
 					for (var a=0;a<this.answerBox.length;a++) {
 						for (var b=0;b<this.answerBox[a].length;b++) {
 							if (this.answerBox[a][b][2]==this.tmp_text) {
@@ -553,7 +553,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			if ((this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
 				this.context.fillStyle=this.currentColours[2];	
 				for (var a=0;a<this.pholderBox.length;a++) 
-					if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
+					if (Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) this.tmp_text = this.pholderBox[a][2];
 			}
 		}
 		var tmp_width = this.labelWidthEffect;
@@ -568,7 +568,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			if (this.qmode == 'script' && this.display_correct_answer) {
 				if ((this.drag_pho_id == i && j== 99 ) || (this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
 					for (var a=0;a<this.pholderBox.length;a++) 
-						if (this.pholderBox[a][5] == temp_x && this.pholderBox[a][6] == temp_y) this.tmp_text = this.pholderBox[a][2];
+						if (Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) this.tmp_text = this.pholderBox[a][2];
 				}
 			}
 			tmp_width = this.labelWidthEffect - 19;
@@ -610,6 +610,12 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				this.context.fillStyle='#fff';
 				this.context.fillRect(temp_x+0.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect,tmp_height);
 				
+				for (var a=1;a<this.menuBox.length;a++) {
+					this.context.fillStyle='#fff';
+					if (Math.round(a/2)==(a/2)) this.context.fillStyle='#f8f8f8';
+					this.context.fillRect(temp_x+1,temp_y+tmp_trans+this.labelHeightEffect+1+(a-1)*this.labelHeightEffect,this.labelWidthEffect-1,this.labelHeightEffect-1);
+				}
+
 				//finding the one already selected
 				this.menu_line = 1;
 				for (var a=this.menuBox.length-1;a>=0;a--) 
@@ -633,7 +639,10 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 				this.context.fillStyle=this.currentColours[2];
 				this.context.font=this.fontSizes[this.fontSizePos]+"px Arial";
 				for (var a=0;a<this.menuBox.length;a++) {
-					this.context.fillText(this.menuBox[a],temp_x+6,temp_y+tmp_trans+this.labelHeightEffect*(a+1.5)+4); //this.labelWidthEffect/2
+					var wrapped = this.wrapText(this.menuBox[a],this.labelWidthEffect);
+					var temp_padding = this.fontChoices[this.fontSizePos]/2-1;
+					if (wrapped[0].indexOf('|')>-1) temp_padding -= wrapped[1]/4;
+					this.fillWrappedText(this.context,wrapped[0],temp_x+6,temp_y+tmp_trans+this.labelHeightEffect*(a+1.5)+temp_padding);
 				}
 			}
 		this.context.lineWidth = this.lineThickness;
