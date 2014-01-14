@@ -53,17 +53,16 @@ set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
 
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], false);
-  //this will exit php
+  $notice->access_denied($mysqli, $string, $string['error_paper'], false);   // This will exit PHP.
 }
 
-$original_paper_type = $propertyObj->get_paper_type(); //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
+$original_paper_type = $propertyObj->get_paper_type(); // Store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 
-$attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
-$low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
-$lab_name = NULL;             //default overwritten by (check_labs)
+$attempt = 1;              // Default attempt to 1 overwritten if the student is resit candidate by (check_modules)
+$low_bandwidth = 0;        // Default to off overwritten by (check_labs) if lab has low_bandwidth set
+$lab_name = NULL;          // Default overwritten by (check_labs)
 $lab_id = NULL;
-$current_address = NULL;   //default overwritten by (check_labs)
+$current_address = NULL;   // Default overwritten by (check_labs)
 
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
@@ -72,9 +71,9 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_id = $lab_object->get_id();
 }
 
-if ($userObject->has_role('Student')) {
+if ($userObject->has_role('Student')) {     // Student user, do a lot more security checks.
 
-  //get the module Ids for this paper
+  // Get the module IDs for this paper
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
   // Check for additional password on the paper
@@ -83,7 +82,7 @@ if ($userObject->has_role('Student')) {
   // Check time security
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
 
-  //Check room security
+  // Check room security
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
                                 $propertyObj->get_labs(),
                                 $current_address,
@@ -92,20 +91,19 @@ if ($userObject->has_role('Student')) {
                                 $mysqli
                               );
 
-  // check modules if the user is a student and the paper is not formative
+  // Check modules if the user is a student and the paper is not formative
   $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $mysqli);
 
   // Check for any metadata security restrictions
   check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
 
   $summative_exam_session_started = false;
-
 }
 
 $is_preview = (isset($_POST['mode']) and $_POST['mode'] == 'preview');
 
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
-if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
   $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli );
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
@@ -129,7 +127,7 @@ try {
 }
 
 if ($ret === true) {
-  //everthing worked ;-)
+  // Everthing worked ;-)
   echo $_POST['randomPageID'];
 } else {
   echo "ERROR";

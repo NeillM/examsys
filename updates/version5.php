@@ -39,8 +39,7 @@ set_time_limit(0);
 
 $old_version = $configObject->get('rogo_version');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -65,7 +64,7 @@ $old_version = $configObject->get('rogo_version');
           <div class="logo_lrg_txt">Rog&#333;</div>
           <div class="logo_small_txt">Update Utility (<?php echo $old_version . ' to ' . $version; ?>)</div>
       </th>
-      <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" border="0" /></th>
+      <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" /></th>
     </tr>
   </table>
 <?php
@@ -414,7 +413,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 03/06/2013 - nazrji - Add VLE APIs to config file.
-  if ($updater_utils->get_company($cfg_web_root) == 'University of Nottingham') {
+  if ($configObject->get('cfg_company') == 'University of Nottingham') {
     $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array('UoNCM' => '', 'NLE' => '');\n");
   } else {
     $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");

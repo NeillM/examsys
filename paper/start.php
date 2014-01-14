@@ -46,7 +46,6 @@ if ($userObject->has_role('External Examiner')) {    // External examiners have 
   $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', '#C00000', true, true);
 }
 
-
 check_var('id', 'GET', true, false, false);
 
 /**
@@ -60,7 +59,6 @@ check_var('id', 'GET', true, false, false);
  *
  */
 function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $db, $string) {
-  var_dump($random_q_data, $user_answers, $screen_data, $used_questions);
   $selected_q_id = '';
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
@@ -807,7 +805,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     stopAutoSave();
 
     <?php // Save any data from wysiwyg  ?>
-    if(typeof(tinyMCE) != "undefined"){
+    if (typeof(tinyMCE) != "undefined"){
       tinyMCE.triggerSave();
     }
     var formData = $('#qForm').serialize();
@@ -854,11 +852,11 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
                    ?>,
           cache: false,
           tryCount : 0,
-          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); //try 3 times before erroring ?>,
+          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); // Try 3 times before erroring ?>,
           beforeSend: function() {
           },
           fail: function() {
-            if(this.retry()) {
+            if (this.retry()) {
               return;
             } else  {
               saveFail();
@@ -874,7 +872,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               saveFail();
               return;
             } else if (textStatus == 'error') {
-              if(this.retry()) {
+              if (this.retry()) {
                 return;
               } else  {
                 saveFail();
@@ -886,12 +884,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           },
           success: function (ret_data, jqXHR, textStatus) {
               if (ret_data == randomPageID) {
-                  <?php // Cache the form data to look for changes on next auto save ?>
-                  last_saved_user_awnsers = this.data;
-                  saveSuccess();
-                  return;
+								<?php // Cache the form data to look for changes on next auto save ?>
+								last_saved_user_awnsers = this.data;
+								saveSuccess();
+								return;
               }
-              if(this.retry()) {
+              if (this.retry()) {
                 return;
               } else  {
                 saveFail();
@@ -927,7 +925,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       $('#qForm').submit();
     } else {
       $('#savemsg').html("<?php echo $string['auto_ok']; ?>");
-      <?php //clear auto save message ?>
+      <?php // Clear auto save message ?>
       setTimeout("$('#savemsg').html(\"\")",5000);
     }
   }

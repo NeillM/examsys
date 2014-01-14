@@ -43,6 +43,13 @@ Class UpdaterUtils {
     return $num_rows;
   }
 
+  /**
+   * Determines if a table exists in the database.
+   *
+   * @param string $table_name - The name of the table to be tested.
+   *
+   * @return bool - True = table exists, False = table does not exist.
+   */
   public function does_table_exist($table_name) {
     $result  = $this->mysqli->prepare('SELECT table_name FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
     $result->bind_param('ss', $this->db_name, $table_name);
@@ -59,7 +66,16 @@ Class UpdaterUtils {
     return true;
   }
 
-  public function does_column_type_value_exist($table_name, $column_name, $column_type_value) {
+  /**
+   * Determines if a table, field and field type all exist in the database.
+   *
+   * @param string $table_name  			- The name of the table to be tested.
+   * @param string $column_name 			- The name of the field to be tested.
+   * @param string $column_type_value - The type of the field to be tested.
+   *
+   * @return bool - True = the table, field and field type are all match in the database.
+   */
+	 public function does_column_type_value_exist($table_name, $column_name, $column_type_value) {
     $result = $this->mysqli->prepare('SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ? AND column_type = ?');
     $result->bind_param('ssss', $this->db_name, $table_name, $column_name, $column_type_value);
     $result->execute();
@@ -75,7 +91,15 @@ Class UpdaterUtils {
     return true;
   }
 
-  public function does_column_exist($table_name, $column_name) {
+  /**
+   * Determines if a table and field exist in the database.
+   *
+   * @param string $table_name  - The name of the table to be tested.
+   * @param string $column_name - The name of the field to be tested.
+   *
+   * @return bool - True = the table/field exists in the database.
+   */
+	 public function does_column_exist($table_name, $column_name) {
     $result = $this->mysqli->prepare('SELECT column_name FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?');
     $result->bind_param('sss', $this->db_name, $table_name, $column_name);
     $result->execute();
@@ -91,6 +115,14 @@ Class UpdaterUtils {
     return true;
   }
 
+  /**
+   * Determines if an index exists for a given table.
+   *
+   * @param string $table_name - The name of the table to be tested.
+   * @param string $index_name - The name of the index to be tested.
+   *
+   * @return bool - True = the index exists.
+   */
   public function does_index_exist($table_name, $index_name) {
     $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ?");
     $result->bind_param('s', $index_name);
@@ -107,6 +139,16 @@ Class UpdaterUtils {
     return true;
   }
 
+  /**
+   * Determines if an index exists for a given table.
+   *
+   * @param string $table_name   - The name of the table to be tested.
+   * @param string $index_name   - The name of the index to be tested.
+   * @param string $index_column - Name of the column being indexed.
+   * @param int $index_sequence  - The column sequence number in the index (optional).
+   *
+   * @return bool - True = the index exists.
+   */
 	public function does_index_column_exist($table_name, $index_name, $index_column, $index_sequence = NULL) {
 		if (!is_null($index_sequence)) {
 			$result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ? AND column_name = ? and seq_in_index = ?");
@@ -128,38 +170,25 @@ Class UpdaterUtils {
 		return true;
 	}
 
-  public function does_tables_priv_exist($user, $table, $privileges) {
-    $this->mysqli->select_db('mysql');
-
-    $privileges = str_replace(' ', '', $privileges);
-    $privileges = ucwords($privileges);
-
-    $result = $this->mysqli->prepare('SELECT * FROM tables_priv WHERE db = ? AND user = ? AND table_name = ? AND table_priv = ?');
-    $result->bind_param('ssss', $this->db_name, $user, $table, $privileges);
-    $result->execute();
-    $result->store_result();
-    $num_rows =  $result->num_rows;
-
-    $result->close();
-
-    $this->mysqli->select_db($this->db_name);
-
-    if ($num_rows < 1) {
-      return false;
-    }
-
-    return true;
-  }
-
-  public function has_grant($user, $grant, $table, $host) {
+  /**
+   * Checks if a particular DB user has a grant on a named table.
+   *
+   * @param string $user  - The database user.
+   * @param string $grant - The grant to be tested.
+   * @param string $table - The database table.
+   * @param string $host  - The database host name.
+   *
+   * @return bool - True = the grant exists for that user on the specified table.
+   */
+	 public function has_grant($user, $grant, $table, $host) {
     $found_grant = '';
 
     $result = $this->mysqli->query("SHOW GRANTS FOR '$user'@'$host'");
     echo $this->mysqli->error;
 
-		if (!is_object($result)) {
-			return false;
-		}
+    if (!is_object($result)) {
+        return false;
+    }
     while ($existing_grant = $result->fetch_array()) {
       if (stripos($existing_grant[0], ".`$table` TO") !== false) {
         $found_grant = $existing_grant[0];
@@ -180,6 +209,12 @@ Class UpdaterUtils {
     }
   }
 
+  /**
+   * Runs an SQL statement against the database.
+   *
+   * @param string $sql  					- The SQL statement to run.
+   * @param bool $update_display 	- If true then echo the SQL to the screen.
+   */
   public function execute_query($sql, $update_display) {
     if ($update_display) {
       echo "<li>$sql&hellip;";
@@ -220,7 +255,16 @@ Class UpdaterUtils {
     flush();
   }
 
-  public function update_version($version, $string, $cfg_web_root) {
+  /**
+   * Changes the version number in /config/config.inc.php.
+   *
+   * @param string $version - The new version number to set.
+   * @param string $string 	- Language translations.
+   * @param string $cfg_web_root - Path to the root of Rogo.
+   *
+   * @return bool - True = the config file is written correctly, False = file could not be written.
+   */
+	 public function update_version($version, $string, $cfg_web_root) {
     $cfg_new = array();
     $cfg = file($cfg_web_root . 'config/config.inc.php');
     foreach ($cfg as $line) {
@@ -237,6 +281,17 @@ Class UpdaterUtils {
     }
   }
 
+  /**
+   * Adds a new line to /config/config.inc.php if not already there.
+   *
+   * @param string $string 				- Language translations.
+   * @param string $search  			- A string to look for to see if the new lines already exist
+   * @param string $new_lines 		- An array of new lines to insert.
+   * @param int $default_line 		- Default line number to add to if no $target_line is found
+   * @param string $cfg_web_root 	- Path to the root of Rogo.
+   * @param string $target_line 	- A string to find on a target line to act as a location for the new lines
+   * @param int $offset 					- A plus or negative offset from $target_line to insert the new lines
+   */
   public function add_line($string, $search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1) {
     $file_path = $cfg_web_root . 'config/config.inc.php';
     $cfg = file($file_path);
@@ -268,25 +323,18 @@ Class UpdaterUtils {
     }
   }
 
-  public function backup_file($cfg_web_root, $old_version) {
+  /**
+   * Takes a backup of the configuration file.
+   *
+   * @param string $cfg_web_root	- Path to the root of Rogo.
+   * @param string $old_version		- Uses the old version of Rogo to make the backup filename.
+   */
+	 public function backup_file($cfg_web_root, $old_version) {
     if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-      copy($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.' . $old_version . '.php');
+      copy ($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.' . $old_version . '.php');
     }
   }
 
-  public function get_company($cfg_web_root) {
-    $cfg_company = '';
-
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
-    foreach ($cfg as $line) {
-      if (strpos($line, 'cfg_company') !== false) {
-        eval($line);
-        break;
-      }
-    }
-
-    return $cfg_company;
-  }
 }
 
 
