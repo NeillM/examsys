@@ -82,7 +82,7 @@ function check_duplicates($q_screens, $string) {
 
 function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $status_array, $db) {
 
-  if (!isset($tmp_excluded) and $status_array[$status]->get_validate()) {
+  if ($tmp_excluded == '0000000000000000000000000000000000000000' and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
@@ -723,8 +723,12 @@ $result->close();
     if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($properties->get_paper_type() < 3) checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $excluded[$old_q_id], $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
+    if ($properties->get_paper_type() < 3) {
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
+			checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
+		}
+		
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
       $latex = check_latex_random($rnd_q_ids, $mysqli);
