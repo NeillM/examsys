@@ -18,6 +18,9 @@ require '../lang/' . $language . '/include/paper_options.inc';
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
+require_once '../classes/configobject.class.php';
+$configObject = Config::get_instance();
+
 $string['start'] = 'Start';
 $string['owner'] = 'Vlastník';
 $string['question'] = 'Úloha';
@@ -50,8 +53,8 @@ $string['paperdeleted'] = 'Dokument odstraněn';
 $string['deleted_msg1'] = 'Dokument <strong>%s</strong> byl odstraněn.';
 $string['deleted_msg2'] = 'Stále ještě může být obnoveno z <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">Koše</a>.';
 $string['deleted_msg3'] = 'Nemusíte tento dokument vlastnit, musíte jej získat od <a href="mailto:%s" style="color:blue">%s %s</a> a obnovit jej.';
-$string['addscreenbreak'] = 'Přidat zalomení obrazovky';
-$string['deletescreenbreak'] = 'Ostranit zalomení obrazovky';
+$string['addscreenbreak'] = '+ zalomení obrazovky';
+$string['deletescreenbreak'] = '- zalomení obrazovky';
 $string['next'] = 'Další >>';
 $string['na'] = 'N/A';
 $string['Duplicate questions'] = 'Duplikovat Úlohu';

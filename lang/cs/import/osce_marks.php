@@ -15,6 +15,8 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/include/paper_options.inc';
+require '../lang/' . $language . '/include/months.inc';
+require '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['importoscemarks'] = 'Nahrát známky z OSCE stanice';
 $string['marksloaded'] = 'Známky nahrány.';
