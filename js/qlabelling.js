@@ -283,11 +283,14 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		}
 		
 		//reducing list of pholders for menu
+		var tmp_reduct = new Array();
 		if (this.qType == 'menu') {
-			for (i=this.pholderBox.length-1;i>=0;i--) 
-				if (this.pholderBox[i][5] == -500) this.pholderBox.splice(i,1);
+			for (i=this.pholderBox.length-1;i>=0;i--) {
+				if (typeof(tmp_reduct[this.pholderBox[i][2]+this.pholderBox[i][5]+this.pholderBox[i][6]])!='undefined') this.pholderBox.splice(i,1);
+				tmp_reduct[this.pholderBox[i][2]+this.pholderBox[i][5]+this.pholderBox[i][6]] = 1;
+				}
 		}
-		
+			
 		//calculating order number of the pholderBox for analysis as [7]
 		var nr = 0;
 		for (i=0;i<this.pholderBox.length;i++) 
@@ -389,6 +392,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		// sort out existing answer info
 		if (answer != '' && answer != undefined && answer != "undefined" && answer != null && answer != "null") {
       var answer_l1 = answer.split(";");
+			this.not_first_answer = true;
 			if (typeof(answer_l1[1]) != 'undefined' && answer_l1[1] == '') this.empty_answer = true
       var answer_l2 = answer_l1[1].split('$');
 			var ans_x,ans_y,ans_n,ans_b,new_j,new_i=0;
@@ -497,8 +501,16 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 	var this_box = this.answerBox[i][j];
 	if (j == -1) this_box = this.answerBox[i][0];
 	if (j == 99) this_box = this.pholderBox[i];
-
-	if (this_box[3] == '' && this.qType == 'menu' && this.empty_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3];
+	//finding answers for this menubox
+	if (this.qType == 'menu') {
+		this.tmp_text = '';
+		for (var a=0;a<this.answerBox.length;a++) {
+			if (this.answerBox[a][0][5] == this_box[5] && this.answerBox[a][0][6] == this_box[6]) {
+				this.tmp_text = this.answerBox[a][0][2];
+			}
+		}
+		if (this.tmp_text == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
+	}
   if (this_box[1] == 'image') this.context.fillRect(temp_x,temp_y,this.imglabelWidth,this.imglabelHeight);
   if (this_box[1] == 'text') this.context.fillRect(temp_x,temp_y,this.labelWidthEffect,this.labelHeightEffect);
 
@@ -947,7 +959,7 @@ function ql_redraw_canvas() {
 				if (typeof(this.pholderBox[i])!='undefined') {
 					//drawing background (unanswered)
 					this.context.fillStyle=this.currentColours[0];
-					if (this.pholderBox[i][3] == '' && this.empty_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3];
+					if (this.pholderBox[i][3] == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
 					//selecting width and height
 					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
@@ -2339,6 +2351,7 @@ function rql(num) {
   this.ShiftChange = false;
 
   this.empty_answer = false;
+	this.not_first_answer = false;
   this.q_Num;
 	this.doorId;
   this.slow_speed = 7;                    //parameter of slowing down speed
