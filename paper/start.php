@@ -506,26 +506,49 @@ $log_data->close();
 
 /*
 *
-* Get any Reference Material
-*
+* Load any Reference Material into an array.
+* @param int $paperID - ID of the current paper
+* @param object $db   - Mysqli object
+* @return array				- Array of all reference material relevant to the current paper.
 */
-$reference_materials = array();
-$ref_no = 0;
-$max_ref_width = 0;
-$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
-$stmt->bind_param('i', $paperID);
-$stmt->execute();
-$stmt->bind_result($reference_title, $reference_material, $reference_width);
-while ($stmt->fetch()) {
-  $reference_materials[$ref_no]['title'] = $reference_title;
-  $reference_materials[$ref_no]['material'] = $reference_material;
-  $reference_materials[$ref_no]['width'] = $reference_width;
-  if ($reference_width > $max_ref_width) {
-    $max_ref_width = $reference_width;
-  }
-  $ref_no++;
+function load_reference_materials($paperID, $db) {
+	$reference_materials = array();
+	$ref_no = 0;
+	$stmt = $db->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
+	$stmt->bind_param('i', $paperID);
+	$stmt->execute();
+	$stmt->bind_result($reference_title, $reference_material, $reference_width);
+	while ($stmt->fetch()) {
+		$reference_materials[$ref_no]['title'] = $reference_title;
+		$reference_materials[$ref_no]['material'] = $reference_material;
+		$reference_materials[$ref_no]['width'] = $reference_width;
+		$ref_no++;
+	}
+	$stmt->close();
+	
+	return $reference_materials;
 }
-$stmt->close();
+
+/*
+*
+* Looks through and returns the largest width for a set of reference materials.
+* @param array $reference_materials - Array of reference materials to check.
+* @return int				- The maximum width of any reference material for the current paper.
+*/
+function get_max_reference_width($reference_materials) {
+	$max_ref_width = 0;
+  foreach ($reference_materials as $reference_material) {
+		if ($reference_material['width'] > $max_ref_width) {
+			$max_ref_width = $reference_material['width'];
+		}
+	}
+	
+	return $max_ref_width;
+}
+
+// Load any reference materials.
+$reference_materials	= load_reference_materials($paperID, $mysqli);
+$max_ref_width 				= get_max_reference_width($reference_materials);
 
 require '../config/start.inc';
 echo "<!DOCTYPE html>\n<html>\n<head>\n";
@@ -645,7 +668,8 @@ if ($css != '') {
 
   var changeRef = function(refID) {
     $('#refpane').val(refID);
-    winH = getWinH();
+    //winH = getWinH();
+		winH = $(window).height();
     resizeReference();
     var flag = 0;
     <?php
@@ -669,7 +693,8 @@ if ($css != '') {
   }
 
   var resizeReference = function() {
-    winH = getWinH();
+    //winH = getWinH();
+		winH = $(window).height();
 <?php
   if (count($reference_materials) > 0) {
     $subtract = (31 * count($reference_materials)) + 11;
@@ -747,7 +772,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var autoSaveRef = '';
   var last_saved_user_awnsers = null;    <?php //holds the data of the last successful auto save ?>
   
-    $(document).ready(function () {
+  $(document).ready(function () {
 		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
 		usingAjax = true;
 		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
@@ -766,16 +791,16 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 		 <?php // Setup autosave ?>
 		startAutoSave();
                 
-                <?php // Stop forms being submitted with ENTER  ?>
-                $('input[type=text]').keydown(function (event) {
-                    event = event || window.event;            
-                    if (event.keyCode == 13) {
-                      event.preventDefault();
-                      return false;
-                    } else {
-                      return true;
-                    }
-                });
+		<?php // Stop forms being submitted with ENTER  ?>
+		$('input[type=text]').keydown(function (event) {
+				event = event || window.event;            
+				if (event.keyCode == 13) {
+					event.preventDefault();
+					return false;
+				} else {
+					return true;
+				}
+		});
   });
 
   <?php // Normal user submit by clicking on next, prevous, finish or jump screen ?>
@@ -857,10 +882,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           data: $('#qForm').serialize(),
           dataType: 'html',
           timeout: <?php
-                        // Set the time out of one requst to be the maximum total time plus 5s for network latency
-                        // PHP handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
-                        // weird happens.
-                        echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
+											// Set the time out of one requst to be the maximum total time plus 5s for network latency
+											// PHP handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
+											// weird happens.
+											echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
                    ?>,
           cache: false,
           tryCount : 0,
@@ -1301,7 +1326,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
 			echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";
     }
-		echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
+		echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
   } else {
     echo $bottom_html;
     ?>
@@ -1332,7 +1357,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
         echo "</select>&nbsp;";
       }
     }
-    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . ($ref_no - 1) . "\" />\n";
+    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
     if ($current_screen > $no_screens) {
 			echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;";
 		} else {
@@ -1352,7 +1377,7 @@ if (count($reference_materials) > 0) {
   foreach ($reference_materials as $reference_material) {
     echo "<div class=\"refhead\" id=\"refhead" . $ref_no . "\" onclick=\"changeRef(" . $ref_no . ")\" style=\"top:{$top}px\">" . $reference_material['title'] . "</div>\n";
     echo "<div class=\"framecontent\" id=\"framecontent" . $ref_no . "\" style=\"top:" . (31 + $top) . "px\">\n" . $reference_material['material'] . "</div>\n";
-    $top+=31;
+    $top += 31;
     $ref_no++;
   }
 }
