@@ -43,17 +43,27 @@ $results->close();
 
 $bad_addresses = array();
 if (isset($_POST['submit'])) {
-  // Delete the existing IP addresses for the lab first.
+  // Delete the existing addresses for the lab first.
   $result = $mysqli->prepare("DELETE FROM client_identifiers WHERE lab = ?");
   $result->bind_param('i', $lab_id);
   $result->execute();
   $result->close();
+	
+	// Get a list of all existing addresses.
+	$existing_addresses = array();
+  $result = $mysqli->prepare("SELECT address FROM client_identifiers");
+  $result->execute();
+	$result->bind_result($address);
+	while (	$result->fetch()) {
+		$existing_addresses[$address] = 1;
+	}
+  $result->close();	
 
-  // Insert the new IP addresses.
-  $addresses = explode('<br />',nl2br($_POST['addresses']));
+  // Insert the new addresses.
+  $addresses = explode('<br />', nl2br($_POST['addresses']));
   foreach ($addresses as $individual_address) {
     $address = trim($individual_address);
-    if ($address != '') {
+    if ($address != '' and !isset($existing_addresses[$address])) {
       if ($configObject->get('cfg_client_lookup') == 'name') {
         $test_re = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/';
       } else {

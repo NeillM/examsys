@@ -21,6 +21,7 @@ $string['records'] = 'Záznamy';
 $string['updated'] = 'Aktualizováno';
 $string['engine'] = 'Stroj';
 $string['application'] = 'Rogō aplikace';
+$string['rogoplugins'] = 'Rogō plug-ins';
 $string['version'] = 'Verze';
 $string['webroot'] = 'Web Root'; //cognate
 $string['database'] = 'Databáze';
@@ -59,5 +60,14 @@ $string['minutes'] = 'minuty';
 $string['hours'] = 'hodiny';
 $string['days'] = 'dny';
 $string['Session'] = 'Relace';
-
+$string['EnhancedCalcPlugin'] = 'Calculation question plugin';
+$string['ErrorLogSettings'] = 'Error Reporting';
+$string['authdebug'] = 'Show authentication debug';
+$string['errorsonscreen'] = 'Show errors on-screen';
+$string['phpnotices'] = 'Show PHP Notices';
+$string['errorshutdown'] = 'Error handling at shutdown';
+$string['varcapturemethod'] = 'Variable capture method on error:';
+$string['improved'] = 'Improved';
+$string['basic'] = 'Basic';
+$string['none'] = 'none';
 ?>

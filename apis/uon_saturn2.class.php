@@ -383,6 +383,9 @@ Class UON_SATURN2 extends SmsUtils {
             }
           }
         } else {
+          $variables = array( 'lookup' => &$sms, 'currentusers' => &$current_users );
+          $errstr = 'Couldnt create user in cron job, unable to establish username';
+          log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
           echo 'ERROR: unable to establish username for ' . $sms->title . ' ' . $sms->surname . ', ' . $sms->forename . ' (' . $sms->studentID . ')<br />';
         }
       }
