@@ -1,4 +1,5 @@
 function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour, mode) {
+
 	this.canvas = document.getElementById('canvas'+num);
 	this.canv_rect = this.canvas.getBoundingClientRect();
   
@@ -140,7 +141,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			apx.push(tmpx);
 			apy.push(tmpy);
 			tmpx += this.labelWidth + this.i_spacex + this.lineThickness - 1;
-			if ((tmpx+this.labelWidth)>220) {
+			if ((tmpx+this.labelWidth)>=220) {
 				tmpx = 5;
 				tmpy += this.labelHeight + this.i_spacey + this.lineThickness - 1;
 			}
@@ -286,11 +287,11 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		var tmp_reduct = new Array();
 		if (this.qType == 'menu') {
 			for (i=this.pholderBox.length-1;i>=0;i--) {
-				if (typeof(tmp_reduct[this.pholderBox[i][2]+this.pholderBox[i][5]+this.pholderBox[i][6]])!='undefined') this.pholderBox.splice(i,1);
+				if (typeof(this.pholderBox[i])=='undefined' || typeof(tmp_reduct[this.pholderBox[i][2]+this.pholderBox[i][5]+this.pholderBox[i][6]])!='undefined') this.pholderBox.splice(i,1);
 				tmp_reduct[this.pholderBox[i][2]+this.pholderBox[i][5]+this.pholderBox[i][6]] = 1;
-				}
+			}
 		}
-			
+
 		//calculating order number of the pholderBox for analysis as [7]
 		var nr = 0;
 		for (i=0;i<this.pholderBox.length;i++) 
@@ -389,6 +390,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		}
 		
 		//---------- answer, 
+		if (this.qmode != 'edit' && this.qType == 'menu') {
+			for (i=0;i<this.answerBox.length;i++) 
+				if (typeof(this.answerBox[i])!='undefined')
+					for (j=0;j<this.answerBox[i].length;j++) 
+						this.answerBox[i][j][2] = '';
+		}
 		// sort out existing answer info
 		if (answer != '' && answer != undefined && answer != "undefined" && answer != null && answer != "null") {
       var answer_l1 = answer.split(";");
@@ -397,9 +404,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       var answer_l2 = answer_l1[1].split('$');
 			var ans_x,ans_y,ans_n,ans_b,new_j,new_i=0;
 			
-			if (this.qmode != 'edit' && this.qType == 'menu') {
-				for (i=0;i<this.answerBox.length;i++) this.answerBox[i][0][2] = '';
-			}
 			
       for (l=0; l<answer_l2.length/4; l++) {
         if (answer_l2[l*4]!='') {
@@ -444,17 +448,20 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 					if (this.qmode != 'edit' && this.qType == 'menu') {
 						var test_subst = true;
 						for (i=0;i<this.answerBox.length;i++) {
-							if (test_subst && typeof(this.answerBox[i][0]) != 'undefined' && Number(this.answerBox[i][0][7]) == ans_x && Number(this.answerBox[i][0][8]) == ans_y) {
-								this.answerBox[i][0][2] = ans_n;
-								this.answerBox[i][0][3] = ans_b;
-								this.answerBox[i][0][4] = 0;
-								this.answerBox[i][0][5] = ans_x;
-								this.answerBox[i][0][6] = ans_y+25-this.yOffset;
-								test_subst = false;
+							if (typeof(this.answerBox[i])!='undefined') {
+								for (j=0;j<this.answerBox[i].length;j++) {
+									if (test_subst && typeof(this.answerBox[i][j]) != 'undefined' && Number(this.answerBox[i][j][7]) == ans_x && Number(this.answerBox[i][j][8]) == ans_y) {
+										this.answerBox[i][j][2] = ans_n;
+										this.answerBox[i][j][3] = ans_b;
+										this.answerBox[i][j][4] = 0;
+										this.answerBox[i][j][5] = ans_x;
+										this.answerBox[i][j][6] = ans_y+25-this.yOffset;
+										test_subst = false;
+									}
+								}
 							}
 						}
 					}
-					
         }      
       }    
     }	
@@ -505,8 +512,12 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 	if (this.qType == 'menu') {
 		this.tmp_text = '';
 		for (var a=0;a<this.answerBox.length;a++) {
-			if (this.answerBox[a][0][5] == this_box[5] && this.answerBox[a][0][6] == this_box[6]) {
-				this.tmp_text = this.answerBox[a][0][2];
+			if (typeof(this.answerBox[a])!='undefined') {
+				for (b=0;b<this.answerBox[a].length;b++) {
+					if (this.answerBox[a][b][5] == this_box[5] && this.answerBox[a][b][6] == this_box[6]) {
+						this.tmp_text = this.answerBox[a][b][2];
+					}
+				}
 			}
 		}
 		if (this.tmp_text == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
@@ -562,7 +573,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		if (this.qmode == 'script' && this.display_correct_answer) {
 			this.context.fillStyle='#000';
 			if (this.drag_pho_id == i && j == 99) this.context.fillStyle=this.currentColours[2];	
-			if ((this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
+			if ((this.drag_box_id == i && this.drag_box_combo == j && temp_x>=220)){
 				this.context.fillStyle=this.currentColours[2];	
 				for (var a=0;a<this.pholderBox.length;a++) 
 					if (Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) this.tmp_text = this.pholderBox[a][2];
@@ -573,12 +584,16 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 		if (this.qType == 'menu') {
 			this.tmp_text = '';
 			for (var a=0;a<this.answerBox.length;a++) {
-				if (this.answerBox[a][0][5] == this_box[5] && this.answerBox[a][0][6] == this_box[6]) {
-					this.tmp_text = this.answerBox[a][0][2];
+				if (typeof(this.answerBox[a])!='undefined') {
+					for (b=0;b<this.answerBox[a].length;b++) {
+						if (this.answerBox[a][b][5] == this_box[5] && this.answerBox[a][b][6] == this_box[6]) {
+							this.tmp_text = this.answerBox[a][b][2];
+						}
+					}
 				}
 			}
 			if (this.qmode == 'script' && this.display_correct_answer) {
-				if ((this.drag_pho_id == i && j== 99 ) || (this.drag_box_id == i && this.drag_box_combo == j && temp_x>220)){
+				if ((this.drag_pho_id == i && j== 99 ) || (this.drag_box_id == i && this.drag_box_combo == j && temp_x>=220)){
 					for (var a=0;a<this.pholderBox.length;a++) 
 						if (Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) this.tmp_text = this.pholderBox[a][2];
 				}
@@ -1001,7 +1016,7 @@ function ql_redraw_canvas() {
 				//creating sorted list of labels and selecting next available
 				for (i=this.answerBox.length-1;i>=0;i--) 
 				for (j=this.answerBox[i].length-1;j>=0;j--) {
-					tmp_area = 2; if (this.answerBox[i][j][5]>220) tmp_area = 1;
+					tmp_area = 2; if (this.answerBox[i][j][5]>=220) tmp_area = 1;
 					if (this.answerBox[i][j][5]>0 && (j == 0 || this.labelMulti == 'multiple')) tmp_pos_array[(tmp_area*1000+this.answerBox[i][j][6])+'.'+(1000+this.answerBox[i][j][5])] = i+','+j;
 				}
 				
@@ -1179,7 +1194,7 @@ function ql_redraw_canvas() {
 				tmpx += this.i_spacex + tmpw + this.lineThickness - 1;
 				if (tmphn < tmph) tmphn = tmph;
 				tmpwn = 0;if (a<(tmpp.length-1)) tmpwn = tmpp[a+1][2];
-				if ((tmpx + tmpwn)>220) {
+				if ((tmpx + tmpwn)>=220) {
 					tmpx = 5;
 					tmpy += tmphn + this.i_spacey + this.lineThickness - 1;
 					tmphn = 0;
@@ -1190,7 +1205,7 @@ function ql_redraw_canvas() {
 		if (this.qType == "menu" && (this.qmode == 'answer' || this.qmode == 'script')) {		
 			//menus
 			for (i=this.answerBox.length-1;i>=0;i--) {
-				if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>220&& i != this.active_box_id) {
+				if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][1] == 'text' && this.pholderBox[i][5]>=220 && i != this.active_box_id) {
 					this.ql_draw_box(i,99,this.pholderBox[i][5],this.pholderBox[i][6]);
 				}
 			}
@@ -1517,10 +1532,11 @@ function ql_mouseDragMove(e){
 										}
 								}
 							} else {
-								if (typeof(this.pholderBox[i])!='undefined' && ((this.qmode == 'edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) || (this.qmode!='edit' && this.pholderBox[i][5]>220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect) == true))) {
+								if (typeof(this.pholderBox[i])!='undefined' && ((this.qmode == 'edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) || (this.qmode!='edit' && this.pholderBox[i][5]>=220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect) == true))) {
 									this.drag_box_id = i;
 									this.drag_pho_id = i;
-									this.drag_box_combo = 0;
+									//this.drag_box_combo = 0;
+									this.drag_box_combo = j;
 								}
 							}
 						}
@@ -1813,7 +1829,7 @@ function ql_mouseDragUp(){
 	//help link
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
 		window.open('/help/staff/index.php?id=60');
-	}	
+	}
 	
 	//dropdown labels 
 	if (this.menu_line>-1 && this.active_box_id>-1 && this.active_box_combo>-1){
@@ -2149,7 +2165,7 @@ function ql_ReturnInfo() {
 
 	if (this.qmode == 'answer') {
 		for (i=0;i<this.pholderBox.length;i++) {
-			if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][2] != "" && this.pholderBox[i][5]>220) {
+			if (typeof(this.pholderBox[i])!='undefined' && this.pholderBox[i][2] != "" && this.pholderBox[i][5]>=220) {
 				temp_answ[this.pholderBox[i][2]] = this.pholderBox[i][5]+','+this.pholderBox[i][6];
 				questions_total++;
 			}
