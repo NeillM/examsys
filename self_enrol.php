@@ -59,10 +59,7 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
   .field {padding-top:4px; padding-left:6px; font-weight:bold}
   .topbar {
     height:70px;
-    background: -moz-linear-gradient(top, #EEEEEE, #C9C9C9);
-    background: -webkit-linear-gradient(top, #EEEEEE, #C9C9C9);
-    background-image: -ms-linear-gradient(top, #EEEEEE 0%, #C9C9C9 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EEEEEE', endColorstr='#C9C9C9');
+    background: #EEEEEE;
     vertical-align:middle;
     font-size:150%;
     font-weight:bold;
