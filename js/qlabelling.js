@@ -472,6 +472,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			this.answerBox[n][0] = new Array(n,"text","","",0,5,30,5,30,"","");
 		}
 		
+		//that is if we'd used that for whole answer
 		if (this.hide_feedback_ifunanswered && this.empty_answer) {
 			this.display_ticks_crosses = false;
 			this.display_correct_answer = false;
@@ -509,7 +510,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 	if (j == -1) this_box = this.answerBox[i][0];
 	if (j == 99) this_box = this.pholderBox[i];
 	//finding answers for this menubox
-	if (this.qType == 'menu') {
+	if (this.qType == 'menu' && j==99) {
 		this.tmp_text = '';
 		for (var a=0;a<this.answerBox.length;a++) {
 			if (typeof(this.answerBox[a])!='undefined') {
@@ -732,11 +733,12 @@ function ql_redraw_box(i,j) {
 	if (typeof this_box != 'undefined' && (this.labelMulti == 'multiple' || this_box[4] == 0)) {
     temp_x = this_box[5];
     temp_y = this_box[6];
-	if (this.qmode == 'script' && this.qType == "menu" && this.active_box==i) {
-		this_box = this.pholderBox[i];
-		temp_x = this_box[5]-10;
-		temp_y = this_box[6]-10;
-	}		
+		
+		if (this.qmode == 'script' && this.qType == "menu" && this.active_box==i) {
+			this_box = this.pholderBox[i];
+			temp_x = this_box[5]-10;
+			temp_y = this_box[6]-10;
+		}		
     //setting shadow
     if (((this.drag_box_id == i && this.drag_box_combo == j) || (this.mov_id == i && this.mov_combo == j)) && this.panelOptionOver == -1 && this.qmode!='script')  {
       this.context.shadowColor = '#AAA';
@@ -1232,7 +1234,7 @@ function ql_redraw_canvas() {
 		if (this.active_box_id>-1 && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[this.active_box_id][this.active_box_combo][1]!='image')) this.ql_redraw_box(this.active_box_id,this.active_box_combo);
 		
 		//redraw empty pholderbox in script and analysis		
-		if (this.drag_pho_id>-1 && this.qType != "menu" && this.display_correct_answer && (this.qmode == 'script' || this.qmode == 'analysis')) this.ql_redraw_box(this.drag_pho_id,99);
+		if (this.drag_pho_id>-1 && this.display_correct_answer && (this.qmode == 'script' || this.qmode == 'analysis'))	this.ql_redraw_box(this.drag_pho_id,99);//this.qType != "menu" && 
 		//if (this.drag_pho_id>-1 && this.qType != "menu" && this.qmode == 'analysis') this.ql_redraw_box(this.drag_pho_id,99);
 		
 		//redraw dragged shape to have it on top
