@@ -43,6 +43,8 @@ require_once '../classes/dateutils.class.php';
     a {color:#215DC6}
     a.heading {color:#215DC6; font-weight:bold}
     a.heading:hover {color:#428EFF; font-weight:bold}
+		.on {width:30px; float:left; color:#008000; font-weight:bold}
+		.off {width:30px; float:left; color:#C00000; font-weight:bold}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -151,8 +153,7 @@ foreach ($enhancedc2 as $key => $value) {
   $enhancedc3 .= "$key => $value<br />";
 }
 
-$enhancedPlugininfo = "Type: $enhancedc1<br />Settings:-<br />$enhancedc3";
-
+$enhancedPlugininfo = "Type: $enhancedc1<br />$enhancedc3";
 
 // Get info on error handling
 $ErrorLogSettings = '';
@@ -163,56 +164,58 @@ $e4 = $configObject->get('displayallerrors');
 $e5 = $configObject->get('errorshutdownhandling');
 $e6 = $configObject->get('errorcontexthandling');
 
-function tickorcross($status, $string) {
-  if($status) {
-    $string .= '&nbsp;<img width="17" height="16" alt="Tick" src="../artwork/tick.gif"></img>';
-  } else {
-    $string .= '&nbsp;<img width="17" height="16" alt="Cross" src="../artwork/cross.gif"></img>';
-  }
-  return $string;
+function onoff($status, $html) {
+  if ($status) {
+	  $html .= '<br /><div class="on">On</div>';
+	} else {
+	  $html .= '<br /><div class="off">Off</div>';
+	}
+	return $html;
 }
 
-$ErrorLogSettings .='Display Auth Debug:';
-$ErrorLogSettings = tickorcross(($e1 === true), $ErrorLogSettings);
+$ErrorLogSettings = onoff(($e1 === true), $ErrorLogSettings);
+$ErrorLogSettings .= $string['authdebug'];
 
-$ErrorLogSettings .='<br />Display Errors to screen:';
-$ErrorLogSettings = tickorcross(($e3 === true), $ErrorLogSettings);
+$ErrorLogSettings = onoff(($e3 === true), $ErrorLogSettings);
+$ErrorLogSettings .= $string['errorsonscreen'];
 
-$ErrorLogSettings .='<br />Display Errors for Notices:';
-$ErrorLogSettings = tickorcross(($e4 === true), $ErrorLogSettings);
+$ErrorLogSettings = onoff(($e4 === true), $ErrorLogSettings);
+$ErrorLogSettings .= $string['phpnotices'];
 
-$ErrorLogSettings .='<br />Run Error Handling @Shutdown:';
-$ErrorLogSettings = tickorcross(($e5 === true), $ErrorLogSettings);
+$ErrorLogSettings = onoff(($e5 === true), $ErrorLogSettings);
+$ErrorLogSettings .= $string['errorshutdown'];
 
-$ErrorLogSettings .='<br />Method of Capturing Variable at error:';
-if($e6 == 'improved') {
-  $ErrorLogSettings .= '&nbsp;<img width="17" height="16" alt="Tick" src="../artwork/tick.gif"></img>';
-  $ErrorLogSettings .='<br />Display Language Strings in debug:';
-  $ErrorLogSettings = tickorcross(($e2 === true), $ErrorLogSettings);
-
-} elseif($e6 == 'basic') {
-  $ErrorLogSettings .= '&nbsp;<img width="17" height="16" alt="Tick" src="../artwork/tick_half.gif"></img>';
+$ErrorLogSettings .= '<br />' . $string['varcapturemethod'] . ' ';
+if ($e6 == 'improved') {
+  //$ErrorLogSettings .= '<br />Show language strings in debug';
+  $ErrorLogSettings .= $string['improved'];
+} elseif ($e6 == 'basic') {
+  $ErrorLogSettings .= $string['basic'];
 } else {
-  $ErrorLogSettings .= '&nbsp;<img width="17" height="16" alt="Cross" src="../artwork/cross.gif"></img>';
+  $ErrorLogSettings .= $string['none'];
 }
 
 ?>
 </td>
 <td style="width:50px">&nbsp;</td>
 <td style="vertical-align:top">
-<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:400px">
+<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:550px">
 <tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
-<tr><td><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
+<tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
 <tr><td><?php echo $string['interactivequestions']; ?></td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
-<tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
-<tr><td><?php echo $string['EnhancedCalcPlugin']; ?></td><td><?php echo $enhancedPlugininfo ?></td></tr>
 <tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>
-<tr><td colspan="2">&nbsp;</td></tr>
 
+<tr><td colspan="2">&nbsp;</td></tr>
+<tr><td colspan="2" class="sechead"><?php echo $string['rogoplugins']; ?></td></tr>
+
+<tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
+<tr><td><?php echo $string['EnhancedCalcPlugin']; ?></td><td><?php echo $enhancedPlugininfo ?></td></tr>
+
+<tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2" class="sechead"><?php echo $string['serverinformation']; ?></td></tr>
 <?php
 
@@ -224,7 +227,7 @@ if($e6 == 'improved') {
       $core_no = 0;
       $processor = '';
       foreach ($lines as $individual_line) {
-        $components = explode(':',$individual_line);
+        $components = explode(':', $individual_line);
         if (trim($components[0]) == 'model name') {
           $core_no++;
           $processor = trim($components[1]);
@@ -240,7 +243,7 @@ if($e6 == 'improved') {
       $virtual = 0;
       $processor = '';
       foreach ($lines as $individual_line) {
-        if (strpos($individual_line,'The physical processor') !== false) {
+        if (strpos($individual_line, 'The physical processor') !== false) {
           $tmp_line = str_replace('The physical processor has ','',trim($individual_line));
           $physical++;
           $virtual += substr($tmp_line,0,1);
@@ -298,7 +301,7 @@ if($e6 == 'improved') {
   } else {
     $master_array = array();
     $results = shell_exec('df -h');
-    $lines = explode('<br />',nl2br($results));
+    $lines = explode('<br />', nl2br($results));
     $row_no = 0;
     foreach ($lines as $individual_line) {
       if ($row_no > 0) {
@@ -314,7 +317,7 @@ if($e6 == 'improved') {
   }
   for ($i=1; $i<($row_no-1);$i++) {
     if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
-      echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" border="0" /></td><td>' . $master_array[$i][5] . '<br />';
+      echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" /></td><td>' . $master_array[$i][5] . '<br />';
 			echo '<span style="border: 1px solid #808080; display:block; height:11px; width:150px">';
       if (intval($master_array[$i][3]) < intval($master_array[$i][1])) {
 			  $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
