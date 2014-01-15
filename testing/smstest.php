@@ -56,6 +56,7 @@ require_once $cfg_web_root . 'classes/authentication.class.php';
 require_once $cfg_web_root . 'classes/lang.class.php';
 
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
+require_once $cfg_web_root . '/classes/smsutils.class.php';
 require_once $cfg_web_root . '/classes/schoolutils.class.php';
 require_once $cfg_web_root . '/classes/usernotices.class.php';
 
@@ -65,6 +66,20 @@ if (!$userObject->has_role('SysAdmin')) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
 }
+if(!isset($_REQUEST['lookuptesttype'])) {
+  $_REQUEST['lookuptesttype']='user';
+}
+$list = '';
+$newdata = new stdClass();
+foreach ($_REQUEST as $key => $value) {
+  if ($key != 'lookuptesttype' and $key != 'ROGO_PW') {
+    $newdata->$key = $value;
+    $list = $list . " $key = $value";
+  }
+}
+
+echo "use lookuptesttype to set type of lookup anything else taken as a key value pair<br>";
+echo "<h1>looking up via $_REQUEST[lookuptesttype] for $list</h1>";
 
 $configObj=Config::get_instance();
 
@@ -73,6 +88,19 @@ $lookup = Lookup::get_instance($configObj, $mysqli);
 
 $newdata = new stdClass();
 
+$sms_connection = SmsUtils::GetSmsUtils();
+
+if($sms_connection === false) {
+  print "<h2>No SMS configuration set</h2>";
+  exit();
+}
+var_dump($sms_connection);
+$out=$sms_connection->get_module($_REQUEST['modulecode']);
+
+var_dump($out);
+
+
+exit();
 
 if(!isset($_REQUEST['lookuptesttype'])) {
   $_REQUEST['lookuptesttype']='user';

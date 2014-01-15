@@ -35,58 +35,13 @@ class lti_integration_extended extends lti_integration {
 
   static private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies', 'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology', 'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering', 'PC' => 'Chemistry', 'MC' => 'Public Health Medicine & Epidemiology', 'MG' => 'Obstetrics, Midwifery & Gynaecology', 'LI' => 'Trent Institute for Health Services Research', 'EV' => 'Structures', 'AB' => 'Classics', 'MR' => 'Pathology', 'PS' => 'Computer Science', 'LC' => 'Contemporary Chinese Studies', 'MZ' => 'Medicine', 'TT' => 'PGCE', 'AJ' => 'Critical Theory', 'RN' => 'Cultural Studies', 'LE' => 'Economics', 'EE' => 'Electrical & Electronic Engineering', 'EZ' => 'Engineering', 'IS' => 'Engineering Surveying & Space Geodesy', 'AE' => 'English', 'AR' => 'Modern Languages', 'EP' => 'Manufacturing Engineering & Operational Management', 'AF' => 'French', 'LQ' => 'Sociology', 'LG' => 'Geography', 'AG' => 'German', 'BR' => 'Training & Staff Development Unit', 'AS' => 'Portuguese', 'AH' => 'History', 'IT' => 'Information Technology', 'RH' => 'Institute of Hearing Research', 'NI' => 'Institute of Infections and Immunity', 'LW' => 'Institute of Work, Health & Organizations', 'OI' => 'International Office', 'UL' => 'Language Centre', 'LL' => 'Law', 'PL' => 'Life & Env Sciences', 'EM' => 'Materials Engineering & Materials Design', 'PM' => 'Theoretical Mechanics', 'EA' => 'Mechanical Engineering', 'AM' => 'Music', 'ZN' => 'Ningbo', 'SHS' => 'Nursing', 'PA' => 'Pharmacy', 'AP' => 'Philosophy', 'PP' => 'Physics', 'LD' => 'Politics', 'LP' => 'Psychology', 'AV' => 'Slavonic Studies', 'AT' => 'Theology', 'SV' => 'Vet School');
 
+  //REMOVED as no longer used by lti as this is done at the authentication layer
   static function user_add($username, $password) {
-    // take user and password and add user to system
-
-    // UoN version looks up data via ldap and correctly gets the correct fields and adds them into the system
-
-    global $mysqli;
-
-    $data = array();
-
-    $returned = ldap_lookup($username, $password, $data, 1);
-    if ($returned === false) {
-      // no ldap user found
-      return false;
-    }
-
-    $title = $returned[0]['title'][0];
-    $forname = $returned[0]['givenname'][0];
-    $surname = $returned[0]['sn'][0];
-    if (isset($returned[0]['uonprimaryemailalias'][0])) {
-      $email = $returned[0]['uonprimaryemailalias'][0];
-    } elseif (isset($returned[0]['uonemailalias'][0])) {
-      $email = $returned[0]['uonemailalias'][0];
-    } elseif (isset($returned[0]['mail'][0])) {
-      $email = $returned[0]['mail'][0];
-    }
-
-
-    $initials = $returned[0]['initials'][0];
-    $employeetype = $returned[0]['employeetype'][0];
-
-    if ($employeetype == 'S') {
-      //staff
-      $course = 'University Lecturer';
-      $role = 'Staff';
-      $year = 1;
-      $gender = '';
-      $sid = '';
-      $id = UserUtils::create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $mysqli);
-    } else {
-      $SMS = SmsUtils::GetSmsUtils();
-      $user_data = $SMS->getUserData($username);
-      if (count($user_data) > 0) {
-        //valid acount found create user
-        UserUtils::createUser($username, $password, $user_data['Title'], $user_data['Forename'], $user_data['Surname'], $user_data['Email'], $user_data['CourseCode'], $user_data['Gender'], $user_data['YearofStudy'], 'Student', $user_data['StudentID'], $mysqli);
-      } else {
-        //error looking up student
-        display_error($string['noaccountfound'], '', false, true);
-      }
-    }
 
 
   }
+
+
 
 
   static function user_time_check($time, $user = '') {
