@@ -43,6 +43,7 @@ require_once $path . '/classes/userobject.class.php';
 require_once $path . '/include/auth.inc';
 require_once $path . '/classes/smsutils.class.php';
 require_once $path . '/classes/lang.class.php';
+require_once $path . '/include/custom_error_handler.inc';
 
 $sms_connection = SmsUtils::GetSmsUtils();
 

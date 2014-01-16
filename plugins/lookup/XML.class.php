@@ -422,8 +422,32 @@ class XML_lookup extends outline_lookup {
       if ($count > 1) {
         $lookupobj->multiple = true;
       }
+
       $attributes = $this->get_setting('xmlfields', $section);
       $rawattributes = $this->get_setting('rawxmlfields', $section);
+      $failattributes = $this->get_setting('failfields', $section);
+
+
+      //check for fail attributes
+      $fail = false;
+      if (is_array($failattributes) and count($failattributes) > 0) {
+        foreach ($xmlsearched as $xmlbits) {
+          foreach ($failattributes as $key => $value) {
+            if (isset($xmlbits->$key)) {
+              $fail = $key;
+              $this->savetodebug("Failure key $key found");
+            }
+          }
+          $lookupobj = $this->store_in_data($xmlbits, $failattributes, $lookupobj, $section);
+
+        }
+      }
+
+      //if failure attribute found stop at state why
+      if($fail !== false) {
+        return $lookupobj;
+      }
+
 
       $this->savetodebug("Found $count records");
       if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == true) {

@@ -23,9 +23,13 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+if (!isset($cfg_web_root)) {
+  $cfg_web_root = $configObject->get('cfg_web_root');
+}
 
 require_once $configObject->get('cfg_web_root') . '/classes/dateutils.class.php';
 require_once $configObject->get('cfg_web_root') . '/classes/lookup.class.php';
+require_once $configObject->get('cfg_web_root') . '/classes/moduleutils.class.php';
 
 //updated interface to saturn using the new lookup class plugins
 Class UON_SATURN2 extends SmsUtils {
@@ -51,7 +55,7 @@ Class UON_SATURN2 extends SmsUtils {
     $session_parts = explode('/', $session);
     $replaced_module = $this->UoNprefixremoval($moduleID);
 
-    if (is_null($sms) and !(isset($this->campus) and $this->campus != '')) {
+    if (is_null($sms_api) and !(isset($this->campus) and $this->campus != '')) {
       $moddetails = module_utils::get_full_details_by_name($moduleID, $mysqli);
     } elseif ($sms_api != '') {
       $moddetails['sms'] = $sms_api;
@@ -91,8 +95,8 @@ Class UON_SATURN2 extends SmsUtils {
     $data->lookupdata = $lookupdata;
     $returned_data = $lookup->modulelookup($data);
 
-    if ($returned_data === false) {
-      return $false;
+    if ($returned_data->success === false or $returned_data->failed === true) {
+      return false;
     } else {
       return $returned_data->lookupdata;
     }
@@ -104,15 +108,21 @@ Class UON_SATURN2 extends SmsUtils {
   function get_module_info($moduleID) { //previous logic included in the retreival of data
     $lookupdata = $this->get_module($moduleID);
 
-    if($lookupdata===false) {
+    if ($lookupdata === false) {
       return false;
     } else {
-    $moduletitle=$lookupdata->moduletitle;
-    $school=$lookupdata->school;
-      return array($moduleID, $moduletitle, $school);
+      if (!isset($lookupdata->moduletitle)) {
+        $moduletitle = 'UNKNOWN - Lookup did not return it';
+      } else {
+        $moduletitle = $lookupdata->moduletitle;
+      }
+      if (!isset($lookupdata->school)) {
+        $school = 'UNKNOWN - Lookup did not return it';
+      } else {
+        $school = $lookupdata->school;
+      }
+      return array( $moduleID, $moduletitle, $school );
     }
-
-
   }
 
   function getModuleEnrolements($moduleID) {
@@ -239,19 +249,36 @@ Class UON_SATURN2 extends SmsUtils {
     }
     $student_data->close();
 
+    /*
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
     $xml = false;
     if ($returned_data !== false) {
       $xml = new SimpleXMLElement($returned_data);
     }
-
+*/
     // the replaced_module is handled internally to the new function
-    $lookupdata=$this->get_module_info($module);
+    $lookupdata=$this->get_module($module);
+
+//    var_dump($lookupdata);
+
+    if((isset($lookupdata->error) and $lookupdata->error != '')) {
+      //log the issue
+      $variables = array( 'lookup' => &$lookupdata );
+      $errstr = 'The module lookup for modulecode: ' . $module . ' returned an error state of ' . $lookupdata->error;
+      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+    }
 
 
-//is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError))
-    if ($lookupdata !== false and (!isset($lookupdata->error) or (isset($lookupdata->error) and $lookupdata->error != ''))) {
+    // previous //is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError))
+
+    // un inverted  the logic around to make it easier
+
+    if ($lookupdata === false or (isset($lookupdata->error) and $lookupdata->error != '')) {
+      $variables = array( 'lookup' => &$lookupdata );
+      $errstr = 'No Data returned from lookup for module: ' . $module;
+    //  log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+    } else {
       foreach ($lookupdata->students as $sms) {
         $sms->Title = trim($sms->title);
         $sms->Surname = trim($sms->surname);
