@@ -230,6 +230,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     return false;
   }
 
+
   switch ($errno) {
     case E_NOTICE:
     case E_USER_NOTICE:
@@ -334,6 +335,8 @@ $context=error_handling($context);
 
       }
     }
+
+
     $userid = 0;
     $username = 'PRE LOGIN';
     if (isset($userObject)) {
@@ -356,6 +359,16 @@ $context=error_handling($context);
     }
 
     //$log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+    if(!isset($_SERVER['PHP_SELF'])) {
+      $_SERVER['PHP_SELF']='NOT RUN FROM WEBSERVER';
+    }
+    if(!isset($_SERVER['QUERY_STRING'])) {
+      $_SERVER['QUERY_STRING'] = 'NOT RUN FROM WEBSERVER';
+    }
+    if(!isset($_SERVER['REQUEST_METHOD'])) {
+      $_SERVER['REQUEST_METHOD'] = 'GET';
+    }
+
     log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID, $post_data, $variables, $backtrace, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
 
 
@@ -366,6 +379,8 @@ $context=error_handling($context);
 
 function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null) {
 
+
+  //var_dump($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID, $post_data, $variables , $backtrace, $page , $querystring , $requestmethod );
   if(is_null($backtrace)) {
     $backtrace='';
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
@@ -410,6 +425,8 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
 
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
+
+
 
   // Query may fail if we try to insert while another statement is open.
   // Since we don't have a handle on the original statement, create another DB link

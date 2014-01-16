@@ -37,7 +37,7 @@ Class LangUtils {
       $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
     }
     
-    if (is_array($langs)) {
+    if (isset($langs) and is_array($langs)) {
       $i = 0;
       while ($i < count($langs) and $language == '') {
         $parts = explode(';', $langs[$i]);
