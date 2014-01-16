@@ -259,7 +259,7 @@ Class UON_SATURN2 extends SmsUtils {
 */
 
     // the replaced_module is handled internally to the new function
-    $lookupdata=$this->get_module_info($module);
+    $lookupdata=$this->get_module($module);
 
     // previous //is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError))
     // un inverted  the logic around to make it easier
