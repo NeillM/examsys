@@ -257,17 +257,27 @@ Class UON_SATURN2 extends SmsUtils {
       $xml = new SimpleXMLElement($returned_data);
     }
 */
-
     // the replaced_module is handled internally to the new function
     $lookupdata=$this->get_module($module);
 
+//    var_dump($lookupdata);
+
+    if((isset($lookupdata->error) and $lookupdata->error != '')) {
+      //log the issue
+      $variables = array( 'lookup' => &$lookupdata );
+      $errstr = 'The module lookup for modulecode: ' . $module . ' returned an error state of ' . $lookupdata->error;
+      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+    }
+
+
     // previous //is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError))
+
     // un inverted  the logic around to make it easier
 
     if ($lookupdata === false or (isset($lookupdata->error) and $lookupdata->error != '')) {
       $variables = array( 'lookup' => &$lookupdata );
-      $errstr = 'No Data returned from lookup';
-      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      $errstr = 'No Data returned from lookup for module: ' . $module;
+    //  log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
     } else {
       foreach ($lookupdata->students as $sms) {
         $sms->Title = trim($sms->title);
