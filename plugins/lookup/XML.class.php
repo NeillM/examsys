@@ -429,16 +429,18 @@ class XML_lookup extends outline_lookup {
 
 
       //check for fail attributes
-      $fail=false;
-      foreach($xmlsearched as $xmlbits) {
-        foreach ($failattributes as $key => $value) {
-          if (isset($xmlbits->$key)) {
-            $fail = $key;
-            $this->savetodebug("Failure key $key found");
+      $fail = false;
+      if (is_array($failattributes) and count($failattributes) > 0) {
+        foreach ($xmlsearched as $xmlbits) {
+          foreach ($failattributes as $key => $value) {
+            if (isset($xmlbits->$key)) {
+              $fail = $key;
+              $this->savetodebug("Failure key $key found");
+            }
           }
-        }
-        $lookupobj = $this->store_in_data($xmlbits, $failattributes, $lookupobj, $section);
+          $lookupobj = $this->store_in_data($xmlbits, $failattributes, $lookupobj, $section);
 
+        }
       }
 
       //if failure attribute found stop at state why
