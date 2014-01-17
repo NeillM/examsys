@@ -33,7 +33,7 @@
  */
 
 require_once $cfg_web_root . 'webServices/RestRequest.class';
-require_once $cfg_web_root . 'apis/VLEFactory.class.php';
+require_once $cfg_web_root . 'classes/CMFactory.class.php';
 require_once $cfg_web_root . 'classes/dateutils.class.php';
 require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
@@ -270,7 +270,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     if ($vle_api != '') {
       // Get objectives from the VLE via REST request
       if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
-				$vle = VLEFactory::GetVLEAPI($vle_api);
+				$vle = CMFactory::GetCMAPI($vle_api);
         $vle->setMappingLevel($map_level);
         $resp = $vle->getObjectives($thisModuleid, $session);
 				

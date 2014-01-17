@@ -22,10 +22,10 @@
 * @package
 */
 
-require_once $cfg_web_root . 'apis/VLEFactory.class.php';
-require_once '../classes/dateutils.class.php';
-require_once '../classes/mappingutils.class.php';
-require_once '../classes/moduleutils.class.php';
+require_once $cfg_web_root . 'classes/CMFactory.class.php';
+require_once $cfg_web_root . 'classes/dateutils.class.php';
+require_once $cfg_web_root . 'classes/mappingutils.class.php';
+require_once $cfg_web_root . 'classes/moduleutils.class.php';
 
 $idMod = $_GET['module'];
 
@@ -37,7 +37,7 @@ $map_level = $vle_api_data['level'];
 $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
 
 if ($vle_api != '') {
-  $vle = VLEFactory::GetVLEAPI($vle_api);
+  $vle = CMFactory::GetCMAPI($vle_api);
   $vle->setMappingLevel($map_level);
   $objsBySession = $vle->getObjectives($module_code, $session);
   $vle_name = $vle->getFriendlyName();
