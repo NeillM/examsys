@@ -15,29 +15,32 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
- * Interface to be implemented by all VLE API classes
- *
- * @author Rob Ingram
- * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
- * @package
- */
+*
+* Implement VLE API for NLE
+*
+* @author Anthony Brown
+* @version 1.0
+* @copyright Copyright (c) 2014 The University of Nottingham
+* @package
+*/
 
-class UnsupportedMappingLevelException extends Exception { }
+require_once 'CMAPI.if.php';
+require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class';
 
-interface iVLEAPI
-{
-  const LEVEL_SESSION = 0;
-  const LEVEL_MODULE = 1;
+class CM_NLE implements iCMAPI {
+  private $_mapping_level = self::LEVEL_SESSION;
 
   /**
-   * Return objectives from the remote system
+   * Return objectives from the University of Nottingham Medical School Networked Learning Environment
    * @param $moduleID
    * @param $session
    * @return mixed Array of session and objective data in format required by Rogō
    */
-  public function getObjectives($moduleID, $session);
+  public function getObjectives($moduleID, $session) {
+    $req = new RestRequest("http://www.nle.nottingham.ac.uk/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$session");
+    $req->execute();
+    return $req->getResponseBody();
+  }
 
   /**
    * Get a friendly name for the source system, with the indefinite article if required
@@ -45,17 +48,27 @@ interface iVLEAPI
    * @param bool $long  Return the long form of the name?
    * @return string     The name in the required format
    */
-  public function getFriendlyName($a = false, $long = false);
+  public function getFriendlyName($a = false, $long = false) {
+    $name = ($long) ? 'Networked Learning Environment' : 'NLE';
+    $name = ($a) ? 'a ' . $name : $name;
+    return $name;
+  }
 
   /**
    * Get the levels of mapping that are supported by this class
    * @return array Array of mapping levels supported
    */
-  public function getMappingLevels();
+  public function getMappingLevels() {
+    return array(self::LEVEL_SESSION);
+  }
 
   /**
    * Set the mapping level at which the class should work
    * @param integer $level Mapping level
    */
-  public function setMappingLevel($level);
+  public function setMappingLevel($level) {
+    // Ignore anything passed in, we only support session level mapping
+    $this->_mapping_level = self::LEVEL_SESSION;
+  }
 }
+?>

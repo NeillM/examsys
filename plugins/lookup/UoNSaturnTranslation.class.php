@@ -171,6 +171,17 @@ $studenti=new stdClass();
       }
     }
 
+    if (isset($datapart->studentstatus)) {
+      if (strtoupper(substr($datapart->reasonforleaving, 0, 3)) == 'W/D') {
+        $datapart->role = 'left';
+      } elseif (stripos($datapart->reasonforleaving, 'not permitted to progress') !== false) {
+        $datapart->role = 'left';
+      } elseif ($datapart->reasonforleaving == 'Successfully completed course') {
+        $datapart->role = 'graduate';
+      } else {
+        $datapart->role = 'Student';
+      }
+    }
     return $datapart;
   }
 

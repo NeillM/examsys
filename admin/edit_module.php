@@ -140,7 +140,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   $mu = module_utils::get_instance();
   $vle_apis = $mu->get_vle_api_data($vle_apis);
   if(count($vle_apis) > 0) {
-    $map_levels = array(iVLEAPI::LEVEL_SESSION => $string['session'], iVLEAPI::LEVEL_MODULE => $string['module']);
+    $map_levels = array(iCMAPI::LEVEL_SESSION => $string['session'], iCMAPI::LEVEL_MODULE => $string['module']);
   } else {
     $map_levels = array();
   }

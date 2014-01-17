@@ -65,8 +65,21 @@ require '../include/sidebar_menu.inc';
   if (isset($_POST['submit'])) {
     for ($i=1; $i<=100; $i++) {
       if (isset($_POST["clear$i"])) {
-        $stmt = $mysqli->prepare("DELETE FROM temp_users WHERE id=?");
+        $stmt = $mysqli->prepare("SELECT users.id FROM temp_users, users WHERE temp_users.id = ? AND temp_users.assigned_account = users.username");
         $stmt->bind_param('i', $_POST["clear$i"]);
+        $stmt->execute();
+        $stmt->bind_result($temp_userID);
+				$stmt->fetch();
+				$stmt->close();
+			
+			  // Delete from the temp_users list.
+        $stmt = $mysqli->prepare("DELETE FROM temp_users WHERE id = ?");
+        $stmt->bind_param('i', $_POST["clear$i"]);
+        $stmt->execute();
+				
+			  // Delete from the log_metadata table just in case a temp user has started but has no records.
+        $stmt = $mysqli->prepare("DELETE FROM log_metadata WHERE userID = ?");
+        $stmt->bind_param('i', $temp_userID);
         $stmt->execute();
       }
     }
