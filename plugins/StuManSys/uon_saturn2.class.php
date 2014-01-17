@@ -302,6 +302,17 @@ Class UON_SATURN2 extends SmsUtils {
         if ($sms->email != '') {
           // Try to extract from email address
           $un_parts = explode('@', $sms->Email);
+
+          if($un_parts[0] != $lookup_username) {
+            $variables = array( 'lookup' => &$lookupdata );
+            $errstr = "username for SID: ". $sms->StudentID . " differ email split: " . $un_parts[0] . " lookup: " . $lookup_username;
+            log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+            if (PHP_SAPI != 'cli') {
+              echo $errstr . "\r\n";
+            }
+          }
+
+          // 2014-01-17 No Idea why we still do this I would suspect that the username from saturn is fine
           $lookup_username = $un_parts[0];
         }
 
