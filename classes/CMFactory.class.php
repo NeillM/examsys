@@ -35,7 +35,7 @@ class CMFactory {
     $classfile = 'CM_' . $vleapi . '.class.php';
 
     try {
-      include_once $cfg_web_root . '/plugins/CM/' . $classfile;
+      include_once $configObject->get('cfg_web_root') . '/plugins/CM/' . $classfile;
       $object = new $classname();
     } catch (Exception $ex) {
       throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
