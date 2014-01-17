@@ -16,7 +16,7 @@
  */
 
 $new_line="\$lti_integration = 'UoN'; // UoN lti integration\r\n";
-$updater_utils->replace_line($string, "\$lti_integration = 'config/integration-UoN/lti_integration.class.php';", $new_line, 99, $cfg_web_root, $target_line, 1);
+$updater_utils->replace_line($string, "\$lti_integration = 'config/integration-UoN/lti_integration.class.php';", $new_line, $cfg_web_root);
 
 
 /*

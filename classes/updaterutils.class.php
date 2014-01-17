@@ -353,7 +353,7 @@ Class UpdaterUtils {
       echo "<li>" . sprintf($string['replacinglines'], $file_path) . "<br />\n";
 
 
-      echo highlight_string("$search\r\n with\r\n$new_line", true) . "\n";
+      echo highlight_string("$replace\r\n with\r\n$new_line", true) . "\n";
 
       echo "</li>\n";
       ob_flush();
