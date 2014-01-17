@@ -286,7 +286,7 @@ Class UpdaterUtils {
    *
    * @param string $string 				- Language translations.
    * @param string $search  			- A string to look for to see if the new lines already exist
-   * @param string $new_lines 		- An array of new lines to insert.
+   * @param array $new_lines 		- An array of new lines to insert.
    * @param int $default_line 		- Default line number to add to if no $target_line is found
    * @param string $cfg_web_root 	- Path to the root of Rogo.
    * @param string $target_line 	- A string to find on a target line to act as a location for the new lines
@@ -317,6 +317,44 @@ Class UpdaterUtils {
       foreach ($new_lines as $new_line) {
         echo highlight_string($new_line, true) . "\n";
       }
+      echo "</li>\n";
+      ob_flush();
+      flush();
+    }
+  }
+
+  /**
+   * replaces a line in /config/config.inc.php if found.
+   *
+   * @param string $string 				- Language translations.
+   * @param string $replace 			- A string to replace
+   * @param string $new_line   		- A  new line to insert.
+   * @param string $cfg_web_root 	- Path to the root of Rogo.
+   */
+  public function replace_line($string, $replace, $new_line, $cfg_web_root) {
+    $file_path = $cfg_web_root . 'config/config.inc.php';
+    $cfg = file($file_path);
+    $found = false;
+    $line_no = 0;
+    foreach ($cfg as $key=>$line) {
+      if (strpos($line, $replace) !== false) {
+        $found = true;
+        $founndloc=$line_no;
+      }
+      $line_no++;
+    }
+
+    if ($found) {
+      $cfg[$founndloc]=$new_line;
+
+      if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+        echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+      }
+      echo "<li>" . sprintf($string['replacinglines'], $file_path) . "<br />\n";
+
+
+      echo highlight_string("$search\r\n with\r\n$new_line", true) . "\n";
+
       echo "</li>\n";
       ob_flush();
       flush();
