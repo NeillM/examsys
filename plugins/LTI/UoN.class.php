@@ -75,8 +75,6 @@ class lti_integration_extended extends lti_integration {
   static function sms_api($data) {
     global $mysqli;
 
-
-
     if ($data[0] != 'SMS') {
       return '';
     }
