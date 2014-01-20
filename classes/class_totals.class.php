@@ -228,7 +228,7 @@ class ClassTotals {
 
     $this->load_metadata();                                                                                   // Query for metadata
 
-    $this->load_overrides();
+    $this->load_overrides();																																									// Load marking overrides (e.g. Calculation question).
 
     $this->load_results();                                                                                    // Load the student data
 
@@ -254,6 +254,10 @@ class ClassTotals {
       $results_cache->save_student_mark_cache($this->paperID, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
 
       $results_cache->save_median_question_marks($this->paperID, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
+			
+			// Unset the re-caching flag now we have just cached the marks.
+			$this->propertyObj->set_recache_marks(0);
+			$this->propertyObj->save();			
     }
   }
 
@@ -1232,7 +1236,7 @@ class ClassTotals {
                                                 'room'=>$room, 
                                                 'student_id'=>$student_id, 
                                                 'attempt'=>$attempt, 
-                                                'visible'=>false, //ad students as not visible
+                                                'visible'=>true, //ad students as not visible
                                                 'display_started'=>$display_started, 
                                                 'started'=>$started, 
                                                 'student_grade'=>$student_grade, 
@@ -1293,6 +1297,7 @@ class ClassTotals {
         } else {
           $this->user_results[$old_metadataID]['module'] = '';
         }
+				
 
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;

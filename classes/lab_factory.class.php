@@ -36,15 +36,14 @@ class LabFactory {
   }
 
   /**
-   * @param  integer  $address IP address of a machine in the required lab
-   * @return Lab                  Lab object for specified IP address or false if not found
+   * @param int $address - IP address of a machine in the required lab
+   * @return Lab         - Lab object for specified IP address or false if not found
    */
   public function get_lab_based_on_client($address) {
 
     $sql = 'SELECT lab, name FROM client_identifiers, labs WHERE client_identifiers.lab = labs.id AND address = ?';
 
     $lab_results = $this->db->prepare($sql);
-
     $lab_results->bind_param('s', $address);
     $lab_results->execute();
     $lab_results->bind_result($lab_id, $room_name);
