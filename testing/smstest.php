@@ -79,7 +79,7 @@ foreach ($_REQUEST as $key => $value) {
 }
 
 echo "use lookuptesttype to set type of lookup anything else taken as a key value pair<br>";
-echo "<h1>looking up via $_REQUEST[lookuptesttype] for $list</h1>";
+echo "<h1>looking up $_REQUEST[modulecode]</h1>";
 
 $configObj=Config::get_instance();
 

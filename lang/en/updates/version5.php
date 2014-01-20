@@ -36,4 +36,5 @@ $string['updatefromversion'] = 'Update from version';
 $string['home'] = 'Home';
 $string['startingupdate'] = 'Starting Update';
 $string['addinglines'] = 'Adding lines to %s file:';
+$string['replacinglines'] = 'Replacing lines to %s file:';
 ?>

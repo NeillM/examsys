@@ -507,8 +507,8 @@ Class module {
     $configObject = Config::get_instance();
     if (is_array($vle_apis)) {
       foreach (array_keys($vle_apis) as $vle_api_id) {
-        $classname = 'VLE_' .$vle_api_id;
-        require_once $configObject->get('cfg_web_root') . "/apis/{$classname}.class.php";
+        $classname = 'CM_' .$vle_api_id;
+        require_once $configObject->get('cfg_web_root') . "/plugins/CM/{$classname}.class.php";
         $api = new $classname();
         $vle_apis[$vle_api_id]['name'] = $api->getFriendlyName(false, true);
         $vle_apis[$vle_api_id]['levels'] = $api->getMappingLevels();

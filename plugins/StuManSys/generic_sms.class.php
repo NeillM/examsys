@@ -32,7 +32,7 @@ require_once $configObject->get('cfg_web_root') . '/classes/lookup.class.php';
 require_once $configObject->get('cfg_web_root') . '/classes/moduleutils.class.php';
 
 //updated interface to saturn using the new lookup class plugins
-Class UON_SATURN2 extends SmsUtils {
+Class GENERIC_SMS extends SmsUtils {
 
   public $campus;
   public $url;
@@ -53,43 +53,10 @@ Class UON_SATURN2 extends SmsUtils {
     // Calculate what the current academic session is.
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
     $session_parts = explode('/', $session);
-    $replaced_module = $this->UoNprefixremoval($moduleID);
 
-    if (is_null($sms_api) and !(isset($this->campus) and $this->campus != '')) {
-      $moddetails = module_utils::get_full_details_by_name($moduleID, $mysqli);
-    } elseif ($sms_api != '') {
-      $moddetails['sms'] = $sms_api;
-    }
-
-    if (isset($moddetails['sms']) and $moddetails['sms'] != '') {
-
-      $sms = $moddetails['sms'];
-      $pos = strrpos($sms, '?');
-      $right = substr($sms, $pos + 1);
-
-      $campus = strtoupper(substr($right, 7));
-      if ($campus == 'MALAYSIA') {
-        $campus = 'MY';
-      } elseif ($campus == 'CHINA') {
-        $campus = 'CN';
-      }
-      // else UK
-
-    } elseif ((isset($this->campus) and $this->campus != '')) {
-      $campus = $this->campus;
-    } else {
-      $campus = 'UK';
-      if (strpos($moduleID, '_UNMC') !== false) {
-        $campus = 'MY';
-      } elseif (strpos($moduleID, '_UNNC') !== false) {
-        $campus = 'CN';
-      }
-    }
-
-    $lookupdata = new stdClass();
-    $lookupdata->modulecode = $replaced_module;
+        $lookupdata = new stdClass();
+    $lookupdata->modulecode = $moduleID;
     $lookupdata->calendar_year = $session_parts[0];
-    $lookupdata->campus = $campus;
 
     $data = new stdClass();
     $data->lookupdata = $lookupdata;
@@ -160,31 +127,17 @@ Class UON_SATURN2 extends SmsUtils {
 
  // appears unused
   function getStudentSources() {
-    return array('&lt;No lookup&gt;' => '', 'UK' => 'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=uk', 'Malaysia' => 'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=malaysia', 'China' => 'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=china');
+    return array('&lt;No lookup&gt;' => '', 'Lookup' => 'lookupclass');
   }
 
   // returns an array with key as display name and value as item to save back to db for use with sms module sources
   function getModuleSources() {
-    return array('UK' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=uk', 'Malaysia' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia', 'China' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china');
+    return array('Lookup' => 'lookupclass');
   }
 
 
   function set_module($location) {
-    if ($location == 'MY') {
-      $location = 'MY';
-    } elseif ($location == 'CN') {
-      $location = 'CN';
-    } elseif ($location == 'UK') {
-      $location = 'UK';
-    }
-    $arr = $this->getModuleSources();
-    if (!isset($arr[$location])) {
-      $this->url = '';
-      $this->campus = $location;
-      return;
-    }
-    $this->url = $arr[$location];
-    $this->campus = $location;
+    //unused in generic
   }
 
   //appears pointless and unused
@@ -192,14 +145,7 @@ Class UON_SATURN2 extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function UoNprefixremoval($modulecode) {
-    // UoN code to strip off prefix codes.
-    //------------------------------------
-    $replaced_module = str_replace('_UNMC', '', $modulecode);
-    $replaced_module = str_replace('_UNNC', '', $replaced_module);
-    //------------------------------------
-    return $replaced_module;
-  }
+
 
   //updates modules enrolements
 
@@ -221,10 +167,6 @@ Class UON_SATURN2 extends SmsUtils {
     $enrolement_details = '';
     $deletion_details = '';
 
-    // UoN code to strip off prefix codes.
-    //------------------------------------
-    $replaced_module = $this->UoNprefixremoval($module);
-    //------------------------------------
 
     // Get the currently enrolled students in Rogo for the module.
     $current_users = array();
@@ -267,6 +209,9 @@ Class UON_SATURN2 extends SmsUtils {
       $variables = array( 'lookup' => &$lookupdata );
       $errstr = 'The module lookup for modulecode: ' . $module . ' returned an error state of ' . $lookupdata->error;
       log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      if (PHP_SAPI != 'cli') {
+        echo $errstr . "\r\n";
+      }
     }
 
 
@@ -277,7 +222,10 @@ Class UON_SATURN2 extends SmsUtils {
     if ($lookupdata === false or (isset($lookupdata->error) and $lookupdata->error != '')) {
       $variables = array( 'lookup' => &$lookupdata );
       $errstr = 'No Data returned from lookup for module: ' . $module;
-    //  log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      if (PHP_SAPI != 'cli') {
+        echo $errstr . "\r\n";
+      }
     } else {
       foreach ($lookupdata->students as $sms) {
         $sms->Title = trim($sms->title);
@@ -291,13 +239,6 @@ Class UON_SATURN2 extends SmsUtils {
         $sms->StudentID = trim($sms->studentID);
 
         $lookup_username = trim($sms->username);
-
-        // Make sure we have a proper username - it can sometimes be blank in SATURN data
-        if ($sms->email != '') {
-          // Try to extract from email address
-          $un_parts = explode('@', $sms->Email);
-          $lookup_username = $un_parts[0];
-        }
 
         if ($lookup_username != '') {
           if (isset($current_users[$lookup_username]['delete'])) {
@@ -362,15 +303,8 @@ Class UON_SATURN2 extends SmsUtils {
           }
 
           // Check to see if any details of the user account need updating.
-          if (strtoupper(substr($sms->reasonforleaving,0,3)) == 'W/D') {
-            $new_roles = 'left';
-          } elseif (stripos($sms->reasonforleaving, 'not permitted to progress') !== false) {
-            $new_roles = 'left';
-          } elseif ($sms->reasonforleaving == 'Successfully completed course') {
-            $new_roles = 'graduate';
-          } else {
-            $new_roles = 'Student';
-          }
+
+          $new_roles=trim($sms->role);
 
           $names = explode(' ', $sms->firstname);
           $tmp_initials = '';
@@ -435,13 +369,9 @@ Class UON_SATURN2 extends SmsUtils {
     }
 
     if ($enrolements > 0 or $deletions > 0) {
-      if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
-        $import_type = 'SATURN Malaysia';
-      } elseif ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
-        $import_type = 'SATURN China';
-      } else {
-        $import_type = 'SATURN UK';
-      }
+
+        $import_type = $sms_api;
+
 
       $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?)");
       $result->bind_param('sisiss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
