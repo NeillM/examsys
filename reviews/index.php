@@ -45,23 +45,6 @@ require_once '../classes/paperutils.class.php';
     body {font-size:90%}
     p {line-height:150%}
   </style>
-
-  <script type="text/javascript" src="../js/student_help.js"></script>
-  <script language="JavaScript">
-    function startPaper(paperID, fullsc, paper_type) {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      if (paper_type == 4) {
-        window.open("../osce/form.php?id="+paperID+"&username=test","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      } else {
-        if (fullsc == 0) {
-          window.open("start.php?id="+paperID+"","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        } else {
-          window.open("start.php?id="+paperID+"","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        }
-      }
-    }
-  </script>
 </head>
 
 <body>
@@ -107,8 +90,8 @@ require_once '../classes/paperutils.class.php';
     $restartdate = '';
     $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
     
-    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('$crypt_name', $fullscreen, $paper_type); return false;\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
+    echo "<tr><td align=\"center\"><a href=\"../user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
+    echo "  <td><a href=\"../user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if ($start_of_day_ts > $external_review_deadline) {
       printf($string['expired'], $configObject->get('cfg_company'));
     } else {
@@ -132,9 +115,7 @@ require_once '../classes/paperutils.class.php';
   }
   $result->close();
   echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" align=\"left\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"#\" onclick=\"launchHelp(31); return false;\"><img src=\"../artwork/help_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" /></a></td>\n</td><td><a href=\"#\" onclick=\"launchHelp(31); return false;\">" . $string['helpandsupport'] . "</a><br /><span style=\"color:#808080\">" . $string['onlinesupportsystem'] . "</span></td></tr>\n";
 
-  echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
   echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:" . $configObject->get('support_email') . "\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" /></a></td>\n</td><td><a href=\"mailto:" . $configObject->get('support_email') . "\">" . $configObject->get('support_email') . "</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
 
   echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";

@@ -143,7 +143,7 @@ $textsize = 100;
 $font = 'Arial';
 
 if ($userObject->is_special_needs()) {
-  //look up special_needs data
+  // Look up special_needs data
   $special_needs_percentage = $userObject->get_special_needs_percentage();
   $textsize = $userObject->get_textsize($textsize);
   $font = $userObject->get_font($font);
@@ -160,14 +160,14 @@ if ($userObject->is_temporary_account()) {
 $total_random_mark = 0;
 $total_marks = 0;
 
-//get paper info
+// Create paper object.
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-//get lab info
+// Get lab information.
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
@@ -199,20 +199,24 @@ $password           = $propertyObj->get_password();
 
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
-// Adjust for timezones.
-$UK_time = new DateTimeZone("Europe/London");
-$target_timezone    = new DateTimeZone($timezone);
-$display_start_date = DateTime::createFromFormat('U', $paper_start, $UK_time);
-$display_end_date   = DateTime::createFromFormat('U', $paper_end, $UK_time);
+if ($userObject->has_role('External Examiner')) {
+  // Don't do timezone stuff as dates may not be set before review.
+	$display_start_date = '';
+} else {
+	// Adjust for timezones.
+	$UK_time = new DateTimeZone("Europe/London");
+	$target_timezone    = new DateTimeZone($timezone);
+	$display_start_date = DateTime::createFromFormat('U', $paper_start, $UK_time);
+	$display_end_date   = DateTime::createFromFormat('U', $paper_end, $UK_time);
 
-$display_start_date->setTimezone($target_timezone);
-$display_end_date->setTimezone($target_timezone);
+	$display_start_date->setTimezone($target_timezone);
+	$display_end_date->setTimezone($target_timezone);
 
-$tmp_cfg_long_date_time = str_replace('%', '', $configObject->get('cfg_long_date_time'));
+	$tmp_cfg_long_date_time = str_replace('%', '', $configObject->get('cfg_long_date_time'));
 
-$display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
-$display_end_date   = $display_end_date->format($tmp_cfg_long_date_time);
-
+	$display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
+	$display_end_date   = $display_end_date->format($tmp_cfg_long_date_time);
+}
 $previously_submitted = 0;
 
 $low_bandwidth = 0;
@@ -253,14 +257,8 @@ if ($exam_duration !== null) {
     if ($remaining_time !== false) {
       $display_remaining_time = true;
 
-      // nazrji - remove pending consultation with Exams Office
-      // if ($remaining_time > ($exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs) ) {
-      //   // sanity check if we have longer remaining then the exam duration set the time remaining
-      //   // to the exam duration (happens in summative exams if we have not started yet)
-      //   $remaining_time = $exam_duration_sec + ($exam_duration_sec * $student_object['special_needs_percentage']) + $extra_time_secs;
-      //  }
       if ($exam_started == false and $remaining_time == 0) {
-        // sanity check if we have not started the exam but time remaing is 0
+        // Sanity check if we have not started the exam but time remaing is 0
         // happens in summative exams if we have the start and end time set wider
         // then the paper duration e.g in multiple sittings
         $remaining_time = $exam_duration_sec + $extra_time_secs;
@@ -302,9 +300,13 @@ if ($exam_duration !== null) {
   <script type="text/javascript" src="./js/student_help.js"></script>
   <script language="JavaScript">
   function startPaper() {
-    var paperURL = "./paper/start.php?id=<?php echo $_GET['id']; ?>";
 <?php
-  if ($userObject->has_role(array('Staff','Admin','SysAdmin')) and isset($_GET['mode']) and $_GET['mode'] == 'preview') {
+	if ($userObject->has_role('External Examiner')) {
+		echo '  var paperURL = "./reviews/start.php?id=' . $_GET['id'] . '";'; // External examiners
+	} else {
+		echo '  var paperURL = "./paper/start.php?id=' . $_GET['id'] . '";';   // Normal staff and students
+	}
+	if ($userObject->has_role(array('Staff','Admin','SysAdmin')) and isset($_GET['mode']) and $_GET['mode'] == 'preview') {
 ?>
     paperURL += '&mode=preview';
 <?php
@@ -451,7 +453,7 @@ if ($textsize > 120) {
   $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
 
   $start_label = $string['start'];
-  if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+  if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
     $start_available      = true;
     $remaining_available  = true;
     $metadata_security    = true;
@@ -493,7 +495,7 @@ if ($textsize > 120) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['timeexpired'] . "</div>\n";
   } elseif ($metadata_security === false) {
     echo "<div style=\"color:#C00000;font-size:90%\">$metadata_msg</div>\n";
-  } elseif ($test_type == 2) {
+  } elseif ($test_type == '2' and !$userObject->has_role('External Examiner')) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
   }
 

@@ -116,24 +116,51 @@ if ($marking{0} == '2') {
   $standards_setting = array();
 }
 
-// Get any Reference Material
-$reference_materials = array();
-$ref_no = 0;
-$max_ref_width = 0;
-$stmt = $mysqli->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
-$stmt->bind_param('i', $property_id);
-$stmt->execute();
-$stmt->bind_result($reference_title, $reference_material, $reference_width);
-while ($stmt->fetch()) {
-  $reference_materials[$ref_no]['title'] = $reference_title;
-  $reference_materials[$ref_no]['material'] = $reference_material;
-  $reference_materials[$ref_no]['width'] = $reference_width;
-  if ($reference_width > $max_ref_width) {
-    $max_ref_width = $reference_width;
-  }
-  $ref_no++;
+/*
+*
+* Load any Reference Material into an array.
+* @param int $paperID - ID of the current paper
+* @param object $db   - Mysqli object
+* @return array				- Array of all reference material relevant to the current paper.
+*/
+function load_reference_materials($paperID, $db) {
+	$reference_materials = array();
+	$ref_no = 0;
+	$stmt = $db->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
+	$stmt->bind_param('i', $paperID);
+	$stmt->execute();
+	$stmt->bind_result($reference_title, $reference_material, $reference_width);
+	while ($stmt->fetch()) {
+		$reference_materials[$ref_no]['title'] = $reference_title;
+		$reference_materials[$ref_no]['material'] = $reference_material;
+		$reference_materials[$ref_no]['width'] = $reference_width;
+		$ref_no++;
+	}
+	$stmt->close();
+	
+	return $reference_materials;
 }
-$stmt->close();
+
+/*
+*
+* Looks through and returns the largest width for a set of reference materials.
+* @param array $reference_materials - Array of reference materials to check.
+* @return int				- The maximum width of any reference material for the current paper.
+*/
+function get_max_reference_width($reference_materials) {
+	$max_ref_width = 0;
+  foreach ($reference_materials as $reference_material) {
+		if ($reference_material['width'] > $max_ref_width) {
+			$max_ref_width = $reference_material['width'];
+		}
+	}
+	
+	return $max_ref_width;
+}
+
+// Load any reference materials.
+$reference_materials	= load_reference_materials($property_id, $mysqli);
+$max_ref_width 				= get_max_reference_width($reference_materials);
 
 // Extract the posted variables.
 $current_screen = 1;
@@ -165,11 +192,11 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <style type="text/css">
 pre {
-white-space: pre-wrap; /* css-3 */
-white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-white-space: -pre-wrap; /* Opera 4-6 */
-white-space: -o-pre-wrap; /* Opera 7 */
-word-wrap: break-word; /* Internet Explorer 5.5+ */
+	white-space: pre-wrap; /* css-3 */
+	white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+	white-space: -pre-wrap; /* Opera 4-6 */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 .std {
   display:block;
@@ -214,8 +241,8 @@ if ($css != '') {
 
 </style>
 
-<script src="start.js" type="text/javascript"></script>
-<script language="JavaScript" src="../js/flash_include.js"></script>
+<script type="text/javascript" src="start.js"></script>
+<script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 <?php if ($latex_needed == 1) {?>
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
@@ -259,38 +286,24 @@ var lang = {
   ?>
   };
 
-  function getWinH() {
-    var winH = 460;
-    if (document.body && document.body.offsetWidth) {
-      winH = document.body.offsetHeight;
-    }
-    if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-      winH = document.documentElement.offsetHeight;
-    }
-    if (window.innerWidth && window.innerHeight) {
-      winH = window.innerHeight;
-    }
-    return winH;
-  }
-
-  function changeRef(refID) {
-    document.cookie = 'refpane=' + refID;
-    winH = getWinH();
+  var changeRef = function(refID) {
+    $('#refpane').val(refID);
+		winH = $(window).height();
     resizeReference();
     var flag = 0;
     <?php
       if (count($reference_materials) > 0) {
         echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
         echo "      if (i == refID) {\n";
-        echo "        document.getElementById('framecontent' + i).style.display = 'block';\n";
-        echo "        document.getElementById('refhead' + i).style.top = (31 * i) + 'px';\n";
+        echo "        $('#framecontent' + i).show();\n";
+        echo "        $('#refhead' + i).css('top', (31 * i) + 'px');\n";
         echo "        flag = 1;\n";
         echo "      } else {\n";
-        echo "        document.getElementById('framecontent' + i).style.display = 'none';\n";
+        echo "        $('#framecontent' + i).hide();\n";
         echo "        if (flag == 0) {\n";
-        echo "          document.getElementById('refhead' + i).style.top = (31 * i) + 'px';\n";
+        echo "          $('#refhead' + i).css('top', (31 * i) + 'px');\n";
         echo "        } else {\n";
-        echo "          document.getElementById('refhead' + i).style.top = (winH - (" . count($reference_materials) . " - i) * 31) + 'px';\n";
+        echo "          $('#refhead' + i).css('top', (winH - (" . count($reference_materials) . " - i) * 31) + 'px');\n";
         echo "        }\n";
         echo "      }\n";
         echo "    }\n";
@@ -299,7 +312,7 @@ var lang = {
   }
 
   function resizeReference() {
-    winH = getWinH();
+		winH = $(window).height();
 <?php
   if (count($reference_materials) > 0) {
     $subtract = (31 * count($reference_materials)) + 11;
@@ -324,17 +337,18 @@ var lang = {
 <?php
   } else {
 ?>
-  function jumpScreen() {
-    document.questions.button_pressed.value='previous';
-    document.questions.action="start.php?id=<?php echo $_GET['id']; ?>";
-    document.questions.submit();
+  var jumpScreen = function () {
+		$('#button_pressed').val('jump_screen');
+		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+		return userSubmit(null);
   }
+
 <?php
   }
 ?>
 </script>
 </head>
-<body onload="refreshparent(); StartClock()" onunload="KillClock()">
+<body onload="StartClock()" onunload="KillClock()">
 <div id="maincontent">
 <?php
 if ($current_screen < $no_screens) {
@@ -528,7 +542,7 @@ if (count($reference_materials) > 0) {
   foreach ($reference_materials as $reference_material) {
     echo "<div class=\"refhead\" id=\"refhead" . $ref_no . "\" onclick=\"changeRef(" . $ref_no . ")\" style=\"top:{$top}px\">" . $reference_material['title'] . "</div>\n";
     echo "<div class=\"framecontent\" id=\"framecontent" . $ref_no . "\" style=\"top:" . (31 + $top) . "px\">\n" . $reference_material['material'] . "</div>\n";
-    $top+=31;
+    $top += 31;
     $ref_no++;
   }
 }
