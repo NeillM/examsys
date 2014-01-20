@@ -81,7 +81,6 @@ function check_duplicates($q_screens, $string) {
 }
 
 function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $status_array, $db) {
-
   if ($tmp_excluded == '0000000000000000000000000000000000000000' and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
@@ -93,7 +92,13 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($p_type != 3 and $q_type == 'textbox' and $question_marks == 0) {
       $temp_array[$row_no]['warnings'] = $string['zeromarks'];
-    } elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
+    } elseif ($q_type == 'blank') {
+		  $open_blank = substr_count($option_text[0], '[blank'); 
+		  $close_blank = substr_count($option_text[0], '[/blank');
+		  if ($open_blank != $close_blank) {
+				$temp_array[$row_no]['warnings'] = $string['mismatchblanktags'];
+			}
+		} elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
       $matching_scenarios = explode('|', $scenario);
       $matching_media     = explode('|', $q_media);
       $matching_correct   = explode('|', $correct_array[0]);
@@ -135,7 +140,7 @@ function have_valid_labels($correct) {
 
   $tmp_first_split = explode(';', $correct);
   $tmp_second_split = explode('$', $tmp_first_split[11]);
-
+	
   for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
     if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
       $ok = true;
@@ -755,7 +760,7 @@ $result->close();
 
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
 
-  //blank row to preserve table layout when using table-layout: fixed - needed to increase ie8 latex rendering speed
+  //blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
 
   echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";

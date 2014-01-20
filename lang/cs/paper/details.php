@@ -41,6 +41,7 @@ $string['markswarning'] = 'Okno %d má %d bodů z %d%% celkem v dokumentu. Abyst
 $string['nocorrect'] = 'Nelze najít správnou odpověď';
 $string['zeromarks'] = 'Varování: nastaveno nula bodů.';
 $string['toomanycorrect'] = 'Mnoho správných odpovědí';
+$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'K některým volbám chybí správné odpovědi.';
 $string['nolabels'] = 'K obrázku nebyly zadány popisky.';
 $string['mcqsurvey'] = "MCQ s volbou 'jiný' by měl být použit jen v průzkumu";

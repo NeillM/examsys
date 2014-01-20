@@ -42,6 +42,7 @@ $string['markswarning'] = 'Screen %d has %d marks which is %d%% of the paper tot
 $string['nocorrect'] = 'No correct answer specified';
 $string['zeromarks'] = 'Warning zero marks set.';
 $string['toomanycorrect'] = 'Too many correct options';
+$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'Correct answer missing for some options.';
 $string['nolabels'] = 'No labels added to image.';
 $string['mcqsurvey'] = "MCQ with 'other' should only be used on surveys";
