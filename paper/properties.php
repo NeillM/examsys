@@ -2117,7 +2117,7 @@ SQL;
     $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', $current_internals) . ')';
   }
 
-  $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE roles != 'Left' AND users.id = modules_staff.memberID AND modules.id = modules_staff.idMod $school_sql $admin_school_sql $current_internals_sql ORDER BY surname, initials";
+  $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE roles != 'Left' AND users.id = modules_staff.memberID AND modules.id = modules_staff.idMod $school_sql $admin_school_sql $current_internals_sql AND user_deleted IS NULL ORDER BY surname, initials";
 
   $internal_details = $mysqli->prepare($query);
   $internal_details->execute();
@@ -2140,7 +2140,7 @@ SQL;
 
   echo "<td><div style=\"width:343px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
   $current_externals = $properties->get_externals();
-  $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles='External Examiner' AND grade != 'left' ORDER BY surname, initials");
+  $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = 'External Examiner' AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
   $external_details->execute();
   $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
   $examiner_no = 0;
