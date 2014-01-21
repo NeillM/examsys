@@ -48,13 +48,14 @@ function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fba
   $leadin_plain = trim(strip_tags($leadin));
   // Make bloom field safe for MySQL strict mode
   $bloom = ($bloom == '') ? NULL : $bloom;
+  $guid = uniqid('', true);
 
-  if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, ?, ?, NULL)")) {
-    $result->bind_param('ssssssssisssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $status, $option_order);
+  if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, ?, ?, NULL, ?)")) {
+    $result->bind_param('ssssssssissssssssssss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $q_group, $scenario_plain, $leadin_plain, $status, $option_order, $guid);
     $result->execute();
     $result->close();
   } else {
-    display_error("Question Add Error",$mysqli->error);
+    display_error("Question Add Error", $mysqli->error);
   }
 
   return $mysqli->insert_id;

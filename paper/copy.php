@@ -231,7 +231,9 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           $new_status = $status;
         }
 
-        $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?)");
+        $guid = uniqid('', true);
+
+        $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
 
         if ($mysqli->error) {
           try {
@@ -243,7 +245,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           }
         }
 
-        $addQuestion->bind_param('ssssssssisssssssisss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings);
+        $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
         $addQuestion->execute();
         $new_qids[] = $question_id = $mysqli->insert_id;
         if ($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
@@ -305,11 +307,11 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       }
 
       if ($q_type != 'calculation') {  // Calculation questions have no options.
-				$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-				$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-				$addOption->execute();
-				$addOption->close();
-			}
+		$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+		$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+		$addOption->execute();
+		$addOption->close();
+	  }
       $line++;
     }
     $qData->free_result();
@@ -318,7 +320,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   $result->free_result();
   $result->close();
 
-  //if we are copying in the same session we can copy the objectives
+  // If we are copying in the same session we can copy the objectives
   if ($new_calendar_year == $calendar_year) {
     $i = 0;
     foreach ($old_qids as $old_id) {
@@ -330,7 +332,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       $i++;
     }
   } else {
-    //we are copying between sessions we need to check for changed sessions/objectives
+    // We are copying between sessions we need to check for changed sessions/objectives
     $mappings_copy_objID = array();
     $old_course = getObjectives($moduleIDs, $calendar_year, $_POST['paperID'], '', $mysqli);
     $new_course = getObjectives($moduleIDs, $new_calendar_year, $_POST['paperID'], '', $mysqli);
@@ -354,9 +356,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           }
         }
       }
-      //$mappings_copy_objID = implode(',', $mappings_copy_objID);
 
-      //copy the objectives for each session where the objective still exists
+      // Copy the objectives for each session where the objective still exists
 
       $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id =?)");
       $nw_paperid = 0;

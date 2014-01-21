@@ -61,6 +61,7 @@ Class QuestionEdit extends RogoObject {
   protected $deleted = null;
   protected $status = -1;
   protected $settings = '';
+  protected $guid = null;
   public $options = array();
 
   public $max_options = 20;
@@ -316,7 +317,7 @@ Class QuestionEdit extends RogoObject {
 
       $this->serialize_settings();
 
-      if($this->bloom == '') {
+      if ($this->bloom == '') {
         $this->bloom = null;
       }
 			
@@ -326,12 +327,13 @@ Class QuestionEdit extends RogoObject {
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $params = array_merge(array('ssssssssssssssissssissssss'), $this->_data);
+        $this->guid = uniqid('', true);
+        $params = array_merge(array('ssssssssssssssissssisssssss'), $this->_data);
         $query = <<< QUERY
 INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
 display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID,
-creation_date, last_edited, locked, deleted, status, settings)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+creation_date, last_edited, locked, deleted, status, settings, guid)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
       } else {
         // Otherwise we're updating an existing one

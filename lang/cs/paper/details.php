@@ -48,8 +48,6 @@ $string['mcqsurvey'] = "MCQ s volbou 'jiný' by měl být použit jen v průzkum
 $string['dichotomouswarning'] = '%d z %d';
 $string['warning'] = 'Varování';
 $string['variablenomarks'] = 'Varování: Proměnný počet bodů';
-$string['export12'] = 'Export 1.2'; //cognate
-$string['import'] = 'Importovat';
 $string['paperdeleted'] = 'Dokument odstraněn';
 $string['deleted_msg1'] = 'Dokument <strong>%s</strong> byl odstraněn.';
 $string['deleted_msg2'] = 'Stále ještě může být obnoveno z <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">Koše</a>.';
