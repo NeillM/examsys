@@ -41,7 +41,9 @@ flush();
 
 $end_dateSQL = 'NOW()';
 if (isset($_POST['period']) and $_POST['period'] != '') {
-  if ($_POST['period'] == 'week') {
+  if ($_POST['period'] == 'day') {
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 DAY)';
+  } elseif ($_POST['period'] == 'week') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 WEEK)';
   } elseif ($_POST['period'] == 'month') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';
