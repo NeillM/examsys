@@ -124,13 +124,13 @@ foreach ($master_array as $school => $data) {
 		if ($_GET['year']) {
 		  $year = $_GET['year'];
 		
-			$date_range .= " AND ((start_date > {$year}0101000000 AND end_date <= {$year}1231235959)";  // Start and end within year
+			$date_range .= " AND ((start_date > {$year}0901000000 AND end_date <= {$year}0831235959)";  // Start and end within year
 			
-			$date_range .= " OR (start_date <= {$year}0101000000 AND end_date >= {$year}1231235959)";   // Paper continuing this year
+			$date_range .= " OR (start_date <= {$year}0901000000 AND end_date >= {$year}0831235959)";   // Paper continuing this year
 			
-			$date_range .= " OR (start_date <= {$year}0101000000 AND end_date >= {$year}0101000000 AND end_date <= {$year}1231235959)";   // End date within year
+			$date_range .= " OR (start_date <= {$year}0901000000 AND end_date >= {$year}0901000000 AND end_date <= {$year}0831235959)";   // End date within year
 			
-			$date_range .= " OR (start_date > {$year}0101000000 AND start_date <= {$year}1231235959 AND end_date >= {$year}1231235959))";   // Start date within year
+			$date_range .= " OR (start_date > {$year}0901000000 AND start_date <= {$year}0831235959 AND end_date >= {$year}0831235959))";   // Start date within year
 		}
 		
 		$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ") GROUP BY property_id");

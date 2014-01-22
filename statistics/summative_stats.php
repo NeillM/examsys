@@ -90,14 +90,14 @@ $month_max = 0;
 $old_month = '';
 $distinct_users = array();
 
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%M'), start_date, end_date, labs FROM properties WHERE start_date > " . $year . "0901000000 AND end_date < " . ($year+1) . "0831235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%M'), start_date, end_date, labs FROM properties WHERE paper_type = '2' AND start_date > " . $year . "0901000000 AND end_date < " . ($year+1) . "0831235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->store_result();
 $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date, $labs);
 while ($result->fetch()) {
   $paper_count = 0;
   
-  $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID=users.ID AND roles IN ('Student','graduate') AND paperID = ? AND started >= ? AND started <= ?");
+  $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
   $paper_data->execute();
   $paper_data->store_result();
@@ -129,7 +129,7 @@ while ($result->fetch()) {
     $month_student_no += $paper_count;
     if ($paper_count < $month_min) $month_min = $paper_count;
     if ($paper_count > $month_max) $month_max = $paper_count;
-  }
+	}
   $old_month = $month;
 }
 if ($month_paper_no > 0) {
