@@ -732,16 +732,25 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,tmp_pos-10,temp_y+tmp_h-19,this.imgdata.width,this.imgdata.height);
 		}
 	}
-	if (typeof(this.pholderBox[i])!='undefined' && typeof(this.pholderBox[i][7])!='undefined' && this.qmode == 'analysis' && temp_x>=220) {
-		var temp_col = this.context.fillStyle;
-		this.context.fillStyle=this.currentColours[1];
-		this.context.fillRect(temp_x-16,temp_y,16,15);
-		this.context.textAlign="center";
-		this.context.fillStyle='#fff';
-		this.context.font="bold 13px Arial";
-		this.char_labels=this.pholderBox[i][7]+1;
-		this.context.fillText(String.fromCharCode(64+this.char_labels), temp_x-8,temp_y+12);
-		this.context.fillStyle = temp_col;
+	
+	if (this.qmode == 'analysis') {
+		this.tmp_num = '';
+		for (var a=0;a<this.pholderBox.length;a++) {
+			if (temp_x>=220 && Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) {
+				if (typeof(this.pholderBox[a][7])!='undefined') {
+					this.tmp_num = this.pholderBox[a][7];
+					var temp_col = this.context.fillStyle;
+					this.context.fillStyle=this.currentColours[1];
+					this.context.fillRect(temp_x-16,temp_y,16,15);
+					this.context.textAlign="center";
+					this.context.fillStyle='#fff';
+					this.context.font="bold 13px Arial";
+					this.char_labels=this.tmp_num+1;
+					this.context.fillText(String.fromCharCode(64+this.char_labels), temp_x-8,temp_y+12);
+					this.context.fillStyle = temp_col;
+				}
+			}
+		}	
 	}
 }
 
