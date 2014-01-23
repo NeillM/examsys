@@ -101,7 +101,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
           case 'labelling':
             $tmp_first_split = explode(';', $questions[$questionID]['options'][0]['correct']);
             $tmp_second_split = explode('$', $tmp_first_split[11]);
-
+						
             $placeholders = 0;
             $count_tmp_second_split = count($tmp_second_split);
             for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {

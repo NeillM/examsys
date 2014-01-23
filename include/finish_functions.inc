@@ -2129,7 +2129,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           if ($user_split1[1] != '') {
             $answered = true;
             $user_split2 = explode('$',$user_split1[1]);
-
+						
             $i = 0;
             for ($a=0; $a<count($user_split2)-3; $a+=4) {
               $x = round($user_split2[$a], 2);
