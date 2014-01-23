@@ -501,7 +501,13 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
             }
           
             if ($saturday_exams == true) {
-              echo "<br ><table style=\"width:100%\"><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr></table>";              
+              echo "<br /><table style=\"width:100%\">";
+							if ($day_number == date("j") and $current_month == date("n") and $current_year == date("Y")) {  // Current day
+								echo "<tr><td class=\"dheadtoday\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
+							} else {
+								echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
+							}
+							echo "</table>";              
               echo "<table style=\"padding-top:5px; width:100%\">";            
               foreach ($paper_details as $individual_paper) {
 								display_paper($day_no + 1, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string, $default_timezone);

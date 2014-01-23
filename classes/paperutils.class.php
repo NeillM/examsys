@@ -469,7 +469,7 @@ Class PaperUtils {
       if ($labs != '') {
         $machineOK = false;
         $labs = str_replace(",", " OR lab=", $labs);
-        $lab_info = $db->query("SELECT address FROM client_identifiers WHERE address='" . NetworkUtils::get_client_address() . "' AND (lab=$labs)");
+        $lab_info = $db->query("SELECT address FROM client_identifiers WHERE address = '" . NetworkUtils::get_client_address() . "' AND (lab = $labs)");
         if ($lab_info->num_rows > 0) $machineOK = true;
         $lab_info->close();
       } else {
@@ -485,7 +485,7 @@ Class PaperUtils {
             $cal_sql = '';
           }
           $module_in = implode(',', array_keys($moduleIDs));
-          $moduleInfo = $db->prepare("SELECT userID FROM modules_student WHERE userID=? $cal_sql AND idMod IN ($module_in)");
+          $moduleInfo = $db->prepare("SELECT userID FROM modules_student WHERE userID = ? $cal_sql AND idMod IN ($module_in)");
           $moduleInfo->bind_param('i', $userObj->get_user_ID());
           $moduleInfo->execute();
           $moduleInfo->store_result();

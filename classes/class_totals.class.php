@@ -84,8 +84,8 @@ class ClassTotals {
   private $question_statuses;
   private $marking_overrides;
 	
-	private $unmarked_enhancedcalc;
-	private $unmarked_textbox;
+	private $unmarked_enhancedcalc = false;
+	private $unmarked_textbox = false;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
     $userObject = UserObject::get_instance();
@@ -228,7 +228,7 @@ class ClassTotals {
 
     $this->load_metadata();                                                                                   // Query for metadata
 
-    $this->load_overrides();
+    $this->load_overrides();																																									// Load marking overrides (e.g. Calculation question).
 
     $this->load_results();                                                                                    // Load the student data
 
@@ -254,6 +254,10 @@ class ClassTotals {
       $results_cache->save_student_mark_cache($this->paperID, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
 
       $results_cache->save_median_question_marks($this->paperID, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
+			
+			// Unset the re-caching flag now we have just cached the marks.
+			$this->propertyObj->set_recache_marks(0);
+			$this->propertyObj->save();			
     }
   }
 
@@ -559,7 +563,12 @@ class ClassTotals {
     return $tmp_q_id;
   }
 
-  private function extract_blank_correct($option_text, $display_method, $question_id) {
+	/**
+	 * Parses a Fill-in-th-Blank question and returns an array of correct answers.
+	 * @param string $option_text	- Original text of the question with all the blanks in.
+	 * @return array - correct answers.
+	 */
+  private function extract_blank_correct($option_text) {
     $correct = array();
 
     $not_used = preg_match('/mark="([0-9]{1,3})"/', $option_text, $results);
@@ -572,20 +581,29 @@ class ClassTotals {
       $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
       $answer_list = explode(',', $blank_details[$i]);
       $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
-      if ($display_method == 'textboxes') {
+      //if ($display_method == 'textboxes') {
         foreach ($answer_list as $individual_answer) {
           $correct[$i-1][] = html_entity_decode(trim($individual_answer));
         }
-      } else {
-        foreach ($answer_list as $tmp_answer) {
-          $correct[$i-1][] = html_entity_decode(trim($tmp_answer));
-        }
-      }
+      //} else {
+      //  foreach ($answer_list as $tmp_answer) {
+      //    $correct[$i-1][] = html_entity_decode(trim($tmp_answer));
+      //  }
+      //}
     }
 
     return $correct;
   }
 
+	/**
+	 * Return the marks for a user/answer taking into account question exclusions.
+	 * @param int $q_id									- ID of the question being marked.
+	 * @param int $userID								- ID of the user (student)
+	 * @param int $tmp_user_answer			- Answer of the user.
+	 * @param int $tmp_user_mark				- The 'original' mark as stored in logX.
+	 * @param int $tmp_user_mark_array	- An array of marks for all the questions on the paper.
+	 * @return int - The mark the user got for the question.
+	 */
   private function getUserMark($q_id, $userID, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array) {
     $tmp_mark = 0;
 
@@ -602,7 +620,7 @@ class ClassTotals {
       } else {
         $question = $tmp_q;
         if ($question['q_type'] == 'blank') {
-          $question['correct'] = $this->extract_blank_correct($question['option_text'][0], $question['display_method'], $tmp_q_id);
+          $question['correct'] = $this->extract_blank_correct($question['option_text'][0]);
         }
       }
     } else {
@@ -906,10 +924,13 @@ class ClassTotals {
     $this->student_cohort = array_values($this->student_cohort);
   }
 
+  /**
+   * Creates an array called 'paper_buffer' which contains all the questions on the paper.
+   * @return bool - If no questions are found will return FALSE.
+   */
   public function load_answers() {
     $question_no      = 0;
     $old_q_id         = 0;
-    $stems            = 0;
     $old_correct      = array();
     $old_option_text  = array();
 
@@ -929,31 +950,34 @@ class ClassTotals {
       if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
         if ($old_q_id != 0) {
           $old_status_obj = $this->question_statuses[$old_status];
+					
           if (!$old_status_obj->get_exclude_marking()) {
             $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
-            if ($old_q_type == 'random') {
+            
+						if ($old_q_type == 'random') {
               $tmp_id = $this->getRandomDetails($old_q_id);
 
               $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
-              $old_q_type = $last_random['q_type'];
-              $old_marks_correct = $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
-              $old_option_text = $last_random['option_text'];
-              $old_correct = $last_random['correct'];
+              $old_q_type 				= $last_random['q_type'];
+              $old_marks_correct 	= $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
+              $old_option_text 		= $last_random['option_text'];
+              $old_correct 				= $last_random['correct'];
               $old_display_method = $last_random['display_method'];
-              $old_score_method = $last_random['score_method'];
-              $this->total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-              $this->orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+              $old_score_method 	= $last_random['score_method'];
+              
+							$this->total_marks				+= qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+              $this->orig_total_marks		+= qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
             } else {
-              $this->total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-              $this->orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-              $this->total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-              $this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
+              $this->total_marks				+= qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+              $this->orig_total_marks		+= qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+              $this->total_random_mark	+= qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+              
+							$this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
             }
           } else {
             $this->displayExperimental($question_no, $old_status_obj->get_name());
           }
-          $stems = 0;
           $old_marks_correct = 0;
         }
         $question_no++;
@@ -970,7 +994,7 @@ class ClassTotals {
         $this->paper_buffer[$question_id]['settings']         = $settings;
 
         if ($q_type == 'blank') {
-          $this->paper_buffer[$question_id]['correct'] = $this->extract_blank_correct($option_text, $score_method, $question_id);
+          $this->paper_buffer[$question_id]['correct'] = $this->extract_blank_correct($option_text);
         } else {
           $this->paper_buffer[$question_id]['correct'][$option_no] = $correct;
         }
@@ -978,7 +1002,6 @@ class ClassTotals {
         $this->paper_buffer[$question_id]['correct'][$option_no] = $correct;
       }
       $option_no++;
-      $stems++;
 
       $old_q_id             = $q_id;
       $old_display_pos      = $display_pos;
@@ -995,7 +1018,11 @@ class ClassTotals {
       $old_settings         = $settings;
     }
     $result->close();
-
+		
+		if ($this->paper_buffer === null) {   // There are no questions on the paper.
+		  return false;
+		}
+		
     $old_status_obj = $this->question_statuses[$old_status];
     if (!$old_status_obj->get_exclude_marking()) {
       $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
@@ -1005,19 +1032,21 @@ class ClassTotals {
 
         $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
-        $old_q_type = $last_random['q_type'];
-        $old_marks_correct = $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
-        $old_option_text = $last_random['option_text'];
-        $old_correct = $last_random['correct'];
+        $old_q_type					= $last_random['q_type'];
+        $old_marks_correct	= $this->get_marks_correct($last_random['q_type'], $last_random['marks_correct'], $last_random['settings']);
+        $old_option_text		= $last_random['option_text'];
+        $old_correct				= $last_random['correct'];
         $old_display_method = $last_random['display_method'];
-        $old_score_method = $last_random['score_method'];
-        $this->total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        $this->orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+        $old_score_method		= $last_random['score_method'];
+        
+				$this->total_marks				+= qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+        $this->orig_total_marks		+= qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
       } else {
-        $this->total_marks += qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        $this->orig_total_marks += qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        $this->total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-        $this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
+        $this->total_marks				+= qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+        $this->orig_total_marks		+= qMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+        $this->total_random_mark	+= qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+        
+				$this->checkDisplayExcluded($tmp_exclude, $question_no, $old_q_type);
       }
     } else {
       $this->displayExperimental($question_no, $old_status_obj->get_name());
@@ -1026,6 +1055,9 @@ class ClassTotals {
     $this->question_no = $question_no;
   }
 
+  /**
+   * Build up an array of any users with records in log_late. Used later to display warnings to staff through the UI.
+   */
   private function set_log_late() {
     // Check log_late for any records
     $late_ts = strtotime($this->enddate) + 7200;
@@ -1104,7 +1136,10 @@ class ClassTotals {
     }
   }
 
-  private function find_users() {     // Get all the users on the module(s) the paper is on.
+  /**
+   * Get all the users on the module(s) the paper is on.
+   */
+  private function find_users() {
     $this->user_modules = array();
     if ($this->repmodule != '') {
       $tmp_moduleID_in = $this->repmodule;
@@ -1127,6 +1162,9 @@ class ClassTotals {
     $mod_query->close();
   }
 
+  /**
+   * Load user (student) metadata which will be output on-screen later.
+   */
   private function load_metadata() {
     $this->metadata_array = array();
 
@@ -1145,6 +1183,9 @@ class ClassTotals {
     $stmt->close();
   }
 
+  /**
+   * Load marking overrides (for example, Calculation question).
+   */
   private function load_overrides() {
     $result = $this->db->prepare("SELECT q_id, user_id, new_mark_type FROM marking_override WHERE paper_id = ?");
     $result->bind_param('i', $this->paperID);
@@ -1156,12 +1197,15 @@ class ClassTotals {
     $result->close();
   }
 
+  /**
+   * Load user data from the log tables and store.
+	 * Calls 'writeUserResults' to write into an array.
+   */
   private function load_results() {
-    
     if ($this->studentsonly == 0) {
       $roles_sql = '';
     } else {
-      $roles_sql = " AND (users.roles='Student' OR users.roles='graduate')";
+      $roles_sql = " AND (users.roles = 'Student' OR users.roles = 'graduate')";
     }
 
     $data_array = array();
@@ -1232,7 +1276,7 @@ class ClassTotals {
                                                 'room'=>$room, 
                                                 'student_id'=>$student_id, 
                                                 'attempt'=>$attempt, 
-                                                'visible'=>false, //ad students as not visible
+                                                'visible'=>true,
                                                 'display_started'=>$display_started, 
                                                 'started'=>$started, 
                                                 'student_grade'=>$student_grade, 
@@ -1264,7 +1308,7 @@ class ClassTotals {
     $log_data             = array();
     $tmp_array            = array();
 
-    // Load 'logx' data.
+    // Load 'logX' data.
     if ($this->paper_type == '0' or $this->paper_type == '1') {
       $result = $this->db->prepare("(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (" . implode(',', $metadataids) . ")) ORDER BY metadataID, screen");
     } elseif ($this->paper_type == '5') {
@@ -1278,10 +1322,10 @@ class ClassTotals {
     while ($result->fetch()) {
       $userID = $this->user_results[$metadataID]['userID'];
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
-        continue; //this user is not on the module set in repmodule so dont put them in the array
+        continue;      // This user is not on the module set in repmodule so don't put them in the array.
       }
       
-      //we have passed the check this students should be displayed
+      // We have passed the check this students should be displayed.
       $this->user_results[$metadataID]['visible'] =  true;
       
       if ($old_screen != $screen or $old_metadataID != $metadataID) {
@@ -1292,7 +1336,7 @@ class ClassTotals {
           $this->user_results[$old_metadataID]['module'] = $this->user_modules[$userID]['idMod'];
         } else {
           $this->user_results[$old_metadataID]['module'] = '';
-        }
+        }				
 
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;
@@ -1362,6 +1406,9 @@ class ClassTotals {
     
   }
 
+  /**
+   * Add rank (position in cohort) to the 'user_results' array.
+   */
   private function add_rank() {
     $result_no = count($this->user_results);
     if ($result_no == 0) return;
@@ -1385,6 +1432,11 @@ class ClassTotals {
     }
   }
 
+  /**
+   * When dealing with certain percentages of the cohort, for example top 33%,
+	 * then this function will set 'visible' flags on the 'user_results' array
+	 * to control which elements are displayed in the final report.
+   */
   private function flag_subpart() {
     $user_no = count($this->user_results);
 
@@ -1407,11 +1459,13 @@ class ClassTotals {
     }
   }
 
+  /**
+   * Add in students in cohort who haven't taken the exam.
+   */
   private function add_absent_students() {
-    $user_no = count($this->user_results);
-
     if ($this->absent == 1) {
-      // Add in students in cohort who haven't taken the exam.
+			$user_no = count($this->user_results);
+
       $count_student_cohort = count($this->student_cohort);
 
       for ($i=0; $i < $count_student_cohort; $i++) {
@@ -1424,7 +1478,7 @@ class ClassTotals {
         $this->user_results[$user_no]['student_grade']    = $this->student_cohort[$i]['student_grade'];
         $this->user_results[$user_no]['module']           = $this->student_cohort[$i]['module'];
         $this->user_results[$user_no]['display_started']  = '';
-        $this->user_results[$user_no]['started']  = '';
+        $this->user_results[$user_no]['started']  				= '';
         $this->user_results[$user_no]['title']            = $this->student_cohort[$i]['title'];
         $this->user_results[$user_no]['surname']          = $this->student_cohort[$i]['surname'];
         $this->user_results[$user_no]['initials']         = $this->student_cohort[$i]['initials'];
@@ -1445,6 +1499,9 @@ class ClassTotals {
     }
   }
 
+  /**
+   * Translates from internal numerical module IDs to institution module codes for display.
+   */
   private function convert_moduleIDs() {
     $result_no = count($this->user_results);
     $moduleIDs = array();
@@ -1467,18 +1524,30 @@ class ClassTotals {
     }
   }
 
+  /**
+   * Count how many user elements we have.
+   */
   private function set_user_no() {
     $this->user_no = count($this->user_results);
   }
-	
+
+  /**
+   * Returns true of false whether there are any unmarked Textbox question answers on the paper.
+   */
 	public function unmarked_textbox() {
 	  return $this->unmarked_textbox;
 	}
 
+  /**
+   * Returns true of false whether there are any unmarked Calculation question answers on the paper.
+   */
 	public function unmarked_enhancedcalc() {
 	  return $this->unmarked_enhancedcalc;
 	}
 
+  /**
+   * Creates an array of basic statistics on the cohort performance.
+   */
   public function generate_stats() {
 		$configObject = Config::get_instance();
 		$percent_decimals = $configObject->get('percent_decimals');
@@ -1511,7 +1580,6 @@ class ClassTotals {
         $median_percent_array[] = round($this->user_results[$i]['percent'], $percent_decimals);
 
         $mark_total += round($this->user_results[$i]['mark'], $percent_decimals);
-        //$percent_total += $this->user_results[$i]['percent'];
         $percent_total += round($this->user_results[$i]['percent'], $percent_decimals);  // Round to the precision being displayed on screen.
       }
       if (isset($this->user_results[$i]['mark']) and $this->user_results[$i]['visible']) {
@@ -1574,7 +1642,6 @@ class ClassTotals {
       $this->stats['median_percent'] = 0;
     }
 
-
     $this->stats['q1'] = MathsUtils::percentile($marks_data, 0.75);
     $this->stats['q2'] = MathsUtils::percentile($marks_data, 0.50);
     $this->stats['q3'] = MathsUtils::percentile($marks_data, 0.25);
@@ -1584,6 +1651,9 @@ class ClassTotals {
     }
   }
 
+  /**
+   * Adds decile information to each student in the 'user_results' array.
+   */
   private function add_deciles() {
     for ($student=0; $student<$this->user_no; $student++) {
       $this->user_results[$student]['decile'] = 10;  // Set all to 10 as a baseline
@@ -1596,6 +1666,9 @@ class ClassTotals {
     }
   }
 
+  /**
+   * Used to sort the main 'user_results' array by various columns.
+   */
   public function sort_results() {
     if (count($this->user_results) == 0) return;
 
@@ -1611,10 +1684,10 @@ class ClassTotals {
   }
 
   /**
-   * Get possible marks for the question (marks correct). May come from options or settings
-   * @param string    $q_type         Type of question
-   * @param integer   $marks_correct  Marks correct if available in an option
-   * @param string    $settings       JSON encoding settings for the question. Assumed to contain the correct marks if not available in an option
+   * Get possible marks for the question (marks correct). May come from options or settings.
+   * @param string $q_type					- Type of question
+   * @param integer $marks_correct	- Marks correct if available in an option
+   * @param string $settings				- JSON encoding settings for the question. Assumed to contain the correct marks if not available in an option
    * @return mixed
    */
   protected function get_marks_correct($q_type, $marks_correct, $settings) {

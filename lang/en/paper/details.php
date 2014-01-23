@@ -42,6 +42,7 @@ $string['markswarning'] = 'Screen %d has %d marks which is %d%% of the paper tot
 $string['nocorrect'] = 'No correct answer specified';
 $string['zeromarks'] = 'Warning zero marks set.';
 $string['toomanycorrect'] = 'Too many correct options';
+$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'Correct answer missing for some options.';
 $string['nolabels'] = 'No labels added to image.';
 $string['mcqsurvey'] = "MCQ with 'other' should only be used on surveys";
@@ -50,8 +51,6 @@ $string['warning'] = 'Warning';
 $string['Duplicate questions'] = 'Duplicate questions';
 $string['following_questions'] = 'The following questions are';
 $string['variablenomarks'] = 'Warning: Variable number of marks';
-$string['export12'] = 'Export 1.2';
-$string['import'] = 'Import';
 $string['paperdeleted'] = 'Paper Deleted';
 $string['deleted_msg1'] = 'Paper <strong>%s</strong> has been deleted.';
 $string['deleted_msg2'] = 'It can still be recovered from the <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">recycle bin</a>.';

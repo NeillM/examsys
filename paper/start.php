@@ -652,23 +652,8 @@ if ($css != '') {
   ?>
   };
 
-  var getWinH = function() {
-    var winH = 460;
-    if (document.body && document.body.offsetWidth) {
-      winH = document.body.offsetHeight;
-    }
-    if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-      winH = document.documentElement.offsetHeight;
-    }
-    if (window.innerWidth && window.innerHeight) {
-      winH = window.innerHeight;
-    }
-    return winH;
-  }
-
   var changeRef = function(refID) {
     $('#refpane').val(refID);
-    //winH = getWinH();
 		winH = $(window).height();
     resizeReference();
     var flag = 0;
@@ -693,7 +678,6 @@ if ($css != '') {
   }
 
   var resizeReference = function() {
-    //winH = getWinH();
 		winH = $(window).height();
 <?php
   if (count($reference_materials) > 0) {
@@ -740,7 +724,7 @@ if ($css != '') {
 	  if (submitted == true) {
       return false;
     }
-    if (document.questions.button_pressed.value == 'finish') {
+    if ($('#button_pressed').val() == 'finish') {
       var agree = confirm("<?php echo $string['javacheck2']; ?>");
       if (agree) {
         document.body.style.cursor = 'wait';
@@ -758,7 +742,7 @@ if ($css != '') {
     }
   }
   var jumpScreen = function () {
-		document.questions.button_pressed.value='jump_screen';
+		$('#button_pressed').val('jump_screen');
 		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
 		return userSubmit(null);
   }

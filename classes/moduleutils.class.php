@@ -317,7 +317,7 @@ Class module {
                             ");
     if ($db->error) {
       try {
-        throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+        throw new Exception("MySQL error $db->error", $db->errno);
       }
       catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";

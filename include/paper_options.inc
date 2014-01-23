@@ -355,7 +355,7 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 			}
 		}
 	?>
-	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup5','papertasks','qti',myOptions5,myURLs5,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['qtiimportexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['qtiimportexport']; ?></a></div>
+	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup5','papertasks','qti',myOptions5,myURLs5,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['importexport']; ?></a></div>
 </div>
 
 <br />
@@ -680,9 +680,9 @@ if ($properties->get_paper_type() == '2') {
   }
 
   if ($properties->get_summative_lock()) {
-    makeMenu(array($string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID&module=$module"));
+    makeMenu(array($string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID&module=$module", $string['exportraf']=>"{$configObject->get('cfg_root_path')}/export/rogo_assessment_format.php?paperID=$paperID"));
   } else {
-    makeMenu(array($string['import']=>"{$configObject->get('cfg_root_path')}/qti/import.php?paperID=$paperID&module=$module",$string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID"));
+    makeMenu(array($string['import']=>"{$configObject->get('cfg_root_path')}/qti/import.php?paperID=$paperID&module=$module", $string['importraf']=>"{$configObject->get('cfg_root_path')}/import/rogo_assessment_format.php?paperID=$paperID&module=$module", '-'=>'-', $string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID", $string['exportraf']=>"{$configObject->get('cfg_root_path')}/export/rogo_assessment_format.php?paperID=$paperID&module=$module"));
   }
   makeMenu(array($string['Continuous']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(), $string['Page-break per question']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1"));
 

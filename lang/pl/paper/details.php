@@ -42,6 +42,7 @@ $string['markswarning'] = 'Ekran %d ma %d punkty/ów, co stanowi %d%% całej lic
 $string['nocorrect'] = 'Nie określono poprawnej odpowiedzi';
 $string['zeromarks'] = 'Uwaga: ustawiono brak punktacji.';
 $string['toomanycorrect'] = 'Zbyt dużo opcji poprawnych';
+$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'Brakuje poprawnych odpowiedzi dla niektórych opcji.';
 $string['nolabels'] = 'Do obrazu nie dodano etykiet.'; 
 $string['mcqsurvey'] = "Pytania wielokrotnego wyboru z opcją 'inne' powinny być tylko używane w ankietach";
@@ -50,8 +51,6 @@ $string['warning'] = 'Uwaga';
 $string['Duplicate questions'] = 'Powielone pytania';
 $string['following_questions'] = 'Następujące pytania są';
 $string['variablenomarks'] = 'Uwaga: Zmienna liczba punktów';
-$string['export12'] = 'Eksport 1.2'; //cognate
-$string['import'] = 'Import'; //cognate
 $string['paperdeleted'] = 'Arkusz usunięty';
 $string['deleted_msg1'] = 'Arkusz <strong>%s</strong> został usunięty.';
 $string['deleted_msg2'] = 'Może być nadal odzyskany z <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">kosza</a>.';

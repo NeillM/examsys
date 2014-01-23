@@ -106,4 +106,6 @@ $string['decile'] = 'Decil';
 $string['hostnames'] = 'Dočasné účty';
 $string['deciles'] = 'Decily';
 $string['quartiles'] = "Kvartily";
+$string['marking'] = 'Marking...';
+$string['markingcalcquestions'] = 'Marking Calculation Questions';
 ?>

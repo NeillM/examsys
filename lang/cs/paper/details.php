@@ -41,14 +41,13 @@ $string['markswarning'] = 'Okno %d má %d bodů z %d%% celkem v dokumentu. Abyst
 $string['nocorrect'] = 'Nelze najít správnou odpověď';
 $string['zeromarks'] = 'Varování: nastaveno nula bodů.';
 $string['toomanycorrect'] = 'Mnoho správných odpovědí';
+$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'K některým volbám chybí správné odpovědi.';
 $string['nolabels'] = 'K obrázku nebyly zadány popisky.';
 $string['mcqsurvey'] = "MCQ s volbou 'jiný' by měl být použit jen v průzkumu";
 $string['dichotomouswarning'] = '%d z %d';
 $string['warning'] = 'Varování';
 $string['variablenomarks'] = 'Varování: Proměnný počet bodů';
-$string['export12'] = 'Export 1.2'; //cognate
-$string['import'] = 'Importovat';
 $string['paperdeleted'] = 'Dokument odstraněn';
 $string['deleted_msg1'] = 'Dokument <strong>%s</strong> byl odstraněn.';
 $string['deleted_msg2'] = 'Stále ještě může být obnoveno z <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">Koše</a>.';

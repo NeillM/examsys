@@ -54,15 +54,11 @@ $result->close();
     body {
       font-size: 90%;
     }
-
     dt {
       font-weight: bold;
     }
     dd {
       padding-bottom: 16px;
-    }
-    input[type=text] {
-      width: 400px;
     }
     .error {
       color: red;
@@ -113,6 +109,7 @@ $result->close();
     <dd>
       <select id="period" name="period">
         <option value="">-- All papers --</option>
+        <option value="day">Last 24hrs</option>
         <option value="week">Last week</option>
         <option value="month">Last month</option>
         <option value="year">Last year</option>
@@ -135,9 +132,9 @@ endforeach;
       </select>
     </dd>
     <dt>Username:</dt>
-    <dd><input type="text" id="username" name="username" class="required" /></dd>
+    <dd><input type="text" id="username" name="username" class="required" style="width:100px" /></dd>
     <dt>Password:</dt>
-    <dd><input type="password" id="passwd" name="passwd" class="required" /></dd>
+    <dd><input type="password" id="passwd" name="passwd" class="required" style="width:100px" /></dd>
   </dl>
     <button id="start">Start Analysis</button>
   </form>
