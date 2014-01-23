@@ -16,7 +16,7 @@
 
 /**
 *
-* Marks all enhanced calculation questions for a summative paper.
+* Marks all Calculation questions for a summative paper.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -62,15 +62,61 @@ foreach ($q_ids as $q_id => $setting) {
 
 $return_status = 'Complete';
 
+$problem_questions = array();
+
 foreach($statuses as $qid => $data) {
-  if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {
-	  $return_status = 'Problems detected - please contact ' . $configObject->get('support_email');
+  if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.
+		$problem_questions[] = get_question_no($qid, $questions);
 	}
 }
-if ($return_status != 'Complete' and $userObject->has_role('SysAdmin')) {
-  $return_status .= var_dump($statuses);
+if (count($problem_questions) > 0) {
+	$return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
+
+	$userid = $userObject->get_user_ID();
+	$username = $userObject->get_username();
+	$error_type = 'Application Error';
+	$errstr = $return_status;
+	$errfile = $_SERVER['PHP_SELF'];
+	$errline = 56;
+  $post_data = '';
+  if (isset($_POST)) {
+    foreach ($_POST as $key => $value) {
+      if ($key != 'ROGO_PW') {
+        if (is_array($value)) {
+          $value = var_export($value, true);
+        }
+        if ($post_data == '') {
+          $post_data = "$key=$value";
+        } else {
+          $post_data .= ", $key=$value";
+        }
+      } else {
+        $post_data .= ", $key=<HIDDEN>";
+      }
+    }
+  }
+				
+	$log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)");
+	$log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
+	$log_error->execute();
+	$log_error->close();
+	
+	$support_email = $configObject->get('support_email');
+	if ($support_email != '') {
+		$return_status .= '<br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
+	}
 }
 
-print $return_status;
+echo $return_status;
+
+function get_question_no($qid, $questions) {
+  foreach($questions as $question) {
+	  if ($qid == $question['q_id']) {
+		  $problem_qid = $question['q_no'];
+		}
+	}
+	
+	return $problem_qid;
+}
 ?>
 
