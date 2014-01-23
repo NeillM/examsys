@@ -265,6 +265,7 @@ function for_id($in) {
   $in = str_replace(" ", "_", $in);
   $in = str_replace("\"", "_", $in);
   $in = str_replace("'", "_", $in);
+  $in = str_replace("’", "_", $in);
   return $in;
 }
 

@@ -179,6 +179,8 @@ function error_handling($context = null) {
         $context1[$key] = 'MYSQLi Object';
       } elseif (is_object($value) and get_class($value) === 'mysqli_stmt') {
         $context1[$key] = 'MYSQLi statement Object';
+      } elseif (is_object($value) and get_class($value) === 'ZipArchive') {
+        $context1[$key] = 'ZipArchive';
       } elseif (is_object($value) and (get_class($value) === 'ErrorException' or get_class($value) === 'Exception')) {
         $context1[$key] = 'ErrorException Object';
       } elseif (is_object($value)) {
