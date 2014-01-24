@@ -33,11 +33,9 @@ if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
 require '../include/media.inc';
 $paperID = $_GET['paperID'];
 
-function display_q($db) {
-  global $bgcolor;
-
-  $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
-  $question_data->bind_param('i', $_GET['q_id']);
+function display_q($target_id, $db) {
+  $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
+  $question_data->bind_param('i', $target_id);
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
@@ -66,17 +64,25 @@ function display_q($db) {
   }
   $question_data->close();
 
-  $question_no = 0;
-  $paper_type = 0;
-  $bgcolor = 'white';
-  $unanswered = false;
+  $question_no	= 0;
+  $paper_type		= 0;
+  $unanswered 	= false;
 
   $question_offset = $_GET['qNo'];
 
   $screen_pre_submitted = 0;
   $user_answers = array();
 
-  display_question($question, $paper_type, $question_offset, $q_type, $question_no, $user_answers, $unanswered);
+	if ($question['q_type'] == 'enhancedcalc') {
+		require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+		if (!isset($configObj)) {
+			$configObj = Config::get_instance();
+		}
+		$question['object'] = new EnhancedCalc($configObj);
+		$question['object']->load($question);
+	}
+
+	display_question($question, $paper_type, $question_offset, $q_type, $question_no, $user_answers, $unanswered);
   $question_nos[] = $old_q_id;
   echo "</table>\n";
 }
@@ -85,7 +91,7 @@ function display_q($db) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Objective Mapping</title>
+  <title><?php echo $string['objectivemapping']; ?></title>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
@@ -102,14 +108,14 @@ function display_q($db) {
     .paper {margin-left:0px; font-size:180%; color:white; font-weight:bold}
     .q_no {width:40px; text-align:right; vertical-align:top}
     .theme {font-size:150%; padding-left:4px; font-weight:bold; color:#316AC5}
-    .notes {font-size:80%; color:#C00000}
+    .note {color:#C00000}
     .mk {color:#808080; font-size:80%}
   </style>
 </head>
 <body>
 <?php
 
-if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
+if (isset($_POST['submit'])) {
   // Write out curriculum mapping.
   save_objective_mappings($mysqli, $_POST['objective_modules'], $_POST['paperID'], $_POST['questionID']);
   ?>
@@ -119,7 +125,7 @@ if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
   </script>
   <?php
 } else {
-  display_q($mysqli);
+  display_q($_GET['q_id'], $mysqli);
 
   echo "<div id=\"obj_form\">\n";
   echo "<form method=\"post\">";
@@ -127,8 +133,8 @@ if (isset($_POST['submit']) AND $_POST['submit'] == 'Save Changes') {
   echo "<br />";
   echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
-  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"Save Changes\" />&nbsp;";
-  echo "<input style=\"width:120px\" type=\"button\" value=\"Cancel\" onclick=\"window.close()\"/></div>";
+  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:130px\" />&nbsp;&nbsp;";
+  echo "<input style=\"width:80px\" type=\"button\" value=\"" . $string['cancel'] . "\" onclick=\"window.close()\"/></div>";
 
   echo "</form>\n</div>\n";
 }
