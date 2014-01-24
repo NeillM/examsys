@@ -15,5 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['objectives'] = 'Objectives';
+$string['objectivemapping'] = 'Objective Mapping';
 $string['noneabove'] = 'None of the Above';
 $string['noneabovemsg'] = 'Check here if the current question does not match any of the above objectives from %s.';

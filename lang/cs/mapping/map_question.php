@@ -15,5 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['objectives'] = 'Vzdělávací cíle';
+$string['objectivemapping'] = 'Objective Mapping';
 $string['noneabove'] = 'Žádný z uvedených';
 $string['noneabovemsg'] = 'Zkontrolujte, zda aktuální úloha skutečně neodpovídá žádnému z výše uvedených cílů %s.';
