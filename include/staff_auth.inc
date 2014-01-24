@@ -34,6 +34,7 @@ require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
+  // Current use is not Staff or External Examiner so display warning and exit.
 	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -73,16 +74,16 @@ $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative 
 $system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 
 //
-//default security checks
+// Default security checks for all pages.
 //
 
 if ($userObject->has_role('SysAdmin')) {
-  //sysadmin can access any thing !!!
+  // SysAdmin can access anything!
 } else {
-  //normal users can access things they own or are on the staff_module of only !!
+  // Normal users can access things they own or are on the staff_module of only.
   $on_staff_module = false;
 
-  //can the user acsess the module
+  // Can the user acsess the module?
   if (isset($_GET['module']) and $_GET['module'] != '' and !isset($_GET['paperID'])) {
     $staff_module_match = false;
     $module_list = explode(',', $_GET['module']);
@@ -92,13 +93,12 @@ if ($userObject->has_role('SysAdmin')) {
       }
     }
     if ($staff_module_match == false) {
-      //$notice->access_denied($mysqli, $string, str_replace('%s', module_utils::get_moduleid_from_id($_GET['module'], $mysqli), $string['denied_team']), false);
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
-  //Can the user acsess the paper?
+  // Can the user acsess the paper?
   if ((isset($_REQUEST['paperID']) and !($_REQUEST['paperID'] == '' or  $_REQUEST['paperID'] == '-1') )) {
     $tmp_paperID = $_REQUEST['paperID'];
     if (substr($tmp_paperID, 0, 5) != 'find:' and substr($tmp_paperID, 0, 5) != 'list:') {
@@ -116,14 +116,13 @@ if ($userObject->has_role('SysAdmin')) {
       }
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-        //$notice->access_denied($mysqli, $string, $string['denied_paper'], false);
         $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
         $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
       }
     }
   }
 
-  //Can the user access the question?
+  // Can the user access the question?
   if (isset($_REQUEST['q_id'])) {
     $tmp_q_id = ltrim($_REQUEST['q_id'], ',');
     $q_id_list = explode(',', $tmp_q_id);
@@ -144,9 +143,8 @@ if ($userObject->has_role('SysAdmin')) {
           }
         }
 
-        //allow acsess to the TRAIN module for training!
+        // Allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
-          //$notice->access_denied($mysqli, $string, $string['denied_question'], false);
           $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
           $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
         }
@@ -154,7 +152,7 @@ if ($userObject->has_role('SysAdmin')) {
     }
   }
   
-  //Can the user access reference material?
+  // Can the user access reference material?
   if (isset($_REQUEST['refID'])) {
     if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));

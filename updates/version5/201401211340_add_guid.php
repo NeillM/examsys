@@ -11,7 +11,8 @@ if (!$updater_utils->does_column_exist('questions', 'guid')) {
 	$stmt->store_result();
 	$stmt->bind_result($q_id);
 	while ($stmt->fetch()) {
-		$guid = $q_id . '.' . uniqid('', true);
+	  $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+		$guid = $server_ipaddress . uniqid('', true);
 		
 		$update = $mysqli->prepare('UPDATE questions SET guid = ? WHERE q_id = ?');
 		$update->bind_param('si', $guid, $q_id);
