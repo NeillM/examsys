@@ -182,7 +182,7 @@ function error_handling($context = null) {
       } elseif (is_object($value) and get_class($value) === 'ZipArchive') {
         $context1[$key] = 'ZipArchive';
       }  elseif (is_object($value) and get_class($value) === 'SimpleXMLElement') {
-        $context1[$key] = 'SimpleXMLElementh ';
+        $context1[$key] = 'SimpleXMLElement ';
       } elseif (is_object($value) and (get_class($value) === 'ErrorException' or get_class($value) === 'Exception')) {
         $context1[$key] = 'ErrorException Object';
       } elseif (is_object($value)) {
@@ -415,7 +415,18 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
 
   }
   if($variables!='' and !is_string($variables)) {
-    $variables = base64_encode(serialize($variables));
+    try {
+      $variables = base64_encode(serialize($context));
+    } catch (Exception $e) {
+      try {
+        $context = array( 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($context, TRUE) );
+        $variables = base64_encode(serialize($context));
+      } catch (Exception $e) {
+        $context = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();
+        $variables = base64_encode(serialize($context));
+      }
+
+    }
   }
   if(is_null($page)) {
     $page = $_SERVER['PHP_SELF'];
