@@ -150,6 +150,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     for (i=12; i<existingInfo.length; i++) {
 			if (existingInfo[i]!='') {
 				var shapeTemp = existingInfo[i].split("$");
+				for (j=2;j<shapeTemp.length;j++) shapeTemp[j]++; //shift for 1px border
 				this.shapeBox.push(shapeTemp);
 			}
     }
@@ -1003,14 +1004,17 @@ function ql_redraw_canvas() {
 		if (this.qmode != 'edit' && this.qType != 'menu') {
 			for (i=0;i<this.pholderBox.length;i++) {
 				if (typeof(this.pholderBox[i])!='undefined') {
-					//drawing background (unanswered)
-					this.context.fillStyle=this.currentColours[0];
-					if (this.pholderBox[i][3] == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
 					//selecting width and height
 					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
+					//drawing background (unanswered)
+					this.context.fillStyle=this.currentColours[0];
+					if (this.pholderBox[i][3] == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') {
+						this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
+						this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					}
 					//fill and strike background rectangle
-					if (this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					if (this.qmode!='script' && this.qmode!='answer') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 					this.context.strokeRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 				}
 			}
@@ -1657,7 +1661,7 @@ function ql_mouseDragMove(e){
   //this.freehand draw end  
 	
 	if (this.qmode == 'answer'){
-		if ((this.char_code == ' ' || this.key_code == 13) &&  drag_box_id==-1) { //space
+		if ((this.char_code == ' ' || this.key_code == 13) && this.drag_box_id==-1) { //space
 			if (this.qType=='menu') {
 				if (this.active_box_id == this.answer_access_id) {
 					this.active_box_id = -1;
@@ -2284,7 +2288,9 @@ function ql_ReturnInfo() {
 		
 		for (i=0;i<this.shapeBox.length;i++) {
 			for (j=0;j<this.shapeBox[i].length;j++) {
-				questions_result += this.shapeBox[i][j]+'$';
+				value = this.shapeBox[i][j];
+				if (j>1) value--; //shift back for 1px border
+				questions_result += value+'$';
 			}
 			questions_result += ';';
 		}
