@@ -18,6 +18,7 @@ require '../lang/' . $language . '/include/months.inc';
 
 $string['summativeexamstats'] = 'Statystyki egzaminu końcowego';
 $string['administrativetools'] = 'Narzędzia administracyjne';
+$string['statistics'] = 'Statystyka';
 $string['month'] = 'Miesiąc';
 $string['papers'] = 'Arkusze';
 $string['owner'] = 'Właściciele';

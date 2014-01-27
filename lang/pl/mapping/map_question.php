@@ -15,6 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['objectives'] = 'Cele'; 
-$string['objectivemapping'] = 'Objective Mapping';
+$string['objectivemapping'] = 'Odwzorowanie celów';
 $string['noneabove'] = 'Żaden z powyższych';
-$string['noneabovemsg'] = 'Sprawdź tutaj, czy aktualnemu pytaniu nie odpowiada żaden z powyższych celów z %s.';
+$string['noneabovemsg'] = 'Sprawdź tutaj, czy aktualnemu pytaniu nie odpowiada któryś z powyższych celów z %s.';

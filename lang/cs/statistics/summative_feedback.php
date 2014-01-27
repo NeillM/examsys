@@ -17,5 +17,4 @@
 $string['summativeexamfeedback'] = 'Summative Exam Feedback';
 $string['administrativetools'] = 'Administrative Tools';
 $string['statistics'] = 'Statistics';
-$string[''] = '';
 ?>

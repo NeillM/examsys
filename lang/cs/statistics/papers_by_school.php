@@ -17,5 +17,4 @@
 $string['papersbyschool'] = 'Papers by School';
 $string['administrativetools'] = 'Administrative Tools';
 $string['statistics'] = 'Statistics';
-$string[''] = '';
 ?>
