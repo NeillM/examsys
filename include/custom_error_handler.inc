@@ -416,14 +416,14 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
   }
   if($variables!='' and !is_string($variables)) {
     try {
-      $variables = base64_encode(serialize($context));
+      $variables = base64_encode(serialize($variables));
     } catch (Exception $e) {
       try {
-        $context = array( 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($context, TRUE) );
-        $variables = base64_encode(serialize($context));
+        $variables = array( 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($variables, TRUE) );
+        $variables = base64_encode(serialize($variables));
       } catch (Exception $e) {
-        $context = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();
-        $variables = base64_encode(serialize($context));
+        $variables = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();
+        $variables = base64_encode(serialize($variables));
       }
 
     }
