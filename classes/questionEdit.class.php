@@ -325,7 +325,8 @@ Class QuestionEdit extends RogoObject {
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $this->guid = uniqid('', true);
+        $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+        $this->guid = $server_ipaddress . uniqid('', true);
         $params = array_merge(array('ssssssssssssssissssisssssss'), $this->_data);
         $query = <<< QUERY
 INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,

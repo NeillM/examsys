@@ -150,6 +150,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
     for (i=12; i<existingInfo.length; i++) {
 			if (existingInfo[i]!='') {
 				var shapeTemp = existingInfo[i].split("$");
+				for (j=2;j<shapeTemp.length;j++) shapeTemp[j]++; //shift for 1px border
 				this.shapeBox.push(shapeTemp);
 			}
     }
@@ -732,16 +733,25 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,tmp_pos-10,temp_y+tmp_h-19,this.imgdata.width,this.imgdata.height);
 		}
 	}
-	if (typeof(this.pholderBox[i])!='undefined' && typeof(this.pholderBox[i][7])!='undefined' && this.qmode == 'analysis' && temp_x>=220) {
-		var temp_col = this.context.fillStyle;
-		this.context.fillStyle=this.currentColours[1];
-		this.context.fillRect(temp_x-16,temp_y,16,15);
-		this.context.textAlign="center";
-		this.context.fillStyle='#fff';
-		this.context.font="bold 13px Arial";
-		this.char_labels=this.pholderBox[i][7]+1;
-		this.context.fillText(String.fromCharCode(64+this.char_labels), temp_x-8,temp_y+12);
-		this.context.fillStyle = temp_col;
+	
+	if (this.qmode == 'analysis') {
+		this.tmp_num = '';
+		for (var a=0;a<this.pholderBox.length;a++) {
+			if (temp_x>=220 && Math.abs(this.pholderBox[a][5] - temp_x) <= 1 && Math.abs(this.pholderBox[a][6] - temp_y) <= 1) {
+				if (typeof(this.pholderBox[a][7])!='undefined') {
+					this.tmp_num = this.pholderBox[a][7];
+					var temp_col = this.context.fillStyle;
+					this.context.fillStyle=this.currentColours[1];
+					this.context.fillRect(temp_x-16,temp_y,16,15);
+					this.context.textAlign="center";
+					this.context.fillStyle='#fff';
+					this.context.font="bold 13px Arial";
+					this.char_labels=this.tmp_num+1;
+					this.context.fillText(String.fromCharCode(64+this.char_labels), temp_x-8,temp_y+12);
+					this.context.fillStyle = temp_col;
+				}
+			}
+		}	
 	}
 }
 
@@ -994,14 +1004,17 @@ function ql_redraw_canvas() {
 		if (this.qmode != 'edit' && this.qType != 'menu') {
 			for (i=0;i<this.pholderBox.length;i++) {
 				if (typeof(this.pholderBox[i])!='undefined') {
-					//drawing background (unanswered)
-					this.context.fillStyle=this.currentColours[0];
-					if (this.pholderBox[i][3] == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
 					//selecting width and height
 					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
 
+					//drawing background (unanswered)
+					this.context.fillStyle=this.currentColours[0];
+					if (this.pholderBox[i][3] == '' && this.not_first_answer && this.qmode!='edit' && this.qmode!='script') {
+						this.context.fillStyle=this.currentColours[3]; //&& this.empty_answer
+						this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					}
 					//fill and strike background rectangle
-					if (this.qmode!='script') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					if (this.qmode!='script' && this.qmode!='answer') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 					this.context.strokeRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 				}
 			}
@@ -1259,7 +1272,7 @@ function ql_redraw_canvas() {
 		var drag_mix = this.drag_box_id+':'+this.drag_box_combo;
 		var active_mix = this.active_box_id+':'+this.active_box_combo;
 		var mov_mix = this.mov_id+':'+this.mov_combo;
-		if (this.drag_box_id>-1 && drag_mix!=active_mix && !(this.qType == "menu" && this.qmode == 'answer' && this.answerBox[this.drag_box_id][this.drag_box_combo][1]!='image')) {
+		if (this.drag_box_id>-1 && drag_mix!=active_mix && !(this.qType == "menu" && (this.qmode == 'answer' || this.qmode == 'script') && this.answerBox[this.drag_box_id][this.drag_box_combo][1]!='image')) {
 			if (this.qmode == 'script' && this.qType != "menu" && this.answerBox[this.drag_box_id][this.drag_box_combo][5]<220) this.context.globalAlpha = 0.5;	
 			this.ql_redraw_box(this.drag_box_id,this.drag_box_combo);
 			this.context.globalAlpha = 1;
@@ -1648,7 +1661,7 @@ function ql_mouseDragMove(e){
   //this.freehand draw end  
 	
 	if (this.qmode == 'answer'){
-		if (this.char_code == ' ' || this.key_code == 13) { //space
+		if ((this.char_code == ' ' || this.key_code == 13) && this.drag_box_id==-1) { //space
 			if (this.qType=='menu') {
 				if (this.active_box_id == this.answer_access_id) {
 					this.active_box_id = -1;
@@ -1859,9 +1872,9 @@ function ql_mouseDragUp(){
 		this.answerBox[this.active_box_id][this.active_box_combo][2] = this.menuBox[this.menu_line-1];
 		//is it correctly dropped label
 		if (this.answerBox[this.active_box_id][this.active_box_combo][2] == this.pholderBox[this.active_box_id][2]) {
-			this.answerBox[this.active_box_id][this.active_box_combo][3] = 't'
+			this.answerBox[this.active_box_id][this.active_box_combo][3] = 't'+this.active_box_id;
 		} else {
-			this.answerBox[this.active_box_id][this.active_box_combo][3] = 'f'
+			this.answerBox[this.active_box_id][this.active_box_combo][3] = 'f'+this.active_box_id;
 		}
 		this.active_box_id = -1;
 	} else { //open new dropdown only if it is NOT while answering other
@@ -2031,9 +2044,9 @@ function ql_mouseDragUp(){
       //is it correctly dropped label?
 
       if (this.answerBox[this.drag_box_id][this.drag_box_combo][2] == this.pholderBox[dest_box][2]) {
-        this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 't'
+        this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 't'+dest_box;
       } else {
-        this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 'f'
+        this.answerBox[this.drag_box_id][this.drag_box_combo][3] = 'f'+dest_box;
 			}
 			
       this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.pholderBox[dest_box][5];
@@ -2193,15 +2206,29 @@ function ql_ReturnInfo() {
 				questions_total++;
 			}
 		}
+		var tmp_info = new Array();
 		for (i=0;i<this.answerBox.length;i++) {
 			for (j=0;j<this.answerBox[i].length;j++) {
 				if (typeof(this.answerBox[i][j])!='undefined' && this.answerBox[i][j][2]!='') {
-					if (this.answerBox[i][j][3] == 't') questions_correct++;
-					if (this.answerBox[i][j][3] == 'f') questions_incorrect++;
-					if (this.answerBox[i][j][3] == 't' || this.answerBox[i][j][3] == 'f') answer_result+=this.answerBox[i][j][5]+'$'+(this.answerBox[i][j][6]-25+this.yOffset)+'$'+fix_names(this.answerBox[i][j][2])+'$'+this.answerBox[i][j][3]+'$';
+					if (this.answerBox[i][j][3].substr(0,1) == 't' || this.answerBox[i][j][3].substr(0,1) == 'f') {
+						tmp_pho = this.answerBox[i][j][3].substr(1);
+						tmp_ans = '$'+fix_names(this.answerBox[i][j][2])+'$'+this.answerBox[i][j][3].substr(0,1)+'$';
+						if (tmp_pho=='') {
+							if (this.answerBox[i][j][5]>=220) tmp_info[this.answerBox[i][j][5]+'$'+(this.answerBox[i][j][6]-25+this.yOffset)] = tmp_ans;
+						}else{
+							if (this.pholderBox[tmp_pho][5]>=220) tmp_info[this.pholderBox[tmp_pho][5]+'$'+(this.pholderBox[tmp_pho][6]-25+this.yOffset)] = tmp_ans;
+						}
+					}
 				}
 			}
-		}  
+		} 
+		for (key in tmp_info) {
+			answer_result+=key+tmp_info[key];
+			tmp_tst = tmp_info[key].split('$');
+			if (tmp_tst[2] == 't') questions_correct++;
+			if (tmp_tst[2] == 'f') questions_incorrect++;
+		}
+		
 		var marks_max = this.marks_per_correct * questions_total;
 		var marks_total = this.marks_per_correct * questions_correct + this.marks_per_incorrect * questions_incorrect;
 		if (this.marking_method != 'Mark per Option') {
@@ -2261,7 +2288,9 @@ function ql_ReturnInfo() {
 		
 		for (i=0;i<this.shapeBox.length;i++) {
 			for (j=0;j<this.shapeBox[i].length;j++) {
-				questions_result += this.shapeBox[i][j]+'$';
+				value = this.shapeBox[i][j];
+				if (j>1) value--; //shift back for 1px border
+				questions_result += value+'$';
 			}
 			questions_result += ';';
 		}

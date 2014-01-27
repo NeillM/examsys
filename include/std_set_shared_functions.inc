@@ -147,6 +147,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
               } else {
                 $ebel_marks[$individual_rating] = $marks_array[$questionID][$partID];
               }
+
               $angoff_review_marks += $marks_array[$questionID][$partID];
             }
             $partID++;
@@ -158,7 +159,10 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
 							if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
 								if (substr($tmp_exclude, $tmp_part, 1) == '0') {
 									if ($q_type == 'textbox') {
-										$std_total += $individual_rating * (count($q_sections) - $tmp_part);
+										$textbox_marks = $marks_array[$questionID][0];
+									  for ($a=0; $a<$textbox_marks; $a++) {
+											$std_total += $rating_array[$a] * ($textbox_marks - $a);
+										}
 									} else {
 										$std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
 									}

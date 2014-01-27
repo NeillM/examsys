@@ -180,9 +180,7 @@ $paper_title        = $propertyObj->get_paper_title();
 $total_random_mark  = $propertyObj->get_random_mark();
 $total_marks        = $propertyObj->get_total_mark();
 $navigation         = $propertyObj->get_bidirectional();
-
-$paper_screens      = Paper_utils::get_numder_of_screens($property_id, $mysqli);
-
+$paper_screens      = $propertyObj->get_max_screen();
 $test_type          = $propertyObj->get_paper_type();
 $paper_start        = $propertyObj->get_start_date();
 $paper_end          = $propertyObj->get_end_date();
@@ -196,8 +194,7 @@ $exam_duration_sec  = $exam_duration * 60;
 $calendar_year      = $propertyObj->get_calendar_year();
 $sound_demo         = $propertyObj->get_sound_demo();
 $password           = $propertyObj->get_password();
-
-$modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
+$modIDs							= array_keys($propertyObj->get_modules());
 
 if ($userObject->has_role('External Examiner')) {
   // Don't do timezone stuff as dates may not be set before review.

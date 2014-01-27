@@ -38,8 +38,36 @@ Class Paper_utils extends RogoStaticSingleton {
 
 Class PaperUtils {
 
+  /**
+  * Parses a paper title and returns the academic year if it exists within the title
+  *
+  * @param string $paper_title - The name of the paper.
+  * @return mixed - False = no academic year found in title, string = the academic year that was found.
+  */
+  public function academic_year_from_title($paper_title) {
+		if (preg_match( '/\d\d\d\d\D\d\d\d\d/' , $paper_title , $matches) == 1) {
+			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
+		} elseif (preg_match( '/\d\d\d\d\s\D\s\d\d\d\d/' , $paper_title , $matches) == 1) {
+			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
+		} elseif (preg_match( '/\d\d\d\d\D\d\d/' , $paper_title , $matches) == 1) {
+			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
+		} elseif (preg_match( '/\d\d\D\d\d/' , $paper_title , $matches) == 1) {
+			$tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
+		} else {
+			$tmp_match = false;
+		}
+		
+		return $tmp_match;
+	}
+
+  /**
+  * Checks to see if a non-deleted paper ID exists in the database.
+  *
+  * @param int $paperID 		- ID of the paper to be used
+  * @param object $db				-	Database connection
+	* @return bool - True = the paperID exists, False = the paper does not exist.
+  */
   public function paper_exists($paperid, $db) {
-    // Check for unique moduleID
     $exist = true;
 
     $result = $db->prepare("SELECT property_id FROM properties WHERE property_id = ? AND deleted IS NULL");
@@ -60,11 +88,11 @@ Class PaperUtils {
   /**
   * Add a question onto a paper
   *
-  * @param $paperID ID of the paper to be used
-  * @param $questionID ID of the question to be added
-  * @param $screen_no number of the screen to add to
-  * @param $display_pos the display position of the new question
-  * @param $db Database connection
+  * @param int $paperID 		- ID of the paper to be used
+  * @param int $questionID 	- ID of the question to be added
+  * @param int $screen_no 	- Number of the screen to add to
+  * @param int $display_pos	- The display position of the new question
+  * @param object $db				-	Database connection
   */
   public function add_question($paperID, $questionID, $screen_no, $display_pos, $db) {
     $display_pos_free = false;
@@ -94,8 +122,8 @@ Class PaperUtils {
   /**
   * Return the user ID of the paper owner
   *
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
+  * @param int $paperID - The id of the paper or property_id
+  * @param object $db 	- Database connection
   * @return integer
   */
   public function get_ownerID($paperID, $db) {
@@ -131,8 +159,8 @@ Class PaperUtils {
   /**
   * Return a array of modules assigned to a paper
   *
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
+  * @param int $paperID - The id of the paper or property_id
+  * @param object $db		- Database connection
   * @return array
   */
   public function get_modules($paperID, $db) {
@@ -198,11 +226,11 @@ Class PaperUtils {
   }
 
   /**
-  * updates the modules on a paper removes modules if the user has permission to do so and then adds in the new modules
-  * @param $paper_modules an array of modules keyed on idMod
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
-  * @param $userObject currently authenticated user
+  * Updates the modules on a paper. Removes modules if the user has permission to do so and then adds in the new modules.
+  * @param array $paper_modules - An array of modules keyed on idMod
+  * @param int $paperID 				- The id of the paper or property_id
+  * @param object $db 					- Database connection
+  * @param object $userObject 	- Currently authenticated user
   * @return void
   */
   public function update_modules($paper_modules, $paperID, $db, $userObject) {
@@ -213,9 +241,9 @@ Class PaperUtils {
 
     if (count($staff_modules) > 0) {
       if ($userObject->has_role('SysAdmin')) {
-        $user_can_delete = ''; //no restrictions
+        $user_can_delete = ''; // No restrictions
       } else {
-        $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
+        $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; // Users can only remove modules if they are on the team.
       }
 
       $editProperties = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $user_can_delete");
@@ -229,12 +257,14 @@ Class PaperUtils {
 
   /**
   * Add/delete internal and external reviewers to a paper
-  * @param array      $old_list     Array of the old reviewers
-  * @param array      $new_list     Array of the new reviewers
-  * @param string     $type         'internal' or 'external' review type
-  * @param integer    $paperID      ID of the paper or property_id
-  * @param mysqli     $db           Database connection
-  * @return bool      $has_changed  True if the list of reviewers has changed
+	*
+  * @param array $old_list	- Array of the old reviewers
+  * @param array $new_list	- Array of the new reviewers
+  * @param string $type			- 'internal' or 'external' review type
+  * @param integer $paperID	- ID of the paper or property_id
+  * @param object $db				-  Database connection
+	*
+  * @return bool - True if the list of reviewers has changed
   */
   public function update_reviewers($old_list, $new_list, $type, $paperID, $db) {
     $has_changed = false;
@@ -269,9 +299,11 @@ Class PaperUtils {
 
   /**
   * Add modules to a paper ignoring duplicates
-  * @param $paper_modules an array of modules keyed on idMod
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
+	*
+  * @param array $paper_modules	- An array of modules keyed on idMod
+  * @param int $paperID 				- The id of the paper or property_id
+  * @param object $db						- Database connection
+	*
   * @return void
   */
   public function add_modules($paper_modules, $paperID, $db) {
@@ -284,10 +316,12 @@ Class PaperUtils {
   }
 
   /**
-  * remove modules from a paper
-  * @param $paper_modules an array of modules keyed on idMod
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
+  * Remove modules from a paper
+	*
+  * @param array $paper_modules - An array of modules keyed on idMod
+  * @param int $paperID					- The id of the paper or property_id
+  * @param object $db						- Database connection
+	*
   * @return void
   */
   public function remove_modules($paper_modules, $paperID, $db) {
@@ -297,27 +331,6 @@ Class PaperUtils {
       $remove->execute();
     }
     $remove->close();
-  }
-
-  /**
-  * Return the paper title (name).
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
-  * @return $paper_title the name of the paper
-  */
-  public function get_title($paperID, $db) {
-    $result = $db->prepare("SELECT paper_title FROM properties WHERE property_id = ? LIMIT 1");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($paper_title);
-    $result->fetch();
-    $result->close();
-
-    if ($paper_title == '') {
-      return false;
-    }
-
-    return $paper_title;
   }
 
   /**
@@ -345,40 +358,16 @@ Class PaperUtils {
   }
 
   /**
-  * Delete a paper from rogo (N.B sets the deleted field we don't actuality delete the row form the papers table)
+  * Delete a paper (Note: sets the deleted field we don't actuality delete the row form the papers table)
   * @param $paperID the id of the paper or property_id
   * @param $db Database connection
   * @return void
   */
   public function delete_paper($paperID, $db) {
-    //delete the paper
     $update = $db->prepare("UPDATE properties SET deleted = NOW(), paper_ownerID = -1 WHERE property_id = ?");
     $update->bind_param('i', $paperID);
     $update->execute();
     $update->close();
-  }
-
-  /**
-  * caculates the number of screens on a paper
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
-  * return @int max
-  */
-  public function get_numder_of_screens($paperID, $db) {
-    $no_screens = 0;
-    $result = $db->prepare("SELECT max(screen) FROM papers WHERE paper = ? group by paper LIMIT 1");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->store_result();
-    if($result->num_rows <= 0) {
-      $result->close();
-      return 0;
-    } else {
-      $result->bind_result($no_screens);
-      $result->fetch();
-      $result->close();
-      return $no_screens;
-    }
   }
 
   public function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {

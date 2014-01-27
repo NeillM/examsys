@@ -16,5 +16,5 @@
 
 require '../lang/' . $language . '/include/paper_options.inc';
 
-$string['importraf'] = 'Import Rog&#333; Assessment Format';
+$string['importraf'] = 'Importuj format egzaminu Rog&#333;';
 ?>

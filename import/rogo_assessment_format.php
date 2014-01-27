@@ -179,7 +179,8 @@ function write_question($q, $db) {
 	if ($q['q_option_order'] == '') $q['q_option_order'] = 'display order';
 	if ($q['score_method'] == '') 	$q['score_method'] = 'Mark per Option';
 
-  $guid = uniqid('', true);
+    $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+    $guid = $server_ipaddress . uniqid('', true);
 	
 	$result = $db->prepare("INSERT INTO questions VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
 	$result->bind_param('ssssssssisssssssissss', $q['q_type'], $q['theme'], $q['scenario'], $q['leadin'], $q['correct_fback'], $q['incorrect_fback'], $q['display_method'], $q['notes'], $userID, $q['q_media'], $q['q_media_width'], $q['q_media_height'], $q['bloom'], $q['scenario_plain'], $q['leadin_plain'], $q['std'], $q['status'], $q['q_option_order'], $q['score_method'], $q['settings'], $guid);
