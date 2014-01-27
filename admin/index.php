@@ -138,10 +138,10 @@
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
+	$menudata['statistics']		= array('../statistics/index.php', 'summative_stats.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
 		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}
-	$menudata['summativeexamstats']		= array('summative_stats.php?year=' . $summative_year, 'summative_stats.png');
 	$menudata['systemerrors']					= array('sys_error_list.php', 'system_errors.png');
 	$menudata['systeminformation']		= array('system_info.php', 'information.png');
 	$menudata['testing']							= array('../testing/', 'crash_test.png');

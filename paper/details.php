@@ -1037,8 +1037,8 @@ $result->close();
 <?php
   ob_flush();
   flush();
-
-  if ($properties->get_recache_marks() == 1) {
+	
+  if ($properties->get_recache_marks() == 1 and count($temp_array) > 0) {
     $startdate = $properties->get_raw_start_date();
     $enddate   = $properties->get_raw_end_date();
 ?>

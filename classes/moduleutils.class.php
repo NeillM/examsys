@@ -57,8 +57,8 @@ Class module {
 
   public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0) {
 
-    // Return false if missing madatory fields.
-    if ($moduleid == '' or $fullname == '' or $schoolID == '') {
+    // Return false if missing madatory fields. schoolid is actually a number
+    if ($moduleid == '' or $fullname == '' or $schoolID === '') {
       return false;
     }
 
@@ -79,6 +79,7 @@ Class module {
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
+      return "failed at insert";
       return false;
     }
 

@@ -105,7 +105,7 @@ DELETE;
  * @param mixed $filename
  *
  */
-function unique_filename( $filename ) {
+function unique_filename($filename) {
 
   $configObject = Config::get_instance();
   $cfg_web_root = $configObject->get( 'cfg_web_root' );

@@ -61,6 +61,7 @@ Class QuestionEdit extends RogoObject {
   protected $deleted = null;
   protected $status = -1;
   protected $settings = '';
+  protected $guid = null;
   public $options = array();
 
   public $max_options = 20;
@@ -80,7 +81,7 @@ Class QuestionEdit extends RogoObject {
   protected $_use_bloom = true;
 
   protected $_user_id;
-  protected $_fields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'media', 'media_width', 'media_height', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings');
+  protected $_fields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'media', 'media_width', 'media_height', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
   protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
   protected $_fields_settings = array();
@@ -316,32 +317,32 @@ Class QuestionEdit extends RogoObject {
 
       $this->serialize_settings();
 
-      if($this->bloom == '') {
+      if ($this->bloom == '') {
         $this->bloom = null;
       }
-			
-			
 
       // If $id is -1 we're inserting a new record
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $params = array_merge(array('ssssssssssssssissssissssss'), $this->_data);
+        $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+        $this->guid = $server_ipaddress . uniqid('', true);
+        $params = array_merge(array('ssssssssssssssissssisssssss'), $this->_data);
         $query = <<< QUERY
 INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
 display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID,
-creation_date, last_edited, locked, deleted, status, settings)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+creation_date, last_edited, locked, deleted, status, settings, guid)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
       } else {
         // Otherwise we're updating an existing one
-        $params = array_merge(array('ssssssssssssssissssissssssi'), $this->_data, array(&$this->id));
+        $params = array_merge(array('ssssssssssssssissssisssssssi'), $this->_data, array(&$this->id));
         $this->last_edited = date('Y-m-d H:i:s');
         $query = <<< QUERY
 UPDATE questions
 SET q_type = ?, theme = ?, scenario = ?, scenario_plain = ?, leadin = ?, leadin_plain = ?, notes = ?, correct_fback = ?, incorrect_fback = ?,
 score_method = ?, display_method = ?, q_option_order = ?, std = ?, bloom = ?, ownerID = ?, q_media = ?, q_media_width = ?, q_media_height = ?,
-checkout_time = ?, checkout_authorID = ?, creation_date = ?, last_edited = ?, locked = ?, deleted = ?, status = ?, settings = ?
+checkout_time = ?, checkout_authorID = ?, creation_date = ?, last_edited = ?, locked = ?, deleted = ?, status = ?, settings = ?, guid = ?
 WHERE q_id = ?
 QUERY;
       }
@@ -379,7 +380,7 @@ QUERY;
       $result->close();
 
       if ($success) {
-        //updates the teams/question modules
+        // Updates the teams/question modules
         QuestionUtils::update_modules($this->teams, $this->id, $this->_mysqli, $this->_userObj);
       }
 
@@ -416,8 +417,8 @@ QUERY;
 
   /**
    * Check out the question for editing
-   * @param int $user_id ID of the user who is currently editing the question
-   * @return boolean Success or failure of the checkout operation
+   * @param int $user_id	- ID of the user who is currently editing the question
+   * @return boolean  		- Success or failure of the checkout operation
    */
   public function checkout($user_id) {
     $success = false;
@@ -467,7 +468,7 @@ QUERY;
    * @param string $new_value
    * @param string $category
    */
-  public function add_unified_field_modification($field, $label, $old_value, $new_value, $category=null) {
+  public function add_unified_field_modification($field, $label, $old_value, $new_value, $category = null) {
     $category = ($category == null) ? $this->_lang_strings['editquestion'] : $category;
 
     if (!in_array($field, $this->_unified_field_modifications)) {
@@ -1443,7 +1444,7 @@ QUERY;
     $q_query = <<< QUERY
 SELECT q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, display_method,
  q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID, creation_date,
- last_edited, locked, deleted, status, settings
+ last_edited, locked, deleted, status, settings, guid
 FROM questions
 WHERE q_id = ?
 QUERY;

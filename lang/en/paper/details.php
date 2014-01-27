@@ -51,8 +51,6 @@ $string['warning'] = 'Warning';
 $string['Duplicate questions'] = 'Duplicate questions';
 $string['following_questions'] = 'The following questions are';
 $string['variablenomarks'] = 'Warning: Variable number of marks';
-$string['export12'] = 'Export 1.2';
-$string['import'] = 'Import';
 $string['paperdeleted'] = 'Paper Deleted';
 $string['deleted_msg1'] = 'Paper <strong>%s</strong> has been deleted.';
 $string['deleted_msg2'] = 'It can still be recovered from the <a href="' . $configObject->get('cfg_root_path') . '/delete/recycle_list.php" style="color:blue">recycle bin</a>.';

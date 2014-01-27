@@ -33,7 +33,9 @@ require '../include/sysadmin_auth.inc';
 
 $end_dateSQL = 'NOW()';
 if (isset($_GET['period']) and $_GET['period'] != '') {
-  if ($_GET['period'] == 'week') {
+  if ($_GET['period'] == 'day') {
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 DAY)';
+  } elseif ($_GET['period'] == 'week') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 WEEK)';
   } elseif ($_GET['period'] == 'month') {
     $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';

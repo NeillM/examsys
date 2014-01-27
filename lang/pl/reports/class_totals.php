@@ -106,5 +106,6 @@ $string['unknown'] = '&nbsp;&lt;Nieznany&gt;';
 $string['markingnotcomplete'] = 'Punktacja nie zakończona';
 $string['of'] = ' z ';
 $string['percentofcohort'] = '% grupy';
-
+$string['marking'] = 'Marking...';
+$string['markingcalcquestions'] = 'Marking Calculation Questions';
 ?>

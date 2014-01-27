@@ -1112,8 +1112,12 @@ class PaperProperties {
    * @return int $exam_duration
    */
   public function get_exam_duration() {
-    return $this->exam_duration;
-  }
+    if ($this->exam_duration == 0) {
+		  return null;
+		} else {
+			return $this->exam_duration;
+		}
+	}
 
   /**
    * @return int $exam_duration in seconds
@@ -1128,7 +1132,8 @@ class PaperProperties {
   public function set_exam_duration($exam_duration) {
     $old_exam_duration = $this->exam_duration;
 
-    $this->exam_duration = $exam_duration;
+    if ($exam_duration == 0) $exam_duration = null;
+		$this->exam_duration = $exam_duration;
 
     if ($old_exam_duration != $exam_duration) {
       $this->changes[] = array('old'=>$old_exam_duration, 'new'=>$exam_duration, 'part'=>'duration');

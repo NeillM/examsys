@@ -79,19 +79,23 @@ if (isset($_GET['scrOfY'])) {
 <tr><th colspan="5" style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['byteam']; ?></th></tr>
 </table>
 <?php
-  $sql = "SELECT modules.id, modules.moduleid, fullname, COUNT(groupID) AS count_no FROM (modules_staff, modules) WHERE modules_staff.idMod=modules.id AND idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ") GROUP BY fullname";
-  $result = $mysqli->prepare($sql);
-  $result->execute();
-  $result->bind_result($mod_id, $moduleid, $module_name, $count_no);
-  while ($result->fetch()) {
-    echo '<div class="foldername">';
-    echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
-    echo '  <a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/user_accounts_icon.png" width="48" height="48" alt="' . $module_name . '" /></a><td>';
-    echo '  <td width="290"><a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $moduleid . ': ' . $module_name . '</a><br />';
-    echo '  <span style="color:#808080">' . $count_no . ' ' . $string['members'] . '</span></td></tr></table>';
-    echo "</div>\n";
-  }
-  $result->close();
+  $user_modules = $userObject->get_staff_modules();
+
+  if (count($user_modules) > 0) {
+		$sql = "SELECT modules.id, modules.moduleid, fullname, COUNT(groupID) AS count_no FROM (modules_staff, modules) WHERE modules_staff.idMod=modules.id AND idMod IN (" . implode(',', array_keys($user_modules)) . ") GROUP BY fullname";
+		$result = $mysqli->prepare($sql);
+		$result->execute();
+		$result->bind_result($mod_id, $moduleid, $module_name, $count_no);
+		while ($result->fetch()) {
+			echo '<div class="foldername">';
+			echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
+			echo '  <a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/user_accounts_icon.png" width="48" height="48" alt="' . $module_name . '" /></a><td>';
+			echo '  <td width="290"><a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $moduleid . ': ' . $module_name . '</a><br />';
+			echo '  <span style="color:#808080">' . $count_no . ' ' . $string['members'] . '</span></td></tr></table>';
+			echo "</div>\n";
+		}
+		$result->close();
+	}
   $mysqli->close();
 ?>
 </body>

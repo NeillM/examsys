@@ -156,26 +156,14 @@ $paper_type  = $propertyObj->get_paper_type();
   $total_random_mark = 0;
   $total_marks = 0;
   if ($row_no > 0) {
-      $year_in_title = false;
-      $tmp_match = '';
-      if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $paper_title , $matches) == 1) {
-        $year_in_title = true;
-        $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-      } elseif (preg_match( '/\d\d\d\d.\d\d/' , $paper_title , $matches) == 1) {
-        $year_in_title = true;
-        $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-      } elseif (preg_match( '/\d\d.\d\d/' , $paper_title , $matches) == 1) {
-        $year_in_title = true;
-        $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
-      }
-      if ($year_in_title == true) {
-        if ($tmp_match != $session) {
-          echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-          echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
-          printf($string['nomatchsession'], $tmp_match, $session);
-          echo "</td></tr>\n</table>\n</td></tr>\n";
-        }
-      }
+			$tmp_match = Paper_utils::academic_year_from_title($paper_title);
+      
+			if ($tmp_match !== false and $tmp_match != $session) {
+				echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
+				echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
+				printf($string['nomatchsession'], $tmp_match, $session);
+				echo "</td></tr>\n</table>\n</td></tr>\n";
+			}
     ?>
     <tr>
     <td style="padding:0px">

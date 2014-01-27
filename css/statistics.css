@@ -1,0 +1,14 @@
+.stats {
+	border-collapse:collapse
+}
+.stats th {
+	background-color:#EAEAEA;
+	border: 1px solid #C0C0C0;
+	font-weight:normal;
+}
+.stats td {
+	border: 1px solid #C0C0C0;
+}
+.n {
+	text-align:right;
+}

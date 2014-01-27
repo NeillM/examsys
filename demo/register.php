@@ -34,6 +34,8 @@ if (strcmp($configObject->get('cfg_install_type'), 'demo') != 0) { // If the ins
 require_once '../include/auth.inc';
 require_once '../include/mb_string.inc.php';
 
+require_once '../include/custom_error_handler.inc';
+
 require_once '../classes/dbutils.class.php';
 require_once '../classes/lang.class.php';
 require_once '../classes/userutils.class.php';
@@ -122,6 +124,7 @@ if (isset($_POST['submit'])) {
 		$result->close();
 
 		UserUtils::add_student_to_module_by_name($userid, $new_moduleid, 1, $session, $mysqli); // Add student to the new module
+		UserUtils::add_student_to_module_by_name($userid, 'A10DEMO', 1, $session, $mysqli); // Add student to the demo module
   }
 	
   // Send out email welcome.

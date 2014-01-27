@@ -68,14 +68,20 @@ function init_feedback(&$strong_on, &$strong_off) {
   }
 }
 
-function display_std($std_value, $inline=1) {
+/**
+ * Format standard setting value.
+ * @param mixed $show_response	- Whether to display ticks/crosses or not.
+ * @param string $type				- What type of icon to display.
+ * @return string - HTML of the standard setting value to display.
+ */
+ function display_std($std_value, $inline = 1) {
   $html = '';
   if ($std_value != '') {
     $html .= '<span class="std"';
     if ($inline == 0) $html .= ' style="display:inline"';
-    if (is_numeric($std_value)) {
+    if (is_numeric($std_value)) {                            // If numeric then we are dealing with Modified Angoff, display straight to screen.
       $html .= '>&nbsp;' . $std_value . '%&nbsp;</span>';
-    } elseif ($std_value != '') {
+    } elseif ($std_value != '') {                            // Display an Ebel value.
       $std_value = str_replace('exclude_','',$std_value);
 
       $titles = array('EE'=>'Easy/Essential','EI'=>'Easy/Important','EN'=>'Easy/Nice to know','ME'=>'Medium/Essential','MI'=>'Medium/Important','MN'=>'Medium/Nice to know','HE'=>'Hard/Essential','HI'=>'Hard/Important','HN'=>'Hard/Nice to know');
@@ -88,9 +94,9 @@ function display_std($std_value, $inline=1) {
 
 /**
  * Select the response to the student from a tick, half tick or cross
- * @param $show_response
- * @param $type
- * @return string
+ * @param int $show_response	- Whether to display ticks/crosses or not.
+ * @param string $type				- What type of icon to display.
+ * @return string - HTML of the icon to display.
  */
 function display_response($show_response, $type) {
   $response = '';
@@ -1379,26 +1385,18 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
                     $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                     // Not all correct if Bonus Mark but not exact match
                     if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
-                  } else {
-                    //if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] != '0') or ($paper[$question]['score_method'] == 'Mark per Option' and $rank_answers[$tmp_part_id-1] != 'u')) {
-										//$tmp = ($tmp_part_id-1);
-										//var_dump($rank_answers,$tmp);
-                    
+                  } else {                    
 										if ($rank_answers[$tmp_part_id-1] != 'u') {
-										
 										  if ($paper[$question]['score_method'] == 'Mark per Option' or $paper[$question]['score_method'] == 'Mark per Question') {
-												echo display_response($tmp_display_students_response, 'cross');
+												echo display_response($tmp_display_students_response, 'cross') . '#';
+												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+												$all_correct = false;
+											} elseif (($rank_answers[$tmp_part_id-1] > '0') or ($paper[$question]['score_method'] == 'Mark per Option')) {
+												echo display_response($tmp_display_students_response, 'cross') . '@';
 												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 												$all_correct = false;
 											}
-										
 										}
-										
-										if (($rank_answers[$tmp_part_id-1] != 'u' and $rank_answers[$tmp_part_id-1] > '0') or ($paper[$question]['score_method'] == 'Mark per Option' and $rank_answers[$tmp_part_id-1] != 'u')) {
-                      echo display_response($tmp_display_students_response, 'cross');
-                      $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
-                      $all_correct = false;
-                    }
                   }
                 }
               }
@@ -2131,7 +2129,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           if ($user_split1[1] != '') {
             $answered = true;
             $user_split2 = explode('$',$user_split1[1]);
-
+						
             $i = 0;
             for ($a=0; $a<count($user_split2)-3; $a+=4) {
               $x = round($user_split2[$a], 2);

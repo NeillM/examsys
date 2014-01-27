@@ -30,6 +30,7 @@ require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 
@@ -58,7 +59,7 @@ if (!isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
     function checkForm() {
-      var checkOption = $('input:radio[name=property_id]:checked').val();
+      var checkOption = $('input:radio[name=paperID]:checked').val();
 
       if (typeof checkOption == 'undefined') {
         alert("Please select which paper you would like to add the question to.");
@@ -67,23 +68,10 @@ if (!isset($_POST['submit'])) {
     }
 
     function resizeList() {
-      var winW = 630, winH = 460;
-      if (document.body && document.body.offsetWidth) {
-        winW = document.body.offsetWidth;
-        winH = document.body.offsetHeight;
-      }
-      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-        winW = document.documentElement.offsetWidth;
-        winH = document.documentElement.offsetHeight;
-      }
-      if (window.innerWidth && window.innerHeight) {
-        winW = window.innerWidth;
-        winH = window.innerHeight;
-      }
-      winH -= 170;
-      document.getElementById('paperlist').style.height = winH + 'px';
-    }
+      winH = $(window).height() - 150;
 
+      $('#paperlist').css('height', winH + 'px');
+    }
   </script>
 </head>
 
@@ -97,8 +85,7 @@ if (!isset($_POST['submit'])) {
   </table>
 
 
-  <p style="margin:4px; text-align:justify; font-size:70%"><img src="../artwork/small_warning_16.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /><?php echo $string['msg1']; ?></p>
-  <p style="margin:4px; text-align:justify; font-size:70%"><img src="../artwork/small_padlock.png" width="16" height="16" alt="<?php echo $string['warning']; ?>" border="0" /><?php echo $string['msg2']; ?></p>
+  <p style="margin-left:20px; margin-right:4px; text-align:justify; font-size:80%; text-indent:-16px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="<?php echo $string['warning']; ?>" />&nbsp;<?php echo $string['msg1']; ?></p>
 
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="paperlist">
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
@@ -110,11 +97,11 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
   $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
     if (($paper_type == '2' or $paper_type == '4') and $end_date != '' and date("Y-m-d H:i:s") > $end_date) {
-      // echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\"><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+      //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\"><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } elseif ($start_date < date("Y-m-d H:i:s") and $end_date > date("Y-m-d H:i:s")) {
-      echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_warning_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+      echo "<tr><td style=\"width:16px\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } else {
-      echo "<tr><td style=\"width:20px\">&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"$property_id\" id=\"$property_id\"><label for=\"$property_id\">$paper_title</label></td></tr>\n";
+      echo "<tr><td style=\"width:16px\">&nbsp;</td><td><input type=\"radio\" name=\"paperID\" value=\"$property_id\" id=\"$property_id\"><label for=\"$property_id\">$paper_title</label></td></tr>\n";
     }
   }
   $result->close();
@@ -138,31 +125,27 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
 </head>
 <body>
 <?php
-  $property_id = $_POST['property_id'];
+  $property_id = $_POST['paperID'];
+	$properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
+
   $q_id = $_GET['q_id'];
   $logger = new Logger($mysqli);
 
   //- Handle paper data first ------------------------------------------------------------------------------------------------------------------------------------
 
   // Get the maximum display position for an existing paper.
-  $result = $mysqli->prepare("SELECT MAX(display_pos), MAX(screen) FROM papers WHERE paper=?");
-  $result->bind_param('i', $property_id);
-  $result->execute();
-  $result->bind_result($display_pos, $screen);
-  $result->fetch();
-  $result->close();
-  if ($screen == '') $screen = 1;
-  $display_pos++;                     // Add one to put new question right at the end.
+	$display_pos	= ($properties->get_max_display_pos() + 1);
+	$screen 			= $properties->get_max_screen();
 
   //- Copy the question(s) ------------------------------------------------------------------------------------------------------------------------------------------
   $q_IDs = explode(',', $_GET['q_id']);
 
   for ($i=1; $i<count($q_IDs); $i++) {
-    $result = $mysqli->prepare("SELECT * FROM questions WHERE q_id=?");
+    $result = $mysqli->prepare("SELECT * FROM questions WHERE q_id = ?");
     $result->bind_param('i', $q_IDs[$i]);
     $result->execute();
     $result->store_result();
-    $result->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings);
+    $result->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid);
 
     $save_ok = true;
 
@@ -215,10 +198,13 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
         $new_status = $status;
       }
 
+			$server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+      $guid = $server_ipaddress . uniqid('', true);
+
       $mysqli->autocommit(false);
 
-      $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?)");
-      $addQuestion->bind_param('ssssssssisssssssisss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings);
+      $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
+      $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
       $res = $addQuestion->execute();
       if ($res === false) {
         $save_ok = false;
@@ -231,7 +217,7 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
       while ($save_ok and $o_result->fetch()) {
         if ($o_media != '') {
           $media_array = array();
-          $media_array = explode("|",$o_media);
+          $media_array = explode("|", $o_media);
           $new_o_media = '';
           foreach ($media_array as $individual_media) {
             if ($individual_media != '' and $individual_media != 'NULL') {
@@ -262,13 +248,13 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
       }
 
       if ($save_ok === false) {
-        //NO - rollback
+        // NO - rollback
         $mysqli->rollback();
       } else {
-        //YES - commit the updates to the tables
+        // YES - commit the updates to the tables
         $mysqli->commit();
       }
-      //turn auto commit back on so future queries function as before
+      // Turn auto commit back on so future queries function as before
       $mysqli->autocommit(true);
 
       if ($save_ok) {
@@ -299,7 +285,7 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
     }
 }
 
-  echo "<p>" . sprintf($string['success'], Paper_utils::get_title($property_id, $mysqli)) . "</p>\n";
+  echo "<p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
   echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></p>\n";
 
   $mysqli->close();

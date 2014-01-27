@@ -16,7 +16,7 @@
 
 /**
 *
-* Class total report
+* Class Totals report.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -90,12 +90,12 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">
 	$(document).ready(function() {
-		// fire off the request to mark_all_enhancedcalc.php
+		// Fire off the request to mark_all_enhancedcalc.php
     var request = $.ajax({
       url: "../ajax/reports/mark_all_enhancedcalc.php",
       type: "post",
       data: {paperID: <?php echo $paperID; ?>},
-			dataType: "text",
+			dataType: "html",
 			success: function (data, textStatus, jqXHR) {
 				data = data.replace(/(\r\n|\n|\r)/gm,"");
 			  if (data == 'Complete') {
@@ -111,7 +111,6 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
 				$("#msg").html('Failed: ' + textStatus);
 			},
     });
-
 	});
 </script>
 </head>
@@ -133,13 +132,12 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
   }
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - Marking Calculation Questions</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   echo '</table>';
+	
+	echo "<div id=\"msg\">" . $string['marking'] . "</div>\n";
 ?>
-
-<div id="msg">Marking...</div>
-
 </body>
 </html>
 <?php
