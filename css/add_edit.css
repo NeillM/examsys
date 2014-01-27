@@ -154,7 +154,7 @@ dd {
 }
 
 .warning {
-  color: #800000;
+  color: #C00000;
 }
   
 .warning-severe {
@@ -293,7 +293,7 @@ td.separated:last-child {
 }
 
 #tabbed-content.banner-spaced {
-  padding-top: 115px;
+  padding-top: 120px;
 }
 
 .tab-area {

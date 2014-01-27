@@ -45,13 +45,13 @@ class TRUE_FALSECorrector extends Corrector {
         if (isset($new_fields['option_marks_correct']) and $new_fields['option_marks_correct'] != $mark_correct) {
           $mark_correct = $new_fields['option_marks_correct'];
           $mark_changes = true;
-          $this->_question->add_unified_field_modification('marks_correct', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['markscorrect'] . '</span>', $option->get_marks_correct(),  $mark_correct, $this->_lang_strings['postexamchange']);
+          $this->_question->add_unified_field_modification('marks_correct', $this->_lang_strings['markscorrect'], $option->get_marks_correct(),  $mark_correct, $this->_lang_strings['postexamchange']);
         }
         $mark_incorrect = $option->get_marks_incorrect();
         if (isset($new_fields['option_marks_incorrect']) and $new_fields['option_marks_incorrect'] != $mark_incorrect) {
           $mark_incorrect = $new_fields['option_marks_incorrect'];
           $mark_changes = true;
-          $this->_question->add_unified_field_modification('marks_incorrect', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['marksincorrect'] . '</span>', $option->get_marks_incorrect(),  $mark_incorrect, $this->_lang_strings['postexamchange']);
+          $this->_question->add_unified_field_modification('marks_incorrect', $this->_lang_strings['marksincorrect'], $option->get_marks_incorrect(),  $mark_incorrect, $this->_lang_strings['postexamchange']);
         }
       }
       if ($mark_changes) {

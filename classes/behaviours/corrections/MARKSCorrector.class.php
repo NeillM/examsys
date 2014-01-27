@@ -45,19 +45,19 @@ class MARKSCorrector extends Corrector {
         if (isset($new_correct['option_marks_correct']) and $new_correct['option_marks_correct'] != $mark_correct) {
           $mark_correct = $new_correct['option_marks_correct'];
           $changes = true;
-          $this->_question->add_unified_field_modification('marks_correct', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['markscorrect'] . '</span>', $option->get_marks_correct(),  $mark_correct, $this->_lang_strings['postexamchange']);
+          $this->_question->add_unified_field_modification('marks_correct', $this->_lang_strings['markscorrect'], $option->get_marks_correct(),  $mark_correct, $this->_lang_strings['postexamchange']);
         }
         $mark_incorrect = $option->get_marks_incorrect();
         if (isset($new_correct['option_marks_incorrect']) and $new_correct['option_marks_incorrect'] != $mark_incorrect) {
           $mark_incorrect = $new_correct['option_marks_incorrect'];
           $changes = true;
-          $this->_question->add_unified_field_modification('marks_incorrect', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['marksincorrect'] . '</span>', $option->get_marks_incorrect(),  $mark_incorrect, $this->_lang_strings['postexamchange']);
+          $this->_question->add_unified_field_modification('marks_incorrect', $this->_lang_strings['marksincorrect'], $option->get_marks_incorrect(),  $mark_incorrect, $this->_lang_strings['postexamchange']);
         }
         $mark_partial = $option->get_marks_partial();
         if ($this->_question->allow_partial_marks() and isset($new_correct['option_marks_partial']) and $new_correct['option_marks_partial'] != $mark_partial) {
           $mark_partial = $new_correct['option_marks_partial'];
           $changes = true;
-          $this->_question->add_unified_field_modification('marks_partial', '<span style="color: red; font-weight: bold">' . $this->_lang_strings['markspartial'] . '</span>', $option->get_marks_partial(),  $mark_partial, $this->_lang_strings['postexamchange']);
+          $this->_question->add_unified_field_modification('marks_partial', $this->_lang_strings['markspartial'], $option->get_marks_partial(),  $mark_partial, $this->_lang_strings['postexamchange']);
         }
       }
       if ($changes) {
