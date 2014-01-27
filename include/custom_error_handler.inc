@@ -428,13 +428,23 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
 
     }
   }
+
   if(is_null($page)) {
+    if(!isset($_SERVER['PHP_SELF'])) {
+      $_SERVER['PHP_SELF']='NOT RUN FROM WEBSERVER';
+    }
     $page = $_SERVER['PHP_SELF'];
   }
   if(is_null($querystring)) {
+    if(!isset($_SERVER['QUERY_STRING'])) {
+      $_SERVER['QUERY_STRING'] = 'NOT RUN FROM WEBSERVER';
+    }
     $querystring = $_SERVER['QUERY_STRING'];
   }
   if(is_null($requestmethod)) {
+    if(!isset($_SERVER['REQUEST_METHOD'])) {
+      $_SERVER['REQUEST_METHOD'] = 'GET';
+    }
     $requestmethod = $_SERVER['REQUEST_METHOD'];
   }
 
