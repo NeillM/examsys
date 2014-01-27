@@ -467,10 +467,10 @@ class XML_lookup extends outline_lookup {
         foreach ($xmlsearched as $numb => $datablock) {
           $this->savetodebug("Saving Entry #$numb");
           $this->savetodebug('Datablock IS NOW: ' . var_export($datablock, true));
-          if(!is_null($attributes)) {
+          if (is_array($attributes) and count($attributes) > 0) {
             $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, $section);
           }
-          if(!is_null($rawattributes)) {
+          if (is_array($rawattributes) and count($rawattributes) > 0) {
             $lookupobj = $this->store_in_data($datablock, $rawattributes, $lookupobj, $section, true);
           }
 
