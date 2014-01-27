@@ -53,6 +53,11 @@ class XML_lookup extends outline_lookup {
 
     $this->savetodebug('The XML modulelookup function has been called');
 
+    if(!isset($this->settings['modulelookup'])) {
+      $this->savetodebug('There is no config for module lookup');
+      return $lookupobj;
+    }
+
     if (isset($this->settings['modulelookup']['mandatoryurlfields'])) {
       // mandatory fields required!
       foreach ($this->settings['modulelookup']['mandatoryurlfields'] as $index) {
@@ -219,6 +224,10 @@ class XML_lookup extends outline_lookup {
 
     $this->savetodebug('The XML userlookup function has been called');
 
+    if(!isset($this->settings['userlookup'])) {
+      $this->savetodebug('There is no config for module lookup');
+      return $lookupobj;
+    }
 
     if (isset($this->settings['userlookup']['disabled']) and $this->settings['userlookup']['disabled'] === true) {
       $this->savetodebug("disabled userlookup in this context");
