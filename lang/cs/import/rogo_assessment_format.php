@@ -17,4 +17,6 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 
 $string['importraf'] = 'Import Rog&#333; Assessment Format';
+$string['file'] = 'File';
+$string['importfile'] = 'Import File';
 ?>

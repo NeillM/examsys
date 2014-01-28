@@ -336,7 +336,7 @@ Class QuestionStatus {
    * @param  array $lang_strings    Language Strings
    * @return array[QuestionStatus]  Existing statuses
    */
-  public static function get_all_statuses($db, $lang_strings, $with_index = false) {
+  private static function get_all_statuses_by_type($db, $lang_strings, $type) {
     $statuses = array();
 
     $sql = "SELECT id, name, exclude_marking, retired, is_default, change_locked, validate, display_warning, colour FROM question_statuses ORDER BY display_order";
@@ -348,15 +348,27 @@ Class QuestionStatus {
     while ($result->fetch()) {
       $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'retired' => $retired, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate, 'display_warning' => $display_warning, 'colour' => $colour);
       $qs = new QuestionStatus($db, $lang_strings, $data);
-      if (!$with_index) {
+      if ($type == '') {
         $statuses[] = $qs;
       } else {
-        $statuses[$id] = $qs;
+        $statuses[$qs->$type] = $qs;
       }
     }
     $result->close();
 
     return $statuses;
+  }
+	
+	public static function get_all_statuses($db, $lang_strings, $with_index = false) {
+    if($with_index  == true) {
+			return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'id');
+		} else {
+ 			return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, '');
+		}
+  }
+	
+	public static function get_all_statuses_by_name($db, $lang_strings) {
+ 			return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'name');
   }
 
   /**
@@ -380,6 +392,13 @@ CSS;
 
     return $css;
   }
+	
+	/*
+	public statis function name_to_id($name) {
+	
+	  return $id;
+	}
+	*/
 
   /**
    * Get the IDs of all statuses that are flagged as 'retired'
