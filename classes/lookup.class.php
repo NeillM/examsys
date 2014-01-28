@@ -101,15 +101,11 @@ class Lookup extends RogoStaticSingleton {
         $this->lookupPluginObj[$number] = new $lookuptype1($number, $name, $this->impliments_api_lookup_version);
       } else {
         $this->lookupPluginObj[$number] = & $settings['mockclass'];
-        //     $this->authPluginObj->mock($number, $name, $this->impliments_api_auth_version);
       }
-//      $this->append_auth_object_debug($number);
       $error = $this->lookupPluginObj[$number]->apicheck();
 
-      //   $this->append_auth_object_debug($number);
       if ($error !== false) {
         $this->debug[] = '********* Disabled module #' . $number . ':' . $name . ' as it implements an old a version of the api.  The returned error #: ' . $error . ' *********';
-        //       unset($this->authPluginObj[$number]);
       } else {
         $this->lookupPluginObj[$number]->init($object);
 
@@ -139,10 +135,7 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
-
   }
-
-
 
   function error_handling($context = null) {
     $context1 = array();
@@ -265,8 +258,6 @@ class Lookup extends RogoStaticSingleton {
     }
 
     return $modulelookupobj;
-
-
   }
 
   function userlookup($data) {
@@ -294,7 +285,6 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
-
     $userlookupobj = new stdClass();
     $userlookupobj->lookupdata = $preuserlookupobj->lookupdata;
     $userlookupobj->searchorder = $preuserlookupobj->searchorder;
@@ -312,7 +302,6 @@ class Lookup extends RogoStaticSingleton {
             $this->append_lookup_object_debug($objid);
           }
         }
-
       }
     }
 
@@ -449,7 +438,6 @@ class Lookup extends RogoStaticSingleton {
 
     }
 
-
     if ($formatted == false) {
       return $data;
     }
@@ -474,12 +462,9 @@ class Lookup extends RogoStaticSingleton {
 
     } else {
       //advanced view
-
-
     }
 
     return $return_data;
   }
-
 
 }
