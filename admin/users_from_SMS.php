@@ -70,5 +70,48 @@ while ($module_data->fetch()) {
 }
 $module_data->close();
 
+$errorinfo=$sms_connection->geterrors();
+
+/*
+ *     $this->errorinfo['usernamematch']=array();
+    $this->errorinfo['unabletodetermineusername']=array();
+    $this->errorinfo['unabletodetermineusernamedata']=array();
+    $this->errorinfo['moduleerrorstate']=array();
+    $this->errorinfo['moduleerrorstatedata']=array();
+    $this->errorinfo['modulenodata']=array();
+    $this->errorinfo['modulenodatadata']=array();
+ */
+
+
+if (count($errorinfo['usernamematch']) > 0) {
+  log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['usernamematch']), 'users_from_SMS.php', 0, '', null, $errorinfo['usernamematchdata'], null);
+}
+
+if (count($errorinfo['unabletodetermineusername']) > 0) {
+  log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['unabletodetermineusername']), 'users_from_SMS.php', 0, '', null, $errorinfo['unabletodetermineusernamedata'], null);
+}
+
+$errorstr = '';
+if (count($errorinfo['moduleerrorstate']) > 0) {
+  foreach ($errorinfo['moduleerrorstate'] as $key => $value) {
+    $cnt= count($value);
+    $errorstr .= 'Error state: ' . $key . " <br />\r\n$cnt module(s):: ";
+    foreach ($value as $value2) {
+      $errorstr .= $value2 . ", ";
+    }
+    $errorstr .= "<br />\r\n";
+  }
+  log_error(0, 'CRON JOB', 'Application Warning', $errorstr, 'users_from_SMS.php', 0, '', null, $errorinfo['moduleerrorstatedata'], null);
+}
+
+$errorstr = '';
+if (count($errorinfo['modulenodata']) > 0) {
+  $errorstr .=  "The following " .count($errorinfo['modulenodata']) . " modules returned no data: <br />\r\n";
+  foreach ($errorinfo['modulenodata'] as $key => $value) {
+    $errorstr .= "$value, ";
+  }
+  log_error(0, 'CRON JOB', 'Application Warning', $errorstr, 'users_from_SMS.php', 0, '', null, $errorinfo['modulenodatadata'], null);
+}
+
 $mysqli->close();
 ?>

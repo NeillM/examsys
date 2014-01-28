@@ -37,6 +37,8 @@ Class UON_SATURN2 extends SmsUtils {
   public $campus;
   public $url;
 
+
+
   //used to get user data but no longer used as abstracted out
   function getUserData($username) {
 //unused function now
@@ -265,8 +267,10 @@ Class UON_SATURN2 extends SmsUtils {
     if((isset($lookupdata->error) and $lookupdata->error != '')) {
       //log the issue
       $variables = array( 'lookup' => &$lookupdata );
+      $this->errorinfo['moduleerrorstate'][$lookupdata->error][] = $module;
+      $this->errorinfo['moduleerrorstatedata'][$lookupdata->error][] = $variables;
       $errstr = 'The module lookup for modulecode: ' . $module . ' returned an error state of ' . $lookupdata->error;
-      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
       if (PHP_SAPI != 'cli') {
         echo $errstr . "\r\n";
       }
@@ -280,7 +284,9 @@ Class UON_SATURN2 extends SmsUtils {
     if ($lookupdata === false or (isset($lookupdata->error) and $lookupdata->error != '')) {
       $variables = array( 'lookup' => &$lookupdata );
       $errstr = 'No Data returned from lookup for module: ' . $module;
-      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      $this->errorinfo['modulenodata'][]=$module;
+      $this->errorinfo['modulenodatadata'][]=$variables;
+      //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
       if (PHP_SAPI != 'cli') {
         echo $errstr . "\r\n";
       }
@@ -303,10 +309,12 @@ Class UON_SATURN2 extends SmsUtils {
           // Try to extract from email address
           $un_parts = explode('@', $sms->Email);
 
-          if($un_parts[0] != $lookup_username) {
+          if ($un_parts[0] != $lookup_username) {
             $variables = array( 'lookup' => &$lookupdata );
-            $errstr = "username for SID: ". $sms->StudentID . " differ email split: " . $un_parts[0] . " lookup: " . $lookup_username;
-            log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+            $errstr = "username for SID: " . $sms->StudentID . " differ email split: " . $un_parts[0] . " lookup: " . $lookup_username;
+            $this->errorinfo['usernamematch'][] = $errstr;
+            $this->errorinfo['usernamematchdata'][] = $variables;
+            //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
             if (PHP_SAPI != 'cli') {
               echo $errstr . "\r\n";
             }
@@ -428,9 +436,13 @@ Class UON_SATURN2 extends SmsUtils {
           }
         } else {
           $variables = array( 'lookup' => &$sms, 'currentusers' => &$current_users );
-          $errstr = 'Couldnt create user in cron job, unable to establish username';
-          log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
-          echo 'ERROR: unable to establish username for ' . $sms->title . ' ' . $sms->surname . ', ' . $sms->forename . ' (' . $sms->studentID . ')<br />';
+          $errstr = 'In cron job ERROR: unable to establish username for ' . $sms->title . ' ' . $sms->surname . ', ' . $sms->forename . ' (' . $sms->studentID . ')<br />';
+          $this->errorinfo['unabletodetermineusername'][] = $errstr;
+          $this->errorinfo['unabletodetermineusernamedata'][] = $variables;
+          //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+          if (PHP_SAPI != 'cli') {
+            echo $errstr . "\r\n";
+          }
         }
       }
 
@@ -465,6 +477,7 @@ Class UON_SATURN2 extends SmsUtils {
       $result->execute();
       $result->close();
     }
+
   }
 }
 

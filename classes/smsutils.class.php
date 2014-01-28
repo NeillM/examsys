@@ -28,6 +28,9 @@ require_once ($configObject->get('cfg_web_root') . '/include/load_config.php');
 
 Abstract Class SmsUtils {
 
+
+  public $errorinfo;
+
   static function GetSmsUtils() {
     $configObject = Config::get_instance();
     
@@ -40,6 +43,21 @@ Abstract Class SmsUtils {
     }
 
     return false;
+  }
+
+  public function __construct() {
+    $this->errorinfo['usernamematch']=array();
+    $this->errorinfo['usernamematchdata']=array();
+    $this->errorinfo['unabletodetermineusername']=array();
+    $this->errorinfo['unabletodetermineusernamedata']=array();
+    $this->errorinfo['moduleerrorstate']=array();
+    $this->errorinfo['moduleerrorstatedata']=array();
+    $this->errorinfo['modulenodata']=array();
+    $this->errorinfo['modulenodatadata']=array();
+  }
+
+  public function geterrors() {
+    return $this->errorinfo;
   }
   
   abstract protected function getUserData($username);
