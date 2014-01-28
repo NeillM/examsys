@@ -69,7 +69,7 @@ Class GENERIC_SMS extends SmsUtils {
     }
   }
 
-// get info about module
+// get info about module eg school and title
   // @param string $moduleID the modulecode eg A14ACE
   // @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
   function get_module_info($moduleID) { //previous logic included in the retreival of data
@@ -92,6 +92,7 @@ Class GENERIC_SMS extends SmsUtils {
     }
   }
 
+//gets a list of enroled users for the module listed
   function getModuleEnrolements($moduleID) {
     $lookupdata = $this->get_module($moduleID);
     foreach ($lookupdata->students as $sms) {
@@ -150,6 +151,9 @@ Class GENERIC_SMS extends SmsUtils {
   //updates modules enrolements
 
   // $module & $idMod shouldnt both be needed in some respects as its a 1 to 1 relationship and $sms_api is also a parameter of the primary key in that table.
+// sms_api is the sms api used for the module
+// mysqli is the mysqli object
+// session in the year
   function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
 
     // run module enrolement for select code
