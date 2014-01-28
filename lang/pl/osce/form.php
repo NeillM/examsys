@@ -26,4 +26,6 @@ $string['marking3'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznaczn
 $string['marking4'] = array('Niezdany', 'Na granicy niezdania', 'Na granicy zdania', 'Zdany', 'Zdecydowanie zdany');
 $string['marking5'] = array('Niesatysfakcjonujący', 'Kompetentny');
 $string['marking6'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznacznie zdany', 'Wyróżniająco zdany');
+$string['savefailed'] = 'Save Failed!';
+$string['tryagain'] = 'Please try again.';
 ?>

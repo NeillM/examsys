@@ -34,7 +34,7 @@ Abstract Class SmsUtils {
     $cfg_sms_api = $configObject->get('cfg_sms_api');
     
     if (isset($cfg_sms_api) and $cfg_sms_api != '') {
-      require_once ($configObject->get('cfg_web_root') . "/plugins/StuManSys/" . $cfg_sms_api . ".class.php");
+      require_once ($configObject->get('cfg_web_root') . "/plugins/SMS/" . $cfg_sms_api . ".class.php");
 
       return new $cfg_sms_api();
     }

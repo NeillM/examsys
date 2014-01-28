@@ -54,58 +54,19 @@ $end_date     = $propertyObj->get_end_date();
 $number_of_qs = $propertyObj->get_question_no();
 
 
-if (isset($_POST['submit'])) {
-  if ($_POST['userID'] != '') {
-    $result = $mysqli->prepare("SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
-    $result->bind_param('ii', $paperID, $userID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($insertID);
-    $result->fetch();
-    $have_record = $result->num_rows > 0;
-    $result->close();
-
-    if ($have_record) {
-      // Delete any Log4 previous submissions for this student.
-      $result = $mysqli->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
-      $result->bind_param('i', $insertID);
-      $result->execute();
-    } else {
-      // Write summary information into Log4_overall.
-      $started = DATE('YmdHis');
-      $result = $mysqli->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, ?, 'electronic', ?)");
-      $result->bind_param('isisssii', $userID, $started, $paperID, $_POST['overall_val'], $_POST['fback'], $_POST['grade'], $userObject->get_user_ID(), $_POST['year']);
-      $result->execute();
-      $result->close();
-
-      $insertID = $mysqli->insert_id;
-    }
-
-    // Write individual ratings into Log4.
-    $numeric_score = 0;
-    for ($question = 1; $question <= $number_of_qs; $question++) {
-      $tmp_val = ($_POST['q' . $question . '_val'] - 1);
-      if (isset( $_POST[$_POST['q' . $question . '_id'] . '_parts'] )) {
-        $q_parts = $_POST[$_POST['q' . $question . '_id'] . '_parts'];
-      } else {
-        $q_parts = '';
-      }
-      $result = $mysqli->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)");
-      $result->bind_param('issi', $_POST['q' . $question . '_id'], $tmp_val, $q_parts, $insertID);
-      $result->execute();
-      $result->close();
-      $numeric_score += ($_POST['q' . $question . '_val'] - 1);
-    }
-
-    // Update Log4_overall with the overall score.
-    $result = $mysqli->prepare("UPDATE log4_overall SET numeric_score = ?, overall_rating = ?, feedback = ? WHERE id = ?");
-    $result->bind_param('issi', $numeric_score, $_POST['overall_val'], $_POST['fback'], $insertID);
-    $result->execute();
-    $result->close();
+if (isset($_POST) and count($_POST) > 0) {
+  
+  if(!isset($_GET['dont_record'])) {
+    save_osce_form($paperID, $number_of_qs, $userID, $_POST, $mysqli);
+  }
+  if(isset($_GET['dont_redirect']) and $_GET['dont_redirect'] == true) {
+    //output the randomID so the js can check for success
+    echo $_GET['rnd'];
+  } else {
+    // Redirect back to the class list to get the next student.
+    header("location: " . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
   }
 
-  // Redirect back to the class list to get the next student.
-  header("location: " . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $_GET['id']);
   exit();
 } else {
   // Get the module ID and calendar year of the OSCE station.
@@ -220,9 +181,9 @@ if (isset($_POST['submit'])) {
        echo "if (rated == $('#q_no').val() && $('#overall_val').val() != '0') {\n";
      }
    ?>
-        document.osceform.submit.disabled = false;
+        document.osceform.submitButton.disabled = false;
       } else {
-        document.osceform.submit.disabled = true;
+        document.osceform.submitButton.disabled = true;
       }
     }
 
@@ -265,10 +226,11 @@ if (isset($_POST['submit'])) {
 
     $(document).ready(checkTotals);
   </script>
+  <?php require './ajaxsave.js.php'; ?>
   </head>
 
   <body>
-  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" name="osceform">
+  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" id="osceform" name="osceform">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
   if (file_exists($cfg_web_root . 'users/photos/' . $username . '.jpg')) {
@@ -357,14 +319,17 @@ if (isset($_POST['submit'])) {
   </blockquote>
   <br />
   <?php
+
+  echo '<div id="saveError"><img src="/artwork/no_save.png" width="60" height="60" alt="Warning" /> <div><span style="color:#C42828; font-weight:bold">' .  $string['savefailed'] . '</span><br />' . $string['tryagain'] . '</div></div>';
+
     // For external examiners just close the window without saving.
     if ($userObject->has_role('External Examiner')) {
   ?>
-    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submitButton" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
     } else {
   ?>
-    <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input id="save" type="submit" name="submitButton" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
   }
   ?>
