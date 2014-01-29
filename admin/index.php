@@ -138,7 +138,7 @@
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
-	$menudata['statistics']		= array('../statistics/index.php', 'summative_stats.png');
+	$menudata['statistics']		= array('../statistics/index.php', 'pie_chart_48.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
 		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}

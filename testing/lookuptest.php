@@ -42,7 +42,7 @@ if (isset($_REQUEST['var_display_max_children'])) {
 ini_set('xdebug.var_display_max_depth', $max_chldrn);
 print 'xdebug.var_display_max_depth: ' . $max_chldrn . '<br />';
 
-$root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
+$root = str_replace('/testing', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . '/../include/auth.inc';
 include_once $root . '/../include/load_config.php';
 $cfg_web_root = $configObject->get('cfg_web_root');
