@@ -69,7 +69,7 @@ Class GENERIC_SMS extends SmsUtils {
     }
   }
 
-// get info about module
+// get info about module eg school and title
   // @param string $moduleID the modulecode eg A14ACE
   // @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
   function get_module_info($moduleID) { //previous logic included in the retreival of data
@@ -92,6 +92,7 @@ Class GENERIC_SMS extends SmsUtils {
     }
   }
 
+//gets a list of enroled users for the module listed
   function getModuleEnrolements($moduleID) {
     $lookupdata = $this->get_module($moduleID);
     foreach ($lookupdata->students as $sms) {
@@ -150,6 +151,9 @@ Class GENERIC_SMS extends SmsUtils {
   //updates modules enrolements
 
   // $module & $idMod shouldnt both be needed in some respects as its a 1 to 1 relationship and $sms_api is also a parameter of the primary key in that table.
+// sms_api is the sms api used for the module
+// mysqli is the mysqli object
+// session in the year
   function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
 
     // run module enrolement for select code
@@ -207,8 +211,10 @@ Class GENERIC_SMS extends SmsUtils {
     if((isset($lookupdata->error) and $lookupdata->error != '')) {
       //log the issue
       $variables = array( 'lookup' => &$lookupdata );
+      $this->errorinfo['moduleerrorstate'][$lookupdata->error][] = $module;
+      $this->errorinfo['moduleerrorstatedata'][$lookupdata->error][] = $variables;
       $errstr = 'The module lookup for modulecode: ' . $module . ' returned an error state of ' . $lookupdata->error;
-      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
       if (PHP_SAPI != 'cli') {
         echo $errstr . "\r\n";
       }
@@ -222,7 +228,9 @@ Class GENERIC_SMS extends SmsUtils {
     if ($lookupdata === false or (isset($lookupdata->error) and $lookupdata->error != '')) {
       $variables = array( 'lookup' => &$lookupdata );
       $errstr = 'No Data returned from lookup for module: ' . $module;
-      log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+      $this->errorinfo['modulenodata'][]=$module;
+      $this->errorinfo['modulenodatadata'][]=$variables;
+      //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
       if (PHP_SAPI != 'cli') {
         echo $errstr . "\r\n";
       }
@@ -345,9 +353,12 @@ Class GENERIC_SMS extends SmsUtils {
           }
         } else {
           $variables = array( 'lookup' => &$sms, 'currentusers' => &$current_users );
-          $errstr = 'Couldnt create user in cron job, unable to establish username';
-          log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
-          echo 'ERROR: unable to establish username for ' . $sms->title . ' ' . $sms->surname . ', ' . $sms->forename . ' (' . $sms->studentID . ')<br />';
+          $errstr = 'In cron job ERROR: unable to establish username for ' . $sms->title . ' ' . $sms->surname . ', ' . $sms->forename . ' (' . $sms->studentID . ')<br />';
+          $this->errorinfo['unabletodetermineusername'][] = $errstr;
+          $this->errorinfo['unabletodetermineusernamedata'][] = $variables;
+          //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
+          if (PHP_SAPI != 'cli') {
+            echo $errstr . "\r\n";
         }
       }
 
