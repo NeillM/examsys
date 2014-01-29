@@ -284,7 +284,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 		echo "<script language='JavaScript' type='text/javascript'>\n";
-		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
+		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
@@ -318,7 +318,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 							echo "<canvas id='canvas" . $q_no . "' width='" . $tmp_width . "' height='" . $tmp_height . "'></canvas>\n";
 							echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 							echo "<script language='JavaScript' type='text/javascript'>\n";
-							echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
+							echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
 							echo "</script>\n";
 							//<!-- ==================================================== -->
 						} else {

@@ -593,7 +593,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . ($tmp_height-29) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
 					echo "</script>\n";
@@ -670,7 +670,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
 					echo "</script>\n";

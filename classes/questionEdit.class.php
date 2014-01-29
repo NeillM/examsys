@@ -320,8 +320,8 @@ Class QuestionEdit extends RogoObject {
       if ($this->bloom == '') {
         $this->bloom = null;
       }
-
-      // If $id is -1 we're inserting a new record
+			
+			// If $id is -1 we're inserting a new record
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
