@@ -37,8 +37,14 @@ foreach ($q_ids as $q_id) {
 	while ($stmt->fetch()) {
 	  if ($user_answer != 'u') {
 			$fixed = fix_coords($user_answer);
+			
+			$unfixed = unfix_coords($fixed);
 		  //var_dump($user_answer, $fixed);
 			$updates[$log_id] = $fixed;
+			
+			if ($user_answer !== $unfixed) {
+			  var_dump('Error', $user_answer, $unfixed);
+			}
 		}
 	}
 	$stmt->close();
@@ -57,6 +63,23 @@ function fix_coords($answer) {
 			$new_answer .= $coords[0] . ',false,false';
 		} else {
 			$new_answer .= $coords[0] . ',' . ($coords[1] + 4) . ',' . ($coords[2] - 2);
+		}
+	}
+	
+	return $new_answer;
+}
+
+function unfix_coords($answer) {
+	$new_answer = '';
+	
+	$parts = explode('|', $answer);
+	foreach($parts as $part) {
+	  $coords = explode(',', $part);
+		if ($new_answer != '') $new_answer .= '|';
+		if ($coords[1] == 'false') {
+			$new_answer .= $coords[0] . ',false,false';
+		} else {
+			$new_answer .= $coords[0] . ',' . ($coords[1] - 4) . ',' . ($coords[2] + 2);
 		}
 	}
 	
