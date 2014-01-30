@@ -83,7 +83,7 @@ if ($configObject->get('cfg_interactive_qs') == 'html5') {
   echo "<canvas id='canvas1' width='" . ($media['width'] + 222) . "' height='" . $plugin_height . "'></canvas>\n";
   echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
   echo "<script language='JavaScript' type='text/javascript'>\n";
-  echo "setUpQuestion(1, 'flash1', '" . $language . "', '" . $media["filename"] . "', '" . trim(str_replace('"','&#034',str_replace("'",'&#039',str_replace('�','&#172',$correct)))) . "', undefined, '" . $img_str . "','#FFC0C0','labelling','edit');\n";
+  echo "setUpQuestion(1, 'flash1', '" . $language . "', '../../media/" . $media["filename"] . "', '" . trim(str_replace('"','&#034',str_replace("'",'&#039',str_replace('�','&#172',$correct)))) . "', undefined, '" . $img_str . "','#FFC0C0','labelling','edit');\n";
   echo "</script>\n";
 	//<!-- ==================================================== -->
 } else {

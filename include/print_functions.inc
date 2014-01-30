@@ -198,18 +198,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
     case 'mcq':
       echo '<blockquote>';
-//var_dump($question);
-     // if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-      { echo '<table cellpadding="2" cellspacing="0" border="0">';
-      }
-    /* elseif ($question['display_method'] == 'dropdown') {
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
-          echo '<div class="option"><select class="unans" name="q' . $question_no . '" size="1">';
-        } else {
-          echo '<div class="option"><select name="q' . $question_no . '" size="1">';
-        }
-        echo '<option value=""></option>';
-      }*/
+      echo '<table cellpadding="2" cellspacing="0" border="0">';
       break;
     case 'mrq':
       $mrq_correct = 0;
@@ -376,21 +365,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'mcq':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
-        if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          echo '<tr><td><img src="../artwork/print_box_circle.png" width="24" height="24" alt="" /></td><td>';
-          if ($display_option['option_text'] != '') echo $display_option['option_text'];
-          if ($display_option['o_media'] != '') {
-            if ($display_option['option_text'] != '') echo '<br />';
-            echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-          }
-          echo "</td></tr>\n";
-        } else {
-          echo '<img src="../artwork/print_box_circle.png" width="24" height="24" alt="" />';
-          if ($display_option['option_text'] != '') echo '&nbsp;' . $display_option['option_text'];
-          if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-          //echo '&nbsp;&nbsp;';
-         // echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-        }
+				echo '<tr><td><img src="../artwork/print_box_circle.png" width="24" height="24" alt="" /></td><td>';
+				if ($display_option['option_text'] != '') echo $display_option['option_text'];
+				if ($display_option['o_media'] != '') {
+					if ($display_option['option_text'] != '') echo '<br />';
+					echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
+				}
+				echo "</td></tr>\n";
         if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
         break;
       case 'mrq':
@@ -593,7 +574,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . ($tmp_height-29) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
 					echo "</script>\n";
@@ -670,7 +651,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
 					echo "</script>\n";
@@ -751,10 +732,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
         }
       }
-      echo '</table>';
-    } elseif ($question['display_method'] == 'dropdown') {
-      echo '</table>';
     }
+    echo '</table>';
   } elseif ($question['q_type'] == 'enhancedcalc') {
     if(!isset($question['object'])) {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');

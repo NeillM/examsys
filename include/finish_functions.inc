@@ -556,13 +556,13 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         if ($tmp_display_correct_answer == '0') {
           $paper[$question]['correct'][0] = '';
         }
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part include finf ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 2) . "' height='" . ($paper[$question]['q_media_height'] + 24) . "'></canvas>\n";
 					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 					$extra = $tmp_display_students_response.$tmp_display_correct_answer.$tmp_display_question_mark.$tmp_display_feedback.$hide_if_unanswered;			
-					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
+					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -2022,12 +2022,12 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 ?>
   <div>
 				<?php
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 				  //"<!-- ======================== HTML5 part include finf ================= -->
 				  echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 301) . "' height='" . ($paper[$question]['q_media_height'] + 30) . "'></canvas>\n";
 				  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 				  echo "<script language='JavaScript' type='text/javascript'>\n";
-				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . ($paper[$question]['q_media']) . "', '" . $tmp_correct . "', '";
+				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $paper[$question]['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
 					echo "', '" . $extra . "','#FFC0C0','hotspot','script');\n";
 				  echo "</script>\n";
@@ -2216,12 +2216,12 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
 				$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
 	
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part include finf ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
 					echo "','";
 					if (isset($extra)) echo $extra;

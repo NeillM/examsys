@@ -18,4 +18,10 @@ $string['username'] = 'Nazwa użytkownika';
 $string['surname'] = 'Nazwisko';
 $string['lookup'] = 'Odnośnik';
 $string['nousersalert'] = 'Nie znaleziono użytkowników przez LDAP.';
+$string['title'] = 'Title';
+$string['first_names'] = 'First Names';
+$string['surname'] = 'Surname';
+$string['username'] = 'Username';
+$string['email'] = 'Email';
+$string['role'] = 'Role';
 ?>

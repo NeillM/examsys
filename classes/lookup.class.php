@@ -72,7 +72,7 @@ class Lookup extends RogoStaticSingleton {
     return static::$inst;
   }
 
-
+// constructor
   function __construct(&$configObj, & $db) {
     $this->db = & $db;
     $this->configObj = & $configObj;
@@ -101,15 +101,11 @@ class Lookup extends RogoStaticSingleton {
         $this->lookupPluginObj[$number] = new $lookuptype1($number, $name, $this->impliments_api_lookup_version);
       } else {
         $this->lookupPluginObj[$number] = & $settings['mockclass'];
-        //     $this->authPluginObj->mock($number, $name, $this->impliments_api_auth_version);
       }
-//      $this->append_auth_object_debug($number);
       $error = $this->lookupPluginObj[$number]->apicheck();
 
-      //   $this->append_auth_object_debug($number);
       if ($error !== false) {
         $this->debug[] = '********* Disabled module #' . $number . ':' . $name . ' as it implements an old a version of the api.  The returned error #: ' . $error . ' *********';
-        //       unset($this->authPluginObj[$number]);
       } else {
         $this->lookupPluginObj[$number]->init($object);
 
@@ -139,11 +135,11 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
-
   }
 
-
-
+  /**
+   * error handling function
+   */
   function error_handling($context = null) {
     $context1 = array();
     $context1 = error_handling($this);
@@ -153,7 +149,9 @@ class Lookup extends RogoStaticSingleton {
     return $context1;
   }
 
-
+  /**
+   * CLoads the config
+   */
   function load_config() {
     $notice = UserNotices::get_instance();
 
@@ -167,6 +165,10 @@ class Lookup extends RogoStaticSingleton {
     $this->debug[] = 'Loaded Config for lookup';
   }
 
+  /**looks up module info Checks if a faculty ID already exists.
+   * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
+   * @return object             - the data object
+   */
   function modulelookup($data) {
     if (!isset($data->searchorder)) {
       if (isset($this->settings->searchorder)) {
@@ -265,10 +267,12 @@ class Lookup extends RogoStaticSingleton {
     }
 
     return $modulelookupobj;
-
-
   }
 
+  /**looks up user info Checks if a faculty ID already exists.
+   * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
+   * @return object             - the data object
+   */
   function userlookup($data) {
     if (!isset($data->searchorder)) {
       if (isset($this->settings->searchorder)) {
@@ -294,7 +298,6 @@ class Lookup extends RogoStaticSingleton {
       }
     }
 
-
     $userlookupobj = new stdClass();
     $userlookupobj->lookupdata = $preuserlookupobj->lookupdata;
     $userlookupobj->searchorder = $preuserlookupobj->searchorder;
@@ -312,7 +315,6 @@ class Lookup extends RogoStaticSingleton {
             $this->append_lookup_object_debug($objid);
           }
         }
-
       }
     }
 
@@ -377,6 +379,14 @@ class Lookup extends RogoStaticSingleton {
     }
   }
 
+  /**registers callbacks from plugins.
+   * @param object  $callback the callback object/array
+   * @param string $section  the section it is associated with
+   * @param int $number the id number for the plugin
+   * @param string $name the  name of the plugin
+   * @param bool $insert optional if set insert at beginning of list
+   *    * @return bool             - false if failed
+   */
   function register_callback($callback, $section, $number, $name, $insert = false) {
     if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
       //attempting to register callback to invalid section
@@ -449,7 +459,6 @@ class Lookup extends RogoStaticSingleton {
 
     }
 
-
     if ($formatted == false) {
       return $data;
     }
@@ -474,12 +483,9 @@ class Lookup extends RogoStaticSingleton {
 
     } else {
       //advanced view
-
-
     }
 
     return $return_data;
   }
-
 
 }

@@ -87,6 +87,7 @@
 
 	$menudata = array();
 	$menudata['papersbyschool']			= array('papers_by_school.php?year=' . $summative_year, 'pie_chart_48.png');
+	$menudata['questionsbyschool']	= array('questions_by_school.php', 'pie_chart_48.png');
 	$menudata['summativefeedback']	= array('summative_feedback.php?year=' . $summative_year, 'pie_chart_48.png');
 	$menudata['summativeexamstats']	= array('summative_stats.php?year=' . $summative_year, 'pie_chart_48.png');
 

@@ -53,6 +53,11 @@ class XML_lookup extends outline_lookup {
 
     $this->savetodebug('The XML modulelookup function has been called');
 
+    if(!isset($this->settings['modulelookup'])) {
+      $this->savetodebug('There is no config for module lookup');
+      return $lookupobj;
+    }
+
     if (isset($this->settings['modulelookup']['mandatoryurlfields'])) {
       // mandatory fields required!
       foreach ($this->settings['modulelookup']['mandatoryurlfields'] as $index) {
@@ -219,6 +224,10 @@ class XML_lookup extends outline_lookup {
 
     $this->savetodebug('The XML userlookup function has been called');
 
+    if(!isset($this->settings['userlookup'])) {
+      $this->savetodebug('There is no config for module lookup');
+      return $lookupobj;
+    }
 
     if (isset($this->settings['userlookup']['disabled']) and $this->settings['userlookup']['disabled'] === true) {
       $this->savetodebug("disabled userlookup in this context");
@@ -467,10 +476,10 @@ class XML_lookup extends outline_lookup {
         foreach ($xmlsearched as $numb => $datablock) {
           $this->savetodebug("Saving Entry #$numb");
           $this->savetodebug('Datablock IS NOW: ' . var_export($datablock, true));
-          if(!is_null($attributes)) {
+          if (is_array($attributes) and count($attributes) > 0) {
             $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, $section);
           }
-          if(!is_null($rawattributes)) {
+          if (is_array($rawattributes) and count($rawattributes) > 0) {
             $lookupobj = $this->store_in_data($datablock, $rawattributes, $lookupobj, $section, true);
           }
 

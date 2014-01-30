@@ -626,11 +626,13 @@ class ClassTotals {
     } else {
       $question = $this->paper_buffer[$q_id];
     }
-
-    $curr_status = $this->question_statuses[$question['status']];
-    if ($curr_status->get_exclude_marking()) {
-      $tmp_exclude = '1111111111111111111111111111111111111111';
-    }
+		
+		if (isset($question['status'])) {
+			$curr_status = $this->question_statuses[$question['status']];
+			if (!is_null($curr_status) and $curr_status->get_exclude_marking()) {
+				$tmp_exclude = '1111111111111111111111111111111111111111';
+			}
+		}
 
     if (!$skip_random and $question['score_method'] != 'Mark per Question' and isset($multi_part_qns[$question['q_type']])) {
       if ($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') {
@@ -1347,10 +1349,12 @@ class ClassTotals {
 
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
-
-      $single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
-      $tmp_mark += $single_mark;
-
+			
+      if (isset($this->paper_buffer[$q_id])) {
+				$single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
+				$tmp_mark += $single_mark;
+			}
+			
       if (($q_type == 'textbox') and !is_numeric($mark)) {
 			  $this->unmarked_textbox = true;
         $marking_complete = 0;

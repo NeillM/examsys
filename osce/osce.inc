@@ -24,6 +24,61 @@
 
 require_once '../classes/mathsutils.class.php';
 
+
+function save_osce_form($paperID, $number_of_questions, $userID, $postdata, $db) {
+    
+    $userObject = UserObject::get_instance();
+            
+    if ($postdata['userID'] != '') {
+        $result = $db->prepare("SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
+        $result->bind_param('ii', $paperID, $userID);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($insertID);
+        $result->fetch();
+        $have_record = $result->num_rows > 0;
+        $result->close();
+
+        if ($have_record) {
+          // Delete any Log4 previous submissions for this student.
+          $result = $db->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
+          $result->bind_param('i', $insertID);
+          $result->execute();
+        } else {
+          // Write summary information into Log4_overall.
+          $started = DATE('YmdHis');
+          $result = $db->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, ?, 'electronic', ?)");
+          $result->bind_param('isisssii', $userID, $started, $paperID, $postdata['overall_val'], $postdata['fback'], $postdata['grade'], $userObject->get_user_ID(), $postdata['year']);
+          $result->execute();
+          $result->close();
+
+          $insertID = $db->insert_id;
+        }
+
+        // Write individual ratings into Log4.
+        $numeric_score = 0;
+        for ($question = 1; $question <= $number_of_questions; $question++) {
+          $tmp_val = ($postdata['q' . $question . '_val'] - 1);
+          if (isset( $postdata[$postdata['q' . $question . '_id'] . '_parts'] )) {
+            $q_parts = $postdata[$postdata['q' . $question . '_id'] . '_parts'];
+          } else {
+            $q_parts = '';
+          }
+          $result = $db->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)");
+          $result->bind_param('issi', $postdata['q' . $question . '_id'], $tmp_val, $q_parts, $insertID);
+          $result->execute();
+          $result->close();
+          $numeric_score += ($postdata['q' . $question . '_val'] - 1);
+        }
+
+        // Update Log4_overall with the overall score.
+        $result = $db->prepare("UPDATE log4_overall SET numeric_score = ?, overall_rating = ?, feedback = ? WHERE id = ?");
+        $result->bind_param('issi', $numeric_score, $postdata['overall_val'], $postdata['fback'], $insertID);
+        $result->execute();
+        $result->close();
+    }
+}
+
 function parse_leadin_word_2003($text,$parts) {
   global $q_id;
   $count = 0;

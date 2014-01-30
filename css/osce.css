@@ -66,3 +66,21 @@ ul {
 .photo {
   width:90px;
 }
+#saveError {
+  display:none;
+  margin-left:25%;
+  margin-bottom:5px;
+  width:45%;
+  height:60px;
+  padding:0px;
+  border: 2px solid #C42828;
+}
+#saveError div { 
+  font-size:110%;
+  margin-top: -58px;
+  margin-left: 80px;
+  height:60px;
+  width: 80%;
+  text-align: left;
+  line-height:150%;
+}

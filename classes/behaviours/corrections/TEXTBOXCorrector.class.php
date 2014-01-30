@@ -39,7 +39,7 @@ class TEXTBOXCorrector extends Corrector {
       $mark_correct = $first->get_marks_correct();
 
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Get metadata ID
@@ -47,11 +47,11 @@ class TEXTBOXCorrector extends Corrector {
           $result->bind_param('i', $paper_id);
           $result->execute();
           $result->bind_result($md_id);
-
+					$result->fetch();
+					$result->close();
 
           // Set new value for totalpos in log{$paper_type} but don't change student marks
-          $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET totalpos=? WHERE q_id=? AND metadataID=?");
-          echo $this->_mysqli->error;
+          $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET totalpos = ? WHERE q_id = ? AND metadataID = ?");
           $updateLog->bind_param('iii', $mark_correct, $this->_question->id, $md_id);
           $updateLog->execute();
           $updateLog->close();

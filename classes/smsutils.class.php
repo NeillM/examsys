@@ -28,18 +28,36 @@ require_once ($configObject->get('cfg_web_root') . '/include/load_config.php');
 
 Abstract Class SmsUtils {
 
+
+  public $errorinfo;
+
   static function GetSmsUtils() {
     $configObject = Config::get_instance();
     
     $cfg_sms_api = $configObject->get('cfg_sms_api');
     
     if (isset($cfg_sms_api) and $cfg_sms_api != '') {
-      require_once ($configObject->get('cfg_web_root') . "/plugins/StuManSys/" . $cfg_sms_api . ".class.php");
+      require_once ($configObject->get('cfg_web_root') . "/plugins/SMS/" . $cfg_sms_api . ".class.php");
 
       return new $cfg_sms_api();
     }
 
     return false;
+  }
+
+  public function __construct() {
+    $this->errorinfo['usernamematch']=array();
+    $this->errorinfo['usernamematchdata']=array();
+    $this->errorinfo['unabletodetermineusername']=array();
+    $this->errorinfo['unabletodetermineusernamedata']=array();
+    $this->errorinfo['moduleerrorstate']=array();
+    $this->errorinfo['moduleerrorstatedata']=array();
+    $this->errorinfo['modulenodata']=array();
+    $this->errorinfo['modulenodatadata']=array();
+  }
+
+  public function geterrors() {
+    return $this->errorinfo;
   }
   
   abstract protected function getUserData($username);

@@ -48,21 +48,15 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
   $leadin = str_replace('&nbsp;',' ',$leadin);
   $old_likert_scale = str_replace('&nbsp;',' ',$old_likert_scale);
 
-  // Convert ampersands
-  $theme = strip_tags(str_replace('&','&amp;',$theme));
-  $scenario = strip_tags(str_replace('&','&amp;',$scenario));
-  $leadin = trim(strip_tags(str_replace('&','&amp;',$leadin)));
-  $old_likert_scale = trim(strip_tags(str_replace('&','&amp;',$old_likert_scale)));
-
-  $theme = strip_tags(str_replace('&amp;amp;','&amp;',$theme));
-  $scenario = strip_tags(str_replace('&amp;amp;','&amp;',$scenario));
-  $leadin = strip_tags(str_replace('&amp;amp;','&amp;',$leadin));
+  // Remove nasty non-utf8 chars
+  $theme = StringUtils::wordToUtf8(strip_tags($theme));
+  $scenario = StringUtils::wordToUtf8(strip_tags($scenario));
+  $leadin = StringUtils::wordToUtf8(strip_tags($leadin));
+	
+  $theme = str_replace('&amp;amp;','&amp;',$theme);
+  $scenario = str_replace('&amp;amp;','&amp;',$scenario);
+  $leadin = str_replace('&amp;amp;','&amp;',$leadin);
   $old_likert_scale = trim(strip_tags(str_replace('&amp;amp;','&amp;',$old_likert_scale)));
-
-  //remove nasty non-utf8 chars
-  $theme = StringUtils::wordToUtf8($theme);
-  $scenario = StringUtils::wordToUtf8($scenario);
-  $leadin = StringUtils::wordToUtf8($leadin);
 
   if ($theme != '') {
     if ($table_on == 1) echo '</w:tbl>';
@@ -87,7 +81,6 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
           if ($log[$screen][$q_id][$i]['f'] == '') $log[$screen][$q_id][$i]['f'] = 0;
           echo '<w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"/><w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="500"/><w:tab w:val="left" w:pos="550"/><w:tab w:val="decimal" w:pos="1450"/><w:tab w:val="left" w:pos="1500"/><w:tab w:val="left" w:pos="2400"/></w:tabs><w:ind w:left="2340" w:hanging="2340"/></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['t'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['t']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>' . $log[$screen][$q_id][$i]['f'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['f']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
         }
-        //echo '</w:tbl>';
         echo '<w:p/>';
         $table_on = 0;
         break;

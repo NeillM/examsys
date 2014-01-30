@@ -165,6 +165,9 @@ HTML;
         $change_new_more = substr($change['new'], $split_pos);
         $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
       }
+			if ($change['section'] == $string['markscorrect'] or $change['section'] == $string['marksincorrect'] or $change['section'] == $string['markspartial']) {
+				$change['section'] = '<span style="color:#C00000">' . $change['section'] . '</span>';
+			}
       $html .= <<< HTML
             <tr{$alt}>
               <td>{$change['date']}</td>

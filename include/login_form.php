@@ -33,7 +33,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
   <title>Rog&#333; - <?php echo $string['signin']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/warnings.css" />
 
