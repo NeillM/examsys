@@ -198,10 +198,10 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   $user_mark = 0;
 
   if (isset($preview_q_id)) {
-    $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question=questions.q_id AND paper =  ? AND questions.q_id = ? ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question = questions.q_id AND paper =  ? AND questions.q_id = ? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('ii', $paperID, $preview_q_id);
   } else {
-    $answer_data = $mysqlidb->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question=questions.q_id AND paper =  ? ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqlidb->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question = questions.q_id AND paper =  ? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('i', $paperID);
   }
   $answer_data->execute();
@@ -285,6 +285,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     $old_marks_correct = $marks_correct;
   }
   $answer_data->close();
+	
   if (isset($excluded[$old_q_id])) {
     $tmp_excluded = $excluded[$old_q_id];
   } else {
@@ -414,8 +415,8 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           $paper[$tmp_q_no]['user_answer'] = $user_answer;
           $paper[$tmp_q_no]['mark'] = $mark;
           $paper[$tmp_q_no]['option_order'] = $option_order;
-          $paper[$tmp_q_no]['metaid']=$metadataid;
-          $paper[$tmp_q_no]['uniqid']=$uniqid;
+          $paper[$tmp_q_no]['metaid'] = $metadataid;
+          $paper[$tmp_q_no]['uniqid'] = $uniqid;
           break;
         }
       }
@@ -1388,11 +1389,11 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
                   } else {                    
 										if ($rank_answers[$tmp_part_id-1] != 'u') {
 										  if ($paper[$question]['score_method'] == 'Mark per Option' or $paper[$question]['score_method'] == 'Mark per Question') {
-												echo display_response($tmp_display_students_response, 'cross') . '#';
+												echo display_response($tmp_display_students_response, 'cross');
 												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 												$all_correct = false;
 											} elseif (($rank_answers[$tmp_part_id-1] > '0') or ($paper[$question]['score_method'] == 'Mark per Option')) {
-												echo display_response($tmp_display_students_response, 'cross') . '@';
+												echo display_response($tmp_display_students_response, 'cross');
 												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
 												$all_correct = false;
 											}
@@ -2293,10 +2294,10 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         break;
     }
 
-    // Display any objectives mapped
+		// Display any objectives mapped
     echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
 
-    if (isset($overrides[$paper[$question]['q_id']])) {
+	if (isset($overrides[$paper[$question]['q_id']])) {
       $paper[$question]['mark'] = $overrides[$paper[$question]['q_id']]['adjmark'];
     }
     // Write out the marks for the question
@@ -2341,7 +2342,7 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
           foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
             $html .= "<li>" . $mappingData['content'];
             if ($mappingData['session']['source_url'] != '') {
-              $html .= "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" border=\"0\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
+              $html .= "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
             }
             $html .= "</li>\n";
           }

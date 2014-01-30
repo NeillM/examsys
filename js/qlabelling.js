@@ -477,7 +477,11 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			this.ql_ReturnInfo();
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/js/images/combined.png'; 
+		if (this.qmode == 'edit') {
+			this.menu_img.src = '../../js/images/combined.png'; 
+		} else {
+			this.menu_img.src = '../js/images/combined.png'; 
+		}
 	}	
 }
 
