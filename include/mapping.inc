@@ -268,15 +268,16 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     $map_level = $vle_api_data['level'];
 
     if ($vle_api != '') {
-      // Get objectives from the VLE via REST request
-      if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
+      // Get objectives from the Curriculum Map via REST request
+      //if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
+      if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session])) {
 				$vle = CMFactory::GetCMAPI($vle_api);
         $vle->setMappingLevel($map_level);
         $resp = $vle->getObjectives($thisModuleid, $session);
 				
         if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
-        }
+				}
       }
       if (isset($objsBySession_cache[$thisModuleid][$session][$thisModuleid])) {
         $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisModuleid];
@@ -312,9 +313,9 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 
       $stmt->close();
       if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
-        //GET objs from Touchstone
+        // Get internal objectives from Rogo.
         foreach ($objsBySession[$thisModuleid] as $identifier => $sess) {
-          $sql = "SELECT obj_id,objective,sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence";
+          $sql = "SELECT obj_id, objective, sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence";
           $stmt = $db->prepare($sql);
           $stmt->bind_param('ss',$identifier,$sess['calendar_year']);
           $stmt->execute();
@@ -348,7 +349,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
   }
   //END:: get the currently mapped objetives in Rogo
 
-  //get all the objetives
+  // Get all the objetives
   foreach ($objsBySession as $moduleid => $sessions) {
   	if (!empty($sessions)) {
 	    foreach ($sessions as $identifier => $tmp_session) {
@@ -366,7 +367,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
   	}
   }
 
-  //check for none of the above
+  // Check for none of the above
   if (isset($mapped[-1])) {
     $objsBySession['none_of_the_above']['mapped'] = 1;
   }
