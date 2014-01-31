@@ -86,10 +86,10 @@
   }
 
 	$menudata = array();
-	$menudata['papersbyschool']			= array('papers_by_school.php?year=' . $summative_year, 'formative.png');
+	$menudata['papersbyschool']			= array('papers_by_school.php?calyear=' . $summative_year, 'formative.png');
 	$menudata['questionsbyschool']	= array('questions_by_school.php', 'question_stats.png');
-	$menudata['summativeexamstats']	= array('summative_stats.php?year=' . $summative_year, 'summative_scheduling.png');
-	$menudata['summativefeedback']	= array('summative_feedback.php?year=' . $summative_year, 'feedback_release_icon.png');
+	$menudata['summativeexamstats']	= array('summative_stats.php?calyear=' . $summative_year, 'summative_scheduling.png');
+	$menudata['summativefeedback']	= array('summative_feedback.php?calyear=' . $summative_year, 'summative_feedback_stats.png');
 
 	foreach($menudata as $menukey => $menuitem) {
 		$parts = explode('.php', $menuitem[0]);
