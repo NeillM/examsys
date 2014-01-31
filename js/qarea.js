@@ -87,7 +87,11 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/js/images/combined.png'; 
+		if (this.qmode == 'edit') {
+			this.menu_img.src = '../../js/images/combined.png'; 
+		} else {
+			this.menu_img.src = '../js/images/combined.png'; 
+		}
 	}
 }
 

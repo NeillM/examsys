@@ -24,8 +24,6 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 
-//var_dump($q_ids);
-
 // Look up user answers.
 $updates = array();
 foreach ($q_ids as $q_id) {
@@ -37,7 +35,7 @@ foreach ($q_ids as $q_id) {
 	while ($stmt->fetch()) {
 	  if ($user_answer != 'u') {
 			$fixed = fix_coords($user_answer);
-		  //var_dump($user_answer, $fixed);
+			
 			$updates[$log_id] = $fixed;
 		}
 	}
@@ -45,6 +43,14 @@ foreach ($q_ids as $q_id) {
 }
 
 var_dump($updates);
+
+$stmt = $mysqli->prepare("UPDATE log2 SET user_answer = ? WHERE id = ?");
+foreach ($updates as $log_id => $user_answer) {
+	$stmt->bind_param('si', $user_answer, $log_id);
+	$stmt->execute();
+}
+$stmt->close();
+
 
 function fix_coords($answer) {
 	$new_answer = '';
@@ -62,5 +68,6 @@ function fix_coords($answer) {
 	
 	return $new_answer;
 }
+
 
 ?>

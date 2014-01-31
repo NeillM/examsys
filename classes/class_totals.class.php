@@ -245,9 +245,9 @@ class ClassTotals {
     $this->generate_stats();                                                                                  // Generate the main statistics
 
     $this->add_deciles();                                                                                     // Add in deciles per student
-
+		
     $this->sort_results();                                                                                    // Sort the whole array by the right column
-
+		
     if ($this->recache) {
       $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
 
@@ -1350,7 +1350,9 @@ class ClassTotals {
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
 			
-      if (isset($this->paper_buffer[$q_id])) {
+			// Check that the question is on the paper - questions may have been removed from formative quizzes
+			// since the student took the paper. Always include random question types.
+      if ($q_type == 'random' or isset($this->paper_buffer[$q_id])) {
 				$single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
 				$tmp_mark += $single_mark;
 			}

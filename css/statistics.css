@@ -1,10 +1,12 @@
 .stats {
-	border-collapse:collapse
+	border-collapse:collapse;
+	font-size:90%;
 }
 .stats th {
 	background-color:#EAEAEA;
 	border: 1px solid #C0C0C0;
 	font-weight:normal;
+	vertical-align:bottom;
 }
 .stats td {
 	border: 1px solid #C0C0C0;
