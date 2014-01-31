@@ -64,13 +64,14 @@ require '../include/errors.inc';
 </table>
 
 <blockquote>
+
 <table border="0" style="width:100%" class="stats">
 <tr>
 <th>School</th>
 <?php
-	$types = array('blank', 'dichotomous', 'flash', 'hotspot', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'rank', 'textbox', 'info', 'extmatch', 'random', 'sct', 'keyword_based', 'true_false', 'area', 'enhancedcalc');
+	$types = array('blank', 'dichotomous', 'hotspot', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'rank', 'textbox', 'info', 'extmatch', 'random', 'sct', 'keyword_based', 'true_false', 'area', 'enhancedcalc');
   foreach ($types as $type) {
-	  echo "<th>$type</th>";
+	  echo '<th>' . $string[$type] . '</th>';
 	}
 ?>
 </tr>
@@ -105,7 +106,7 @@ foreach ($master_array as $school => $data) {
 		// Get the papers.
 		$date_range = '';
 				
-		$result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod IN (" . implode(',', $moduleIDs) . ") GROUP BY questions.q_id");
+		$result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY questions.q_id");
 		$result->execute();
 		$result->bind_result($q_id, $q_type);
 		while ($result->fetch()) {

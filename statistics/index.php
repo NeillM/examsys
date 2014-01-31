@@ -32,14 +32,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+<title>Rog&#333;: <?php echo $string['statistics'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/admin.css" />
 
-<?php echo $configObject->get('cfg_js_root') ?>
+<?php echo $configObject->get('cfg_js_root'); ?>
 <script src="../js/staff_help.js" type="text/javascript"></script>
 <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
 <script language="JavaScript" src="../js/sidebar.js"></script>
@@ -86,10 +86,10 @@
   }
 
 	$menudata = array();
-	$menudata['papersbyschool']			= array('papers_by_school.php?year=' . $summative_year, 'pie_chart_48.png');
-	$menudata['questionsbyschool']	= array('questions_by_school.php', 'pie_chart_48.png');
-	$menudata['summativefeedback']	= array('summative_feedback.php?year=' . $summative_year, 'pie_chart_48.png');
-	$menudata['summativeexamstats']	= array('summative_stats.php?year=' . $summative_year, 'pie_chart_48.png');
+	$menudata['papersbyschool']			= array('papers_by_school.php?year=' . $summative_year, 'formative.png');
+	$menudata['questionsbyschool']	= array('questions_by_school.php', 'question_stats.png');
+	$menudata['summativeexamstats']	= array('summative_stats.php?year=' . $summative_year, 'summative_scheduling.png');
+	$menudata['summativefeedback']	= array('summative_feedback.php?year=' . $summative_year, 'feedback_release_icon.png');
 
 	foreach($menudata as $menukey => $menuitem) {
 		$parts = explode('.php', $menuitem[0]);

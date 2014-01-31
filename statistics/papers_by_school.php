@@ -133,7 +133,7 @@ foreach ($master_array as $school => $data) {
 			$date_range .= " OR (start_date > {$year}0901000000 AND start_date <= " . ($year + 1) . "0831235959 AND end_date >= " . ($year + 1) . "0831235959))";   // Start date within year
 		}
 		
-		$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ") GROUP BY property_id");
+		$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY property_id");
 		$result->execute();
 		$result->bind_result($paperID, $paper_title, $paper_type);
 		while ($result->fetch()) {
