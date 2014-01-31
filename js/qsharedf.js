@@ -328,7 +328,7 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   var int_count = 0;
   this.context.lineJoin = "round";
 	this.context.lineCap = "round";
-
+	yy=yy-0.5;
   this.context.beginPath();
   var tx0,ty0,tx1,ty1,tx2,ty2,tx3,ty3,ta,tb;
   tx2 = parseInt(pp[0].trim(), 16)+xx+0.5;
