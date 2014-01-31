@@ -279,11 +279,20 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $log_array[$qID][$layer]['u'] = 1;
           }
         }
-        if (!isset($log_array[$qID][$layer]['coords'])) {
-          $log_array[$qID][$layer]['coords'] = substr($layer_answer,2);
-        } else {
-          $log_array[$qID][$layer]['coords'] .= ';' . substr($layer_answer,2);
-        }
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
+					if (!isset($log_array[$qID][$layer]['coords'])) {
+						$log_array[$qID][$layer]['coords'] = $layer_answer;
+					} else {
+						$log_array[$qID][$layer]['coords'] .= ';' . $layer_answer;
+					}
+				} else {
+				  // In Flash mode strip of the correct/incorrect information from the front of the coordinates.
+					if (!isset($log_array[$qID][$layer]['coords'])) {
+						$log_array[$qID][$layer]['coords'] = substr($layer_answer,2);
+					} else {
+						$log_array[$qID][$layer]['coords'] .= ';' . substr($layer_answer,2);
+					}
+				}
         $layer++;
       }
       break;
@@ -1015,7 +1024,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 				<?php
 				require_once '../classes/configobject.class.php';
 				$configObject          = Config::get_instance();
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rep disc ================= -->
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
