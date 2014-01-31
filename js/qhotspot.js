@@ -94,7 +94,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 					var answer_l2 = answer_l1[i].split(";"); //all the users
 					for (j=0; j<answer_l2.length; j++) {
 						var tmp_ans = answer_l2[j].split(",");
-						if (this.qmode == 'analysis') this.answers[i][j] = [-1,tmp_ans[0],tmp_ans[1],0];
+						if (this.qmode == 'analysis') this.answers[i][j] = [tmp_ans[0],tmp_ans[1],tmp_ans[2],0]; //niko
 						if (this.qmode == 'correction') this.answers[i][j] = [-1,tmp_ans[1],tmp_ans[2],tmp_ans[0]]; 
 					}				
 				}
@@ -284,18 +284,20 @@ function qh_test(type) {
 			for (j=0;j<this.answers[i].length;j++) {        
 				this.answers[i][j][0] = '0';
 				if (typeof this.answers[i][j][1]!='undefined' && this.answers[i][j][1]!='' && this.answers[i][j][1]!='false') {
-					tx = (1*this.answers[i][j][1]+300);
+					tx = (1*this.answers[i][j][1]+300+0.5);
 					ty = (1*this.answers[i][j][2]+25-this.yOffset);
 					timgd = this.context.getImageData(tx,ty,1,1);
 					timgp = timgd.data;
 					//if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == this.layerColours[i].toUpperCase()) {
-					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000') {
-						this.answers[i][j][0] = '1';
-					}
+					//if (timgp[3]>0 && timgp[3]<255) console.log(timgp[0]+','+timgp[1]+','+timgp[2]+','+timgp[3]+':'+this.answers[i][j][1]+','+this.answers[i][j][2]);
+					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { //niko
+						this.answers[i][j][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
+					}			
 				}
 			}
 		}	
   }
+	//return;
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
   if (type == 'answers' && (this.qmode == 'answer' || this.qmode == 'edit' || this.qmode == 'correction')) this.qh_ReturnInfo();
   if (type == 'cursor') return this.hotspot_over;
@@ -349,6 +351,7 @@ function qh_redraw_canvas() {
 
     //test against label fields  
     if (this.do_the_test && this.qmode!='script') {
+			console.log(this.do_the_test)
 			this.qh_test('answers');
 		}
 		
@@ -595,8 +598,9 @@ function qh_redraw_canvas() {
 				this.context.fillStyle='#00ff00';
 				i = this.activeLabel;
 				{        
-					for (j=0;j<this.answers[i].length;j++) {        
-						if (this.answers[i][j][0] == 1) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
+					for (j=0;j<this.answers[i].length;j++) {
+						//console.log(this.answers[i][j])
+						if (1*this.answers[i][j][0] == 1) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
 					}
 				}
 			}
@@ -605,7 +609,7 @@ function qh_redraw_canvas() {
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {        
-						if (this.answers[i][j][0] == 0) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.	round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
+						if (1*this.answers[i][j][0] == 0) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.	round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
 					}
 				}				
 			}
@@ -1153,7 +1157,8 @@ function qh_mouseDragUp(){
     this.hotSpots[led[0]].splice((led[1])*6+4,6);
     this.hotSpots[led[0]][3]--;
   }
-	this.do_the_test = true;
+	if (this.qmode == 'answer' || this.qmode == 'correction') this.do_the_test = true; //niko
+	
 	if (this.qmode == 'analysis') {
 		this.canvas.style.cursor = 'wait';
 	}else{
@@ -1259,7 +1264,7 @@ function rqh(num) {
 	this.key_code = 0;
 	this.char_code = ''
 	
-  this.do_the_test = true;
+  this.do_the_test = false;
   this.tw = false;
   this.twr = new Array(0,0,0,0,'#000');
 	this.answers = new Array(); 			          	// sublevels of this keep all the answer data
