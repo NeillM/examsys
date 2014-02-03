@@ -27,35 +27,13 @@
 require '../include/staff_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/sort.inc';
+require '../include/year_tabs.inc';
 require_once '../lang/' . $language . '/include/timezones.inc';
 
 if (isset($_GET['calyear'])) {
   $current_year = $_GET['calyear'];
 } else {
   $current_year = date("Y");
-}
-
-function drawTabs($current_tab) {
-  $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
-  
-  if (isset($_GET['module'])) {
-    $extra = '&module=' . $_GET['module'];
-  } else {
-    $extra = '';
-  }
-  
-  $start_year = date("Y");
-  $start_year -= 3;
-  for ($tmp_year=$start_year; $tmp_year < $start_year + 5; $tmp_year++) {
-    if ($tmp_year == $current_tab) {
-      $html .= "<td class=\"tabon\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra . "'\">" . $tmp_year . "</td>";
-    } else {
-      $html .= "<td class=\"taboff\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra ."'\">" . $tmp_year . "</td>";
-    }
-  }
-  $html .= "</tr></table>";
-  
-  return $html;
 }
 
 function display_paper($day_no, $subtract, $current_year, $current_month, $paper, &$papers, &$cellID, $string, $default_timezone) {
@@ -293,8 +271,14 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   }
   echo "</select>&nbsp;";
   echo "<input type=\"hidden\" name=\"calyear\" value=\"$current_year\" /><br />";
+
+  if (isset($_GET['module'])) {
+    $extra = '&module=' . $_GET['module'];
+  } else {
+    $extra = '';
+  }
 ?>
-<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year); ?></div>
+<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', 3, 2, $extra); ?></div>
 </th>
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>

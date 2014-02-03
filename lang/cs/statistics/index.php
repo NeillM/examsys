@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Administrative Tools';
-$string['statistics'] = 'Statistics';
+$string['statisticsreports'] = 'Statistics Reports';
 $string['papersbyschool'] = 'Papers by School';
 $string['summativeexamstats'] = 'Summative Exams';
 ?>
