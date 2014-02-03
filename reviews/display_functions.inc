@@ -703,7 +703,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');\n";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -795,7 +795,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "'  width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
 					if (isset($question['std'])) echo $question['std'];
 					echo "','#FFC0C0','labelling','review');\n";
 					echo "</script>\n";

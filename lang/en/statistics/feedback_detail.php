@@ -14,10 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/paper_types.inc';
+require '../lang/' . $language . '/include/months.inc';
 
-$string['papersbyschool'] = 'Arkusze wg. katedry';
-$string['administrativetools'] = 'Narzędzia administracyjne';
-$string['statistics'] = 'Statystyka';
-$string['school'] = 'School';
+$string['summativeexamfeedback'] = 'Summative Exam Feedback';
+$string['feedbackstats'] = 'Feedback Statistics';
+$string['administrativetools'] = 'Administrative Tools';
+$string['statistics'] = 'Statistics';
+$string['paper'] = 'Paper';
+$string['feedbackreleased'] = 'Feedback Released';
+$string['students'] = 'Students';
+$string['feedbackviewed'] = 'Feedback Viewed';
+$string['objectivefeedback'] = 'Objective Feedback';
+$string['questionfeedback'] = 'Question Feedback';
 ?>

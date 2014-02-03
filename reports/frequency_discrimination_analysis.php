@@ -160,6 +160,7 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
 }
 
 function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $mark, $totalpos, $stop_words, $analysis_type) {
+	$configObject = Config::get_instance();
 
   if (!isset($log_array[$qID]['mark'])) $log_array[$qID]['mark'] = 0;
   if (!isset($log_array[$qID]['totalpos'])) $log_array[$qID]['totalpos'] = 0;
@@ -279,11 +280,20 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $log_array[$qID][$layer]['u'] = 1;
           }
         }
-        if (!isset($log_array[$qID][$layer]['coords'])) {
-          $log_array[$qID][$layer]['coords'] = substr($layer_answer,2);
-        } else {
-          $log_array[$qID][$layer]['coords'] .= ';' . substr($layer_answer,2);
-        }
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
+					if (!isset($log_array[$qID][$layer]['coords'])) {
+						$log_array[$qID][$layer]['coords'] = $layer_answer;
+					} else {
+						$log_array[$qID][$layer]['coords'] .= ';' . $layer_answer;
+					}
+				} else {
+				  // In Flash mode strip of the correct/incorrect information from the front of the coordinates.
+					if (!isset($log_array[$qID][$layer]['coords'])) {
+						$log_array[$qID][$layer]['coords'] = substr($layer_answer,2);
+					} else {
+						$log_array[$qID][$layer]['coords'] .= ';' . substr($layer_answer,2);
+					}
+				}
         $layer++;
       }
       break;
@@ -499,6 +509,8 @@ function count_labels($correct) {
 
 function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
   global $ex_no, $d_no, $d_total, $excluded, $user_total, $language, $string;
+
+	$configObject = Config::get_instance();
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
@@ -868,13 +880,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   <div align="center">
 <?php
 	require_once '../classes/configobject.class.php';
-	$configObject          = Config::get_instance();
 	if ($configObject->get('cfg_interactive_qs')=='html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 		echo "<script language='JavaScript' type='text/javascript'>\n";
-		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
+		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
@@ -1015,12 +1026,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 				<?php
 				require_once '../classes/configobject.class.php';
 				$configObject          = Config::get_instance();
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rep disc ================= -->
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
+					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {

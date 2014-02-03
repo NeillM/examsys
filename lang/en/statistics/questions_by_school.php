@@ -14,10 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/paper_types.inc';
-
-$string['papersbyschool'] = 'Papers by School';
 $string['administrativetools'] = 'Administrative Tools';
 $string['statistics'] = 'Statistics';
-$string['school'] = 'School';
+$string['questionsbyschool'] = 'Questions by School';
+
+$string['info'] = 'Information Block';
+$string['keyword_based'] = 'Keyword-based';
+$string['random'] = 'Random Block';
+$string['dichotomous'] = 'Dichotomous';
+$string['extmatch'] = 'EMQ';
+$string['blank'] = 'Fill-in-the-Blank';
+$string['hotspot'] = 'Image Hotspot';
+$string['labelling'] = 'Labelling';
+$string['likert'] = 'Likert Scale';
+$string['matrix'] = 'Matrix';
+$string['mcq'] = 'MCQ';
+$string['mrq'] = 'MRQ';
+$string['rank'] = 'Ranking';
+$string['sct'] = 'SCT';
+$string['textbox'] = 'Textbox';
+$string['true_false'] = 'True/False';
+$string['area'] = 'Area';
+$string['enhancedcalc'] = 'Calculation';
 ?>

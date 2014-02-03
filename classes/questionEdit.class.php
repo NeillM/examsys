@@ -107,7 +107,7 @@ Class QuestionEdit extends RogoObject {
   protected $_unified_field_modifications = array();
 
   // These are the fields that are relevant for post-exam corrections
-  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial');
+  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial','correct_fback');
 
   // Map our 'nice' property names to the database fields and 'parts' in track changes
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
@@ -320,8 +320,8 @@ Class QuestionEdit extends RogoObject {
       if ($this->bloom == '') {
         $this->bloom = null;
       }
-
-      // If $id is -1 we're inserting a new record
+			
+			// If $id is -1 we're inserting a new record
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');

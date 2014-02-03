@@ -37,8 +37,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 			this.qa_redraw_canvas;
 		} 
 		this.gen_img.onload = qh_gen_img_onload.bind(this);
-		this.gen_img.src = '/media/'+image; 
-
+		this.gen_img.src = ((mode == 'edit' || mode == 'correction')?'../':'')+'../media/'+image;
 		//---------- mode 
 		if (mode == 'review') mode='script';
 		if (mode == 'edit' || mode == 'analysis' || mode == 'correction') this.yOffset = 0;
@@ -88,14 +87,31 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 					this.answers[i][0] = answer_l1[i].split(",");
 				}
 			}
-			if (this.qmode == 'analysis' || this.qmode == 'correction') {
+			if (this.qmode == 'analysis') {
 				var answer_l1 = answer.split("|"); // all the hotspots
+				console.log(answer_l1)
 				for (i=0; i<answer_l1.length; i++) {
+					if (typeof(this.answers[i])=='undefined') this.answers[i] = new Array ();
 					var answer_l2 = answer_l1[i].split(";"); //all the users
 					for (j=0; j<answer_l2.length; j++) {
 						var tmp_ans = answer_l2[j].split(",");
-						if (this.qmode == 'analysis') this.answers[i][j] = [-1,tmp_ans[0],tmp_ans[1],0];
-						if (this.qmode == 'correction') this.answers[i][j] = [-1,tmp_ans[1],tmp_ans[2],tmp_ans[0]]; 
+						this.answers[i][j] = [tmp_ans[0],tmp_ans[1],tmp_ans[2],0]; //niko
+					}				
+				}
+			}
+			if (this.qmode == 'correction') {
+				var answer_l1 = answer.split(";"); // all the hotspots
+				for (i=0; i<answer_l1.length; i++) {
+					var answer_l0 = answer_l1[i].split(",");
+						var answer_id = answer_l0[0];
+						answer_l0.splice(0,1);
+						answer_l1[i] = answer_l0.join(',');
+						console.log(answer_l1[i])
+					if (typeof(this.answers[i])=='undefined') this.answers[i] = new Array ();
+					var answer_l2 = answer_l1[i].split("|"); //all the users
+					for (j=0; j<answer_l2.length; j++) {
+						var tmp_ans = answer_l2[j].split(",");
+						this.answers[i][j] = [-1,tmp_ans[1],tmp_ans[2],tmp_ans[0]]; 
 					}				
 				}
 			}
@@ -127,7 +143,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/js/images/combined.png'; 
+		this.menu_img.src = ((this.qmode == 'edit' || this.qmode == 'correction')?'../':'')+'../js/images/combined.png';
 	}
 }
 
@@ -283,19 +299,22 @@ function qh_test(type) {
     if (type == 'answers') {
 			for (j=0;j<this.answers[i].length;j++) {        
 				this.answers[i][j][0] = '0';
+				console.log(this.answers[i][j]);
 				if (typeof this.answers[i][j][1]!='undefined' && this.answers[i][j][1]!='' && this.answers[i][j][1]!='false') {
-					tx = (1*this.answers[i][j][1]+300+4.5);
-					ty = (1*this.answers[i][j][2]+25-0.5-this.yOffset);
-					timgd = this.context.getImageData(tx,ty,1,1);					
+					tx = (1*this.answers[i][j][1]+300+0.5);
+					ty = (1*this.answers[i][j][2]+25-this.yOffset);
+					timgd = this.context.getImageData(tx,ty,1,1);
 					timgp = timgd.data;
 					//if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() == this.layerColours[i].toUpperCase()) {
-					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000') {
-						this.answers[i][j][0] = '1';
-					}
+					//if (timgp[3]>0 && timgp[3]<255) console.log(timgp[0]+','+timgp[1]+','+timgp[2]+','+timgp[3]+':'+this.answers[i][j][1]+','+this.answers[i][j][2]);
+					if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { //niko
+						this.answers[i][j][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
+					}			
 				}
 			}
 		}	
   }
+	//return;
 	this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
   if (type == 'answers' && (this.qmode == 'answer' || this.qmode == 'edit' || this.qmode == 'correction')) this.qh_ReturnInfo();
   if (type == 'cursor') return this.hotspot_over;
@@ -341,8 +360,11 @@ function redraw_hotspot(i,j) {
 
 
 function qh_redraw_canvas() {
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert('Hotspot question cannot be displayed because some images were not loaded.');
+	
 	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.start_polygon || (this.qmode == 'edit' && this.activeLabelText>-1))) {
-    this.redraw_once = false;
+		this.redraw_once = false;
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
     //menu buttons
     if (this.buttonBox.length == 0 && (this.qmode == 'edit' || this.qmode == 'analysis' || this.qmode == 'script' || this.qmode == 'correction')) this.qh_menuBuild(); 
@@ -374,7 +396,7 @@ function qh_redraw_canvas() {
       pan_h = 25 + wrapped[1];
 
       //reset pos_y for bpalette button
-      if (this.activeLabel == i && this.qmode == 'edit') this.buttonBox[this.buttonBoxNames['toolbar/ico_palette.png']][2] = pan_y+12;
+      if (this.activeLabel == i && this.qmode == 'edit') this.buttonBox[this.buttonBoxNames['toolbar/ico_palette.png']][2] = pan_y+11;
 
       //add this.hotSpotsPanel data
       this.hotSpotsPanel[i] = new Array(0,pan_y,300,pan_h,45.5,pan_y+11.5,245-this.palico,pan_h-19);
@@ -595,8 +617,8 @@ function qh_redraw_canvas() {
 				this.context.fillStyle='#00ff00';
 				i = this.activeLabel;
 				{        
-					for (j=0;j<this.answers[i].length;j++) {        
-						if (this.answers[i][j][0] == 1) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300)+0.5-2,Math.round(1*this.answers[i][j][2]+25-2-this.yOffset)+0.5,2,2);
+					for (j=0;j<this.answers[i].length;j++) {
+						if (1*this.answers[i][j][0] == 1) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
 					}
 				}
 			}
@@ -605,7 +627,7 @@ function qh_redraw_canvas() {
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {        
-						if (this.answers[i][j][0] == 0) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300)+0.5-2,Math.	round(1*this.answers[i][j][2]+25-2-this.yOffset)+0.5,2,2);
+						if (1*this.answers[i][j][0] == 0) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.	round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
 					}
 				}				
 			}
@@ -629,8 +651,9 @@ function qh_redraw_canvas() {
 					
 					//flipping
 					this.context.save();
-					var calc_x = calc_x0 = Math.round(1*this.answers[i][0][1]+300);
-					var calc_y = calc_y0 = Math.round(1*this.answers[i][0][2]-this.yOffset);
+					//position the smoke
+					var calc_x = calc_x0 = Math.round(1*this.answers[i][0][1]+300-4); //-4px correction for smoke icon shift and border
+					var calc_y = calc_y0 = Math.round(1*this.answers[i][0][2]-this.yOffset+2); //+2px correction for smoke icon shift and border
  					if (fliph == 1) {
 						this.context.scale(-1,1);
 						calc_x = -calc_x-10;
@@ -668,7 +691,7 @@ function qh_redraw_canvas() {
 					this.context.fillStyle=setTextColour(this.hotSpots[i][2]);
 			    this.context.textAlign="left";
           this.context.font="bold 18px Arial";
-          this.context.fillText(String.fromCharCode(65+i),(1*this.answers[i][0][1]+320+0.5-45*fliph),(1*this.answers[i][0][2]-this.yOffset+19+22*flipv));
+          this.context.fillText(String.fromCharCode(65+i),(1*this.answers[i][0][1]+320-3.5-45*fliph),(1*this.answers[i][0][2]-this.yOffset+21+22*flipv));
 					
         }
       }
@@ -752,6 +775,11 @@ function qh_redraw_canvas() {
 				this.context.strokeStyle=this.currentColours[1];
 			}
 		}
+		this.canvas.style.cursor = this.cur;
+	}else if(this.qmode == 'analysis' && this.canvas.style.cursor == 'wait'){
+		this.redraw_once = true; //give one cycle to change the cursor
+	}else if(this.qmode == 'analysis' && this.canvas.style.cursor != this.cur){
+		this.canvas.style.cursor = this.cur; //reset the cursor if cycle is missed
 	}
 }
 
@@ -816,20 +844,20 @@ function qh_mouseDragMove(e){
         }
 			}
                   
-      var cur = 'default';
-      if (this.global_edit) cur = 'not-allowed';
-			if (this.global_edit && this.test_result!='') cur = 'move';
-			if (this.global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) cur = 'default';
-			if (this.global_erase && this.test_result!='') cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
-			if (over_object) cur = 'pointer';
-			if (this.handle_over != -1) cur = 'move';
+      this.cur = 'default';
+      if (this.global_edit) this.cur = 'not-allowed';
+			if (this.global_edit && this.test_result!='') this.cur = 'move';
+			if (this.global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) this.cur = 'default';
+			if (this.global_erase && this.test_result!='') this.cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
+			if (over_object) this.cur = 'pointer';
+			if (this.handle_over != -1) this.cur = 'move';
 
-      if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') cur = 'help';
-      if (this.y>25 && (this.start_rectangle || this.start_ellipse  || this.start_polygon)) cur = 'crosshair';
-      if (this.testWithin(this.x,this.y,0,0,300,this.canvas.height)) cur = 'default';
-			if (this.testWithin(this.x,this.y,300,0,this.canvas.width,this.canvas.height) && this.qmode == 'answer') cur = 'crosshair';
+      if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') this.cur = 'help';
+      if (this.y>25 && (this.start_rectangle || this.start_ellipse  || this.start_polygon)) this.cur = 'crosshair';
+      if (this.testWithin(this.x,this.y,0,0,300,this.canvas.height)) this.cur = 'default';
+			if (this.testWithin(this.x,this.y,300,0,this.canvas.width,this.canvas.height) && this.qmode == 'answer') this.cur = 'crosshair';
 
-      e.target.style.cursor = cur;
+      e.target.style.cursor = this.cur;
 		}
 	}
   //test cursor against labels
@@ -932,7 +960,7 @@ function qh_mouseDragDown(e){
 			this.sub_y = this.y - this.hotSpots[this.drag_box_id][6];
 		}
 		*/
-		if (this.panelOptionOver == -1) this.dragging = true;	
+		if (this.panelOptionOver == -1 && this.qmode!='analysis') this.dragging = true;	
 	}
 	if (this.qmode!='script' && this.testWithin(this.x,this.y,300,25,this.canvas.width,this.canvas.height)) {
 		if (this.start_rectangle && this.activeLabel>-1) {    
@@ -1019,8 +1047,8 @@ function qh_mouseDragUp(){
     	
   //test for image area
   if (this.qmode == 'answer' && this.testWithin(this.x,this.y,300,0,this.canvas.width-300,this.canvas.height)) {
-    this.answers[this.activeLabel][0][1]=this.x-300-5;
-    this.answers[this.activeLabel][0][2]=this.y+1;
+    this.answers[this.activeLabel][0][1]=this.x-300-1; //1px for border
+    this.answers[this.activeLabel][0][2]=this.y-1; //1px for border
 		this.activeLabel++;
 		if (this.hotSpots.length<=this.activeLabel) this.activeLabel=0;
   }
@@ -1146,10 +1174,14 @@ function qh_mouseDragUp(){
     this.hotSpots[led[0]].splice((led[1])*6+4,6);
     this.hotSpots[led[0]][3]--;
   }
-  
-	this.redraw_once = true;
-	this.do_the_test = true;
-  this.qh_redraw_canvas;
+	if (this.qmode == 'answer' || this.qmode == 'correction') this.do_the_test = true; //niko
+	
+	if (this.qmode == 'analysis') {
+		this.canvas.style.cursor = 'wait';
+	}else{
+		this.redraw_once = true;
+		this.qh_redraw_canvas;
+	}
 }
 
 
@@ -1237,8 +1269,6 @@ function rqh(num) {
 	this.build_msgbox=build_msgbox;
 	this.tooltip_draw=tooltip_draw;
 	
-  this.nikotest = 0;
-
 	this.test; 
 	this.test_result = '';
 	this.x,this.y,this.sub_x,this.sub_y;
@@ -1251,7 +1281,7 @@ function rqh(num) {
 	this.key_code = 0;
 	this.char_code = ''
 	
-  this.do_the_test = true;
+  this.do_the_test = false;
   this.tw = false;
   this.twr = new Array(0,0,0,0,'#000');
 	this.answers = new Array(); 			          	// sublevels of this keep all the answer data
@@ -1333,4 +1363,5 @@ function rqh(num) {
 	this.display_correct_answer = true;
   this.imgdata,this.imgdatab,this.imgdatac;
 	this.keypressed = false;
+	this.imageerrordisplay = 0;
 }

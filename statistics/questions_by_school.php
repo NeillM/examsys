@@ -25,9 +25,6 @@
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/errors.inc';
-require '../include/year_tabs.inc';
-
-$current_year = check_var('calyear', 'GET', true, false, true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,15 +32,15 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-	<title>Rog&#333;: <?php echo $string['summativeexamfeedback']  . ' ' . $configObject->get('cfg_install_type'); ?></title>
+	<title>Rog&#333;: <?php echo $string['questionsbyschool']  . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
 	<style>
 	  body {font-size:90%}
 		.grey {color:#C0C0C0}
+		.qtype {width:4%}
 	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -63,23 +60,21 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 <tr>
-<th><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['summativeexamfeedback']; ?>:</strong> <?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></th>
-<th style="text-align:right; vertical-align:bottom; padding-bottom:2px; padding-right:6px"></th>
+<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['questionsbyschool']; ?></th>
 </tr>
-<tr>
-<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1); ?></div></th>
-</tr>
-<tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 
 <blockquote>
-<table class="stats">
+
+<table border="0" style="width:100%; border-right: 1px solid #C0C0C0;border-bottom: 1px solid #C0C0C0" class="stats">
 <tr>
 <th>School</th>
-<th>Exams</th>
-<th>Objective Feedback</th>
-<th>Question Feedback</th>
-<th>Cohort Performance</th>
+<?php
+	$types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
+  foreach ($types as $type) {
+	  echo '<th class="qtype">' . $string[$type] . '</th>';
+	}
+?>
 </tr>
 <?php
 $master_array = array();
@@ -90,10 +85,7 @@ $result->bind_result($id, $school, $faculty);
 while ($result->fetch()) {
   $master_array[$school]['id'] = $id;
   $master_array[$school]['faculty'] = $faculty;
-	$master_array[$school]['exams'] = 0;
-	$master_array[$school]['objectives'] = 0;
-	$master_array[$school]['questions'] = 0;
-	$master_array[$school]['cohort_performance'] = 0;
+	$master_array[$school]['types'] = array('blank'=>0, 'dichotomous'=>0, 'flash'=>0, 'hotspot'=>0, 'labelling'=>0, 'likert'=>0, 'matrix'=>0, 'mcq'=>0, 'mrq'=>0, 'rank'=>0, 'textbox'=>0, 'info'=>0, 'extmatch'=>0, 'random'=>0, 'sct'=>0, 'keyword_based'=>0, 'true_false'=>0, 'area'=>0, 'enhancedcalc'=>0);
 }
 $result->close();
 
@@ -115,60 +107,44 @@ foreach ($master_array as $school => $data) {
 	if (count($moduleIDs) > 0) {
 		// Get the papers.
 		$date_range = '';
-		if ($_GET['calyear']) {
-		  $year = $_GET['calyear'];
-		
-			$date_range .= " AND start_date > {$year}0901000000 AND end_date <= " . ($year + 1) . "0831235959";  // Start and end within year			
-		}
-		
-		$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND paper_type = '2' AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY property_id");
+				
+		$result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY questions.q_id");
 		$result->execute();
-		$result->bind_result($paperID, $paper_title, $paper_type);
+		$result->bind_result($q_id, $q_type);
 		while ($result->fetch()) {
-			$master_array[$school]['exams']++;
-		}
-		$result->close();
-
-		$result = $mysqli->prepare("SELECT DISTINCT idfeedback_release, type FROM properties, properties_modules, feedback_release WHERE feedback_release.paper_id = properties.property_id AND properties.property_id = properties_modules.property_id $date_range AND paper_type = '2' AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL");
-		$result->execute();
-		$result->bind_result($idfeedback_release, $type);
-		while ($result->fetch()) {
-			$master_array[$school][$type]++;
+			$master_array[$school]['types'][$q_type]++;
 		}
 		$result->close();
 	}
 }
 
-$parts = array('exams', 'objectives', 'questions', 'cohort_performance');
-
 $old_faculty = '';
-$faculty_stats = array(0, 0, 0, 0);
+$faculty_stats = $types;
 
 foreach ($master_array as $school => $data) {
   if ($old_faculty != $data['faculty']) {
 	  if ($old_faculty != '') {
-			echo output_faculty_stats($faculty_stats);
+			echo output_faculty_stats($faculty_stats, $types);
 	  }
-		echo '<tr><td colspan="5" class="faculty">' . $data['faculty'] . '</td></tr>';
-		$faculty_stats = array(0, 0, 0, 0);
+		echo '<tr><td colspan="19" class="faculty">' . $data['faculty'] . '</td></tr>';
+		$faculty_stats = array();
 	}
   echo "<tr><td>" . $school . "</td>";
 	
-	for ($i=0; $i<4; $i++) {
-	  $part = $parts[$i];
-	  if ($data[$part] == 0) {
-			echo "<td class=\"n grey\">" . $data[$part] . "</td>";
+	foreach ($types as $type) {
+	  if ($data['types'][$type] == 0) {
+			echo "<td class=\"n grey\">" . $data['types'][$type] . "</td>";
 		} else {
-			if ($i == 1 or $i == 1) {
-				echo "<td class=\"n\"><a href=\"feedback_detail.php?calyear=" . $_GET['calyear'] . "&school=" . $master_array[$school]['id'] . "&type=$i\">" . $data[$part] . "</a></td>";
-			} else {
-				echo "<td class=\"n\">" . $data[$part] . "</td>";
-			}
+			echo "<td class=\"n\">" . number_format($data['types'][$type]) . "</td>";
 		}
-		$faculty_stats[$i] += $data[$part];
+		if (isset($faculty_stats[$type])) {
+			$faculty_stats[$type] += $data['types'][$type];
+		} else {
+			$faculty_stats[$type] = $data['types'][$type];
+		}
 	}
 	echo "</tr>\n";
-	
+
 	$old_faculty = $data['faculty'];
 }
 ?>
@@ -178,11 +154,11 @@ foreach ($master_array as $school => $data) {
 </body>
 </html>
 <?php
-function output_faculty_stats($stats) {
+function output_faculty_stats($stats, $types) {
   $html = '<tr><td>&nbsp;</td>';
 	
-	for ($i=0; $i<4; $i++) {
-	  $html .= '<td class="n subtotal">' . number_format($stats[$i]) . '</td>';
+	foreach ($types as $type) {
+	  $html .= '<td class="n subtotal">' . number_format($stats[$type]) . '</td>';
 	}
 	
 	$html .= '</tr>';

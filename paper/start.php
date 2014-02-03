@@ -316,7 +316,7 @@ $stmt->close();
 $original_paper_type = $propertyObj->get_paper_type();
 
 // Is this a type of paper that allows only one attempt?
-$do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_paper_type == 2));
+$do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_paper_type == 2 or $original_paper_type == 3));
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -396,7 +396,6 @@ if (!$is_first_launch) {
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 
 if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)) {
-
   //in preview mode or for non-restartable papers always start a new session if we have relaunched the window
   $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 

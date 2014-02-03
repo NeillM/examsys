@@ -75,7 +75,7 @@ require_once 'detail_parts/details_scenario.php';
 										echo "<canvas id='canvas1' width='" . ($media['width'] + 300) . "' height='" . ($plugin_height) . "'></canvas>\n";
 										echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 										echo "<script language='JavaScript' type='text/javascript'>\n";
-										echo "setUpQuestion(1, 'flash1', '" . $language . "', '" . $media['filename'] . "', '" . $tmp_correct . "','','','#FFC0C0','hotspot','edit'); \n";
+										echo "setUpQuestion(1, 'flash1', '" . $language . "', '../../media/" . $media['filename'] . "', '" . $tmp_correct . "','','','#FFC0C0','hotspot','edit'); \n";
 										echo "</script>\n";
 										//<!-- ==================================================== -->
 									} else {

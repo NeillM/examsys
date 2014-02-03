@@ -25,6 +25,9 @@
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/errors.inc';
+require '../include/year_tabs.inc';
+
+$current_year = check_var('calyear', 'GET', true, false, true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,19 +40,16 @@ require '../include/errors.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
+	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
 	<style>
 	  body {font-size:90%}
 		.grey {color:#C0C0C0}
+		.papertype {width:9%}
 	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
-    function jumpTo() {
-      document.location = 'papers_by_school.php?year=' + $('#year').val();
-    }
-  </script>
 </head>
 
 <body>
@@ -60,45 +60,39 @@ require '../include/errors.inc';
 ?>
 <table class="header" style="font-size:90%">
 <tr>
-<th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
+<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
 <tr>
-<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['papersbyschool']; ?>:</strong> <?php echo $_GET['year']; ?>/<?php echo (substr($_GET['year'],2,2)+1); ?></th>
-<th style="text-align:right; vertical-align:bottom; padding-bottom:2px; padding-right:6px"><select name="year" id="year" onchange="jumpTo()">
-<?php
-for ($i=2005; $i<=date('Y'); $i++) {
-  if ($i == $_GET['year']) {
-    echo "<option value=\"$i\" selected>$i/" . substr(($i+1),2,2) . "</option>\n";
-  } else {
-    echo "<option value=\"$i\">$i/" . substr(($i+1),2,2) . "</option>\n";
-  }
-}
-?>
-</select></th>
+<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['papersbyschool']; ?>:</strong> <?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></th>
 </tr>
+<tr>
+<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1); ?></div></th>
+</tr>
+<tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 
 <blockquote>
-<table border="0" style="width:100%" class="stats">
+<table class="stats">
 <tr>
-<th>School</th>
-<th>Formative</th>
-<th>Progress Test</th>
-<th>Summative</th>
-<th>Survey</th>
-<th>OSCEs</th>
-<th>Offline</th>
-<th>Peer Review</th>
+<th><?php echo $string['school']; ?></th>
+<th class="papertype"><?php echo $string['formative quiz']; ?></th>
+<th class="papertype"><?php echo $string['progress test']; ?></th>
+<th class="papertype"><?php echo $string['summative exam']; ?></th>
+<th class="papertype"><?php echo $string['survey']; ?></th>
+<th class="papertype"><?php echo $string['osce stations']; ?></th>
+<th class="papertype"><?php echo $string['offline papers']; ?></th>
+<th class="papertype"><?php echo $string['peer review']; ?></th>
 </tr>
 <?php
 $master_array = array();
 
-$result = $mysqli->prepare("SELECT id, school FROM schools WHERE school != 'Training' ORDER BY school");
+$result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
 $result->execute();
-$result->bind_result($id, $school);
+$result->bind_result($id, $school, $faculty);
 while ($result->fetch()) {
   $master_array[$school]['id'] = $id;
+  $master_array[$school]['faculty'] = $faculty;
 	$master_array[$school]['paper_types'] = array(0, 0, 0, 0, 0, 0, 0);
 }
 $result->close();
@@ -107,7 +101,7 @@ foreach ($master_array as $school => $data) {
 	// Get the modules which belong in the school first.
 	$moduleIDs = array();
 
-	$result = $mysqli->prepare("SELECT id FROM modules WHERE schoolid = ?");
+	$result = $mysqli->prepare("SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL");
 	$result->bind_param('i', $data['id']);
 	$result->execute();
 	$result->bind_result($id);
@@ -121,8 +115,8 @@ foreach ($master_array as $school => $data) {
 	if (count($moduleIDs) > 0) {
 		// Get the papers.
 		$date_range = '';
-		if ($_GET['year']) {
-		  $year = $_GET['year'];
+		if ($_GET['calyear']) {
+		  $year = $_GET['calyear'];
 		
 			$date_range .= " AND ((start_date > {$year}0901000000 AND end_date <= " . ($year + 1) . "0831235959)";  // Start and end within year
 			
@@ -133,7 +127,7 @@ foreach ($master_array as $school => $data) {
 			$date_range .= " OR (start_date > {$year}0901000000 AND start_date <= " . ($year + 1) . "0831235959 AND end_date >= " . ($year + 1) . "0831235959))";   // Start date within year
 		}
 		
-		$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ") GROUP BY property_id");
+		$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY property_id");
 		$result->execute();
 		$result->bind_result($paperID, $paper_title, $paper_type);
 		while ($result->fetch()) {
@@ -143,7 +137,17 @@ foreach ($master_array as $school => $data) {
 	}
 }
 
+$old_faculty = '';
+$faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+
 foreach ($master_array as $school => $data) {
+  if ($old_faculty != $data['faculty']) {
+	  if ($old_faculty != '') {
+			echo output_faculty_stats($faculty_stats);
+	  }
+		echo '<tr><td colspan="8" class="faculty">' . $data['faculty'] . '</td></tr>';
+		$faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+	}
   echo "<tr><td>" . $school . "</td>";
 	
 	for ($i=0; $i<=6; $i++) {
@@ -152,8 +156,11 @@ foreach ($master_array as $school => $data) {
 		} else {
 			echo "<td class=\"n\">" . $data['paper_types'][$i] . "</td>";
 		}
+		$faculty_stats[$i] += $data['paper_types'][$i];
 	}
 	echo "</tr>\n";
+	
+	$old_faculty = $data['faculty'];
 }
 ?>
 </table>
@@ -161,3 +168,16 @@ foreach ($master_array as $school => $data) {
 
 </body>
 </html>
+<?php
+function output_faculty_stats($stats) {
+  $html = '<tr><td>&nbsp;</td>';
+	
+	for ($i=0; $i<=6; $i++) {
+	  $html .= '<td class="n subtotal">' . number_format($stats[$i]) . '</td>';
+	}
+	
+	$html .= '</tr>';
+	
+	return $html;
+}
+?>

@@ -40,8 +40,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
       this.ql_redraw_canvas();        
 		}
 		this.gen_img.onload = ql_gen_img_onload.bind(this);
-		this.gen_img.src = '/media/'+image; 
-
+		this.gen_img.src = ((mode == 'edit')?'../':'')+'../media/'+image;
 		//---------- mode 
 		this.yOffset = 25;
 		if (mode == 'edit') this.yOffset = 0;
@@ -357,7 +356,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				if (typeof(this.answerBox[i][j]) != 'undefined' && this.answerBox[i][j][1] == "image" && this.all_images[this.all_images.indexOf(this.answerBox[i][j][2])+1] == '') {
 					this.imageBox[this.answerBox[i][j][2]] = new Image();
 					this.imageBox[this.answerBox[i][j][2]].onload = ql_ans_img_onload.bind(this);
-					this.imageBox[this.answerBox[i][j][2]].src = '/media/'+this.answerBox[i][j][2];
+					this.imageBox[this.answerBox[i][j][2]].src = ((this.qmode == 'edit')?'../':'')+'../media/'+this.answerBox[i][j][2];
 					this.all_images[this.answerBox[i][j][2]] = i+','+j;
 				}
 			}
@@ -477,7 +476,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			this.ql_ReturnInfo();
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		this.menu_img.src = '/js/images/combined.png'; 
+		this.menu_img.src = ((this.qmode == 'edit')?'../':'')+'../js/images/combined.png'; 
 	}	
 }
 
@@ -900,6 +899,9 @@ function ql_redraw_canvas() {
     }
   }
  
+ 	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
+	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert('Labelling question cannot be displayed because some images were not loaded.');
+
 	//main redrawing part
 	if (this.allImagesLoaded && this.menu_img_loaded && this.gen_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || (this.global_add != '' &&  this.shape_x1>-1) || this.global_move || this.global_erase)){
 		this.redraw_once = false;
@@ -2457,4 +2459,5 @@ function rql(num) {
 	this.imglabelHeight;
 	this.keypressed = false;
 	this.all_images = new Array();
+	this.imageerrordisplay = 0;
 }
