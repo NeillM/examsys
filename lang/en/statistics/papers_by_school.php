@@ -14,7 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/include/paper_types.inc';
+
 $string['papersbyschool'] = 'Papers by School';
 $string['administrativetools'] = 'Administrative Tools';
 $string['statistics'] = 'Statistics';
+$string['school'] = 'School';
 ?>

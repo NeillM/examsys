@@ -38,9 +38,12 @@ $current_year = check_var('calyear', 'GET', true, false, true);
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
+	<style>
+	  body {font-size:90%}
+		.grey {color:#C0C0C0}
+	</style>
   
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -49,13 +52,11 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
-<table class="header">
+<table class="header" style="font-size:90%">
 <tr>
 <th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
@@ -70,7 +71,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 </table>
 
 <blockquote>
-<table class="stats" cellpadding="2" cellspacing="0" border="0" style="width:400px">
+<table class="stats" style="width:400px !important">
 <tr><th><?php echo $string['month']; ?></th><th><?php echo $string['papers']; ?></th><th><?php echo $string['mean']; ?></th><th><?php echo $string['min']; ?></th><th><?php echo $string['max']; ?></th><th><?php echo $string['studentpapers']; ?></th></tr>
 <?php
 $total_paper_no = 0;
@@ -127,7 +128,7 @@ while ($result->fetch()) {
 if ($month_paper_no > 0) {
   echo "<tr><td>".$string[strtolower($old_month)]."</td><td class=\"n\">$month_paper_no</td><td class=\"n\">" . round($month_student_no/$month_paper_no,1) . "</td><td class=\"n\">$month_min</td><td class=\"n\">$month_max</td><td class=\"n\">" . number_format($month_student_no) . "</td></tr>\n";
 }
-echo "<tr><td><strong>".$string['totals']."</strong></td><td class=\"n\"><strong>" . number_format($total_paper_no) . "</strong></td><td colspan=\"3\">&nbsp;</td><td class=\"n\"><strong>" . number_format($total_student_no) . "</strong></td></tr>\n";
+echo "<tr><td>&nbsp;</td><td class=\"n subtotal\">" . number_format($total_paper_no) . "</td><td class=\"subtotal\" colspan=\"3\">&nbsp;</td><td class=\"n subtotal\">" . number_format($total_student_no) . "</td></tr>\n";
 
 $result->close();
 $mysqli->close();
@@ -138,6 +139,6 @@ $mysqli->close();
   printf($string['uniquestudents'], number_format(count($distinct_users)));
 ?>
 </blockquote>
-</div>
+
 </body>
 </html>

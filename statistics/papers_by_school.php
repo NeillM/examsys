@@ -44,6 +44,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 	<style>
 	  body {font-size:90%}
 		.grey {color:#C0C0C0}
+		.papertype {width:9%}
 	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -72,25 +73,26 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 </table>
 
 <blockquote>
-<table border="0" style="width:100%" class="stats">
+<table class="stats">
 <tr>
-<th>School</th>
-<th>Formative</th>
-<th>Progress Test</th>
-<th>Summative</th>
-<th>Survey</th>
-<th>OSCEs</th>
-<th>Offline</th>
-<th>Peer Review</th>
+<th><?php echo $string['school']; ?></th>
+<th class="papertype"><?php echo $string['formative quiz']; ?></th>
+<th class="papertype"><?php echo $string['progress test']; ?></th>
+<th class="papertype"><?php echo $string['summative exam']; ?></th>
+<th class="papertype"><?php echo $string['survey']; ?></th>
+<th class="papertype"><?php echo $string['osce stations']; ?></th>
+<th class="papertype"><?php echo $string['offline papers']; ?></th>
+<th class="papertype"><?php echo $string['peer review']; ?></th>
 </tr>
 <?php
 $master_array = array();
 
-$result = $mysqli->prepare("SELECT id, school FROM schools WHERE school != 'Training' ORDER BY school");
+$result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
 $result->execute();
-$result->bind_result($id, $school);
+$result->bind_result($id, $school, $faculty);
 while ($result->fetch()) {
   $master_array[$school]['id'] = $id;
+  $master_array[$school]['faculty'] = $faculty;
 	$master_array[$school]['paper_types'] = array(0, 0, 0, 0, 0, 0, 0);
 }
 $result->close();
@@ -99,7 +101,7 @@ foreach ($master_array as $school => $data) {
 	// Get the modules which belong in the school first.
 	$moduleIDs = array();
 
-	$result = $mysqli->prepare("SELECT id FROM modules WHERE schoolid = ?");
+	$result = $mysqli->prepare("SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL");
 	$result->bind_param('i', $data['id']);
 	$result->execute();
 	$result->bind_result($id);
@@ -135,7 +137,17 @@ foreach ($master_array as $school => $data) {
 	}
 }
 
+$old_faculty = '';
+$faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+
 foreach ($master_array as $school => $data) {
+  if ($old_faculty != $data['faculty']) {
+	  if ($old_faculty != '') {
+			echo output_faculty_stats($faculty_stats);
+	  }
+		echo '<tr><td colspan="8" class="faculty">' . $data['faculty'] . '</td></tr>';
+		$faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+	}
   echo "<tr><td>" . $school . "</td>";
 	
 	for ($i=0; $i<=6; $i++) {
@@ -144,8 +156,11 @@ foreach ($master_array as $school => $data) {
 		} else {
 			echo "<td class=\"n\">" . $data['paper_types'][$i] . "</td>";
 		}
+		$faculty_stats[$i] += $data['paper_types'][$i];
 	}
 	echo "</tr>\n";
+	
+	$old_faculty = $data['faculty'];
 }
 ?>
 </table>
@@ -153,3 +168,16 @@ foreach ($master_array as $school => $data) {
 
 </body>
 </html>
+<?php
+function output_faculty_stats($stats) {
+  $html = '<tr><td>&nbsp;</td>';
+	
+	for ($i=0; $i<=6; $i++) {
+	  $html .= '<td class="n subtotal">' . number_format($stats[$i]) . '</td>';
+	}
+	
+	$html .= '</tr>';
+	
+	return $html;
+}
+?>

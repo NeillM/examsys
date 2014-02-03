@@ -40,6 +40,7 @@ require '../include/errors.inc';
 	<style>
 	  body {font-size:90%}
 		.grey {color:#C0C0C0}
+		.qtype {width:4%}
 	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -65,24 +66,25 @@ require '../include/errors.inc';
 
 <blockquote>
 
-<table border="0" style="width:100%" class="stats">
+<table border="0" style="width:100%; border-right: 1px solid #C0C0C0;border-bottom: 1px solid #C0C0C0" class="stats">
 <tr>
 <th>School</th>
 <?php
-	$types = array('blank', 'dichotomous', 'hotspot', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'rank', 'textbox', 'info', 'extmatch', 'random', 'sct', 'keyword_based', 'true_false', 'area', 'enhancedcalc');
+	$types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
   foreach ($types as $type) {
-	  echo '<th>' . $string[$type] . '</th>';
+	  echo '<th class="qtype">' . $string[$type] . '</th>';
 	}
 ?>
 </tr>
 <?php
 $master_array = array();
 
-$result = $mysqli->prepare("SELECT id, school FROM schools WHERE school != 'Training' ORDER BY school");
+$result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
 $result->execute();
-$result->bind_result($id, $school);
+$result->bind_result($id, $school, $faculty);
 while ($result->fetch()) {
   $master_array[$school]['id'] = $id;
+  $master_array[$school]['faculty'] = $faculty;
 	$master_array[$school]['types'] = array('blank'=>0, 'dichotomous'=>0, 'flash'=>0, 'hotspot'=>0, 'labelling'=>0, 'likert'=>0, 'matrix'=>0, 'mcq'=>0, 'mrq'=>0, 'rank'=>0, 'textbox'=>0, 'info'=>0, 'extmatch'=>0, 'random'=>0, 'sct'=>0, 'keyword_based'=>0, 'true_false'=>0, 'area'=>0, 'enhancedcalc'=>0);
 }
 $result->close();
@@ -91,7 +93,7 @@ foreach ($master_array as $school => $data) {
 	// Get the modules which belong in the school first.
 	$moduleIDs = array();
 
-	$result = $mysqli->prepare("SELECT id FROM modules WHERE schoolid = ?");
+	$result = $mysqli->prepare("SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL");
 	$result->bind_param('i', $data['id']);
 	$result->execute();
 	$result->bind_result($id);
@@ -116,7 +118,17 @@ foreach ($master_array as $school => $data) {
 	}
 }
 
+$old_faculty = '';
+$faculty_stats = $types;
+
 foreach ($master_array as $school => $data) {
+  if ($old_faculty != $data['faculty']) {
+	  if ($old_faculty != '') {
+			echo output_faculty_stats($faculty_stats, $types);
+	  }
+		echo '<tr><td colspan="19" class="faculty">' . $data['faculty'] . '</td></tr>';
+		$faculty_stats = array();
+	}
   echo "<tr><td>" . $school . "</td>";
 	
 	foreach ($types as $type) {
@@ -125,8 +137,15 @@ foreach ($master_array as $school => $data) {
 		} else {
 			echo "<td class=\"n\">" . number_format($data['types'][$type]) . "</td>";
 		}
+		if (isset($faculty_stats[$type])) {
+			$faculty_stats[$type] += $data['types'][$type];
+		} else {
+			$faculty_stats[$type] = $data['types'][$type];
+		}
 	}
 	echo "</tr>\n";
+
+	$old_faculty = $data['faculty'];
 }
 ?>
 </table>
@@ -134,3 +153,16 @@ foreach ($master_array as $school => $data) {
 
 </body>
 </html>
+<?php
+function output_faculty_stats($stats, $types) {
+  $html = '<tr><td>&nbsp;</td>';
+	
+	foreach ($types as $type) {
+	  $html .= '<td class="n subtotal">' . number_format($stats[$type]) . '</td>';
+	}
+	
+	$html .= '</tr>';
+	
+	return $html;
+}
+?>

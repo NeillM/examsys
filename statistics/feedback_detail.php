@@ -84,7 +84,7 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 </table>
 
 <blockquote>
-<table border="0" style="width:100%" class="stats">
+<table class="stats">
 <tr>
 <th><?php echo $string['paper']; ?></th>
 <th><?php echo $string['feedbackreleased']; ?></th>
@@ -145,7 +145,7 @@ function count_feedback_views(&$papers, $db) {
 function get_modules($schoolID, $db) {
 	$moduleIDs = array();
 	
-	$result = $db->prepare("SELECT id FROM modules WHERE schoolid = ?");
+	$result = $db->prepare("SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL");
 	$result->bind_param('i', $schoolID);
 	$result->execute();
 	$result->bind_result($id);
