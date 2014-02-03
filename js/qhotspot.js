@@ -37,8 +37,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 			this.qa_redraw_canvas;
 		} 
 		this.gen_img.onload = qh_gen_img_onload.bind(this);
-		this.gen_img.src = image;
-		
+		this.gen_img.src = ((mode == 'edit' || mode == 'correction')?'../':'')+'../media/'+image;
 		//---------- mode 
 		if (mode == 'review') mode='script';
 		if (mode == 'edit' || mode == 'analysis' || mode == 'correction') this.yOffset = 0;
@@ -88,14 +87,31 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 					this.answers[i][0] = answer_l1[i].split(",");
 				}
 			}
-			if (this.qmode == 'analysis' || this.qmode == 'correction') {
+			if (this.qmode == 'analysis') {
 				var answer_l1 = answer.split("|"); // all the hotspots
+				console.log(answer_l1)
 				for (i=0; i<answer_l1.length; i++) {
+					if (typeof(this.answers[i])=='undefined') this.answers[i] = new Array ();
 					var answer_l2 = answer_l1[i].split(";"); //all the users
 					for (j=0; j<answer_l2.length; j++) {
 						var tmp_ans = answer_l2[j].split(",");
-						if (this.qmode == 'analysis') this.answers[i][j] = [tmp_ans[0],tmp_ans[1],tmp_ans[2],0]; //niko
-						if (this.qmode == 'correction') this.answers[i][j] = [-1,tmp_ans[1],tmp_ans[2],tmp_ans[0]]; 
+						this.answers[i][j] = [tmp_ans[0],tmp_ans[1],tmp_ans[2],0]; //niko
+					}				
+				}
+			}
+			if (this.qmode == 'correction') {
+				var answer_l1 = answer.split(";"); // all the hotspots
+				for (i=0; i<answer_l1.length; i++) {
+					var answer_l0 = answer_l1[i].split(",");
+						var answer_id = answer_l0[0];
+						answer_l0.splice(0,1);
+						answer_l1[i] = answer_l0.join(',');
+						console.log(answer_l1[i])
+					if (typeof(this.answers[i])=='undefined') this.answers[i] = new Array ();
+					var answer_l2 = answer_l1[i].split("|"); //all the users
+					for (j=0; j<answer_l2.length; j++) {
+						var tmp_ans = answer_l2[j].split(",");
+						this.answers[i][j] = [-1,tmp_ans[1],tmp_ans[2],tmp_ans[0]]; 
 					}				
 				}
 			}
@@ -127,11 +143,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		if (this.qmode == 'edit') {
-			this.menu_img.src = '../../js/images/combined.png';
-		} else {
-			this.menu_img.src = '../js/images/combined.png';
-		}
+		this.menu_img.src = ((this.qmode == 'edit' || this.qmode == 'correction')?'../':'')+'../js/images/combined.png';
 	}
 }
 
@@ -287,6 +299,7 @@ function qh_test(type) {
     if (type == 'answers') {
 			for (j=0;j<this.answers[i].length;j++) {        
 				this.answers[i][j][0] = '0';
+				console.log(this.answers[i][j]);
 				if (typeof this.answers[i][j][1]!='undefined' && this.answers[i][j][1]!='' && this.answers[i][j][1]!='false') {
 					tx = (1*this.answers[i][j][1]+300+0.5);
 					ty = (1*this.answers[i][j][2]+25-this.yOffset);
@@ -347,6 +360,9 @@ function redraw_hotspot(i,j) {
 
 
 function qh_redraw_canvas() {
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert('Hotspot question cannot be displayed because some images were not loaded.');
+	
 	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.start_polygon || (this.qmode == 'edit' && this.activeLabelText>-1))) {
 		this.redraw_once = false;
 		this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
@@ -355,7 +371,6 @@ function qh_redraw_canvas() {
 
     //test against label fields  
     if (this.do_the_test && this.qmode!='script') {
-			console.log(this.do_the_test)
 			this.qh_test('answers');
 		}
 		
@@ -603,7 +618,6 @@ function qh_redraw_canvas() {
 				i = this.activeLabel;
 				{        
 					for (j=0;j<this.answers[i].length;j++) {
-						//console.log(this.answers[i][j])
 						if (1*this.answers[i][j][0] == 1) this.context.fillRect(Math.round(1*this.answers[i][j][1]+300+0)-0.5,Math.round(1*this.answers[i][j][2]+25-this.yOffset)-0.5,2,2);
 					}
 				}
@@ -640,7 +654,6 @@ function qh_redraw_canvas() {
 					//position the smoke
 					var calc_x = calc_x0 = Math.round(1*this.answers[i][0][1]+300-4); //-4px correction for smoke icon shift and border
 					var calc_y = calc_y0 = Math.round(1*this.answers[i][0][2]-this.yOffset+2); //+2px correction for smoke icon shift and border
-					console.log(calc_x,calc_y);
  					if (fliph == 1) {
 						this.context.scale(-1,1);
 						calc_x = -calc_x-10;
@@ -1350,4 +1363,5 @@ function rqh(num) {
 	this.display_correct_answer = true;
   this.imgdata,this.imgdatab,this.imgdatac;
 	this.keypressed = false;
+	this.imageerrordisplay = 0;
 }
