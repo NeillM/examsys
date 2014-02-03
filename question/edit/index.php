@@ -134,7 +134,7 @@ if ($critical_error == '') {
     } else {
       $unified_part_names = $question->get_unified_fields();
       $save_individual = in_array('correct', array_keys($unified_part_names));
-
+      
       if ($save_individual) {
         // calculation, mcq
         $part_names = $question->get_change_fields();
@@ -143,6 +143,15 @@ if ($critical_error == '') {
           if (isset($_POST[$field])) $fields[$field] = $_POST[$field];
         }
         $errors = $question->update_correct($fields, $paper_id);
+        
+        foreach($fields as $feild_to_update => $value) {
+            if (stristr($feild_to_update, 'option_') !== false) {
+                continue;
+            }
+            $call = 'set_' . $feild_to_update;
+            $question->$call($value);
+        }
+        
       } else {
         // dichotomous, mrq, rank, extmatch, matrix
         $first = reset($question->options);
