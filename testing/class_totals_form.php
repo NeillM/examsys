@@ -44,9 +44,6 @@ require '../include/sysadmin_auth.inc';
     dd {
       padding-bottom: 16px;
     }
-    input[type=text] {
-      width: 400px;
-    }
     .error {
       color: red;
       font-weight: bold;

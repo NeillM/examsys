@@ -26,4 +26,5 @@ $string['students'] = 'Students';
 $string['feedbackviewed'] = 'Feedback Viewed';
 $string['objectivefeedback'] = 'Objective Feedback';
 $string['questionfeedback'] = 'Question Feedback';
+$string['cohortperformance'] = 'Cohort Performance';
 ?>

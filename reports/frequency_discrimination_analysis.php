@@ -1032,10 +1032,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 					echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "','0','#FFC0C0');}\n";
 					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $q_no . "\" width=\"" . ($q_media_width + 302) . "\" height=\"" . ($q_media_height + 25) . "\" align=\"middle\">');\n";
 					echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
-					echo "write_string('<param name=\"movie\" value=\"/reports/hotspot_analysis.swf\" />');\n";
+					echo "write_string('<param name=\"movie\" value=\"hotspot_analysis.swf\" />');\n";
 					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
 					echo "write_string('<param name=\"bgcolor\" value=\"#ffffff\" />');\n";
-					echo "write_string('<embed src=\"/reports/hotspot_analysis.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"" . ($q_media_width + 302) . "\" height=\"" . ($q_media_height + 25) . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+					echo "write_string('<embed src=\"hotspot_analysis.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"" . ($q_media_width + 302) . "\" height=\"" . ($q_media_height + 25) . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
 					echo "write_string('</object>');\n";
 					echo "</script>\n";
 				}

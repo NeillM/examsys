@@ -30,6 +30,8 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require_once '../include/load_config.php';
+
 set_time_limit(0);
 session_write_close();
 $response = '123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
@@ -177,8 +179,8 @@ $result->execute();
 
 $result = $mysqli->prepare("SELECT surname, first_names, username FROM users WHERE id = ? LIMIT 1");
 foreach ($papers as $paper) {
-  $url = $server . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=1&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
-  
+  $url = $server . $configObject->get('cfg_root_path') . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repcourse=%&sortby=student_id&module=1&folder=&percent=100&absent=0&direction=asc&studentsonly=1";
+	
   $output = getData($url);
   $marks_set = parseRawMarks($output);
   
@@ -195,7 +197,7 @@ foreach ($papers as $paper) {
     $errors = "<ul><li>Couldn't access class_totals</li>\n";
   }
   foreach ($marks_set as $mark) {
-    $url = $server . "/paper/finish.php?id=" . $paper['crypt_name'] . "&metadataID=" . $mark['metadataID'] . "&userID=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
+    $url = $server . $configObject->get('cfg_root_path') . "/paper/finish.php?id=" . $paper['crypt_name'] . "&metadataID=" . $mark['metadataID'] . "&userID=" . $mark['userID'] . "&surname=Test&log_type=2&percent=" . str_replace('%' ,'', $mark['percent']) . "&disable_mappings=1";
     $output = getData($url);
     $script_mark = parseScript($output);
 		

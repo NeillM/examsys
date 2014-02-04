@@ -24,7 +24,7 @@
  * @package
  */
 
-include_once 'Corrector.class.php';
+require_once 'Corrector.class.php';
 
 class HOTSPOTCorrector extends Corrector {
   /**
@@ -34,11 +34,14 @@ class HOTSPOTCorrector extends Corrector {
    */
   public function execute($new_correct, $paper_id, &$changes, $paper_type) {
     $errors = array();
+		
+
 
     $old_points = $this->_question->get_points1();
     $option = reset($this->_question->options);
     $marks_correct = $option->get_marks_correct();
     $marks_incorrect = $option->get_marks_incorrect();
+
 
     if ($old_points != $new_correct['points1']) {
       $changes = true;
@@ -48,21 +51,21 @@ class HOTSPOTCorrector extends Corrector {
     }
 
     if ($changes) {
-      try {
-    	  if(!$this->_question->save()) {
+			try {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
-          $student_records = explode(';', $new_correct['option_correct1']);
+					$student_records = explode(';', $new_correct['option_correct1']);
           $max_layers = 0;
-
+					
           foreach ($student_records as $student_record) {
             if (strlen($student_record) > 0) {
-              $layers = explode('|',$student_record);
+              $layers = explode('|', $student_record);
               $mark = 0;
               $correct_count = 0;
               $layer_no = 0;
               foreach ($layers as $layer) {
-                $sub_parts = explode(',',$layer);
+                $sub_parts = explode(',', $layer);
                 if ($layer_no == 0) {
                   $database_id = $sub_parts[0];
                   $is_correct = $sub_parts[1];
@@ -93,9 +96,9 @@ class HOTSPOTCorrector extends Corrector {
               }
 
               $first_comma = strpos($student_record, ',') + 1;
-              $tmp_user_answer = substr($student_record,$first_comma);
-
-              $result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=?, user_answer=? WHERE id=?");
+              $tmp_user_answer = substr($student_record, $first_comma);
+							
+							$result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");
               $result->bind_param('disi', $mark, $totalpos, $tmp_user_answer, $database_id);
               $result->execute();
               $result->close();
