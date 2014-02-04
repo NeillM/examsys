@@ -280,20 +280,11 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $log_array[$qID][$layer]['u'] = 1;
           }
         }
-				if ($configObject->get('cfg_interactive_qs') == 'html5') {
-					if (!isset($log_array[$qID][$layer]['coords'])) {
-						$log_array[$qID][$layer]['coords'] = $layer_answer;
-					} else {
-						$log_array[$qID][$layer]['coords'] .= ';' . $layer_answer;
-					}
+				if (!isset($log_array[$qID][$layer]['coords'])) {
+					$log_array[$qID][$layer]['coords'] = $layer_answer;
 				} else {
-				  // In Flash mode strip of the correct/incorrect information from the front of the coordinates.
-					if (!isset($log_array[$qID][$layer]['coords'])) {
-						$log_array[$qID][$layer]['coords'] = substr($layer_answer,2);
-					} else {
-						$log_array[$qID][$layer]['coords'] .= ';' . substr($layer_answer,2);
-					}
-				}
+					$log_array[$qID][$layer]['coords'] .= ';' . $layer_answer;
+				}				
         $layer++;
       }
       break;
@@ -319,12 +310,12 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       break;
     case 'extmatch':
       $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|',$answer);
+      $tmp_answer_parts = explode('|', $answer);
       $i = 0;
       foreach ($tmp_answer_parts as $tmp_individual_answer) {
         $i++;
         $tmp_sub_parts = array();
-        $tmp_sub_parts = explode('$',$tmp_individual_answer);
+        $tmp_sub_parts = explode('$', $tmp_individual_answer);
         foreach ($tmp_sub_parts as $tmp_individual_part) {
           if ($tmp_individual_answer == 'u') {
             if (isset($log_array[$qID][$i]['u'])) {
@@ -343,7 +334,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       }
       break;
     case 'matrix':
-      $tmp_answer_parts = explode('|',$answer);
+      $tmp_answer_parts = explode('|', $answer);
       $count_tmp_answer_parts = count($tmp_answer_parts);
       for ($i=0; $i<$count_tmp_answer_parts; $i++) {
         $tmp_individual_answer = $tmp_answer_parts[$i];
@@ -365,7 +356,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       break;
     case 'rank':
       $tmp_answer_parts = array();
-      $tmp_answer_parts = explode(',',$answer);
+      $tmp_answer_parts = explode(',', $answer);
       $i = 0;
       foreach ($tmp_answer_parts as $tmp_individual_answer) {
         if (isset($log_array[$qID][$i][$tmp_individual_answer])) {
