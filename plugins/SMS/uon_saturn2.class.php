@@ -102,6 +102,7 @@ Class UON_SATURN2 extends SmsUtils {
     $data->lookupdata = $lookupdata;
     $returned_data = $lookup->modulelookup($data);
 
+    $lookup->display_debug();
     if ($returned_data->success === false or $returned_data->failed === true) {
       return false;
     } else {
