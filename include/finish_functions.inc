@@ -490,8 +490,12 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
   echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
   for ($question=1; $question<=$q_no; $question++) {
-    $display_no++;
-
+    if (isset($_GET['qNo'])) {
+			$display_no = $_GET['qNo'];
+		} else {
+			$display_no++;
+		}
+		
     init_feedback($strong_on, $strong_off);
 
     $q_type = $paper[$question]['q_type'];
@@ -563,7 +567,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 					$extra = $tmp_display_students_response.$tmp_display_correct_answer.$tmp_display_question_mark.$tmp_display_feedback.$hide_if_unanswered;			
-					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
+					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -599,7 +603,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-					echo "sendTextToAS3('$language', 'q$question_no', 3, '../media/" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '";
+					echo "sendTextToAS3('$language', 'q$question_no', 3, '" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '";
           if ($tmp_display_correct_answer == '1') {
             echo $tmp_user_answer;
           } else {
@@ -2028,7 +2032,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 				  echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 301) . "' height='" . ($paper[$question]['q_media_height'] + 30) . "'></canvas>\n";
 				  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 				  echo "<script language='JavaScript' type='text/javascript'>\n";
-				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $paper[$question]['q_media'] . "', '" . $tmp_correct . "', '";
+				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
 					echo "', '" . $extra . "','#FFC0C0','hotspot','script');\n";
 				  echo "</script>\n";
@@ -2222,7 +2226,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
 					echo "','";
 					if (isset($extra)) echo $extra;
@@ -2278,11 +2282,11 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   <script language="JavaScript">
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="/media/<?php echo $movie; ?>" />');
+    write_string('<param name="movie" value="../media/<?php echo $movie; ?>" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     write_string('<param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" />');
-    write_string('<embed src="/media/<?php echo $movie ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="../media/<?php echo $movie ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
   </div>
@@ -2342,7 +2346,7 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
           foreach ($objByModule[$thisModuleid] as $id => $mappingData) {
             $html .= "<li>" . $mappingData['content'];
             if ($mappingData['session']['source_url'] != '') {
-              $html .= "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"12\" height=\"12\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
+              $html .= "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $mappingData['session']['source_url'] . "\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" target=\"_blank\">" . $mappingData['session']['title'] . "</a>";
             }
             $html .= "</li>\n";
           }

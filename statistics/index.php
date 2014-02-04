@@ -72,7 +72,7 @@ require '../include/sidebar_menu.inc';
   }
 
 	$menudata = array();
-	$menudata['papersbyschool']			= array('papers_by_school.php?calyear=' . $summative_year, 'formative.png');
+	$menudata['papersbyschool']			= array('papers_by_school.php?calyear=' . $summative_year, 'paper_stats.png');
 	$menudata['questionsbyschool']	= array('questions_by_school.php', 'question_stats.png');
 	$menudata['summativeexamstats']	= array('summative_stats.php?calyear=' . $summative_year, 'summative_scheduling.png');
 	$menudata['summativefeedback']	= array('summative_feedback.php?calyear=' . $summative_year, 'summative_feedback_stats.png');

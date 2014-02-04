@@ -44,13 +44,14 @@ class RAF {
     $this->db        	= $db;
 		$this->configObj	= $configObject;
 		$this->userID			= $userObject->get_user_ID();
+		$this->string			= $string;
   }
 	
 	/**
 	 * EXPORT: Creates and outputs a ZIP file containing all the questions on the current paper.
 	 */
 	public function export($questions) {
-		$this->status_array = QuestionStatus::get_all_statuses($db, $string, true);
+		$this->status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
 		
 		$raf_data = $this->create_export_array($questions);
 		

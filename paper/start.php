@@ -552,7 +552,7 @@ $max_ref_width 				= get_max_reference_width($reference_materials);
 require '../config/start.inc';
 echo "<!DOCTYPE html>\n<html>\n<head>\n";
 
-$url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] : '';
+$url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] . '&qNo=' . $_GET['qNo'] : '';
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -1085,8 +1085,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
         $assigned_number++;
         $no_on_screen++;
       }
-      $tmp_questions_array[$q_no]['assigned_number'] = $assigned_number;
-      $tmp_questions_array[$q_no]['no_on_screen'] = $no_on_screen;
+			if (isset($_GET['qNo'])) {
+				$tmp_questions_array[$q_no]['assigned_number'] = $_GET['qNo'];   // Preview mode, use the number that is passed in.
+			} else {
+				$tmp_questions_array[$q_no]['assigned_number'] = $assigned_number;
+      }
+			$tmp_questions_array[$q_no]['no_on_screen'] = $no_on_screen;
       $tmp_questions_array[$q_no]['screen'] = $screen;
       $tmp_questions_array[$q_no]['theme'] = trim($theme);
       $tmp_questions_array[$q_no]['scenario'] = trim($scenario);

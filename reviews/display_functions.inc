@@ -336,7 +336,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         ?>
         <br />
 				<?php
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rev disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 1) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
@@ -703,7 +703,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');\n";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -790,12 +790,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $tmp_bgcolor = $bgcolor;
 ?>
 				<?php
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rev disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "'  width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
+					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
 					if (isset($question['std'])) echo $question['std'];
 					echo "','#FFC0C0','labelling','review');\n";
 					echo "</script>\n";
@@ -896,17 +896,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     //put the caculated awnser in the session for use in linked caculation questions (N.B only for reviewers screen!!)
     $_SESSION['allans'][$current_screen][$question['q_id']] = $question['object']->useranswer;
     
-    //$question['object']->load_all_user_answers($_SESSION['allans']);
-    //echo "<tr><td>hi</td><td>";
-
-    //if ($li_set == 0) {
-    //  echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
-    //  if ($calculator == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.png" width="24" height="24" alt="' . $string['calculator'] . '" /></a>';
-    //  echo '</td><td>';
-    //} else {
-      echo '<tr><td></td><td>';
-    //}
-
+    echo '<tr><td></td><td>';
+    
     $question['leadin'] = str_replace('$A','<span style="background-color:#FFFF80">&nbsp;<strong>$A</strong>&nbsp;</span>' . $A,$question['leadin']);
     $question['leadin'] = str_replace('$B','<span style="background-color:#FFFF80">&nbsp;<strong>$B</strong>&nbsp;</span>' . $B,$question['leadin']);
     $question['leadin'] = str_replace('$C','<span style="background-color:#FFFF80">&nbsp;<strong>$C</strong>&nbsp;</span>' . $C,$question['leadin']);
@@ -918,20 +909,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $question['leadin'] = str_replace('$I','<span style="background-color:#FFFF80">&nbsp;<strong>$G</strong>&nbsp;</span>' . $I,$question['leadin']);
     $question['leadin'] = str_replace('$J','<span style="background-color:#FFFF80">&nbsp;<strong>$H</strong>&nbsp;</span>' . $J,$question['leadin']);
 
-    //echo "<p>" . $question['leadin'] . "</p>";
-
-    //eval ("\$answer = $answer_equation;");
-    //$answer = round($answer, $settings['answer_decimals']);
     $answer = '';
 
     $_SESSION['ans' . $q_id] = $answer;
     $_SESSION['q' . $q_id] = ($question_no + $question_offset);
     echo "<table  cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n<tr><td>";
     if (isset($std_parts[0])) echo "<p>" . display_std($std_parts[0]) . "</p>";
-    echo "</td>\n<td>";
-    //echo "<p><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" value=\"$answer\" />" . $settings['units'] . "</p>\n";
-    echo "</td></tr></table>";
-    //$marks = $display_option['marks_correct'];
+    echo "</td>\n<td></td></tr></table>";
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
     if ($question['score_method'] == 'other') {
       $part_id++;
