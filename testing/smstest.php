@@ -43,9 +43,9 @@ ini_set('xdebug.var_display_max_depth', $max_chldrn);
 print 'xdebug.var_display_max_depth: ' . $max_chldrn . '<br />';
 
 if (isset($_REQUEST['var_display_max_data'])) {
-  $max_chldrn = $_REQUEST['var_display_max_data'];
+  $max_data = $_REQUEST['var_display_max_data'];
 } else {
-  $max_chldrn = 1024;
+  $max_data = 1024;
 }
 ini_set('xdebug.var_display_max_data', $max_data);
 print 'xdebug.var_display_max_data: ' . $max_data . '<br />';
