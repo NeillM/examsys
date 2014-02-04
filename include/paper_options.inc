@@ -29,6 +29,7 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
 require_once $cfg_web_root . 'include/mapping.inc';
 
 require_once $cfg_web_root . 'classes/paperproperties.class.php';
+require_once $cfg_web_root . 'classes/paperutils.class.php';
 require_once $cfg_web_root . 'classes/relationship.class.php';
 
 $userObject = UserObject::get_instance();
@@ -468,19 +469,9 @@ if ($properties->get_paper_type() == '2') {
 <table style="font-size:90%; width:185px; margin-left:9px">
 <?php
   // Session
-  $year_in_title = false;
-  $tmp_match = '';
-  if (preg_match( '/\d\d\d\d[\/-]\d\d\d\d/' , $properties->get_paper_title(), $matches) == 1) {
-    $year_in_title = true;
-    $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-  } elseif (preg_match( '/\d\d\d\d[\/-]\d\d/' , $properties->get_paper_title(), $matches) == 1) {
-    $year_in_title = true;
-    $tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-  } elseif (preg_match( '/\d\d[\/-]\d\d/' , $properties->get_paper_title(), $matches) == 1) {
-    $year_in_title = true;
-    $tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
-  }
-  if ($year_in_title == true and $tmp_match != $properties->get_calendar_year()) {
+  $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
+	
+  if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['session'] . "</a></td><td style=\"color:#C00000\"><strong>" . $string['mismatch'] . "</strong></td></tr>\n";
   }
   // Times
