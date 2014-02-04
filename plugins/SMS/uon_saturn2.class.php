@@ -65,11 +65,13 @@ Class UON_SATURN2 extends SmsUtils {
 
     if (isset($moddetails['sms']) and $moddetails['sms'] != '') {
 
+      print "sms is set<br>";
       $sms = $moddetails['sms'];
       $pos = strrpos($sms, '?');
       $right = substr($sms, $pos + 1);
 
       $campus = strtoupper(substr($right, 7));
+      print "SMS campus is set to $campus <br>";
       if ($campus == 'MALAYSIA') {
         $campus = 'MY';
       } elseif ($campus == 'CHINA') {
@@ -78,14 +80,17 @@ Class UON_SATURN2 extends SmsUtils {
       // else UK
 
     } elseif ((isset($this->campus) and $this->campus != '')) {
+      print "object campus variable set to " . $this->campus . "<br>";
       $campus = $this->campus;
     } else {
+      print "defaulted to dettecting using module code";
       $campus = 'UK';
       if (strpos($moduleID, '_UNMC') !== false) {
         $campus = 'MY';
       } elseif (strpos($moduleID, '_UNNC') !== false) {
         $campus = 'CN';
       }
+      print " $campus <br>";
     }
 
     $lookupdata = new stdClass();
@@ -97,6 +102,7 @@ Class UON_SATURN2 extends SmsUtils {
     $data->lookupdata = $lookupdata;
     $returned_data = $lookup->modulelookup($data);
 
+    $lookup->display_debug();
     if ($returned_data->success === false or $returned_data->failed === true) {
       return false;
     } else {
