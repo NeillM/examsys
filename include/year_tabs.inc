@@ -29,7 +29,10 @@ function drawTabs($current_tab, $type, $start_offset, $end_offset, $extra = '') 
 	
   for ($tmp_year=$start_year; $tmp_year < $start_year + $start_offset + $end_offset; $tmp_year++) {
 	  if ($type == 'academic') {
-		  $tab_year = $tmp_year . '/' . (substr($tmp_year,-2) + 1);
+		  $inc_year = (substr($tmp_year,-2) + 1);
+			if ($inc_year < 10) $inc_year = '0' . $inc_year;
+		
+		  $tab_year = $tmp_year . '/' . $inc_year;
 		} else {
 		  $tab_year = $tmp_year;
 		}

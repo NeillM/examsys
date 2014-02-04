@@ -159,7 +159,7 @@ foreach ($master_array as $school => $data) {
 	  if ($data[$part] == 0) {
 			echo "<td class=\"n grey\">" . $data[$part] . "</td>";
 		} else {
-			if ($i == 1 or $i == 1) {
+			if ($i == 1 or $i == 2 or $i == 3) {
 				echo "<td class=\"n\"><a href=\"feedback_detail.php?calyear=" . $_GET['calyear'] . "&school=" . $master_array[$school]['id'] . "&type=$i\">" . $data[$part] . "</a></td>";
 			} else {
 				echo "<td class=\"n\">" . $data[$part] . "</td>";

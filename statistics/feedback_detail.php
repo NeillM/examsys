@@ -68,10 +68,16 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 <tr>
 <th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php
 	echo $string['feedbackstats'] . ': </strong>';
-	if ($_GET['type'] == 1) {
-	  echo $string['objectivefeedback'];
-	} else {
-	  echo $string['questionfeedback'];
+	switch ($_GET['type']) {
+		case 1:
+			echo $string['objectivefeedback'];
+			break;
+		case 2:
+			echo $string['questionfeedback'];
+			break;
+		case 3:
+			echo $string['cohortperformance'];
+			break;
 	}
 	
 	$extra = "&school=$schoolID&type=" . $_GET['type'];
@@ -177,10 +183,16 @@ function get_papers_for_school($date_range, $moduleIDs, $db) {
 
 function get_feedback_release_dates($date_range, $moduleIDs, &$papers, $db) {
 	$configObject = Config::get_instance();
-	if ($_GET['type'] == 1) {
-		$report_type = 'objectives';
-	} else {
-		$report_type = 'questions';
+	switch ($_GET['type']) {
+		case 1:
+			$report_type = 'objectives';
+			break;
+		case 2:
+			$report_type = 'questions';
+			break;
+		case 3:
+			$report_type = 'cohort_performance';
+		  break;
 	}
 	
 	$sql = "SELECT feedback_release.paper_id, idfeedback_release, type, DATE_FORMAT(date, '" . $configObject->get('cfg_long_date_time') . "') FROM properties, properties_modules, feedback_release WHERE feedback_release.paper_id = properties.property_id AND properties.property_id = properties_modules.property_id $date_range AND paper_type = '2' AND feedback_release.type='$report_type' AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL";
