@@ -23,8 +23,10 @@
 */
 
 require_once $cfg_web_root . 'classes/stringutils.class.php';
-require_once $root . 'classes/configobject.class.php';
-$configObject          = Config::get_instance();
+require_once $cfg_web_root . 'classes/configobject.class.php';
+require_once $cfg_web_root . 'classes/exclusion.class.php';
+
+$configObject = Config::get_instance();
 
 function echo_content($html) {
   echo $html;
@@ -158,6 +160,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     $excluded[$exclude_q_id] = $exclude_parts;
   }
   $exclude_query->close();
+	
+  $exclusions = new Exclusion($paperID, $mysqlidb);
+  $exclusions->load();
 
   if ($paper_type == '2' and ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
     if (!isset($_GET['userID']) and !isset($_GET['q_id'])) { 
@@ -209,11 +214,16 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   while ($answer_data->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {  // New question.
      if ($old_q_id != 0) {
-        if (isset($excluded[$old_q_id])) {
+        /*
+				if (isset($excluded[$old_q_id])) {
           $tmp_exclude = $excluded[$old_q_id];
         } else {
           $tmp_exclude = '';
         }
+				*/
+				
+				$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+				
         $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
         $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
@@ -286,13 +296,17 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   }
   $answer_data->close();
 	
+	$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+	/*
   if (isset($excluded[$old_q_id])) {
     $tmp_excluded = $excluded[$old_q_id];
   } else {
     $tmp_excluded = '';
   }
-  $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
-  $total_random_mark += qRandomMarks($old_q_type, $tmp_excluded, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+	*/
+	
+  $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
+  $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
 
   // Parse for random questions.
   for ($i=1; $i<=$q_no; $i++) {
@@ -386,13 +400,16 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         $paper[$i]['q_type'] = 'random_failed';
         $paper[$i]['leadin'] = "<span style=\"color: #f00;\">{$string['errorrandomnotfound']}</span>";
       }
+			$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+			/*
       if (isset($excluded[$old_q_id])) {
         $tmp_excluded = $excluded[$old_q_id];
       } else {
         $tmp_excluded = '';
       }
-      $paper[$i]['totalpos'] = qMarks($q_type, $tmp_excluded, $marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method);
-      $total_random_mark += qRandomMarks($q_type, $tmp_excluded, $old_marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
+			*/
+      $paper[$i]['totalpos'] = qMarks($q_type, $tmp_exclude, $marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method);
+      $total_random_mark += qRandomMarks($q_type, $tmp_exclude, $old_marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
     }
   }
 
@@ -444,8 +461,8 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         $enhancedcalc->export_save($paper[$question]);
       }
 
-      $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
-      $total_random_mark += qRandomMarks($paper[$question]['q_type'], $tmp_excluded, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height']);
+      $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_exclude, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
+      $total_random_mark += qRandomMarks($paper[$question]['q_type'], $tmp_exclude, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height']);
     }
  }
 
@@ -519,11 +536,14 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     }
     $no_options = count($paper[$question]['option_text']);
 
-    if (array_key_exists($paper[$question]['q_id'],$excluded)) {
+		$tmp_exclude = $exclusions->get_exclusions_by_qid($paper[$question]['q_id']);
+    /*
+		if (array_key_exists($paper[$question]['q_id'],$excluded)) {
       $tmp_exclude = $excluded[$paper[$question]['q_id']];
     } else {
       $tmp_exclude = '0000000000000000000000000000000000000000';      // No exclusions found, enable all options.
     }
+		*/
 
     // Backwards compatibility - make up a default order if there is none.
     if (!isset($paper[$question]['option_order']) or $paper[$question]['option_order'] == '') {
