@@ -55,9 +55,9 @@ class HOTSPOTCorrector extends Corrector {
     	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
-          $student_records = explode(';', $new_correct['option_correct1']);
+					$student_records = explode(';', $new_correct['option_correct1']);
           $max_layers = 0;
-
+					
           foreach ($student_records as $student_record) {
             if (strlen($student_record) > 0) {
               $layers = explode('|', $student_record);
@@ -98,10 +98,7 @@ class HOTSPOTCorrector extends Corrector {
               $first_comma = strpos($student_record, ',') + 1;
               $tmp_user_answer = substr($student_record, $first_comma);
 							
-							var_dump('hi');
-							exit;
-
-              $result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");
+							$result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");
               $result->bind_param('disi', $mark, $totalpos, $tmp_user_answer, $database_id);
               $result->execute();
               $result->close();

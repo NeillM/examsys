@@ -1205,7 +1205,7 @@ function qh_mouseDragUp(){
     this.hotSpots[led[0]].splice((led[1])*6+4,6);
     this.hotSpots[led[0]][3]--;
   }
-	if (this.qmode == 'answer') this.do_the_test = true;
+	if (this.qmode == 'answer' || this.qmode == 'edit') this.do_the_test = true;
 	
 	if (this.qmode == 'analysis') {
 		this.canvas.style.cursor = 'wait';
