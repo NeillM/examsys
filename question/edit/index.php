@@ -122,19 +122,23 @@ if ($critical_error == '') {
 
   // Get any existing media
   $current_media = $question->get_media();
+	
 
   $do_save = false;
   $show_media_upload = false;
   $show_correction_intermediate = false;
   if ($question->requires_media() and $current_media['filename'] == '') {
     $show_media_upload = true;
+		
+
   } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['limitedsave']) {
+
     if ($question->requires_correction_intermediate() and (!isset($_POST['corrected']) or $_POST['corrected'] != 'OK')) {
       $show_correction_intermediate = true;
-    } else {
+		} else {
       $unified_part_names = $question->get_unified_fields();
       $save_individual = in_array('correct', array_keys($unified_part_names));
-      
+			
       if ($save_individual) {
         // calculation, mcq
         $part_names = $question->get_change_fields();

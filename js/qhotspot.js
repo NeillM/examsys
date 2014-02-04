@@ -37,7 +37,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 			this.qa_redraw_canvas;
 		} 
 		this.gen_img.onload = qh_gen_img_onload.bind(this);
-		this.gen_img.src = ((mode == 'edit' || mode == 'correction')?'../':'')+'../media/'+image;
+		this.gen_img.src = ((mode == 'edit' || mode == 'correction') ? '../' : '') + '../media/'+image;
 		//---------- mode 
 		if (mode == 'review') mode='script';
 		if (mode == 'edit' || mode == 'analysis' || mode == 'correction') this.yOffset = 0;
@@ -1174,7 +1174,7 @@ function qh_mouseDragUp(){
     this.hotSpots[led[0]].splice((led[1])*6+4,6);
     this.hotSpots[led[0]][3]--;
   }
-	if (this.qmode == 'answer' || this.qmode == 'correction') this.do_the_test = true; //niko
+	if (this.qmode == 'answer' || this.qmode == 'correction' || this.qmode == 'edit') this.do_the_test = true; //niko
 	
 	if (this.qmode == 'analysis') {
 		this.canvas.style.cursor = 'wait';
@@ -1218,7 +1218,7 @@ function qh_ReturnInfo() {
 		}
 		var target_field = document.getElementById('option_correct'+this.q_Num);
 	}
-
+	console.log(this.qmode);
 	if (this.qmode == 'edit') {
 		for (i=0;i<this.hotSpots.length;i++) {
 			questions_result+=this.hotSpots[i][1]+'~';
@@ -1232,6 +1232,7 @@ function qh_ReturnInfo() {
 		}
 		questions_result = questions_result.substring(0,questions_result.length-1);
 		var target_field = document.getElementById('points'+this.q_Num);
+		console.log(target_field);
 	}
 	if (questions_result!='' && target_field) target_field.value = questions_result;
 }

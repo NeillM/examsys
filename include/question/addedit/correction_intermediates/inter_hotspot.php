@@ -18,22 +18,22 @@
 * 
 * @author Rob Ingram
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
 // Query log2 table for existing student answers.
 $fix_data = '';
-$result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id=?");
+$result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id = ?");
 $result->bind_param('i', $question->id);
 $result->execute();  
 $result->bind_result($id, $user_answer);
-while ($row = $result->fetch()) {
+while ($result->fetch()) {
   if ($user_answer != 'u') {
     $tmp_user_answer = '';
-    $layers = explode('|',$user_answer);
+    $layers = explode('|', $user_answer);
     foreach ($layers as $layer) {
-      $sub_parts = explode(',',$layer);
+      $sub_parts = explode(',', $layer);
       if ($tmp_user_answer == '') {
         $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2];
       } else {
@@ -108,7 +108,7 @@ flashTarget = 'option_correct';
 								}
 							endif;
 							?>                
-                <input type="hidden" name="option_correct1" id="option_correct1" value="" />
+                <input type="text" name="option_correct1" id="option_correct1" value="" />
                 <input type="hidden" name="option_marks_correct" id="option_marks_correct" value="<?php echo $_POST['option_marks_correct']; ?>" />
                 <input type="hidden" name="option_marks_incorrect" id="option_marks_incorrect" value="<?php echo $_POST['option_marks_incorrect']; ?>" />
                 <input type="hidden" name="corrected" value="OK" />
