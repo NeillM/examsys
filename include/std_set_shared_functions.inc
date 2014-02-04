@@ -426,12 +426,12 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         echo '<tr><td></td><td>';
       }
       echo $display_option['leadin'] . '<br />';
-			if ($configObject->get('cfg_interactive_qs')=='html5') {
+			if ($configObject->get('cfg_interactive_qs') == 'html5') {
 				//<!-- ======================== HTML5 part include finf ================= -->
 				echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 2) . "' height='" . ($display_option['q_media_height'] + 24) . "'></canvas>\n";
 				echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 				echo "<script language='JavaScript' type='text/javascript'>\n";
-				echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $display_option['q_media'] . "', '" . $display_option['correct'] . "', '','','#FFC0C0','area','script');\n";
+				echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $display_option['q_media'] . "', '" . $display_option['correct'] . "', '','','#FFC0C0','area','script');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->
 			} else {

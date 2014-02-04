@@ -55,7 +55,7 @@ $error_range = range(0, 50);
 <script type="text/javascript">
 //<![CDATA[
 $(function () {
-  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
+  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'" . $media['filename'] . "', '" . $correct . "'" ?>);
 });
 //]]>
 </script>
@@ -88,7 +88,7 @@ if ($configObject->get('cfg_interactive_qs') == 'html5') {
   echo '<canvas id="canvas1" width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
   echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";
 	echo '<script language="JavaScript" type="text/javascript">' . "\n";
-	echo 'setUpQuestion(1, "option_correct", "' . $language . '", "../../media/' . $media['filename'] . '", "' . $correct . '", "", "", "#FFC0C0", "area", "2");' . "\n";
+	echo 'setUpQuestion(1, "option_correct", "' . $language . '", "' . $media['filename'] . '", "' . $correct . '", "", "", "#FFC0C0", "area", "2");' . "\n";
   echo '</script>' . "\n";
   //<!-- ==================================================== -->
 } else {

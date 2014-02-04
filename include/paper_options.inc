@@ -83,7 +83,7 @@ if (count($moduleIDs) > 0) {
 <script language="JavaScript" src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js"></script>
 <script language="JavaScript">
   function startPaper(fullsc, preview) {
-    var urlMod = (typeof preview == 'undefined' || !preview) ? '' : '&q_id=' + getLastID($('#questionID').val());
+    var urlMod = (typeof preview == 'undefined' || !preview) ? '' : '&q_id=' + getLastID($('#questionID').val() + '&qNo=' + $('#questionNo').val());
     <?php
     if ($properties->get_paper_type() == '4') {      // OSCE
     ?>
