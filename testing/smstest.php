@@ -51,7 +51,6 @@ ini_set('xdebug.var_display_max_data', $max_data);
 print 'xdebug.var_display_max_data: ' . $max_data . '<br />';
 
 
-xdebug.var_display_max_data
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once $root . '/../include/auth.inc';
 include_once $root . '/../include/load_config.php';
