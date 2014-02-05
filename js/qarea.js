@@ -22,7 +22,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		var intervalID = window.setInterval(this.qa_redraw_canvas.bind(this), 10);
 	}
 	if (this.canvas && !this.canvas.getContext){
-		alert ('Canvas not supported');
+		alert (lang_string['errorcanvas']);
 	}
   
 	if (this.canvas && this.canvas.getContext){
@@ -316,7 +316,10 @@ function qa_redraw_canvas_main(tx,ty) {
 }
 
 function qa_redraw_canvas() { 
-		if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
+	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
+	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert(lang_string['errorimages']);
+
+	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
 		
     //buttons
     if (this.buttonBox.length == 0) this.qa_menuBuild();
@@ -938,4 +941,5 @@ function rqa(num) {
 	this.display_students_response = true;
 	this.display_correct_answer = true;
 	this.hide_feedback_ifunanswered = false;
+	this.imageerrordisplay = 0;
 }

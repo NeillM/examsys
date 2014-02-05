@@ -21,5 +21,7 @@ $string['warning'] = 'VAROVÁNÍ';
 $string['errormessage1'] = 'Linky mnohoúhelníku se překrývají.';
 $string['errormessage2'] = 'Toto může mít za následek vznik průrvy v aktivním místě obrázku a následné nesprávné oznámkování studentovi odpovědi.';
 $string['cancel'] = 'Chcete odstranit poslední linku?';
+$string['errorcanvas'] = 'Canvas not supported';
+$string['errorimages'] = 'Hotspot question cannot be displayed because some images were not loaded.';
 
 ?>
