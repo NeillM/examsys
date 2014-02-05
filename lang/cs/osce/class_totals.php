@@ -47,4 +47,5 @@ $string['surname'] = 'Příjmení';
 $string['firstnames'] = 'Jméno';
 $string['rating'] = 'Ohodnocení';
 $string['borderlinemethod'] = 'Hraniční metoda';
+$string['noattempts'] = 'This OSCE has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
 ?>
