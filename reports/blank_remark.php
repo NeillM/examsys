@@ -35,7 +35,7 @@ $q_id     = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $paper_type = $propertyObj->get_paper_type();
 
@@ -112,51 +112,74 @@ if (isset($_POST['submit'])) {
   $result->bind_param('si', $new_option_text, $q_id);
   $result->execute();
   $result->close();
-
+	
   $logger = new Logger($mysqli);
   $success = $logger->track_change('Post-Exam Blank correction', $q_id, $userObject->get_user_ID(), $option_text, $new_option_text, 'Question/Stem');
 
   // Remark student answers
   $blank_details = explode("[blank", $new_option_text);
   $no_answers = count($blank_details) - 1;
-  $have_answer = false;
-  for ($i=1; $i<=$no_answers; $i++) {
-    $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
-    $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
-    $answer_list[] = explode(',',$blank_details[$i]);
-  }
+  	
+	$totalpos = 0;
+	for ($i = 1; $i <= $no_answers; $i++) {
+		if (preg_match("|mark=\"([0-9]{1,3})\"|", $blank_details[$i], $mark_matches)) {
+			$totalpos += $mark_matches[1];
+			$individual_q_mark = $mark_matches[1];
+		} else {
+			$totalpos += $marks_correct;
+			$individual_q_mark = $marks_correct;
+		}		
+	}
 
-  //foreach ($log_answers as $id=>$log_answer) {
-  foreach ($log_answers as $log_type) {
-    foreach ($log_type as $id=>$log_answer) {
-      $mark = 0;
+	foreach ($log_answers as $log_type=>$log_data) {
+    foreach ($log_data as $id=>$log_answer) {
+			$mark = 0;
+			$have_answer = false;
+			$saved_response = '';
       $user_parts = explode('|', $log_answer);
+			
+			for ($i = 1; $i <= $no_answers; $i++) {
+				$blank_details = explode("[blank", $new_option_text);
+				$blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
+				$blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+				$answer_list = explode(',', $blank_details[$i]);
 
-      for ($i=1; $i<=$no_answers; $i++) {
-        $match = false;
-        if ($user_parts[$i] != 'u') {
-          foreach ($answer_list[$i-1] as $alternative) {
-            if (trim($user_parts[$i]) == trim($alternative)) {
-              $match = true;
-            }
-          }
-          if ($match) {
-            $mark += $marks_correct;
-          } else {
-            $mark -= $marks_incorrect;
-          }
-        }
-      }
-      // Update log2 with new student marks.
-      $result = $mysqli->prepare("UPDATE log$log_type SET mark = ? WHERE id = ?");
-      $result->bind_param('ii', $mark, $id);
-      $result->execute();
-      $result->close();
-    }
-  }
+				$answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
+			
+				if ($user_parts[$i] != 'u' and $user_parts[$i] != '') {
+					$have_answer = true;
+					$is_correct = false;
+					foreach ($answer_list as $individual_answer) {
+						if (str_replace('&nbsp;', ' ', trim(strtolower($user_parts[$i]))) == str_replace('&nbsp;', ' ', trim(strtolower($individual_answer)))) {
+							$is_correct = true;
+							break;
+						}
+					}
+					$mark += ($is_correct) ? $individual_q_mark : $marks_incorrect;
+				}		
+			}		
+		
+			// Recalculate if mark per question
+			if ($score_method == 'Mark per Question') {
+				if ($have_answer) {
+					$mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
+				}
+			}
+			
+			// Update marks in the database
+			$result = $mysqli->prepare("UPDATE log$log_type SET mark = ? WHERE id = ?");
+			$result->bind_param('ii', $mark, $id);
+			$result->execute();
+			$result->close();
+		}
+	}
+	
+	// Set paper to re-cache marks again after the change.
+  $propertyObj->set_recache_marks(1);
+  $propertyObj->save();
+
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -184,8 +207,7 @@ if (isset($_POST['submit'])) {
     }
   }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -227,7 +249,7 @@ if (isset($_POST['submit'])) {
 
 <body onload="resizeList()" onresize="resizeList()">
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID']; ?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate']; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32 alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['uniqueanswers']; ?></td></tr>
   </table>
