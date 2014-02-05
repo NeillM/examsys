@@ -693,7 +693,7 @@ function qh_redraw_canvas() {
 						calc_y = -calc_y-48;
 					}
           //pasting the baloon background
-					this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top+1,this.imgdata.width-2,this.imgdata.height-2,calc_x,calc_y,this.imgdata.width-2,this.imgdata.height-2);
+					this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top+1,this.imgdata.width-2,this.imgdata.height-2,calc_x,calc_y+1,this.imgdata.width-2,this.imgdata.height-2);
           this.context.restore(); //restore from before flippping
                   
           //recoloring the baloon background
@@ -714,14 +714,14 @@ function qh_redraw_canvas() {
 					if (fliph == 1) this.context.scale(-1,1);
 					if (flipv == 1) this.context.scale(1,-1);
           this.imgdata = menuImages['toolbar/smoke.png'];
-         	this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,calc_x-1.5,calc_y-1,this.imgdata.width,this.imgdata.height);
+         	this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,calc_x-1,calc_y,this.imgdata.width,this.imgdata.height);
           this.context.restore(); //restore from before flippping
 
           //symbol
 					this.context.fillStyle=setTextColour(this.hotSpots[i][2]);
 			    this.context.textAlign="left";
           this.context.font="bold 18px Arial";
-          this.context.fillText(String.fromCharCode(65+i),(1*this.answers[i][0][1]+320-3.5-45*fliph),(1*this.answers[i][0][2]-this.yOffset+20+22*flipv));
+          this.context.fillText(String.fromCharCode(65+i),(1*this.answers[i][0][1]+320-3.5-45*fliph),(1*this.answers[i][0][2]-this.yOffset+21+22*flipv));
 					
         }
       }
