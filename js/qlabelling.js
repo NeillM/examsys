@@ -21,9 +21,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.intervalID = window.setInterval(this.ql_redraw_canvas.bind(this), 10);
 	}
 	if (this.canvas && !this.canvas.getContext){
-		alert ('Canvas not supported');
+		alert (lang_string['errorcanvas']);
 	}
-
 	if (this.canvas && this.canvas.getContext){
 		this.context = this.canvas.getContext('2d');
 		this.context.lineWidth = 1;
@@ -900,7 +899,7 @@ function ql_redraw_canvas() {
   }
  
  	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
-	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert('Labelling question cannot be displayed because some images were not loaded.');
+	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert(lang_string['errorimages']);
 
 	//main redrawing part
 	if (this.allImagesLoaded && this.menu_img_loaded && this.gen_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || (this.global_add != '' &&  this.shape_x1>-1) || this.global_move || this.global_erase)){

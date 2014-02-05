@@ -20,9 +20,9 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 	}
 	
 	if (this.canvas && !this.canvas.getContext){
-		alert ('Canvas not supported');
+		alert (lang_string['errorcanvas']);
 	}
-  
+
 	if (this.canvas && this.canvas.getContext){
 		this.context = this.canvas.getContext('2d');
 		this.context.lineWidth = 1;
@@ -368,10 +368,9 @@ function redraw_hotspot(i,j) {
 
 }
 
-
 function qh_redraw_canvas() {
 	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
-	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert('Hotspot question cannot be displayed because some images were not loaded.');
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert(lang_string['errorimages']);
 	
 	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.start_polygon || (this.qmode == 'edit' && this.activeLabelText>-1))) {
 		this.redraw_once = false;
@@ -715,7 +714,7 @@ function qh_redraw_canvas() {
 					if (fliph == 1) this.context.scale(-1,1);
 					if (flipv == 1) this.context.scale(1,-1);
           this.imgdata = menuImages['toolbar/smoke.png'];
-         	this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,calc_x-1.5,calc_y,this.imgdata.width,this.imgdata.height);
+         	this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width-1,this.imgdata.height,calc_x-1,calc_y,this.imgdata.width,this.imgdata.height);
           this.context.restore(); //restore from before flippping
 
           //symbol

@@ -458,26 +458,26 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     case '4':     // OSCE menu
       echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['cohortreports'] . "</div>\n";
       //echo "<div style=\"line-height:150%\">inc. absent candidates&nbsp;<input type=\"checkbox\" name=\"absent\" value=\"1\" /></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../osce/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../osce/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../osce/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
       
       echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['itemanalysis'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../osce/frequency_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/frequency_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
       
       echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../osce/portfolio_sheets.php?',event)\">" . $string['individualportfoliosheets'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../osce/export_ratings.php?',event)\">" . $string['exportratingscsv'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/portfolio_sheets.php?',event)\">" . $string['individualportfoliosheets'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/export_ratings.php?',event)\">" . $string['exportratingscsv'] . "</a></div>\n";
       break;
     case '6':
       echo "<br />\n<div style=\"line-height:150%; font-weight:bold\">Reports</div>\n";
       if ($properties->get_display_question_mark() == '1') {
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../peer_review/summary_report.php?percent=0&',event)\">" . $string['ReviewSummary1'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../peer_review/summary_report.php?percent=1&',event)\">" . $string['ReviewSummary2'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=0&',event)\">" . $string['ReviewSummary1'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=1&',event)\">" . $string['ReviewSummary2'] . "</a></div>\n";
       } else {
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../peer_review/summary_report.php?',event)\">" . $string['ReviewSummary3'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?',event)\">" . $string['ReviewSummary3'] . "</a></div>\n";
       }
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../../peer_review/summary_report_csv.php?',event)\">" . $string['ReviewSummary4'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report_csv.php?',event)\">" . $string['ReviewSummary4'] . "</a></div>\n";
       break;
   }
 

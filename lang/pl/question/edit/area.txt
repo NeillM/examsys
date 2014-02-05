@@ -16,4 +16,6 @@ $string['Eraser'] = 'Kasownik';
 $string['popUp_msg'] = 'Czy na pewno usunąć wszystkie linie?';
 $string['popUp_yes'] = 'Tak';
 $string['popUp_no'] = 'Nie';
+$string['errorcanvas'] = 'Przeglądarka nie udostępnia Canvas';
+$string['errorimages'] = 'Pytanie na obrys obszaru nie mogło być przedstawione gdyż niektóre obrazy nie zostały załadowane.';
 ?>

@@ -688,13 +688,15 @@ class ClassTotals {
           }
         }
       } elseif ($question['q_type'] == 'blank') {
-        $user_answers = explode('|', $tmp_user_answer);
+				$user_answers = explode('|', $tmp_user_answer);
         $count_user_awnser = count($user_answers)-1;
         for ($a=0; $a<$count_user_awnser; $a++) {
           if ($tmp_exclude{$a} == '0') {
             if ($question['display_method'] == 'dropdown') {
               $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
               $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a+1])));
+							
+							
 
               if ($student_answer == $correct_answer) {
                 $tmp_mark += $question['marks_correct'];
