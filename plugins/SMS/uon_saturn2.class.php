@@ -498,7 +498,7 @@ Class UON_SATURN2 extends SmsUtils {
 
       $expdata['moduledata']=$lookupdata;
       $expdata['students']=$current_users;
-      file_put_contents($dir . $module . 'uon2' . 'txt',var_export($expdata));
+      file_put_contents($dir . $module . 'uon2' . 'txt',var_export($expdata,true));
     }
   }
 }
