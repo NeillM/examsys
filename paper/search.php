@@ -132,7 +132,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   }
 
   if (isset($_POST['submit'])) {
-    $results = $mysqli->prepare("SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID=users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
+    $results = $mysqli->prepare("SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id = papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
     if (count($variables) > 0) {
 	    array_unshift($variables, $params);
 	    $vars = array();
@@ -158,22 +158,8 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
         } else {
           $locked = '';
         }
-        if ($paper_ownerID == $userObject->get_user_ID() or $userObject->has_role(array('SysAdmin','Admin'))or $type != 2) {
-          $codes = module_utils::get_idMod(explode(',', $moduleID), $mysqli);
-          $html = implode(',', $codes);
-          echo "<a href=\"../paper/details.php?paperID=$property_id&module=$html\">" . Paper_utils::displayIcon($type, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
-          echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$html\">$paper_title</a><br />";
-        } else {
-          if ($userObject->is_staff_user_on_module($moduleID)) {
-            $codes = module_utils::get_idMod(explode(',', $moduleID), $mysqli);
-            $html = implode(',', $codes);
-            echo "<a href=\"../paper/details.php?paperID=$property_id&module=$html\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
-            echo "</td><td><a href=\"../paper/details.php?paperID=$property_id&module=$html\">$paper_title</a><br />";
-          } else {
-            echo "<img src=\"../artwork/noentry_question_icon_48.png\" width=\"48\" height=\"48\" alt=\"Type: Summative Exam (Restricted Access)&#013;Author: $title $initials $surname\" border=\"0\" /></td>\n";
-            echo "</td><td>$paper_title<br />";
-          }
-        }
+				echo "<a href=\"../paper/details.php?paperID=$property_id\">" . Paper_utils::displayIcon($type, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
+				echo "</td><td><a href=\"../paper/details.php?paperID=$property_id\">$paper_title</a><br />";
         echo '  <span style="color:#808080">' . $screens;
         if ($screens == 1) {
           echo ' ' . $string['screen'] . ', ';
