@@ -104,7 +104,7 @@ Class UON_SATURN2 extends SmsUtils {
     $data->lookupdata = $lookupdata;
     $returned_data = $lookup->modulelookup($data);
 
-    if($replaced_module == 'C73MMI') {
+/*    if($replaced_module == 'C73MMI') {
 
       $log=$lookup->debug_as_array();
       $data=$returned_data;
@@ -116,6 +116,7 @@ Class UON_SATURN2 extends SmsUtils {
       file_put_contents($dir . '/' . 'dbg-uon2-' . $module . '.txt', var_export($expdata, true));
 
     }
+*/
 
     //$lookup->display_debug();
     if ($returned_data->success === false or $returned_data->failed === true) {
@@ -493,11 +494,11 @@ Class UON_SATURN2 extends SmsUtils {
     $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
       if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
-        $import_type = 'SATURN Malaysia';
+        $import_type = 'V2 SATURN Malaysia';
       } elseif ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
-        $import_type = 'SATURN China';
+        $import_type = 'V2 SATURN China';
       } else {
-        $import_type = 'SATURN UK';
+        $import_type = 'V2 SATURN UK';
       }
 
       $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?)");
@@ -508,7 +509,7 @@ Class UON_SATURN2 extends SmsUtils {
 
 
     $expdata=array();
-   // if($demomode) {
+    if($demomode) {
       //write out to temp
       $dir=sys_get_temp_dir();
 
@@ -520,7 +521,7 @@ Class UON_SATURN2 extends SmsUtils {
 
       file_put_contents($dir . '/' . 'sum-uon2-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
 
-    //}
+    }
   }
 }
 
