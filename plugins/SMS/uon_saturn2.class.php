@@ -493,7 +493,7 @@ Class UON_SATURN2 extends SmsUtils {
 
 
     $expdata=array();
-    if($demomode) {
+   // if($demomode) {
       //write out to temp
       $dir=sys_get_temp_dir();
 
@@ -505,7 +505,7 @@ Class UON_SATURN2 extends SmsUtils {
 
       file_put_contents($dir . '/' . 'sum-uon2-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
 
-    }
+    //}
   }
 }
 
