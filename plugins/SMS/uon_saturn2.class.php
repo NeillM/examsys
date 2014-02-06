@@ -257,6 +257,7 @@ Class UON_SATURN2 extends SmsUtils {
     }
     $student_data->close();
 
+    $c_u = $current_users;
     /*
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
@@ -497,9 +498,13 @@ Class UON_SATURN2 extends SmsUtils {
       $dir=sys_get_temp_dir();
 
       $expdata['status']=$this->errorinfo;
+      $expdata['students']=$c_u;
       $expdata['moduledata']=$lookupdata;
-      $expdata['students']=$current_users;
+      $expdata['studentsa']=$current_users;
       file_put_contents($dir . '/' . 'uon2-' . $module . '.txt',var_export($expdata,true));
+
+      file_put_contents($dir . '/' . 'sum-uon2-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
+
     }
   }
 }
