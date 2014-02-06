@@ -233,6 +233,8 @@ Class UON_SATURN extends SmsUtils {
     }
     $student_data->close();
 
+    $c_u = $current_users;
+
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
     $xml = false;
@@ -398,7 +400,7 @@ Class UON_SATURN extends SmsUtils {
         }
       }
     }
-
+    $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
       if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
@@ -420,9 +422,13 @@ Class UON_SATURN extends SmsUtils {
       $dir=sys_get_temp_dir();
 
       $expdata['status']=$this->errorinfo;
+      $expdata['students']=$c_u;
       $expdata['moduledata']=$xml;
-      $expdata['students']=$current_users;
+      $expdata['studentsa']=$current_users;
       file_put_contents($dir . '/' . 'uon-' . $module . '.txt',var_export($expdata,true));
+
+      file_put_contents($dir . '/' . 'sum-uon-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
+
     }
   }
 }
