@@ -876,7 +876,7 @@ $result->close();
       $theme_str = "<h4 class=\"theme\">" . trim($temp_array[$x]['theme']) . "</h4>\n";
     }
 
-    echo "<tr id=\"link_$x\" onselectstart=\"return false\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
+    echo "<tr id=\"link_$x\" onselectstart=\"return false\" onmousedown=\"if (typeof event.preventDefault != 'undefined') { event.preventDefault(); }\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
 
     $prevous_screen = '';
     $next_screen = '';
