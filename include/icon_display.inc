@@ -24,11 +24,9 @@
 
 require_once '../classes/paperutils.class.php';
 
-function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj) { //todo TAKES USEROBJECT AND PARATMETR FROM FIX
-  global $folder, $module, $mysqli, $string;
+function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj) {
+  global $folder, $module, $string;
   
-  $paper_modules = Paper_utils::get_modules($property_id, $mysqli);
-
   if ($retired != '') {
     echo '<div class="file retired">';
   } else {
@@ -55,29 +53,8 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     }
     echo '<br />';
   } else {
-    $access = false;
-    foreach ($paper_modules as $idmod => $individual_module) {
-      if ($userObj->is_staff_user_on_module($idmod)) {
-        $access = true;
-        break;
-      }
-    }
-  
-    if ($access == true) {
-      echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
-      echo "<td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"blacklink\">" . $paper_title . '</a><br />';
-    } else {
-      if ($icon_type == '2') {
-        echo "<img src=\"../artwork/noentry_question_icon_48.png\" width=\"48\" height=\"48\" alt=\"Type: Summative Exam (Restricted Access)&#013;Author: " . $title . ' ' . $initials . ' ' . $surname . "\" />\n";
-      } else {
-        echo "<img src=\"../artwork/noentry_osce.png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station (Restricted Access)&#013;Author: " . $title . ' ' . $initials . ' ' . $surname . "\" />\n";
-      }
-      echo '</td><td>' . $paper_title;
-      if ($password != '') {
-        echo ' <img src="../artwork/key.png" width="16" height="16" alt="Key" />';
-      }
-      echo '<br />';
-    }
+		echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
+		echo "<td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"blacklink\">" . $paper_title . '</a><br />';
   }
   if ($retired == '') {
     echo '  <span class="grey">';
@@ -90,11 +67,6 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     echo $screens . ' ' . $string['screen'];
   } else {
     echo $screens . ' ' . $string['screens'];
-  }
-  if (count($paper_modules) == 0) {
-    echo ', <span style="color:#C00000">' . $string['nomodulesset'] . '</span>';
-  } else {
-    if (isset($_GET['module']) and $_GET['module'] == '') echo ', ' . implode(',', $paper_modules);
   }
   echo '<br />';
   if ($display_start_date == '') {
