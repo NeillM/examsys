@@ -83,7 +83,7 @@ Class UON_SATURN2 extends SmsUtils {
       //print "object campus variable set to " . $this->campus . "<br>";
       $campus = $this->campus;
     } else {
-      print "defaulted to dettecting using module code";
+      print "defaulted to detecting using module code";
       $campus = 'UK';
       if (strpos($moduleID, '_UNMC') !== false) {
         $campus = 'MY';
@@ -101,6 +101,17 @@ Class UON_SATURN2 extends SmsUtils {
     $data = new stdClass();
     $data->lookupdata = $lookupdata;
     $returned_data = $lookup->modulelookup($data);
+
+    if($replaced_module == 'C73MMI') {
+
+      $log=$lookup->debug_as_array();
+      $data=$returned_data;
+      $expdata['log']=$log;
+      $expdata['data']=$data;
+
+      file_put_contents($dir . '/' . 'dbg-uon2-' . $module . '.txt', var_export($expdata, true));
+
+    }
 
     //$lookup->display_debug();
     if ($returned_data->success === false or $returned_data->failed === true) {
