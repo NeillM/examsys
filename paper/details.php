@@ -473,6 +473,18 @@ $result->close();
   function scrollXY() {
     $('#scrOfY').val($('body,html').scrollTop());
   }
+	
+	$(document).ready(function(){
+		<?php
+		if (isset($_GET['scrOfY'])) {
+			echo "  window.scrollTo(0," . $_GET['scrOfY'] . ");\n";
+		}
+		?>
+	
+		$(window).scroll(function() {
+			scrollXY();
+		});
+	});
 </script>
 <?php
   $user_details = UserUtils::get_user_details($properties->get_paper_ownerid(), $mysqli);
@@ -491,7 +503,8 @@ $result->close();
   }
 ?>
 </head>
-<body onscroll="scrollXY();"<?php if (isset($_GET['scrOfY'])) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ');"'; ?> onselectstart="return false">
+<!-- <body onselectstart="return false"> -->
+<body>
 
 <?php
   if ($properties->get_deleted() != '') {
@@ -500,7 +513,7 @@ $result->close();
     </div>
     <div id="content" class="content"><br />
   <?php
-    echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/full_bin.png\" width=\"48\" height=\"48\" /></div>\n";
+    echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"color:#C00000; margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
     $deleted_parts = explode('[deleted', $properties->get_paper_title());
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:70px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<br />\n<ul style=\"margin-left:80px\">\n";
@@ -508,13 +521,8 @@ $result->close();
       echo "<li>" . $string['deleted_msg2'] . "</li>\n";
     } else {
       $tmp_owner = $properties->get_paper_ownerid();
-      $result = $mysqli->prepare("SELECT title, surname, email FROM users WHERE id = ?");
-      $result->bind_param('i', $tmp_owner);
-      $result->execute();
-      $result->bind_result($tmp_title, $tmp_surname, $tmp_email);
-      $result->fetch();
-      $result->close();
-      echo "<li>" . sprintf($string['deleted_msg3'], $tmp_email, $tmp_title, $tmp_surname). "</li>\n";
+			$owner_details = UserUtils::get_user_details($tmp_owner, $mysqli);
+      echo "<li>" . sprintf($string['deleted_msg3'], $owner_details['email'], $owner_details['title'], $owner_details['surname']). "</li>\n";
     }
     echo "</ul>";
     echo "</div>\n</body>\n</html>\n";
@@ -526,17 +534,6 @@ $result->close();
   $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW();");
   $result->bind_param('ii', $userObject->get_user_ID(), $paperID);
   $result->execute();
-  $result->close();
-
-  // Get any questions to exclude.
-  $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($q_id, $parts);
-  while ($result->fetch()) {
-    $excluded[$q_id] = $parts;
-  }
   $result->close();
 
   $old_p_id           = 0;
@@ -662,11 +659,6 @@ $result->close();
 
       if ($properties->get_summative_lock() and $locked == '') {
         QuestionUtils::lock_question($q_id, $mysqli);
-      }
-
-      //prevent php errors by populating $excluded[$q_id]
-      if (!isset($excluded[$q_id])) {
-        $excluded[$q_id] = NULL;
       }
     }
 		$old_p_id						= $p_id;
@@ -871,7 +863,7 @@ $result->close();
 
     $higlight_class = '';
     $status_class = '';
-    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $excluded[$temp_array[$x]['q_id']] != NULL) {
+    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] == 0 and $temp_array[$x]['q_type'] != 'info' and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
       $higlight_class = ' excluded';
     } else {
       $status_class = ' status' . $temp_array[$x]['status'];
@@ -884,7 +876,7 @@ $result->close();
       $theme_str = "<h4 class=\"theme\">" . trim($temp_array[$x]['theme']) . "</h4>\n";
     }
 
-    echo "<tr id=\"link_$x\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
+    echo "<tr id=\"link_$x\" onselectstart=\"return false\" class=\"link_$x qline{$theme_class}{$status_class}{$higlight_class}";
 
     $prevous_screen = '';
     $next_screen = '';
@@ -928,7 +920,9 @@ $result->close();
       if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
-      if ($excluded[$temp_array[$x]['q_id']] != NULL) echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
+			if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
+				echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
+			}
       if (isset($exam_announcements[$temp_array[$x]['q_id']])) echo ' <img src="../artwork/comment_14_11.png" width="14" height="11" alt="Exam Clarification" />';
       if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
