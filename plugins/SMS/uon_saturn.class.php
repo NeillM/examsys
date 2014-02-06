@@ -400,7 +400,7 @@ Class UON_SATURN extends SmsUtils {
         }
       }
     }
-
+    $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
       if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
