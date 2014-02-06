@@ -50,7 +50,8 @@ Class UON_SATURN2 extends SmsUtils {
 
     global $mysqli;
     $configObj = Config::get_instance();
-    $lookup = Lookup::get_instance($configObj, $mysqli);
+    //$lookup = Lookup::get_instance($configObj, $mysqli);
+    $lookup = new Lookup($configObj, $mysqli);
     $lookup->clear_debug();
 
     // Calculate what the current academic session is.
