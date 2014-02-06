@@ -14,16 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
+require '../lang/' . $language . '/admin/list_modules.php';
+
 $string['entermoduleid'] = 'Zadejte, prosím,  identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
 $string['moduleid'] = 'ID modulu';
-$string['createmodule'] = 'Nový modul';
-$string['editmodule'] = 'Upravit modul';
-$string['deletemodule'] = 'Odstranit modul';
-$string['modulefolder'] = 'Složka modulu';
-$string['studentcohort'] = 'Skupina studentů';
-$string['bulkmoduleimport'] = 'Nahrát modul';
 $string['msg1'] = 'Tato funkce umožňuje moduly nahrát hromadně. Studenty však zapisujte do modulů samostatně.';
 $string['msg2'] = "Mezi povinná pole patří pouze položky 'ID Modulu', 'Název' a 'Škola'.";
 $string['csvfile'] = 'CSV soubor:';
