@@ -306,7 +306,7 @@ foreach ($unique_list as $word=>$occurrance) {
 </div>
 
 <input type="hidden" name="word_count" value="<?php echo $word_count; ?>" />
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:130px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /></div>
 
 </form>
 </body>
