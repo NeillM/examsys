@@ -136,12 +136,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       ?>
       <br />
 			<?php
-					if ($configObject->get('cfg_interactive_qs')=='html5') {
+					if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part include finf ================= -->
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 2) . "' height='" . ($q_media_height + 1) . "'></canvas>\n";
 					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
-					echo "setUpQuestion(" . $q_no . ", 'q" . $q_no . "','" . $language . "', '" . '" . $q_media . "', '" . $correct . "', '','','#FFC0C0','area','script');\n";
+					echo "setUpQuestion(" . $q_no . ", 'q" . $q_no . "','" . $language . "', '" . $q_media . "', '" . $correct . "', '','','#FFC0C0','area','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -279,7 +279,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 	<?php
 	require_once '../classes/configobject.class.php';
 	$configObject          = Config::get_instance();
-	if ($configObject->get('cfg_interactive_qs')=='html5') {
+	if ($configObject->get('cfg_interactive_qs') == 'html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
@@ -313,12 +313,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         ?>
             <div>
 						<?php
-						if ($configObject->get('cfg_interactive_qs')=='html5') {
+						if ($configObject->get('cfg_interactive_qs') == 'html5') {
 							//"<!-- ======================== HTML5 part include finf ================= -->
 							echo "<canvas id='canvas" . $q_no . "' width='" . $tmp_width . "' height='" . $tmp_height . "'></canvas>\n";
 							echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 							echo "<script language='JavaScript' type='text/javascript'>\n";
-							echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
+							echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
 							echo "</script>\n";
 							//<!-- ==================================================== -->
 						} else {
@@ -385,7 +385,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $i++;
           echo "<tr><td><select><option value=\"\"></option>";
           for ($a=1; $a<=$rank_no; $a++) {
-            //echo '<option value="">' . displayRank($correct_buf[$a], $string) . '</option>';
             if ($correct_buf[$i-1] == $a) {
               echo '<option value="" selected="selected">' . displayRank($a, $string) . '</option>';
             } else {

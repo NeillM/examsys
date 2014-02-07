@@ -458,10 +458,14 @@ if (isset($_POST['Submit'])) {
 				if (isset($_POST['exam_duration_mins'])) {
 					$exam_duration += $_POST['exam_duration_mins'];
 				}
-        $properties->set_exam_duration($exam_duration);
-      } else {
+        if (!$locked) {
+					$properties->set_exam_duration($exam_duration);
+				}
+			} else {
 				$exam_duration = NULL;
-        $properties->set_exam_duration($exam_duration);
+        if (!$locked) {
+					$properties->set_exam_duration($exam_duration);
+				}
 			}
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
