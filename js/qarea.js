@@ -316,8 +316,8 @@ function qa_redraw_canvas_main(tx,ty) {
 }
 
 function qa_redraw_canvas() { 
-	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
-	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) {
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) {
 		this.context.textAlign="left";
 		this.context.fillStyle='#C00000';
 		this.context.font="13px Arial";
