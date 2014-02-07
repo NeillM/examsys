@@ -4,6 +4,6 @@ $string['hotspots'] = 'Úlohy s aktivním místem v obrázku';
 $string['correctAnswers'] = 'Správné odpovědi';
 $string['incorrectAnswers'] = 'Chybné odpovědi';
 $string['errorcanvas'] = 'Canvas not supported';
-$string['errorimages'] = 'Hotspot question cannot be displayed because some images were not loaded.';
+$string['errorimageshotspot'] = 'Hotspot question cannot be displayed because some images were not loaded.';
 
 ?>

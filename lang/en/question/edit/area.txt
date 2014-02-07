@@ -17,5 +17,5 @@ $string['popUp_msg'] = 'Do you want to clear all lines?';
 $string['popUp_yes'] = 'Yes';
 $string['popUp_no'] = 'No';
 $string['errorcanvas'] = 'Canvas not supported';
-$string['errorimages'] = 'Area question cannot be displayed because some images were not loaded.';
+$string['errorimagesarea'] = 'area question cannot be displayed because some images were not loaded.';
 ?>

@@ -434,6 +434,10 @@ class Lookup extends RogoStaticSingleton {
     return $this->debug;
   }
 
+  function clear_debug() {
+    $this->debug=array();
+  }
+
   function version_info($formatted = false, $advanced = false) {
     $data = new stdClass();
     $data->plugins = array();
