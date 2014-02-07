@@ -900,9 +900,8 @@ function ql_redraw_canvas() {
  
  	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
 	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) {
-		//console.log(lang_string['errorimageslabelling']);
 		this.context.textAlign="left";
-		this.context.fillStyle='#000000';
+		this.context.fillStyle='#C00000';
 		this.context.font="13px Arial";
 		this.context.fillText(lang_string['errorimageslabelling'],15,15);	
 	}
