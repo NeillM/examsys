@@ -22,6 +22,6 @@ $string['errormessage1'] = 'The polygon lines have overlapped.';
 $string['errormessage2'] = 'This may result in holes in the hotspot and incorrect marking of student answers.';
 $string['cancel'] = 'Do you want to cancel the last line?';
 $string['errorcanvas'] = 'Canvas not supported';
-$string['errorimages'] = 'Hotspot question cannot be displayed because some images were not loaded.';
+$string['errorimageshotspot'] = 'Hotspot question cannot be displayed because some images were not loaded.';
 
 ?>

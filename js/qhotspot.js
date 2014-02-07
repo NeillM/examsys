@@ -370,7 +370,13 @@ function redraw_hotspot(i,j) {
 
 function qh_redraw_canvas() {
 	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
-	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert(lang_string['errorimages']);
+	if (!(this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) {
+		//console.log(lang_string['errorimageshotspot']);
+		this.context.textAlign="left";
+		this.context.fillStyle='#000000';
+		this.context.font="13px Arial";
+		this.context.fillText(lang_string['errorimageshotspot'],15,15);
+	}
 	
 	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.start_polygon || (this.qmode == 'edit' && this.activeLabelText>-1))) {
 		this.redraw_once = false;

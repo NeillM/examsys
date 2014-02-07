@@ -17,5 +17,5 @@ $string['popUp_msg'] = 'Chcete vymazat všechny řádky?';
 $string['popUp_yes'] = 'Ano';
 $string['popUp_no'] = 'Ne';
 $string['errorcanvas'] = 'Canvas not supported';
-$string['errorimages'] = 'Area question cannot be displayed because some images were not loaded.';
+$string['errorimagesarea'] = 'Area question cannot be displayed because some images were not loaded.';
 ?>

@@ -24,6 +24,6 @@ $string['warning'] = 'WARNING';
 $string['errormessage'] = 'If you change from repeated to unique labels some of the labels on the image will be deleted.';
 $string['continue'] = 'Do you want to continue?';
 $string['errorcanvas'] = 'Canvas not supported';
-$string['errorimages'] = 'Labelling question cannot be displayed because some images were not loaded.';
+$string['errorimageslabelling'] = 'Labelling question cannot be displayed because some images were not loaded.';
 
 ?>

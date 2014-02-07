@@ -899,7 +899,13 @@ function ql_redraw_canvas() {
   }
  
  	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
-	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert(lang_string['errorimages']);
+	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) {
+		//console.log(lang_string['errorimageslabelling']);
+		this.context.textAlign="left";
+		this.context.fillStyle='#000000';
+		this.context.font="13px Arial";
+		this.context.fillText(lang_string['errorimageslabelling'],15,15);	
+	}
 
 	//main redrawing part
 	if (this.allImagesLoaded && this.menu_img_loaded && this.gen_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || (this.global_add != '' &&  this.shape_x1>-1) || this.global_move || this.global_erase)){

@@ -317,7 +317,13 @@ function qa_redraw_canvas_main(tx,ty) {
 
 function qa_redraw_canvas() { 
 	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay<501) this.imageerrordisplay ++;
-	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) alert(lang_string['errorimages']);
+	if (!(this.allImagesLoaded && this.gen_img_loaded && this.menu_img_loaded) && this.imageerrordisplay==500) {
+		//console.log(lang_string['errorimagesarea']);
+		this.context.textAlign="left";
+		this.context.fillStyle='#000000';
+		this.context.font="13px Arial";
+		this.context.fillText(lang_string['errorimagesarea'],15,15);	
+	}
 
 	if (this.gen_img_loaded && this.menu_img_loaded && (this.dragging || this.redraw_once || this.mov_id!=-1 || this.mouse_moved || this.ShiftChange)) {
 		
