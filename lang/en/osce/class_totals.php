@@ -47,4 +47,5 @@ $string['unsatisfactory'] = 'Unsatisfactory';
 $string['competent'] = 'Competent';
 $string['passmark'] = 'Pass Mark';
 $string['borderlinemethod'] = 'borderline method';
+$string['noattempts'] = 'This OSCE has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
 ?>

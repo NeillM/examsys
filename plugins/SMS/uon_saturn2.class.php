@@ -50,7 +50,9 @@ Class UON_SATURN2 extends SmsUtils {
 
     global $mysqli;
     $configObj = Config::get_instance();
-    $lookup = Lookup::get_instance($configObj, $mysqli);
+    //$lookup = Lookup::get_instance($configObj, $mysqli);
+    $lookup = new Lookup($configObj, $mysqli);
+    $lookup->clear_debug();
 
     // Calculate what the current academic session is.
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
@@ -83,7 +85,7 @@ Class UON_SATURN2 extends SmsUtils {
       //print "object campus variable set to " . $this->campus . "<br>";
       $campus = $this->campus;
     } else {
-      print "defaulted to dettecting using module code";
+      print "defaulted to detecting using module code";
       $campus = 'UK';
       if (strpos($moduleID, '_UNMC') !== false) {
         $campus = 'MY';
@@ -101,6 +103,20 @@ Class UON_SATURN2 extends SmsUtils {
     $data = new stdClass();
     $data->lookupdata = $lookupdata;
     $returned_data = $lookup->modulelookup($data);
+
+/*    if($replaced_module == 'C73MMI') {
+
+      $log=$lookup->debug_as_array();
+      $data=$returned_data;
+      $expdata['log']=$log;
+      $expdata['data']=$data;
+
+      $dir=sys_get_temp_dir();
+
+      file_put_contents($dir . '/' . 'dbg-uon2-' . $module . '.txt', var_export($expdata, true));
+
+    }
+*/
 
     //$lookup->display_debug();
     if ($returned_data->success === false or $returned_data->failed === true) {
@@ -212,7 +228,7 @@ Class UON_SATURN2 extends SmsUtils {
   //updates modules enrolements
 
   // $module & $idMod shouldnt both be needed in some respects as its a 1 to 1 relationship and $sms_api is also a parameter of the primary key in that table.
-  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
+  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET', $demomode = false) {
 
     // run module enrolement for select code
     if ($mysqli == 'NOTSET') {
@@ -257,6 +273,7 @@ Class UON_SATURN2 extends SmsUtils {
     }
     $student_data->close();
 
+    $c_u = $current_users;
     /*
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
@@ -350,8 +367,9 @@ Class UON_SATURN2 extends SmsUtils {
                 $initials .= $tmp_name[0];
               }
 
-              $tmp_userID = UserUtils::create_user($lookup_username, '', $sms->title, $sms->firstname, $sms->surname, $sms->email, $sms->coursecode, $sms->gender, $sms->yearofstudy, 'Student', $sms->studentID, $mysqli);
-
+              if (!$demomode) {
+                $tmp_userID = UserUtils::create_user($lookup_username, '', $sms->title, $sms->firstname, $sms->surname, $sms->email, $sms->coursecode, $sms->gender, $sms->yearofstudy, 'Student', $sms->studentID, $mysqli);
+              }
               $current_users[$lookup_username]['userID'] = $tmp_userID;
               $current_users[$lookup_username]['grade'] = $sms->coursecode;
               $current_users[$lookup_username]['title'] = $sms->title;
@@ -378,8 +396,9 @@ Class UON_SATURN2 extends SmsUtils {
             }
             // Add student onto the module
             $auto_update = 1; //set auto_update to student module association
-            $success = UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli, $auto_update);
-
+            if (!$demomode) {
+              $success = UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli, $auto_update);
+            }
             if ($success) {
               $enrolements++;
               if ($enrolement_details == '') {
@@ -411,19 +430,21 @@ Class UON_SATURN2 extends SmsUtils {
             }
           }
 
-          if (  $current_users[$lookup_username]['year'] != $sms->yearofstudy or
-                $tmp_initials != $current_users[$lookup_username]['initials'] or
-                $current_users[$lookup_username]['grade'] != $sms->coursecode or
-                $current_users[$lookup_username]['title'] != $sms->title or
-                $current_users[$lookup_username]['surname'] != $sms->surname  or
-                $current_users[$lookup_username]['first_names'] != $sms->firstname or
-                $current_users[$lookup_username]['roles'] != $new_roles or
-            (isset($current_users[$lookup_username]['email']) and $current_users[$lookup_username]['email'] != $sms->email )
-             ) {
-              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email = ? WHERE username = ?");
-              $result->bind_param('issssssss', $sms->yearofstudy, $new_roles, $sms->coursecode, $sms->title, $sms->surname, $sms->firstname, $tmp_initials, $sms->email, $lookup_username);
+          if ($current_users[$lookup_username]['year'] != $sms->yearofstudy or
+            $tmp_initials != $current_users[$lookup_username]['initials'] or
+            $current_users[$lookup_username]['grade'] != $sms->coursecode or
+            $current_users[$lookup_username]['title'] != $sms->title or
+            $current_users[$lookup_username]['surname'] != $sms->surname  or
+            $current_users[$lookup_username]['first_names'] != $sms->firstname or
+            $current_users[$lookup_username]['roles'] != $new_roles or
+            (isset($current_users[$lookup_username]['email']) and $current_users[$lookup_username]['email'] != $sms->email)
+          ) {
+            $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email = ? WHERE username = ?");
+            $result->bind_param('issssssss', $sms->yearofstudy, $new_roles, $sms->coursecode, $sms->title, $sms->surname, $sms->firstname, $tmp_initials, $sms->email, $lookup_username);
+            if (!$demomode) {
               $result->execute();
-              $result->close();
+            }
+            $result->close();
           }
 
           // Check if SID needs updating - rare but could happen
@@ -457,7 +478,9 @@ Class UON_SATURN2 extends SmsUtils {
         if ($individual_user['delete'] == 1 and $individual_user['auto_update'] == 1) {
           $result = $mysqli->prepare("DELETE FROM modules_student WHERE id = ?"); // Delete using primary key of 'modules_student'
           $result->bind_param('i', $individual_user['smID']);
-          $result->execute();
+          if (!$demomode) {
+            $result->execute();
+          }
           $result->close();
           $deletions++;
           if ($deletion_details == '') {
@@ -468,14 +491,14 @@ Class UON_SATURN2 extends SmsUtils {
         }
       }
     }
-
+    $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
       if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
-        $import_type = 'SATURN Malaysia';
+        $import_type = 'V2 SATURN Malaysia';
       } elseif ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
-        $import_type = 'SATURN China';
+        $import_type = 'V2 SATURN China';
       } else {
-        $import_type = 'SATURN UK';
+        $import_type = 'V2 SATURN UK';
       }
 
       $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?)");
@@ -484,6 +507,21 @@ Class UON_SATURN2 extends SmsUtils {
       $result->close();
     }
 
+
+    $expdata=array();
+    if($demomode) {
+      //write out to temp
+      $dir=sys_get_temp_dir();
+
+      $expdata['status']=$this->errorinfo;
+      $expdata['students']=$c_u;
+      $expdata['moduledata']=$lookupdata;
+      $expdata['studentsa']=$current_users;
+      file_put_contents($dir . '/' . 'uon2-' . $module . '.txt',var_export($expdata,true));
+
+      file_put_contents($dir . '/' . 'sum-uon2-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
+
+    }
   }
 }
 

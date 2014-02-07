@@ -48,7 +48,9 @@ Class GENERIC_SMS extends SmsUtils {
 
     global $mysqli;
     $configObj = Config::get_instance();
-    $lookup = Lookup::get_instance($configObj, $mysqli);
+    //$lookup = Lookup::get_instance($configObj, $mysqli);
+    $lookup = new Lookup($configObj, $mysqli);
+    $lookup->clear_debug();
 
     // Calculate what the current academic session is.
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();

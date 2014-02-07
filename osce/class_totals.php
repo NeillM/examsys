@@ -114,9 +114,9 @@ if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
-  <html>
-  <head>
+<!DOCTYPE html>
+<html>
+<head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
@@ -158,29 +158,34 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
     
     document.onmousedown = mouseSelect;
   </script>
-  </head>
+</head>
 
-  <body>
+<body>
 <?php
-  require '../include/toprightmenu.inc';
+require '../include/toprightmenu.inc';
 	
-	echo draw_toprightmenu();
+echo draw_toprightmenu();
+
+$popup_width = 180;
+if ($language != 'en') {
+  $popup_width = 300;
+}
 ?>
-<div id="menudiv" class="popupmenu" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:90%; background-color:white">
+<div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
   <tr><td>
-    <table width="180" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
+    <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
       <tr>
-        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['oscemarksheet']; ?></td>
+        <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['oscemarksheet']; ?></td>
       </tr>
       <tr>
-        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
+        <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
       </tr>
       <tr>
-        <td style="background-color:#F1F5FB; width:22px"> </td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" border="0" alt="-" /></td>
+        <td style="background-color:#F1F5FB; width:22px"> </td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
       </tr>
       <tr>
-        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
+        <td id="item3a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></td><td id="item3b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
       </tr>
     </table>
   </td></tr>
@@ -256,7 +261,11 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
     }
     echo "</tr>\n";
   }
-  
+	if ($user_no == 0) {
+    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left; font-size:85%\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . sprintf($string['noattempts'], $report->nicedate($_GET['startdate']), $report->nicedate($_GET['enddate'])) . "</td></tr></table>\n<div>\n</body>\n</html>";
+    exit;
+	}
+ 
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
       echo "<tr class=\"nonattend\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";

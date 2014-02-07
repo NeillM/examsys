@@ -187,7 +187,7 @@ Class UON_SATURN extends SmsUtils {
     $dat = $this->getModuleEnrolements($modulecode);
   }
 
-  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
+  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET', $demomode = false) {
 
     // run module enrolement for select code
     if ($mysqli == 'NOTSET') {
@@ -232,6 +232,8 @@ Class UON_SATURN extends SmsUtils {
       $current_users[$username]['student_id'] = $student_id;
     }
     $student_data->close();
+
+    $c_u = $current_users;
 
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
@@ -281,8 +283,9 @@ Class UON_SATURN extends SmsUtils {
                 $initials .= $tmp_name[0];
               }
 
-              $tmp_userID = UserUtils::create_user($lookup_username, '', $sms->Title, $sms->Forename, $sms->Surname, $sms->Email, $sms->CourseCode, $sms->Gender, $sms->YearofStudy, 'Student', $sms->StudentID, $mysqli);
-
+              if (!$demomode) {
+                $tmp_userID = UserUtils::create_user($lookup_username, '', $sms->Title, $sms->Forename, $sms->Surname, $sms->Email, $sms->CourseCode, $sms->Gender, $sms->YearofStudy, 'Student', $sms->StudentID, $mysqli);
+              }
               $current_users[$lookup_username]['userID'] = $tmp_userID;
               $current_users[$lookup_username]['grade'] = $sms->CourseCode;
               $current_users[$lookup_username]['title'] = $sms->Title;
@@ -309,8 +312,9 @@ Class UON_SATURN extends SmsUtils {
             }
             // Add student onto the module
             $auto_update = 1; //set auto_update to student module association
-            $success = UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli, $auto_update);
-
+            if (!$demomode) {
+              $success = UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli, $auto_update);
+            }
             if ($success) {
               $enrolements++;
               if ($enrolement_details == '') {
@@ -342,19 +346,21 @@ Class UON_SATURN extends SmsUtils {
             }
           }
 
-          if (  $current_users[$lookup_username]['year'] != $sms->YearofStudy or
-                $tmp_initials != $current_users[$lookup_username]['initials'] or
-                $current_users[$lookup_username]['grade'] != $sms->CourseCode or
-                $current_users[$lookup_username]['title'] != $sms->Title or
-                $current_users[$lookup_username]['surname'] != $sms->Surname  or
-                $current_users[$lookup_username]['first_names'] != $sms->Forename or
-                $current_users[$lookup_username]['roles'] != $new_roles or
-            (isset($current_users[$lookup_username]['email']) and $current_users[$lookup_username]['email'] != $sms->Email )
-             ) {
-              $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email = ? WHERE username = ?");
-              $result->bind_param('issssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);
+          if ($current_users[$lookup_username]['year'] != $sms->YearofStudy or
+            $tmp_initials != $current_users[$lookup_username]['initials'] or
+            $current_users[$lookup_username]['grade'] != $sms->CourseCode or
+            $current_users[$lookup_username]['title'] != $sms->Title or
+            $current_users[$lookup_username]['surname'] != $sms->Surname  or
+            $current_users[$lookup_username]['first_names'] != $sms->Forename or
+            $current_users[$lookup_username]['roles'] != $new_roles or
+            (isset($current_users[$lookup_username]['email']) and $current_users[$lookup_username]['email'] != $sms->Email)
+          ) {
+            $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, roles = ?, grade = ?, title = ?, surname = ?, first_names = ?, initials = ?, email = ? WHERE username = ?");
+            $result->bind_param('issssssss', $sms->YearofStudy, $new_roles, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);
+            if (!$demomode) {
               $result->execute();
-              $result->close();
+            }
+            $result->close();
           }
 
           // Check if SID needs updating - rare but could happen
@@ -381,7 +387,9 @@ Class UON_SATURN extends SmsUtils {
         if ($individual_user['delete'] == 1 and $individual_user['auto_update'] == 1) {
           $result = $mysqli->prepare("DELETE FROM modules_student WHERE id = ?"); // Delete using primary key of 'modules_student'
           $result->bind_param('i', $individual_user['smID']);
-          $result->execute();
+          if (!$demomode) {
+            $result->execute();
+          }
           $result->close();
           $deletions++;
           if ($deletion_details == '') {
@@ -392,7 +400,7 @@ Class UON_SATURN extends SmsUtils {
         }
       }
     }
-
+    $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
       if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
@@ -406,6 +414,21 @@ Class UON_SATURN extends SmsUtils {
       $result->bind_param('sisiss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
       $result->execute();
       $result->close();
+    }
+
+    $expdata=array();
+    if($demomode) {
+      //write out to temp
+      $dir=sys_get_temp_dir();
+
+      $expdata['status']=$this->errorinfo;
+      $expdata['students']=$c_u;
+      $expdata['moduledata']=$xml;
+      $expdata['studentsa']=$current_users;
+      file_put_contents($dir . '/' . 'uon-' . $module . '.txt',var_export($expdata,true));
+
+      file_put_contents($dir . '/' . 'sum-uon-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
+
     }
   }
 }

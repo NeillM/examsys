@@ -113,7 +113,6 @@ if (isset($_POST) and count($_POST) > 0) {
   ?>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-
   <title><?php echo $string['osceform']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -233,12 +232,12 @@ if (isset($_POST) and count($_POST) > 0) {
   <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" id="osceform" name="osceform">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
-  if (file_exists($cfg_web_root . 'users/photos/' . $username . '.jpg')) {
-    echo '<td class="photo"><img src="/users/photos/' . $username . '.jpg" width="90" height="135" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
+  if (file_exists('../users/photos/' . $username . '.jpg')) {
+    echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" width="90" height="135" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
   } else {
     echo '<td class="photo"><img src="./test_photo.png" width="90" height="135" border="1" alt="Photo" /></td>';
   }
-  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div class=\"title\">" . $propertyObj->get_paper_title() . "</div><br /><br /><div style=\"font-size:150%\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span style=\"color:#808080\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
+  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div class=\"title\">" . $propertyObj->get_paper_title() . "</div><br /><br /><div style=\"font-size:150%; padding-left:8px\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><div style=\"color:#808080; padding-left:8px\">($student_id)</div></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
 
   if ($test == false) {
     // Query Log4 just in case form has already been submitted for this user.
@@ -320,7 +319,7 @@ if (isset($_POST) and count($_POST) > 0) {
   <br />
   <?php
 
-  echo '<div id="saveError"><img src="/artwork/no_save.png" width="60" height="60" alt="Warning" /> <div><span style="color:#C42828; font-weight:bold">' .  $string['savefailed'] . '</span><br />' . $string['tryagain'] . '</div></div>';
+  echo '<div id="saveError"><img src="../artwork/no_save.png" width="60" height="60" alt="Warning" /> <div><span style="color:#C42828; font-weight:bold">' .  $string['savefailed'] . '</span><br />' . $string['tryagain'] . '</div></div>';
 
     // For external examiners just close the window without saving.
     if ($userObject->has_role('External Examiner')) {

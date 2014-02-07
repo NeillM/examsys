@@ -310,7 +310,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
       $sub_part_no = 0;
       $option_no = count($option_text);
       $prob = 1;
-      
+     
       foreach ($correct_array as $individual_correct) {
         if (trim($individual_correct) != '') {
           $sub_array = explode('$', $individual_correct);
