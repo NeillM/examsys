@@ -90,7 +90,7 @@ if (!isset($_POST['submit'])) {
   <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="paperlist">
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
 <?php
-$sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')) AND deleted IS NULL  ORDER BY paper_title";
+	$sql = "SELECT DISTINCT properties.property_id, paper_title, start_date, end_date, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')) AND deleted IS NULL ORDER BY paper_title";
   $result = $mysqli->prepare($sql);
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
@@ -136,6 +136,7 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
   // Get the maximum display position for an existing paper.
 	$display_pos	= ($properties->get_max_display_pos() + 1);
 	$screen 			= $properties->get_max_screen();
+	if ($screen == 0) $screen = 1;
 
   //- Copy the question(s) ------------------------------------------------------------------------------------------------------------------------------------------
   $q_IDs = explode(',', $_GET['q_id']);
@@ -203,7 +204,11 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
 
       $mysqli->autocommit(false);
 
-      $addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
+			if ($bloom == '') 					$bloom = null;  
+			if ($q_option_order == '')	$q_option_order = 'display order';
+			if ($score_method == '') 		$score_method = 'Mark per Option';
+
+			$addQuestion = $mysqli->prepare("INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
       $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
       $res = $addQuestion->execute();
       if ($res === false) {
@@ -237,6 +242,7 @@ $sql="SELECT DISTINCT properties.property_id, paper_title, start_date, end_date,
             }
           }
         }
+				
 
         $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
         $addOption->bind_param('isssssssddd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
