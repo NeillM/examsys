@@ -448,17 +448,19 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 
   function clarifyMethod() {
   <?php
-    foreach ($properties_list as $property_object) {
-      $paperID = $property_object->get_property_id();
-  ?>
-    $.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
-      if ($('#msg<?php echo $paperID; ?>').html() != data) {
-        $('#msg<?php echo $paperID; ?>').html(data);
-        $('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
+	  if (is_array($properties_list)) {
+			foreach ($properties_list as $property_object) {
+				$paperID = $property_object->get_property_id();
+		?>
+			$.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
+				if ($('#msg<?php echo $paperID; ?>').html() != data) {
+					$('#msg<?php echo $paperID; ?>').html(data);
+					$('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
+				}
+			});
+		<?php
       }
-    });
-  <?php
-      }
+		}
   ?>
   }
 

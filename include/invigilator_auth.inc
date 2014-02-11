@@ -16,7 +16,7 @@
 
 /**
 * 
-* Authentication routine which permits SysAdmin,Admin and Invigilator only access.
+* Authentication routine which permits SysAdmin, Admin and Invigilator only access.
 * 
 * @author Simon Wilkinson
 * @version 1.0
