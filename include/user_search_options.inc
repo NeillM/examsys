@@ -58,8 +58,7 @@ if (isset($_GET['calendar_year'])) {
     $('#icon' + ID).attr('src', icon);
     $('#icon' + ID).attr('alt', alttag);
     
-    updateState('advanced', current);
-    
+		updateState('advanced', $('#menu' + ID).is(":visible"));
   }
   
   function checkRoles() {
@@ -207,6 +206,13 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
       echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /> <label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
     } else {
       echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /> <label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
+    }
+  }
+  if ($userObject->has_role('SysAdmin')) {
+    if (isset($state['chkbox10']) and $state['chkbox10'] == 'true') {
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" checked /> <label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
+    } else {
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" /> <label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
     }
   }
   if (isset($state['chkbox7']) and $state['chkbox7'] == 'true') {
