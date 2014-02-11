@@ -37,22 +37,22 @@ require_once $cfg_web_root . 'classes/dateutils.class.php';
 require_once $cfg_web_root . 'classes/usernotices.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 
-$displayDebug = false; //xml call so debug info messes up the output
+$displayDebug = false; //XML call so debug info messes up the output
 error_reporting(E_ALL);
 ini_set('display_errors','On');
 
-if(!isset($_GET['url'])) {
+if (!isset($_GET['url'])) {
   $action = '';
   $parms = '';
 } else {
-  if ( substr_count($_GET['url'], '/') > 0) {
-    list($action, $parms) = explode('/',$_GET['url'],2);
+  if (substr_count($_GET['url'], '/') > 0) {
+    list($action, $parms) = explode('/', $_GET['url'], 2);
   } else {
     $action = $_GET['url'];
   }
 }
 if ($action == 'getModulePaperList') {
-  //force a staff db connection for getModulePaperList
+  // Force a staff DB connection for getModulePaperList
   
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 
                                      $configObject->get('cfg_db_staff_user'), 
@@ -87,16 +87,22 @@ Class webServiceRestAPI extends restAPI {
     parent::__construct();
   }
 
+	/**
+	 * Structures the XML output from the array
+	 * @param object $xml - XMLWriter object
+	 * @param array $data - The array to be converted to XML
+	 * @param array $tmp_tag - Contains the XML tag to be used within the root tag.
+	 *
+	 */
   function write(XMLWriter $xml, $data, $tmp_tag){
-    if(!is_array($data)) {
+    if (!is_array($data)) {
       return; 
     }
-    foreach($data as $key => $value){
-      if (is_array($value)){
+    foreach ($data as $key => $value){
+      if (is_array($value)) {
         if (is_numeric($key)) {
           $xml->startElement($tmp_tag);
         } else {
-          echo $key . '<br />';
           $xml->startElement($key);
         }
         $this->write($xml, $value, $tmp_tag);
@@ -110,8 +116,7 @@ Class webServiceRestAPI extends restAPI {
   public function formatData($data, $root_tag, $tmp_tag) {
     if ($this->http_accept == 'json') {
       $data = json_encode($data);
-    } else {
-      //$data = array_flip($data);
+		} else {
       $xml = new XmlWriter();
       $xml->openMemory();
       $xml->startDocument('1.0', 'UTF-8');
@@ -128,9 +133,9 @@ Class webServiceRestAPI extends restAPI {
   
   public function getUserID($username, $staff = false) {
     if ($staff == true) {
-      $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles LIKE '%Staff%'");
+      $res = $this->db->prepare("SELECT id FROM users WHERE username = ? AND roles LIKE '%Staff%'");
     } else {
-      $res = $this->db->prepare("SELECT id FROM users WHERE username=? AND roles = 'Student'");
+      $res = $this->db->prepare("SELECT id FROM users WHERE username = ? AND roles = 'Student'");
     }
     $res->bind_param('s', $username);
     $res->execute();
@@ -142,7 +147,7 @@ Class webServiceRestAPI extends restAPI {
   }
 
   public function processRequest() {
-    if(!isset($_GET['url'])) {
+    if (!isset($_GET['url'])) {
       $action = '';
       $parms = '';
     } else {
@@ -155,7 +160,7 @@ Class webServiceRestAPI extends restAPI {
     
     switch($action) {
       case 'getAvailableFeedback':
-        //process url
+        // Process URL
         $username = '';
         $module = '';
         $tmp = explode('/', $parms);
@@ -164,7 +169,7 @@ Class webServiceRestAPI extends restAPI {
         if ($username == '') {
           $this->sendResponse(400, '', '');
         } else {
-          //return the module Available Feedback
+          // Return the module Available Feedback
           $this->data = $this->getAvailableFeedback($username, $module);
           if ($this->data == '') {
             $this->sendResponse(400, '', '');
@@ -221,14 +226,100 @@ Class webServiceRestAPI extends restAPI {
           $this->sendResponse(200, $this->formatData(array('userID' => $this->data), 'user', 'paper'), $this->http_accept);
         }
         break;
+			case'getQStatsLastWeek':
+				$this->data = $this->getQStatsLastWeek();
+
+				if ($this->data == '') {
+					$this->sendResponse(400, '', '');
+				} else {
+					$this->sendResponse(200, $this->formatData($this->data, 'questionperformance', 'question', 'part'), $this->http_accept);
+				}
+			  break;
+			case 'getQStatsbyPaper':
+			  $paperID = null;
+        $tmp = explode('/', $parms);
+        if (isset($tmp[0])) $paperID = $tmp[0];
+				
+        if ($paperID == null) {
+          $this->sendResponse(400, '', '');
+        } else {
+          $this->data = $this->getQStatsbyPaper(array($paperID));
+
+          if ($this->data == '') {
+            $this->sendResponse(400, '', '');
+          } else {
+            $this->sendResponse(200, $this->formatData($this->data, 'questionperformance', 'question', 'part'), $this->http_accept);
+          }
+        }
+			  break;
       default:
-        //if we get here the action is unsupported so give a http 405 bad request
+        // If we get here the action is unsupported so give a HTTP 405 bad request
         $this->sendResponse(405, '', '');
         break;
     }
   }
+	
+	public function getQStatsLastWeek() {
+	  $papers = array();
+	
+	  $sql = "SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > SUBDATE(NOW(), INTERVAL 4 WEEK) AND end_date < NOW() AND deleted IS NULL ORDER BY start_date";
+		$res = $this->db->prepare($sql);
+    $res->execute();
+    $res->store_result();
+    $res->bind_result($paperID);
+    while ($res->fetch()) {
+		  $papers[] = $paperID;
+		}
+		$res->close();
+		
+		$stats = $this->getQStatsbyPaper($papers);
+		
+		return $stats;
+	}
 
-
+  public function getQStatsbyPaper($paperID) {
+	  $stats = array();
+		
+		$stat_no = 0;
+		$old_guid = 0;
+	
+	  $sql = 'SELECT
+							guid, percentage, cohort_size, taken, part_no, p, d, paperID
+						FROM
+							questions, performance_main, performance_details
+						WHERE
+							questions.q_id = performance_main.q_id AND
+							performance_main.id = performance_details.perform_id AND
+							paperID IN (' . implode(',', $paperID) . ')
+						ORDER BY questions.q_id, perform_id, part_no';
+						
+		$res = $this->db->prepare($sql);
+    $res->execute();
+    $res->store_result();
+    $res->bind_result($guid, $percentage, $cohort_size, $taken, $part_no, $p, $d, $paperID);
+		if ($res->num_rows == 0) {
+      return json_encode($this->db->error);
+    } else {
+      while ($res->fetch()) {
+			
+				if ($old_guid != $guid) {
+					$stat_no++;
+					$stats[$stat_no]['guid'] = $guid;
+					$stats[$stat_no]['paperID'] = $paperID;
+					$stats[$stat_no]['percentage'] = $percentage;
+					$stats[$stat_no]['cohort_size'] = $cohort_size;
+					$stats[$stat_no]['taken'] = $taken;
+				}
+				
+        $stats[$stat_no]['parts']['part' . $part_no] = array('p' => $p/100, 'd' => $d/100);
+								
+				$old_guid = $guid;
+			}
+    }
+    $res->close();
+		
+    return $stats;
+	}
 
   public function getModulePaperList($moduleID) {
     global $protocol, $configObject;
@@ -237,16 +328,16 @@ Class webServiceRestAPI extends restAPI {
     
     $papers = array();
     $paper_no = 0;
-    $sql="SELECT 
+    $sql = "SELECT 
             properties.property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name 
           FROM 
             properties, papers, users, properties_modules 
           WHERE 
             properties.property_id = properties_modules.property_id AND
-            properties.paper_ownerID=users.id AND 
-            properties.property_id=papers.paper AND  
+            properties.paper_ownerID = users.id AND 
+            properties.property_id = papers.paper AND  
             idMod = ? AND 
-            paper_type!='2' AND 
+            paper_type != '2' AND 
             deleted IS NULL AND 
             retired IS NULL 
           GROUP BY 
@@ -255,14 +346,14 @@ Class webServiceRestAPI extends restAPI {
             paper_title";
 
     $res = $this->db->prepare($sql);
-    $res->bind_param('i',$idMod);
+    $res->bind_param('i', $idMod);
     $res->execute();
     $res->store_result();
     $res->bind_result($property_id, $paper_title, $paper_type, $start_date, $end_date, $created, $screens, $title, $surname, $crypt_name);
     if ($res->num_rows == 0) {
       return json_encode($this->db->error);
     } else {
-      while($res->fetch()) {
+      while ($res->fetch()) {
         $papers[$paper_no]['id'] = $crypt_name;
         $papers[$paper_no]['title'] = $paper_title;
         $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
@@ -292,7 +383,7 @@ Class webServiceRestAPI extends restAPI {
     } else if ($userObject->has_role('Staff')) {
       $allowaccess = true;
     } else if ($userObject->has_role('Student') and $tmp_userID == $userObject->get_user_ID()) {
-      //students can only list their own feedabck
+      // Students can only list their own feedabck
       $allowaccess = true;
     }
     
@@ -310,7 +401,7 @@ Class webServiceRestAPI extends restAPI {
     $paper_no = 0;
     $old_yearID = -1;
     $papers = array();
-    if($moduleID == '') {
+    if ($moduleID == '') {
       $sql = "SELECT 
                       paper_id, 
                       date, 
@@ -345,7 +436,7 @@ Class webServiceRestAPI extends restAPI {
                       moduleId  
                FROM feedback_release 
                LEFT JOIN properties ON feedback_release.paper_id = properties.property_id 
-               LEFT JOIN properties_modules ON properties.property_id =  properties_modules.property_id 
+               LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id 
                LEFT JOIN modules_student ON modules_student.idMod = properties_modules.idMod 
                LEFT JOIN modules ON modules.id = properties_modules.idMod 
                WHERE 
@@ -361,7 +452,7 @@ Class webServiceRestAPI extends restAPI {
     while ($res->fetch()) {
       
       if ($is_live < time()) {
-        //have they sat the paper?
+        // Have they sat the paper?
         $log = $this->db->prepare("SELECT userID FROM log_metadata WHERE userID=? AND paperID=? LIMIT 1");
         $log->bind_param('ii', $tmp_userID, $paperID);
         $log->execute();
@@ -410,7 +501,7 @@ Class webServiceRestAPI extends restAPI {
     } else if ($userObject->has_role('Staff') and $tmp_userID == $userObject->get_user_ID()) {
       $allowaccess = true;
     } else if ($userObject->has_role('Student')) {
-      //students can not access this function
+      // Students can not access this function
       $allowaccess = false;
     }
     
@@ -424,7 +515,7 @@ Class webServiceRestAPI extends restAPI {
     
     $staff_modules = UserUtils::list_staff_modules_by_userID($tmp_userID, $this->db);
     if(count($staff_modules) == 0) {
-      //user is not on any teams. stop!!
+      // User is not on any teams. stop!!
       return array();
     }
     $staff_modules_ids_str = ' OR idMod IN (' . implode(',',array_keys($staff_modules)) . ') ';

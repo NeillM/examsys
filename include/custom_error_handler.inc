@@ -182,7 +182,9 @@ function error_handling($context = null) {
       } elseif (is_object($value) and get_class($value) === 'ZipArchive') {
         $context1[$key] = 'ZipArchive';
       }  elseif (is_object($value) and get_class($value) === 'SimpleXMLElement') {
-        $context1[$key] = 'SimpleXMLElement ';
+        $context1[$key] = 'SimpleXMLElement';				
+      }  elseif (is_object($value) and get_class($value) === 'XMLWriter') {
+        $context1[$key] = 'XMLWriter';				
       } elseif (is_object($value) and (get_class($value) === 'ErrorException' or get_class($value) === 'Exception')) {
         $context1[$key] = 'ErrorException Object';
       } elseif (is_object($value)) {
