@@ -35,20 +35,18 @@ class HOTSPOTCorrector extends Corrector {
   public function execute($new_correct, $paper_id, &$changes, $paper_type) {
     $errors = array();
 		
-
-
     $old_points = $this->_question->get_points1();
     $option = reset($this->_question->options);
     $marks_correct = $option->get_marks_correct();
     $marks_incorrect = $option->get_marks_incorrect();
 
 
-    if ($old_points != $new_correct['points1']) {
+    //if ($old_points != $new_correct['points1']) {
       $changes = true;
 
       $this->_question->set_points1($new_correct['points1']);
       $this->_question->add_unified_field_modification('points', 'points', $old_points, $new_correct['points1'], $this->_lang_strings['postexamchange']);
-    }
+    //}
 
     if ($changes) {
 			try {
