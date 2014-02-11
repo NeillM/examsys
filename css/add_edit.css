@@ -603,8 +603,11 @@ textarea.disabled, input[type=text].disabled, .editor-disabled {
 }
 
 .editor-disabled {
-  height: 120px;
+  height: 140px;
   overflow: auto;
+	background-image: url('../tools/tinymce/jscripts/tiny_mce/themes/advanced/img/disabled_icons.gif');
+	background-repeat: no-repeat;
+	padding-top: 26px;
 }
 
 .editor-disabled p {
