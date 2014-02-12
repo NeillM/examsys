@@ -39,6 +39,8 @@ class RAF {
 	private $logger;
 	private $string;
 	private $status_array;
+	private $keywords_lookup = null;
+	private $raf_company;
 
   public function __construct($userObject, $configObject, $db, $string) {
     $this->db        	= $db;
@@ -49,6 +51,7 @@ class RAF {
 	
 	/**
 	 * EXPORT: Creates and outputs a ZIP file containing all the questions on the current paper.
+	 * @param array $questions - An array of questions to be exported.
 	 */
 	public function export($questions) {
 		$this->status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
@@ -77,6 +80,7 @@ class RAF {
 	
 	/**
 	 * EXPORT: Create an array of data to export. This will be JSON encoded later.
+	 * @param array $questions - An array of questions to be exported.
 	 */
 	private function create_export_array($questions) {
 		$this->data['metadata']['rogo_version']	= $this->configObj->get('rogo_version');
@@ -93,6 +97,8 @@ class RAF {
 			$this->getImages_from_html($this->data['items'][$item_no]['question']['leadin']);     // Parse out any images in the question leadin.
 			
 			$this->data['items'][$item_no]['options'] = $this->get_options($question['q_id']);
+			
+			$this->data['items'][$item_no]['keywords'] = $this->get_keywords($question['q_id']);
 
 			$item_no++;
 		}
@@ -100,24 +106,26 @@ class RAF {
 
 	/**
 	 * EXPORT: Retrieve a specific question record from the database for export.
+	 * @param int $question - ID for a question to be looked up in the database.
 	 */
 	private function get_question($question) {
-		$result = $this->db->prepare("SELECT q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid FROM questions WHERE q_id = ?");
+		$result = $this->db->prepare("SELECT q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid, title, first_names, surname FROM questions, users WHERE questions.ownerID = users.id AND q_id = ?");
 		$result->bind_param('i', $question['q_id']);
 		$result->execute();
-		$result->bind_result($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_authorID, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid);
+		$result->bind_result($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_authorID, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid, $title, $first_names, $surname);
 		$result->fetch();
 		$result->close();
 		
 		$this->check_media($q_media);
 		
 		$status = $this->status_array[$status]->get_name();
-
-		return array('screen'=>$question['screen'], 'q_id'=>$question['q_id'], 'q_type'=>$q_type, 'theme'=>$theme, 'scenario'=>$scenario, 'leadin'=>$leadin, 'correct_fback'=>$correct_fback, 'incorrect_fback'=>$incorrect_fback, 'display_method'=>$display_method, 'notes'=>$notes, 'ownerID'=>$ownerID, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'creation_date'=>$creation_date, 'last_edited'=>$last_edited, 'bloom'=>$bloom, 'scenario_plain'=>$scenario_plain, 'leadin_plain'=>$leadin_plain, 'std'=>$std, 'status'=>$status, 'q_option_order'=>$q_option_order, 'score_method'=>$score_method, 'settings'=>$settings, 'guid'=>$guid);
+		
+		return array('screen'=>$question['screen'], 'q_id'=>$question['q_id'], 'q_type'=>$q_type, 'theme'=>$theme, 'scenario'=>$scenario, 'leadin'=>$leadin, 'correct_fback'=>$correct_fback, 'incorrect_fback'=>$incorrect_fback, 'display_method'=>$display_method, 'notes'=>$notes, 'ownerID'=>$ownerID, 'q_media'=>$q_media, 'q_media_width'=>$q_media_width, 'q_media_height'=>$q_media_height, 'creation_date'=>$creation_date, 'last_edited'=>$last_edited, 'bloom'=>$bloom, 'scenario_plain'=>$scenario_plain, 'leadin_plain'=>$leadin_plain, 'std'=>$std, 'status'=>$status, 'q_option_order'=>$q_option_order, 'score_method'=>$score_method, 'settings'=>$settings, 'guid'=>$guid, 'owner'=>array('title'=>$title, 'first_names'=>$first_names, 'surname'=>$surname));
 	}
 
 	/**
 	 * EXPORT: Retrieve a specific option record from the database for export.
+	 * @param int $o_id - Option ID to be looked up in the database.
 	 */
 	private function get_options($o_id) {
 		$options = array();
@@ -134,6 +142,26 @@ class RAF {
 		$result->close();
 		
 		return $options;
+	}
+	
+	/**
+	 * EXPORT: Retrieve keywords (as text) associated with a question for export.
+	 * @param int $q_id - ID for a question to be look up keywords.
+	 */
+	private function get_keywords($q_id) {
+		$keywords = array();
+
+		$result = $this->db->prepare("SELECT id, keyword FROM keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND q_id = ?");
+		$result->bind_param('i', $q_id);
+		$result->execute();
+		$result->bind_result($id, $keyword);
+		while ($result->fetch()) {
+			$keywords[$id] = $keyword;
+		}
+		$result->close();
+		
+		return $keywords;
+	
 	}
 
 	/**
@@ -173,7 +201,7 @@ class RAF {
 	 * EXPORT: Write JSON encoded data out to the filesystem.
 	 */
 	private function write_file() {
-		$file_handle = fopen($this->configObj->get('cfg_tmpdir') . $this->userID. '_raf.json', 'w');
+		$file_handle = fopen($this->configObj->get('cfg_tmpdir') . $this->userID . '_raf.json', 'w');
 		fwrite($file_handle, json_encode($this->data));
 		fclose($file_handle);
 	}
@@ -210,6 +238,8 @@ class RAF {
 		$this->logger = new Logger($this->db);
 		$this->status_array = QuestionStatus::get_all_statuses_by_name($this->db, $this->string);
 	
+	  $this->get_keyword_ids();
+		
 		$this->zip_filename = $this->userID . '_raf.zip';
 		$tmp_path = $this->configObj->get('cfg_tmpdir');
 		
@@ -266,9 +296,12 @@ class RAF {
 	private function load_raf_data() {
 		$data_array = json_decode($this->data, true);
 		$display_pos = 1;
+		$this->raf_company = $data_array['metadata']['company'];
 		foreach ($data_array['items'] as $item) {
 			
 			$q_id = $this->write_question($item['question']);
+			
+			$this->write_keywords($item['keywords'], $q_id);
 			
 			foreach ($item['options'] as $options) {
 				$this->write_option($options, $q_id);
@@ -301,6 +334,7 @@ class RAF {
 
 	/**
 	 * IMPORT: Insert a single question into the database.
+   * @param array $q - Array holding all the information to create the question.
 	 */
 	private function write_question($q) {
 		// Stop SQL errors with ENUM fields and old data which may be blank.
@@ -329,13 +363,66 @@ class RAF {
 		$q_id =  $this->db->insert_id;
 		$result->close();
 		
-		$this->logger->track_change('New Question', $q_id, $this->userID, '', 'Imported from...', '');
+		$date_format = $this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_short_time_php');
+		$this->logger->track_change('New Question', $q_id, $this->userID, '', 'Imported from RAF file at ' . date($date_format), '');
 		
 		return $q_id;
+	}
+	
+	/**
+	 * IMPORT: Take the textual keywords of a question, lookup IDs and then insert into the DB.
+   * @param array $keywords	- Array of textual keywords
+   * @param int $q_id			 	- ID of the question the keywords are for.
+	 */
+	private function write_keywords($keywords, $q_id) {
+		if ($this->raf_company == $this->configObj->get('cfg_company')) {  // The import file company is the same as the current installation. Use the same IDs.
+			$keywordIDs = $keywords;
+		} else {
+			$keywordIDs = array();
+			foreach ($keywords as $keyword) {
+				if (isset($this->keywords_lookup[$keyword])) {
+					$tmp_ID = $this->keywords_lookup[$keyword];
+					$keywordIDs[$tmp_ID] = $tmp_ID;
+				}
+			}
+		}
+		
+		if (count($keywordIDs) > 0) {
+			QuestionUtils::add_keywords($keywordIDs, $q_id, $this->db);
+		}
+	}
+	
+	/**
+	 * IMPORT: Load all personal keywords and keywords belonging to the team(s) of the current paper.
+	 * Creates a lookup array for translating the text of a keyword into IDs for insertion into the DB.
+	 */
+	private function get_keyword_ids() {
+	  // Get any personal keywords.
+		$result = $this->db->prepare("SELECT id, keyword FROM keywords_user WHERE userID = ? AND keyword_type = 'personal'");
+		$result->bind_param('i', $this->userID);
+		$result->execute();
+		$result->bind_result($id, $keyword);
+		while ($result->fetch()) {
+		  $this->keywords_lookup[$keyword] = $id;
+		}
+		$result->close();
+		
+	  // Get team keywords.
+		$modules = array_keys($this->properties->get_modules());
+
+		$result = $this->db->prepare("SELECT id, keyword FROM keywords_user WHERE userID IN (" . implode(',', $modules) . ") AND keyword_type = 'team'");
+		$result->execute();
+		$result->bind_result($id, $keyword);
+		while ($result->fetch()) {
+		  $this->keywords_lookup[$keyword] = $id;
+		}
+		$result->close();	
 	}
 
 	/**
 	 * IMPORT: Insert a single option into the database.
+   * @param array $o 	- Array holding all the information to write into the options table.
+   * @param int $q_id - The ID of the question the options belong to.
 	 */
 	private function write_option($o, $q_id) {
 		$result = $this->db->prepare("INSERT INTO options VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
