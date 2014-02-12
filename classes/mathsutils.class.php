@@ -46,7 +46,10 @@ Class MathsUtils {
    */
   static function gen_random_no($min, $max, $increment, $decimals) {
     if ($min === 'ERROR' or $max === 'ERROR') return 'ERROR';
-    if ($decimals > 0) {
+		if ($min === $max) {  // Both numbers are identical, simply return.
+			return $min;
+    }
+		if ($decimals > 0) {
       $min = $min * (10 * $decimals);
       $max = $max * (10 * $decimals);
       $increment = $increment * (10 * $decimals);

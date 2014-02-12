@@ -42,11 +42,9 @@ class EnhancedCalc extends Question implements questionInterface {
     $this->settings = $data;
   }
 
-
   function error_handling($context = null) {
     return error_handling($this);
   }
-
 
 
   /**
@@ -63,7 +61,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
       $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
       $out = preg_match($pattern, $input, $matches);
-      if(isset($matches[0])) {
+      if (isset($matches[0])) {
         return array($matches[0], $this->useranswer['uansunit']);
       } else {
         return array($input, $this->useranswer['uansunit']);
@@ -96,6 +94,7 @@ class EnhancedCalc extends Question implements questionInterface {
         $formula_by_units[$value1] = $value['formula'];
       }
     }
+		
     return $formula_by_units;
   }
 
@@ -128,6 +127,7 @@ class EnhancedCalc extends Question implements questionInterface {
     $returnstatus = null;
     if (is_null($this->useranswer)) {
       $this->error = 'No User Answer';
+			
       return Q_MARKING_UNANSWERABLE;
     }
 
@@ -142,7 +142,7 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     if (isset($this->useranswer['uansunit'])) {
-       $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
+      $this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
     }
 
     //are the units correct?
@@ -194,10 +194,10 @@ class EnhancedCalc extends Question implements questionInterface {
         switch ($this->settings['fulltoltyp']) {
           case "%":
             $res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
-          break;
+						break;
           case "#":
             $res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
-          break;
+						break;
         }
         $this->useranswer['ans']['tolerance_full'] = $res['tolerance'];
         $this->useranswer['ans']['tolerance_fullans'] = $res['tolerance_ans'];
@@ -209,10 +209,10 @@ class EnhancedCalc extends Question implements questionInterface {
         switch ($this->settings['parttoltyp']) {
           case "%":
             $res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
-          break;
+						break;
           case "#":
             $res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
-          break;
+						break;
         }
         $this->useranswer['ans']['tolerance_partial'] = $res['tolerance'];
         $this->useranswer['ans']['tolerance_partialans'] = $res['tolerance_ans'];
@@ -235,9 +235,9 @@ class EnhancedCalc extends Question implements questionInterface {
           $function = 'format_number_sf';
           $arg = $this->settings['sf'];
         } else {
-            //round to student precision
-            $function = 'format_number_to_precision_of_other_number';
-            $arg = $this->useranswer['uansnumb'];
+					//round to student precision
+					$function = 'format_number_to_precision_of_other_number';
+					$arg = $this->useranswer['uansnumb'];
         }
 
         $this->useranswer['cans'] = $enhancedcalcObj->$function($this->useranswer['cans'], $arg);
@@ -256,7 +256,7 @@ class EnhancedCalc extends Question implements questionInterface {
        *
        */
         if (!isset($this->useranswer['uansnumb']) or (isset($this->useranswer['uansnumb']) and trim($this->useranswer['uansnumb']) == '')) {
-            //not answered
+            // Not answered
             $this->qmark = 0;
             $returnstatus = Q_MARKING_NOTANS;
             $this->useranswer['status']['overall'] = $returnstatus;
@@ -265,7 +265,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 
       if ($this->useranswer['status']['units'] === false) {
-        //we can't mach the units so this question must be wrong!
+        // We can't mach the units so this question must be wrong!
         $this->qmark = $this->settings['marks_incorrect'];
         $this->useranswer['status']['exact'] = false;
         $returnstatus = Q_MARKING_WRONG;
@@ -275,11 +275,11 @@ class EnhancedCalc extends Question implements questionInterface {
 
       $this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
 
-      //calculate distance from correct if needed
+      // Calculate distance from correct if needed
       if ($this->useranswer['status']['exact'] === false) {
-         $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
+        $this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
       } else {
-         $this->useranswer['cans_dist'] = '0';
+        $this->useranswer['cans_dist'] = '0';
       }
 
       if ($this->useranswer['status']['exact'] === false) {
@@ -300,7 +300,7 @@ class EnhancedCalc extends Question implements questionInterface {
         $this->useranswer['status']['tolerance_partial'] = true;
         $this->useranswer['status']['tolerance_full'] = true;
       }
-      //strict dp marking
+      // Strict dp marking
       if ($this->is_strict_dp_enabled()) {
 
         if ( $this->is_strict_dp_strictzeros_enabled() ) {
@@ -316,7 +316,7 @@ class EnhancedCalc extends Question implements questionInterface {
         }
       }
 
-      //check for strict sf
+      // Sheck for strict sf
       if ($this->is_strict_sf_enabled() ) {
         $this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
         if ($this->useranswer['status']['strictsf'] === false) {
@@ -327,29 +327,29 @@ class EnhancedCalc extends Question implements questionInterface {
         }
       }
 
-      //assume its wrong wrong !!
+      // Assume its wrong wrong !!
       $returnstatus = Q_MARKING_WRONG;
       $this->qmark = $this->settings['marks_incorrect'];
 
-      //part tolerance range
+      // Part tolerance range
       if ($this->is_user_ans_within_partial_tolerance()) {
         $this->qmark = $this->settings['marks_partial'];
         $returnstatus = Q_MARKING_PART_TOL;
       }
 
-      //full tolerance range
+      // Full tolerance range
       if ($this->is_user_ans_within_fullmark_tolerance()) {
         $this->qmark = $this->settings['marks_correct'];
         $returnstatus = Q_MARKING_FULL_TOL;
       }
 
-      //exact answer
+      // Exact answer
       if ($this->is_user_ans_correct()) {
         $this->qmark = $this->settings['marks_correct'];
         $returnstatus = Q_MARKING_EXACT;
       }
 
-      //remove marks for incorrect unit
+      // Remove marks for incorrect unit
       if ((isset($this->settings['unit_marks']) and !($this->settings['unit_marks'] == 0 or $this->settings['unit_marks'] == 'invalidate')) and $this->useranswer['status']['units'] !== true) {
         $this->qmark = $this->qmark - $this->settings['unit_marks'];
         $returnstatus = Q_MARKING_PART_UNITS_WRONG;
@@ -363,6 +363,7 @@ class EnhancedCalc extends Question implements questionInterface {
       $this->useranswer['status']['error'] = true;
       $this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
       $this->useranswer['status']['overall'] = $returnstatus;
+			
       return $returnstatus;
     }
 
@@ -403,6 +404,7 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   public function calculate_question_mark() {
 	  $this->decode_settings();
+		
     return $this->settings['marks_correct'];
   }
 
@@ -482,7 +484,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * return the passed value or 0 if the value is an empty string 
    */
   private function set_blank_to_zero($val) {
-      return ($val === '' ? 0 : $val);
+    return ($val === '' ? 0 : $val);
   } 
   
   /*
@@ -528,19 +530,19 @@ class EnhancedCalc extends Question implements questionInterface {
     echo_content($leadin);
 
     if (!isset($this->useranswer['uans']) or $this->useranswer['uans'] == '') {
-        if ($extra['hide_if_unanswered'] == 1) {
-            $extra['tmp_display_correct_answer'] = 0;
-            $extra['tmp_display_students_response'] = '0';
-            $extra['tmp_display_feedback'] = '0';
-            $extra['$tmp_display_question_mark'] = '0';
-        }
+      if ($extra['hide_if_unanswered'] == 1) {
+				$extra['tmp_display_correct_answer'] = 0;
+				$extra['tmp_display_students_response'] = '0';
+				$extra['tmp_display_feedback'] = '0';
+				$extra['$tmp_display_question_mark'] = '0';
+      }
     }
 
     $saved_response = '';
     $saved_response_clean = '';
-    if(isset($this->useranswer['uans'])) {
-        $saved_response = $this->useranswer['uans'];
-        $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+    if (isset($this->useranswer['uans'])) {
+      $saved_response = $this->useranswer['uans'];
+      $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
     }
     $part_id = 1;
 
@@ -633,17 +635,17 @@ class EnhancedCalc extends Question implements questionInterface {
       $uansarray = array();
       $find_qid = intval(substr($inputVal, 3));
       $pre_user_answers = '';
-      if(!is_array($user_answers)) {
-        $user_answers=array();
-        $inputVal='ERROR';
+      if (!is_array($user_answers)) {
+        $user_answers = array();
+        $inputVal = 'ERROR';
       }
       foreach ($user_answers as $screen => $answers) {
         if (isset($answers[$find_qid])) {
           try {
             if (!is_array($answers[$find_qid])) {
-                $uansarray = json_decode($answers[$find_qid], true);
+              $uansarray = json_decode($answers[$find_qid], true);
             } else {
-                $uansarray = $answers[$find_qid];
+              $uansarray = $answers[$find_qid];
             }
           } catch (exception $e) {
             return 'ERROR';
@@ -652,38 +654,38 @@ class EnhancedCalc extends Question implements questionInterface {
         }
       }
       if (!isset($uansarray['uans']) or $uansarray['uans'] == '') {
-          return 'ERROR';
+        return 'ERROR';
       }
       $return = $this->split_numb_from_unit($uansarray['uans']);
       $inputVal = $return[0];
     } elseif ($this->is_linked_question_var($inputVal)) {
-      //its a var refrance from a previous question
+      // It's a var refrance from a previous question
       $find_var = substr($inputVal, 3, 2);
       $find_qid = intval(substr($inputVal, 5));
       $pre_var_val = '';
-      if(!is_array($user_answers)) {
-        $user_answers=array();
-        $inputVal='ERROR';
+      if (!is_array($user_answers)) {
+        $user_answers = array();
+        $inputVal = 'ERROR';
       }
       foreach ($user_answers as $screen => $answers) {
         if (isset($answers[$find_qid])) {
-            if(!is_array($answers[$find_qid])) {
-                $variables = json_decode($answers[$find_qid], true);
-            } else {
-                $variables = $answers[$find_qid];
-            }
-            if(isset($variables['vars'][$find_var])) {
-              $inputVal = $variables['vars'][$find_var];
-              break;
-            } else {
-              $inputVal = 'ERROR';
-            }
+					if (!is_array($answers[$find_qid])) {
+						$variables = json_decode($answers[$find_qid], true);
+					} else {
+						$variables = $answers[$find_qid];
+					}
+					if (isset($variables['vars'][$find_var])) {
+						$inputVal = $variables['vars'][$find_var];
+						break;
+					} else {
+						$inputVal = 'ERROR';
+					}
         } else {
-            $inputVal = 'ERROR';
+          $inputVal = 'ERROR';
         }
-
       }
     }
+		
     return $inputVal;
   }
 
@@ -705,7 +707,7 @@ class EnhancedCalc extends Question implements questionInterface {
    * @return bool
    */
   public function is_linked_question_var($varval) {
-      if (substr($varval, 0, 3) == 'var') {
+    if (substr($varval, 0, 3) == 'var') {
       return true;
     }
     return false;
@@ -719,11 +721,12 @@ class EnhancedCalc extends Question implements questionInterface {
   public function generate_variables () {
     
     if (!isset($this->useranswer['vars']) or !is_array($this->useranswer['vars'])) {
-        //create an empty array to hold the generated variables
-        $this->useranswer['vars'] = array();
+      // Create an empty array to hold the generated variables
+      $this->useranswer['vars'] = array();
     }
     
-    //check to see if variables have been previously generated if not put them in an array to be generated
+		
+    // Check to see if variables have been previously generated if not put them in an array to be generated
     foreach ($this->settings['vars'] as $key => $value) {
       if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
         $min = $this->variable_substitution($value['min'], $this->alluseranswers);
@@ -734,16 +737,16 @@ class EnhancedCalc extends Question implements questionInterface {
         $max = $this->variable_substitution($value['max'], $this->alluseranswers);
         $inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
         $dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
-
+				
         $this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
       }
 
-//pull in the last userans every time
+			// Pull in the last userans every time
       if ($this->is_linked_ans($value['min'])) {
         $this->useranswer['vars'][$key] = $this->variable_substitution($value['min'], $this->alluseranswers);
       }
     }
-    //update the session
+    // Update the session
     $_SESSION['qid'][$this->id]['vars'] = $this->useranswer['vars'];
   }
 
@@ -765,6 +768,7 @@ class EnhancedCalc extends Question implements questionInterface {
     $varname = array_keys($this->useranswer['vars']);
     $varvalue = array_values($this->useranswer['vars']);
     $string = str_ireplace($varname, $varvalue, $string);
+		
     return $string;
   }
 
@@ -777,20 +781,19 @@ class EnhancedCalc extends Question implements questionInterface {
   public function render_paper($extra = array()) {
     global $string;
 
-
-    // display question on paper
+    // Display question on paper
     $screen_pre_submitted = null;
     if (isset($extra['screen_pre_submitted'])) {
       $screen_pre_submitted = $extra['screen_pre_submitted'];
     }
 
-    //make sure data is arrays not encoded
+    // Make sure data is arrays not encoded
     if (!is_array($this->useranswer)) {
       $this->useranswer = json_decode($this->useranswer, true);
     }
     $this->decode_settings();
 
-    // create array of units and functions
+    // Create array of units and functions
     if ((isset($this->settings['answersexp']) and !is_array($this->settings['answersexp'])) or (!isset($this->settings['answersexp']))) {
       foreach ($this->settings['answers'] as $key => $value) {
         $units = explode(',', $value['units']);
@@ -964,8 +967,8 @@ class EnhancedCalc extends Question implements questionInterface {
 
 
  public function get_user_answer_full() {
-   $ret='';
-   if(isset($this->useranswer['uansnumb'])) {
+   $ret = '';
+   if (isset($this->useranswer['uansnumb'])) {
      $ret=$this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'];
    }
    return $ret;
@@ -993,7 +996,7 @@ class EnhancedCalc extends Question implements questionInterface {
    */
   public function get_answer_distance() {
 
-    if(!isset($this->useranswer['cans_dist'])) {
+    if (!isset($this->useranswer['cans_dist'])) {
       $enhancedcalcType = $this->configObj->get('enhancedcalc_type');
       if (!is_null($enhancedcalcType)) {
         require_once $enhancedcalcType . '.php';
@@ -1010,10 +1013,13 @@ class EnhancedCalc extends Question implements questionInterface {
         $this->useranswer['cans_dist'] = '0';
       }
     }
-    $data=false;
-if(isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') {
-  $data=$this->useranswer['cans_dist'];
-}
+    
+		$data = false;
+		
+		if (isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 'ERROR') {
+			$data=$this->useranswer['cans_dist'];
+		}
+		
     return $data;
   }
 
@@ -1023,6 +1029,7 @@ if(isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 
    */
   public function is_negative_marked() {
     $this->decode_settings();
+		
     return $this->settings['marks_incorrect'] < 0;
   }
 
@@ -1030,10 +1037,9 @@ if(isset($this->useranswer['cans_dist']) and $this->useranswer['cans_dist'] !== 
     if (isset ($this->useranswer['ans'])) {
       return $this->useranswer['ans'];
     }
+		
     return null;
-
   }
-
 
 }
 ?>
