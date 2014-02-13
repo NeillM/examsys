@@ -33,10 +33,10 @@
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
   
-  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 	<style type="text/css">
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
 		a {color:black}
@@ -51,10 +51,10 @@
     label.error {display:block; color:#f00}
 	</style>
   
-	<script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../../js/staff_help.js"></script>
-  <script type="text/javascript" src="../../js/toprightmenu.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     // Popup window code
     function newPopup(url) {

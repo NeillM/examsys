@@ -28,10 +28,8 @@
 	<title>Export to QTI</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
-	<script type="text/javascript" src="js/mootools-1.2.4.js"></script> 
-	<link rel="stylesheet" type="text/css" href="css/highlight.css" /> 
-	<link rel="stylesheet" type="text/css" href="css/wizard.css" /> 
-
+	<script type="text/javascript" src="./js/mootools-1.2.4.js"></script> 
+	
 	<style type="text/css">
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
 		.divider {padding-left:6px; font-weight:bold}

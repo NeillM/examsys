@@ -29,10 +29,10 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	<title><?php echo $string['importfromqti'] ?></title>
   
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-	<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/body.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/header.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/submenu.css" />
 
 	<script type="text/javascript" src="/qti/js/mootools-1.2.4.js"></script> 
 	<style type="text/css">
