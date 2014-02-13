@@ -67,6 +67,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title; ?>");
 			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname; ?>");
 			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname; ?>");
 			window.opener.$('#new_username').val("<?php echo $output->lookupdata->username; ?>");
