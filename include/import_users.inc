@@ -27,6 +27,8 @@
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 
+ini_set("auto_detect_line_endings", true);
+
 $header = array();
 $needed_cols1 = array('student_id','first names','surname','title','course code','year of course','local email');
 $needed_cols2 = array('id','forenames','family name','title','course','year of study','email');
@@ -241,8 +243,16 @@ function add_users_from_file($fileName) {
       $invalid_user = true;
     }
 
-    $module = trim($fields[$header['modules']]);
-    $session = trim($fields[$header['session']]);
+    if (isset($header['modules'])) {
+			$module = trim($fields[$header['modules']]);
+    } else {
+		  $module = '';
+		}
+		if (isset($header['session'])) {
+			$session = trim($fields[$header['session']]);
+		} else {
+			$session = '';
+		}
     $idMod = module_utils::get_idMod($module, $mysqli);
     if ($idMod !== false) {
       if ($role != 'Staff' and $role != 'External Examiner' and $invalid_user != true and isset($header['modules']) and isset($header['session'])) {
