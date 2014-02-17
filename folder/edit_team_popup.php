@@ -158,7 +158,7 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"staff_no\" value=\"$staff_no\" /></div></td>\n</tr>\n";
 ?>
 
-<div style="text-align:center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div style="text-align:center"><input style="width:130px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;&nbsp;<input style="width:80px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>
