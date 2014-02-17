@@ -122,6 +122,7 @@
   }
 
 	$menudata = array();
+	$menudata['bitbucket']						= array('https://bitbucket.org/rogoOOS/', 'bitbucket.png');
 	$menudata['calendar']							= array('calendar.php#week' . date("W"), 'calendar_icon.png');
 	$menudata['clearguestaccounts']		= array('clear_guest_users.php', 'clear_guest_users.png');
 	$menudata['clearoldlogs']					= array('clear_old_logs.php', 'clear_logs.png');
@@ -145,7 +146,6 @@
 	$menudata['systemerrors']					= array('sys_error_list.php', 'system_errors.png');
 	$menudata['systeminformation']		= array('system_info.php', 'information.png');
 	$menudata['testing']							= array('../testing/', 'crash_test.png');
-	$menudata['trac']									= array('https://suivarro.nottingham.ac.uk/trac/rogo/', 'trac_logo.png');
 	$menudata['usermanagement']				= array('../users/search.php', 'user_accounts_icon.png');
 
 	foreach($menudata as $menukey => $menuitem) {
