@@ -25,6 +25,7 @@
 */
 
 require_once 'question_status.class.php';
+require_once 'usernotices.class.php';
 
 class RAF {
 
@@ -47,6 +48,7 @@ class RAF {
 		$this->configObj	= $configObject;
 		$this->userID			= $userObject->get_user_ID();
 		$this->string			= $string;
+		$this->notice			= new user_notices;
   }
 	
 	/**
@@ -257,7 +259,14 @@ class RAF {
 		if ($zip->open($tmp_path . $this->zip_filename) === TRUE) {
 			$zip->extractTo($dest_dir);
 			
-			$this->data = file_get_contents($dest_dir . '/raf.json');
+			if (file_exists($dest_dir . '/raf.json')) {
+				$this->data = file_get_contents($dest_dir . '/raf.json');
+			} else {
+				$zip->close();
+				$msg = sprintf($this->string['furtherassistance'], $this->configObj->get('support_email'), $this->configObj->get('support_email'));
+				$this->notice->display_notice_and_exit($this->db, $this->string['invalidraf'], $msg, $this->string['invalidraf'], '../artwork/exclamation_48.png', '#C00000', true, true);
+			}
+
 
 			$this->copy_images($dest_dir, $tmp_path);
 			
@@ -267,8 +276,8 @@ class RAF {
 
 			$zip->close();
 		} else {
-			echo 'failed';
-			exit;
+      $msg = sprintf($this->string['furtherassistance'], $this->configObj->get('support_email'), $this->configObj->get('support_email'));
+      $this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
 		}		
 	}
 	
@@ -363,8 +372,34 @@ class RAF {
 		$q_id =  $this->db->insert_id;
 		$result->close();
 		
+		
 		$date_format = $this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_short_time_php');
-		$this->logger->track_change('New Question', $q_id, $this->userID, '', 'Imported from RAF file at ' . date($date_format), '');
+		
+		if ($this->raf_company == $this->configObj->get('cfg_company')) {  // The import file company is the same as the current installation. Use the same IDs.
+		  $old_q_id = $this->getQID_GUID($q['guid']);
+		
+		  if ($old_q_id !== false) {
+				$this->logger->track_change('Copied Question', $q_id, $this->userID, $old_q_id, $q_id, 'Imported from RAF file at ' . date($date_format));		// Log as a copied file
+			}
+		} else {
+			$this->logger->track_change('New Question', $q_id, $this->userID, '', 'Imported from RAF file at ' . date($date_format), '');										// Log as a new file that has been imported
+		}
+		
+		return $q_id;
+	}
+	
+	private function getQID_GUID($guid) {
+		$result = $this->db->prepare("SELECT q_id FROM questions WHERE guid = ?");
+		$result->bind_param('s', $guid);
+		$result->execute();
+		$result->bind_result($q_id);
+		$result->store_result();
+    if ($result->num_rows > 0) {
+			$result->fetch();
+		} else {
+		  $q_id = false;
+		}
+		$result->close();
 		
 		return $q_id;
 	}

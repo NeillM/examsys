@@ -19,4 +19,6 @@ require '../lang/' . $language . '/include/paper_options.inc';
 $string['importraf'] = 'Import Rog&#333; Assessment Format';
 $string['file'] = 'File';
 $string['importfile'] = 'Import File';
+$string['invalidzip'] = 'This is an invalid ZIP file.';
+$string['invalidraf'] = 'This is an invalid Rogo Assessment File (RAF).';
 ?>
