@@ -670,11 +670,28 @@ if ($properties->get_paper_type() == '2') {
     makeMenu(array($string['info']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info$params",$string['keyword_based']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based$params",$string['random']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random$params","-"=>"-",$string['area']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area$params",$string['calculation']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc$params",$string['dichotomous']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous$params",$string['extmatch']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch$params",$string['blank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank$params",$string['hotspot']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot$params",$string['labelling']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling$params",$string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",$string['matrix']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix$params",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params",$string['mrq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq$params",$string['rank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank$params",$string['sct']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct$params",$string['textbox']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox$params",$string['true_false']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params"));
   }
 
+	$importexport_menu = array();
+	if (!$properties->get_summative_lock()) {
+		$importexport_menu[$string['import']] = $configObject->get('cfg_root_path') . "/qti/import.php?paperID=$paperID&module=$module";
+		$importexport_menu[$string['importraf']] = $configObject->get('cfg_root_path') . "/import/rogo_assessment_format.php?paperID=$paperID&module=$module";
+		if ($properties->get_question_no() > 0) {
+			$importexport_menu['-'] = "-";
+		}
+	}
+	if ($properties->get_question_no() > 0) {
+		$importexport_menu[$string['export12']] = $configObject->get('cfg_root_path') . "/qti/export.php?dest=qti12&paperID=$paperID&module=$module";
+		$importexport_menu[$string['exportraf']] = $configObject->get('cfg_root_path') . "/export/rogo_assessment_format.php?paperID=$paperID";
+	}
+
+	makeMenu($importexport_menu);
+	/*
   if ($properties->get_summative_lock()) {
     makeMenu(array($string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID&module=$module", $string['exportraf']=>"{$configObject->get('cfg_root_path')}/export/rogo_assessment_format.php?paperID=$paperID"));
   } else {
     makeMenu(array($string['import']=>"{$configObject->get('cfg_root_path')}/qti/import.php?paperID=$paperID&module=$module", $string['importraf']=>"{$configObject->get('cfg_root_path')}/import/rogo_assessment_format.php?paperID=$paperID&module=$module", '-'=>'-', $string['export12']=>"{$configObject->get('cfg_root_path')}/qti/export.php?dest=qti12&paperID=$paperID", $string['exportraf']=>"{$configObject->get('cfg_root_path')}/export/rogo_assessment_format.php?paperID=$paperID&module=$module"));
   }
+	*/
+	
   makeMenu(array($string['Continuous']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(), $string['Page-break per question']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1"));
 
   hideMenuScript($menuNo);
