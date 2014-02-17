@@ -61,6 +61,47 @@ class IE_qti_Load extends IE_Main {
         }
         $zip->close();
       } else {
+        print "zip invalid ";
+        switch($res){
+          case ZipArchive::ER_EXISTS:
+            $ErrMsg = "File already exists.";
+            break;
+
+          case ZipArchive::ER_INCONS:
+            $ErrMsg = "Zip archive inconsistent.";
+            break;
+
+          case ZipArchive::ER_MEMORY:
+            $ErrMsg = "Malloc failure.";
+            break;
+
+          case ZipArchive::ER_NOENT:
+            $ErrMsg = "No such file.";
+            break;
+
+          case ZipArchive::ER_NOZIP:
+            $ErrMsg = "Not a zip archive.";
+            break;
+
+          case ZipArchive::ER_OPEN:
+            $ErrMsg = "Can't open file.";
+            break;
+
+          case ZipArchive::ER_READ:
+            $ErrMsg = "Read error.";
+            break;
+
+          case ZipArchive::ER_SEEK:
+            $ErrMsg = "Seek error.";
+            break;
+
+          default:
+            $ErrMsg = "Unknown (Code $rOpen)";
+            break;
+
+
+        }
+        print "Zip Error Message: " . $ErrMsg . "\r\n";
         $this->AddError($string['invalidzip']);
         return;
       }
