@@ -5,7 +5,7 @@ require '../include/sysadmin_auth.inc';
 // Gather all the Image Hotspot question IDs first.
 $q_ids = array();
 
-$stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE start_date > 20131207180000 and start_date < now() and paper_type = '2'");
+$stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE start_date > 20131207180000 and start_date < 20140207090000 and paper_type = '1'");
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($paperID);
@@ -27,7 +27,7 @@ $stmt->close();
 // Look up user answers.
 $updates = array();
 foreach ($q_ids as $q_id) {
-	$stmt = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id = ? AND updated > 20131207180000");
+	$stmt = $mysqli->prepare("SELECT id, user_answer FROM log1 WHERE q_id = ? AND updated > 20131207180000 and updated < 20140207090000");
 	$stmt->bind_param('i', $q_id);
 	$stmt->execute();
 	$stmt->store_result();
@@ -44,7 +44,7 @@ foreach ($q_ids as $q_id) {
 
 var_dump($updates);
 
-$stmt = $mysqli->prepare("UPDATE log2 SET user_answer = ? WHERE id = ?");
+$stmt = $mysqli->prepare("UPDATE log1 SET user_answer = ? WHERE id = ?");
 foreach ($updates as $log_id => $user_answer) {
 	$stmt->bind_param('si', $user_answer, $log_id);
 	$stmt->execute();

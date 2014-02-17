@@ -25,6 +25,8 @@
 require '../include/staff_auth.inc';  
 require '../include/errors.inc';
 
+ini_set("auto_detect_line_endings", true);
+
 $moduleID = check_var('module', 'REQUEST', true, false, true);
 if (isset($_POST['submit'])) {
   $session = $_POST['session'];
@@ -55,7 +57,7 @@ if (isset($_POST['submit'])) {
       $result->close();
       $identifier = $largest + 1;
       
-      $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
+      $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
       foreach ($lines as $separate_line) {
 
         if (substr($separate_line,0,1) == '#') {   // Sub-heading

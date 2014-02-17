@@ -27,6 +27,8 @@
 require '../include/admin_auth.inc';
 require_once '../classes/moduleutils.class.php';
 
+ini_set("auto_detect_line_endings", true);
+
 function returnTrueFalse($value) {
   $value = strtolower(trim($value));
 

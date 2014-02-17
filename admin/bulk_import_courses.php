@@ -24,9 +24,11 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require_once '../classes/courseutils.class.php';
-  require_once '../classes/schoolutils.class.php';
+require '../include/admin_auth.inc';
+require_once '../classes/courseutils.class.php';
+require_once '../classes/schoolutils.class.php';
+
+ini_set("auto_detect_line_endings", true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -105,7 +107,7 @@
         $result->close();
 
         $coursesAdded = 0;
-        $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_course_create.csv");
+        $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_course_create.csv");
 
         $students = array();
         foreach ($lines as $separate_line) {

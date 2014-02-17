@@ -29,12 +29,12 @@
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	<title><?php echo $string['importfromqti'] ?></title>
   
-	<link rel="stylesheet" type="text/css" href="../../css/body.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
-	<link rel="stylesheet" type="text/css" href="../../css/submenu.css" />
+	<link rel="stylesheet" type="text/css" href="../css/body.css" />
+	<link rel="stylesheet" type="text/css" href="../css/header.css" />
+	<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+	<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
-	<script type="text/javascript" src="/qti/js/mootools-1.2.4.js"></script> 
+	<script type="text/javascript" src="./js/mootools-1.2.4.js"></script> 
 	<style type="text/css">
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
 		a {color:black}
@@ -48,8 +48,8 @@
     .screen_head {font-size:120%}
   </style>
   
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     // Popup window code
     function newPopup(url) {

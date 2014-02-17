@@ -34,6 +34,7 @@ require_once '../classes/userutils.class.php';
 $module = check_var('module', 'GET', true, false, true);
 set_time_limit(0);
 ob_start();
+ini_set("auto_detect_line_endings", true);
 
 // Folder security checks
 $folder = '';
@@ -112,7 +113,7 @@ if (!$module_details) {
         }
         $stmt->close();
 
-        $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
+        $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
         $type  = '';
         $value = '';
 

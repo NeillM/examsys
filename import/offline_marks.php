@@ -27,6 +27,8 @@ require_once '../include/question_types.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
 
+ini_set("auto_detect_line_endings", true);
+
 $paperID = check_var('paperID', 'GET', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
