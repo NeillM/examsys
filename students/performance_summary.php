@@ -52,13 +52,19 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {   // Check for valid user ID.
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+/**
+ * Gets a list of papers for which feadback is available for.
+ * @param int $userID - The ID of the user to display the plots for. Usually the current student user but could be a member of staff viewing a student.
+ * @param object $db	- Mysqli database link.
+ * @return array			- List of papers that the user has sat and have been released.
+ */
 function get_taken_papers($userID, $db) {
   $papers = array();
 
   $i = 0;
   
   // Query for Summative and Offline papers
-  $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
@@ -75,14 +81,14 @@ function get_taken_papers($userID, $db) {
     $results_cache = new ResultsCache($db);
     $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
     $papers[$i]['idfeedback_release'] = $idfeedback_release;
-    $papers[$i]['feedback_type'] = $feedback_type;
+    $papers[$i]['feedback_type']	= $feedback_type;
 
     $i++;
   }
   $result->close();
   
   // Query for OSCE stations
-  $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? ORDER BY calendar_year DESC");
+  $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
@@ -99,7 +105,7 @@ function get_taken_papers($userID, $db) {
     $results_cache = new ResultsCache($db);
     $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
     $papers[$i]['idfeedback_release'] = $idfeedback_release;
-    $papers[$i]['feedback_type'] = $feedback_type;
+    $papers[$i]['feedback_type']	= $feedback_type;
 
     $i++;
   }
@@ -257,7 +263,7 @@ foreach ($papers as $paper) {
       $col = 0;
     }
   
-    if ($col == 8) {
+    if ($col == 8) {				// Put in line break after 8 box/whisker plots.
       echo '<br />';
       $col = 0;
     }
