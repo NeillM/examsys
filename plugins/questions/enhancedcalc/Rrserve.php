@@ -18,7 +18,7 @@
 
 /**
  *
- * R based maths functions  for calculation  questions
+ * R based maths functions for Calculation questions
  *
  * @author Simon Atack, Anthony Brown
  * @version 1.0
@@ -56,7 +56,7 @@ class EnhancedCalc_Rrserve {
     $this->reset_error();
     
     if (is_null(self::$cnx)) {
-      //connection failed
+      // Connection failed!
       $this->set_error("Can Not Connect"); 
       return false;
     }
@@ -79,17 +79,17 @@ class EnhancedCalc_Rrserve {
       $this->setup_R();
       return true;
     } else {
-      //We are connected
+      // We are connected
       return true;
     }
   }
   
   function setup_R() {
-       self::$cnx->evalString('options(digits=15); 1==1;');
-       self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
-       self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
-       self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
-       self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
+		 self::$cnx->evalString('options(digits=15); 1==1;');
+		 self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
+		 self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
+		 self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
+		 self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
   }
   
   function calculate_correct_ans($vars, $formula) {
@@ -115,23 +115,18 @@ class EnhancedCalc_Rrserve {
     }
     
     if ($round_to_stundent_precision) {
-        if ($this->is_engineering_format($useranswer)) {
-            $stundent_precision = $this->calc_sf($useranswer);
-            $calc = "signif($correctanswer,$stundent_precision) == $useranswer";
-        } else {
-            $stundent_precision = $this->calc_dp($useranswer);
-            $calc = "excel_round($correctanswer,$stundent_precision) == $useranswer";
-        }
+			if ($this->is_engineering_format($useranswer)) {
+				$stundent_precision = $this->calc_sf($useranswer);
+				$calc = "signif($correctanswer,$stundent_precision) == $useranswer";
+			} else {
+				$stundent_precision = $this->calc_dp($useranswer);
+				$calc = "excel_round($correctanswer,$stundent_precision) == $useranswer";
+			}
     } else {
        $calc = "$correctanswer == $useranswer";
     }
     
-    try {
-      $status = $this->eval_string($calc);
-    } catch(Exception $e) {
-      //there is an error it cant be correct
-      return false;
-    }
+    $status = $this->eval_string($calc);
     if ($status === true) {
       return true;
     } else {
@@ -148,9 +143,9 @@ class EnhancedCalc_Rrserve {
 
 
     try {
-       $res = $this->eval_string("abs(excel_round((abs($useranswer - $correctanswer)/$correctanswer * 100),3))");
+      $res = $this->eval_string("abs(excel_round((abs($useranswer - $correctanswer)/$correctanswer * 100),3))");
     } catch(Exception $e) {
-      //there is an error it cant be correct
+      // There is an error it can't be correct
       return 'ERROR';
     }
 
@@ -168,12 +163,12 @@ class EnhancedCalc_Rrserve {
     //
     // Make sure the min and max are correct tolerances on negative numbers causes problems 
     //
-    if($result[1] > $result[2]) {
-        $res['tolerance_ans'] = $result[1];
-        $res['tolerance_ansneg'] = $result[2];
+    if ($result[1] > $result[2]) {
+			$res['tolerance_ans'] = $result[1];
+			$res['tolerance_ansneg'] = $result[2];
     } else {
-        $res['tolerance_ans'] = $result[2];
-        $res['tolerance_ansneg'] = $result[1];
+			$res['tolerance_ans'] = $result[2];
+			$res['tolerance_ansneg'] = $result[1];
     }
     return $res;
   }
@@ -201,13 +196,13 @@ class EnhancedCalc_Rrserve {
     try {
        $status = $this->eval_string("$useranswer <= $max & $useranswer >= $min");
     } catch(Exception $e) {
-      //there is an error it cant be correct
+      // There is an error it can't be correct
       return false;
     }
     
     
     if ($status === true) {
-      //correct
+      // Correct
       return true;
     } else {
       return false;
@@ -222,7 +217,7 @@ class EnhancedCalc_Rrserve {
     
     $status = $this->eval_string("signif($useranswer," . $sf . ") ==  $useranswer");
     if ($status === true) {
-      //correct
+      // Correct
       return true;
     } else {
       return false;
@@ -267,15 +262,15 @@ class EnhancedCalc_Rrserve {
   
   function calc_dp($num) {
     $dotpos = strpos($num, '.');
-    if($dotpos === false) {
+    if ($dotpos === false) {
       return 0;
     }
     
     $epos = strpos($num, 'e');
-    if($epos !== false) {
-        $end = $epos;
+    if ($epos !== false) {
+      $end = $epos;
     } else {
-        $end = strlen($num);
+      $end = strlen($num);
     }
    
     return $end - ($dotpos + 1);
@@ -298,11 +293,11 @@ class EnhancedCalc_Rrserve {
   }
   
   function is_engineering_format($num) {
-      $epos = stripos($num, 'e');
-      if($epos !== false) {
-         return true;
-      }
-      return false;
+		$epos = stripos($num, 'e');
+		if ($epos !== false) {
+			return true;
+		}
+		return false;
   }
   
   function format_number_dp($num,$dp) {
@@ -318,12 +313,12 @@ class EnhancedCalc_Rrserve {
   }
   
   function format_number_to_precision_of_other_number($roundme, $likethisone) {
-      if ($this->is_engineering_format($likethisone)) {
-        $precision = $this->calc_sf($likethisone);
-        return $this->format_number_sf($roundme,$precision);
+    if ($this->is_engineering_format($likethisone)) {
+      $precision = $this->calc_sf($likethisone);
+      return $this->format_number_sf($roundme,$precision);
     } else {
-        $precision = $this->calc_dp($likethisone);
-        return $this->format_number_dp($roundme,$precision);
+      $precision = $this->calc_dp($likethisone);
+      return $this->format_number_dp($roundme,$precision);
     }
   }
   

@@ -16,7 +16,7 @@
 
 /**
 *
-* Marks all enhanced calculation questions for a summative paper.
+* Marks all Calculation questions for a summative paper.
 *
 * @author Rob Ingram
 * @version 1.0
@@ -27,7 +27,7 @@ global $configObject;
 require_once $configObject->get('cfg_web_root') . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
 function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mode = 'unmarked') {
-  $status = array(-4 => 0, -3 => 0, -2 => 0, -1 => 0, 0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0);
+  $status = array(-13 => 0, -12 => 0, -11 => 0, -10 => 0, -9 => 0, -8 => 0, -7 => 0, -6 => 0, -5 => 0, -4 => 0, -3 => 0, -2 => 0, -1 => 0, 0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0);
   $configObject = Config::get_instance();
   $enhancedcalc = new EnhancedCalc($configObject);
   $data['settings'] = $settings;
@@ -48,14 +48,13 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
     $status[$returnarray]++;
 
 		if ($returnarray !== Q_MARKING_UNMARKED and $returnarray !== Q_MARKING_ERROR) {
-      //save the extra data back into the log record.
+      // Save the extra data back into the log record.
       $sql = "UPDATE log{$paper_type} set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
       $storemark = $db->prepare($sql);
       $new_useranswerstring = $enhancedcalc->useranswer_to_string();
       $totalpos = $enhancedcalc->calculate_question_mark();
       $storemark->bind_param('dddsi', $enhancedcalc->qmark, $enhancedcalc->qmark, $totalpos, $new_useranswerstring, $id);
       $storemark->execute();
- //     print "markingLL:: q: " . $enhancedcalc->qmark . ' t:  ' . $totalpos . ' uas: ' . $new_useranswerstring . ' id:  ' . $id . "<br>\r\n";
     }
   }
   $result->close();
