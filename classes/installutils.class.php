@@ -1360,7 +1360,7 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
 \$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
-\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or hostname
+\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or name
 \$cfg_interactive_qs = '{interactivequestions}'; //flash or html5
 
 
