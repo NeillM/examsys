@@ -140,7 +140,7 @@ Class MathsUtils {
     $floatval     = $allindex - $intvalindex;
     
     rsort($data);
-    
+   
     if (!is_float($floatval)){
       $result = $data[$intvalindex];
     } else {

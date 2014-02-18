@@ -45,7 +45,7 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 $paperID = check_var('paperID', 'GET', true, false, true);
 check_var('method', 'GET', true, false, false);
 
-//get the paper properties
+// Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $paper_title = $propertyObj->get_paper_title();
@@ -72,19 +72,21 @@ function ebelDropdown($dropdownID, $ebel_grid) {
   return $html;
 }
 
-function check_ebel_distinction_type($ebel) {
-  if (!isset($ebel[9]) or $ebel[9] === '') {
-    return 'dna';
-  }
-
-  $type = 'top20';
-
-  for ($i = 9; $i < 18; $i++) {
-    if ($ebel[$i] > 0) {
-      $type = 'grid';
-      break;
-    }
-  }
+function check_ebel_distinction_type($reviewID, $db) {
+	$result = $db->prepare("SELECT distinction_score FROM std_set WHERE id = ?");
+  $result->bind_param('i', $reviewID);
+  $result->execute();
+  $result->bind_result($distinction_score);
+  $result->fetch();
+  $result->close();
+	
+	if (is_null($distinction_score)) {
+		$type = 'dna';
+	} elseif ($distinction_score === '0.000000') {
+		$type = 'top20';
+	} else {
+    $type = 'grid';
+	}
 
   return $type;
 }
@@ -614,7 +616,7 @@ function check_ebel_distinction_type($ebel) {
     ?>
     <blockquote style="margin-top:8px; margin-bottom:8px">
 <?php
-    $ebel_dist = check_ebel_distinction_type($ebel);
+    $ebel_dist = check_ebel_distinction_type($_GET['std_setID'], $mysqli);	
 ?>
     <input type="radio" id="distinction_type_grid" name="distinction_type" value="1"<?php if ($ebel_dist == 'grid') echo ' checked="checked"'; ?> /> <label for="distinction_type_grid"><?php echo $string['gridbelow']; ?></label><br />
     <input type="radio" id="distinction_type_t20" name="distinction_type" value="2"<?php if ($ebel_dist == 'top20') echo ' checked="checked"'; ?> /> <label for="distinction_type_t20"><?php echo $string['top20']; ?></label><br />

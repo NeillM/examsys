@@ -71,11 +71,11 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
   
   $standard_setting = new StandardSetting($mysqli);
   
-  $result = $mysqli->prepare("SELECT std_set.id, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, method, group_review, title, initials, surname, setterID FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set");
+  $result = $mysqli->prepare("SELECT std_set.id, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, method, group_review, title, initials, surname, setterID, distinction_score FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($std_setID, $std_set, $display_date, $method, $group_review, $title, $initials, $surname, $setterID);
+  $result->bind_result($std_setID, $std_set, $display_date, $method, $group_review, $title, $initials, $surname, $setterID, $distinction_score);
   while ($result->fetch()) {
     $reviews[] = array(
     	'std_setID' => $std_setID,
@@ -87,7 +87,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     	'date' => $std_set,
       'display_date' => $display_date,
     	'method' => $method,
-      'distinction_score' => 0,
+      'distinction_score' => $distinction_score,
       'pass_score' => 0,
       'name' => "$title $initials $surname");
   }
@@ -199,7 +199,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
        
       $pass_score = ($total_marks == 0) ? $total_marks : ($cut_marks / ($total_marks  * 100)) * 100;
-      $reviews[$i]['pass_score'] = round($pass_score,1);
+      $reviews[$i]['pass_score'] = round($pass_score, 1);
 
       $cut_marks2 = 0.0;
       $cut_marks2 += $ebel_marks['EE'] * $ebel_percents['EE2'] * 100;
@@ -211,10 +211,12 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
       $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
       $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
-      $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
       
-      $reviews[$i]['distinction_score'] = round($distinction_score,1);
-    }
+			if ($reviews[$i]['distinction_score'] > 0) {
+				$distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
+        $reviews[$i]['distinction_score'] = round($distinction_score, 1);
+			}
+		}
     $reviews[$i]['total_marks'] = $total_marks;
   }
   
