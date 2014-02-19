@@ -159,7 +159,23 @@ function format_user($text, $user_list) {
 }
 
 function format_lab($lab_id, $lab_list) {
-  return (isset($lab_list[$lab_id])) ? $lab_list[$lab_id] : $lab_id;
+  $formatted_string = '';
+	
+  $parts = explode(',', $lab_id);
+  foreach ($parts as $part) {
+	  if (isset($lab_list[$part])) {
+			$lab_name = $lab_list[$part];
+		} else {
+		  $lab_name = 'unknown';
+		}
+    if ($formatted_string == '') {
+      $formatted_string = $lab_name;
+    } else {
+      $formatted_string .= ', ' . $lab_name;
+    }
+  }
+
+  return $formatted_string;
 }
 
 function format_marking($marking, $string) {
@@ -896,8 +912,8 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_properties.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_properties.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php
