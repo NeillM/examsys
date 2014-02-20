@@ -59,4 +59,5 @@ $string['addscreenbreak'] = 'Wstaw podzielnik ekranu';
 $string['deletescreenbreak'] = 'Usuń podzielnik ekranu';
 $string['next'] = 'Dalej >>';  
 $string['na'] = 'Brak'; 
+$string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
 ?>

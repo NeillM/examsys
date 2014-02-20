@@ -16,6 +16,7 @@
 
 $string['confirmdelete'] = 'Confirm Pointer Delete';
 $string['msg'] = 'Deleting the pointer to this question will only delete it from the question paper.<br /><br />It does <strong>not</strong> delete the actual question in the question bank.';
+$string['msg2'] = 'You are trying to delete a question from a locked paper, this is not possible.';
 $string['delete'] = 'Delete Pointer';
 $string['deletes'] = 'Delete Pointers';
 $string['recyclebin'] = 'Recycle Bin';

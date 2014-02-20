@@ -72,25 +72,47 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 $exclusions = new Exclusion($_GET['paperID'], $mysqli);
 $exclusions->load();
 
+/**
+ * Displays a warning if any questions are duplicated on the paper (not Surveys).
+ * @param array $q_screens	- Array of question IDs. If there are more than one element for the same ID you have a duplicate.
+ * @param array $string			- Language translations
+ */
 function check_duplicates($q_screens, $string) {
   foreach ($q_screens as $q_screen=>$qs) {
     if (count($qs) > 1) {
-      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\"><strong>" . $string['Duplicate questions'] . ":</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
+      echo "<tr><td colspan=\"2\" class=\"warnicon\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td colspan=\"4\" class=\"warn\">&nbsp;<strong>" . $string['Duplicate questions'] . ":</strong> Q" . implode(', Q', $qs) . "</td></tr>\n";
     }
   }
 }
 
-function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario, $q_media, $row_no, $question_marks, $q_id, $tmp_excluded, $option_text, $o_media, $correct_array, $status, $string, $status_array, $db) {
+/**
+ * Displays warnings if there are certain problems with a question.
+ * @param string $q_type				- Type of the question.
+ * @param array $temp_array			- Holds information about all the questions on the current paper. Any warnings are added to this array.
+ * @param int $row_no						- Number of the element to address in $temp_array.
+ * @param int $q_id							- ID of the question.
+ * @param string $tmp_excluded 	- Which parts of the question are/are not excluded.
+ * @param array $option_text		- Array of the options for the question
+ * @param array $correct_array	- Array of which options are correct
+ * @param array $string					- Language translations
+ * @param array $status_array		- Array of status objects
+ * @param object $db						- MySQLi connection.
+ */
+function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $db) {
+	$question_marks = $temp_array[$row_no]['original_marks'];
+	$status 				= $temp_array[$row_no]['status'];
+	$score_method 	= $temp_array[$row_no]['score_method'];
+
   if ($tmp_excluded == '0000000000000000000000000000000000000000' and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
       if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
-    } elseif ($p_type != 3 and ($q_type == 'mcq' or $q_type == 'calculation') and $correct_array[0] == '') {
+    } elseif (($q_type == 'mcq' or $q_type == 'calculation') and $correct_array[0] == '') {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
-    } elseif ($p_type != 3 and $q_type == 'mrq' and !in_array('y', $correct_array)) {
+    } elseif ($q_type == 'mrq' and !in_array('y', $correct_array)) {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
-    } elseif ($p_type != 3 and $q_type == 'textbox' and $question_marks == 0) {
+    } elseif ($q_type == 'textbox' and $question_marks == 0) {
       $temp_array[$row_no]['warnings'] = $string['zeromarks'];
     } elseif ($q_type == 'blank') {
 		  $open_blank = substr_count($option_text[0], '[blank'); 
@@ -99,8 +121,8 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
 				$temp_array[$row_no]['warnings'] = $string['mismatchblanktags'];
 			}
 		} elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
-      $matching_scenarios = explode('|', $scenario);
-      $matching_media     = explode('|', $q_media);
+      $matching_scenarios = explode('|', $temp_array[$row_no]['scenario']);
+      $matching_media     = explode('|', $temp_array[$row_no]['q_media']);
       $matching_correct   = explode('|', $correct_array[0]);
 
       $text_scenarios = 0;
@@ -124,7 +146,7 @@ function checkProblems($p_type, $q_type, $score_method, &$temp_array, $scenario,
         $temp_array[$row_no]['warnings'] = $string['nolabels'];
       }
     }
-    if ($q_type == 'mcq' and $score_method == 'vertical_other' and $p_type != '3') {
+    if ($q_type == 'mcq' and $score_method == 'vertical_other') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
     }
   }
@@ -151,9 +173,13 @@ function have_valid_labels($correct) {
   return $ok;
 }
 
-function randomDetails($questionID) {
-  global $configObject, $mysqli;
-
+/**
+ * Get details of all the questions that make up a random question block.
+ * @param int $questionID				- ID of the random question to look up.
+ * @param object $configObject	- Configuration object.
+ * @return array								- Array of the questions that make up a random question block.
+ */
+function randomDetails($questionID, $configObject, $db) {
   $question_no = 0;
   $random_questions = array();
   $old_q_id = '';
@@ -163,7 +189,7 @@ function randomDetails($questionID) {
   $old_correct = array();
   $old_option_text = array();
 
-  $result = $mysqli->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM options AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.option_text=questions.q_id AND options1.o_id=? ");
+  $result = $db->prepare("SELECT theme, options1.option_text, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM options AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.option_text=questions.q_id AND options1.o_id=? ");
   $result->bind_param('i', $questionID);
   $result->execute();
   $result->store_result();
@@ -219,7 +245,7 @@ function randomDetails($questionID) {
     $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
   }
   $result->close();
-
+	
   return $random_questions;
 }
 
@@ -241,12 +267,12 @@ function random_qMarks($random_questions) {
 
 /**
  * Check the parts of a question to see if they contain equations and therefore need to include LaTeX processing code
- * @param $leadin
- * @param $scenario
- * @param $option_text
- * @param $score_method
- * @param $correct_fback
- * @param $feedback_right
+ * @param string $leadin
+ * @param string $scenario
+ * @param string $option_text
+ * @param string $score_method
+ * @param string $correct_fback
+ * @param string $feedback_right
  * @return int
  */
 function check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right) {
@@ -311,16 +337,6 @@ function check_latex_random($q_ids, $mysqli) {
 
   return $latex;
 }
-
-$max_screen = 0;
-
-$result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) FROM papers WHERE paper = ?");
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($max_screen, $max_display_pos);
-$result->fetch();
-$result->close();
-
 ?>
 <!DOCTYPE html>
 <html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
@@ -503,9 +519,8 @@ $result->close();
   }
 ?>
 </head>
-<!-- <body onselectstart="return false"> -->
-<body>
 
+<body>
 <?php
   if ($properties->get_deleted() != '') {
   ?>
@@ -582,7 +597,7 @@ $result->close();
       if ($q_type == 'random') {
         $rnd_q_ids[] = $option_text;
       } else {
-        $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+        //$latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
       }
     }
     // Check for negative marking
@@ -623,7 +638,7 @@ $result->close();
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
+        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -653,7 +668,7 @@ $result->close();
       $q_mod_check[] = $q_id;
 
       if ($q_type == 'random') {
-        $temp_array[$row_no]['random'] = randomDetails($q_id);
+        $temp_array[$row_no]['random'] = randomDetails($q_id, $configObject, $mysqli);
       }
 
       if ($properties->get_summative_lock() and $locked == '') {
@@ -681,19 +696,21 @@ $result->close();
   }
   $result->close();
 
-  $q_mod_check = array_unique($q_mod_check);
-  if (count($q_mod_check) > 0) {
-    $q_mod_found = QuestionUtils::multi_get_modules($q_mod_check, $mysqli);
-    $paper_modules = Paper_utils::get_modules($_GET['paperID'], $mysqli);
-    foreach ($q_mod_check as $tmp_q_id) {
-      foreach ($paper_modules as $p_mod_id => $mod) {
-        if (!isset($q_mod_found[$tmp_q_id][$p_mod_id])) {
-          QuestionUtils::add_modules($paper_modules, $tmp_q_id, $mysqli);
-          break;
-        }
-      }
-    }
-  }
+	if (!$properties->get_summative_lock()) {
+		$q_mod_check = array_unique($q_mod_check);
+		if (count($q_mod_check) > 0) {
+			$q_mod_found = QuestionUtils::multi_get_modules($q_mod_check, $mysqli);
+			$paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+			foreach ($q_mod_check as $tmp_q_id) {
+				foreach ($paper_modules as $p_mod_id => $mod) {
+					if (!isset($q_mod_found[$tmp_q_id][$p_mod_id])) {
+						QuestionUtils::add_modules($paper_modules, $tmp_q_id, $mysqli);			// Question is not on a module that the paper is assigned to so add.
+						break;
+					}
+				}
+			}
+		}
+	}
 
   if ($row_no > 0) {
     $temp_array[$row_no]['options'] = $options;
@@ -722,15 +739,15 @@ $result->close();
     if ($properties->get_paper_type() < 3) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-			checkProblems($properties->get_paper_type(), $old_q_type, $old_score_method, $temp_array, $old_scenario, $old_q_media, $row_no2, $temp_array[$row_no2]['original_marks'], $old_q_id, $tmp_exclude, $old_option_text, $old_o_media, $old_correct, $temp_array[$row_no2]['status'], $string, $status_array, $mysqli);
+			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $mysqli);
 		}
 		
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
       $latex = check_latex_random($rnd_q_ids, $mysqli);
     }
-
-    if ((round($total_random_mark,10) != round($properties->get_random_mark(), 10) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
+		
+    if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark = ?, total_mark = ?, latex_needed = ? WHERE property_id = ?");
       $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $_GET['paperID']);
       $result->execute();
@@ -751,7 +768,7 @@ $result->close();
 
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
 
-  //blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed
+  // Blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed.
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
 
   echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
@@ -805,23 +822,7 @@ $result->close();
   <?php
 
   if ($properties->get_summative_lock()) {
-    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\">";
-    if ($userObject->has_role(array('SysAdmin'))) {
-      $record_no = 0;
-      $result = $mysqli->prepare("SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE paperID = ? AND log_metadata.userID = users.id AND roles = 'Student'");
-      $result->bind_param('i', $paperID);
-      $result->execute();
-      $result->bind_result($record_no);
-      $result->fetch();
-      $result->close();
-
-      if ($record_no == 0) {
-        echo '<input type="button" name="unlock" value=" ' . $string['unlock'] . ' " onclick="window.location=\'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder . '&scrOfY=0&unlock=1\'" />';
-      } else {
-        echo '<input type="button" name="unlock" value=" ' . $string['unlock'] . ' " disabled />';
-      }
-    }
-    echo "&nbsp;</div></td></tr>\n";
+    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\"></div></td></tr>\n";
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
@@ -835,7 +836,18 @@ $result->close();
     }
   }
 
-  $q_screen = array();
+	if ($properties->get_calendar_year() !== null) {
+		$tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
+		
+		if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
+			echo "<tr><td colspan=\"6\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
+			echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
+			printf($string['nomatchsession'], $tmp_match, $properties->get_calendar_year());
+			echo "</td></tr>\n</table>\n</td></tr>\n";
+		}
+	}
+
+	$q_screen = array();
   $screen_marks = 0;
   $old_screen = 0;
   $question_number = 0;
@@ -899,7 +911,7 @@ $result->close();
 
     echo '<td>';
     if ($temp_array[$x]['q_type'] == 'random') {
-      $dice_no = rand(1,6);
+      $dice_no = rand(1, 6);
       if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
       echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
     }
@@ -1018,12 +1030,14 @@ $result->close();
     }
   }
 
-  if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
-    $editPaper = $mysqli->prepare("UPDATE properties SET marking = 0 WHERE property_id = ?");
-    $editPaper->bind_param('i', $paperID);
-    $editPaper->execute();
-    $editPaper->close();
-  }
+	if (!$properties->get_summative_lock()) {
+		if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
+			$editPaper = $mysqli->prepare("UPDATE properties SET marking = 0 WHERE property_id = ?");
+			$editPaper->bind_param('i', $paperID);
+			$editPaper->execute();
+			$editPaper->close();
+		}
+	}
 ?>
 </table>
 

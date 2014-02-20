@@ -30,10 +30,19 @@ check_var('questionID', 'POST', true, false, false);
 check_var('pID', 'POST', true, false, false);
 $tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
+// Check that the paper is not summative and not locked.
+$result = $mysqli->prepare("SELECT property_id FROM properties WHERE property_id = ? AND start_date < NOW() AND paper_type = '2'");
+$result->bind_param('i', $tmp_paperID);
+$result->execute();
+$result->bind_result($property_id);
+$result->store_result();
+if ($result->num_rows > 0) {
+	exit;		// We have some records, must be locked - exit.
+}
+$result->close();
+
 $tmp_pIDs = explode(',', substr($_POST['pID'], 1));  
 $tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
-
-var_dump($tmp_pIDs);
 
 for ($i=0; $i<count($tmp_pIDs); $i++) {
   if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id = ?")) {

@@ -25,9 +25,21 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
-check_var('questionID', 'GET', true, false, false);
-check_var('pID', 'GET', true, false, false);
-check_var('paperID', 'GET', true, false, false);
+$questionID = check_var('questionID', 'GET', true, false, true);
+$pID				=	check_var('pID', 'GET', true, false, true);
+$paperID 		= check_var('paperID', 'GET', true, false, true);
+
+$result = $mysqli->prepare("SELECT property_id FROM properties WHERE property_id = ? AND start_date < NOW() AND paper_type = '2'");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($property_id);
+$result->store_result();
+if ($result->num_rows > 0) {
+	$locked_papers = true;
+} else {
+	$locked_papers = false;
+}
+$result->close();
 
 $mysqli->close();
 ?>
@@ -44,11 +56,16 @@ $mysqli->close();
 </head>
 
 <body>
-
 <table>
 <tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
+<?php
+  if ($locked_papers) {
+		echo "<td class=\"icon\"><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['recyclebin'] . "\" /></td>\n";
+		echo "<td><p>" . $string['msg2'] . "</p>\n";
+	} else {
+?>
+<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
 <td><p><?php echo $string['msg']; ?></p>
 
 <div style="text-align: right">
@@ -56,9 +73,9 @@ $mysqli->close();
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <input type="hidden" name="scrOfY" value="<?php echo $_GET['scrOfY']; ?>" />
-<input type="hidden" name="questionID" value="<?php echo $_GET['questionID']; ?>" />
-<input type="hidden" name="pID" value="<?php echo $_GET['pID']; ?>" />
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
+<input type="hidden" name="questionID" value="<?php echo $questionID; ?>" />
+<input type="hidden" name="pID" value="<?php echo $pID; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 
 <?php
 if (substr_count($_GET['pID'], ',')  > 1) {
@@ -68,6 +85,9 @@ if (substr_count($_GET['pID'], ',')  > 1) {
 }
 ?>
 &nbsp;
+<?php
+}
+?>
 <input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
