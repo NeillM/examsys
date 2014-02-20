@@ -597,7 +597,7 @@ function check_latex_random($q_ids, $mysqli) {
       if ($q_type == 'random') {
         $rnd_q_ids[] = $option_text;
       } else {
-        //$latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+        $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
       }
     }
     // Check for negative marking
