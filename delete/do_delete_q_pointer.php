@@ -25,21 +25,18 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('questionID', 'POST', true, false, false);
 check_var('pID', 'POST', true, false, false);
 $tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
+$properties = PaperProperties::get_paper_properties_by_id($tmp_paperID, $mysqli, $string);
+
 // Check that the paper is not summative and not locked.
-$result = $mysqli->prepare("SELECT property_id FROM properties WHERE property_id = ? AND start_date < NOW() AND paper_type = '2'");
-$result->bind_param('i', $tmp_paperID);
-$result->execute();
-$result->bind_result($property_id);
-$result->store_result();
-if ($result->num_rows > 0) {
-	exit;		// We have some records, must be locked - exit.
+if ($properties->get_summative_lock()) {
+	exit;
 }
-$result->close();
 
 $tmp_pIDs = explode(',', substr($_POST['pID'], 1));  
 $tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
