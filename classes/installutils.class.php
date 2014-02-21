@@ -2335,7 +2335,7 @@ QUERY;
           `note_date` datetime default NULL,
           `paper_id` mediumint(8) unsigned default NULL,
           `note_authorID` int(10) unsigned default NULL,
-          `note_workstation` varchar(15) default NULL,
+          `note_workstation` char(60) default NULL,
           PRIMARY KEY (`note_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;

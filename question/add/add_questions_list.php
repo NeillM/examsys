@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -48,7 +48,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     function Qpreview(qID) {
-      parent.previewurl.location = '../view_question.php?q_id=' + qID;
+      parent.top.qlist.previewurl.location = '../view_question.php?q_id=' + qID;
     }
 
     function populateTicks() {

@@ -70,4 +70,5 @@ $string['varcapturemethod'] = 'Metoda przechwytywania zmiennej przy błędzie:';
 $string['improved'] = 'Poprawione';
 $string['basic'] = 'Podstawowe';
 $string['none'] = 'brak';
+$string['company'] = 'Company';
 ?>

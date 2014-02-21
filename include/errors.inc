@@ -53,7 +53,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   if ($display_support_email and $support_email != '') {
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
-  $notice->display_notice($error_title, $error_description, $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000');
+  $notice->display_notice($error_title, $error_description, '/artwork/bomb.png', '#C00000');
 
 
   if ($headers == false) {
@@ -126,7 +126,6 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
         
         display_error($string['fatalerrormsg0'], $var_name, $headers);
-        //display_error($string['fatalerrormsg0'], $string['fatalerrormsg2'], $headers);
       }
       if ($return_var) {
         return $_POST[$var_name];

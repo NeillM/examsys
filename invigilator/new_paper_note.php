@@ -23,15 +23,18 @@
 */
 
 require '../include/invigilator_auth.inc';
+require_once '../include/errors.inc';
 require_once '../classes/noteutils.class.php';
 
-  if (isset($_POST['submit'])) {
-    if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-			PaperNotes::add_note($_POST['note'], $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
-    } else {
-			PaperNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
-    }
-  ?>
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+if (isset($_POST['submit'])) {
+	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
+		PaperNotes::add_note($_POST['note'], $paperID, $userObject->get_user_ID(), $mysqli);
+	} else {
+		PaperNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
+	}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,22 +53,13 @@ require_once '../classes/noteutils.class.php';
 </head>
 <body>
   <form>
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
+    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="closeWindow();" /></div>
   </form>
   <?php
   } else {
     $current_address = NetworkUtils::get_client_address();
 
-		$note_details = PaperNotes::get_note($_GET['paperID'], $current_address, $mysqli);
-		
-    /*
-		$result = $mysqli->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?");
-    $result->bind_param('is', $_GET['paperID'], $current_address);
-    $result->execute();
-    $result->bind_result($note_id, $note);
-    $result->fetch();
-    $result->close();
-		*/
+		$note_details = PaperNotes::get_note($paperID, $current_address, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -108,7 +102,7 @@ require_once '../classes/noteutils.class.php';
 <tr>
 <td>
 <?php
-  echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
+  echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $paperID . "\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
 ?>

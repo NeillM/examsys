@@ -28,7 +28,10 @@ require_once '../classes/noteutils.class.php';
 
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-		StudentNotes::add_note($_POST['student_userID'], $_POST['note'], $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
+	  $note_msg = trim($_POST['note']);
+		if ($note_msg != '') {  // Check we are not saving nothing.
+			StudentNotes::add_note($_POST['student_userID'], $note_msg, $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
+		}
 	} else {
 		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
 	}
@@ -46,7 +49,7 @@ if (isset($_POST['submit'])) {
   </script></head>
   <body onload="closeWindow();">
   <form>
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
+    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="closeWindow();" /></div>
   </form>
   <?php
   } else {
@@ -87,7 +90,7 @@ if (isset($_POST['submit'])) {
 <tr>
 <?php
   if (file_exists($cfg_web_root . 'users/photos/' . $student_details['username'] . '.jpg')) {
-    echo "<td style=\"border-left:1px solid #5582D2; width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>" . $student_details['title'] . " " . $student_details['surname'] . "</strong><br />&nbsp;" . $student_details['first_names'] . "<br />&nbsp;" . $details['student_id'] . "<br /><img src=\"../users/photos/$student_username.jpg\" width=\"180\" height=\"270\" border=\"0\" alt=\"Photo\" /></td><td>";
+    echo "<td style=\"width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>" . $student_details['title'] . " " . $student_details['surname'] . "</strong><br />&nbsp;" . $student_details['first_names'] . "<br />&nbsp;" . $student_details['student_id'] . "<br /><img src=\"../users/photos/" . $student_details['username'] . ".jpg\" width=\"180\" height=\"270\" alt=\"Photo\" /></td><td>";
   } else {
     echo '<td><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];
     if ($student_details['student_id'] != '') echo ' (' . $student_details['student_id'] . ')';
@@ -101,7 +104,7 @@ if (isset($_POST['submit'])) {
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" style="width:130px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="student_userID" value="<?php echo $_GET['userID']; ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
 </form>

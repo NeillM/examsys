@@ -103,7 +103,7 @@ Class CourseUtils {
     // Check for unique course
     $exists = true;
 
-    $result = $db->prepare("SELECT id FROM courses WHERE name = ?");
+    $result = $db->prepare("SELECT id FROM courses WHERE name = ? AND deleted IS NULL");
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
@@ -117,7 +117,7 @@ Class CourseUtils {
   }
 
   static function courseid_exists($courseID, $db) {
-    $result = $db->prepare("SELECT id FROM courses WHERE id = ?");
+    $result = $db->prepare("SELECT id FROM courses WHERE id = ? AND deleted IS NULL");
     $result->bind_param('i', $courseID);
     $result->execute();
     $result->store_result();

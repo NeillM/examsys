@@ -466,13 +466,13 @@ if ($tmp_method == 'Ebel') {
         $percentage = $_POST[$individualID];
       }
     } elseif (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '2') {
-      //if ($individualID == 'EE2' or $individualID == 'EI2' or $individualID == 'EN2' or $individualID == 'ME2' or $individualID == 'MI2' or $individualID == 'MN2' or $individualID == 'HE2' or $individualID == 'HI2' or $individualID == 'HN2') {
+      if ($individualID == 'EE2' or $individualID == 'EI2' or $individualID == 'EN2' or $individualID == 'ME2' or $individualID == 'MI2' or $individualID == 'MN2' or $individualID == 'HE2' or $individualID == 'HI2' or $individualID == 'HN2') {
         $category = $individualID;
         $percentage = 0;
-      //} else {
-      //  $category = $individualID;
-      //  $percentage = $_POST[$individualID];
-      //}
+      } else {
+        $category = $individualID;
+        $percentage = $_POST[$individualID];
+      }
     } else {
       $category = $individualID;
       $percentage = $_POST[$individualID];

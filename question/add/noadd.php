@@ -18,22 +18,20 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
 require '../../include/staff_auth.inc';
+require '../../include/errors.inc';
+require_once '../../classes/paperproperties.class.php';
 
-function englishDate($orig_date) {
-  $tmp_date = substr($orig_date,6,2);
-  $tmp_date .= '/' . substr($orig_date,4,2);
-  $tmp_date .= '/' . substr($orig_date,0,4);
-  $tmp_date .= ' ' . substr($orig_date,8,2);
-  $tmp_date .= ':' . substr($orig_date,10,2);
-  
-  return $tmp_date;
-}
+$paperID = check_var('paperID', 'GET', true, false, true);
+
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -49,7 +47,7 @@ function englishDate($orig_date) {
   
   <script language="javascript">
     function paperProperties() {
-      notice=window.open("../../paper/properties.php?paperID=<?php echo $_GET['paperID']; ?>&caller=details&noadd=y","properties","width=882,height=650,left="+(screen.width/2-325)+",top="+(screen.height/2-441)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("../../paper/properties.php?paperID=<?php echo $paperID; ?>&caller=details&noadd=y","properties","width=882,height=650,left="+(screen.width/2-325)+",top="+(screen.height/2-441)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }
@@ -63,7 +61,7 @@ function englishDate($orig_date) {
 <tr><td style="width:56px"><img src="../../artwork/summative_scheduling.png" width="48" height="48" alt="Clock" /></td>
 <td style="font-size: 160%; font-weight: bold"><?php echo $string['activepaper']; ?></td></tr>
 <tr><td></td><td><hr width="100%" style="border: 0px; color: #808080; background-color: #808080" noshade="noshade" size="1" /></td></tr>
-<tr><td>&nbsp;</td><td><span class="date"><?php echo englishDate($_GET['start_date']); ?></span> <?php echo $string['to']; ?> <span class="date"><?php echo englishDate($_GET['end_date']); ?></span>.</td></tr>
+<tr><td>&nbsp;</td><td><span class="date"><?php echo $properties->get_display_start_date(); ?></span> <?php echo $string['to']; ?> <span class="date"><?php echo $properties->get_display_end_date(); ?></span>.</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><?php echo $string['msg']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>

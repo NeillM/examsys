@@ -84,7 +84,7 @@ ini_set("auto_detect_line_endings", true);
         <?php
         // Get a list of courses held by Rogo.
         $course_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT name FROM courses");
+        $result = $mysqli->prepare("SELECT DISTINCT name FROM courses WHERE deleted IS NULL");
         $result->execute();
         $result->bind_result($course_name);
         while ($result->fetch()) {
@@ -95,7 +95,7 @@ ini_set("auto_detect_line_endings", true);
         // Get a list of schools held by Rogo.
         $unknown_schoolID = 0;
         $school_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT id, school FROM schools");
+        $result = $mysqli->prepare("SELECT DISTINCT id, school FROM schools WHERE deleted IS NULL");
         $result->execute();
         $result->bind_result($school_id, $school_name);
         while ($result->fetch()) {

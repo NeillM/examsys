@@ -75,7 +75,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
 
       <?php
 
-      //Get all students who should are able to access this paper
+      // Get all students who should are able to access this paper
       $sql = "SELECT DISTINCT extra_time, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( " . $modules . ") AND calendar_year = ? AND modules_student.userID = users.id ORDER BY surname, initials";
       $results = $db->prepare($sql);
       $session = $property_object->get_calendar_year();
@@ -94,7 +94,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
       }
       $results->close();
 
-      //merge in all students who have submitted records for this paper
+      // Merge in all students who have submitted records for this paper
       $sql = 'SELECT DISTINCT sn.extra_time, lm.userID, u.surname, u.first_names, u.title FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id LEFT JOIN special_needs sn ON u.id = sn.userID WHERE lm.paperID = ? AND u.username LIKE "user%" ORDER BY u.surname, u.initials';
       $results = $db->prepare($sql);
       $results->bind_param('i', $paperID);
@@ -294,10 +294,8 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
 <script type="text/javascript">
 
-  var ie = document.all;
   var ns6 = document.getElementById && !document.all;
   var isMenu = false;
-  var menuSelObj = null;
   var overpopupmenu = false;
 
   function mouseSelect(e) {
@@ -317,8 +315,8 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     if (!e) var e = window.event;
     var currentX = e.clientX;
     var currentY = e.clientY;
-    var scrOfX = getScrollX();
-    var scrOfY = getScrollY();
+    var scrOfX = $('body,html').scrollLeft();
+    var scrOfY = $('body,html').scrollTop();
 
     $('#userID').val(tmpUserID);
     $('#paperID').val(paperID);
@@ -343,37 +341,6 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
     isMenu = true;
     return false;
   }
-
-  function getScrollX() {
-    var scrollOfX = 0;
-    if (typeof( window.pageYOffset ) == 'number') {
-        //Netscape compliant
-        scrollOfX = window.pageXOffset;
-    } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
-        //DOM compliant
-        scrollOfX = document.body.scrollLeft;
-    } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
-        //IE6 standards compliant mode
-        scrollOfX = document.documentElement.scrollLeft;
-    }
-    return scrollOfX;
-  }
-
-  function getScrollY() {
-    var scrollOfY = 0;
-    if (typeof( window.pageYOffset ) == 'number') {
-        //Netscape compliant
-        scrollOfY = window.pageYOffset;
-    } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
-        //DOM compliant
-        scrollOfY = document.body.scrollTop;
-    } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
-        //IE6 standards compliant mode
-        scrollOfY = document.documentElement.scrollTop;
-    }
-    return scrollOfY;
-  }
-
 
   // please keep these lines on when you copy the source
   // made by: Nicolas - http://www.javascript-page.com
