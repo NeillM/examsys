@@ -135,8 +135,7 @@ $results->close();
       }
     }
   }
-  
-  $cohort_size = $string['cohortsize'];
+
   if ($cohort_size == 0) {
     $cohort_size = $string['whole cohort'];
   }
