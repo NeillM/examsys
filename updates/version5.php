@@ -32,7 +32,7 @@ require_once '../classes/dbutils.class.php';
 require_once '../classes/stringutils.class.php';
 require_once '../include/std_set_shared_functions.inc';
 
-$version = '5.1.2';
+$version = '5.1.3';
 $migration_path = 'version5';
 
 set_time_limit(0);
@@ -859,6 +859,6 @@ QUERY;
   echo "<div>Ended at " . date("H:i:s") . "</div>";
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"" . $configObject->get('cfg_root_path') . "window.location('/staff/')\" /></div><blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location('" . $configObject->get('cfg_root_path') . "/staff/')\" /></div><blockquote>\n";
 }
 ?>

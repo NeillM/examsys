@@ -76,6 +76,7 @@ require_once '../classes/dateutils.class.php';
 <tr><td style="width:180px" class="sechead"><?php echo $string['table']; ?></td><td class="sechead"><?php echo $string['records']; ?></td><td class="sechead"><?php echo $string['engine']; ?></td>
 </tr>
 <?php
+	// Get info about the database tables
   $result = $mysqli->prepare("SHOW TABLE STATUS");
   $result->execute();
   $result->store_result();
@@ -139,10 +140,10 @@ require_once '../classes/dateutils.class.php';
   }
   echo "</table>\n<br />\n";
 
-// get info on authentication stack
+// Get info on authentication stack
 $authinfo = $authentication->version_info(true, false);
 
-// get info about enhanced calculation plugin
+// Get info about enhanced calculation plugin
 $enhancedc1 = $configObject->get('enhancedcalc_type');
 $enhancedc2 = $configObject->get('enhancedcalculation');
 if (is_null($enhancedc1)) {
@@ -187,7 +188,6 @@ $ErrorLogSettings .= $string['errorshutdown'];
 
 $ErrorLogSettings .= '<br />' . $string['varcapturemethod'] . ' ';
 if ($e6 == 'improved') {
-  //$ErrorLogSettings .= '<br />Show language strings in debug';
   $ErrorLogSettings .= $string['improved'];
 } elseif ($e6 == 'basic') {
   $ErrorLogSettings .= $string['basic'];
@@ -204,6 +204,7 @@ if ($e6 == 'improved') {
 <tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
+<tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get('cfg_company'); ?></td></tr>
 <tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
 <tr><td><?php echo $string['interactivequestions']; ?></td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
@@ -238,7 +239,7 @@ if ($e6 == 'improved') {
     } else {
       // Try Solaris command
       $results = shell_exec('psrinfo -pv');
-      $lines = explode('<br />',nl2br($results));
+      $lines = explode('<br />', nl2br($results));
       $physical = 0;
       $virtual = 0;
       $processor = '';
@@ -305,7 +306,7 @@ if ($e6 == 'improved') {
     $row_no = 0;
     foreach ($lines as $individual_line) {
       if ($row_no > 0) {
-        $cols = explode(' ',$individual_line);
+        $cols = explode(' ', $individual_line);
         foreach($cols as $individual_col) {
           if ($individual_col != '') {
             $master_array[$row_no][] = $individual_col;

@@ -70,4 +70,5 @@ $string['varcapturemethod'] = 'Variable capture method on error:';
 $string['improved'] = 'Improved';
 $string['basic'] = 'Basic';
 $string['none'] = 'none';
+$string['company'] = 'Company';
 ?>
