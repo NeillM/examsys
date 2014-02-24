@@ -72,7 +72,7 @@ require '../include/sysadmin_auth.inc';
     $ordering = 'desc';
   }
 
-  // output table header
+  // Output table header
   $table_order = array($string['title']=>'title', $string['startdate']=>'startdate', $string['enddate']=>'enddate');
   foreach($table_order as $display => $key) {
     if ($key == 'title') {
@@ -95,28 +95,21 @@ require '../include/sysadmin_auth.inc';
 $announce_no = 0;
 $announcements = array();
 
-$result = $mysqli->prepare("SELECT id, title, icon, startdate, DATE_FORMAT(startdate, '" . $configObject->get('cfg_long_date_time') . "') AS startdate_display, DATE_FORMAT(enddate, '" . $configObject->get('cfg_long_date_time') . "') AS enddate_display, deleted FROM announcements ORDER BY $sortby $ordering");
+$result = $mysqli->prepare("SELECT id, title, startdate, DATE_FORMAT(startdate, '" . $configObject->get('cfg_long_date_time') . "') AS startdate_display, DATE_FORMAT(enddate, '" . $configObject->get('cfg_long_date_time') . "') AS enddate_display FROM announcements WHERE deleted IS NULL ORDER BY $sortby $ordering");
 $result->execute();
-$result->bind_result($announcementid, $title, $icon, $startdate, $startdate_display, $enddate_display, $deleted);
+$result->bind_result($announcementid, $title, $startdate, $startdate_display, $enddate_display);
 while ($result->fetch()) {
   $announcements[$announce_no]['announcementid'] = $announcementid;
   $announcements[$announce_no]['title'] = $title;
-  $announcements[$announce_no]['icon'] = $icon;
   $announcements[$announce_no]['startdate_display'] = $startdate_display;
   $announcements[$announce_no]['enddate_display'] = $enddate_display;
-  $announcements[$announce_no]['deleted'] = $deleted;
   
   $announce_no++;
 }
 $result->close();
 
 for ($i=0; $i<$announce_no; $i++) {
-  if ($announcements[$i]['deleted'] != '') {
-    $deleted = ' deleted';
-  } else {
-    $deleted = '';
-  }
-  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td><div class=\"col10$deleted\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['startdate_display']  . "</div></td><td><div class=\"col$deleted\">" . $announcements[$i]['enddate_display']  . "</div></td></tr>\n";
+  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td><div class=\"col10\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col\">" . $announcements[$i]['startdate_display']  . "</div></td><td><div class=\"col\">" . $announcements[$i]['enddate_display']  . "</div></td></tr>\n";
 }
 
 $mysqli->close();
