@@ -155,7 +155,7 @@ foreach ($enhancedc2 as $key => $value) {
 }
 
 $enhancedPlugininfo = "Type: $enhancedc1<br />$enhancedc3";
-
+// TODO really need a lookup plugin info section
 // Get info on error handling
 $ErrorLogSettings = '';
 $e1 = $configObject->get('display_auth_debug');
