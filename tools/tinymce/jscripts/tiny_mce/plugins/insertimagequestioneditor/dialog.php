@@ -22,13 +22,8 @@
 * @package
 */
 
-$include_path = realpath( '../../../../../../include/' ) . DIRECTORY_SEPARATOR;
-
-require $include_path . 'load_config.php';
-require $include_path . 'media.inc';
-require $include_path . 'staff_auth.inc';
-
-
+require '../../../../../../include/staff_auth.inc';
+require '../../../../../../include/media.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -79,7 +74,7 @@ require $include_path . 'staff_auth.inc';
       $class = 'class="image_no_brd"';
     }
 
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="../../media/' . $destName . '" ' . $class . ' />';
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="' . $configObject->get('cfg_root_path') . '/media/' . $destName . '" ' . $class . ' />';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>

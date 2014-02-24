@@ -773,7 +773,7 @@ QUERY;
    * @param string $value
    */
   public function set_scenario($value) {
-    $scenario = (trim(strip_tags($value)) == '') ? '' : $value;
+    $scenario = (trim(strip_tags($value, '<img>')) == '') ? '' : $value;
     $tmp_scenario = trim($this->scenario);
     if ($scenario != $tmp_scenario) {
       $this->set_modified_field('scenario_plain', $this->get_scenario_plain());

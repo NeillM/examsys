@@ -149,11 +149,11 @@ if ($critical_error == '') {
         $errors = $question->update_correct($fields, $paper_id);
         
         foreach($fields as $feild_to_update => $value) {
-            if (stristr($feild_to_update, 'option_') !== false) {
-                continue;
-            }
-            $call = 'set_' . $feild_to_update;
-            $question->$call($value);
+					if (stristr($feild_to_update, 'option_') !== false) {
+						continue;
+					}
+					$call = 'set_' . $feild_to_update;
+					$question->$call($value);
         }
         
       } else {
