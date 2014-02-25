@@ -230,7 +230,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
         $addQuestion->execute();
         $new_qids[] = $question_id = $mysqli->insert_id;
-        if ($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
+        if ($q_type == 'enhancedcalc') $caculation_qid_map[$q_id] = $question_id;
         $addQuestion->close();
 
         // Add in a record to the papers table.
@@ -259,41 +259,86 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         }
         $keyword_result->close();
       }
-
-      // Look for and fix links in linked calculation questions
-      if ($q_type == 'calculation') {
-        $options = explode(',', $option_text);
-        $new_option_text = array();
-        foreach ($options as $opt) {
-          if (stristr($opt, 'var') !== false) {
-            $old_calc_q_id = substr($opt, 4);
-            if(!isset($caculation_qid_map[$old_calc_q_id])) {
-              $error[] = sprintf($string['calculation_link_update_error'], $opt);
-              $new_option_text[] = $opt;
-            } else {
-              $new_option_text[] = substr($opt, 0, 4) . $caculation_qid_map[$old_calc_q_id];
-            }
-          } elseif (stristr($opt, 'ans') !== false){
-            $old_calc_q_id = substr($opt, 3);
-            if (!isset($caculation_qid_map[$old_calc_q_id])) {
-              $error[] = sprintf($string['calculation_link_update_error'], $opt);
-              $new_option_text[] = $opt;
-            } else {
-              $new_option_text[] = substr($opt, 0, 3) . $caculation_qid_map[$old_calc_q_id];
-            }
-          } else {
-            $new_option_text[] = $opt;
+      
+      // Look for and fix links in linked enhancedcalc questions
+      if($q_type == 'enhancedcalc') {
+          require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+          if (!isset($configObj)) {
+            $configObj = Config::get_instance();
           }
-        }
-        $option_text = implode(',', $new_option_text);
-      }
+          
+          $tmp_questions_array['theme'] = trim($theme);
+          $tmp_questions_array['scenario'] = trim($scenario);
+          $tmp_questions_array['leadin'] = trim($leadin);
+          $tmp_questions_array['notes'] = trim($notes);
+          $tmp_questions_array['q_type'] = $q_type;
+          $tmp_questions_array['q_id'] = $question_id; //the newly inserted question id !!
+          $tmp_questions_array['score_method'] = $score_method;
+          $tmp_questions_array['status'] = $status;
+          $tmp_questions_array['display_method'] = $display_method;
+          $tmp_questions_array['settings'] = $settings;
+          $tmp_questions_array['q_media'] = $q_media;
+          $tmp_questions_array['q_media_width'] = $q_media_width;
+          $tmp_questions_array['q_media_height'] = $q_media_height;
+          $tmp_questions_array['q_option_order'] = $q_option_order;
+          $tmp_questions_array['dismiss'] = '';
+      
+          $q = new EnhancedCalc($configObj);
+          $q->load($tmp_questions_array);
+          
+          $vars = $q->get_question_vars();
+          $questionChanged = false;
+          foreach($vars as $var_name => $var_data) {
+              $linked_q_id = 0;
 
-      if ($q_type != 'calculation') {  // Calculation questions have no options.
-				$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-				$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-				$addOption->execute();
-				$addOption->close();
-			}
+              if ($q->is_linked_question_var($var_data['min'])) {
+                  
+                  list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['min']);
+                  $vars[$var_name]['min'] = 'var' . $linked_var_name . $caculation_qid_map[$linked_q_id];
+                  $questionChanged = true;
+                  
+              } 
+              
+              if ($q->is_linked_question_var($var_data['max'])) {
+                  
+                  list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['max']);
+                  $vars[$var_name]['max'] = 'var' . $linked_var_name . $caculation_qid_map[$linked_q_id];
+                  $questionChanged = true;
+                  
+              } 
+              
+              if($q->is_linked_ans($var_data['min'])) {
+                  
+                  $linked_q_id = $q->parse_linked_ans($var_data['min']);
+                  $vars[$var_name]['min'] = 'ans' . $caculation_qid_map[$linked_q_id];
+                  $questionChanged = true;
+                  
+              } 
+              
+              if($q->is_linked_ans($var_data['max'])) {
+                  
+                  $linked_q_id = $q->parse_linked_ans($var_data['max']);
+                  $vars[$var_name]['max'] = 'ans' . $caculation_qid_map[$linked_q_id];
+                  $questionChanged = true;
+                  
+              }
+
+          }
+          
+          if($questionChanged == true) {
+              //update the question!!
+              $q->set_question_vars($vars);
+              $q->save($mysqli);
+          }
+          
+      }
+      
+      if ($q_type != 'enhancedcalc') {  // Calculation questions have no options.
+            $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+            $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+            $addOption->execute();
+            $addOption->close();
+      }
       $line++;
     }
     $qData->free_result();

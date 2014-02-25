@@ -845,7 +845,16 @@ class EnhancedCalc extends Question implements questionInterface {
     }
     return false;
   }
-
+  
+  /**
+   * Split the q_id from a linked answer 
+   * @param type $varval
+   * @return type rogo q_id
+   */
+  public function parse_linked_ans($varval) {
+      return intval(substr($varval, 3)); //qid
+  }
+  
   /**
    * test to see if a var is linked to a previous question
    * @param  string  var min or max
@@ -856,6 +865,17 @@ class EnhancedCalc extends Question implements questionInterface {
       return true;
     }
     return false;
+  }
+  
+  /**
+   * Split the q_id and varname from a linked question var 
+   * @param type $varval
+   * @return type array(varname, q_id)
+   */
+  public function parse_linked_question_var($varval) {
+      $varname = substr($varval, 3, 2);
+      $qid = intval(substr($varval, 5));
+      return array($varname, $qid);
   }
 
   /**
@@ -1045,6 +1065,14 @@ class EnhancedCalc extends Question implements questionInterface {
   public function get_question_vars() {
     $this->decode_settings();
     return (isset($this->settings['vars'])) ? $this->settings['vars'] : array();
+  }
+  
+  /**
+   * Set the veriables as defined in the question
+   */
+  public function set_question_vars($vars) {
+    $this->decode_settings();
+    $this->settings['vars'] = $vars;
   }
 
   public function get_user_vars() {
