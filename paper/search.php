@@ -108,31 +108,31 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
+<body>
 <?php
+  require '../include/paper_search_options.inc';
+
   require '../include/toprightmenu.inc';
-
 	echo draw_toprightmenu();
+	
+	echo "<div id=\"content\" class=\"content\">\n";
+	echo "<table class=\"header\">\n";
 
-  if (isset($_POST['submit'])) {
-    echo "<body>\n";
-
-    require '../include/paper_search_options.inc';
-
-    echo "<div id=\"content\" class=\"content\">\n";
-    echo "<table class=\"header\">\n";
-  } else {
-    echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
-
-    require '../include/paper_search_options.inc';
-
-    echo "<div id=\"content\" class=\"content\">\n";
-    echo "<table class=\"header\">\n";
+  if (!isset($_POST['submit'])) {
     echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
     echo "</table>\n";
   }
 
   if (isset($_POST['submit'])) {
-    $results = $mysqli->prepare("SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id = papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
+    $sql = "SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired
+						FROM (properties, users, properties_modules, modules)
+						LEFT JOIN papers ON properties.property_id = papers.paper
+						WHERE properties.property_id = properties_modules.property_id
+						AND properties_modules.idMod = modules.id
+						AND properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type
+						AND deleted IS NULL
+						GROUP BY paper_title";
+		$results = $mysqli->prepare($sql);
     if (count($variables) > 0) {
 	    array_unshift($variables, $params);
 	    $vars = array();
@@ -174,7 +174,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     ?>
     <table cellpadding="1" cellspacing="1" border="0" style="margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left">
     <tr><td colspan="2" style="background-color:#F2B100; height:3px"> </td></tr>
-    <tr><td style="width:16px; padding-top:5px; padding-bottom:5px"><img src="../artwork/information_icon.gif" width="16" height="16" alt="i" border="0" /></td><td style="padding-top:5px; padding-bottom:5px">&nbsp;<?php echo $string['nothingfound']; ?> "<?php echo $_POST['searchterm']; ?>"</td></tr>
+    <tr><td style="width:16px; padding-top:5px; padding-bottom:5px"><img src="../artwork/information_icon.gif" width="16" height="16" alt="i" /></td><td style="padding-top:5px; padding-bottom:5px">&nbsp;<?php echo $string['nothingfound']; ?> "<?php echo $_POST['searchterm']; ?>"</td></tr>
     </table>
     <?php
     }

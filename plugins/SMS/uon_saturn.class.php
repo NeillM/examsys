@@ -18,7 +18,7 @@
  *
  * Utility class for user related functions
  *
- * @author Anthony Brown
+ * @author Anthony Brown, Simon Atack
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
@@ -218,18 +218,18 @@ Class UON_SATURN extends SmsUtils {
     $student_data->store_result();
     $student_data->bind_result($sm_id, $uid, $username, $grade, $title, $surname, $first_names, $initials, $roles, $year, $auto_update, $student_id);
     while ($student_data->fetch()) {
-      $current_users[$username]['delete'] = $auto_update; // Set users to be deleted if added via SATURN, set otherwise lower down after checking with SMS
-      $current_users[$username]['smID'] = $sm_id;
-      $current_users[$username]['userID'] = $uid;
-      $current_users[$username]['grade'] = $grade;
-      $current_users[$username]['title'] = $title;
-      $current_users[$username]['surname'] = $surname;
-      $current_users[$username]['first_names'] = $first_names;
-      $current_users[$username]['initials'] = $initials;
-      $current_users[$username]['roles'] = $roles;
-      $current_users[$username]['year'] = $year;
-      $current_users[$username]['auto_update'] = $auto_update;
-      $current_users[$username]['student_id'] = $student_id;
+      $current_users[$username]['delete'] 			= $auto_update; // Set users to be deleted if added via SATURN, set otherwise lower down after checking with SMS
+      $current_users[$username]['smID']					= $sm_id;
+      $current_users[$username]['userID']				= $uid;
+      $current_users[$username]['grade']				= $grade;
+      $current_users[$username]['title']				= $title;
+      $current_users[$username]['surname']			= $surname;
+      $current_users[$username]['first_names']	= $first_names;
+      $current_users[$username]['initials']			= $initials;
+      $current_users[$username]['roles']				= $roles;
+      $current_users[$username]['year']					= $year;
+      $current_users[$username]['auto_update']	= $auto_update;
+      $current_users[$username]['student_id']		= $student_id;
     }
     $student_data->close();
 
@@ -244,17 +244,17 @@ Class UON_SATURN extends SmsUtils {
 
     if (is_object($xml) and !isset($xml->ErrorMessage) and !isset($xml->Module->ModuleError)) {
       foreach ($xml->Module->Membership->Student as $sms) {
-        $sms->Title = trim($sms->Title);
-        $sms->Surname = trim($sms->Surname);
-        $sms->Forename = trim($sms->Forename);
-        $sms->CourseCode = trim($sms->CourseCode);
-        $sms->Username = trim($sms->Username);
-        $sms->Email = trim($sms->Email);
-        $sms->Gender = trim($sms->Gender);
+        $sms->Title				= trim($sms->Title);
+        $sms->Surname			= trim($sms->Surname);
+        $sms->Forename		= trim($sms->Forename);
+        $sms->CourseCode	= trim($sms->CourseCode);
+        $sms->Username		= trim($sms->Username);
+        $sms->Email				= trim($sms->Email);
+        $sms->Gender			= trim($sms->Gender);
         $sms->YearofStudy = trim($sms->YearofStudy);
-        $sms->StudentID = trim($sms->StudentID);
+        $sms->StudentID		= trim($sms->StudentID);
 
-        $lookup_username = trim($sms->Username);
+        $lookup_username	= trim($sms->Username);
 
         // Make sure we have a proper username - it can sometimes be blank in SATURN data
         if ($sms->Email != '') {
@@ -286,29 +286,29 @@ Class UON_SATURN extends SmsUtils {
               if (!$demomode) {
                 $tmp_userID = UserUtils::create_user($lookup_username, '', $sms->Title, $sms->Forename, $sms->Surname, $sms->Email, $sms->CourseCode, $sms->Gender, $sms->YearofStudy, 'Student', $sms->StudentID, $mysqli);
               }
-              $current_users[$lookup_username]['userID'] = $tmp_userID;
-              $current_users[$lookup_username]['grade'] = $sms->CourseCode;
-              $current_users[$lookup_username]['title'] = $sms->Title;
-              $current_users[$lookup_username]['surname'] = $sms->Surname;
+              $current_users[$lookup_username]['userID']			= $tmp_userID;
+              $current_users[$lookup_username]['grade']				= $sms->CourseCode;
+              $current_users[$lookup_username]['title']				= $sms->Title;
+              $current_users[$lookup_username]['surname']			= $sms->Surname;
               $current_users[$lookup_username]['first_names'] = $tmp_first_names;
-              $current_users[$lookup_username]['initials'] = $initials;
-              $current_users[$lookup_username]['roles'] = 'Student';
-              $current_users[$lookup_username]['email'] = $sms->Email;
-              $current_users[$lookup_username]['year'] = $sms->YearofStudy;
-              $current_users[$lookup_username]['student_id'] = $sms->StudentID;
-              $current_users[$lookup_username]['delete'] = 0;
+              $current_users[$lookup_username]['initials']		= $initials;
+              $current_users[$lookup_username]['roles']				= 'Student';
+              $current_users[$lookup_username]['email']				= $sms->Email;
+              $current_users[$lookup_username]['year']				= $sms->YearofStudy;
+              $current_users[$lookup_username]['student_id']	= $sms->StudentID;
+              $current_users[$lookup_username]['delete']			= 0;
             } else {
-              $current_users[$lookup_username]['userID'] = $tmp_userID;
-              $current_users[$lookup_username]['grade'] = $tmp_grade;
-              $current_users[$lookup_username]['title'] = $tmp_title;
-              $current_users[$lookup_username]['surname'] = $tmp_surname;
+              $current_users[$lookup_username]['userID']			= $tmp_userID;
+              $current_users[$lookup_username]['grade']				= $tmp_grade;
+              $current_users[$lookup_username]['title']				= $tmp_title;
+              $current_users[$lookup_username]['surname']			= $tmp_surname;
               $current_users[$lookup_username]['first_names'] = $tmp_first_names;
-              $current_users[$lookup_username]['initials'] = $tmp_initials;
-              $current_users[$lookup_username]['roles'] = $tmp_roles;
-              $current_users[$lookup_username]['email'] = $tmp_email;
-              $current_users[$lookup_username]['year'] = $tmp_yearofstudy;
-              $current_users[$lookup_username]['student_id'] = $tmp_student_id;
-              $current_users[$lookup_username]['delete'] = 0;
+              $current_users[$lookup_username]['initials']		= $tmp_initials;
+              $current_users[$lookup_username]['roles']				= $tmp_roles;
+              $current_users[$lookup_username]['email']				= $tmp_email;
+              $current_users[$lookup_username]['year']				= $tmp_yearofstudy;
+              $current_users[$lookup_username]['student_id']	= $tmp_student_id;
+              $current_users[$lookup_username]['delete']			= 0;
             }
             // Add student onto the module
             $auto_update = 1; //set auto_update to student module association
@@ -335,7 +335,9 @@ Class UON_SATURN extends SmsUtils {
           } elseif ($sms->ReasonForLeaving == 'Successfully completed course') {
             $new_roles = 'graduate';
           } else {
-            $new_roles = 'Student';
+            //$new_roles = 'Student';
+						$new_roles = $current_users[$lookup_username]['roles'];				// Keep the roles same as they were.
+						
           }
 
           $names = explode(' ', $sms->Forename);
@@ -416,15 +418,15 @@ Class UON_SATURN extends SmsUtils {
       $result->close();
     }
 
-    $expdata=array();
-    if($demomode) {
-      //write out to temp
-      $dir=sys_get_temp_dir();
+    $expdata = array();
+    if ($demomode) {
+      // Write out to temp
+      $dir = sys_get_temp_dir();
 
-      $expdata['status']=$this->errorinfo;
-      $expdata['students']=$c_u;
-      $expdata['moduledata']=$xml;
-      $expdata['studentsa']=$current_users;
+      $expdata['status']			= $this->errorinfo;
+      $expdata['students']		= $c_u;
+      $expdata['moduledata']	= $xml;
+      $expdata['studentsa']		= $current_users;
       file_put_contents($dir . '/' . 'uon-' . $module . '.txt',var_export($expdata,true));
 
       file_put_contents($dir . '/' . 'sum-uon-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");

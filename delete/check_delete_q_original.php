@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting a question in the bank.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -27,7 +29,7 @@ require '../include/errors.inc';
 
 check_var('q_id', 'GET', true, false, false);
 
-$icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline');
+$icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 
 ?>
 <!DOCTYPE html>
@@ -71,7 +73,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   } else {
     echo "<p>" . $string['warning1'] . "</p>\n<blockquote>\n";
     while ($result->fetch()) {
-      echo "<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" />&nbsp;" . $paper_title . "<br />\n";
+      echo "<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" alt=\"\" />&nbsp;" . $paper_title . "<br />\n";
     }
     echo "</blockquote>\n";
   ?>

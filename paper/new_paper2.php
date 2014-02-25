@@ -164,7 +164,7 @@ require '../lang/' . $language. '/include/timezones.inc';
 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:100px" /></div>
+<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" />&nbsp;&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:130px" /></div>
 </form>
 
 <?php

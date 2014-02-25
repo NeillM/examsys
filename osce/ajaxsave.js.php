@@ -25,7 +25,7 @@
 <script>
     
 var ajaxSave = function () {
-    //redirect the form 
+    // Redirect the form 
     $('#osceform').attr('action',"<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>&dont_record=true");
 
     <?php // Hide any errors ?>
@@ -104,8 +104,8 @@ var ajaxSave = function () {
   }
 
   var saveSuccess = function () {
-      $('#osceform').submit();
-      return true;
+		$('#osceform').submit();
+		return true;
   }
 
   var saveFail = function () {
@@ -117,7 +117,6 @@ var ajaxSave = function () {
   
   
 $(document).ready(function () {
-    
     $('#save').replaceWith('<input id="save" type="submit" name="submitButton" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled />');
     $('#save').click(ajaxSave);
     checkTotals();

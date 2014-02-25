@@ -16,6 +16,8 @@
 
 /**
 *
+* Displays Frequency Analysis report for an OSCE station.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -26,6 +28,7 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $paperID   = check_var('paperID', 'GET', true, false, true);
 $startdate = check_var('startdate', 'GET', true, false, true);
@@ -40,12 +43,9 @@ $result->fetch();
 $result->close();
 
 // Get properties of the paper.
-$result = $mysqli->prepare("SELECT paper_title, bgcolor, fgcolor, labelcolor, themecolor FROM properties WHERE property_id = ?");
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($paper, $bgcolor, $fgcolor, $labelcolor, $themecolor);
-$result->fetch();
-$result->close();
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$paper = $propertyObj->get_paper_title();
+$labelcolor = $propertyObj->get_labelcolor();
 ?>
 <html>
   <head>

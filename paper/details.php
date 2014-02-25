@@ -949,7 +949,7 @@ function check_latex_random($q_ids, $mysqli) {
     // Display position out of sync.
     if ($x <> $temp_array[$x]['display_pos']) {
       $temp_array[$x]['display_pos'] = $x;
-      $editPaper = "UPDATE papers SET display_pos=$x WHERE p_id=" . $temp_array[$x]['p_id'];
+      $editPaper = "UPDATE papers SET display_pos = $x WHERE p_id = " . $temp_array[$x]['p_id'];
       if (!$mysqli->query($editPaper)) {
         display_error("Paper order Error","Problem with query: $editPaper");
       }

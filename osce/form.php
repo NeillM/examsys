@@ -39,14 +39,13 @@ if (isset($_REQUEST['userID'])) {
   }
 }
 
-//get the paper properties
+// Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-// Get properties of the paper.
 $paperID      = $propertyObj->get_property_id();
 $marking      = $propertyObj->get_marking();
 $start_date   = $propertyObj->get_start_date();
@@ -60,7 +59,7 @@ if (isset($_POST) and count($_POST) > 0) {
     save_osce_form($paperID, $number_of_qs, $userID, $_POST, $mysqli);
   }
   if(isset($_GET['dont_redirect']) and $_GET['dont_redirect'] == true) {
-    //output the randomID so the js can check for success
+    // Output the randomID so the JavaScript can check for success
     echo $_GET['rnd'];
   } else {
     // Redirect back to the class list to get the next student.

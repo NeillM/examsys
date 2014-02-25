@@ -49,20 +49,21 @@ if ($userObject->has_role('External Examiner')) {    // External examiners have 
 check_var('id', 'GET', true, false, false);
 
 /**
- * @param object $configObj - Configuration object
- * @param array $random_q_data - Holds question information about the parent random question.
- * @param array $user_answers - Holds a list of user answers by question ID.
- * @param array $screen_data - Holds a list of question types and IDs used on all screens in the paper.
- * @param array $used_questions - 
- * @param object $db    	- Mysqli object
- * @param array $string   - Contains language translations.
+ * Looks up the source question in a random question block.
+ * @param object $configObj 		- Configuration object
+ * @param array $random_q_data 	- Holds question information about the parent random question.
+ * @param array $user_answers 	- Holds a list of user answers by question ID.
+ * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
+ * @param array $used_questions - Array of question IDs already used on the paper.
+ * @param object $db    				- Mysqli object
+ * @param array $string   			- Contains language translations.
  *
  */
 function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $db, $string) {
   $selected_q_id = '';
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
-
+	
   if (isset($user_answers[$current_screen])) {
     // Match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
@@ -94,7 +95,7 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
 
   if ($unique) {
     // Look up selected question and overwrite data.
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options on questions.q_id=options.o_id  WHERE q_id=? ORDER BY id_num");
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
@@ -142,10 +143,21 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
     $question['options'] = array();
   }
-
+	
   return $question;
 }
 
+/**
+ * Looks up the source question in a keyword question block.
+ * @param object $configObj 		- Configuration object
+ * @param array $random_q_data 	- Holds question information about the parent random question.
+ * @param array $user_answers 	- Holds a list of user answers by question ID.
+ * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
+ * @param array $used_questions - Array of question IDs already used on the paper.
+ * @param object $db    				- Mysqli object
+ * @param array $string   			- Contains language translations.
+ *
+ */
 function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_questions, $db, $string) {
   $selected_q_id = '';
   $unique = true;
@@ -153,7 +165,7 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
   $q_no = $random_q_data['no_on_screen'];
 
   if (isset($user_answers[$current_screen])) {
-    //match user's answers with random question ID.
+    // Match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
     $selected_q_id = current($question_on_screen);
     for ($i=1; $i<$q_no; $i++) {
@@ -186,7 +198,7 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
 
   if ($unique) {
     // Look up selected question and overwrite the question data.
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options on questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num");
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
@@ -244,7 +256,7 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
   return $question;
 }
 
-//get the paper properties
+// Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));

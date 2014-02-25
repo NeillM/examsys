@@ -16,6 +16,8 @@
 
 /**
 *
+* Delete a question status.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham

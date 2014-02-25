@@ -16,7 +16,7 @@
 
 /**
 *
-* Task menu for papers.
+* Sidebar menu for papers.
 *
 * @author Simon Wilkinson
 * @version 1.0

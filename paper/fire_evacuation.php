@@ -41,7 +41,7 @@ check_var('id', 'GET', true, false, false);
 
 $userObject = UserObject::get_instance();
 
-//get the paper properties
+// Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
 if ($propertyObj == false) {  // No properties found, this crypt_name
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -58,14 +58,14 @@ $password       = $propertyObj->get_password();
 
 /*
  *
- * Setup som feature related flags
+ * Setup some feature related flags
  *
  */
-//are we in a staff test and preview mode?
+// Are we in a staff test and preview mode?
 $is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
-//are we in a staff test and preview mode and on the first screen?
+// Are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
-//are we in a staff single question testmode
+// Are we in a staff single question testmode
 $is_question_preview_mode = ( isset($_GET['q_id']) );
 
 /*
@@ -90,7 +90,7 @@ if ($userObject->has_role('Student')) {
   // Check time security
   check_datetime($start_date, $end_date);
 
-  //Check room security
+  // Check room security
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
                                 $propertyObj->get_labs(),
                                 $current_address,
@@ -99,14 +99,14 @@ if ($userObject->has_role('Student')) {
                                 $mysqli
                               );
 
-  //get modules if the user is a student and the paper is not formative
+  // Get modules if the user is a student and the paper is not formative
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
   // Check for any metadata security restrictions
   check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 }
 
-//get lab info used in log metadata
+// Get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
@@ -117,7 +117,7 @@ if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
   $paper_type = '_late';
 }
 
-//lookup previous sessionid from log_metadata.started property_id
+// Lookup previous sessionid from log_metadata.started property_id
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 $sessionid = $log_metadata->get_session_id();
 

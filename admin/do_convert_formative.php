@@ -16,6 +16,8 @@
 
 /**
 * 
+* Changes a summative exam into a formativ quiz. Part of summative exam scheduling system.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham

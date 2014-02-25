@@ -15,7 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* This screen presents a list of students assigned to a particular cohort.
+* You click on the student name of interest and the OSCE station marking
+* form comes up.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,20 +27,17 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 
-check_var('id', 'GET', true, false, false);
+$id = check_var('id', 'GET', true, false, true);
 
-// Get the module ID and calendar year of the OSCE station.
-$result = $mysqli->prepare("SELECT property_id, paper_title, calendar_year FROM properties WHERE crypt_name = ?");
-$result->bind_param('s', $_GET['id']);
-$result->execute();
-$result->bind_result($paperID, $paper_title, $calendar_year);
-$result->fetch();
-$result->close();
+$properties = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli);
 
-$modules = Paper_utils::get_modules($paperID, $mysqli);
+$paperID 				= $properties->get_property_id();
+$paper_title 		= $properties->get_paper_title();
+$calendar_year 	= $properties->get_calendar_year();
+$modules				= $properties->get_modules();
 ?>
 <!DOCTYPE html>
 <html>
@@ -94,7 +95,7 @@ $modules = Paper_utils::get_modules($paperID, $mysqli);
     $student_no = 0;
     $old_letter = '';
     
-    $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id=log4_overall.userID AND q_paper=? WHERE modules_student.userID=users.id AND users.id=sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year=? ORDER BY surname, initials");
+    $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id=log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id AND users.id = sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? ORDER BY surname, initials");
     $result->bind_param('is', $paperID, $calendar_year);
     $result->execute();
     $result->bind_result($tmp_userID, $surname, $first_names, $title, $student_id, $started);

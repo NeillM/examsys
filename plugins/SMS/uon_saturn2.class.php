@@ -419,7 +419,8 @@ Class UON_SATURN2 extends SmsUtils {
           } elseif ($sms->reasonforleaving == 'Successfully completed course') {
             $new_roles = 'graduate';
           } else {
-            $new_roles = 'Student';
+            //$new_roles = 'Student';
+						$new_roles = $current_users[$lookup_username]['roles'];				// Keep the roles same as they were.
           }
 
           $names = explode(' ', $sms->firstname);
@@ -508,15 +509,15 @@ Class UON_SATURN2 extends SmsUtils {
     }
 
 
-    $expdata=array();
-    if($demomode) {
+    $expdata = array();
+    if ($demomode) {
       //write out to temp
-      $dir=sys_get_temp_dir();
+      $dir = sys_get_temp_dir();
 
-      $expdata['status']=$this->errorinfo;
-      $expdata['students']=$c_u;
-      $expdata['moduledata']=$lookupdata;
-      $expdata['studentsa']=$current_users;
+      $expdata['status']			= $this->errorinfo;
+      $expdata['students']		= $c_u;
+      $expdata['moduledata']	= $lookupdata;
+      $expdata['studentsa']		= $current_users;
       file_put_contents($dir . '/' . 'uon2-' . $module . '.txt',var_export($expdata,true));
 
       file_put_contents($dir . '/' . 'sum-uon2-' . $module . '.txt',"$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");

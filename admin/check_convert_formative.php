@@ -15,14 +15,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Changes a summative exam into a formativ quiz. Part of summative exam scheduling system.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/admin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 
@@ -50,7 +52,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/formative.png" width="48" height="48" border="0" alt="" /></td>
+<td valign="top"><img src="../artwork/formative.png" width="48" height="48" alt="" /></td>
 
 <td><p><?php echo $string['msg']; ?></p>
 <br />

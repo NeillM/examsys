@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a course - SysAdmin only.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,9 +27,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('courseID', 'POST', true, false, false);
-
-$tmp_courseID = $_POST['courseID'];
+$tmp_courseID = check_var('courseID', 'POST', true, false, true);
 
 $result = $mysqli->prepare("UPDATE courses SET deleted = NOW() WHERE id = ?");
 $result->bind_param('i', $tmp_courseID);

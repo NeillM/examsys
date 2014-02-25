@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a paper.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,16 +25,20 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 
-$tmp_paperID = check_var('paperID', 'POST', true, false, true);
+$paperID = check_var('paperID', 'POST', true, false, true);
 
-// Set the deleted field to now and appened the date onto the paper title.
-// This will allow someone to make a new paper with the same name as that being deleted.
-$result = $mysqli->prepare("UPDATE properties SET deleted = NOW(), paper_title = CONCAT(paper_title,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE property_id = ?");
-$result->bind_param('i', $tmp_paperID);
-$result->execute();  
-$result->close();
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+$new_title = $properties->get_paper_title() . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
+$properties->set_paper_title($new_title);
+
+$delete_date = date('YmdHis');
+$properties->set_deleted($delete_date);
+
+$properties->save();
 
 $mysqli->close();
 ?>

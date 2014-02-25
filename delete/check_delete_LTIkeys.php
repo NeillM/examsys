@@ -15,12 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
- * @author Simon Wilkinson
- * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
- * @package
- */
+*
+* Confirm that it is OK to proceed deleting an LTI key.
+*
+* @author Simon Wilkinson
+* @version 1.0
+* @copyright Copyright (c) 2014 The University of Nottingham
+* @package
+*/
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';

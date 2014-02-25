@@ -16,6 +16,8 @@
 
 /**
 *
+* Copies a paper (e.g. properties table) and possibly the questions on the paper.
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -153,7 +155,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
                 if (file_exists("../media/$individual_media")) {
                   if (!copy("../media/$individual_media", "../media/$new_media_name")) {
                     $error[] = sprintf($string['copyerror'], $individual_media);
-                    //if the image is missing dont put the file name in the new question
+                    // If the image is missing dont put the file name in the new question
                     $new_media_name = '';
                   }
                 } else {
@@ -287,11 +289,11 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       }
 
       if ($q_type != 'calculation') {  // Calculation questions have no options.
-		$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-		$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-		$addOption->execute();
-		$addOption->close();
-	  }
+				$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+				$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+				$addOption->execute();
+				$addOption->close();
+			}
       $line++;
     }
     $qData->free_result();
@@ -326,7 +328,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
                 if (isset($new_course[$module][$identifier]['objectives'])){
                   foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
                   if (($new_obj['id'] == $old_objID or $new_obj['guid'] == $old_objGUID) and $new_obj['content'] == $obj['content']) {
-                    //build a list of objectives that are still in both sessions
+                    // Build a list of objectives that are still in both sessions
                     $mappings_copy_objID[$old_objID] = $new_obj['id'];
                     break;
                   }
@@ -339,7 +341,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 
       // Copy the objectives for each session where the objective still exists
 
-      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id =?)");
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id = ?)");
       $nw_paperid = 0;
       $nw_qid = 0;
       $nw_mapid = 0;
@@ -400,7 +402,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#C0C0C0; text-align:left">
     <tr>
-    <td valign="middle" style="background-color:white"><img src="../artwork/orange_alert_32.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
+    <td valign="middle" style="background-color:white"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
    </tr>
    <tr>
    <td style="background-color:#EAEAEA"><ul>
@@ -424,6 +426,17 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 }
 $mysqli->close();
 
+/**
+ * Copies the paper properties record.
+ *
+ * @param object $db						- Link to MySQL database
+ * @param string $calendar_year	- Looks up and updates the academic session - used with learning objectives
+ * @param string $moduleIDs			- Looks up and updates the modules the paper is on - used with learning objectives
+ * @param object $userObj				- Currently logged in user object.
+ * @param object $configObject	- Configuration settings object.
+ *
+ * @return int - ID of the newly inserted property record.
+ */
 function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj, $configObject) {
 
   $userID = $userObj->get_user_ID();
@@ -439,7 +452,6 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 
   $paper_type = $_POST['paper_type'];      // Override the paper type with what is posted.
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
-    //$tmp_exam_duration = $_POST['duration'];
 		$duration = 0;
 		if (isset($_POST['duration_hours'])) {
 			$duration += ($_POST['duration_hours'] * 60);
@@ -507,7 +519,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   }
   $result2->close();
 
-  //set the modules on the new paper
+  // Set the modules on the new paper
   Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {

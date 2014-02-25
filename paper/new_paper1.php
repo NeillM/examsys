@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Initial screen of the create new paper dialog box.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -133,7 +135,7 @@ require '../include/staff_auth.inc';
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:100px" /></div>
+<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" />&nbsp;&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:130px" /></div>
 </form>
 </body>
 </html>

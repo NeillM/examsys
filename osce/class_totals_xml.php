@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Export cohort ratings in Excel 2003 format.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -285,7 +287,6 @@ echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Cohort Size</Data></Cell>';
 echo '<Cell><Data ss:Type="Number">' . $user_no . '</Data></Cell>';
 echo '</Row>';
 foreach ($labels as $i => $label) {
-  //echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
   echo '<Row>';
   echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string[strtolower($label)] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $classifications[$i] . '</Data></Cell>';

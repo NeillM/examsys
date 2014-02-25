@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Outputs the results of an OSCE station as in CSV format.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -54,7 +56,7 @@ $paper = $propertyObj->get_paper_title();
 $crypt_name = $propertyObj->get_crypt_name();
 
 $exclusions = new Exclusion($paperID, $mysqli);
-$exclusions->load();                                                                                  // Get any questions to exclude.
+$exclusions->load();                                        // Get any questions to exclude.
 
 $report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
 $report->load_answers();
@@ -105,7 +107,7 @@ header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $pap
 $completed_no = 0;
 $total_score = 0;
 
-//output table heading
+// Output table heading
 if ($borderline_method) {
   $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['rating'], $string['classification'], $string['starttime'], $string['examiner']);
 } else {
