@@ -1215,6 +1215,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
       }
 			if ($display_option['marks_incorrect'] < 0) {
+				// Include an abstain option if negative marking is used.
 			  if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
 					echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\" checked=\"checked\" /></td><td style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</td></tr>\n";
 				} else {
@@ -1234,8 +1235,8 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       echo '</select></div>';
     }
   } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
+    $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
     if ($question['display_method'] == 'other') {
-      $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
       $part_id++;
       if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td>";
@@ -1243,7 +1244,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
       }
       echo "<td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer, $part_id) . "\" /></td></tr>\n";
-    }
+    } elseif ($question['q_type'] == 'mrq' and $display_option['marks_incorrect'] < 0) {
+		  // Include an abstain option if negative marking is used.
+      if ($answer != '' and $answer{0} == 'a') {
+				echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_abstain\" value=\"y\" checked /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+			} else {
+				echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_abstain\" value=\"y\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+			}
+		}
     echo '</table>';
     if ($question['score_method'] == 'Mark per Question') {
       $marks = $display_option['marks_correct'];

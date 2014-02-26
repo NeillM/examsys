@@ -60,4 +60,5 @@ $string['save'] = 'Uložit výjimky';
 $string['screen'] = 'Obrazovka';
 $string['warning1'] = 'Varování: Obtížnost je menší než 0.2';
 $string['warning2'] = 'Varování: Rozlišení je menší než 0.15';
+$string['abstain'] = 'Abstain';
 ?>

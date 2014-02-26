@@ -112,17 +112,15 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
   // did the all the save to log operations succeed?
   //
   if ($save_ok === false) {
-    //NO - rollback
-    $db->rollback();
-  } else {
-    //YES - commit the updates to the log tables
-    $db->commit();
+    $db->rollback();			// NO - rollback
+  } else {    
+    $db->commit();				// YES - commit the updates to the log tables
   }
   //turn auto commit back on so future queries function as befor
   $db->autocommit(true);
 
   // Close prepared queries
-  if (count($response_data) > 0) { // Could happen on a screen with just an info block
+  if (count($response_data) > 0) { 		// Could happen on a screen with just an info block
     $save_answers->close();
   }
 
@@ -989,7 +987,10 @@ function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $ol
 }
 
 function finalise_mrq($old_score_method, $old_display_method, $correct_rank, $old_marks_correct, $old_marks_incorrect, $question_no, $mrq_options_selected, $totalpos, &$mark, &$question_part, &$qid, &$saved_response) {
-  if ($old_score_method == 'Mark per Question') {
+	if (isset($_POST['q' . $question_no . '_abstain'])) {
+	  $mark = 0;
+		$saved_response = 'a';
+	} elseif ($old_score_method == 'Mark per Question') {
     if ($correct_rank) {
       $mark = $old_marks_correct;
     } else {

@@ -296,15 +296,23 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       }
       break;
     case 'mrq':
-      $count_answer = strlen($answer);
-      for ($i=0; $i<$count_answer; $i++) {
-        $tmp_individual_answer = $answer{$i};
-        if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
-          $log_array[$qID][$i+1][$tmp_individual_answer]++;
-        } else {
-          $log_array[$qID][$i+1][$tmp_individual_answer] = 1;
-        }
-      }
+		  if ($answer == 'a') {
+			  if (isset($log_array[$qID]['a'])) {
+					$log_array[$qID]['a']++;
+				} else {
+					$log_array[$qID]['a'] = 1;
+				}
+			} else {
+				$count_answer = strlen($answer);
+				for ($i=0; $i<$count_answer; $i++) {
+					$tmp_individual_answer = $answer{$i};
+					if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
+						$log_array[$qID][$i+1][$tmp_individual_answer]++;
+					} else {
+						$log_array[$qID][$i+1][$tmp_individual_answer] = 1;
+					}
+				}
+			}
       $log_array[$qID]['mark'] += $mark;
       $log_array[$qID]['totalpos'] += $totalpos;
       break;
@@ -1198,6 +1206,25 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
           echo "</td></tr>\n";
         }
+				
+				// Abstain
+        if (isset($freq_log[$q_id]['a'])) {
+					$t = number_format(($freq_log[$q_id]['a']/$user_total)*100,0);
+        } else {
+					$t = 0;
+				}
+				if (isset($top_log[$q_id]['a'])) {
+					$u = number_format(($top_log[$q_id]['a']/$candidate_no)*100,0);
+        } else {
+					$u = 0;
+				}
+        if (isset($bottom_log[$q_id]['a'])) {
+					$l = number_format(($bottom_log[$q_id]['a']/$candidate_no)*100,0);
+				} else {
+					$l = 0;
+				}
+        echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_abstain\"><span style=\"color:#C00000\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>\n";
+				
         if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
           $d = 0;
         } else {

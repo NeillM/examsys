@@ -60,4 +60,5 @@ $string['save'] = 'Save Exclusions';
 $string['screen'] = 'Screen';
 $string['warning1'] = 'Warning: Difficulty is less than 0.2';
 $string['warning2'] = 'Warning: Discrimination less than 0.15';
+$string['abstain'] = 'Abstain';
 ?>

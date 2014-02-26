@@ -934,11 +934,15 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         // Check to see if the user has answered any options.
         $answered = false;
         if (isset($paper[$question]['user_answer'])) {
-          for ($i=0; $i<strlen($paper[$question]['user_answer']); $i++) {
-            if (substr($paper[$question]['user_answer'], $i, 1) == 'y') {
-              $answered = true;
-            }
-          }
+				  if ($paper[$question]['user_answer'] == 'a') {
+						$answered = true;
+					} else {
+						for ($i=0; $i<strlen($paper[$question]['user_answer']); $i++) {
+							if (substr($paper[$question]['user_answer'], $i, 1) == 'y') {
+								$answered = true;
+							}
+						}
+					}
         }
         if ($answered  == false) {
           reset_feedback($hide_if_unanswered);
@@ -951,8 +955,10 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
             if ($paper[$question]['correct'][$tmp_part_id] == 'y') {
               if ($tmp_display_correct_answer == '1') {
                 echo '<tr><td>';
-                  if (isset($paper[$question]['std'][$tmp_part_id])) echo display_std($paper[$question]['std'][$tmp_part_id]);
-                echo '</td>';
+                if (isset($paper[$question]['std'][$tmp_part_id])) {
+									echo display_std($paper[$question]['std'][$tmp_part_id]);
+                }
+								echo '</td>';
               } else {
                 echo '<tr><td></td>';
               }
@@ -1045,6 +1051,14 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
             }
           }
         }
+				
+				// Output abstain option.
+				if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'a') {
+					echo "<tr><td></td><td>&nbsp;</td><td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_abstain\" value=\"y\" checked />&nbsp;</td><td valign=\"top\"><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+				} else {
+					echo "<tr><td></td><td>&nbsp;</td><td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_abstain\" value=\"y\" />&nbsp;</td><td valign=\"top\"><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+				}
+				
         echo "</table>\n";
         if (!$answered) echo "<br />\n<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {

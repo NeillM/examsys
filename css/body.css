@@ -28,7 +28,7 @@ input[type='checkbox'] {
 textarea, input[type=text], select, input[type=password] {
   font-family:Arial,sans-serif;
   font-size:100%;
-  border: 1px solid #7F9DB9;
+  border: 1px solid #808080;
 }
 table {
   font-size:100%;
