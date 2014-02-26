@@ -302,13 +302,11 @@ ob_start();
     });
   }
 	
-	
 	$(document).ready(function(){
 	  $('#maindata').click(function() {
 		  $('#menudiv').hide();
 		});
 	});
-  //document.onmousedown = mouseSelect;
 </script>
 </head>
 
@@ -325,7 +323,7 @@ require '../include/toprightmenu.inc';
 echo draw_toprightmenu(30);
 
 $popup_width = 180;
-if ($language != 'en') {
+if ($language != 'en') {		// Make wider for non-English languages which have longer words
   $popup_width = 300;
 }
 ?>

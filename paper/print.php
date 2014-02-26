@@ -16,6 +16,9 @@
 
 /**
 *
+* Displays an HTML page in a suitable way that it could be printed
+* with the intention of making a student answer booklet (i.e. only
+* questions, no answers).
 *
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0

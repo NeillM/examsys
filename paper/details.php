@@ -47,6 +47,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 // Unlock code - emergency use only!
+// Can only unlock if current user is SysAdmin!
 if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role('SysAdmin')) {
   $tmp_date = new DateTime();
   $tmp_date->modify('+28 day');

@@ -70,7 +70,7 @@ while ($module_data->fetch()) {
 }
 $module_data->close();
 
-$errorinfo=$sms_connection->geterrors();
+$errorinfo = $sms_connection->geterrors();
 
 /*
  *     $this->errorinfo['usernamematch']=array();

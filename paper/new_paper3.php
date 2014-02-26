@@ -76,7 +76,7 @@ if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summat
   $timezone = $_POST['timezone'];
 }
 
-//process the posted modules
+// Process the posted modules
 $modules = array();
 $first = true;
 for ($i=0; $i<$_POST['module_no']; $i++) {

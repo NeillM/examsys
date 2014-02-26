@@ -16,6 +16,7 @@
 
 /**
 *
+* Displays a 'Class Totals' like report for a peer review paper type.
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -36,11 +37,11 @@ $enddate    = check_var('enddate', 'GET', true, false, true);
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-$paper_title = $propertyObj->get_paper_title();
-$calendar_year = $propertyObj->get_calendar_year();
-$type = $propertyObj->get_rubric();
-$marking = $propertyObj->get_marking();
-$review_type = $propertyObj->get_display_question_mark();
+$paper_title		= $propertyObj->get_paper_title();
+$calendar_year	= $propertyObj->get_calendar_year();
+$type						= $propertyObj->get_rubric();
+$marking				= $propertyObj->get_marking();
+$review_type		= $propertyObj->get_display_question_mark();
 
 require_once 'summary_report.inc';
 ?>
@@ -83,8 +84,12 @@ require_once 'summary_report.inc';
     var winheight = screen.height-80;
     window.open("display_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
   }
-
-  document.onmousedown = mouseSelect;
+	
+	$(document).ready(function(){
+	  $('#maindata').click(function() {
+		  $('#menudiv').hide();
+		});
+	});
   </script>
 </head>
 
@@ -93,23 +98,28 @@ require_once 'summary_report.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
+	
+	$popup_width = 180;
+	if ($language != 'en') {		// Make wider for non-English languages which have longer words
+		$popup_width = 300;
+	}
 ?>
-  <div id="menudiv" style="background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
+  <div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
+  <table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
     <tr><td>
-      <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
+      <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
         <tr>
-          <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewReviews();"><?php echo $string['Review Form'];?></td>
+          <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewReviews();"><?php echo $string['Review Form'];?></td>
         </tr>
         <tr>
-          <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><?php echo $string['Student Profile'];?></td>
+          <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><?php echo $string['Student Profile'];?></td>
         </tr>
       </table>
     </td></tr>
   </table>
   </div>
 <?php
-  echo "<table class=\"header\" style=\"font-size:80%\">\n";
+  echo "<table id=\"maindata\" class=\"header\" style=\"font-size:80%\">\n";
   echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
   if (isset( $_GET['module'] ) and $_GET['module'] != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
@@ -118,13 +128,13 @@ require_once 'summary_report.inc';
   } else {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a>';
   echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['reviewsummary'] . "</div>";
   echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 ?>
 <?php
 
-  //work out ordring
+  // Work out ordring
   if (isset($_GET['ordering']) and $_GET['ordering'] == 'asc') {
     $ordering = 'desc';
     $ordering_img = "<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" />";
@@ -143,7 +153,7 @@ require_once 'summary_report.inc';
     $percent = 100;
   }
 
-  // write out headings
+  // Write out headings
   $query_string = "percent=" . $percent . "&paperID=" . $paperID . "&startdate=" . $startdate . "&enddate=" . $enddate . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
   $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
   if ($review_type == 1) {
@@ -238,10 +248,7 @@ require_once 'summary_report.inc';
   // Sort the data.
   $master_array = array_csort($master_array, $sortby, $ordering);
   
-  //var_dump($master_array);
-
   for ($i=0; $i<$user_number; $i++) {
-    //if ($student_userID > 0) {
     if ($master_array[$i]['student_id'] > 0) {
       echo '<tr>';
       echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');" /></td>';

@@ -16,6 +16,8 @@
 
 /**
 *
+* Report that exports responses in CSV format (raw or text).
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -35,9 +37,9 @@ $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 
-$displayDebug = false; //disable debug output in this script as it effects the output
+$displayDebug = false; // Disable debug output in this script as it effects the output
 
-//get the paper properties
+// Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $demo = is_demo($userObject);

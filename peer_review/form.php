@@ -16,6 +16,8 @@
 
 /**
 *
+* This is the peer review form that students use.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -32,7 +34,6 @@ require_once '../classes/paperproperties.class.php';
 check_var('id', 'GET', true, false, false);
 
 $userObject = UserObject::get_instance();
-
 
 function display_question($qID, $details, $member_userID, &$row_no, $columns, $marking, $saved_results) {
   if ($details['q_type'] == 'likert') {
@@ -69,22 +70,19 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$property_id = $propertyObj->get_property_id();
-$calendar_year = $propertyObj->get_calendar_year();
-$paper_title = $propertyObj->get_paper_title();
-$paper_type = $propertyObj->get_paper_type();
-$start_date = $propertyObj->get_start_date();
-$end_date = $propertyObj->get_end_date();
-$marking = $propertyObj->get_marking();
-$password = $propertyObj->get_password();
-$paper_prologue  = $propertyObj->get_paper_prologue ();
-
-/*
- * TODO remove nasty oveloaded database feilds
- */
+$property_id		= $propertyObj->get_property_id();
+$calendar_year	= $propertyObj->get_calendar_year();
+$paper_title		= $propertyObj->get_paper_title();
+$paper_type			= $propertyObj->get_paper_type();
+$start_date			= $propertyObj->get_start_date();
+$end_date				= $propertyObj->get_end_date();
+$marking				= $propertyObj->get_marking();
+$password				= $propertyObj->get_password();
+$paper_prologue	= $propertyObj->get_paper_prologue();
+// TODO: remove nasty oveloaded database fields
 $display_photos = $propertyObj->get_display_correct_answer();
-$review = $propertyObj->get_display_question_mark();
-$type  = $propertyObj->get_rubric();
+$review					= $propertyObj->get_display_question_mark();
+$type						= $propertyObj->get_rubric();
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -103,7 +101,7 @@ if ($type == '') {   // What metadata field to use.
   display_error($string['Error'], $string['NoFieldMetadata'], false, true);
 }
 
-//get lab info
+// Get lab info
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
@@ -297,31 +295,17 @@ if (isset($_POST['submit'] )) {
   </script>
 </head>
 <body>
-  <div id="menudiv" style="filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); position:absolute; display:none; top:0px; left:0px;z-index:10000;" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table width="160" cellspacing="2" cellpadding="0" border="0" style="border:1px solid #6593CF; font-size:90%; background-color:white">
-    <tr><td>
-      <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
-        <tr>
-          <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="/artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['Review Form']; ?></td>
-        </tr>
-        <tr>
-          <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="/artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><?php echo $string['Student Profile']; ?></td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
-  </div>
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$string['Group'].':</strong> ' . $group . '</strong></div></td></tr></table>';
+  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['Reviewer'] . ':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['Group'] . ':</strong> ' . $group . '</strong></div></td></tr></table>';
 
   if ($language == 'en') {
-    echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">'.$string['Thank You'].'</p>';
+    echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['Thank You'] . '</p>';
   } else {
     // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-    echo '<p style="margin-left:10px; font-size:450%">'.$string['Thank You'].'</p>';
+    echo '<p style="margin-left:10px; font-size:450%">' . $string['Thank You'] . '</p>';
   }
-  echo '<p style="margin-left:10px">'.$string['The ratings saved'].'</p>';
+  echo '<p style="margin-left:10px">' . $string['The ratings saved'] . '</p>';
 } else {
   // Get existing values.
   $saved_results = array();
@@ -365,7 +349,7 @@ if (isset($_POST['submit'] )) {
   <?php
   echo "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\">\n";
 
-  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
+  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$string['Group'].':</strong> ';
   if ($userObject->has_role('Student')) {
     echo $group;
@@ -445,7 +429,7 @@ if (isset($_POST['submit'] )) {
 
   echo "</table>\n";
 
-  echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"border-top:1px solid #164994;background-color:#2765AB;background-image:url('../artwork/title_gradient.png');background-repeat:repeat-y;background-position:center; text-align:center\">";
+  echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"background-color:#5590CF; text-align:center\">";
   if ($userObject->has_role('Student')) {
     echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:100px\" />";
   } else {
