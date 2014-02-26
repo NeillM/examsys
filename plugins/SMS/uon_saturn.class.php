@@ -335,8 +335,11 @@ Class UON_SATURN extends SmsUtils {
           } elseif ($sms->ReasonForLeaving == 'Successfully completed course') {
             $new_roles = 'graduate';
           } else {
-            //$new_roles = 'Student';
 						$new_roles = $current_users[$lookup_username]['roles'];				// Keep the roles same as they were.
+						
+						if ($new_roles != 'left' and $new_roles != 'graduate' and strpos($new_roles, 'Student') === false ) {
+							$new_roles .= ',Student';			// Add in 'student' role if missing.
+						}
 						
           }
 
