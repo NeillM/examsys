@@ -63,6 +63,7 @@ $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();
 
 $user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
+
 $report->set_user_results($user_results);
 $report->generate_stats();
 $user_no = $report->get_user_no();
@@ -155,8 +156,6 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       $('#menudiv').hide();
       window.top.location = '../users/details.php?userID=' + $('#userID').val();
     }
-    
-    document.onmousedown = mouseSelect;
   </script>
 </head>
 
@@ -292,7 +291,10 @@ if ($language != 'en') {
       
       echo '<td class="greyln';
       if ($sortby == 'classification') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['classification'] . "</td>";
+			if ($user_results[$i]['classification'] == $string['fail']) echo ' fail';
+      echo "\">&nbsp;" . $user_results[$i]['classification'];
+			if ($user_results[$i]['classification'] == $string['fail']) echo '&nbsp;<img src="../artwork/skull_16.png" width=16" height="16" alt="skull" />';
+			echo "</td>";
       echo '<td class="greyln';
       if ($sortby == 'started') echo ' ordered';
       echo "\">&nbsp;" . $user_results[$i]['display_started'] . "</td>\n";

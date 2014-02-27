@@ -40,6 +40,7 @@ require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/exam_announcements.class.php';
+require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -69,6 +70,13 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
 }
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+if ($properties->get_paper_type() == '4') {		// OSCE
+	require_once '../classes/killer_question.class.php';
+	
+	$killer_questions = new Killer_question($paperID, $mysqli);
+	$killer_questions->load();
+}
 
 $exclusions = new Exclusion($_GET['paperID'], $mysqli);
 $exclusions->load();
@@ -400,7 +408,7 @@ function check_latex_random($q_ids, $mysqli) {
     $('.highlight').removeClass('highlight');
   }
 
-  function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, evt) {
+  function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, killerq, evt) {
     $('#menu2a').hide();
     if (menuID == '2b') {
       $('#menu2c').hide();
@@ -455,7 +463,19 @@ function check_latex_random($q_ids, $mysqli) {
       var addLink = $('#add_break');
       activateAddBreak(addLink);
     }
-
+		
+<?php
+	if ($properties->get_paper_type() == '4') {			// OSCE stations
+?>
+		if (killerq == '1') {
+			$("span.killer").html('<?php echo $string['unsetkillerquestion']; ?>');
+		} else {
+			$("span.killer").html('<?php echo $string['setkillerquestion']; ?>');
+		}
+<?php
+	}
+?>
+		
     if (document.PapersMenu.questionID.value == '') {
       qOff();
     }
@@ -904,10 +924,15 @@ function check_latex_random($q_ids, $mysqli) {
       $next_screen = $temp_array[$x + 1]['screen'];
     }
 
+		$killer = false;
+		if (isset($killer_questions) and $killer_questions->is_killer_question($temp_array[$x]['q_id'])) {
+			$killer = true;
+		}
+
     if ($properties->get_summative_lock()) {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",'$killer',event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     } else {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",'$killer',event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     }
 
     echo '<td>';
@@ -916,6 +941,9 @@ function check_latex_random($q_ids, $mysqli) {
       if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
       echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
     }
+		if ($killer) {
+      echo '<img src="../artwork/skull_16.png" width="16" height="16" alt="skull" style="position:relative; left:1px;" />';
+		}
     echo '</td>';
 
     if ($temp_array[$x]['q_type'] == 'info') {

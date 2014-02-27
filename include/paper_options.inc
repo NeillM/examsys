@@ -149,15 +149,22 @@ if (count($moduleIDs) > 0) {
   }
 
   function deleteQuestion() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_q_pointer.php?questionID=" + $('#questionID').val() + "&pID=" + $('#pID').val() + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&q_id=" + document.PapersMenu.questionID.value + "&scrOfY=" + document.PapersMenu.scrOfY.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_q_pointer.php?questionID=" + $('#questionID').val() + "&pID=" + $('#pID').val() + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&q_id=" + document.PapersMenu.questionID.value + "&scrOfY=" + document.PapersMenu.scrOfY.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
     }
   }
+	
+	function killerq() {
+		qID = getLastID($('#questionID').val());
+		var jqxhr = $.get("../ajax/paper/set_unset_killer_question.php?paperID=<?php echo $paperID; ?>&q_id=" + qID, function() {
+		});
+		location.reload();
+	}
 
   function deletePaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -165,7 +172,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function retirePaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/check_retire_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/check_retire_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -179,13 +186,13 @@ if (count($moduleIDs) > 0) {
   function incScreen() {
     screenNo = $('#screenNo').val();
     screenNo++;
-    window.location='<?php echo $configObject->get('cfg_root_path') ?>/paper/change_screen_no.php?questionID=' + getLastID($('#pID').val()) + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + $('#scrOfY').val();
+    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/paper/change_screen_no.php?questionID=' + getLastID($('#pID').val()) + '&paperID=<?php echo $paperID; ?>&screen=' + screenNo + '&display_pos=' + document.PapersMenu.current_pos.value + '&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&scrOfY=' + $('#scrOfY').val();
   }
 
   function addQuestions(display, screen_no) {
     winH = screen.height - 80
     winW = screen.width - 80
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + $('#scrOfY').val() + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + $('#scrOfY').val() + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
@@ -193,14 +200,14 @@ if (count($moduleIDs) > 0) {
 
   function noAdd(start, end) {
     winH = screen.height - 40
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/noadd.php?paperID=<?php echo $paperID; ?>&start_date=" + start + "&end_date=" + end + "","notice","width=770,height=550,left="+(screen.width/2-385)+",top="+(screen.height/2-275)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/noadd.php?paperID=<?php echo $paperID; ?>&start_date=" + start + "&end_date=" + end + "","notice","width=770,height=550,left="+(screen.width/2-385)+",top="+(screen.height/2-275)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
 
   function copyToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300,10);
     if (window.focus) {
       notice.focus();
@@ -208,7 +215,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function linkToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/link_to_paper.php?q_id=" + $('#questionID').val() + "","linktopaper","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/link_to_paper.php?q_id=" + $('#questionID').val() + "","linktopaper","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
     notice.moveTo(screen.width/2-300,10);
     if (window.focus) {
       notice.focus();
@@ -216,7 +223,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function questionInfo() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","notice","width=700,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","notice","width=700,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-350,screen.height/2-300);
     if (window.focus) {
       notice.focus();
@@ -224,7 +231,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function examClarification() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/exam_clarification.php?paperID=<?php echo $paperID; ?>&q_id=" + getLastID($('#questionID').val()) + "&questionNo=" + $('#questionNo').val() + "&screenNo=" + $('#screenNo').val() + "","notice","width=800,height=450,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/exam_clarification.php?paperID=<?php echo $paperID; ?>&q_id=" + getLastID($('#questionID').val()) + "&questionNo=" + $('#questionNo').val() + "&screenNo=" + $('#screenNo').val() + "","notice","width=800,height=450,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-400,screen.height/2-225);
     if (window.focus) {
       notice.focus();
@@ -377,6 +384,11 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon_grey.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link_grey.png" alt="Link 2 Paper" /><?php echo $string['linktopaper']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper']; ?>" /><?php echo $string['removefrompaper']; ?></div>
+<?php
+	if ($properties->get_paper_type() == '4') {
+		echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\">" . $string['unsetkillerquestion'] . "</span></div>\n";
+	}
+?>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play_grey.png" alt="<?php echo $string['previewquestion']; ?>" /><?php echo $string['previewquestion']; ?></div>
 </div>
 
@@ -391,6 +403,11 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 	<div class="menuitem" id="copy" onclick="copyToPaper()"><img class="sidebar_icon" style="cursor:hand" onclick="copyToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><a href="#" onclick="return false"><?php echo $string['copyontopaperx']; ?></a></div>
 	<div class="menuitem" id="link" onclick="linkToPaper()"><img class="sidebar_icon" style="cursor:hand" onclick="linkToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="Link 2 Paper" /><a href="#" onclick="return false"><?php echo $string['linktopaper']; ?></a></div>
 	<div class="menuitem" id="delete" onclick="deleteQuestion()"><img class="sidebar_icon" style="cursor:hand" onclick="deleteQuestion(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross.png" alt="<?php echo $string['removefrompaper']; ?>" /><a href="#" onclick="return false"><?php echo $string['removefrompaper']; ?></a></div>
+<?php
+	if ($properties->get_paper_type() == '4') {
+		echo "<div class=\"menuitem\" id=\"killerq\" onclick=\"killerq()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\"><a href=\"#\" onclick=\"return false\">" . $string['unsetkillerquestion'] . "</a></span></div>\n";
+	}
+?>
 	<div class="menuitem" id="preview" onclick="startPaper(0, true)"><img class="sidebar_icon" style="cursor:hand" onclick="startPaper(0, true); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['previewquestion']; ?></a></div>
 </div>
 
@@ -405,6 +422,11 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 	<div class="menuitem" id="copy" onclick="copyToPaper()"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><a href="#" onclick="return false"><?php echo $string['copyontopaperx']; ?></a></div>
 	<div class="menuitem" id="link" onclick="linkToPaper()"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="Link 2 Paper" /><a href="#" onclick="return false"><?php echo $string['linktopaper']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper']; ?>" /><?php echo $string['removefrompaper']; ?></div>
+<?php
+	if ($properties->get_paper_type() == '4') {
+		echo "<div class=\"menuitem\" id=\"killerq\" onclick=\"killerq()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\"><a href=\"#\" onclick=\"return false\">" . $string['unsetkillerquestion'] . "</a></span></div>\n";
+	}
+?>
 	<div class="menuitem" id="preview" onclick="startPaper(0, true)"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['previewquestion']; ?></a></div>
 </div>
 

@@ -1396,7 +1396,7 @@ class ClassTotals {
       $this->db->autocommit(false);
 
       $log_query = $this->db->prepare("UPDATE log$paper_type SET adjmark = ? WHERE id = ?");
-      foreach($log_data as $individual_log_data) {
+      foreach ($log_data as $individual_log_data) {
         $paper_type = $individual_log_data['paper_type'];
         $adjmark = $individual_log_data['adjmark'];
         $log_id = $individual_log_data['id'];

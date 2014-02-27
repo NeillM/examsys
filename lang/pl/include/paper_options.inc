@@ -48,6 +48,8 @@ $string['moveup'] = 'Przesuń do góry';
 $string['movedown'] = 'Przesuń w dół';
 $string['changescreenno'] = 'Zmień numer ekranu';
 $string['removefrompaper'] = 'Usuń z arkusza';
+$string['setkillerquestion'] = 'Set Killer Question';
+$string['unsetkillerquestion'] = 'Unset Killer Question';
 
 $string['summativechecklist'] = 'Zestawienie końcowe';
 $string['session'] = 'Sesja';

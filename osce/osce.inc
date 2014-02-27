@@ -23,7 +23,7 @@
 */
 
 require_once '../classes/mathsutils.class.php';
-
+require_once '../classes/killer_question.class.php';
 
 /**
  * Save OSCE form data back to the database.
@@ -300,12 +300,49 @@ function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db) {
     $user_results[$user_no]['examiner']         = $examiner_title . ' ' . $examiner_initials . ' ' . $examiner_surname;
     $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
     $user_results[$user_no]['questions']        = $question_no;
+    $user_results[$user_no]['killer_fail']      = false;		// Set all users to false for killer questions.
 
     $user_no++;
   }
   $result->close();
   
-  return $user_results;
+	$killer_questions = new Killer_question($_GET['paperID'], $db);
+	$killer_questions->load();
+  
+	check_killer_answers($user_results, $killer_questions, $db);
+	
+	return $user_results;
+}
+
+function find_user_result($user_results, $target_userID) {
+  $user_no = false;
+	$user_count = count($user_results);
+	
+  for ($i=0; $i<$user_count; $i++) {
+	  if ($user_results[$i]['userID'] == $target_userID) {
+			$user_no = $i;
+		}
+	}
+	
+	return $user_no;
+}
+
+function check_killer_answers(&$user_results, $killer_questions, $db) {
+  $result = $db->prepare("SELECT q_id, rating, userID FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND started >= ? AND started <= ? AND q_paper = ?");
+  $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($q_id, $rating, $userID);
+  while ($result->fetch()) {
+	  if ($rating == 0 and $killer_questions->is_killer_question($q_id)) {
+			$target_user = find_user_result($user_results, $userID);
+			if ($target_user !== false) {
+				$user_results[$target_user]['killer_fail'] = true;
+				
+			}
+		}
+	}
+	$result->close();
+	
 }
 
 /**
@@ -338,7 +375,9 @@ function load_osce_medians($db) {
  */
 function set_classification(&$user_results, $passmark, $user_no, $string) {
   for ($i=0; $i<$user_no; $i++) {
-    if ($user_results[$i]['percent'] >= $passmark) {
+    if ($user_results[$i]['killer_fail']) {
+      $user_results[$i]['classification'] = $string['fail'];
+		} elseif ($user_results[$i]['percent'] >= $passmark) {
       $user_results[$i]['classification'] = $string['pass'];
     } else {
       $user_results[$i]['classification'] = $string['fail'];

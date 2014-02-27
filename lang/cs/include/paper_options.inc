@@ -47,6 +47,8 @@ $string['moveup'] = 'Přesunout výše';
 $string['movedown'] = 'Přesunout níže';
 $string['changescreenno'] = 'Změnit obrazovku č.';
 $string['removefrompaper'] = 'Odstranit z dokumentu';
+$string['setkillerquestion'] = 'Set Killer Question';
+$string['unsetkillerquestion'] = 'Unset Killer Question';
 
 $string['summativechecklist'] = 'Sumativní kontrolní seznam';
 $string['session'] = 'Relace';

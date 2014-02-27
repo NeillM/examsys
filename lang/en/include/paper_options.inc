@@ -48,6 +48,8 @@ $string['moveup'] = 'Move up';
 $string['movedown'] = 'Move down';
 $string['changescreenno'] = 'Change Screen No.';
 $string['removefrompaper'] = 'Remove from Paper';
+$string['setkillerquestion'] = 'Set Killer Question';
+$string['unsetkillerquestion'] = 'Unset Killer Question';
 
 $string['summativechecklist'] = 'Summative Checklist';
 $string['session'] = 'Session';

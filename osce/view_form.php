@@ -28,6 +28,7 @@ require '../include/staff_student_auth.inc';
 require '../include/demo_replace.inc';
 require './osce.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/killer_question.class.php';
 
 if ($userObject->has_role('Demo')) $demo = true;
 
@@ -52,6 +53,8 @@ if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+$killer_questions = new Killer_question($_GET['paperID'], $mysqli);
+$killer_questions->load();
 
 // Get the module ID and calendar year of the OSCE station.
 $result = $mysqli->prepare("SELECT username, title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE users.id = ? AND users.id = sid.userID");
@@ -112,7 +115,6 @@ $marking      = $propertyObj->get_marking();
   $result->fetch();
   $result->close();
 
-
   $stored_results = array();
   $result = $mysqli->prepare("SELECT q_id, rating, q_parts FROM log4 WHERE log4_overallID = ?");
   $result->bind_param('i', $log4_overall_id);
@@ -143,6 +145,9 @@ $marking      = $propertyObj->get_marking();
       echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
     echo "<tr id=\"row_" . $question_no . "\"><td class=\"q\" style=\"width: 80%\">";
+		if ($killer_questions->is_killer_question($q_id)) {
+      echo '<img src="../artwork/skull_16.png" width="16" height="16" alt="skull" style="position:relative; right:4px;" />';
+		}
     if (trim($notes) != '') {
       echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
