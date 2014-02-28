@@ -125,7 +125,7 @@ class Authentication {
     }
 
     if ($notfound === true) {
-      array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));
+      array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));		// Add in 'already logged in' plugin so don't re-authenticate every page.
     }
 
     // get form data here?
