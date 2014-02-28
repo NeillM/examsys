@@ -442,10 +442,12 @@ class ClassTotals {
 
     $standard_setting = new StandardSetting($this->db);
     $percents = $standard_setting->get_pass_distinction($mark_parts[1]);
-
+		
     $this->ss_pass = $percents['pass_score'];
 		
-    if ($percents['distinction_score'] == 0) {   // If zero set to top 20% of cohort performance.
+    if (is_null($percents['distinction_score'])) {
+			$this->ss_hon = 100;
+		} elseif ($percents['distinction_score'] == '0.000000') {   // If zero set to top 20% of cohort performance.
       $this->set_ss_hon();
     } else {
 			$this->ss_hon = $percents['distinction_score'];

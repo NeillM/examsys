@@ -62,6 +62,9 @@ function displayReview($review, $userObj) {
   } else {
     $html .= "{$review['name']}</a>";
   }
+	if ($review['distinction_score'] == '0.000000%') {
+		$review['distinction_score'] = 'top 20%';
+	}
   if ($review['review_total'] == $review['total_marks']) {
     $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   } else {

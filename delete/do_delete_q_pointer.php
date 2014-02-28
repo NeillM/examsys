@@ -25,15 +25,21 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('questionID', 'POST', true, false, false);
 check_var('pID', 'POST', true, false, false);
 $tmp_paperID = check_var('paperID', 'POST', true, false, true);
 
+$properties = PaperProperties::get_paper_properties_by_id($tmp_paperID, $mysqli, $string);
+
+// Check that the paper is not summative and not locked.
+if ($properties->get_summative_lock()) {
+	exit;
+}
+
 $tmp_pIDs = explode(',', substr($_POST['pID'], 1));  
 $tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
-
-var_dump($tmp_pIDs);
 
 for ($i=0; $i<count($tmp_pIDs); $i++) {
   if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id = ?")) {

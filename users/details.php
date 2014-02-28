@@ -115,7 +115,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   foreach ($first_names_array as $individual_name) {
     $initials .= trim(substr($individual_name,0,1));
   }
-  //Update 'users' table.
+  // Update 'users' table.
   $tmp_roles = $_POST['roles'];
   $grade = $_POST['grade'];
 
@@ -136,7 +136,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $result->execute();
   $result->close();
 
-  //Remove from teams if 'left'.
+  // Remove from teams if 'left'.
   if (strtolower($tmp_roles) == 'left') {
     UserUtils::clear_staff_modules_by_userID($_POST['old_userID'], $mysqli);
   }
@@ -149,7 +149,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   }
 
   $username = $_POST['username'];
-  //Update 'sid' table;
+  // Update 'sid' table;
   $result = $mysqli->prepare("DELETE FROM sid WHERE userID = ?");
   $result->bind_param('i', $_POST['old_userID']);
   $result->execute();
@@ -432,7 +432,6 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
           echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" &nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         }
       } else {
-        //echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"https://saturnweb.nottingham.ac.uk/nottingham/photo/" . $original_student_id . ".jpg\" width=\"200\" height=\"200\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
       }
     } else {
@@ -652,8 +651,22 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     if (stripos($tmp_roles, 'External Examiner') !== false) {      // Get the papers the External is down to review.
       $external_array = array();
 
-      $stmt = $mysqli->prepare("SELECT DISTINCT crypt_name, paper_title, property_id, paper_type, reviewed, DATE_FORMAT(reviewed,'{$configObject->get('cfg_long_date_time')}') AS display_started FROM (properties, properties_reviewers) LEFT JOIN review_comments ON properties.property_id=review_comments.q_paper WHERE properties.property_id=properties_reviewers.paperID AND reviewerID=? AND deleted IS NULL ORDER BY paper_title");
-      $stmt->bind_param('i', $tmp_id);
+      $sql = "SELECT DISTINCT
+								crypt_name, paper_title, property_id, paper_type, reviewed, DATE_FORMAT(reviewed,'{$configObject->get('cfg_long_date_time')}') AS display_started
+							FROM
+								(properties, properties_reviewers)
+							LEFT JOIN
+								review_comments
+							ON
+								properties.property_id = review_comments.q_paper AND reviewer = ?
+							WHERE
+								properties.property_id = properties_reviewers.paperID AND
+								reviewerID = ? AND
+								deleted IS NULL
+							ORDER BY
+								paper_title";
+      $stmt = $mysqli->prepare($sql);
+      $stmt->bind_param('ii', $tmp_id, $tmp_id);
       $stmt->execute();
       $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $reviewed, $display_started);
       while ($stmt->fetch()) {
@@ -671,7 +684,6 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         $results_no++;
       }
       $stmt->close();
-
     } else {
       // Only allow Admin/SysAdmin or current user to view this information
       $queries = array();

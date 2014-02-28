@@ -26,8 +26,8 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/media.inc';
 require_once '../include/mapping.inc';
-require_once '../classes/question_status.class.php';
 
+require_once '../classes/question_status.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
 
@@ -38,13 +38,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-// Check to see if that paper name has already been taken.
-$result = $mysqli->prepare("SELECT paper_title FROM properties WHERE paper_title = ?");
-$result->bind_param('s', $_POST['new_paper']);
-$result->execute();
-$result->store_result();
-$result->bind_result($paper_title);
-if ($result->num_rows > 0) {
+if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If the paper title is unique.
   ?>
 <html>
 <head>
@@ -77,21 +71,6 @@ if ($result->num_rows > 0) {
   </html>
   <?php
   exit;
-}
-$result->free_result();
-$result->close();
-
-function checkSession($session) {
-  $updated_session = $session;
-  if (preg_match( '/\d\d\d\d.\d\d\d\d/' , $_POST['new_paper'], $matches) == 1) {
-    $updated_session = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-  } elseif (preg_match( '/\d\d\d\d.\d\d/' , $_POST['new_paper'], $matches) == 1) {
-    $updated_session = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-  } elseif (preg_match( '/\d\d.\d\d/' , $_POST['new_paper'], $matches) == 1) {
-    $updated_session = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
-  }
-
-  return $updated_session;
 }
 
 $calendar_year = $new_calendar_year = '';
@@ -500,7 +479,12 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   if (isset($_POST['session'])) {
     $new_calendar_year = $_POST['session'];
   } else {
-    $new_calendar_year = checkSession($calendar_year);
+		$academic_year_title = Paper_utils::academic_year_from_title($_POST['new_paper']);
+		if ($academic_year_title !== false) {
+			$new_calendar_year = $academic_year_title;
+		} else {
+			$new_calendar_year = $calendar_year;
+		}
   }
 
   $addPaper = $db->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, 0)");

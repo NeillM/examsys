@@ -828,6 +828,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
@@ -1359,7 +1360,7 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
 \$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
-\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or hostname
+\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or name
 \$cfg_interactive_qs = '{interactivequestions}'; //flash or html5
 
 
@@ -2334,7 +2335,7 @@ QUERY;
           `note_date` datetime default NULL,
           `paper_id` mediumint(8) unsigned default NULL,
           `note_authorID` int(10) unsigned default NULL,
-          `note_workstation` varchar(15) default NULL,
+          `note_workstation` char(60) default NULL,
           PRIMARY KEY (`note_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;

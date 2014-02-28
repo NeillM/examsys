@@ -58,4 +58,5 @@ $string['next'] = 'Další >>';
 $string['na'] = 'N/A';
 $string['Duplicate questions'] = 'Duplikovat Úlohu';
 $string['following_questions'] = 'Následující úlohy jsou';
+$string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
 ?>

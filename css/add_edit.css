@@ -597,9 +597,10 @@ input[type=text] {
   display: none;
 }
 
-textarea.disabled, input[type=text].disabled, .editor-disabled {
+textarea.disabled, select:disabled, input[type=text].disabled, .editor-disabled {
   border: 1px solid #ccc;
-  background-color: #eaeaea;
+  background-color: #F9F9F9;
+	color: #595959;
 }
 
 .editor-disabled {
@@ -611,5 +612,8 @@ textarea.disabled, input[type=text].disabled, .editor-disabled {
 }
 
 .editor-disabled p {
-  padding: 0 4px;
+  padding: 4px;
+}
+.editor-disabled div {
+  padding: 4px;
 }

@@ -48,10 +48,22 @@ if (isset($_GET['group']) and $_GET['group'] == 'true' and isset($_POST['review_
 }
 
 if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
-  $std_query = $mysqli->prepare("UPDATE std_set SET std_set = NOW() WHERE id = ?");
-  $std_query->bind_param('i', $_POST['std_setID']);
-  $std_query->execute();
-  $std_query->close();
+	if (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '3') {
+		$std_query = $mysqli->prepare("UPDATE std_set SET std_set = NOW(), distinction_score = NULL WHERE id = ?");
+		$std_query->bind_param('i', $_POST['std_setID']);
+		$std_query->execute();
+		$std_query->close();
+	} elseif (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '2') {
+		$std_query = $mysqli->prepare("UPDATE std_set SET std_set = NOW(), distinction_score = 0 WHERE id = ?");
+		$std_query->bind_param('i', $_POST['std_setID']);
+		$std_query->execute();
+		$std_query->close();	} else {
+		$std_query = $mysqli->prepare("UPDATE std_set SET std_set = NOW(), distinction_score = 1 WHERE id = ?");
+		$std_query->bind_param('i', $_POST['std_setID']);
+		$std_query->execute();
+		$std_query->close();
+	}
+
   
   $std_query = $mysqli->prepare("DELETE FROM std_set_questions WHERE std_setID = ?");
   $std_query->bind_param('i', $_POST['std_setID']);
@@ -66,9 +78,17 @@ if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
   $std_setID = $_POST['std_setID'];
 } else {
   $setterID = $userObject->get_user_ID();
-
-  $std_query = $mysqli->prepare("INSERT INTO std_set VALUES(NULL, ?, ?, NOW(), ?, ?, NULL, NULL)");
-  $std_query->bind_param('iiss', $setterID, $paperID, $tmp_method, $group_review);
+	
+	if (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '3') {
+		$std_query = $mysqli->prepare("INSERT INTO std_set VALUES(NULL, ?, ?, NOW(), ?, ?, NULL, NULL)");
+		$std_query->bind_param('iiss', $setterID, $paperID, $tmp_method, $group_review);
+	} elseif (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '2') {
+		$std_query = $mysqli->prepare("INSERT INTO std_set VALUES(NULL, ?, ?, NOW(), ?, ?, NULL, 0)");
+		$std_query->bind_param('iiss', $setterID, $paperID, $tmp_method, $group_review);
+	} else {
+		$std_query = $mysqli->prepare("INSERT INTO std_set VALUES(NULL, ?, ?, NOW(), ?, ?, NULL, 1)");
+		$std_query->bind_param('iiss', $setterID, $paperID, $tmp_method, $group_review);
+	}
   $std_query->execute();
   $std_query->close();
   
