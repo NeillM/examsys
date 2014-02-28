@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
       $result->execute();
       $result->bind_result($largest);
       $i = 0;
-      while ($row = $result->fetch()) {
+      while ($result->fetch()) {
         $obj_id = $largest + 1;
       }
       if ($obj_id < 10) {
@@ -92,7 +92,7 @@ if (isset($_POST['submit'])) {
   header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $moduleID);
 	exit();
 } else {
-  //display the form
+  // Display the form
 ?>
 <!DOCTYPE html>
 <html>
@@ -168,7 +168,7 @@ if (isset($_POST['submit'])) {
 </tr>
 
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" style="width:130px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;&nbsp;<input style="width:80px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
 </form>
 </div>
 </td>
