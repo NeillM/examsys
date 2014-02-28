@@ -321,6 +321,7 @@ function find_user_result($user_results, $target_userID) {
   for ($i=0; $i<$user_count; $i++) {
 	  if ($user_results[$i]['userID'] == $target_userID) {
 			$user_no = $i;
+			break;
 		}
 	}
 	

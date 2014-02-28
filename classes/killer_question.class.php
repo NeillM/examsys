@@ -42,7 +42,8 @@ class Killer_Question {
 	 * Load all killer questions for the current paper.
 	 */
   public function load() {
-    $this->excluded = array();
+    $this->questions = array();
+		
     $result = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
     $result->bind_param('i', $this->paper_id);
     $result->execute();
@@ -76,6 +77,10 @@ class Killer_Question {
 	 * Returns true/false if a particular question is a killer one or not.
 	 */
 	public function is_killer_question($q_id) {
+	  if (!is_array($this->questions)) {
+			$this->load();
+		}
+	
 	  if (isset($this->questions[$q_id])) {
 		  return true;
 		} else {
@@ -87,6 +92,10 @@ class Killer_Question {
 	 * Sets a question as being killer.
 	 */
 	public function set_question($q_id) {
+	  if (!is_array($this->questions)) {
+			$this->load();
+		}
+	
 		$this->questions[$q_id] = true;
 	}
 	
@@ -94,6 +103,10 @@ class Killer_Question {
 	 * Unsets a question as being killer.
 	 */
 	public function unset_question($q_id) {
+	  if (!is_array($this->questions)) {
+			$this->load();
+		}
+	
 		unset($this->questions[$q_id]);
 	}
 	
