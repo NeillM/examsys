@@ -63,40 +63,51 @@ function UpdateClockWithCurrentTime() {
   var minutes = tDate.getMinutes();
   var seconds = tDate.getSeconds();
   
-  UpdateClock( hours, minutes, seconds);
+  UpdateClock(hours, minutes, seconds);
   
-  clockID = setTimeout( "UpdateClockWithCurrentTime()", 1000);
+  clockID = setTimeout("UpdateClockWithCurrentTime()", 1000);
 }
 
-function StartTimer( remaining_time, close ){
-
-  clockID = setTimeout( "UpdateTimerWithRemainingTime(" + remaining_time + ", " + close + " )", 500);
+function StartTimer(remaining_time, close) {
+  clockID = setTimeout("UpdateTimerWithRemainingTime(" + remaining_time + ", " + close + " )", 500);
 }
 
 function StartClock() {
-  clockID = setTimeout( "UpdateClockWithCurrentTime()", 500);
+  clockID = setTimeout("UpdateClockWithCurrentTime()", 500);
 }
 
 function KillClock() {
-  if(clockID) {
+  if (clockID) {
     clearTimeout(clockID);
     clockID  = 0;
   }
 }
 
 function MRQ(questionid, part_id, options_total, selectable) {
+	var abstainExist = document.getElementById("q" + questionid + "_abstain");
+	if (abstainExist != null) {
+		$("#q" + questionid + "_abstain").prop("checked", false);
+	}
+	
   checked_total = 0;
   for (i=1; i<=options_total; i++) {
     currentid = "q" + questionid + "_" + i;
-    if (document.getElementById(currentid).checked == 1) {
+    if ($('#' + currentid).prop("checked")) {
       checked_total++;
     }
   }
   if (checked_total > selectable) {
-	alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
-    document.getElementById("q" + questionid + "_" + part_id).checked = 0;
+		alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+		$("#q" + questionid + "_" + part_id).prop("checked", false);
   }
 }
+
+function MRQabstain(questionid, options_total) {
+  for (i=1; i<=options_total; i++) {
+		$("#q" + questionid + "_" + i).prop("checked", false);
+  }
+}
+
 function rankCheck() {
   var sel = $(this).val();    
   var classlist =  '.' + $(this).attr('class').replace(' ', '.');
@@ -139,20 +150,9 @@ function openCalc2() {
   if (typeof(calc) == 'object' && calc.closed != true) {
     calc.focus();
   } else {
-    calc=window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=360,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
+    calc = window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=360,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
     if (window.focus) {
       calc.focus();
-    }
-  }
-}
-
-function openLink(url,name,width,height) {
-  if (typeof (doc) == 'object' && doc.closed != true) {
-    doc.focus();
-  } else {
-    doc = window.open(url, name, "width=" + width + ",height=" + height + ",top=10,left="+(document.documentElement.clientWidth-280)+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    if (window.focus) {
-      doc.focus();
     }
   }
 }
