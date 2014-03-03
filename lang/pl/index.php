@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cannotfindexams'] = 'Rogō nie odnalazło żadnego egzaminu';
+$string['noexamsfound'] = 'Rogō nie odnalazło żadnego egzaminu';
 $string['exams'] = 'Egzaminy';
 $string['staffmangscreens'] = 'Strony zarządzania dla kadry';
 $string['note1'] = '<strong>Uwaga:</strong> To jest ekran egzaminów końcowych dla studentów, czy potrzebujesz';

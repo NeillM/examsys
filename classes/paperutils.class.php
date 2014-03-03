@@ -371,6 +371,8 @@ Class PaperUtils {
   }
 
   public function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {
+	  $configObj = Config::get_instance();
+
     $paper_type = strval($paper_type);
 
     if ($retired != '') {
@@ -385,31 +387,31 @@ Class PaperUtils {
 
     switch ($paper_type) {
       case '0':
-        $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case '1':
-        $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case '2':
-        $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case '3':
-        $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case '4':
-        $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case '5':
-        $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case '6':
-        $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
         break;
       case 'objectives':
-        $html = "<img src=\"../artwork/feedback_release_icon.png\" width=\"48\" height=\"48\" alt=\"Objectives Feedback\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/feedback_release_icon.png\" width=\"48\" height=\"48\" alt=\"Objectives Feedback\" />";
         break;
       case 'questions':
-        $html = "<img src=\"../artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
         break;
        default:
          var_dump($paper_type);

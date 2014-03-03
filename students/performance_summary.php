@@ -28,6 +28,7 @@ require '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
+require_once '../include/toprightmenu.inc';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
 
@@ -143,8 +144,14 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
 <?php
+if ($userObject->has_role('Staff')) {
+	echo '<script type="text/javascript" src="../js/staff_help.js"></script>';
+} else {
+	echo '<script type="text/javascript" src="../js/student_help.js"></script>';
+}
 if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 ?>
   <script language="javascript">
@@ -188,8 +195,11 @@ if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 </head>
 
 <body>
+<?php
+	echo draw_toprightmenu();
+?>
 
-<div style="position:relative; width:300px; height:173px; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
+<div style="position:relative; width:300px; height:173px; border: 2px solid #FCE699; z-index:10; float:right; top:30px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
 <img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
 <div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
 <div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>
@@ -240,7 +250,8 @@ $name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($stu
 <div style="position:absolute; top:0px; left:0px; width:100%">
 <?php
 echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
-echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
+echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px; padding-bottom:6px\">$name</div></th>";
+echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 echo "</table>\n<div>";
 
 $old_calendar_year = '';

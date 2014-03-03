@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cannotfindexams'] = 'Rogō cannot find any Exams';
+$string['noexamsfound'] = 'No exams found';
 $string['exams'] = 'Exams';
 $string['staffmangscreens'] = 'Staff management screens';
 $string['note1'] = '<strong>Note:</strong> This is the summative exams screen for students, did you want the';
@@ -25,7 +25,7 @@ $string['Time/Date'] = 'Time/Date';
 $string['yearofstudy'] = 'Year of Study';
 $string['noyear'] = 'no year held for user!';
 $string['Modules'] = 'Modules';
-$string['nomodules'] = 'Warning: no modules registered!';
+$string['nomodules'] = 'No modules registered!';
 $string['UserRoles'] = 'User roles';
 $string['try'] = 'What you can try';
 $string['f5'] = 'If the time is more than 15 minutes before the start of the exam wait until within 15 minutes and press F5.';

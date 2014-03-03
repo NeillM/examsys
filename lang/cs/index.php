@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cannotfindexams'] = 'Rogō žádnou zkoušku nenalezlo';
+$string['noexamsfound'] = 'Nebyly nalezeny žádné zkoušky';
 $string['exams'] = 'Zkouška';
 $string['staffmangscreens'] = 'Manažer';
 $string['note1'] = '<strong>Poznámka:</strong> Toto je stránka sloužící k sumativnímu testování studentů, chtěli jste vstoupit na stránku';

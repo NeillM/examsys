@@ -27,6 +27,8 @@
  */
 
 require_once './include/staff_student_auth.inc';
+require_once './include/toprightmenu.inc';
+
 require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
 require_once './classes/logger.class.php';
@@ -38,6 +40,23 @@ if ($userObject->has_role('External Examiner')) {
 } elseif ($userObject->has_role('Invigilator')) {
   header("location: invigilator/");
   exit();
+}
+
+function displayHead($string) {
+	$html = '';
+	
+	$html .= '<table cellpadding="0" cellspacing="0" border="0" class="header">';
+  $html .= '<tr>';
+  $html .= '  <th style="padding-left:16px; padding-top:5px">';
+  $html .= '  <img src="./artwork/r_logo.gif" alt="logo" class="logo_img" />';
+  $html .= '  <div class="logo_lrg_txt">Rog&#333;</div>';
+  $html .= '  <div class="logo_small_txt">' . $string['eassessmentmanagementsystem'] . '</div>';
+  $html .= '  </th>';
+  $html .= '  <th style="text-align:right; vertical-align:top"><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon"></th>';
+  $html .= '</tr>';
+	$html .= '</table>';
+	
+	return $html;
 }
 
 function display_duration($duration, $string, &$warnings) {
@@ -81,7 +100,7 @@ function display_labs($labs, $computer_lab, $string, &$warnings) {
       if ($first) {
         $first = false;
       } else {
-        $html .= ',';
+        $html .= ', ';
       }
       $html .= ($lab == $computer_lab) ? '<span class="current">' . $lab . '</span>' : $lab;
     }
@@ -96,7 +115,7 @@ $logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/');
 
 $paper_utils = Paper_utils::get_instance();
 $paper_display = array();
-$paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli);
+$paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli);		// Get active Progress Tests and Summative Exams.
 
 if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);
@@ -106,117 +125,35 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   ?>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
 
-    <title><?php echo $string['exams']; ?></title>
+  <title><?php echo $string['exams']; ?></title>
 
-    <link rel="stylesheet" type="text/css" href="./css/body.css"/>
-    <link rel="stylesheet" type="text/css" href="./css/header.css"/>
-    <style type="text/css">
-        body {
-					font-size: 90%;
-					color: #575757;
-					margin-top: 8px;
-        }
-
-        h1 {
-					font-weight: normal;
-					font-size: 140%
-        }
-
-        #summ_test {
-					margin: 36px 0 0 90px;
-        }
-
-        #summ_test  a {
-					text-decoration: none
-        }
-
-        .file {
-					float: left;
-					width: 375px;
-					height: 74px;
-					padding-left: 12px
-        }
-
-        a.blacklink:link {
-					color: #000000
-        }
-
-        a.blacklink:visited {
-					color: #000000
-        }
-
-        #summ_test a.blacklink:hover {
-					color: #000000;
-					text-decoration: underline
-        }
-
-        #summ_test, .file td, .mod-header td {
-					font-size: 90%;
-        }
-
-        #summ_test h2 {
-					font-weight: normal;
-					font-size: 140%;
-        }
-
-        #summ_test p {
-					font-size: 100%;
-					color: black;
-        }
-
-        table.mod-header {
-					border: 0;
-					padding: 6px 0 2px 0;
-					width: 100%;
-					color: #1E3287;
-					margin-bottom: 8px;
-        }
-
-        table.map-session td {
-					white-space: nowrap;
-        }
-
-        hr.head-line {
-					border: 0;
-					height: 1px;
-					color: #E5E5E5;
-					background-color: #E5E5E5;
-					width: 100%
-        }
-
-        .subtext {
-					color: #808080;
-					line-height: 18px;
-        }
-
-        .warning-img {
-					vertical-align: text-top;
-					margin-top: -2px;
-					width: 12pg;
-					height: 11px;
-					padding-right: 5px;
-        }
-				
-				.warning {
-				  color: #C55A11;
-				}
-
-        .labs {
-					color: #ff6300;
-        }
-
-        .labs .current {
-					color: #fff;
-					background-color: #ff6300;
-        }
-    </style>
+  <link rel="stylesheet" type="text/css" href="./css/body.css"/>
+  <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
+  <link rel="stylesheet" type="text/css" href="./css/header.css"/>
+  <link rel="stylesheet" type="text/css" href="./css/index.css"/>
+	
+  <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="./js/toprightmenu.js"></script>
+<?php
+	if ($userObject->has_role('Staff')) {
+		echo '<script type="text/javascript" src="./js/staff_help.js"></script>';
+	} else {
+		echo '<script type="text/javascript" src="./js/student_help.js"></script>';
+	}
+?>
+</head>
+<body>
   <?php
-  echo "</head>\n<body>\n";
-  echo "<div style=\"position:absolute; left:20px; top:10px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
-  echo "<h1 class=\"dkblue_header\" style=\"margin-left:90px\">" . $string['cannotfindexams'] . "</h1>\n";
+	echo draw_toprightmenu();
+	
+	echo displayHead($string);
+	
+	echo "<div style=\"font-size:90%; padding-top:20px\">\n";
+  echo "<div style=\"float:left; padding-left:16px; padding-top:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
+  echo "<h1 style=\"margin-left:90px; color:#C00000; font-weight:bold\">" . $string['noexamsfound'] . "</h1>\n";
 
   if ($userObject->has_role('Staff')) {
     echo "<p style=\"margin-left:90px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"11\" height=\"11\" /> <a href=\"staff/index.php\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
@@ -250,20 +187,21 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
 
 
   $last_cal_year = '';
-  $i = 0;
   $info = $mysqli->prepare("SELECT moduleID, calendar_year FROM modules_student, modules WHERE modules.id = modules_student.idMod AND userID = ? ORDER BY calendar_year DESC, moduleID");
   $info->bind_param('i', $userObject->get_user_ID());
   $info->execute();
   $info->bind_result($user_moduleID, $user_calendar_year);
   $info->store_result();
   if ($info->num_rows() == 0) {
-    echo '<span style="color:#C00000">' . $string['nomodules'] . '</span>';
+    echo '<span style="background-color:#C00000; color:white">&nbsp;' . $string['nomodules'] . '&nbsp;</span>';
   } else {
     while ($info->fetch()) {
       if ($last_cal_year != $user_calendar_year) {
-        echo "<br /><strong>" . $user_calendar_year . "</strong><br />";
+				$i = 0;
+        echo "<br /><strong>" . $user_calendar_year . ":</strong>&nbsp;";
       }
-      echo $user_moduleID . '&nbsp;';
+			if ($i > 0) echo ', ';
+      echo $user_moduleID;
       $last_cal_year = $user_calendar_year;
       $i++;
     }
@@ -279,13 +217,13 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
       if ($ur != '') {
         echo '<span style="color:#C00000">' . $string[strtolower($ur)] . '</span>';
         if ($key < count($userRolesArray) - 1) {
-          echo ',';
+          echo ', ';
         }
       }
     } else {
       echo $string[strtolower($ur)];
       if ($key < count($userRolesArray) - 1) {
-        echo ',';
+        echo ', ';
       }
     }
   }
@@ -298,7 +236,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     }
     $papers = array();
     foreach ($staff_modules as $idMod => $moduleID) {
-      $paper_q = $mysqli->prepare("SELECT DISTINCT properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, exam_duration, crypt_name, fullscreen, labs FROM properties LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_type='2' AND start_date > NOW() AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY) AND idMod = ?  AND deleted IS NULL AND retired IS NULL GROUP BY paper_title HAVING MAX(screen) > 0 ORDER BY paper_type, paper_title");
+      $paper_q = $mysqli->prepare("SELECT DISTINCT properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, exam_duration, crypt_name, fullscreen, labs FROM properties LEFT JOIN papers ON properties.property_id = papers.paper LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id WHERE paper_type='2' AND start_date > NOW() AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY) AND idMod = ?  AND deleted IS NULL AND retired IS NULL GROUP BY paper_title HAVING MAX(screen) > 0 ORDER BY paper_type, paper_title");
       $paper_q->bind_param('i', $idMod);
       $paper_q->execute();
       $paper_q->store_result();
@@ -358,32 +296,35 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     }
   }
 
-  echo "</body>\n</html>\n";
+  echo "</div>\n</body>\n</html>\n";
   exit;
 } else {
   ?>
 <html>
-  <head>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
 
-      <title><?php echo $string['exams']; ?></title>
+	<title><?php echo $string['exams']; ?></title>
 
-      <link rel="stylesheet" type="text/css" href="./css/body.css"/>
-      <style type="text/css">
-          .heading {
-              font-weight: bold;
-              font-size: 180%;
-              padding: 10px;
-              background-color: #EAEAEA;
-          }
-      </style>
-  </head>
-  <body>
+  <link rel="stylesheet" type="text/css" href="./css/body.css"/>
+  <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
+  <link rel="stylesheet" type="text/css" href="./css/header.css"/>
+  <link rel="stylesheet" type="text/css" href="./css/index.css"/>
+	
+  <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="./js/toprightmenu.js"></script>
+</head>
+<body>
 <?php
+	echo draw_toprightmenu();
+
   if ($paper_no > 1) {
-    echo "<div class=\"heading\">" . $string['multipleExams'] . "</div>\n";
-    echo "<p>&nbsp;" . $string['selectOne'] . "</p>\n";
+		echo displayHead($string);
+
+		echo "<div style=\"margin:16px\">";
+    echo "<h1>" . $string['multipleExams'] . "</h1>\n";
+    echo "<p>" . $string['selectOne'] . "</p>\n";
   }
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
   for ($i = 0; $i < $paper_no; $i++) {
@@ -408,7 +349,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     }
     echo ")</span></td></tr>\n";
   }
-  echo "</table>\n";
+  echo "</table>\n</div>\n";
 }
 $mysqli->close();
 ?>

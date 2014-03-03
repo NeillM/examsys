@@ -501,7 +501,7 @@ if ($textsize > 120) {
     $paper_utils = Paper_utils::get_instance();
     $paper_display = array();
     $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli, $property_id);
-    if ($paper_no > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='../index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
+    if ($paper_no > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
   }
 
   $display_date = '';

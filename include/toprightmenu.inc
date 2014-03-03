@@ -32,7 +32,7 @@ function draw_toprightmenu($helpID = 1) {
   $html = '';
   $html .= '<div id="toprightmenu">';
 
-  $html .= "<div class=\"trm_div\" onclick=\"launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
+  $html .= "<div class=\"trm_div\" onclick=\"toprightmenu_launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
   $html .= '<div class="trm_div" id="signout">' . $string['signout'] . '</div>';
   $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get('rogo_version')) . '</div>';
 
