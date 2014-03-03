@@ -78,9 +78,9 @@ function list_modules($mod, $id, $student_mod) {
     }
 
     if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-      echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+      echo "<div class=\"r2\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
     } else {
-      echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+      echo "<div class=\"r1\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
     }
     $loop++;
     $old_letter = strtoupper(substr($moduleid, 0, 1));
@@ -139,15 +139,27 @@ if (isset($_POST['submit'])) {
   <style type="text/css">
     body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
     td {font-size:90%}
+		.r1 {
+			text-indent:-23px;
+			padding-left:43px;
+			background-color:white;
+		}
+		.r2 {
+			text-indent:-23px;
+			padding-left:43px;
+			background-color:#FFBD69;
+		}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
-      if ($('#' + objectID).css('background-color') == 'white') {
-        $('#' + objectID).css('background-color', '#B3C8E8');
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        $('#' + objectID).css('background-color', 'white');
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
 
@@ -166,9 +178,17 @@ if (isset($_POST['submit'])) {
       $('#list2').css('height', winH + 'px');
       $('#list3').css('height', winH + 'px');
     }
+		
+		$(document).ready(function() {
+			resizeList();
+			
+			$(window).resize(function(){
+				resizeList();
+			});
+		});
   </script>
 </head>
-<body onload="resizeList()" onresize="resizeList()">
+<body>
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
 <?php
@@ -213,7 +233,7 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"session\" value=\"" . $session . "\" /></div></td>\n</tr>\n";
 ?>
 <br /><br />
-<div align="center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div align="center"><input style="width:130px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;&nbsp;<input style="width:80px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

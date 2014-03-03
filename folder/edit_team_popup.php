@@ -106,9 +106,17 @@ if (isset($_POST['submit'])) {
 
       $('#list').css('height', winH + 'px');
     }
+		
+		$(document).ready(function() {
+			resizeList();
+			
+			$(window).resize(function(){
+				resizeList();
+			});
+		});	
   </script>
 </head>
-<body onload="resizeList()" onresize="resizeList()">
+<body>
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
