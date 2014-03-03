@@ -490,7 +490,7 @@ class UoN_LTI extends BLTI {
   function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type,updated_on) VALUES (?, ?, ?, NOW()) ");
+      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type, updated_on) VALUES (?, ?, ?, NOW()) ");
       $result->bind_param('sss', $lti_resource_key, $internal_id, $internal_type);
       $result->execute();
       $ret = $this->db->insert_id;

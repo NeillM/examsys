@@ -53,7 +53,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
   $results2 = $mysqli->prepare($query_string);
   if ($mysqli->error) {
     try {
-      throw new Exception("0MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+      throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
     } catch (Exception $e) {
       echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
       echo nl2br($e->getTraceAsString());
@@ -230,7 +230,6 @@ if (!$lti->isInstructor()) {
           $mapping = 1;
           $neg_marking = 1;
 
-
           $selfEnroll = 0;
           if ($v[0] == 'Manual') {
             $selfEnroll = 1;
@@ -267,7 +266,7 @@ if (!$lti->isInstructor()) {
     }
     $mod = $returned2[0];
     $data = $lti_i::module_code_translate($mod);
-    foreach($data as $v) {
+    foreach ($data as $v) {
       if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
         UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
       } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
