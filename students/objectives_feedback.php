@@ -30,6 +30,7 @@ require_once '../include/errors.inc';
 require_once '../include/feedback.inc';
 require_once '../include/sort.inc';
 require_once '../include/calculate_marks.inc';
+require_once '../include/toprightmenu.inc';
 
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
@@ -167,9 +168,22 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     .c {text-align:center}
     .symbol {width:24px; text-align:center}
   </style>
+	
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+<?php
+	if ($userObject->has_role('Staff')) {
+		echo '  <script type="text/javascript" src="../js/staff_help.js"></script>';
+	} else {
+		echo '  <script type="text/javascript" src="../js/student_help.js"></script>';
+	}
+?>
 </head>
 <body>
-    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px; padding-left:6px; padding-right:6px">
+<?php
+	echo draw_toprightmenu();
+?>
+    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFFFEE; padding-left:6px; padding-right:6px">
     <tr><td><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon']; ?></td></tr>
     <tr><td><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon']; ?></td></tr>
     <tr><td><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon']; ?></td></tr>
@@ -180,7 +194,8 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   echo "<div style=\"position:absolute; top:0px; left:0px; width:100%\">\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
-  echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
+  echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th>";
+	echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
     echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";
@@ -312,6 +327,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 
   // Display the feedback
   ?>
+	<br />
   <h1><?php echo $string['learningobjectives']; ?></h1>
   <p><?php echo $string['explanation']; ?></p>
   <?php
