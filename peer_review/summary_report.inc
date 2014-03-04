@@ -66,7 +66,7 @@ while ($result->fetch()) {
   }
 }
 $result->close();
-$heading_no = $questions[$questionID]['scale_size'];
+//$heading_no = $questions[$questionID]['scale_size'];
 
 $group = '%';
 $type = $propertyObj->get_rubric();
@@ -110,18 +110,20 @@ $result->close();
 $users = array_keys($user_data);
 $users = implode(',', $users);
 
-// Load results from Log6
-$reviewers = array();
+if ($users != '') {
+	// Load results from Log6
+	$reviewers = array();
 
-$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE reviewerID IN ($users) AND paperID = ? AND started > ? AND started < ? ORDER BY started");
-$result->bind_param('iss', $paperID, $startdate, $enddate);
-$result->execute();
-$result->bind_result($reviewerID, $peerID, $q_id, $rating);
-while ($result->fetch()) {
-  $user_data[$peerID]['data'][$q_id][$reviewerID] = $rating;
-  $reviewers[$reviewerID] = $reviewerID;
+	$result = $mysqli->prepare("SELECT reviewerID, peerID, q_id, rating FROM log6 WHERE reviewerID IN ($users) AND paperID = ? AND started > ? AND started < ? ORDER BY started");
+	$result->bind_param('iss', $paperID, $startdate, $enddate);
+	$result->execute();
+	$result->bind_result($reviewerID, $peerID, $q_id, $rating);
+	while ($result->fetch()) {
+		$user_data[$peerID]['data'][$q_id][$reviewerID] = $rating;
+		$reviewers[$reviewerID] = $reviewerID;
+	}
+	$result->close();
 }
-$result->close();
 
 // Parse the data calculating means
 $review_type = $propertyObj->get_display_question_mark();

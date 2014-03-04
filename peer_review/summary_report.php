@@ -42,6 +42,7 @@ $calendar_year	= $propertyObj->get_calendar_year();
 $type						= $propertyObj->get_rubric();
 $marking				= $propertyObj->get_marking();
 $review_type		= $propertyObj->get_display_question_mark();
+$question_no		= $propertyObj->get_question_no();
 
 require_once 'summary_report.inc';
 ?>
@@ -120,7 +121,7 @@ require_once 'summary_report.inc';
   </div>
 <?php
   echo "<table id=\"maindata\" class=\"header\" style=\"font-size:80%\">\n";
-  echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
+  echo "<tr><th colspan=\"" . ($question_no + 7) . "\"><div class=\"breadcrumb\">";
   if (isset( $_GET['module'] ) and $_GET['module'] != '') {
     echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   } elseif (isset($_GET['folder'])) {
@@ -153,8 +154,14 @@ require_once 'summary_report.inc';
     $percent = 100;
   }
 
+	if (isset($_GET['meta1'])) {
+		$meta1 = $_GET['meta1'];
+	} else {
+		$meta1 = '';
+	}
+	
   // Write out headings
-  $query_string = "percent=" . $percent . "&paperID=" . $paperID . "&startdate=" . $startdate . "&enddate=" . $enddate . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
+  $query_string = "percent=$percent&paperID=$paperID&startdate=$startdate&enddate=$enddate&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=$meta1";
   $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
   if ($review_type == 1) {
     $heading['review_no'] = $string['reviews'];
@@ -178,6 +185,11 @@ require_once 'summary_report.inc';
     echo '</th>';
   }
   echo "<th class=\"num\">&nbsp;</th></tr>\n";
+	
+	if (count($user_data) == 0) {
+		echo "</table>\n" . $notice->info_strip('No students found', 80) . "</body>\n</html>\n";
+		exit;
+	}
 
   // Take the arrays and form one master array which can be sorted for on-screen display.
   $master_array = array();
@@ -227,7 +239,8 @@ require_once 'summary_report.inc';
         if ($_GET['percent'] == '1') {
           $master_array[$user_number]['overall'] = round($student['total_percent'][$questionID], 0);
         } else {
-          $master_array[$user_number]['overall'] = padDecimals($mean_total / $heading_no, 2);
+          //$master_array[$user_number]['overall'] = padDecimals($mean_total / $heading_no, 2);
+          $master_array[$user_number]['overall'] = padDecimals($mean_total / $question_no, 2);
         }
       } else {
         $q_no = 1;
