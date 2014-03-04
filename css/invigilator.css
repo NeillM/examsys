@@ -28,7 +28,7 @@ fieldset {
   margin-bottom: 6px;
 }
 .cohortlist {
-  border: 1px solid #95AEC8
+  border: 1px solid #909090;
 }
 #menudiv ul {
   list-style: none;
@@ -61,7 +61,7 @@ fieldset {
   font-size: 140%;
 }
 .clarifymsg {
-  border: 1px solid #95AEC8;
+  border: 1px solid #909090;
   padding:2px;
   height:100px;
   overflow:auto;

@@ -453,7 +453,6 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 </head>
 
 <body>
-
 <?php
 $popup_width = 180;
 if ($language != 'en') {
@@ -499,7 +498,7 @@ if ($language != 'en') {
               <input type="text" style="background-color:transparent; text-align:right; font-size:180%; border:0px; font-weight:bold" id="theEndTime" />
             <?php
           }
-          ?>&nbsp;
+          ?>&nbsp;<a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" alt="Logout" /></a>&nbsp;
         </th>
     </tr>
 </table>
