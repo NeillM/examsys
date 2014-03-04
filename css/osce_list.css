@@ -1,47 +1,49 @@
 table {
-  font-size:100%;
-  width:100%;
-  line-height:150%;
+  font-size: 100%;
+  width: 100%;
+  line-height: 150%;
 }
 tr {
-  border:1px solid #C0C0C0;
+  border: 1px solid #C0C0C0;
 }
 td {
-  text-align:left;
+  text-align: left;
 }
 a {
-  color:black;
+  color: black;
 }
 .title {
-  padding:6px;
-  font-size:150%;
-  font-weight:bold;
-  background-color:#EAEAEA;
+	color: white;
+	background-color: #517DBF;
+	font-size: 160%;
+	font-weight: bold;
+	padding: 4px;
 }
 .n {
-  color:#808080;
+  color: #808080;
 }
 .bl {
-  font-weight:bold;
+  font-weight: bold;
 }
 .l {
-  color:#808080;
+  color: #808080;
 }
 .indent {
-  padding-left:40px;
+  padding-left: 40px;
 }
 .letter {
-  color:#316AC5;
-  font-weight:bold;
-  font-size:120%;
+  color: #517DBF;
+  font-weight: bold;
+  font-size: 120%;
 }
 .qlink {
-  text-align:center;
-  background-color:#316AC5;
-  font-weight:bold;
-  font-size:120%;
-  width:3.8%;
+  text-align: center;
+  background-color: #C0C0C0;
+  font-weight: bold;
+  font-size: 120%;
+  width: 3.8%;
+	line-height: 120%;
 }
 a.qlink {
-  color:white;
+  color: white;
 }

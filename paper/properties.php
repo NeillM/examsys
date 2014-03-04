@@ -1057,6 +1057,11 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
           alert ("<?php echo $string['msg5']; ?>");
           return false;
         }
+				
+        if ($('#session').val() == '') {
+          alert ("<?php echo $string['msg4']; ?>");
+          return false;
+        }
       }
 
       var external_set = false;
@@ -1512,8 +1517,12 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 <?php
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
-    echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n<option value=\"\">" . $string['na'] .  "</option>\n";
-
+    echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n";
+		
+		if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {
+			echo "<option value=\"\">" . $string['na'] .  "</option>\n";		// N/A option.
+		}
+		
     $stop_year = date("Y") + 3;
     for ($year=2002; $year<$stop_year; $year++) {
       $next_year = ($year - 2000) + 1;

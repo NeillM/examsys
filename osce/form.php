@@ -92,8 +92,8 @@ if (isset($_POST) and count($_POST) > 0) {
   // Check time security
   if ($test == false) {
     if (time() < $start_date or time() > $end_date) {
-      echo "<html><head>\n<title>".$string['Access Denied']."</title>\n<style type=\"text/css\">\nbody {font-size:120%;font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#C00000;font-size:140%}\n</style></head>\n<body style=\"font-family:Arial,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"../artwork/summative_scheduling.png\" width=\"48\" height=\"48\" /></div>\n";
-      echo "<h1 style=\"margin-left:60px\">".$string['Access Denied']."</h1>\n";
+      echo "<html><head>\n<title>" . $string['Access Denied'] . "</title>\n<style type=\"text/css\">\nbody {font-size:120%;font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#C00000;font-size:140%}\n</style></head>\n<body style=\"font-family:Arial,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"../artwork/summative_scheduling.png\" width=\"48\" height=\"48\" /></div>\n";
+      echo "<h1 style=\"margin-left:60px\">" . $string['Access Denied'] . "</h1>\n";
       echo "<hr size=\"1\" align=\"left\" width=\"500\" noshade=\"noshade\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0;height:1px;border:0px\" />\n<p style=\"margin-left:60px\">" . $string['paperavailable'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['from'] . " - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>" . $string['to'] . " - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"&lt; Back\" style=\"width:100px\" name=\"back\" onclick=\"history.back();\"></form></p>\n</body>\n</html>";
       $mysqli->close();
       exit;
@@ -232,11 +232,11 @@ if (isset($_POST) and count($_POST) > 0) {
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
   if (file_exists('../users/photos/' . $username . '.jpg')) {
-    echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" width="90" height="135" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
+    echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" width="90" height="135" alt="Photo" /></td>';
   } else {
-    echo '<td class="photo"><img src="./test_photo.png" width="90" height="135" border="1" alt="Photo" /></td>';
+    echo '<td class="photo"><img src="./test_photo.png" width="90" height="135" alt="Photo" /></td>';
   }
-  echo "<td style=\"vertical-align:top; font-weight:bold; text-align:left\"><div class=\"title\">" . $propertyObj->get_paper_title() . "</div><br /><br /><div style=\"font-size:150%; padding-left:8px\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><div style=\"color:#808080; padding-left:8px\">($student_id)</div></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
+  echo "<td style=\"vertical-align:top; text-align:left\"><div class=\"osce_title\">" . $propertyObj->get_paper_title() . "</div><br /><br /><div class=\"student_name\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><div class=\"student_id\">($student_id)</div></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
 
   if ($test == false) {
     // Query Log4 just in case form has already been submitted for this user.
@@ -254,14 +254,14 @@ if (isset($_POST) and count($_POST) > 0) {
 
   // Get the questions.
   $question_no = 1;
-  $cell_colors = array('#D99594','#FABF8F','#C2D69B');
+  $cell_colors = array('#D99594', '#FABF8F', '#C2D69B');
+	
   $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
   while ($result->fetch()) {
-    if ($question_no == 1) {
-      // Header row
+    if ($question_no == 1) {				// Header row
       $cols = substr_count($display_method, '|');
     }
 

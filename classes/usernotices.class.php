@@ -44,6 +44,12 @@ Class user_notices extends RogoStaticSingleton {
   * constructor
   */
   public function __construct() {}
+	
+	public function info_strip($msg, $font_size = 85) {
+    $configObject = Config::get_instance();
+
+		return "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 2px auto; width:75%; border: 1px solid #C0C0C0; text-align:left; font-size:$font_size%\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"" . $configObject->get('cfg_root_path') . "/artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$msg</td></tr></table>";
+	}
 
   /**
    * This function will output a message to the user 

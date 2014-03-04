@@ -38,6 +38,18 @@ $paperID 				= $properties->get_property_id();
 $paper_title 		= $properties->get_paper_title();
 $calendar_year 	= $properties->get_calendar_year();
 $modules				= $properties->get_modules();
+
+function quick_links() {
+	$html = '';
+	
+	$html .= "<table style=\"width:100%; text-align:center\">\n<tr>\n";
+	for ($i=1; $i<=26; $i++) {
+		$html .= "<td class=\"qlink\"><a href=\"#" . chr($i+64) . "\" class=\"qlink\">" . chr($i+64) . "</a></td>";
+	}
+	$html .= "</tr>\n</table>\n";
+	
+	return $html;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -77,44 +89,45 @@ $modules				= $properties->get_modules();
   <form>
   
   <?php
-    echo "<table style=\"width:100%; text-align:center\">\n<tr>\n";
-    for ($i=1; $i<=26; $i++) {
-      echo "<td class=\"qlink\"><a href=\"#" . chr($i+64) . "\" class=\"qlink\">" . chr($i+64) . "</a></td>";
-    }
-    echo "</tr>\n</table>\n";
-  ?>
   
-  <table cellpadding="6" cellspacing="0" border="0" style="width:100%">
-<?php
   if (count($modules) == 0) {
-    echo "<tr><td style=\"color:#C00000\"><strong>Error:</strong> No module selected so no students could be found.</td></tr>";
+		echo $notice->info_strip($string['error1'], 100);
   } elseif (trim($calendar_year) == '') {
-    echo "<tr><td style=\"color:#C00000\"><strong>Error:</strong> No academic year set so no students could be found.</td></tr>";
+		echo $notice->info_strip($string['error2'], 100);
   } else {
     // Get the students who are enrolled on the module/session.
     $student_no = 0;
     $old_letter = '';
     
-    $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id=log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id AND users.id = sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? ORDER BY surname, initials");
+    $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id = log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id AND users.id = sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? ORDER BY surname, initials");
     $result->bind_param('is', $paperID, $calendar_year);
     $result->execute();
+		$result->store_result();
     $result->bind_result($tmp_userID, $surname, $first_names, $title, $student_id, $started);
-    while ($result->fetch()) {
-      $current_letter = strtoupper($surname{0});
-      if ($old_letter != $current_letter) {
-        echo "<tr><td colspan=\"3\" class=\"letter\"><a name=\"$current_letter\"></a>$current_letter</td></tr>";
-      }
-      if ($started == '') {
-        echo "<tr class=\"bl\" onclick=\"load('$tmp_userID')\"><td class=\"indent\">$title</td><td>$surname, <span class=\"n\">$first_names</span</td><td>$student_id</td></tr>\n";
-      } else {
-        echo "<tr class=\"l\" onclick=\"load('$tmp_userID')\"><td class=\"indent\">$title</td><td>$surname, $first_names</td><td>$student_id</td></tr>\n";
-      }
-      $student_no++;
-      $old_letter = $current_letter;
-    }
+		if ($result->num_rows == 0) {
+			echo $notice->info_strip($string['error3'], 100);
+		} else {
+		  echo quick_links();
+			
+			echo "<table cellpadding=\"6\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
+				
+			while ($result->fetch()) {
+				$current_letter = strtoupper($surname{0});
+				if ($old_letter != $current_letter) {
+					echo "<tr><td colspan=\"3\" class=\"letter\"><a name=\"$current_letter\"></a>$current_letter</td></tr>";
+				}
+				if ($started == '') {
+					echo "<tr class=\"bl\" onclick=\"load('$tmp_userID')\"><td class=\"indent\">$title</td><td>$surname, <span class=\"n\">$first_names</span</td><td>$student_id</td></tr>\n";
+				} else {
+					echo "<tr class=\"l\" onclick=\"load('$tmp_userID')\"><td class=\"indent\">$title</td><td>$surname, $first_names</td><td>$student_id</td></tr>\n";
+				}
+				$student_no++;
+				$old_letter = $current_letter;
+			}
+		}
     $result->close();
   }
-  echo "</table>\n<input type=\"hidden\" name=\"oldstudent\" id=\"oldstudent\" value=\"\" />\n</form>\n";
+  echo "</table>\n</form>\n";
 
   $mysqli->close();
 ?>

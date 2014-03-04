@@ -171,12 +171,8 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
         echo "</div>\n";
       }
     } else {
-    ?>
-    <table cellpadding="1" cellspacing="1" border="0" style="margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left">
-    <tr><td colspan="2" style="background-color:#F2B100; height:3px"> </td></tr>
-    <tr><td style="width:16px; padding-top:5px; padding-bottom:5px"><img src="../artwork/information_icon.gif" width="16" height="16" alt="i" /></td><td style="padding-top:5px; padding-bottom:5px">&nbsp;<?php echo $string['nothingfound']; ?> "<?php echo $_POST['searchterm']; ?>"</td></tr>
-    </table>
-    <?php
+			$msg = $string['nothingfound'] . ' "' . $_POST['searchterm'] . '"';
+			echo $notice->info_strip($msg, 100);
     }
     $results->close();
     $mysqli->close();

@@ -174,7 +174,6 @@ if (isset($_POST['submit'])) {
   }
 
   echo "<table class=\"header fixed\">\n";
-  //echo "<table border=\"1\">\n";
 
   $params = '';
   $variables = array();
@@ -366,7 +365,7 @@ if (isset($_POST['submit'])) {
   echo "</table>\n";
 
   if ($hits == 0) {
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['noquestionsfound'] . "</td></tr></table>\n";
+		echo $notice->info_strip($string['noquestionsfound'], 100);
   }
 
   $mysqli->close();
