@@ -160,18 +160,18 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(3);"><?php
     if (isset($state['advanced']) and $state['advanced'] == 'block') {
-      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
+      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
+      echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
-  if (isset($state['advanced'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:" . $state['advanced'] . "\">\n";
+  if (isset($state['advanced']) and $state['advanced'] == 'block') {
+    echo "<table id=\"menu3\" style=\"width:100%; display:" . $state['advanced'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:none\">\n";
+    echo "<table id=\"menu3\" style=\"width:100%; display:none\">\n";
   }
   echo '<tr><td>';
   if (isset($state['chkbox1']) and $state['chkbox1'] == 'false') {
@@ -195,7 +195,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
     echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" /> <label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
   }
   //----------------------------
-  echo "<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#95AEC8; color:#95AEC8\" />\n";
+  echo "<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#808080; color:#808080\" />\n";
   if (isset($state['chkbox5']) and $state['chkbox5'] == 'true') {
     echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" checked /> <label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
   } else {

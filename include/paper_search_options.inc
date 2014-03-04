@@ -104,13 +104,13 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 ?>
 
-<tr><td><input type="checkbox" name="formative" value="1"<?php echo $radio[0]; ?> /></td><td><?php echo $string['formative']; ?></td></tr>
-<tr><td><input type="checkbox" name="progress" value="1"<?php echo $radio[1]; ?> /></td><td><?php echo $string['progresstest']; ?></td></tr>
-<tr><td><input type="checkbox" name="summative" value="1"<?php echo $radio[2]; ?> /></td><td><?php echo $string['summative']; ?></td></tr>
-<tr><td><input type="checkbox" name="survey" value="1"<?php echo $radio[3]; ?> /></td><td><?php echo $string['survey']; ?></td></tr>
-<tr><td><input type="checkbox" name="osce" value="1"<?php echo $radio[4]; ?> /></td><td><?php echo $string['oscestation']; ?></td></tr>
-<tr><td><input type="checkbox" name="offline" value="1"<?php echo $radio[5]; ?> /></td><td><?php echo $string['offlinepaper']; ?></td></tr>
-<tr><td><input type="checkbox" name="peerreview" value="1"<?php echo $radio[6]; ?> /></td><td><?php echo $string['peerreview']; ?></td></tr>
+<tr><td><input type="checkbox" name="formative" id="formative" value="1"<?php echo $radio[0]; ?> /></td><td>&nbsp;<label for="formative"><?php echo $string['formative']; ?></label></td></tr>
+<tr><td><input type="checkbox" name="progress" id="progress" value="1"<?php echo $radio[1]; ?> /></td><td>&nbsp;<label for="progress"><?php echo $string['progresstest']; ?></label></td></tr>
+<tr><td><input type="checkbox" name="summative" id="summative" value="1"<?php echo $radio[2]; ?> /></td><td>&nbsp;<label for="summative"><?php echo $string['summative']; ?></label></td></tr>
+<tr><td><input type="checkbox" name="survey" id="survey" value="1"<?php echo $radio[3]; ?> /></td><td>&nbsp;<label for="survey"><?php echo $string['survey']; ?></label></td></tr>
+<tr><td><input type="checkbox" name="osce" id="osce" value="1"<?php echo $radio[4]; ?> /></td><td>&nbsp;<label for="osce"><?php echo $string['oscestation']; ?></label></td></tr>
+<tr><td><input type="checkbox" name="offline" id="offline" value="1"<?php echo $radio[5]; ?> /></td><td>&nbsp;<label for="offline"><?php echo $string['offlinepaper']; ?></label></td></tr>
+<tr><td><input type="checkbox" name="peerreview" id="peerreview" value="1"<?php echo $radio[6]; ?> /></td><td>&nbsp;<label for="peerreview"><?php echo $string['peerreview']; ?></label></td></tr>
 </table>
 
 <br />
@@ -119,18 +119,18 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'block') {
-      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" />';
+      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
     } else {
-      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" />';
+      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="10" height="9" alt="Show" />';
     }
   ?></a></td></tr>
   </table>
 
 <?php
   if (isset($state['menu6'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
+    echo "<table id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
+    echo "<table id=\"menu6\" style=\"display:none\">\n";
   }
 ?>
 <tr><td><div style="margin-left:4px"><?php echo $string['date']; ?>&nbsp;</div></td><td>
@@ -198,18 +198,18 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
-      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
   if (isset($state['menu9'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
+    echo "<table id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
+    echo "<table id=\"menu9\" style=\"display:none\">\n";
   }
 ?>
   <tr><td>

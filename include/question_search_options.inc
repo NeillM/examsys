@@ -151,18 +151,18 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(8);"><?php echo $string['questionsections']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(8);"><?php
     if (isset($state['menu8']) and $state['menu8'] == 'block') {
-      echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
+      echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon8\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
+      echo "<img id=\"icon8\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
   if (isset($state['menu8'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu8\" style=\"display:" . $state['menu8'] . "\">\n";
+    echo "<table id=\"menu8\" style=\"display:" . $state['menu8'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu8\" style=\"display:none\">\n";
+    echo "<table id=\"menu8\" style=\"display:none\">\n";
   }
   echo '<tr><td>';
   if (isset($state['checkbox1']) and $state['checkbox1'] == 'false') {
@@ -200,18 +200,18 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'block') {
-      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" />';
+      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
     } else {
-      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" />';
+      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="10" height="9" alt="Show" />';
     }
   ?></a></td></tr>
   </table>
 
 <?php
   if (isset($state['menu6'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
+    echo "<table id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
+    echo "<table id=\"menu6\" style=\"display:none\">\n";
   }
 
   $date_options = array("dont remember"=>$string['dont remember'], "week"=>$string['week'], "month"=>$string['month'], "year"=>$string['year'], "specify"=>$string['specify']);
@@ -348,18 +348,18 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   <tr><td><a href="#" style="font-weight:bold; color: black" onclick="updateMenu(9);"><?php echo $string['metadata']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
-      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
   if (isset($state['menu9'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
+    echo "<table id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
+    echo "<table id=\"menu9\" style=\"display:none\">\n";
   }
 
 if (!isset($status_array)) {

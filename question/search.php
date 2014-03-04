@@ -53,7 +53,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 		<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
     function addQID(qID, clearall) {
@@ -120,16 +122,20 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     echo "<body onselectstart=\"return false\">\n";
 
     require '../include/question_search_options.inc';
+    require '../include/toprightmenu.inc';
 
+		echo draw_toprightmenu();
     echo "<div id=\"content\" class=\"content\">\n";
   } else {
-    echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
+    echo "<body>\n";
 
     require '../include/question_search_options.inc';
+    require '../include/toprightmenu.inc';
 
+		echo draw_toprightmenu();
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
-    echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th></tr>";
+    echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
 ?>
   <tr>
     <th>&nbsp;</th>
@@ -137,6 +143,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     <th class="vert_div"><?php echo $string['owner']; ?></th>
     <th class="vert_div"><?php echo $string['type']; ?></th>
     <th class="vert_div"><?php echo $string['modified']; ?></th>
+    <th class="vert_div"><?php echo $string['status']; ?></th>
   </tr>
   </table>
 <?php
@@ -159,14 +166,15 @@ if (isset($_POST['submit'])) {
 
   if ($error != '') {
     echo "<table class=\"header\" style=\"table-layout:fixed\">\n";
-    echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>".$string['questionsearch']."</div></th></tr>";
+    echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
     ?>
     <tr>
     <th>&nbsp;</th>
     <th class="vert_div"><?php echo $string['question']; ?></th>
     <th class="vert_div"><?php echo $string['owner']; ?></th>
     <th class="vert_div"><?php echo $string['type']; ?></th>
-    <th class="vert_div"><?php echo $string['modified']; ?></th></tr>
+    <th class="vert_div"><?php echo $string['modified']; ?></th>
+    <th class="vert_div"><?php echo $string['status']; ?></th></tr>
     </table>
     <?php
     echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;$error.</td></tr></table>\n";
@@ -323,7 +331,7 @@ if (isset($_POST['submit'])) {
 
   // Empty first line to fix widths
   echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 130px\"></th><th style=\"width: 120px\"></th><th style=\"width: 70px\"></th><th style=\"width: 70px\"></th></tr>";
-  echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
+  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
   if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
     echo "'" . $_POST['searchterm'] . "'";
   } elseif (isset($_POST['searchtype']) and $_POST['searchtype'] != '%') {
@@ -331,7 +339,7 @@ if (isset($_POST['submit'])) {
   } else {
     echo $_POST['module'];
   }
-  echo "</div></th></tr>";
+  echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
 ?>
   <tr>
     <th>&nbsp;</th>
