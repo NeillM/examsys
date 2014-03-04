@@ -290,10 +290,11 @@ if ($exam_duration !== null) {
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/user_index.css" />
   <style type="text/css">
-    body {margin-top:25px; font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
-    .noimg {display:none; width:0; height:0}
+    body { font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
   </style>
 
+  <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="./js/toprightmenu.js"></script>
   <script type="text/javascript" src="./js/student_help.js"></script>
   <script language="JavaScript">
   function startPaper() {
@@ -325,6 +326,11 @@ if ($exam_duration !== null) {
   </script>
 </head>
 <body>
+<div style="text-align:right; padding-right:2px;"><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<?php
+  require './include/toprightmenu.inc';
+	echo draw_toprightmenu(31);
+?>
 <form name="theform">
 <?php
 if ($textsize > 120) {
@@ -496,7 +502,6 @@ if ($textsize > 120) {
     echo "<div style=\"color:#C00000;font-size:90%\">" . $string['donotstart'] . "</div>\n";
   }
 
-  echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['help'] . "\" name=\"help\" onclick=\"launchHelp(31);\" onkeypress=\"launchHelp(31);\" />\n";
   if ($test_type == 2) {
     $paper_utils = Paper_utils::get_instance();
     $paper_display = array();
@@ -554,23 +559,23 @@ if ($textsize > 120) {
   $mysqli->close();
   ?><div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div></td></tr></table>
 </form>
-    <!-- Cache often used scripts and images -->
-    <script src="js/start.js"></script>
-    <script src="js/jquery-1.6.1.min.js" /></script>
-    <script src="js/flash_include.js" /></script>
-    <script src="js/jquery.flash_q.js" /></script>
-    <script src="tools/mee/mee/js/mee_src.js" /></script>
-    <div class="mee" style="position:absolute; left:-100px">\int sin(x)dx\pi</div>
-    <img class="noimg" src="artwork/calc.gif" />
-    <img class="noimg" src="artwork/no_save.png" />
-    <img class="noimg" src="artwork/fire_exit.png" />
-    <img class="noimg" src="artwork/title_gradient.png" />
-		
-		<script src="js/html5.images.js"></script> 
-		<script src="js/qsharedf.js"></script> 
-		<script src="js/qarea.js"></script> 
-		<script src="js/qhotspot.js"></script> 
-		<script src="js/qlabelling.js"></script> 
-    <img class="noimg" src="js/images/combined.png" />
+
+	<!-- Cache often used scripts and images -->
+	<script src="js/start.js"></script>
+	<script src="js/jquery-1.6.1.min.js" /></script>
+	<script src="js/flash_include.js" /></script>
+	<script src="js/jquery.flash_q.js" /></script>
+	<script src="tools/mee/mee/js/mee_src.js" /></script>
+	<img class="noimg" src="artwork/calc.png" />
+	<img class="noimg" src="artwork/no_save.png" />
+	<img class="noimg" src="artwork/fire_exit.png" />
+	<img class="noimg" src="artwork/title_gradient.png" />
+	
+	<script src="js/html5.images.js"></script> 
+	<script src="js/qsharedf.js"></script> 
+	<script src="js/qarea.js"></script> 
+	<script src="js/qhotspot.js"></script> 
+	<script src="js/qlabelling.js"></script> 
+	<img class="noimg" src="js/images/combined.png" />
 </body>
 </html>

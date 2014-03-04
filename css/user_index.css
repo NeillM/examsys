@@ -14,6 +14,14 @@ hr {
   width:80%;
   border:0;
 }
+form {
+	margin-top: 25px;
+}
+.noimg {
+	display: none;
+	width: 0;
+	height: 0;
+}
 .title {
   font-size:24pt;
   font-weight:bold;
