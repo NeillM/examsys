@@ -66,7 +66,6 @@ while ($result->fetch()) {
   }
 }
 $result->close();
-//$heading_no = $questions[$questionID]['scale_size'];
 
 $group = '%';
 $type = $propertyObj->get_rubric();

@@ -93,6 +93,7 @@ $string['html5warn'] = 'Rog&#333; vyžaduje podporu HTML5, aktualizujte, prosím
 $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
+$string['loggedinas'] = 'Logged in as';
 
 $configObject = Config::get_instance();
 $cfg_web_root = $configObject->get('cfg_web_root');

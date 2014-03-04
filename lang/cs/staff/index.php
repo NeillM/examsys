@@ -54,7 +54,6 @@ $string['mins'] = 'minut';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['duplicatefoldername'] = 'Duplicitní název složky, použijte, prosím, jiný.';
-$string['loggedinas'] = 'Jste přihlášen/a jako';
 $string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, prosím, kontaktujte:';
 $string['papersforreview'] = 'Dokumenty k rezenci';
 $string['deadline'] = 'Uzávěrka:';

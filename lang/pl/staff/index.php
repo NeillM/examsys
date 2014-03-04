@@ -54,7 +54,6 @@ $string['mins'] = 'min.';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['duplicatefoldername'] = 'Ta nazwa folderu jest już wykorzystywana, użyj innej.';
-$string['loggedinas'] = 'Jesteś zalogowany jako';
 $string['deadline'] = 'Termin finalizacji:';
 $string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';
 $string['papersforreview'] = 'Arkusze do recenzji';  

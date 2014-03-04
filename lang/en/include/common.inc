@@ -93,6 +93,7 @@ $string['NoFieldMetadata'] = 'No field in the metadata set for groups.';
 $string['NoGroup'] = 'No Group can be found for the current user.';
 $string['note'] = 'Note';
 $string['studentname'] = 'Student Name';
+$string['loggedinas'] = 'Logged in as';
 
 $configObject = Config::get_instance();
 $cfg_web_root = $configObject->get('cfg_web_root');
