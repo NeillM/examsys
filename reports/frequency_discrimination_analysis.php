@@ -1663,7 +1663,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -1676,7 +1675,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
-    body {font-size:90%}
+    body {font-size:90%; margin-bottom:10px}
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:0px; margin-right:0px}
     .figures {text-align:right}

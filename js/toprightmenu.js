@@ -5,6 +5,15 @@ $(document).ready(function(event) {
 		} else {
 			$('#toprightmenu').fadeIn();
 		}
+		return false;
+	});
+	
+	$('.header').click(function() {
+		if ($('#toprightmenu').is(':visible')) {
+			$('#toprightmenu').fadeOut();
+		} else {
+			$('#toprightmenu').fadeIn();
+		}
 	});
 	
 	$('#signout').click(function() {
