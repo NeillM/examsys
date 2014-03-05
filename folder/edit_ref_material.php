@@ -94,7 +94,8 @@ $result->close();
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+	<script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     $(function () {
       $('#theform').validate({
@@ -188,7 +189,7 @@ for ($size=200; $size<850; $size+=50) {
 ?>
 </td>
 </tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px; font-size:90%" />&nbsp;&nbsp;<input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px; font-size:90%" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:130px; font-size:90%" />&nbsp;&nbsp;<input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px; font-size:90%" /></td></tr>
 </table>
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 </form>

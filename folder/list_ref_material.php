@@ -91,12 +91,12 @@ if (!$module_code) {
     }
     
     function editReference() {
-      window.location="<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>";
+      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>";
     }
     
     function deleteReference() {
-      notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      notice.moveTo(screen.width/2-210,screen.height/2-85);
+      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-210, screen.height/2-85);
       if (window.focus) {
         notice.focus();
       }
@@ -150,7 +150,7 @@ if (!$module_code) {
 
 <?php
 foreach ($reference_materials as $id => $details) {
-  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><img src=\"/artwork/ref_16.png\" width=\"16\" height=\"16\" alt=\"\">&nbsp;" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
+  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><img src=\"../artwork/ref_16.png\" width=\"16\" height=\"16\" alt=\"\">&nbsp;" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
 }
 echo "</table>\n";
 $mysqli->close();

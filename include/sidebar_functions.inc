@@ -32,6 +32,8 @@
  * @return array list of personal folder URLs
  */
 function get_folders($staff_modules, $userID, $db) {
+  $configObject = Config::get_instance();
+
   $staff_modules_string = '';
   if (count($staff_modules) > 0) {
     $staff_modules_string = " OR idMod IN(" . implode(',',array_keys($staff_modules)) . ")";
@@ -46,7 +48,7 @@ function get_folders($staff_modules, $userID, $db) {
     $folder_array = explode(';', $folder_name);
     $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
     $display_name = str_replace("'", "\'", $display_name);
-    $url = '/folder/details.php?folder=' . $folder_id;
+    $url = $configObject->get('cfg_root_path') . '/folder/details.php?folder=' . $folder_id;
     $my_folders_array[$display_name] = $url;
   }
   $result->close();
@@ -63,6 +65,8 @@ function get_folders($staff_modules, $userID, $db) {
  * @return array list of module URLs
  */
 function get_modules($teams, $my_folders_array, &$modules_array, $db) {
+  $configObject = Config::get_instance();
+
   if (count($teams) > 0) {
     $team_sql = implode(",", array_keys($teams));
     
@@ -71,7 +75,7 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db) {
     $result->bind_result($modID, $tmp_moduleid, $tmp_fullname);
     while ($result->fetch()) {
       $title = $tmp_moduleid . ' - ' . str_replace("'", "\'", $tmp_fullname);
-      $url = '/folder/details.php?module=' . $modID;
+      $url = $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $modID;
       $modules_array[$title] = $url;
     }
     $result->close();

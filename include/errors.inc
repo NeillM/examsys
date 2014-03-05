@@ -53,11 +53,10 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   if ($display_support_email and $support_email != '') {
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
-  $notice->display_notice($error_title, $error_description, '/artwork/bomb.png', '#C00000');
-
+	$notice->display_notice($error_title, $error_description, '/artwork/square_exclamation_48.png', '#C00000', false, false);
 
   if ($headers == false) {
-    echo "</body>\n</html>\n";
+    echo "\n</body>\n</html>\n";
   }
   if ($stop_execution == true) {
     $mysqli->close();

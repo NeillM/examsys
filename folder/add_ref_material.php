@@ -23,7 +23,10 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
 require_once '../classes/searchutils.class.php';
+
+check_var('module', 'REQUEST', true, false, false);
 
 if (isset($_POST['submit'])) {
   // Write the reference material
@@ -67,6 +70,8 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+	<script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     $(function () {
       $('#theform').validate({
@@ -91,12 +96,20 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
+<?php
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
+?>
 
 <table class="header" cellspacing="0" cellpadding="0" border="0" style="font-size:80%">
-<tr><th>
+<tr>
+<th>
   <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?module=<?php echo $_GET['module']; ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['newreferencematerial']; ?></div>
-</th></tr>
+</th>
+<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+</tr>
 </table>
 
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8">
@@ -139,7 +152,7 @@ for ($size=200; $size<850; $size+=50) {
 ?>
 </td>
 </tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px; font-size:90%" />&nbsp;&nbsp;<input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px; font-size:90%" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:130px; font-size:90%" />&nbsp;&nbsp;<input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px; font-size:90%" /></td></tr>
 </table>
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 
