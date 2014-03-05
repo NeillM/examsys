@@ -53,7 +53,7 @@ if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
   $paper = '';
 }
 if (isset($_POST['owner']) and $_POST['owner'] != '') {
-  $owner = 'AND paper_ownerID=?';
+  $owner = 'AND paper_ownerID = ?';
   $variables[] = $_POST['owner'];
   $params .= 'i';
   setcookie("papersearch[2]", $_POST['owner'], time()+60*60*24*365);
@@ -124,6 +124,13 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   }
 
   if (isset($_POST['submit'])) {
+	  if ($type == '') {
+			echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
+			echo "</table>\n";
+			echo $notice->info_strip('No paper types have been selected.', 100);
+			echo "</body>\n</html>\n";
+			exit;
+		}
     $sql = "SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired
 						FROM (properties, users, properties_modules, modules)
 						LEFT JOIN papers ON properties.property_id = papers.paper

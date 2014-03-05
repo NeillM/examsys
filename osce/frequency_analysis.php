@@ -34,18 +34,11 @@ $paperID   = check_var('paperID', 'GET', true, false, true);
 $startdate = check_var('startdate', 'GET', true, false, true);
 $enddate   = check_var('enddate', 'GET', true, false, true);
 
-// Get the module ID and calendar year of the OSCE station.
-$result = $mysqli->prepare("SELECT title, surname, first_names, grade, yearofstudy, student_id FROM (users, sid) WHERE id = ? AND users.id = sid.userID");
-$result->bind_param('s', $_GET['userID']);
-$result->execute();
-$result->bind_result($title, $surname, $first_names, $grade, $year, $student_id);
-$result->fetch();
-$result->close();
-
 // Get properties of the paper.
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
-$paper = $propertyObj->get_paper_title();
+$paper			= $propertyObj->get_paper_title();
 $labelcolor = $propertyObj->get_labelcolor();
+$themecolor = $propertyObj->get_themecolor();
 ?>
 <html>
   <head>
@@ -58,10 +51,10 @@ $labelcolor = $propertyObj->get_labelcolor();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%}
-    .question {text-align:left; border:1px solid #7F9DB9}
-    .rating {width:40px; text-align:right; border:1px solid #7F9DB9}
+    .question {text-align:left; border:1px solid #808080}
+    .rating {width:40px; text-align:right; border:1px solid #808080}
     .theme {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}
-    .overall {border:1px solid #7F9DB9; width:20%; height:35px; text-align:center}
+    .overall {border:1px solid #808080; width:20%; height:35px; text-align:center}
     ul {margin-top:0px; margin-bottom:0px}
   </style>
 	
@@ -85,9 +78,9 @@ $labelcolor = $propertyObj->get_labelcolor();
   echo "<table class=\"header\">\n";
   echo "<tr><th>";
   if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $report_title = 'Frequency Analysis (' . $_GET['repmodule'] . ' students only)';
+    $report_title = $string['frequencyanalysis'] . ' (' . $_GET['repmodule'] . ' ' . $string['studentsonly'] . ')';
   } else {
-    $report_title = 'Frequency Analysis';
+    $report_title = $string['frequencyanalysis'];
   }
 
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
@@ -102,7 +95,6 @@ $labelcolor = $propertyObj->get_labelcolor();
 
   echo '</table>';
 
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
 
   // Query Log4 to get stored ratings per question.
   $old_userID = '';
@@ -125,10 +117,11 @@ $labelcolor = $propertyObj->get_labelcolor();
   $result->close();
 
   if ($user_no == 0) {
-    echo "</table>\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;This paper has not been attempted by anyone.</td></tr></table>\n";
+		echo $notice->info_strip('This paper has not been attempted by anyone.', 100);
   } else {
-    // Get the questions.
+		echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
+    
+		// Get the questions.
     $question_no = 1;
     $sub_totals = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
     $cell_colors = array('#FFCBCB', '#FFE3B3', '#C0FFC0');

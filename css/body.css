@@ -98,3 +98,25 @@ hr {
 	font-size: 90%;
 	height: 32px;
 }
+.info_bar {
+	margin: 2px auto;
+	width:75%;
+	border: 1px solid #C0C0C0;
+	text-align:left;
+	padding: 1px;
+	height: 38px;
+}
+.info_bar img {
+	width: 16px;
+	height: 16px;
+	position: relative;
+	top: 2px;
+	padding-left: 4px;
+	padding-right: 8px;
+}
+.info_bar_yellow {
+	height: 4px;
+	width: 100%;
+	background-color: #F2B100;
+	margin-bottom: 5px;
+}

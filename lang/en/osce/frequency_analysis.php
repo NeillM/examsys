@@ -14,5 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['frequencyanalysis'] = 'OSCE: Frequency Analysis';
+$string['frequencyanalysis'] = 'Frequency Analysis';
+$string['studentsonly'] = 'students only';
 ?>
