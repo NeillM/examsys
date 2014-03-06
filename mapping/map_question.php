@@ -25,13 +25,16 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/mapping.inc';
+require '../include/errors.inc';
 require '../include/display_functions.inc';
+
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
   require $cfg_web_root . "lang/$language/paper/start.php";
 }
 require '../include/media.inc';
-$paperID = $_GET['paperID'];
+//$paperID = $_GET['paperID'];
 
 function display_q($target_id, $db) {
   $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
@@ -133,8 +136,7 @@ if (isset($_POST['submit'])) {
   echo "<br />";
   echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
-  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:130px\" />&nbsp;&nbsp;";
-  echo "<input style=\"width:80px\" type=\"button\" value=\"" . $string['cancel'] . "\" onclick=\"window.close()\"/></div>";
+  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" onclick=\"window.close()\"/></div>";
 
   echo "</form>\n</div>\n";
 }

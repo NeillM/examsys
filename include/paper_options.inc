@@ -158,8 +158,11 @@ if (count($moduleIDs) > 0) {
 	
 	function killerq() {
 		qID = getLastID($('#questionID').val());
-		var jqxhr = $.get("../ajax/paper/set_unset_killer_question.php?paperID=<?php echo $paperID; ?>&q_id=" + qID, function() {
-		});
+		qNumber = $('#questionNo').val();
+		url = '../ajax/paper/set_unset_killer_question.php';
+		
+		var posting = $.post(url, { paperID: <?php echo $paperID; ?>, q_id: qID, qNumber: qNumber } );
+		
 		location.reload();
 	}
 

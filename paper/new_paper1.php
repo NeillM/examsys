@@ -135,7 +135,7 @@ require '../include/staff_auth.inc';
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" />&nbsp;&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:130px" /></div>
+<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" /><input type="submit" name="submit" value="<?php echo $string['next']; ?>" class="ok" /></div>
 </form>
 </body>
 </html>

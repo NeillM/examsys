@@ -104,7 +104,7 @@ if (isset($_POST['submit'])) {
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" style="width:130px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="student_userID" value="<?php echo $_GET['userID']; ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
 </form>

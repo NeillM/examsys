@@ -166,9 +166,7 @@ if (isset($_POST['submit'])) {
   echo "</select></td>\n";
 ?>
 </tr>
-
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" style="width:130px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;&nbsp;<input style="width:80px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
 </form>
 </div>
 </td>

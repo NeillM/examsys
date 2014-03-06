@@ -1159,7 +1159,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <?php
   require '../tools/colour_picker/colour_picker.inc';
 ?>
-<table border="0" cellpadding="1" cellspacing="5" style="width:100%; height:645px; font-size:90%">
+<table border="0" cellpadding="0" cellspacing="5" style="width:100%; height:645px; font-size:90%">
 <tr><td valign="top" style="background-color:white; border:1px solid #828790; width:120px">
 
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
@@ -1204,7 +1204,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 <td style="background-color:white; border:1px solid #828790" valign="top">
 
 <table id="general" style="height:590px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>" cellpadding="0" cellspacing="0" border="0">
-<tr><td style="background-color:#C2D5F3; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/general_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['generalheading']; ?></td></tr>
+<tr><td class="tabtitle" colspan="2"><img src="../artwork/general_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['generalheading']; ?></td></tr>
 <td style="text-align:left; vertical-align:top" colspan="2">
    <?php
      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
@@ -1501,17 +1501,17 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 </table>
 
 <table id="prologue" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-color:#C2D5F3; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/prologue_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['prologueheading']; ?></td></tr>
-<tr><td><textarea class="mceEditor" id="paper_prologue" name="paper_prologue" style="width:725px; height:542px"><?php echo htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES); ?></textarea></td></tr>
+<tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
+<tr><td><textarea class="mceEditor" id="paper_prologue" name="paper_prologue" style="width:100%; height:542px"><?php echo htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
 <table id="postscript" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-color:#C2D5F3; color:#001687; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/postscript_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['postscriptheading']; ?></td></tr>
-<tr><td><textarea class="mceEditor" id="paper_postscript" name="paper_postscript" style="width:725px; height:542px"><?php echo htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES); ?></textarea></td></tr>
+<tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
+<tr><td><textarea class="mceEditor" id="paper_postscript" name="paper_postscript" style="width:100%; height:542px"><?php echo htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
 <table id="security" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-color:#C2D5F3; height:49px; font-size:110%">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/security_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['securityheading']; ?></td></tr>
+<tr><td class="tabtitle"><img src="../artwork/security_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['securityheading']; ?></td></tr>
 <tr>
 <td style="text-align:center; vertical-align:top">
 <?php
@@ -1808,7 +1808,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<tr><td class=\"headbar\" style=\"padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td class=\"headbar\" style=\"padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
 
-    echo "<div style=\"display:block; width:400px; height:425px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+    echo "<div style=\"display:block; width:400px; height:435px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
 
 		$modules_array = $properties->get_modules();
 
@@ -1851,19 +1851,19 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
   ?>
   <tr><td class="headbar" style="padding:2px" colspan="2">&nbsp;<?php echo $string['restricttometadata']; ?></td></tr>
-  <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:116px; overflow-y:scroll;border:1px solid #828790; font-size:90%" id="metadata_security"></div></td></tr>
+  <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:126px; overflow-y:scroll;border:1px solid #828790; font-size:90%" id="metadata_security"></div></td></tr>
   </table>
 	
   </td></tr>
 </table>
 
 <table id="rubric" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-  <tr><td style="background-color:#C2D5F3; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/rubric_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['rubricheading']; ?></td></tr>
-	<tr><td><textarea class="mceEditor" id="rubric_text" name="rubric_text" style="width:725px; height:542px"><?php echo htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES); ?></textarea></td></tr>
+  <tr><td class="tabtitle" colspan="2"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
+	<tr><td><textarea class="mceEditor" id="rubric_text" name="rubric_text" style="width:100%; height:542px"><?php echo htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
 <table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-  <tr><td style="background-color:#C2D5F3; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/feedback_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['feedbackheading']; ?></td></tr>
+  <tr><td class="tabtitle" colspan="2"><img src="../artwork/feedback_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['feedbackheading']; ?></td></tr>
 
   <?php
      echo "<tr><td colspan=\"2\" valign=\"top\">";
@@ -1961,7 +1961,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 </table>
 
 <table id="reviewers" style="font-size:90%; width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-color:#C2D5F3; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/reviewers_heading_icon.png" width="34" height="34" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['reviewersheading']; ?></td></tr>
+<tr><td class="tabtitle" colspan="2"><img src="../artwork/reviewers_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['reviewersheading']; ?></td></tr>
 <tr>
 <td align="center" colspan="2">
 <table cellpadding="1" cellspacing="2" border="0">
@@ -2121,7 +2121,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:343px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+  echo "<tr><td><div style=\"width:350px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
 
   // Get all users for teams within the schools of the current user
   // Also get all admin users for those schools
@@ -2167,7 +2167,7 @@ SQL;
   $internal_details->close();
   echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:343px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+  echo "<td><div style=\"width:350px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
   $current_externals = $properties->get_externals();
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = 'External Examiner' AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
   $external_details->execute();
@@ -2194,13 +2194,13 @@ SQL;
 </table>
 
 <table id="reference" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-color:#C2D5F3; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/toggle_log.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['referenceheading']; ?></td></tr>
+<tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading']; ?></td></tr>
 <tr><td style="vertical-align:top"><div id="reference_list"></div></td></tr>
 </table>
 
 <table id="changes" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td style="background-color:#C2D5F3; height:49px; font-size:110%" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;<img src="../artwork/version_icon.png" width="32" height="32" alt="Icon" align="middle" />&nbsp;&nbsp;<?php echo $string['changesheading']; ?></td></tr>
-<tr><td style="vertical-align:top"><div id="change_list" style="height:550px; overflow-y:scroll;border:1px solid #828790">
+<tr><td class="tabtitle" colspan="2"><img src="../artwork/version_icon.png" alt="Icon" align="middle" /><?php echo $string['changesheading']; ?></td></tr>
+<tr><td style="vertical-align:top"><div id="change_list" style="height:550px; overflow-y:scroll">
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <?php
 $modules = module_utils::get_module_list_by_id($mysqli);
@@ -2316,7 +2316,7 @@ $mysqli->close();
 
 </td>
 </tr>
-<tr><td colspan="2" align="right"><input type="submit" style="width:130px" name="Submit" value="<?php echo $string['ok']; ?>">&nbsp;&nbsp;<input type="button" name="home" style="width:80px" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
+<tr><td colspan="2" align="right"><input type="submit" class="ok" name="Submit" value="<?php echo $string['ok']; ?>" /><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
 </table>
 
 <input type="hidden" name="noadd" value="<?php if (isset($_GET['noadd'])) echo $_GET['noadd']; ?>" />

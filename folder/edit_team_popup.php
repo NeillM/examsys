@@ -126,7 +126,7 @@ if (isset($_POST['submit'])) {
 <?php
   $team_members = UserUtils::get_staff_modules_list_by_modID($_GET['module'], $mysqli);
 
-  echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:12px 4px 8px 4px; font-size:90%\" id=\"list\">";
+  echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:10px 4px 6px 4px; font-size:90%\" id=\"list\">";
   $staff_no = 0;
   $old_letter = '';
 
@@ -166,7 +166,7 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"staff_no\" value=\"$staff_no\" /></div></td>\n</tr>\n";
 ?>
 
-<div style="text-align:center"><input style="width:130px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;&nbsp;<input style="width:80px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

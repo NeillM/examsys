@@ -189,7 +189,7 @@ for ($size=200; $size<850; $size+=50) {
 ?>
 </td>
 </tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:130px; font-size:90%" />&nbsp;&nbsp;<input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px; font-size:90%" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" style="font-size:90%" /><input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="font-size:90%" /></td></tr>
 </table>
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 </form>

@@ -7,10 +7,11 @@ html, body {
 	background-color: #FCE699;
 }
 textarea {
+	margin-top: 2px;
 	border: 1px solid #E6B10D;
 	background-color: transparent;
-	width: 99%;
-	height: 275px;
+	width: 99.5%;
+	height: 300px;
 }
 select {
 	width: 99%;

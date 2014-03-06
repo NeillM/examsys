@@ -27,18 +27,25 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
-require_once '../../classes/killer_question.class.php';
 
-$paperID = check_var('paperID', 'GET', true, false, true);
-$q_id = check_var('q_id', 'GET', true, false, true);
+require_once '../../classes/killer_question.class.php';
+require_once '../../classes/logger.class.php';
+
+$paperID	= check_var('paperID', 'POST', true, false, true);
+$q_id			= check_var('q_id', 'POST', true, false, true);
+$qNumber	= check_var('qNumber', 'POST', true, false, true);
 
 $killer_questions = new Killer_question($paperID, $mysqli);
 $killer_questions->load();			// Get the existing killer questions for the paper.
 
+$logger = new Logger($mysqli);
+
 if ($killer_questions->is_killer_question($q_id)) {
 	$killer_questions->unset_question($q_id);
+  $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'on', 'off', "killer question $qNumber");
 } else {
 	$killer_questions->set_question($q_id);
+  $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'off', 'on', "killer question $qNumber");
 }
 $killer_questions->save();
 

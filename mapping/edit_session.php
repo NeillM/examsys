@@ -350,8 +350,7 @@ echo '</ul>';
 //add the save buttens
 echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
 echo '<li style="margin: 0.5em; margin-left: 0.5em; text-align: center">';
-echo '<input name="Edit" style="height=90%; width: 130px;" type="submit" value="' . $string['save'] . '" >&nbsp;&nbsp;';
-echo '<input name="cancel" style="width: 80px;" type="submit" value="' . $string['cancel'] . '">';
+echo '<input name="Edit" class="ok" type="submit" value="' . $string['save'] . '" ><input name="cancel" class="cancel" type="submit" value="' . $string['cancel'] . '">';
 echo '</li>';
 echo "</ul>\n";
 

@@ -920,9 +920,10 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes_tab\" style=\"width:100%; display:none\">\n";
   }
-  $link_html = '<nobr><img src="../artwork/shortcut.png" onclick="newStudentNote()" width="10" height="10" border="0" />&nbsp;<a href="" onclick="newStudentNote(); return false;" class="access">' . $string['createnote'] . '</a>&nbsp;</nobr>';
-  echo drawTabs('Notes', 4, $link_html, $tmp_roles, $bg_color);
+  echo drawTabs('Notes', 4, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;" . $string['date'] . "</td><td class=\"coltitle\">" . $string['paper'] . "</td><td class=\"coltitle\">" . $string['note'] . "</td><td class=\"coltitle\">" . $string['author'] . "</td></tr>\n";
+  
+	echo "<tr><td colspan=\"4\"><input type=\"button\" name=\"createname\" onclick=\"newStudentNote()\" value=\"" .  $string['newnote'] . "\" /></td></tr>\n";
 
   $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \" {$configObject->get('cfg_short_date')}\"), paper_id, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID = users.id AND student_notes.userID = ?");
   $results->bind_param('i', $tmp_id);

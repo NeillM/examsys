@@ -55,9 +55,9 @@ function list_modules($mod, $id, $student_mod) {
   $old_letter = '';
 
   if ($id == '1') {
-    echo "<div style=\"display:block; width:100%; border-bottom:10px\" id=\"list$id\">";
+    echo "<div style=\"display:block; width:100%; border-bottom:6px\" id=\"list$id\">";
   } else {
-    echo "<div style=\"display:none; width:100%; border-bottom:10px\" id=\"list$id\">";
+    echo "<div style=\"display:none; width:100%; border-bottom:6px\" id=\"list$id\">";
   }
 
   echo drawTabs($id);
@@ -233,7 +233,7 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"session\" value=\"" . $session . "\" /></div></td>\n</tr>\n";
 ?>
 <br /><br />
-<div align="center"><input style="width:130px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;&nbsp;<input style="width:80px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

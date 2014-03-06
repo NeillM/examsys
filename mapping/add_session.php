@@ -300,8 +300,7 @@ if (isset($_POST['Save'])) {
     //add the save buttens
     echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
     echo '<li style="margin:0.5em; margin-left:0.5em; text-align:center">';
-    echo '<input name="Save" style="width:120px" type="submit" value="' . $string['save'] . '" />&nbsp;&nbsp;';
-    echo '<input name="cancel" style="width:120px" type="button" value="' . $string['cancel'] . '" onclick="cancelForm();" />';
+    echo '<input name="Save" class="ok" type="submit" value="' . $string['save'] . '" /><input name="cancel" class="cancel" type="button" value="' . $string['cancel'] . '" onclick="cancelForm();" />';
     echo '</li>';
     echo "</ul>\n";
 

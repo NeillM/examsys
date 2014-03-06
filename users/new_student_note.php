@@ -135,26 +135,35 @@ if (isset($_POST['submit'])) {
 		
 		$current_year = date_utils::get_current_academic_year();
 		$module_IDs = array();
-		foreach ($student_modules[$current_year] as $moduleID=>$module_code) {
-			$module_IDs[] = $moduleID;
+		if (isset($student_modules[$current_year])) {
+			foreach ($student_modules[$current_year] as $moduleID=>$module_code) {
+				$module_IDs[] = $moduleID;
+			}
 		}
 		
     echo $string['papername'] . " <select name=\"paperID\" id=\"paperID\" required>\n<option value=\"\"></option>\n";
-    $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (" . implode(',', $module_IDs) . ") AND paper_type = '2' AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title");
-		$result->execute();
-    $result->bind_result($property_id, $paper_title);
-    while ($result->fetch()) {
-      echo "<option value=\"$property_id\">$paper_title</option>\n";
-    }
-    echo "</select>\n<br />\n";
-    $result->close();
+    if (count($module_IDs) > 0) {
+			// Look up summative papers that have been live in the last 28 days.
+			$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (" . implode(',', $module_IDs) . ") AND paper_type = '2' AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title");
+			$result->execute();
+			$result->bind_result($property_id, $paper_title);
+			while ($result->fetch()) {
+				echo "<option value=\"$property_id\">$paper_title</option>\n";
+			}
+			echo "</select>\n<br />\n";
+			$result->close();
+
+			$disabled = '';
+		} else {
+			$disabled = ' disabled="disabled"';
+		}
   }
   
   echo "<br />" . $string['note'] . "<br />\n";
   echo "<div style=\"text-align:center\"><textarea name=\"note\" id=\"note\" required>" . $note_details['note'] . "</textarea></div>\n";
 ?>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="userID" value="<?php echo $_GET['userID']; ?>" />
 <input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling']; ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
