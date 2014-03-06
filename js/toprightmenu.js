@@ -11,8 +11,6 @@ $(document).ready(function(event) {
 	$('.header').click(function() {
 		if ($('#toprightmenu').is(':visible')) {
 			$('#toprightmenu').fadeOut();
-		} else {
-			$('#toprightmenu').fadeIn();
 		}
 	});
 	

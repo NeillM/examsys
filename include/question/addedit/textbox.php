@@ -18,7 +18,7 @@
 * 
 * @author Rob Ingram
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -27,7 +27,7 @@ $columns = range(10, 120, 10);
 $rows = range(1, 15);
 $editors = array('plain' => $string['plaintext'], 'WYSIWYG' => $string['wysiwyg']);
 
-if(count($question->options) > 0) {
+if (count($question->options) > 0) {
   $option = reset($question->options);
   $marks_correct = $option->get_marks_correct();
   $terms = $option->get_correct();
@@ -80,7 +80,7 @@ require_once 'detail_parts/details_marking.php';
             <tr>
               <th><label for="terms"><?php echo $string['terms'] ?></label><br /><span class="note"><?php echo $string['termsmsg'] ?></span></th>
               <td>
-                <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"><?php echo $terms ?></textarea>
+                <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"<?php echo $allow_change_method ?>><?php echo $terms ?></textarea>
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
               </td>
             </tr>

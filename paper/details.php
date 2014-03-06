@@ -385,7 +385,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script defer="defer" type="text/javascript">
-  var paperID='<?php echo $_GET['paperID'] ?>';
+  var paperID = '<?php echo $paperID; ?>';
 
   function addQID(qID, pID, clearall) {
     if (clearall) {
@@ -481,6 +481,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
+
   function edQ(questionNo, questionID, qType) {
     var loc = "../question/edit/index.php?q_id=" + questionID + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + $('#scrOfY').val();
     if (qType == 'random' || qType == 'keyword_based') {
@@ -517,6 +518,10 @@ function check_latex_random($q_ids, $mysqli) {
 			echo "  window.scrollTo(0," . $_GET['scrOfY'] . ");\n";
 		}
 		?>
+	
+		$('#left-sidebar').click(function() {
+			$('#copy_submenu').hide();
+		});
 	
 		$(window).scroll(function() {
 			scrollXY();

@@ -430,14 +430,19 @@ label.error {
 }
 
 textarea, input[type=text], select {
-	font-family:Arail,sans-serif;
 	font-size:100%;
-	border: 1px solid #7F9DB9;
+  border: 1px solid #7F9DB9;
   overflow: auto;
 }
 
 input[type=text] {
 	overflow: hidden;
+}
+
+textarea[disabled], select:disabled, input[type=text].disabled, .editor-disabled {
+  border: 1px solid #ccc;
+  background-color: #F9F9F9;
+	color: #595959;
 }
 
 /* Media */
@@ -595,12 +600,6 @@ input[type=text] {
   margin: 0;
   padding: 0;
   display: none;
-}
-
-textarea.disabled, select:disabled, input[type=text].disabled, .editor-disabled {
-  border: 1px solid #ccc;
-  background-color: #F9F9F9;
-	color: #595959;
 }
 
 .editor-disabled {
