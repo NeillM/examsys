@@ -161,9 +161,14 @@ if (count($moduleIDs) > 0) {
 		qNumber = $('#questionNo').val();
 		url = '../ajax/paper/set_unset_killer_question.php';
 		
+		if ( $("#icon_" + qNumber).hasClass("killer_icon") ) {
+			$("#icon_" + qNumber).removeClass("killer_icon");
+		} else {
+			$("#icon_" + qNumber).addClass("killer_icon");
+		}
+		
 		var posting = $.post(url, { paperID: <?php echo $paperID; ?>, q_id: qID, qNumber: qNumber } );
 		
-		location.reload();
 	}
 
   function deletePaper() {

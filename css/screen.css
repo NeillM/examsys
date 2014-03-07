@@ -209,3 +209,9 @@ input {
 	padding-left:20px;
 	color:#808080;
 }
+.killer_icon {
+	width: 17px;
+  background-image:url('../artwork/skull_16.png');
+	background-repeat:no-repeat;
+	background-position: 1px center
+}

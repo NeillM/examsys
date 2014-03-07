@@ -408,7 +408,7 @@ function check_latex_random($q_ids, $mysqli) {
     $('.highlight').removeClass('highlight');
   }
 
-  function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, killerq, evt) {
+  function selQ(questionNo, questionID, lineID, qType, screenNo, pID, current_pos, menuID, subparts, evt) {
     $('#menu2a').hide();
     if (menuID == '2b') {
       $('#menu2c').hide();
@@ -467,7 +467,7 @@ function check_latex_random($q_ids, $mysqli) {
 <?php
 	if ($properties->get_paper_type() == '4') {			// OSCE stations
 ?>
-		if (killerq == 1) {
+		if ( $("#icon_" + questionNo).hasClass("killer_icon") ) {
 			$("span.killer").html('<?php echo $string['unsetkillerquestion']; ?>');
 		} else {
 			$("span.killer").html('<?php echo $string['setkillerquestion']; ?>');
@@ -906,6 +906,14 @@ function check_latex_random($q_ids, $mysqli) {
       $status_class = ' status' . $temp_array[$x]['status'];
     }
 
+		$killer = 0;
+		if (isset($killer_questions) and $killer_questions->is_killer_question($temp_array[$x]['q_id'])) {
+			$killer = 1;
+			$killer_class = ' killer_icon';
+		} else {
+			$killer_class = '';
+		}
+		
     $theme_class = '';
     $theme_str = '';
     if (trim($temp_array[$x]['theme']) != '') {
@@ -929,26 +937,18 @@ function check_latex_random($q_ids, $mysqli) {
       $next_screen = $temp_array[$x + 1]['screen'];
     }
 
-		$killer = 0;
-		if (isset($killer_questions) and $killer_questions->is_killer_question($temp_array[$x]['q_id'])) {
-			$killer = 1;
-		}
-
     if ($properties->get_summative_lock()) {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",$killer,event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     } else {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",$killer,event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     }
 
-    echo '<td>';
+    echo "<td id=\"icon_" . ($question_number+1) . "\" class=\"{$killer_class}\">";
     if ($temp_array[$x]['q_type'] == 'random') {
       $dice_no = rand(1, 6);
       if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
       echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
     }
-		if ($killer) {
-      echo '<img src="../artwork/skull_16.png" width="16" height="16" alt="skull" style="position:relative; left:1px;" />';
-		}
     echo '</td>';
 
     if ($temp_array[$x]['q_type'] == 'info') {
