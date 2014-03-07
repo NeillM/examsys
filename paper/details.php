@@ -467,10 +467,14 @@ function check_latex_random($q_ids, $mysqli) {
 <?php
 	if ($properties->get_paper_type() == '4') {			// OSCE stations
 ?>
-		if ( $("#icon_" + questionNo).hasClass("killer_icon") ) {
+		if ( $("#icon_" + questionNo).hasClass("info_class") ) {
+			$("span.killer").addClass('greymenuitem');
+		} else if ( $("#icon_" + questionNo).hasClass("killer_icon") ) {
 			$("span.killer").html('<?php echo $string['unsetkillerquestion']; ?>');
+			$("span.killer").removeClass('greymenuitem');
 		} else {
 			$("span.killer").html('<?php echo $string['setkillerquestion']; ?>');
+			$("span.killer").removeClass('greymenuitem');
 		}
 <?php
 	}
@@ -943,7 +947,13 @@ function check_latex_random($q_ids, $mysqli) {
       echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     }
 
-    echo "<td id=\"icon_" . ($question_number+1) . "\" class=\"{$killer_class}\">";
+    if ($temp_array[$x]['q_type'] == 'info') {
+			$info_class = ' info_class';
+		} else {
+			$info_class = '';
+		}
+
+    echo "<td id=\"icon_" . ($question_number+1) . "\" class=\"{$killer_class}{$info_class}\">";
     if ($temp_array[$x]['q_type'] == 'random') {
       $dice_no = rand(1, 6);
       if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
