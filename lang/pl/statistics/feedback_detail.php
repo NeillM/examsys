@@ -14,10 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/include/months.inc';
+
+$string['summativeexamfeedback'] = 'Informacje zwrotne dot. egazminu końcowego';
+$string['feedbackstats'] = 'Statystyka informacji zwrotnych';
 $string['administrativetools'] = 'Narzędzia administracyjne';
-$string['statisticsreports'] = 'Raporty Statystyczne';
-$string['questionsbyschool'] = 'Pytania wg. katedry';
-$string['papersbyschool'] = 'Arkusze wg. katedry';
-$string['summativefeedback'] = 'Odzew dot. egzaminu końcowego';
-$string['summativeexamstats'] = 'Egzaminy końcowe';
+$string['statistics'] = 'Statystyka';
+$string['paper'] = 'Arkusz';
+$string['feedbackreleased'] = 'Informacje zwrotne uwolnione';
+$string['students'] = 'Studenci';
+$string['feedbackviewed'] = 'Informacje zwrotne przejrzane';
+$string['objectivefeedback'] = 'Informacje zwrotne dot. celów';
+$string['questionfeedback'] = 'Informacje zwrotne dot. pytań';
+$string['cohortperformance'] = 'Osiągnięcia grupy';
 ?>

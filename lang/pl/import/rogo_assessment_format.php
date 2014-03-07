@@ -17,8 +17,8 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 
 $string['importraf'] = 'Importuj format egzaminu Rog&#333;';
-$string['file'] = 'File';
-$string['importfile'] = 'Import File';
-$string['invalidzip'] = 'This is an invalid ZIP file.';
-$string['invalidraf'] = 'This is an invalid Rogo Assessment File (RAF).';
+$string['file'] = 'Plik';
+$string['importfile'] = 'Importuj plik';
+$string['invalidzip'] = 'Ten plik ZIP jest nieczytelny.';
+$string['invalidraf'] = 'Ten plik RAF (Rogo Assessment File) jest nieczytelny.';
 ?>

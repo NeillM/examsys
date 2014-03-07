@@ -68,7 +68,6 @@ $string['date'] = 'Data';
 $string['paper'] = 'Arkusz';
 $string['note'] = 'Notatka'; 
 $string['author'] = 'Autor';
-$string['createnote'] = 'Utwórz nową notatkę';
 $string['extratime'] = 'Dodatkowy czas';
 $string['fontsize'] = 'Rozmiar liter';
 $string['typeface'] = 'Czcionka';
@@ -103,6 +102,7 @@ $string['forcereset'] = 'Wymuś reset';
 $string['classifiedinfo'] = 'informacja zastrzeżona';
 $string['custom'] = 'Własna';
 $string['Access Denied']='Brak dostępu';
+$string['newnote'] = 'Nowa notatka...';
 
 //demo
 $string['demo1'] = 'Miasta';

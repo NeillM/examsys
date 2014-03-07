@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['classtotals'] = 'Zestawienie klasy';
-$string['studentsonly'] = 'Tylko studenci';
+$string['studentsonly'] = 'Tylko próby studenckie';
 $string['paper'] = 'Arkusz';
 $string['temporaryaccountswarning'] = '<strong>Uwaga dot. kont tymczasowych</strong>&nbsp;&nbsp;&nbsp;Przypisz je do właściwych kont studenckich.';
 $string['unmarkedenhancedcalc'] = '<strong>Pytania nie ocenione</strong>&nbsp;&nbsp;&nbsp;Niektóre pytania <em>obliczeniowe</em> nie zostały jeszcze ocenione.';
