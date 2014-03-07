@@ -15,5 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['frequencyanalysis'] = 'Analiza częstości';
-$string['studentsonly'] = 'students only';
+$string['studentsonly'] = 'tylko próby studenckie';
 ?>

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['error1'] = 'No module selected so no students could be found.';
-$string['error2'] = 'No academic year set so no students could be found.';
-$string['error3'] = 'No students have been found on the module.';
+$string['error1'] = 'Nie wybrano modułu dlatego nie można było znaleźć studentów.';
+$string['error2'] = 'Nie okreslono roku akademickiego dlatego nie można było znaleźć studentów.';
+$string['error3'] = 'Nie znaleziono studentów w tym module.';
 ?>

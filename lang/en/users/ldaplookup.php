@@ -20,8 +20,6 @@ $string['lookup'] = 'Lookup';
 $string['nousersalert'] = 'No users found in LDAP lookup.';
 $string['title'] = 'Title';
 $string['first_names'] = 'First Names';
-$string['surname'] = 'Surname';
-$string['username'] = 'Username';
 $string['email'] = 'Email';
 $string['role'] = 'Role';
 ?>

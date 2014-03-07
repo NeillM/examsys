@@ -323,12 +323,12 @@ function polyDrawH(ctx,cc,cb,xx,yy,pp,mode) {
   var tpi = new Array(); //array of line interconnections
   var qq = new Array(); //corrected
   var templw = this.context.lineWidth;
-  var d1 = 2.5;
-  var d2 = 6;
+  var d1 = 3.5;
+  var d2 = 7;
   var int_count = 0;
   this.context.lineJoin = "round";
 	this.context.lineCap = "round";
-	yy=yy-0.5;
+	//yy=yy-0.5;
   this.context.beginPath();
   var tx0,ty0,tx1,ty1,tx2,ty2,tx3,ty3,ta,tb;
   tx2 = parseInt(pp[0].trim(), 16)+xx+0.5;

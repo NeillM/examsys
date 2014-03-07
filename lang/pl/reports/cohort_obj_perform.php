@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['studentsonly'] = 'Tylko studenci';
+$string['studentsonly'] = 'Tylko próby studenckie';
 $string['learningobjectiveanalysis'] = 'Analiza celów kształcenia';
 $string['msg1'] = 'Ten arkusz nie był przez nikogo wybrany';
 $string['msg2'] = 'Ten arkusz nie odwzorowuje żadnych celów kształcenia.';
