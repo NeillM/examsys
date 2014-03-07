@@ -60,7 +60,6 @@ function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) 
         $tmp_duration += $_POST['previous_duration'];
         $extcomments = $_POST["extcomments$question_no"];
         
-        //var_dump("INSERT INTO review_comments VALUES (NULL, $paper_id, $q_id, " . $_POST["exttype$question_no"] . ", $extcomments, $userid, " . $_POST['sessionid'] . ", 'Not actioned', '', ?, '" . NetworkUtils::get_client_address() . "', $tmp_duration, " . $_POST['old_screen'] . ")");
         $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, ?, ?, ?, 'Not actioned', '', ?, '" . NetworkUtils::get_client_address() . "', $tmp_duration, ?)");
         $result->bind_param('iiisissi', $paper_id, $q_id, $_POST["exttype$question_no"], $extcomments, $userid, $_POST['sessionid'], $review_type, $_POST['old_screen']);
         $result->execute();  
