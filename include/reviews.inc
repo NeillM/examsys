@@ -28,16 +28,18 @@ function time_to_seconds($seconds) {
   $hr = intval(substr($seconds,8,2));
   $min = intval(substr($seconds,10,2));
   $sec = intval(substr($seconds,12,2));
+	
   return ($hr * 3600) + ($min * 60) + $sec;
 }
 
 function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) {
+	
   $question_no = 0;
   $old_q_id = NULL;
   $userid = trim($userid);
   $submit_time = date("YmdHis", time());
 
-  $stmt = $dblink->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper=? AND screen=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $stmt = $dblink->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper = ? AND screen = ? AND papers.question = questions.q_id ORDER BY display_pos");
   $stmt->bind_param('ii', $paper_id, $screen_no);
   $stmt->execute();
   $stmt->bind_result($q_id, $q_type);
@@ -48,7 +50,7 @@ function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) 
       if ($q_type != 'info') {
         $question_no++;
         
-        $result = $dblink->prepare("DELETE FROM review_comments WHERE q_paper=? AND q_id=? AND reviewer=?");
+        $result = $dblink->prepare("DELETE FROM review_comments WHERE q_paper = ? AND q_id = ? AND reviewer = ?");
         $result->bind_param('iis', $paper_id, $q_id, $userid);
         $result->execute();  
         $result->close();
@@ -58,6 +60,7 @@ function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) 
         $tmp_duration += $_POST['previous_duration'];
         $extcomments = $_POST["extcomments$question_no"];
         
+        //var_dump("INSERT INTO review_comments VALUES (NULL, $paper_id, $q_id, " . $_POST["exttype$question_no"] . ", $extcomments, $userid, " . $_POST['sessionid'] . ", 'Not actioned', '', ?, '" . NetworkUtils::get_client_address() . "', $tmp_duration, " . $_POST['old_screen'] . ")");
         $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, ?, ?, ?, 'Not actioned', '', ?, '" . NetworkUtils::get_client_address() . "', $tmp_duration, ?)");
         $result->bind_param('iiisissi', $paper_id, $q_id, $_POST["exttype$question_no"], $extcomments, $userid, $_POST['sessionid'], $review_type, $_POST['old_screen']);
         $result->execute();  

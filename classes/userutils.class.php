@@ -122,11 +122,11 @@ Class UserUtils {
     if ($userID == '' or $password == '') {
       return false;
     }
-    
-    $salt = UserUtils::get_salt();
+
+		$salt = UserUtils::get_salt();
     $encrypt_password = encpw($salt, $username, $password);
 
-    $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt = $db->prepare("UPDATE users SET password = ?, password_expire = NULL WHERE id = ?");
     $stmt->bind_param('si', $encrypt_password, $userID);
     if (!$stmt->execute()) {
       $success = false;

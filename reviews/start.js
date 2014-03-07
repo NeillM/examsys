@@ -45,19 +45,32 @@ function confirmSubmit() {
     return true;
   }
 }
-function checkMRQ(questionid,part_id,options_total,selectable) {
+
+function MRQ(questionid, part_id, options_total, selectable) {
+	var abstainExist = document.getElementById("q" + questionid + "_abstain");
+	if (abstainExist != null) {
+		$("#q" + questionid + "_abstain").prop("checked", false);
+	}
+	
   checked_total = 0;
   for (i=1; i<=options_total; i++) {
     currentid = "q" + questionid + "_" + i;
-    if (document.getElementById(currentid).checked == 1) {
+    if ($('#' + currentid).prop("checked")) {
       checked_total++;
     }
   }
   if (checked_total > selectable) {
-    alert(lang['msgselectable1'] + selectable + lang['msgselectable2']);
-    document.getElementById("q" + questionid + "_" + part_id).checked = 0;
+		alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+		$("#q" + questionid + "_" + part_id).prop("checked", false);
   }
 }
+
+function MRQabstain(questionid, options_total) {
+  for (i=1; i<=options_total; i++) {
+		$("#q" + questionid + "_" + i).prop("checked", false);
+  }
+}
+
 function rankCheck(questionid,part_id,options_total,selectable) {
   checked_total = 0;
   duplicate = 0;

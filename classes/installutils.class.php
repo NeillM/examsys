@@ -2626,7 +2626,7 @@ QUERY;
           `action` enum('Not actioned','Read - disagree','Read - actioned') default NULL,
           `response` text,
           `review_type` enum('External','Internal') default NULL,
-          `ipaddress` varchar(15) default NULL,
+          `ipaddress` varchar(60) default NULL,
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
           PRIMARY KEY (`id`),

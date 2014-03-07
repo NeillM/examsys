@@ -31,6 +31,7 @@ require_once '../classes/paperutils.class.php';
 if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['summative']) and isset($_POST['survey']) and isset($_POST['osce']) and isset($_POST['offline']) and isset($_POST['peerreview'])) {
   // All types are selected so don't build into query.
   $type = '';
+	$type_problem = false;
 } else {
   $type = '';
   if (isset($_POST['formative']) and $_POST['formative'] == '1') $type .= " OR paper_type='0'";
@@ -40,7 +41,13 @@ if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['s
   if (isset($_POST['osce']) and $_POST['osce'] == '1') $type .= " OR paper_type='4'";
   if (isset($_POST['offline']) and $_POST['offline'] == '1') $type .= " OR paper_type='5'";
   if (isset($_POST['peerreview']) and $_POST['peerreview'] == '1') $type .= " OR paper_type='6'";
-  if (strlen($type) > 0) $type = 'AND (' . substr($type,4) . ')';
+  if (strlen($type) > 0) {
+		$type = 'AND (' . substr($type,4) . ')';
+		$type_problem = false;
+	} else {
+		$type_problem = true;
+	}
+	
 }
 
 $params = '';
@@ -124,7 +131,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   }
 
   if (isset($_POST['submit'])) {
-	  if ($type == '') {
+	  if ($type_problem) {
 			echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
 			echo "</table>\n";
 			echo $notice->info_strip('No paper types have been selected.', 100);

@@ -340,7 +340,7 @@ var lang = {
   var jumpScreen = function () {
 		$('#button_pressed').val('jump_screen');
 		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
-		return userSubmit(null);
+		$('#qForm').submit();
   }
 
 <?php
@@ -352,9 +352,9 @@ var lang = {
 <div id="maincontent">
 <?php
 if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'];
+  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'];
 } else {
-  echo "<form method=\"post\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'];
+  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'];
 }
 echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear navigation mode.
 ?>

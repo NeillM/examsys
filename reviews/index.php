@@ -40,6 +40,7 @@ require_once '../classes/paperutils.class.php';
   <title><?php echo $string['externalexaminerarea']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
     body {font-size:90%}
@@ -49,17 +50,16 @@ require_once '../classes/paperutils.class.php';
 
 <body>
 
-<table cellspacing="0" cellpadding="0" border="0" style="width:100%; background-color:#F1F5FB">
+<table cellspacing="0" cellpadding="0" border="0" class="header">
 <tr>
-<td><div style="padding-left:15px">
+<th><div style="padding-left:15px">
   <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
   <div class="logo_lrg_txt">Rog&#333;</div>
   <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
 </div>
-</td>
-<td align="right"><?php echo $logo_html; ?></td>
+</th>
+<th style="text-align:right"><?php echo $logo_html; ?></th>
 </tr>
-<tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
 </table>
 
 <p style="font-size:130%; font-weight:bold; margin-left:15px"><?php echo $string['instructions']; ?></p>
