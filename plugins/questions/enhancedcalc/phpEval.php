@@ -26,8 +26,6 @@
  * @package
  */
 
-require_once('rserve/Connection.php');
-
 class EnhancedCalc_phpEval {
 
   protected $impliments_api_calc_version = 1;
@@ -83,8 +81,6 @@ class EnhancedCalc_phpEval {
   }
 
   function calculate_correct_ans($vars, $formula) {
-    
-
     
     $varname = array_keys($vars);
     $varvalue = array_values($vars);
