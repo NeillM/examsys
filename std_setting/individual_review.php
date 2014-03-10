@@ -616,7 +616,11 @@ function check_ebel_distinction_type($reviewID, $db) {
     ?>
     <blockquote style="margin-top:8px; margin-bottom:8px">
 <?php
-    $ebel_dist = check_ebel_distinction_type($_GET['std_setID'], $mysqli);	
+		if (isset($_GET['std_setID'])) {
+			$ebel_dist = check_ebel_distinction_type($_GET['std_setID'], $mysqli);	
+		} else {
+			$ebel_dist = 'grid';
+		}
 ?>
     <input type="radio" id="distinction_type_grid" name="distinction_type" value="1"<?php if ($ebel_dist == 'grid') echo ' checked="checked"'; ?> /> <label for="distinction_type_grid"><?php echo $string['gridbelow']; ?></label><br />
     <input type="radio" id="distinction_type_t20" name="distinction_type" value="2"<?php if ($ebel_dist == 'top20') echo ' checked="checked"'; ?> /> <label for="distinction_type_t20"><?php echo $string['top20']; ?></label><br />
