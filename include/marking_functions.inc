@@ -442,6 +442,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           $totalpos = null;
         }
         $saved_response = EnhancedCalc::process_user_answer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
+
         //unset($_SESSION['qid'][$log_id]);
         break;
       case 'dichotomous':

@@ -835,7 +835,7 @@ if ($student_no > 0) {
             }
             break;
           case 'blank':
-            $correct_parts = explode(',',$question['correct']);
+            $correct_parts = explode(',', $question['correct']);
             $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
             $correct_parts = explode(',',$question['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
@@ -852,8 +852,12 @@ if ($student_no > 0) {
             break;
           case 'enhancedcalc':
             if (!isset($excluded[$tmp_question_ID])) {
-              $answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
-              if (isset($answer['uans'])) {
+							if (isset($individual[$tmp_screen][$tmp_question_ID])) {		// Check for missing answers.
+								$answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
+              } else {
+								$answer = '';
+							}
+							if (isset($answer['uans'])) {
 								$csv .= ',' . $answer['uans'];
 							} else {
 								$csv .= ',error';
@@ -864,13 +868,15 @@ if ($student_no > 0) {
 								$csv .= ',error';
 							}
               $variables = '';
-              foreach ($answer['vars'] as $var_name => $value) {
-                if ($variables == '') {
-                  $variables .= $value;
-                } else {
-                  $variables .= ',' . $value;
-                }
-              }
+							if (isset($answer['vars'])) {
+								foreach ($answer['vars'] as $var_name => $value) {
+									if ($variables == '') {
+										$variables .= $value;
+									} else {
+										$variables .= ',' . $value;
+									}
+								}
+							}
               $csv .= ',"' . $variables . '"';
             }
             break;

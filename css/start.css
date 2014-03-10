@@ -249,3 +249,8 @@ pre {
   font-size:120%;
   padding-bottom:10px;
 }
+.var_error {
+	background-color: #FFC0C0;
+	padding-left: 4px;
+	padding-right: 4px;
+}

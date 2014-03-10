@@ -37,7 +37,7 @@ $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $paper            = $propertyObj->get_paper_title();
 $marking          = $propertyObj->get_marking();
@@ -70,7 +70,7 @@ $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
 
-if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) {
+if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) or ($paper_type == '1' and $report->unmarked_enhancedcalc())) {
 // Only mark calculation questions when the exam is not active.
 ?>
 <!DOCTYPE html>
@@ -105,7 +105,8 @@ if ($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyO
 				}
 			},
 			error: function (xhr, textStatus, errorThrown) {
-				$("#msg").html('Error: ' + errorThrown);
+			
+				$("#msg").html('Error: ' + xhr.getAllResponseHeaders()  );
 			},
 			fail: function (jqXHR, textStatus) {
 				$("#msg").html('Failed: ' + textStatus);
