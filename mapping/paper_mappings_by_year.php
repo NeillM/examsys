@@ -26,11 +26,12 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/mapping.inc';
+require '../include/errors.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 
-$paperID = $_GET['paperID'];
+$paperID = check_var('paperID', 'GET', true, false, true);
 
 function getPaper($paperID) {
   global  $mysqli;
@@ -110,7 +111,6 @@ function getPaper($paperID) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
 
@@ -119,15 +119,13 @@ function getPaper($paperID) {
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
-  require '../include/paper_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(147);
 ?>
-
-<div id="content" class="content">
+<div id="content" class="content" style="font-size:80%">
 <?php
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
@@ -149,7 +147,7 @@ function getPaper($paperID) {
       $modules = explode(',', $_GET['module']);
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
     }
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
     echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n</table>\n";
   }
   $result->close();
@@ -158,8 +156,8 @@ function getPaper($paperID) {
 <table class="header">
 <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td class="taboff" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
   <td class="tabon"><?php echo $string['longitudinal']; ?></td>
   </table>
 </th><th style="width:100%; text-align:right">&nbsp;</th>
@@ -168,13 +166,13 @@ function getPaper($paperID) {
 </table><br/>
 <?php
 
-//look for other papers
-$papers[$_GET['paperID']] =  getPaper($_GET['paperID']);
-$moduleIDs = Paper_utils::get_modules($_GET['paperID'],$mysqli);
+// Look for other papers.
+$papers[$paperID] =  getPaper($paperID);
+$moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
 $moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
 $sql = "SELECT properties.property_id from properties,properties_modules WHERE properties.property_id = properties_modules.property_id AND  idMod IN ($moduleIDs_in) AND properties.property_id != ? AND paper_type = 3 AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND labs IS NOT NULL AND start_date < ? order by start_date DESC LIMIT 3";
 $papersRes = $mysqli->prepare($sql);
-$papersRes->bind_param('is', $_GET['paperID'],$start_date);
+$papersRes->bind_param('is', $paperID, $start_date);
 $papersRes->execute();
 $papersRes->bind_result($property_id);
 while ($papersRes->fetch()) {
@@ -184,7 +182,6 @@ while ($papersRes->fetch()) {
 $papersRes->close();
 
 if (isset($papers_tmp)) {
-  //$papers_tmp = array_reverse($papers_tmp);
   $i = 0;
   foreach ($papers_tmp as $p_id) {
     $papers[$p_id] = getPaper($p_id);

@@ -30,6 +30,7 @@ require '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/exclusion.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -52,7 +53,6 @@ $paper_type  = $propertyObj->get_paper_type();
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
@@ -67,15 +67,13 @@ $paper_type  = $propertyObj->get_paper_type();
   </script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
-  require '../include/paper_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(147);
 ?>
-
-<div id="content" class="content">
+<div id="content" class="content" style="font-size:80%">
 <?php
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
@@ -91,20 +89,12 @@ $paper_type  = $propertyObj->get_paper_type();
     $modules = explode(',', $_GET['module']);
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
   echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n</table>\n";
 
-  //build excluded array
   // Get any questions to exclude.
-  $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($q_id, $parts);
-  while ($result->fetch()) {
-    $excluded[$q_id] = $parts;
-  }
-  $result->close();
+	$exclusions = new Exclusion($paperID, $mysqli);
+	$exclusions->load();
 
   $old_p_id = 0;
   $row_no = 0;
@@ -145,8 +135,8 @@ $paper_type  = $propertyObj->get_paper_type();
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
   <td class="tabon"><?php echo $string['bysession']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_question.php?paperID=<?php echo $paperID; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $paperID; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
@@ -156,14 +146,14 @@ $paper_type  = $propertyObj->get_paper_type();
   $total_random_mark = 0;
   $total_marks = 0;
   if ($row_no > 0) {
-			$tmp_match = Paper_utils::academic_year_from_title($paper_title);
-      
-			if ($tmp_match !== false and $tmp_match != $session) {
-				echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-				echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
-				printf($string['nomatchsession'], $tmp_match, $session);
-				echo "</td></tr>\n</table>\n</td></tr>\n";
-			}
+		$tmp_match = Paper_utils::academic_year_from_title($paper_title);
+		
+		if ($tmp_match !== false and $tmp_match != $session) {
+			echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
+			echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
+			printf($string['nomatchsession'], $tmp_match, $session);
+			echo "</td></tr>\n</table>\n</td></tr>\n";
+		}
     ?>
     <tr>
     <td style="padding:0px">
@@ -194,7 +184,7 @@ $paper_type  = $propertyObj->get_paper_type();
               echo '<li class="mapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . ' <span class="mapping">';
               $i = 0;
               foreach ($objectives['mapped'] as $q_id) {
-                if (array_key_exists($q_id, $excluded)) {
+								if ($exclusions->get_exclusions_by_qid($q_id) != '0000000000000000000000000000000000000000') {
                   $class = 'q_excluded';
                 } else {
                   $class = 'q_ok';
@@ -205,7 +195,7 @@ $paper_type  = $propertyObj->get_paper_type();
               }
               echo'</span></li>';
             } else {
-              //could display unmaped obj here !!
+              // Could display unmapped objective here!
               echo '<li class="unmapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . '</li>';
             }
           }
@@ -223,5 +213,6 @@ $paper_type  = $propertyObj->get_paper_type();
 ?>
 </table>
 </div>
+
 </body>
 </html>

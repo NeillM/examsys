@@ -29,6 +29,7 @@ require '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/exclusion.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -51,7 +52,6 @@ $paper_type = $propertyObj->get_paper_type();
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
@@ -71,17 +71,14 @@ $paper_type = $propertyObj->get_paper_type();
   </script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
-  require '../include/paper_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(147);
 ?>
-
-<div id="content" class="content">
+<div id="content" class="content" style="font-size:80%">
 <?php
-
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
     $direction = 'asc';
@@ -96,28 +93,20 @@ $paper_type = $propertyObj->get_paper_type();
     $modules = explode(',', $_GET['module']);
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
   echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n</table>\n";
 
-  //build excluded array
   // Get any questions to exclude.
-  $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($q_id, $parts);
-  while ($result->fetch()) {
-    $excluded[$q_id] = $parts;
-  }
-  $result->close();
+	$exclusions = new Exclusion($paperID, $mysqli);
+	$exclusions->load();
 
   ?>
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td class="taboff" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_session.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
   <td class="tabon"><?php echo $string['byquestion']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  <td class="taboff" onclick="window.location.href='paper_mappings_by_year.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
@@ -217,9 +206,9 @@ $paper_type = $propertyObj->get_paper_type();
     }
     $old_screen = $temp_array[$x]['screen'];
 
-    $moduleIDs = Paper_utils::get_modules($paperID,$mysqli);
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $objByModule = getObjectivesByMapping($moduleIDs, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
-    if (array_key_exists($temp_array[$x]['q_id'], $excluded)) {
+    if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
       $class = 'mapping_exclueded';
     } else {
       $class = '';
