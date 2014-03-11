@@ -373,7 +373,7 @@ function qa_redraw_canvas() {
     this.menuRebuild(this.context);
 
     //frames
-    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeStyle='#c0c0c0';//'#7f9db9'; 
     this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
     
     if (this.global_clearpnl) this.build_msgbox((this.canvas.width/2-130),(this.canvas.height/2-40),260,80,lang_string['popUp_msg'],lang_string['popUp_yes'],lang_string['popUp_no'],'');
@@ -420,7 +420,7 @@ function qa_redraw_canvas() {
       this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,loupe_x,loupe_y-this.imgdata.height,this.imgdata.width,this.imgdata.height);
     }	
     // border
-    this.context.strokeStyle='#7f9db9'; 
+    this.context.strokeStyle='#909090';  //#7f9db9'; 
     this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1); 
 		
 		//testing the answer
@@ -571,8 +571,8 @@ function qa_mouseDragMove(e){
         for (var n=1;n<pp.length/2;n++) {
           var ttx = (parseInt(pp[n*2].trim(), 16)-parseInt(pp[n*2-2].trim(), 16))/2+parseInt(pp[n*2-2].trim(), 16);
           var tty = (parseInt(pp[n*2+1].trim(), 16)-parseInt(pp[n*2-1].trim(), 16))/2+parseInt(pp[n*2-1].trim(), 16);
-          if (this.testWithin(this.x,this.oy,ttx-3,tty-3,7,7)) this.handler_dot = n;
-          if (this.testWithin(this.x,this.oy,parseInt(pp[n*2-2].trim(), 16)-3,parseInt(pp[n*2-1].trim(), 16)-1,7,7)) this.handler_sqr = n;					
+          if (this.testWithin(this.x,this.oy,ttx-3.5,tty-3.5,7,7)) this.handler_dot = n;
+          if (this.testWithin(this.x,this.oy,parseInt(pp[n*2-2].trim(), 16)-3.5,parseInt(pp[n*2-1].trim(), 16)-3.5,7,7)) this.handler_sqr = n;					
         }
       }
 			

@@ -417,10 +417,10 @@ function qh_redraw_canvas() {
 
       //background & border
       this.imgdata = menuImages['toolbar/back_h1.png'];
-      this.context.strokeStyle= '#b3c7d9';			
+      this.context.strokeStyle= '#c0c0c0';//'#b3c7d9';			
       if (this.activeLabel == i && this.hotSpots.length>1) {
 				this.imgdata = menuImages['toolbar/back_h2.png'];
-				this.context.strokeStyle= '#fed55f';
+				this.context.strokeStyle= '#c0c0c0';//'#fed55f';
 			}
       
 			this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top,this.imgdata.width-2,this.imgdata.height,0.5,pan_y+0.5,300,pan_h);
@@ -475,10 +475,10 @@ function qh_redraw_canvas() {
 		if (this.qmode == 'script' && typeof(this.buttonBox[0])!='undefined') this.buttonBox[0][2] = pan_y+10;
 		
     //frames
-    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeStyle='#c0c0c0';//'#7f9db9'; 
     if (this.qmode == 'edit') this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
 
-    this.context.strokeStyle='#7f9db9';  
+    this.context.strokeStyle='#909090';//#7f9db9
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
 		this.draw_limit = Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
@@ -753,7 +753,7 @@ function qh_redraw_canvas() {
 		if (this.buttonOver!=-1) this.tooltip_draw(this.context,this.buttonBox[this.buttonOver]);
 
 		// border
-		this.context.strokeStyle='#7f9db9';  
+		this.context.strokeStyle='#909090';  //#7f9db9
 		this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1);
 		
 		//cursor blink

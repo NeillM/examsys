@@ -947,9 +947,9 @@ function ql_redraw_canvas() {
 
     //frames
     this.context.lineWidth = 1;
-    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeStyle='#c0c0c0';//'#7f9db9'; 
     if (this.qmode == 'edit') this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 		
-    this.context.strokeStyle='#7f9db9';  
+    this.context.strokeStyle='#909090';  //'#7f9db9';  
     this.context.strokeRect(220.5,0.5,this.canvas.width-220,this.canvas.height-1); 
     
     if (this.global_move && this.active_shape_move>-1) {      
@@ -1465,7 +1465,7 @@ function ql_redraw_canvas() {
 
     // border
     this.context.lineWidth = 1;
-    this.context.strokeStyle='#7f9db9';  
+    this.context.strokeStyle='#909090';  //'#7f9db9';  
 		this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1); //border
 	}
 }
