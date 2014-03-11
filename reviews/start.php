@@ -43,67 +43,54 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 
 check_var('id', 'GET', true, false, false);
-//session_start();
+
+// Get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $start_of_day_ts = strtotime('midnight');
 
-// Extract the get variables.
-if (isset($_GET['no_screens'])) {
-  $no_screens = $_GET['no_screens'];
-  $current_screen = $_GET['current_screen'];
-  $sessionid = $_GET['sessionid'];
-  $previous = $_GET['previous'];
-  $userid = $_GET['userid'];
-  $surname = $_GET['surname'];
-}
+/*
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+*/
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
-$stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs, users WHERE users.id = special_needs.userID AND special_needs = 1 AND users.id = ?");
-$stmt->bind_param('i', $userObject->get_user_ID());
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
-$stmt->fetch();
-$stmt->close();
+$marking 							= $propertyObj->get_marking();
+$paperID 							= $propertyObj->get_property_id();
+$start_date						= $propertyObj->get_start_date();
+$paper_type						= $propertyObj->get_paper_type();
+$original_paper_type	= $propertyObj->get_paper_type();
+$paper_prologue 			= $propertyObj->get_paper_prologue();
 
 // Get how many screens make up the question paper.
 $screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, q_type, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calculator, calendar_year, UNIX_TIMESTAMP(external_review_deadline), UNIX_TIMESTAMP(internal_review_deadline), latex_needed, password, questions.q_type, question FROM (properties, papers, questions) WHERE properties.property_id = papers.paper AND crypt_name = ? AND papers.question = questions.q_id ORDER BY screen");
-$stmt->bind_param('s', $_GET['id']);
+$stmt = $mysqli->prepare("SELECT screen, q_type, question FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
+$stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $q_type, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calculator, $calendar_year, $external_review_deadline, $internal_review_deadline, $latex_needed, $password, $q_type, $q_id);
+$stmt->bind_result($screen, $q_type, $q_id);
 while ($stmt->fetch()) {
   $no_screens = $screen;
-  $original_paper_type = $paper_type;
   if ($q_type != 'info') {
     $screen_data[$no_screens][] = array($q_type, $q_id);
-  }
-
-  // If set overwrite the default colours with the current users' special settings
-  if (!isset($bgcolor) or $bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-  if (!isset($fgcolor) or $fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-  if (!isset($textsize) or $textsize == 'NULL' or $textsize == '') $textsize = 90;
-  if (!isset($marks_color) or $marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-  if (!isset($themecolor) or $themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-  if (!isset($labelcolor) or $labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
-  if (!isset($font) or $font== 'NULL' or $font == '') $font = 'Arial';
-  $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
-
-  if ($userObject->has_role('External Examiner')) {
-    $review_type = 'External';
-    $review_deadline = $external_review_deadline;
-  } else {
-    $review_type = 'Internal';
-    $review_deadline = $internal_review_deadline;
   }
 }
 $stmt->free_result();
 $stmt->close();
 
-//get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
-
-$marking = $propertyObj->get_marking();
+// Determine which review deadline to use.
+if ($userObject->has_role('External Examiner')) {
+	$review_type = 'External';
+	$review_deadline = strtotime($propertyObj->get_external_review_deadline());
+} else {
+	$review_type = 'Internal';
+	$review_deadline = strtotime($propertyObj->get_internal_review_deadline());
+}
 
 // Get standards setting data
 if ($marking{0} == '2') {
@@ -131,9 +118,9 @@ function load_reference_materials($paperID, $db) {
 	$stmt->execute();
 	$stmt->bind_result($reference_title, $reference_material, $reference_width);
 	while ($stmt->fetch()) {
-		$reference_materials[$ref_no]['title'] = $reference_title;
-		$reference_materials[$ref_no]['material'] = $reference_material;
-		$reference_materials[$ref_no]['width'] = $reference_width;
+		$reference_materials[$ref_no]['title']		= $reference_title;
+		$reference_materials[$ref_no]['material']	= $reference_material;
+		$reference_materials[$ref_no]['width']		= $reference_width;
 		$ref_no++;
 	}
 	$stmt->close();
@@ -158,8 +145,27 @@ function get_max_reference_width($reference_materials) {
 	return $max_ref_width;
 }
 
+function load_reviews($paperID, $screen, $reviewerID, $db) {	
+	$reviews_array = array();
+	
+	$result = $db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen = ? AND reviewer = ?");
+	$result->bind_param('iii', $paperID, $screen, $reviewerID);
+	$result->execute();
+	$result->store_result();
+	$result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
+	while ($result->fetch()) {
+		$reviews_array[$q_id]['category'] = $category;
+		$reviews_array[$q_id]['comment'] = $comment;
+		$reviews_array[$q_id]['action'] = $action;
+		$reviews_array[$q_id]['response'] = $response;
+	}
+	$result->close();
+	
+	return $reviews_array;
+}
+
 // Load any reference materials.
-$reference_materials	= load_reference_materials($property_id, $mysqli);
+$reference_materials	= load_reference_materials($paperID, $mysqli);
 $max_ref_width 				= get_max_reference_width($reference_materials);
 
 // Extract the posted variables.
@@ -185,7 +191,7 @@ echo "<html>\n<head>\n";
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 
-<title><?php echo $paper_title; ?></title>
+<title><?php echo $propertyObj->get_paper_title(); ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
@@ -199,11 +205,11 @@ pre {
 	word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 .std {
-  display:block;
-  background-color:#f27000;
-  color:white;
-  width:35px;
-  text-align:center;
+  display: block;
+  background-color: #f27000;
+  color: white;
+  width: 35px;
+  text-align: center;
 }
 <?php
 $css = '';
@@ -244,7 +250,7 @@ if ($css != '') {
 <script type="text/javascript" src="start.js"></script>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<?php if ($latex_needed == 1) {?>
+<?php if ($propertyObj->get_latex_needed() == 1) {?>
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
@@ -323,7 +329,7 @@ var lang = {
 ?>
   }
 <?php
-  if ($bidirectional == 0) {
+  if ($propertyObj->get_bidirectional() == 0) {
 ?>
   function confirmSubmit() {
     var agree = confirm("<?php echo $string['confirmsubmit'] ?>");
@@ -362,11 +368,11 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   <tr><td valign="top">
   <?php
   if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
-    record_comments($property_id, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
+    record_comments($paperID, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
   }
 
   echo $top_table_html;
-  echo '<tr><td><div class="paper">' . $paper_title . '</div>';
+  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div>';
   $question_offset = 0;
   if ($no_screens > 1) {
     for ($i=1; $i<=$no_screens; $i++) {
@@ -417,20 +423,10 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
 
   $previous_duration = 0;
   $screen_pre_submitted = 0;
-  $reviews_array = array();
-  $result = $mysqli->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen = ? AND reviewer = ?");
-  $result->bind_param('iii', $property_id, $current_screen, $userObject->get_user_ID());
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
-  while ($result->fetch()) {
-    $reviews_array[$q_id]['category'] = $category;
-    $reviews_array[$q_id]['comment'] = $comment;
-    $reviews_array[$q_id]['action'] = $action;
-    $reviews_array[$q_id]['response'] = $response;
-  }
-  $result->close();
-
+	
+	// Load past reviews from the database.
+	$reviews_array = load_reviews($paperID, $current_screen, $userObject->get_user_ID(), $mysqli);
+	
   $old_leadin = '';
   $old_q_type = '';
   $old_q_id = 0;
@@ -441,7 +437,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $previous_q_type = '';
 
   $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, correct_fback, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND screen = ? AND papers.question = questions.q_id ORDER BY display_pos, id_num");
-  $question_data->bind_param('ii', $property_id, $current_screen);
+  $question_data->bind_param('ii', $paperID, $current_screen);
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $correct_fback, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
@@ -475,9 +471,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   }
   $question_data->close();
 
-  $unanswered = false;
-
-  //display the questions
+  // Display the questions
   foreach ($questions_array as &$question) {
     if ($question['q_type'] == 'enhancedcalc') {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
@@ -509,7 +503,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
 
   echo $bottom_html;
   echo '<input type="text" style="background-color:transparent; text-align:center; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
-  if ($bidirectional == 1 and $no_screens > 1) {
+  if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
     if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='start.php?id=" . $_GET['id'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
       echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
@@ -551,12 +545,6 @@ $mysqli->close();
 if (isset($_COOKIE['refpane'])) {
   echo "<script language=\"JavaScript\">\n";
   echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
-  echo "</script>\n";
-}
-
-if ($unanswered) {
-  echo "<script language=\"JavaScript\">\n";
-  echo "  document.getElementById('unansweredkey').style.display = '';\n";
   echo "</script>\n";
 }
 ?>
