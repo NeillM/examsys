@@ -86,8 +86,8 @@ function init_feedback(&$strong_on, &$strong_off) {
     } elseif ($std_value != '') {                            // Display an Ebel value.
       $std_value = str_replace('exclude_','',$std_value);
 
-      $titles = array('EE'=>'Easy/Essential','EI'=>'Easy/Important','EN'=>'Easy/Nice to know','ME'=>'Medium/Essential','MI'=>'Medium/Important','MN'=>'Medium/Nice to know','HE'=>'Hard/Essential','HI'=>'Hard/Important','HN'=>'Hard/Nice to know');
-      $html .= ' title="' . $titles[$std_value] . '">&nbsp;' . $std_value . '&nbsp;</span>';
+      $titles = array('EE' => 'Easy/Essential', 'EI' => 'Easy/Important', 'EN' => 'Easy/Nice to know', 'ME' => 'Medium/Essential', 'MI' => 'Medium/Important', 'MN' => 'Medium/Nice to know', 'HE' => 'Hard/Essential', 'HI' => 'Hard/Important', 'HN' => 'Hard/Nice to know');
+      $html .= ' title="' . $titles[$std_value] . '">' . $std_value . '</span>';
     }
   }
 
@@ -145,22 +145,12 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
 
 function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObj, $metadataid, $mysqlidb, $status_array, $overrides, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $moduleID, $calendar_year, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
+
   $configObject = Config::get_instance();
   $strong_on = '';
   $strong_off = '';
 
   // Get any questions to exclude.
-  $excluded = array();
-  $exclude_query = $mysqlidb->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  echo $mysqlidb->error;
-  $exclude_query->bind_param('i', $paperID);
-  $exclude_query->execute();
-  $exclude_query->bind_result($exclude_q_id, $exclude_parts);
-  while ($exclude_query->fetch()) {
-    $excluded[$exclude_q_id] = $exclude_parts;
-  }
-  $exclude_query->close();
-	
   $exclusions = new Exclusion($paperID, $mysqlidb);
   $exclusions->load();
 
@@ -168,7 +158,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     if (!isset($_GET['userID']) and !isset($_GET['q_id'])) { 
       $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
       echo '<blockquote><p style="font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p><p>' . $tmp_string . '</p>';
-      //echo '<blockquote><p><img src="../artwork/thankyou.gif" width="238" height="76" alt="Thank You" /></p><p>' . $tmp_string . '</p><br />';
       if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
       echo '</blockquote>';
 
@@ -214,14 +203,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   while ($answer_data->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {  // New question.
      if ($old_q_id != 0) {
-        /*
-				if (isset($excluded[$old_q_id])) {
-          $tmp_exclude = $excluded[$old_q_id];
-        } else {
-          $tmp_exclude = '';
-        }
-				*/
-				
 				$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 				
         $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
@@ -297,13 +278,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   $answer_data->close();
 	
 	$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
-	/*
-  if (isset($excluded[$old_q_id])) {
-    $tmp_excluded = $excluded[$old_q_id];
-  } else {
-    $tmp_excluded = '';
-  }
-	*/
 	
   $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
   $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -401,13 +375,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         $paper[$i]['leadin'] = "<span style=\"color: #f00;\">{$string['errorrandomnotfound']}</span>";
       }
 			$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
-			/*
-      if (isset($excluded[$old_q_id])) {
-        $tmp_excluded = $excluded[$old_q_id];
-      } else {
-        $tmp_excluded = '';
-      }
-			*/
+
       $paper[$i]['totalpos'] = qMarks($q_type, $tmp_exclude, $marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method);
       $total_random_mark += qRandomMarks($q_type, $tmp_exclude, $old_marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
     }
@@ -478,9 +446,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     <?php echo $string['boldwords'] ; ?><br />
     <span class="fback"><?php echo $string['feedbackinred']; ?></span><br />
     <?php
-    if ($marking{0} == '2') echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> ' . $string['difficultyofthequestion'] . '.</div></td>';
+    if ($marking{0} == '2') echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> ' . $string['difficultyofthequestion'] . '</div></td>';
     ?>
-    <td style="text-align:right; vertical-align:top; width:80px"><a href="javascript:window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" border="0" /></a></td>
+    <td style="text-align:right; vertical-align:top; width:80px"><a href="javascript:window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
     </tr>
     </table>
     </div>
@@ -537,13 +505,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     $no_options = count($paper[$question]['option_text']);
 
 		$tmp_exclude = $exclusions->get_exclusions_by_qid($paper[$question]['q_id']);
-    /*
-		if (array_key_exists($paper[$question]['q_id'],$excluded)) {
-      $tmp_exclude = $excluded[$paper[$question]['q_id']];
-    } else {
-      $tmp_exclude = '0000000000000000000000000000000000000000';      // No exclusions found, enable all options.
-    }
-		*/
 
     // Backwards compatibility - make up a default order if there is none.
     if (!isset($paper[$question]['option_order']) or $paper[$question]['option_order'] == '') {
@@ -1053,10 +1014,12 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
 				
 				// Output abstain option.
-				if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'a') {
-					echo "<tr><td></td><td>&nbsp;</td><td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_abstain\" value=\"y\" checked />&nbsp;</td><td valign=\"top\"><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
-				} else {
-					echo "<tr><td></td><td>&nbsp;</td><td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_abstain\" value=\"y\" />&nbsp;</td><td valign=\"top\"><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+				if ($paper[$question]['marks_incorrect'] < 0) {
+					if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'a') {
+						echo "<tr><td></td><td>&nbsp;</td><td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_abstain\" value=\"y\" checked />&nbsp;</td><td valign=\"top\"><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+					} else {
+						echo "<tr><td></td><td>&nbsp;</td><td valign=\"top\"><input type=\"checkbox\" name=\"q" . $question . "_abstain\" value=\"y\" />&nbsp;</td><td valign=\"top\"><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+					}
 				}
 				
         echo "</table>\n";
@@ -1072,8 +1035,8 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
         $sct_parts = explode('~',$paper[$question]['leadin']);
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-        $sct_titles = array(1=>$string['hypothesis'],2=>$string['investigation'],3=>$string['prescription'],4=>$string['intervention'],5=>$string['treatment']);
-        $sct_intros = array(1=>$string['tdiagnosis'],2=>$string['tinvestigation'],3=>$string['tprescription'],4=>$string['tintervention'],5=>$string['ttreatment']);
+        $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
+        $sct_intros = array(1 => $string['tdiagnosis'], 2 => $string['tinvestigation'], 3 => $string['tprescription'], 4 => $string['tintervention'], 5 => $string['ttreatment']);
         echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$paper[$question]['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
         echo "<tr><td style=\"width:49%;\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%;\">" . $sct_parts[1] . "</td></tr>\n";
         echo '</table>';
@@ -2092,9 +2055,13 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 <?php
 
         if ($tmp_display_correct_answer == '1') {
-          echo '<br />';
-          if (isset($paper[$question]['std'][0])) echo display_std($paper[$question]['std'][0]);
-          echo '<br />';
+          echo '<br /><table>';
+	        for ($i = 0; $i < count($parts); $i++) {
+						if (isset($paper[$question]['std'][0])) {
+							echo '<tr><td>' . chr($i + 65) . '.</td><td>' . display_std($paper[$question]['std'][$i]) . '</td></tr>';
+						}
+					}
+          echo '</table>';
         }
 
         if (!isset($paper[$question]['user_answer'])){
