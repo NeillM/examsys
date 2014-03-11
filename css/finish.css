@@ -34,11 +34,13 @@ blockquote {
   margin-right:15px
 }
 .std {
-  display:block;
-  background-color:#f27000;
-  color:white;
-  width:35px;
-  text-align:center
+  display: block;
+  background-color: #f27000;
+  color: white;
+  width: 35px;
+  text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 .exclude {
   color:red;
