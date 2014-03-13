@@ -175,12 +175,14 @@ class EnhancedCalc extends Question implements questionInterface {
 				$enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
 			}
 
-			foreach ($this->useranswer['vars'] as $key => $variablessplit) {
-				if ($variablessplit === 'ERROR') {
-					$this->error = "variable $key is ERROR";
-					$this->qmark = 0;
-					
-					return Q_MARKING_UNANSWERABLE;
+			if (is_array($this->useranswer['vars'])) {
+				foreach ($this->useranswer['vars'] as $key => $variablessplit) {
+					if ($variablessplit === 'ERROR') {
+						$this->error = "variable $key is ERROR";
+						$this->qmark = 0;
+						
+						return Q_MARKING_UNANSWERABLE;
+					}
 				}
 			}
 			// Run calculate through the external interface if errors catch exception and indicate its still unmarked.
@@ -195,13 +197,13 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-						$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
 				} else {
-						$returnstatus = Q_MARKING_UNCALC_ANSWER;
-						$this->useranswer['status']['error'] = true;
-						$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
-						$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
-						var_dump($e->getCode() . " - " . $e->getMessage());
+					$returnstatus = Q_MARKING_UNCALC_ANSWER;
+					$this->useranswer['status']['error'] = true;
+					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
+					//var_dump($e->getCode() . " - " . $e->getMessage());
 				}
 
 				$this->useranswer['status']['overall'] = $returnstatus;

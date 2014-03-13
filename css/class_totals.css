@@ -108,3 +108,14 @@ td {
 .q_msg {
   padding-bottom:10px;
 }
+.marking {
+  border: 2px solid #FCE699;
+	background-color:#FFFFEE;
+	color:#404040;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 500px;
+	padding: 10px;
+	height: 32px;
+}

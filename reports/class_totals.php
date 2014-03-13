@@ -91,10 +91,11 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 <script language="JavaScript">
 	$(document).ready(function() {
 		// Fire off the request to mark_all_enhancedcalc.php
-    var request = $.ajax({
+   var request = $.ajax({
       url: "../ajax/reports/mark_all_enhancedcalc.php",
-      type: "post",
+      type: "get",
       data: {paperID: <?php echo $paperID; ?>},
+			timeout: 30000, // timeout after 30 seconds
 			dataType: "html",
 			success: function (data, textStatus, jqXHR) {
 				data = data.replace(/(\r\n|\n|\r)/gm,"");
@@ -105,8 +106,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 				}
 			},
 			error: function (xhr, textStatus, errorThrown) {
-			
-				$("#msg").html('Error: ' + xhr.getAllResponseHeaders()  );
+				$("#msg").html('Error: ' + textStatus);
 			},
 			fail: function (jqXHR, textStatus) {
 				$("#msg").html('Failed: ' + textStatus);
@@ -131,13 +131,15 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
   } elseif (isset($_GET['module']) and $_GET['module'] != '' ) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
   echo '</table>';
 	
+	echo "<div class=\"marking\"><img src=\"../artwork/large_spin.gif\" widht=\"32\" height=\"32\" style=\"float:left; padding-right:10px\" />\n";
 	echo "<div id=\"msg\">" . $string['marking'] . "</div>\n";
+	echo "</div>\n";
 ?>
 </body>
 </html>
@@ -473,7 +475,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   } elseif ( isset( $_GET['module'] ) and $_GET['module'] != '' ) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
@@ -506,11 +508,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         echo "<th class=\"vert_div\">";
       }
       if ($sortby == $key and $ordering == 'asc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
       } elseif ($sortby == $key and $ordering == 'desc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
       } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a></th>";
+        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a></th>";
       }
     }
     echo "</tr>\n";
