@@ -286,7 +286,7 @@ for ($i=0; $i<3; $i++) {
 ?>
 </div>
 <br />
-<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
+<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></div>
 </form>
 </div>
 </body>
