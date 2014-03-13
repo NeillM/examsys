@@ -514,7 +514,6 @@ if ($log_data->num_rows > 0) {
 }
 $log_data->close();
 
-
 /*
 *
 * Load any Reference Material into an array.
@@ -765,7 +764,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var usingAjax = false;
   var submitType = '';
   var autoSaveRef = '';
-  var last_saved_user_awnsers = null;    <?php //holds the data of the last successful auto save ?>
+	var last_save_point = (new Date).getTime();
+  var last_saved_user_answers = null;    <?php // Holds the data of the last successful auto save ?>
   
   $(document).ready(function () {
 		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
@@ -842,10 +842,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     }
     var formData = $('#qForm').serialize();
 
-    <?php // Only auto save if the data has changed ?>
-    if (last_saved_user_awnsers !== formData) {
+    <?php // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
+		var now_milliseconds = (new Date).getTime();
+		var save_diff = now_milliseconds - last_save_point;
+    if (last_saved_user_answers !== formData || save_diff > (1000 * 1200)) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
       ajaxSave();
+			last_save_point = (new Date).getTime();
     } else {
       <?php // Re-register the autosave timer ?>
       startAutoSave();
@@ -917,7 +920,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           success: function (ret_data, jqXHR, textStatus) {
               if (ret_data == randomPageID) {
 								<?php // Cache the form data to look for changes on next auto save ?>
-								last_saved_user_awnsers = this.data;
+								last_saved_user_answers = this.data;
 								saveSuccess();
 								return;
               }
