@@ -70,17 +70,18 @@ if (isset($_POST['submit'])) {
   $new_email = trim($_POST['new_email']);
   $new_first_names = UserUtils::my_ucwords(trim($_POST['new_first_names']));
   $new_grade = $_POST['new_grade'];
+	$new_year = $_POST['new_year'];
 }
 
 if (isset($_POST['submit']) and $unique_username == true) {
   if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_grade == '') {
     $problem = true;
   } else {
-    UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], 1, $tmp_roles, $_POST['new_sid'], $mysqli);
+    UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], $new_year, $tmp_roles, $_POST['new_sid'], $mysqli);
 
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
-      $result = $mysqli->prepare("SELECT email FROM users WHERE username=?");
+      $result = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
       $result->bind_param('s', $userObject->get_username());
       $result->execute();
       $result->bind_result($tmp_email);
@@ -151,12 +152,12 @@ MESSAGE;
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo "{$string['createnewuser']} {$configObject->get('cfg_install_type')}" ?></title>
+  <title>Rog&#333;: <?php echo "{$string['createnewuser']} {$configObject->get('cfg_install_type')}" ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <style type="text/css">
-    .title {font-size:160%; font-weight:bold}
     .field {font-weight:bold}
   </style>
 
@@ -195,7 +196,7 @@ MESSAGE;
 <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
 <tr><td>
 <table border="0" cellspacing="6" cellpadding="0" width="100%" style="background-color:white">
-<tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="title"><?php echo $string['createnewuser']; ?></td></tr>
+<tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="dialog_header"><?php echo $string['createnewuser']; ?></td></tr>
 </table>
 </td></tr>
 <tr><td>
@@ -299,7 +300,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></td></tr>
 <tr><td colspan="2" align="center">
-<input type="submit" name="submit" value="<?php echo $string['createaccount']; ?>" /></td></tr>
+<input type="submit" name="submit" value="<?php echo $string['createaccount']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td></tr>
 </table>
 </td></tr>
 </table>

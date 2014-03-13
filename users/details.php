@@ -432,11 +432,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
           echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" &nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
         }
       } else {
-        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"54\" height=\"57\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
       }
     } else {
       $row_no = 9;
-      echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+      echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"54\" height=\"57\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
     }
     $title_array = explode(',', $string['title_types']);
     echo '<select name="title">';
