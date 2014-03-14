@@ -282,7 +282,8 @@ HTML;
 
 function insert_into_papers($p_id, $q_id, $branching_question=false) {
   global $mysqli;
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper=?");
+	
+  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->bind_result($screen, $display_pos);
@@ -312,7 +313,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
     if ($source_screen == $screen) $screen++;
   }
 
-  //force random mark to recaculate
+  // Force random mark to recalculate.
   $result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
@@ -323,7 +324,7 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
     $result->execute();
     $result->close();
   } else {
-    display_error("Papers Add Error",$mysqli->error);
+    display_error("Papers Add Error", $mysqli->error);
   }
   echo $mysqli->error;
   return $mysqli->insert_id;
@@ -334,7 +335,8 @@ function disable_locked($question, &$dis_class, &$dis_readonly) {
     $dis_class = ' disabled';
     $dis_readonly = ' readonly="readonly"';
   } else {
-    $dis_class = $dis_readonly = '';
+    $dis_class = '';
+		$dis_readonly = '';
   }
 }
 

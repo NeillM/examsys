@@ -69,7 +69,9 @@ dd {
 }
 
 .disabled {
-  color: #999;
+	border: 1px solid #CCCCCC !important;
+  background-color: #F9F9F9;
+	color: #595959;
 }
 
 .clearfix:after {
@@ -212,7 +214,7 @@ td.separated:last-child {
 #page-header {
 	width: 100%;
 	padding: 0;
-  background: #dfecff url('../artwork/edit_question_small.png') no-repeat 6px 2px;
+  background: #D3E5FF url('../artwork/edit_question_small.png') no-repeat 6px 2px;
   position: fixed;
   top: 0;
   z-index: 25;
@@ -247,7 +249,7 @@ td.separated:last-child {
 
 .tab-holder {
   height: 21px;
-  background-color: #dfecff;
+  background-color: #D3E5FF;
 }
 
 .tabs {
@@ -307,12 +309,12 @@ td.separated:last-child {
 
 #button-bar {
 	width: 100%;
-	padding: 20px 0 20px 0;
+	padding: 6px 0 12px 0;
 	text-align: center;
 	position: fixed;
 	bottom: 0;
-	background-color: #dfecff;
-	border-top: 1px solid #1e3c7b;
+	background-color: #D3E5FF;
+	border-top: 1px solid #517DBF;
   z-index: 25;
 }
 
@@ -439,8 +441,8 @@ input[type=text] {
 	overflow: hidden;
 }
 
-textarea[disabled], select:disabled, input[type=text].disabled, .editor-disabled {
-  border: 1px solid #ccc;
+textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=text]:disabled, .editor-disabled {
+  border: 1px solid #CCCCCC;
   background-color: #F9F9F9;
 	color: #595959;
 }

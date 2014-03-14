@@ -32,7 +32,7 @@ $feedback_rows = (isset($feedback_rows)) ? $feedback_rows : 3;
             <tr>
               <th><label for="correct_fback"><?php echo $label_correct ?></label></th>
               <td>
-                <textarea id="correct_fback" name="correct_fback" cols="100" rows="<?php echo $feedback_rows ?>" class="form-large"><?php echo $question->get_correct_fback() ?></textarea>
+                <textarea id="correct_fback" name="correct_fback" cols="100" rows="<?php echo $feedback_rows ?>" class="form-large"<?php echo $disabled ?>><?php echo $question->get_correct_fback() ?></textarea>
               </td>
             </tr>
 <?php

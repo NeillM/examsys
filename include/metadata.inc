@@ -47,7 +47,7 @@ META;
       $checked = (($curr_status == -1 and $status->get_is_default()) or $curr_status == $status->id) ? ' checked="checked"' : '';
       if ($disabled != '' and !$status->get_change_locked()) {
         $disabled_mod = ' disabled="disabled"';
-        $disabled_class = ' class="disabled"';
+        $disabled_class = ' class="grey"';
       } else {
         $disabled_mod = $disabled_class = '';
       }
