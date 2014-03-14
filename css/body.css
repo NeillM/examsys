@@ -123,9 +123,9 @@ hr {
 }
 .ok {
 	width: 130px;
-	margin: 4px;
+	margin: 4px 4px 4px 0;
 }
 .cancel {
 	width: 80px;
-	margin: 4px;
+	margin: 4px 0 4px 4px;
 }

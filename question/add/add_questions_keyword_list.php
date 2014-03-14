@@ -40,6 +40,7 @@ require '../../include/staff_auth.inc';
     a:link {color:black}
     a:visited {color:black}
     a:hover {color:black}
+		input[type="checkbox"] {margin-right:6px}
     .k {padding-left:2px}
   </style>
 
@@ -56,25 +57,26 @@ require '../../include/staff_auth.inc';
   $keyword_no = 0;
   
   $old_moduleID = '';
-  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID=modules.id AND moduleid IN ('" . implode("','", $userObject->get_staff_modules()) . "') ORDER BY moduleid, keyword");
+  $stmt = $mysqli->prepare("SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND moduleid IN ('" . implode("','", $userObject->get_staff_modules()) . "') ORDER BY moduleid, keyword");
   $stmt->execute();
   $stmt->bind_result($moduleID, $keyword, $keywordID);
   while ($stmt->fetch()) {
     if ($old_moduleID != $moduleID) {
       echo "<table border=\"0\" style=\"padding-top:5px; padding-bottom:2px; width:100%; color:#1E3287; white-space:nowrap\"><tr><td>$moduleID</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     }    
-    echo "<div class=\"k\"><input type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" onclick=\"findKeywords()\" />$keyword</div>\n";
+    echo "<div class=\"k\"><label><input type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" onclick=\"findKeywords()\" />$keyword</label></div>\n";
     $keyword_no++;
     $old_moduleID = $moduleID;    
   }
   $stmt->close();
 
   echo "<table border=\"0\" style=\"padding-top:3px; padding-bottom:2px; width:100%; color:#1E3287; white-space:nowrap\"><tr><td>" . $string['mykeywords'] . " </td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-  $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID=" . $userObject->get_user_ID() . " ORDER BY keyword");
+  $stmt = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE userID = ? ORDER BY keyword");
+  $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);
   while ($stmt->fetch()) {
-    echo "<div class=\"k\"><input type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" onclick=\"findKeywords()\" />$keyword</div>\n";
+    echo "<div class=\"k\"><label onclick=\"findKeywords()\"><input type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" />$keyword</label></div>\n";
     $keyword_no++;
   }
   $stmt->close();
