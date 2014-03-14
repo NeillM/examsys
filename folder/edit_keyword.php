@@ -26,7 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 
 if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("UPDATE keywords_user SET keyword=? WHERE id=?");
+  $result = $mysqli->prepare("UPDATE keywords_user SET keyword = ? WHERE id = ?");
   $result->bind_param('si', $_POST['new_keyword'], $_POST['keywordID']);
   $result->execute();  
   $result->close();
@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
 </html>
   <?php
 } else {
-  $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id=?");
+  $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id = ?");
   $result->bind_param('i', $_GET['keywordID']);
   $result->execute();
   $result->bind_result($keyword);
@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
 <h1><?php echo $string['editkeyword']; ?></h1>
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><input type="text" style="width:99%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" required autofocus /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
-<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
+<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>

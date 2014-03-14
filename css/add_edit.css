@@ -177,7 +177,7 @@ dd {
 }
 
 .submit {
-	width: 110px;
+	width: 170px;
 }
 
 .more-text {
@@ -309,7 +309,7 @@ td.separated:last-child {
 
 #button-bar {
 	width: 100%;
-	padding: 6px 0 12px 0;
+	padding: 6px 0 16px 0;
 	text-align: center;
 	position: fixed;
 	bottom: 0;

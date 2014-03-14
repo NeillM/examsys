@@ -244,7 +244,7 @@ function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $check
     }
 
     $html .= <<< HTML
-      <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="submit"{$save_disabled} />
+      <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="ok"{$save_disabled} />
 
 HTML;
 
@@ -266,14 +266,14 @@ HTML;
 HTML;
     if ($paper_id != -1 and substr($paper_id, 0, 5) != 'list:') {
       $html .= <<< HTML
-  <input type="submit" id="addpaper" name="addpaper" value="{$string['addtobankandpaper']}" class="submit form-small">
+  <input type="submit" id="addpaper" name="addpaper" value="{$string['addtobankandpaper']}" class="submit">
 
 HTML;
     }
   }
 
   $html .= <<< HTML
-      <input id="submit-cancel" name="submit-cancel" value="{$string['cancel']}" type="submit" class="submit cancel" />
+      <input id="submit-cancel" name="submit-cancel" value="{$string['cancel']}" type="submit" class="cancel" />
 
 HTML;
 
