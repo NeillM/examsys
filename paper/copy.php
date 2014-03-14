@@ -122,14 +122,14 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   }
 
   // Copy the question and option data (questions and options tables)
+  $old_qids = array();
+  $new_qids = array();
+  $q_no = 0;
   $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ? ORDER BY display_pos");
   $result->bind_param('i', $paperid);
   $result->execute();
   $result->store_result();
   $result->bind_result($question, $screen, $display_pos);
-  $old_qids = array();
-  $new_qids = array();
-  $q_no = 0;
   while ($result->fetch()) {
     $line = 0;
     $qData = $mysqli->prepare("SELECT * FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
@@ -230,7 +230,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
         $addQuestion->execute();
         $new_qids[] = $question_id = $mysqli->insert_id;
-        if ($q_type == 'enhancedcalc') $caculation_qid_map[$q_id] = $question_id;
+        if ($q_type == 'enhancedcalc') $calculation_qid_map[$q_id] = $question_id;
         $addQuestion->close();
 
         // Add in a record to the papers table.
@@ -261,83 +261,75 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       }
       
       // Look for and fix links in linked enhancedcalc questions
-      if($q_type == 'enhancedcalc') {
-          require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
-          if (!isset($configObj)) {
-            $configObj = Config::get_instance();
-          }
-          
-          $tmp_questions_array['theme'] = trim($theme);
-          $tmp_questions_array['scenario'] = trim($scenario);
-          $tmp_questions_array['leadin'] = trim($leadin);
-          $tmp_questions_array['notes'] = trim($notes);
-          $tmp_questions_array['q_type'] = $q_type;
-          $tmp_questions_array['q_id'] = $question_id; //the newly inserted question id !!
-          $tmp_questions_array['score_method'] = $score_method;
-          $tmp_questions_array['status'] = $status;
-          $tmp_questions_array['display_method'] = $display_method;
-          $tmp_questions_array['settings'] = $settings;
-          $tmp_questions_array['q_media'] = $q_media;
-          $tmp_questions_array['q_media_width'] = $q_media_width;
-          $tmp_questions_array['q_media_height'] = $q_media_height;
-          $tmp_questions_array['q_option_order'] = $q_option_order;
-          $tmp_questions_array['dismiss'] = '';
-      
-          $q = new EnhancedCalc($configObj);
-          $q->load($tmp_questions_array);
-          
-          $vars = $q->get_question_vars();
-          $questionChanged = false;
-          foreach($vars as $var_name => $var_data) {
-              $linked_q_id = 0;
+      if ($q_type == 'enhancedcalc') {
+				require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+				if (!isset($configObj)) {
+					$configObj = Config::get_instance();
+				}
+				
+				$tmp_questions_array['theme']						= trim($theme);
+				$tmp_questions_array['scenario']				= trim($scenario);
+				$tmp_questions_array['leadin']					= trim($leadin);
+				$tmp_questions_array['notes']						= trim($notes);
+				$tmp_questions_array['q_type']					= $q_type;
+				$tmp_questions_array['q_id']						= $question_id; //the newly inserted question ID!
+				$tmp_questions_array['score_method']		= $score_method;
+				$tmp_questions_array['status']					= $status;
+				$tmp_questions_array['display_method']	= $display_method;
+				$tmp_questions_array['settings']				= $settings;
+				$tmp_questions_array['q_media']					= $q_media;
+				$tmp_questions_array['q_media_width']		= $q_media_width;
+				$tmp_questions_array['q_media_height']	= $q_media_height;
+				$tmp_questions_array['q_option_order']	= $q_option_order;
+				$tmp_questions_array['dismiss']					= '';
+		
+				$q = new EnhancedCalc($configObj);
+				$q->load($tmp_questions_array);
+				
+				$vars = $q->get_question_vars();
+				$questionChanged = false;
+				foreach($vars as $var_name => $var_data) {
+					$linked_q_id = 0;
 
-              if ($q->is_linked_question_var($var_data['min'])) {
-                  
-                  list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['min']);
-                  $vars[$var_name]['min'] = 'var' . $linked_var_name . $caculation_qid_map[$linked_q_id];
-                  $questionChanged = true;
-                  
-              } 
-              
-              if ($q->is_linked_question_var($var_data['max'])) {
-                  
-                  list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['max']);
-                  $vars[$var_name]['max'] = 'var' . $linked_var_name . $caculation_qid_map[$linked_q_id];
-                  $questionChanged = true;
-                  
-              } 
-              
-              if($q->is_linked_ans($var_data['min'])) {
-                  
-                  $linked_q_id = $q->parse_linked_ans($var_data['min']);
-                  $vars[$var_name]['min'] = 'ans' . $caculation_qid_map[$linked_q_id];
-                  $questionChanged = true;
-                  
-              } 
-              
-              if($q->is_linked_ans($var_data['max'])) {
-                  
-                  $linked_q_id = $q->parse_linked_ans($var_data['max']);
-                  $vars[$var_name]['max'] = 'ans' . $caculation_qid_map[$linked_q_id];
-                  $questionChanged = true;
-                  
-              }
+					if ($q->is_linked_question_var($var_data['min'])) {
+						list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['min']);
+						$vars[$var_name]['min'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
+						$questionChanged = true;
+					} 
+					
+					if ($q->is_linked_question_var($var_data['max'])) {
+						list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['max']);
+						$vars[$var_name]['max'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
+						$questionChanged = true;
+					} 
+					
+					if ($q->is_linked_ans($var_data['min'])) {
+						$linked_q_id = $q->parse_linked_ans($var_data['min']);
+						$vars[$var_name]['min'] = 'ans' . $calculation_qid_map[$linked_q_id];
+						$questionChanged = true;
+					} 
+					
+					if ($q->is_linked_ans($var_data['max'])) {
+						$linked_q_id = $q->parse_linked_ans($var_data['max']);
+						$vars[$var_name]['max'] = 'ans' . $calculation_qid_map[$linked_q_id];
+						$questionChanged = true;
+					}
 
-          }
-          
-          if($questionChanged == true) {
-              //update the question!!
-              $q->set_question_vars($vars);
-              $q->save($mysqli);
-          }
+				}
+				
+				if ($questionChanged == true) {
+					// Update the question!
+					$q->set_question_vars($vars);
+					$q->save($mysqli);
+				}
           
       }
       
       if ($q_type != 'enhancedcalc') {  // Calculation questions have no options.
-            $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-            $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-            $addOption->execute();
-            $addOption->close();
+				$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+				$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+				$addOption->execute();
+				$addOption->close();
       }
       $line++;
     }
@@ -385,7 +377,6 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       }
 
       // Copy the objectives for each session where the objective still exists
-
       $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id = ?)");
       $nw_paperid = 0;
       $nw_qid = 0;
@@ -401,13 +392,13 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
       $i=0;
       foreach ($old_qids as $old_id) {
         foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
-          $nw_paperid = $new_paper_id;
-          $nw_qid = $new_qids[$i];
-          $nw_mapid = $newmapid;
-          $nw_calyr = $new_calendar_year;
-          $nw_oldid = $old_id;
-          $nw_oldpapid = $paperid;
-          $nw_oldoid = $oldmapid;
+          $nw_paperid		= $new_paper_id;
+          $nw_qid				= $new_qids[$i];
+          $nw_mapid			= $newmapid;
+          $nw_calyr			= $new_calendar_year;
+          $nw_oldid			= $old_id;
+          $nw_oldpapid	= $paperid;
+          $nw_oldoid		= $oldmapid;
           $result->execute();
           if ($mysqli->error) {
             $error[] = 'mysqli error ' . $mysql->error;

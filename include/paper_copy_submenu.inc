@@ -60,9 +60,16 @@ require_once '../classes/dateutils.class.php';
       }
     }
   }
+	
+	$(document).ready(function() {
+		$("#cancel").click(function(event) {
+      $('#copy_submenu').hide();
+			event.stopPropagation();
+		});
+	});
 </script>
 
-<div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:320px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:330px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
@@ -139,13 +146,12 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr>
 <?php
 if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
-  echo '<td align="center" colspan="5"><input type="button" style="width:100px; display_block" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" style="width:100px; display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" style="margin-right:8px" /><input type="button" class="ok" style="display_block" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 } else {
-  echo '<td align="center" colspan="5"><input type="button" style="width:100px; display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" style="width:100px; display:block" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" style="margin-right:8px" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:block" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 }
 ?>
 </tr>
-<tr><td colspan="5">&nbsp;</td></tr>
 </table>
 </div>
 
@@ -220,7 +226,7 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
   
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
-  echo '<tr><td colspan="6" style="text-align:center"><input type="submit" style="width:100px" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
+  echo '<tr><td colspan="6" style="text-align:center"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="submit" class="save" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
 
 ?>
 </table>
