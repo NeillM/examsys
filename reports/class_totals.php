@@ -437,10 +437,10 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   }
 
   //output table heading
-	if ($configObject->get('cfg_client_lookup') == 'ipaddress') {
-		$table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
-	} else {
+	if ($configObject->get('cfg_client_lookup') == 'name') {
 		$table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['hostnames']=>'ipaddress');
+	} else {
+		$table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
   }
 	if ($paper_type == '2') $table_order[$string['room']] = 'room';
   $metadata_cols = array();
