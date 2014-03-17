@@ -25,6 +25,9 @@
 require_once '../config/campuses.inc';
 require_once '../classes/dateutils.class.php';
 ?>
+<style>
+	.cancel {margin-right:8px}
+</style>
 
 <script language="JavaScript">
   function changeButton() {
@@ -62,7 +65,7 @@ require_once '../classes/dateutils.class.php';
   }
 	
 	$(document).ready(function() {
-		$("#cancel").click(function(event) {
+		$(".cancel").click(function(event) {
       $('#copy_submenu').hide();
 			event.stopPropagation();
 		});
@@ -146,9 +149,9 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr>
 <?php
 if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
-  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" style="margin-right:8px" /><input type="button" class="ok" style="display_block" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 } else {
-  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" style="margin-right:8px" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:block" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 }
 ?>
 </tr>
@@ -226,7 +229,7 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
   
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
-  echo '<tr><td colspan="6" style="text-align:center"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="submit" class="save" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
+  echo '<tr><td colspan="6" style="text-align:center"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" onclick="" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
 
 ?>
 </table>
