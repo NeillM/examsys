@@ -622,6 +622,22 @@ Class UserUtils {
 
     return $studentModules;
   }
+	
+  /**
+   * Set a single user to be deleted. Also appends the primary key ID
+	 * to the end of username so that username is still unique if
+	 * another user with the same username is added later.
+   *
+   * @param int $userID ID of the student.
+   * @param object $db $mysqli database connection.
+   *
+   */
+	static function delete_userID($userID, $db) {
+    $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $userID);
+    $result->execute();  
+    $result->close();
+	}
 
 
 }

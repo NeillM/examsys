@@ -2892,7 +2892,7 @@ QUERY;
           `surname` char(35) default NULL,
           `initials` char(10) default NULL,
           `title` varchar(30) default NULL,
-          `username` char(15) default NULL,
+          `username` char(60) default NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
           `id` int(10) unsigned NOT NULL auto_increment,
@@ -2904,7 +2904,7 @@ QUERY;
           `user_deleted` datetime default NULL,
           `password_expire` int(11) unsigned default NULL,
           PRIMARY KEY (`id`),
-          KEY `username_index` (`username`),
+          UNIQUE KEY `username_index` (`username`),
           KEY `idx_roles` (`roles`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;

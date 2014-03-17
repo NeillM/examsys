@@ -43,10 +43,7 @@ foreach ($id_list as $id) {
 
 foreach ($id_list as $single_id) {
   if ($single_id != '') {
-    $result = $mysqli->prepare("UPDATE users SET user_deleted = NOW() WHERE id = ?");
-    $result->bind_param('i', $single_id);
-    $result->execute();  
-    $result->close();
+		UserUtils::delete_userID($single_id, $mysqli);
   }
 }
 
@@ -62,15 +59,16 @@ $mysqli->close();
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript">
-    function updateParent() {
+		$(document).ready(function(){
       window.opener.location.reload();
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
