@@ -18,7 +18,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -27,7 +27,7 @@ require '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
 
-check_var('q_id', 'GET', true, false, false);
+$q_id = check_var('q_id', 'GET', true, false, true);
 
 if (!isset($_POST['submit'])) {
 ?>
@@ -40,53 +40,46 @@ if (!isset($_POST['submit'])) {
   <title><?php echo $string['linktopaper']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-size:80%}
+    body {background-color:#F1F5FB}
+    td {font-size:80%}
   </style>
 
-  <script language="JavaScript">
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript">
     function checkForm() {
-      checkOption = -1
-      for (i=0; i<theForm.property_id.length; i++) {
-        if (theForm.property_id[i].checked) {
-          checkOption = i;
-        }
-      }
-      if (checkOption == -1) {
+      var checkOption = $('input:radio[name=paperID]:checked').val();
+
+      if (typeof checkOption == 'undefined') {
         alert("Please select which paper you would like to add the question to.");
         return false;
       }
     }
 
     function resizeList() {
-      var winW = 630, winH = 460;
-      if (document.body && document.body.offsetWidth) {
-        winW = document.body.offsetWidth;
-        winH = document.body.offsetHeight;
-      }
-      if (document.compatMode=='CSS1Compat' && document.documentElement && document.documentElement.offsetWidth ) {
-        winW = document.documentElement.offsetWidth;
-        winH = document.documentElement.offsetHeight;
-      }
-      if (window.innerWidth && window.innerHeight) {
-        winW = window.innerWidth;
-        winH = window.innerHeight;
-      }
-      winH -= 155;
-      document.getElementById('paperlist').style.height = winH + 'px';
+      winH = $(window).height() - 150;
+
+      $('#paperlist').css('height', winH + 'px');
     }
-  </script>
+
+		$(document).ready(function() {
+		  resizeList();
+			
+			$(window).resize(function() {
+				resizeList();
+			});
+		});
+	</script>
 </head>
 
-<body onload="resizeList();" onresize="resizeList();" class="inline_dialog_body">
+<body>
 <?php
-  echo "<form method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?q_id=" . $_GET['q_id'] . "\">\n";
+  echo "<form method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?q_id=" . $q_id . "\">\n";
 ?>  
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/link_to_paper.png" width="32" height="32" alt="<?php echo $string['linktopaper']; ?>" /></td><td class="dialog_header" style="border-bottom:1px solid #CCD9EA"><?php echo $string['linktopaper']; ?></td></tr>
+  <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/link_to_paper.png" width="32" height="32" alt="<?php echo $string['linktopaper']; ?>" /></td><td class="midblue_header" style="background-color:white; font-size:150%; font-weight:bold; border-bottom:1px solid #CCD9EA"><?php echo $string['linktopaper']; ?></td></tr>
   </table>
 
   <p style="margin:4px; text-align:justify; font-size:90%"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="<?php echo $string['warning']; ?>" /> <?php echo $string['msg1']; ?></p>
@@ -111,7 +104,7 @@ if (!isset($_POST['submit'])) {
   
   echo "</table>\n</div>";
   
-  echo "<div style=\"text-align:center; padding-top:4px;\"><input type=\"submit\" style=\"width:120px\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" style=\"width:120px\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+  echo "<div style=\"text-align:center; padding-top:4px;\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
 <!DOCTYPE html>
@@ -129,7 +122,7 @@ if (!isset($_POST['submit'])) {
   $q_id = $_GET['q_id'];
   
   // Get the maximum display position for an existing paper.
-  $result = $mysqli->prepare("SELECT MAX(display_pos), MAX(screen) FROM papers WHERE paper=?");
+  $result = $mysqli->prepare("SELECT MAX(display_pos), MAX(screen) FROM papers WHERE paper = ?");
   $result->bind_param('i', $property_id);
   $result->execute();
   $result->bind_result($display_pos, $screen);
@@ -146,7 +139,7 @@ if (!isset($_POST['submit'])) {
   }
 
   echo "<p>" . $string['success'] . "</p>\n";
-  echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></p>\n";
+  echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\" /></p>\n";
 }
 $mysqli->close();
 ?>

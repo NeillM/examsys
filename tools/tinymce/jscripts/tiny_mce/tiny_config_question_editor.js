@@ -29,16 +29,6 @@ tinyMCE.init({
         tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
           // Do something when the editor window is blured.
           tinyMCE.triggerSave();
-
-          if (typeof jQuery != 'undefined') {
-            if (typeof $("#" + ed.id).valid != 'undefined') {
-              if ($("#" + ed.id).valid() == 1) {
-                ed.getBody().style.backgroundColor = "#ffffff";
-              } else {
-                ed.getBody().style.backgroundColor = "#ffd6d6";
-              }
-            }
-          }
         });
       });
 

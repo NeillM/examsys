@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -72,10 +72,18 @@ if (!isset($_POST['submit'])) {
 
       $('#paperlist').css('height', winH + 'px');
     }
+
+		$(document).ready(function() {
+		  resizeList();
+			
+			$(window).resize(function() {
+				resizeList();
+			});
+		});
   </script>
 </head>
 
-<body onload="resizeList();" onresize="resizeList();">
+<body>
 
 <?php
   echo "<form style=\"width:100%; height:100%;\" method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?q_id=" . $_GET['q_id'] . "\">\n";
@@ -107,7 +115,7 @@ if (!isset($_POST['submit'])) {
   $result->close();
 
   echo "</table>\n</div>";
-  echo "<div align=\"center\"><input type=\"submit\" style=\"width:120px\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" style=\"width:120px\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
 <!DOCTYPE html>
@@ -292,7 +300,7 @@ if (!isset($_POST['submit'])) {
 }
 
   echo "<p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
-  echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></p>\n";
+  echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\" /></p>\n";
 
   $mysqli->close();
 }

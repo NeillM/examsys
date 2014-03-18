@@ -72,11 +72,7 @@ echo ViewHelper::render_options($decimals, $variable->get_decimals(), 3);
               </td>
               <td class=" align-left<?php echo $spaced ?>">
                 <label for="option_increment<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['increment'];?></label>
-                <select id="option_increment<?php echo $index ?>" name="option_increment<?php echo $index ?>"<?php echo $disabled ?>>
-<?php
-echo ViewHelper::render_options($increments, $variable->get_increment(), 3);
-?>
-                </select>
+                <input type="text" id="option_increment<?php echo $index ?>" name="option_increment<?php echo $index ?>" value="<?php echo $variable->get_increment() ?>" class="calc-min form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
               </td>
             </tr>
           </tbody>

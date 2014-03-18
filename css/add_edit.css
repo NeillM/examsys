@@ -150,9 +150,9 @@ dd {
 }
 
 .mandatory {
-  font-family:'Courier New';
-  font-weight:bold;
-  color:#C00000
+  font-family: 'Courier New';
+  font-weight: bold;
+  color: #C00000;
 }
 
 .warning {
@@ -198,7 +198,6 @@ td.separated:last-child {
 	width: 790px;
 	padding: 4px 4px 4px 52px;
 	border: 1px solid #ccc;
-	background: #c00000 url('../artwork/orange_alert_32.png') no-repeat 6px 8px;
 }
 
 #errors li {
@@ -299,7 +298,7 @@ td.separated:last-child {
 }
 
 .tab-area {
-	padding-bottom: 120px;
+	padding-bottom: 65px;
 }
 
 #bar-spacer {
@@ -423,8 +422,8 @@ div.form {
 }
 
 input.error, textarea.error, select.error {
-	border: 1px solid red;
-	background-color: #ffd6d6;
+  border: 1px solid #C00000  !important;
+  box-shadow: 0 0 6px rgba(200, 0, 0, 0.85);
 }
 
 label.error {
@@ -433,7 +432,7 @@ label.error {
 
 textarea, input[type=text], select {
 	font-size:100%;
-  border: 1px solid #7F9DB9;
+  border: 1px solid #909090;
   overflow: auto;
 }
 
@@ -491,8 +490,8 @@ textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=t
 	height: 300px;
 	max-height: 300px;
 	overflow: auto;
-	background-color: #fff;
-	border: 1px solid #7f9db9;
+	background-color: white;
+	border: 1px solid #909090;
 	font-size: 90%;
 }
 

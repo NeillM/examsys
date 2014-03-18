@@ -38,10 +38,10 @@ Class question_info {
     
     echo '<table cellpadding="5" cellspacing="0" border="0" width="100%">';
     echo '<tr><td colspan="2" valign="middle" style="background-color:white; text-align:left; border-bottom:1px solid #CCD9EA">';
-    echo '<img src="../artwork/lrg_info_icon.png" width="37" height="37" alt="Information" style="float:left" /><span class="midblue_header" style="font-size:18pt; font-weight:bold">&nbsp;&nbsp;' .  $string['questioninformation'] . '</span></td></tr>';
+    echo '<img src="../artwork/lrg_info_icon.png" width="37" height="37" alt="Information" style="float:left" /><span style="color:#295AAD; font-size:18pt; font-weight:bold">&nbsp;&nbsp;' .  $string['questioninformation'] . '</span></td></tr>';
     
     $question_data = $db->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"{$configObject->get('cfg_long_date_time')}\") AS locked,  q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id = ? LIMIT 1");
-    $question_data->bind_param('i', $_GET['q_id']);
+    $question_data->bind_param('i', $q_id);
     $question_data->execute();
     $question_data->bind_result($email, $title, $surname, $initials, $creation_date, $last_edited, $locked, $q_type, $std, $status);
     $question_data->store_result();
@@ -82,7 +82,7 @@ Class question_info {
     echo "<tr><td>" . $string['copies'] . "</td><td></td></tr>\n";
     echo "</table>\n";
     
-    echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">";
+    echo "<div style=\"margin:5px; display:block; height:95px; overflow-y:scroll; border:1px solid #295AAD; font-size:100%; background-color:white\">\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">";
     echo "<tr><th>" . $string['type'] . "</th><th>" . $string['papername'] . "</th><th>" . $string['questionno'] . "</th></tr>\n";
     
     $data = question_info::check_copies($q_id, $db);  
@@ -114,7 +114,7 @@ Class question_info {
     echo "<tr><td>" . $string['followingpapers'] . "</td><td style=\"text-align:right\"><input type=\"button\" name=\"longitudinal\" value=\"" . $string['Longitudinal'] . "\" onclick=\"openLongitudinal($q_id);\" /></td></tr>\n";
     echo "</table>\n";
     
-    echo "<div style=\"margin:5px; display:block; height:195px; overflow-y:scroll; border:1px solid #95AEC8; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
+    echo "<div style=\"margin:5px; display:block; height:195px; overflow-y:scroll; border:1px solid #295AAD; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
     echo "<tr><th></th><th>" . $string['papername'] . "</th><th>" . $string['screenno'] . "</th><th>" . $string['examdate'] . "</th><th>" . $string['cohort'] . "</th><th></th><th>" . $string['p'] . "</th><th>" . $string['d'] . "</th></tr>\n";
 
     $performance_array = question_info::question_performance($q_id, $db);
