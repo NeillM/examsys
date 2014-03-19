@@ -185,7 +185,7 @@ if ($message == '') {
     					</td>
     				</tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
-    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['send'] ?>"  style="width:100px" /></td></tr>
+    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['send'] ?>" class="ok" /></td></tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
     			</table>
     		</td>

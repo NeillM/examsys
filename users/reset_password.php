@@ -223,7 +223,7 @@ if($message == '') {
     						<input type="hidden" name="token" value="<?php echo $token ?>" />
     					</td>
     				</tr>
-    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['reset'] ?>"  style="width:100px" /></td></tr>
+    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['reset'] ?>"  class="ok" /></td></tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
     			</table>
     		</td>
