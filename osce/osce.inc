@@ -378,7 +378,13 @@ function set_classification(&$user_results, $passmark, $user_no, $string) {
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['killer_fail']) {
       $user_results[$i]['classification'] = $string['fail'];
-		} elseif ($user_results[$i]['percent'] >= $passmark) {
+    } elseif ($passmark == 'N/A') {     // Passmark is set to N/A - therefore use global rating from OSCE mark sheet
+      if ($user_results[$i]['rating'] == '1') {
+        $user_results[$i]['classification'] = $string['fail'];
+      } else {
+        $user_results[$i]['classification'] = $string['pass'];
+      }
+    } elseif ($user_results[$i]['percent'] >= $passmark) {
       $user_results[$i]['classification'] = $string['pass'];
     } else {
       $user_results[$i]['classification'] = $string['fail'];
@@ -424,6 +430,9 @@ function get_labels($propertyObj) {
       break;
     case '6':
       $labels = array(1=>'Clear FAIL', 2=>'BORDERLINE', 3=>'Clear PASS', 4=>'Honours PASS', 'ERROR'=>'ERROR');
+      break;
+    case '7':
+      $labels = array(1=>'Fail', 2=>'Pass', 'ERROR'=>'ERROR');
       break;
   }
   return $labels;

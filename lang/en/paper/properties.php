@@ -16,6 +16,7 @@
 
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
+require '../lang/' . $language . '/include/osce_marking.inc';
 
 $string['propertiestitle'] = 'Properties';
 $string['edittitle'] = 'Edit';
@@ -67,6 +68,7 @@ $string['overallclass1'] = '&lt;Automatic&gt;';
 $string['overallclass2'] = 'Clear Fail | Borderline | Clear Pass';
 $string['overallclass3'] = 'Fail | Borderline fail | Borderline pass | Pass | Good pass';
 $string['overallclass4'] = 'Clear FAIL | BORDERLINE | Clear PASS | Honours PASS';
+$string['overallclass5'] = 'Pass | Fail';
 $string['passmark'] = 'Pass Mark';
 $string['distinction'] = 'Distinction';
 $string['method'] = 'Method';

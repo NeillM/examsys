@@ -27,6 +27,7 @@ require '../include/errors.inc';
 require './osce.inc';
 require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/killer_question.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -52,13 +53,16 @@ $start_date   = $propertyObj->get_start_date();
 $end_date     = $propertyObj->get_end_date();
 $number_of_qs = $propertyObj->get_question_no();
 
+$killer_questions = new Killer_question($paperID, $mysqli);
+$killer_questions->load();
+  
 
 if (isset($_POST) and count($_POST) > 0) {
   
-  if(!isset($_GET['dont_record'])) {
+  if (!isset($_GET['dont_record'])) {
     save_osce_form($paperID, $number_of_qs, $userID, $_POST, $mysqli);
   }
-  if(isset($_GET['dont_redirect']) and $_GET['dont_redirect'] == true) {
+  if (isset($_GET['dont_redirect']) and $_GET['dont_redirect'] == true) {
     // Output the randomID so the JavaScript can check for success
     echo $_GET['rnd'];
   } else {
@@ -87,7 +91,6 @@ if (isset($_POST) and count($_POST) > 0) {
     $result->close();
     $test = false;
   }
-
 
   // Check time security
   if ($test == false) {
@@ -205,6 +208,10 @@ if (isset($_POST) and count($_POST) > 0) {
           $labels = $string['marking6'];
           $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
           break;
+        case '7':
+          $labels = $string['marking7'];
+          $colors = array('#D99594', '#C2D69B');
+          break;
       }
       for ($i=0; $i<count($colors); $i++) {
         echo "colors[" . ($i+1) . "]=\"" . $colors[$i] ."\";\n";
@@ -234,9 +241,9 @@ if (isset($_POST) and count($_POST) > 0) {
   if (file_exists('../users/photos/' . $username . '.jpg')) {
     echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" width="90" height="135" alt="Photo" /></td>';
   } else {
-    echo '<td class="photo"><img src="./test_photo.png" width="90" height="135" alt="Photo" /></td>';
+    echo '<td></td>';
   }
-  echo "<td style=\"vertical-align:top; text-align:left\"><div class=\"osce_title\">" . $propertyObj->get_paper_title() . "</div><br /><br /><div class=\"student_name\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><div class=\"student_id\">($student_id)</div></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
+  echo "<td style=\"vertical-align:top; text-align:left\"><div class=\"osce_title\">" . $propertyObj->get_paper_title() . "</div><div class=\"student_name\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><div class=\"student_id\">($student_id)</div></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
 
   if ($test == false) {
     // Query Log4 just in case form has already been submitted for this user.
@@ -266,8 +273,14 @@ if (isset($_POST) and count($_POST) > 0) {
     }
 
     if (trim($theme) != '') echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
-
-    echo "<tr><td class=\"q\">";
+    
+    if ($killer_questions->is_killer_question($q_id)) {
+      $killer = 'killer';
+    } else {
+      $killer = 'non_killer';
+    }
+    
+    echo "<tr><td class=\"q {$killer}\">";
     if (trim($notes) != '') {
       echo "<span style=\"color:" . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
@@ -297,7 +310,7 @@ if (isset($_POST) and count($_POST) > 0) {
     echo "<tr><td></td><td class=\"totals r\"><input type=\"text\" name=\"fails\" id=\"fails\" size=\"4\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td><td class=\"totals r\"><input type=\"text\" name=\"borderlines\" size=\"4\" id=\"borderlines\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td><td class=\"totals r\"><input type=\"text\" name=\"passes\" size=\"4\" id=\"passes\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td></tr>\n";
   }
 
-  if ($marking == '3' or $marking == '4' or $marking == '6') {
+  if ($marking == '3' or $marking == '4' or $marking == '6' or $marking == '7') {
     if (!isset($overall_rating)) $overall_rating = '0';
     echo "<tr><td colspan=\"4\" style=\"text-align:left\">" . $propertyObj->get_paper_postscript() . "</td></tr><tr><td colspan=\"4\" style=\"font-weight:bold; text-align:left\">" . $string['overallclassification'] . "<input type=\"hidden\" name=\"overall_val\" id=\"overall_val\" value=\"" . $overall_rating . "\" /></td></tr><tr><td colspan=\"4\" id=\"overall\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr>";
 

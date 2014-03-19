@@ -193,6 +193,18 @@ function format_marking($marking, $string) {
     case MARK_STD_SET:
       $marking_string = $string['stdset'];
       break;
+    case '3':
+      $marking_string = $string['overallclass2'];
+      break;
+    case '4':
+      $marking_string = $string['overallclass3'];
+      break;
+    case '6':
+      $marking_string = $string['overallclass4'];
+      break;
+    case '7':
+      $marking_string = $string['overallclass5'];
+      break;
   }
 
   return $marking_string;
@@ -1364,6 +1376,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       echo "</select></td></tr>";
       echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
     ?>
+      <option value="7"<?php if ($properties->get_marking() == '7') echo ' selected'; ?> /><?php echo $string['overallclass5']; ?></option>
       <option value="3"<?php if ($properties->get_marking() == '3') echo ' selected'; ?> /><?php echo $string['overallclass2']; ?></option>
       <option value="4"<?php if ($properties->get_marking() == '4') echo ' selected'; ?> /><?php echo $string['overallclass3']; ?></option>
       <option value="6"<?php if ($properties->get_marking() == '6') echo ' selected'; ?> /><?php echo $string['overallclass4']; ?></option>

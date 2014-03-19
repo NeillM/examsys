@@ -105,9 +105,9 @@ $marking      = $propertyObj->get_marking();
       echo '<td style="width:180px"><img src="../users/photos/' . $original_username . '.jpg" width="180" height="270" alt="Photo" /></td>';
     }
   } else {
-    echo '<td style="width:180px"><img src="./test_photo.png" width="180" height="270" alt="Photo" /></td>';
+    echo '<td></td>';
   }
-  echo "<td style=\"vertical-align:top; text-align:left\"><div class=\"osce_title\">$paper_title</div><br /><br /><div class=\"student_name\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span class=\"student_id\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width: 100%\"><tr>";
+  echo "<td style=\"vertical-align:top; text-align:left\"><div class=\"osce_title\">$paper_title</div><div class=\"student_name\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><span class=\"student_id\">($student_id)</span></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width: 100%\"><tr>";
 
   // Query Log4 just in case form has already been submitted for this user.
   $result = $mysqli->prepare("SELECT id, feedback, overall_rating FROM log4_overall WHERE q_paper = ? AND userID = ?");
@@ -196,6 +196,10 @@ $marking      = $propertyObj->get_marking();
     case '6':
       $labels = array('Clear FAIL', 'BORDERLINE', 'Clear PASS', 'Honours PASS');
       $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
+      break;
+    case '7':
+      $labels = array('Fail', 'Pass');
+      $colors = array('#D99694', '#C2D69B');
       break;
   }
 

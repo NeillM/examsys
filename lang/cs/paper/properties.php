@@ -35,7 +35,6 @@ $string['msg6'] = 'Zadali jste externí recenzenty, ale nazadali jste lhůtu.';
 $string['msg7'] = 'Zadejte, prosím, název dokumentu.';
 $string['msg8'] = 'Jedná se o uzavřenou zkoušku, tedy bez použití pomůcek. Studenti nesmí používat jiných zdrojů (včetně souseda), než kterých je užito v dokumentu. Nelze používat žádná jiná elektronická zařízení, než počítač ke zkoušce určený. Slovníky <em>nejsou</em> povoleny s jedinnou výjimkou. Ti, kteří <em>nemají</em> češtinu jako rodný jazyk, mohou používat pro překlad do češtiny slovník. Za podmínky, že ani jeden z jazyků není předmětem zkoušky. Odborné slovníky jsou zakázány. Během zkoušky a ani po jejím ukončení není dovoleno z učebny odnášet jakékoliv dokumenty a poznámky. Veškeré poznámky, které si zapíšete v průběhu zkoušky budou shromážděny Dohlížejícím a zlikvidovány.';
 
-
 // General tab
 $string['generaltab'] = 'Celkem';
 $string['generalheading'] = 'Název dokumentu, známkování a možnosti zobrazení';
@@ -67,6 +66,7 @@ $string['overallclass1'] = '&lt;Automaticky&gt;';
 $string['overallclass2'] = 'Neuspěl | Na hraně | Uspěl';
 $string['overallclass3'] = 'Nedostatečně | Dostatečně | Dobře | Chvalitebně | Výborně';
 $string['overallclass4'] = 'Neuspěl | Na hraně | Uspěl | Uspěl s vyznamenáním';
+$string['overallclass5'] = 'Pass | Fail';
 $string['passmark'] = 'Potřebná známka';
 $string['distinction'] = 'S vyznamenáním';
 $string['method'] = 'Metoda';
