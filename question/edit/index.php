@@ -115,7 +115,11 @@ if ($critical_error == '') {
   $question->add_default_correction_behaviours($cfg_web_root);
 
   if ($mode == 'Edit') {
-    $q_no = $question->get_question_number($paper_id);
+    if (isset($_GET['qNo'])) {
+      $q_no = $_GET['qNo'];
+    } else {
+      $q_no = $question->get_question_number($paper_id);
+    }
     // If existing question, check how many summative papers it is on
     $paper_count = $question->get_other_summative_count($paper_id);
   }

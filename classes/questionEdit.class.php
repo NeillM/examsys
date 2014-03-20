@@ -629,11 +629,11 @@ QUERY;
   public function get_question_number($paper_id) {
     $number = '';
 
-    if(ctype_digit($paper_id)) {
+    if (ctype_digit($paper_id)) {
       $pos = 0;
 
       $pos_query = <<< QUERY
-SELECT p.display_pos FROM papers p WHERE p.question=? AND p.paper=? ORDER BY p.display_pos ASC;
+SELECT p.display_pos FROM papers p WHERE p.question = ? AND p.paper = ? ORDER BY p.display_pos ASC;
 QUERY;
       $result = $this->_mysqli->prepare($pos_query);
       $result->bind_param('ii', $this->id, $paper_id);
@@ -645,7 +645,7 @@ QUERY;
 
       if ($pos > 0) {
         $info_query = <<< QUERY
-SELECT count(p.p_id) AS info FROM papers p INNER JOIN questions q ON p.question=q.q_id WHERE p.paper=? AND p.display_pos<? AND q.q_type='info';
+SELECT count(p.p_id) AS info FROM papers p INNER JOIN questions q ON p.question = q.q_id WHERE p.paper = ? AND p.display_pos < ? AND q.q_type = 'info';
 QUERY;
         $result = $this->_mysqli->prepare($info_query);
         $result->bind_param('ii', $paper_id, $pos);
@@ -658,7 +658,7 @@ QUERY;
         $number = $pos - $info;
       } else {
         $num_query = <<< QUERY
-SELECT count(p.p_id) AS pos FROM papers p INNER JOIN questions q ON p.question=q.q_id WHERE p.paper=? AND q.q_type<>'info';
+SELECT count(p.p_id) AS pos FROM papers p INNER JOIN questions q ON p.question = q.q_id WHERE p.paper = ? AND q.q_type <> 'info';
 QUERY;
         $result = $this->_mysqli->prepare($num_query);
         $result->bind_param('i', $paper_id);
