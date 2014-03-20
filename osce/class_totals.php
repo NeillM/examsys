@@ -86,7 +86,7 @@ if ($borderline_method) {
 $distinction_mark = $propertyObj->get_distinction_mark();
 
 
-set_classification($user_results, $passmark, $user_no, $string);
+set_classification($propertyObj->get_marking(), $user_results, $passmark, $user_no, $string);
 $report->sort_results();
 $user_results = array_csort($user_results, $sortby, $ordering);
 

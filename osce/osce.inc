@@ -374,16 +374,31 @@ function load_osce_medians($db) {
  * @param int $user_no				- How many users there are in the master array.
  * @param array $string				- Language translations.
  */
-function set_classification(&$user_results, $passmark, $user_no, $string) {
+function set_classification($marking, &$user_results, $passmark, $user_no, $string) {
+  switch ($marking) {
+    case '3':
+      $labels = $string['marking3'];
+      break;
+    case '4':
+      $labels = $string['marking4'];
+      break;
+    case '5':
+      $labels = $string['marking5'];
+      break;
+    case '6':
+      $labels = $string['marking6'];
+      break;
+    case '7':
+      $labels = $string['marking7'];
+      break;
+  }
+  
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['killer_fail']) {
       $user_results[$i]['classification'] = $string['fail'];
     } elseif ($passmark == 'N/A') {     // Passmark is set to N/A - therefore use global rating from OSCE mark sheet
-      if ($user_results[$i]['rating'] == '1') {
-        $user_results[$i]['classification'] = $string['fail'];
-      } else {
-        $user_results[$i]['classification'] = $string['pass'];
-      }
+      $rating_no = ($user_results[$i]['rating'] - 1);
+      $user_results[$i]['classification'] = $labels[$rating_no];
     } elseif ($user_results[$i]['percent'] >= $passmark) {
       $user_results[$i]['classification'] = $string['pass'];
     } else {
