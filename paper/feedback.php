@@ -40,6 +40,15 @@ require_once '../classes/question_status.class.php';
 require_once '../classes/exam_announcements.class.php';
 require_once '../LTI/ims-lti/UoN_LTI.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
+require_once '../lang/' . $language . '/question/edit/area.txt';
+require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
+require_once '../lang/' . $language . '/paper/hotspot_question.txt';
+require_once '../lang/' . $language . '/paper/label_answer.txt';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 check_var('id', 'GET', true, false, false);
 
 //get the paper properties
@@ -162,11 +171,24 @@ require '../config/finish.inc';
   }
 ?>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/student_help.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
+  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
+  <script type="text/javascript" src="../js/student_help.js"></script>
+
+  <!-- HTML5 part start -->
+  <script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
+  <script type="text/javascript" src="../js/html5.images.js"></script>
+  <script type="text/javascript" src="../js/qsharedf.js"></script>
+  <script type="text/javascript" src="../js/qlabelling.js"></script>
+  <script type="text/javascript" src="../js/qhotspot.js"></script>
+  <script type="text/javascript" src="../js/qarea.js"></script>
+  <!-- HTML5 part end -->
   <script language="JavaScript">
     window.history.go(1);
   </script>
+  <?php
+  echo $configObject->get('cfg_js_root');
+  ?>
 </head>
 <body>
 <?php

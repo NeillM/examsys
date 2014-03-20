@@ -398,7 +398,6 @@ function qh_redraw_canvas() {
 		this.context.strokeStyle=this.currentColours[1];
 			
     //label bars
-    var textboxcolours = new Array('#6f7777','#c4cccc','#eeeeee','#d5dddd','#919999','#d5dddd','#ff0000');
     var pan_y = 25-this.yOffset;
     var pan_h = 46;
     for (i in this.hotSpots) {
@@ -443,24 +442,18 @@ function qh_redraw_canvas() {
       //text background
       this.context.fillStyle=this.currentColours[0];
       if ((this.is_an_answer && this.answers[i][0][1] == 'false') || this.allUnaswered == true) this.context.fillStyle=this.currentColours[3];
-   		this.context.fillRect(40.5,pan_y+12.5,250-this.palico,pan_h-18);
+   		this.context.fillRect(39.5,pan_y+11.5,252-this.palico,pan_h-17);
       //label text
       this.context.fillStyle='#000000';
 			if (this.exclusions[i] == '1') {
 				this.context.fillStyle='#FF0000';
 	      this.lineDraw(this.context,'#FF0000',43.5,pan_y+22.5,243-this.palico,0);
-				}
+			}
    		this.context.font="12px Arial";
 			this.fillWrappedText(this.context,wrapped[0],45.5,pan_y+25.5);
       //text frame
-      this.lineDraw(this.context,textboxcolours[0],39,pan_y+11.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[1],39,pan_y+12.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[2],39,pan_y+pan_h-5.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[3],39,pan_y+pan_h-4.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[4],39.5,pan_y+12,0,pan_h-17);
-      this.lineDraw(this.context,textboxcolours[5],40.5,pan_y+13,0,pan_h-19);
-      this.lineDraw(this.context,textboxcolours[4],39.5+252-this.palico,pan_y+12,0,pan_h-17);
-      this.lineDraw(this.context,textboxcolours[5],40.5+250-this.palico,pan_y+13,0,pan_h-19);
+      this.context.fillStyle='#C0C0C0';
+   		this.context.strokeRect(39.5,pan_y+11.5,252-this.palico,pan_h-17);
       //colour pallete button
 			if (this.qmode == 'edit') {
 				this.imgdata = menuImages['toolbar/ico_palette.png'];
@@ -883,7 +876,7 @@ function qh_mouseDragMove(e){
       if (this.global_edit) this.cur = 'not-allowed';
 			if (this.global_edit && this.test_result!='') this.cur = 'move';
 			if (this.global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) this.cur = 'default';
-			if (this.global_erase && this.test_result!='') this.cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
+			if (this.global_erase && this.test_result!='') this.cur = 'url(' + cfgRootPath +  '/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) this.cur = 'pointer';
 			if (this.handle_over != -1) this.cur = 'move';
 

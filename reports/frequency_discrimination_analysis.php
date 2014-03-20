@@ -875,9 +875,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
         $tmp_height = $q_media_height;
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
-?>
-  <div align="center">
-<?php
+
 	require_once '../classes/configobject.class.php';
 	if ($configObject->get('cfg_interactive_qs')=='html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->
@@ -902,7 +900,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 		echo "</script>\n";
 	}
 	?>
-  </div>
   <br />
 <?php
 
@@ -1020,9 +1017,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $tmp_correct = str_replace("'", "\'", trim($correct));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-        ?>
-        <div align="center">
-				<?php
+        
 				require_once '../classes/configobject.class.php';
 				$configObject          = Config::get_instance();
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
@@ -1047,10 +1042,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 					echo "write_string('</object>');\n";
 					echo "</script>\n";
 				}
-				?>
-        </div>
-        <?php
-
+				
         echo "<p><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         for ($i = 1; $i <= count($layers); $i++) {
           echo "<tr><td>" . chr($i + 64) . ".</td>";
