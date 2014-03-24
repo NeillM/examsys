@@ -736,7 +736,7 @@ if (isset($_POST['Submit'])) {
 
     }
 
-    // Set any metadata security
+    // Get the current (old) metadata security settings from the database.
     $old_meta = '';
     $result = $mysqli->prepare("SELECT name, value FROM paper_metadata_security WHERE paperID = ? ORDER BY name");
     $result->bind_param('i', $paperID);
@@ -752,22 +752,13 @@ if (isset($_POST['Submit'])) {
     }
     $result->close();
 
-    $new_meta = '';
+    // Loop around the POST fields to get the new metadata security settings.
+		$new_meta = '';
     for ($i=0; $i<$_POST['meta_dropdown_no']; $i++) {
       $meta_type = $_POST['meta_type' . $i];
       $meta_value = $_POST['meta_value' . $i];
 
-      $editProperties = $mysqli->prepare("DELETE FROM paper_metadata_security WHERE paperID = ? AND name = ?");
-      $editProperties->bind_param('is', $paperID, $meta_type);
-      $editProperties->execute();
-      $editProperties->close();
-
       if ($meta_value != '') {
-        $editProperties = $mysqli->prepare("INSERT INTO paper_metadata_security VALUES (NULL, ?, ?, ?)");
-        $editProperties->bind_param('iss', $paperID, $meta_type, $meta_value);
-        $editProperties->execute();
-        $editProperties->close();
-
         if ($new_meta == '') {
           $new_meta = $meta_type . ':' . $meta_value;
         } else {
@@ -775,7 +766,28 @@ if (isset($_POST['Submit'])) {
         }
       }
     }
-    if ($old_meta != $new_meta) $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_meta, $new_meta, 'restricttometadata');
+		
+    if ($old_meta != $new_meta) {
+			// The metadata security settings have changed - update the database.
+			$logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_meta, $new_meta, 'restricttometadata');
+			
+      $editProperties = $mysqli->prepare("DELETE FROM paper_metadata_security WHERE paperID = ?");
+      $editProperties->bind_param('i', $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+			
+			for ($i=0; $i<$_POST['meta_dropdown_no']; $i++) {
+				$meta_type = $_POST['meta_type' . $i];
+				$meta_value = $_POST['meta_value' . $i];
+
+				if ($meta_value != '') {
+					$editProperties = $mysqli->prepare("INSERT INTO paper_metadata_security VALUES (NULL, ?, ?, ?)");
+					$editProperties->bind_param('iss', $paperID, $meta_type, $meta_value);
+					$editProperties->execute();
+					$editProperties->close();
+				}
+			}
+		}
 
     // Get existing Reference Materials
     $existing_refs = array();
