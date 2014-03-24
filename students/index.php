@@ -97,12 +97,12 @@ if ($userObject->has_role('Student')) {
   }
   $stmt->close();
 
-  // Get papers for this module - types 0,1,3, valid for this date
+  // Get papers for this module - types 0, 1, 3, 6 valid for this date
   $papers = 0;
   $papers_query = <<< QUERY
   SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
   INNER JOIN papers pa ON p.property_id = pa.paper
-  WHERE p.paper_type IN ('0', '1', '3', '4', '6')
+  WHERE p.paper_type IN ('0', '1', '3', '6')
   AND p.property_id = pm.property_id
   AND idMod = ?
   AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
@@ -166,7 +166,7 @@ QUERY;
   }
   $stmt->close();
 
-  // Get any objectives-based feedback released.
+  // Get any question-based or objectives-based feedback released.
   $feedback_query = <<< QUERY
   SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, paper_type, p.start_date, p.password FROM (feedback_release f, properties p, properties_modules pm)
   WHERE f.paper_id = p.property_id

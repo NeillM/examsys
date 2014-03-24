@@ -53,7 +53,7 @@ if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$killer_questions = new Killer_question($_GET['paperID'], $mysqli);
+$killer_questions = new Killer_question($paperID, $mysqli);
 $killer_questions->load();
 
 $killed = false;
@@ -150,10 +150,10 @@ $marking      = $propertyObj->get_marking();
 		if ($killer_questions->is_killer_question($q_id)) {
       if (array_key_exists($q_id, $stored_results) and $stored_results[$q_id] == 0) {
 				echo "<td class=\"killerq skull\">";
+				$killed = true;
 			} else {
 				echo "<td class=\"q skull\">";
 			}
-			$killed = true;
 		} else {
 			echo "<td class=\"q\">";
 		}
