@@ -81,7 +81,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <script language="JavaScript">
   var lab_names = new Array();
 <?php
-  //get computer lab info
+  // Get computer lab information.
   $lab_details = array($string['default']=>array('-1'=>$string['alllabs']));
   $stmt = $mysqli->prepare("SELECT id, building, room_no, campus FROM labs WHERE room_no != '' ORDER BY campus, building, room_no");
   $stmt->execute();
@@ -146,17 +146,20 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		} else {
 			$('#lab_ok').show();
 			$('#lab_warning').hide();
-			var lab_parts = labs.split(","); 
-			var lab_html = '';
-			$.each(lab_parts, function(key, value) {
-				if (lab_html == '') {
-					lab_html = lab_names[value];
-				} else {
-					lab_html += '<br />' + lab_names[value];
-				}
-			});
+			if (labs == '') {
+				lab_html = '';
+			} else {
+				lab_parts = labs.split(","); 
+				lab_html = '';
+				$.each(lab_parts, function(key, value) {
+					if (lab_html == '') {
+						lab_html = lab_names[value];
+					} else {
+						lab_html += '<br />' + lab_names[value];
+					}
+				});
+			}
 		}
-		
 		$('#labs').html(lab_html);
 		$('#password').html(password);
 		if (password == '') {
