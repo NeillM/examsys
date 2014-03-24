@@ -90,6 +90,21 @@ Class UpdaterUtils {
 
     return true;
   }
+  
+  public function is_column_nullable($table_name, $column_name) {
+    $result = $this->mysqli->prepare('SELECT IS_NULLABLE FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?');
+    $result->bind_param('sss', $this->db_name, $table_name, $column_name);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($is_nullable);
+    $result->close();
+
+    if ($is_nullable == 'NO') {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   /**
    * Determines if a table and field exist in the database.

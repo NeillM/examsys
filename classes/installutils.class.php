@@ -2887,18 +2887,17 @@ QUERY;
 
     $this->tableList['users'] = <<<QUERY
         CREATE TABLE `users` (
-          `password` char(90) default NULL,
+          `password` char(90) NOT NULL,
           `grade` char(30) default NULL,
-          `surname` char(35) default NULL,
+          `surname` char(35) NOT NULL,
           `initials` char(10) default NULL,
           `title` varchar(30) default NULL,
-          `username` char(60) default NULL,
+          `username` char(60) NOT NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
           `id` int(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
-          `last_login` datetime default NULL,
           `special_needs` tinyint(4) default '0',
           `yearofstudy` tinyint(4) default NULL,
           `user_deleted` datetime default NULL,

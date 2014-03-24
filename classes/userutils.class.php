@@ -48,7 +48,7 @@ Class UserUtils {
   }
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
-    if ($username == '' or  $surname == '' or $role == '') {
+    if (trim($username) == '' or  trim($surname) == '' or $role == '') {
       return false;
     }
 
@@ -65,12 +65,12 @@ Class UserUtils {
       $surname = self::my_ucwords(trim($surname));
       $title = self::my_ucwords(trim($title));
 
-      //if there is no password generate one
+      // If there is no password generate a default one.
       if ($password == '') {
         $password = gen_password();
       }
 
-      //force valid value for gender or default to NULL
+      // Force valid value for gender or default to NULL
       if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
         $gender = null;
       }
@@ -78,8 +78,8 @@ Class UserUtils {
       $salt = UserUtils::get_salt();
       $encrypt_password = encpw($salt, $username, $password);  // One way encrypt the password.
 
-      //add new users
-      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NOW(), 0, ?, NULL, NULL)");
+      // Add new record into users table.
+      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, 0, ?, NULL, NULL)");
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
