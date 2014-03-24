@@ -140,7 +140,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'mrq':
-            if (strpos($current_answer, 'y') === false) {
+            if (strpos($current_answer, 'y') === false and $current_answer != 'a') {
               $incomplete_screens[$i] = 1;
             }
             break;
