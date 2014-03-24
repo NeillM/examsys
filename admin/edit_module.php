@@ -305,7 +305,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $module['moduleid'] . "\" />\n";
   ?>
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>
   </div>
 </div>
