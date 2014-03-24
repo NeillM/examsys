@@ -395,15 +395,17 @@ if ($textsize > 120) {
   $metadata_security = true;
   $metadata_msg = '';
   $metadata = Paper_utils::get_metadata($property_id, $mysqli);
-  foreach ($metadata as $security_type=>$security_value) {
-    $html = '';
-    if (!$userObject->has_metadata($modIDs, $security_type, $security_value)) {
-      $metadata_security = false;
-      $metadata_msg = sprintf($string['metadata_msg'], $security_type, $security_value);
-      $html = ' class="warn"';
-    }
-    echo "<tr><td class=\"f\">$security_type</td><td$html>$security_value</td><td></td><td></td></tr>\n";
-  }
+	if (!$userObject->is_temporary_account()) {			// Do not check metadata security if temporary account
+		foreach ($metadata as $security_type=>$security_value) {
+			$html = '';
+			if (!$userObject->has_metadata($modIDs, $security_type, $security_value)) {
+				$metadata_security = false;
+				$metadata_msg = sprintf($string['metadata_msg'], $security_type, $security_value);
+				$html = ' class="warn"';
+			}
+			echo "<tr><td class=\"f\">$security_type</td><td$html>$security_value</td><td></td><td></td></tr>\n";
+		}
+	}
 
   echo '<tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
   echo '<td class="f">' . $string['navigation'] . '</td><td>';

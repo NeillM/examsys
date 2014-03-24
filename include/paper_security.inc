@@ -134,16 +134,18 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
 }
 
 function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
-  $notice = UserNotices::get_instance();
-  
-  $metadata = Paper_utils::get_metadata($property_id, $db);
+	if (!$userObj->is_temporary_account()) {			// Do not check metadata security if temporary account
+		$notice = UserNotices::get_instance();
+		
+		$metadata = Paper_utils::get_metadata($property_id, $db);
 
-  foreach ($metadata as $security_type=>$security_value) {
-    if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
-      $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-      $notice->access_denied($db, $string, $tmp_string, true, true);
-    }
-  }
+		foreach ($metadata as $security_type=>$security_value) {
+			if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
+				$tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
+				$notice->access_denied($db, $string, $tmp_string, true, true);
+			}
+		}
+	}
 }
 
 function render_password_form($string) {
