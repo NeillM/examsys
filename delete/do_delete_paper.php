@@ -27,6 +27,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/logger.class.php';
 
 $paperID = check_var('paperID', 'POST', true, false, true);
 
@@ -39,6 +40,10 @@ $delete_date = date('YmdHis');
 $properties->set_deleted($delete_date);
 
 $properties->save();
+
+// Record the deletion.
+$logger = new Logger($mysqli);
+$logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', '', 'Paper Deleted');
 
 $mysqli->close();
 ?>
