@@ -272,32 +272,6 @@ echo '   <ProtectObjects>False</ProtectObjects>';
 echo '   <ProtectScenarios>False</ProtectScenarios>';
 echo '  </WorksheetOptions>';
 echo ' </Worksheet>';
-echo ' <Worksheet ss:Name="Summary">';
-if ($marking == '0') {
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="16" x:FullColumns="1" x:FullRows="1">';
-} elseif ($marking == '1') {
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="17" x:FullColumns="1" x:FullRows="1">';
-} else {
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="18" x:FullColumns="1" x:FullRows="1">';
-}
-echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
-
-echo '<Row>';
-echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Cohort Size</Data></Cell>';
-echo '<Cell><Data ss:Type="Number">' . $user_no . '</Data></Cell>';
-echo '</Row>';
-foreach ($labels as $i => $label) {
-  echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string[strtolower($label)] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . $classifications[$i] . '</Data></Cell>';
-  echo '</Row>';
-} 
-echo '  </Table>';  
-echo '  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">';
-echo '   <ProtectObjects>False</ProtectObjects>';
-echo '   <ProtectScenarios>False</ProtectScenarios>';
-echo '  </WorksheetOptions>';
-echo ' </Worksheet>';
 echo '</Workbook>';
 
 $mysqli->close();
