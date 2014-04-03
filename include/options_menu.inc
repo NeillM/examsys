@@ -24,16 +24,7 @@
 * @package
 */
 
-require_once 'sidebar_functions.inc';
-
-$modules_array = array();
-//$staff_modules is populated in staff_auth.inc
-$my_folders_array = get_folders($staff_modules, $userObject->get_user_ID(), $mysqli);
-$full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
-$staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
-$keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
-
-?><div id="left-sidebar" class="sidebar">
+?><div id="left-sidebar" class="sidebar" style="overflow:hidden">
 <br />
 
 <div id="general" style="font-size:90%; margin-left:-8px">
@@ -49,52 +40,27 @@ $keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysq
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><?php echo $string['mypersonalkeywords']; ?></a></div>
 </div>
 
-<br />
-
-<div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
-	<div style="font-size:90%">
-	<?php
-		if (count($staff_modules) > 0 or $userObject->has_role(array('Admin','SysAdmin'))) {    // Allow SysAdmin and Admin users not on any team to still create papers.
-			echo "<div class=\"menuitem\" onclick=\"newPaper()\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/new_paper_icon_16.gif\" alt=\"New Paper\" /><a href=\"#\" onclick=\"newPaper(); return false;\">" . $string['createnewpaper'] . "</a></div>\n";
-		} else {
-			echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/new_paper_icon_16.gif\" alt=\"New Paper\" />" . $string['createnewpaper'] . "</div>\n";
-		}
-	?>
-	<div class="menuitem cascade" id="listpapers" onclick="showMenu('popup0','papertasks','listpapers',myOptions0,myURLs0,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/list_papers_icon_16.gif" alt="List Papers" /><a href="#" onclick="return false;"><?php echo $string['listpapers']; ?></a></div>
-</div>
-
-<br />
-
-<div class="submenuheading" id="banktasks"><?php echo $string['questionbanktasks']; ?></div>
-<div style="font-size:90%">
-	<div class="menuitem cascade" id="type" onclick="showMenu('popup1','banktasks','type',myOptions1,myURLs1,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" alt="List Papers" /><a href="#" onclick="return false"><?php echo $string['questionsbytype']; ?></div>
-	<?php
-		if (count($staff_modules) == 0) {
-			echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/question_list_icon_grey.gif\" alt=\"List Teams\" />" . $string['questionsbyteam'] . "</div>\n";
-		} else {
-			echo "<div class=\"menuitem cascade\" id=\"team\" onclick=\"showMenu('popup2','banktasks','team',myOptions2,myURLs2,event)\"><a href=\"#\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/question_list_icon.gif\" alt=\"List Teams\" /><a href=\"#\" onclick=\"return false\">" . $string['questionsbyteam'] . "</a></div>\n";
-		}
-		if (count($keywords_array) == 0) {
-			echo "<div class=\"grey menuitem greycascade\" id=\"keyword\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon_grey.gif\" alt=\"List Keywords\" />" . $string['questionsbykeyword'] . "</div>\n";
-		} else {
-			echo "<div class=\"menuitem cascade\" id=\"keyword\" onclick=\"showMenu('popup3','banktasks','keyword',myOptions3,myURLs3,event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon.gif\" alt=\"List Keywords\" /><a href=\"#\" onclick=\"return false\">" . $string['questionsbykeyword'] . "</a></div>\n";
-		}
-	?>
-	<div class="menuitem cascade" id="search" onclick="showMenu('popup4','banktasks','search',myOptions4,myURLs4,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><a href="#" onclick="return false"><?php echo $string['search']; ?></a></div>
-	<div class="menuitem cascade" id="newquestion" onclick="showMenu('popup5','banktasks','newquestion',myOptions5,myURLs5,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
-</div>
-
-<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%; color:#295AAD; font-weight:bold" id="displaycredits">Rog&#333; <?php echo $configObject->get('rogo_version'); ?> - &copy; 2014</div>
-</div>
+<div style="font-size:170%; padding-top:40px; color:#606060" id="papertasks">Recent</div>
 
 <?php
-  // Create the sub-menus.
-  makeMenu($full_modules_array);
-  makeMenu(array($string['info']=>$configObject->get('cfg_root_path') . '/question/list.php?type=info',$string['keyword_based']=>$configObject->get('cfg_root_path') . '/question/list.php?type=keyword',$string['random']=>$configObject->get('cfg_root_path') . '/question/list.php?type=random','-'=>'-',$string['area']=>$configObject->get('cfg_root_path') . '/question/list.php?type=area',$string['calculation']=>$configObject->get('cfg_root_path') . '/question/list.php?type=enhancedcalc',$string['dichotomous']=>$configObject->get('cfg_root_path') . '/question/list.php?type=dichotomous',$string['extmatch']=>$configObject->get('cfg_root_path') . '/question/list.php?type=extmatch',$string['blank']=>$configObject->get('cfg_root_path') . '/question/list.php?type=blank',$string['hotspot']=>$configObject->get('cfg_root_path') . '/question/list.php?type=hotspot',$string['labelling']=>$configObject->get('cfg_root_path') . '/question/list.php?type=labelling',$string['likert']=>$configObject->get('cfg_root_path') . '/question/list.php?type=likert',$string['matrix']=>$configObject->get('cfg_root_path') . '/question/list.php?type=matrix',$string['mcq']=>$configObject->get('cfg_root_path') . '/question/list.php?type=mcq',$string['mrq']=>$configObject->get('cfg_root_path') . '/question/list.php?type=mrq',$string['rank']=>$configObject->get('cfg_root_path') . '/question/list.php?type=rank',$string['sct']=>$configObject->get('cfg_root_path') . '/question/list.php?type=sct',$string['textbox']=>$configObject->get('cfg_root_path') . '/question/list.php?type=textbox', $string['true_false']=>$configObject->get('cfg_root_path') . '/question/list.php?type=true_false'));
-  makeMenu($staff_modules_array);
-  makeMenu($keywords_array);
-  makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php'));
-  makeMenu(array($string['info']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info",$string['keyword_based']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based",$string['random']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random","-"=>"-",$string['area']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area",$string['calculation']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc",$string['dichotomous']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous",$string['extmatch']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch",$string['blank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank",$string['hotspot']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot",$string['labelling']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling",$string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert",$string['matrix']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq",$string['mrq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq",$string['rank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank",$string['sct']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct",$string['textbox']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox",$string['true_false']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false"));
+  $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 
-  hideMenuScript($menuNo);
+  // -- Display top 10 recent papers ----------------------------------
+  echo '<ul type="square">';
+  $result = $mysqli->prepare("SELECT paperID, paper_title, accessed, paper_type FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
+  $result->bind_param('i', $userObject->get_user_ID());
+  $result->execute();
+  $result->bind_result($paperID, $paper_title, $accessed, $paper_type);
+  $result->store_result();
+  while ($result->fetch()) {
+    echo "<li style=\"margin-left:-25px; line-height:150%\" class=\"menuitem\"><a ";
+    if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
+    echo "href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
+  }
+  $result->close();
+  echo '</ul>';
+
 ?>
+<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; font-size:90%; color:#295AAD; font-weight:bold" id="displaycredits">Rog&#333; <?php echo $configObject->get('rogo_version'); ?> - &copy; 2014</div>
+
+</div>

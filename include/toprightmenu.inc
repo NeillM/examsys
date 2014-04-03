@@ -40,6 +40,9 @@ function draw_toprightmenu($helpID = 1) {
 		$html .= '<div id="toprightmenu">';
 	}
 
+	if ($userObject->has_role('SysAdmin')) {
+    $html .= '<div class="trm_div" id="admintools">Administrative Tools</div>';
+  }
   $html .= "<div class=\"trm_div\" onclick=\"toprightmenu_launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
   $html .= '<div class="trm_div" id="signout">' . $string['signout'] . '</div>';
   $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get('rogo_version')) . '</div>';

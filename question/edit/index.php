@@ -127,7 +127,6 @@ if ($critical_error == '') {
   // Get any existing media
   $current_media = $question->get_media();
 	
-
   $do_save = false;
   $show_media_upload = false;
   $show_correction_intermediate = false;
@@ -196,7 +195,7 @@ if ($critical_error == '') {
         $_POST['teams'] = array();
       }
       foreach($part_names as $section_name) {
-        if(isset($_POST["$section_name"])) {
+        if (isset($_POST["$section_name"])) {
           $method = "set_$section_name";
           $question->$method($_POST["$section_name"]);
         }

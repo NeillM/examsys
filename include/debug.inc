@@ -16,7 +16,7 @@
 
 /**
 * 
-* debug mysqli override etc.
+* Debug mysqli override etc.
 * 
 * @author Anthony Brown
 * @version 1.0
@@ -31,11 +31,13 @@ register_shutdown_function('outputLoadTimes');
 $dbclass = 'debug_mysqli';
   
 $queryInfo = array();
+
 Class debug_mysqli extends mysqli {
   var $queryCount = 1;
 	var $closed = false;
   var $dbusername;
   var $dbname;
+  
   function __construct($db_host , $db_username, $db_passwd, $db_database) {
 	  parent::__construct($db_host , $db_username, $db_passwd, $db_database);
 	  $this->query('SET profiling_history_size=200',false);
@@ -97,8 +99,7 @@ Class debug_mysqli extends mysqli {
 	  return $stmt;
 	}
 
-  function change_user( $user , $password , $database )
-  {
+  function change_user( $user , $password , $database ) {
     $this->dbusername=$user;
     $this->dbname=$database;
     return parent::change_user($user,$password,$database);
@@ -106,6 +107,7 @@ Class debug_mysqli extends mysqli {
 
 	function query($sql,$log = true) {
 	  global $queryInfo;
+    
 	  if ($log) {
       if (isset($stmt->error) and $stmt->error != '') {
 	      $queryInfo[$this->queryCount]['sql']['error'] = $stmt->error;
@@ -165,7 +167,7 @@ function outputLoadTimes() {
   if (!is_object($mysqli)) {
     return;
   }
-  if(!$displayDebug) {
+  if (!$displayDebug) {
     return;
   }
 
@@ -173,29 +175,32 @@ function outputLoadTimes() {
     $mysqli->cacheSqlProfile();
   } 
   
-  echo  '<div style="cursor:pointer; position:absolute; left:55%; top:0; z-index: 9999; font-size:90%; padding:0px; background-color:#ffffff; width:43%">';
-  $start = explode(' ',$debug_pagestart);
-  $end = explode(' ', microtime());
-  $usec = floatval($end[0]) - floatval($start[0]);
-  $sec = $end[1] - $start[1];
-  $res=(float)$sec+(float)$usec;
-  echo '<div onclick="var el=document.getElementById(\'debugOverview\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;">Debug:: Time: ' . round($res,3) . ' secs, Memory: ' . round(((memory_get_peak_usage()/1024)/1024),1) . 'Mb, Queries: ' . count($queryInfo) . "</div>";
-  echo "<div id=\"debugOverview\" style=\"display:none\">";
-  echo '<p onclick="var el=document.getElementById(\'dbgData\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;"><strong>$_ POST GET SERVER SESSION</strong></p>';
+  echo  '<div style="cursor:pointer; position:absolute; left:55%; top:0; z-index: 9999; font-size:75%; padding:1px; background-color:black; color:white; width:40%">';
+  
+  $start  = explode(' ',$debug_pagestart);
+  $end    = explode(' ', microtime());
+  $usec   = floatval($end[0]) - floatval($start[0]);
+  $sec    = $end[1] - $start[1];
+  $res    = (float)$sec + (float)$usec;
+  
+  echo '<div style="padding:2px" onclick="var el=document.getElementById(\'debugOverview\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;"><strong>Time</strong> ' . round($res,3) . ' secs, <strong>Memory</strong> ' . round(((memory_get_peak_usage()/1024)/1024),1) . 'Mb, <strong>Queries</strong> ' . count($queryInfo) . "</div>";
+  echo "<div id=\"debugOverview\" style=\"display:none; background-color:#EAEAEA; color:black; padding:2px\">";
+  echo '<p onclick="var el = document.getElementById(\'dbgData\'); el.style.display = (el.style.display != \'none\' ? \'none\' : \'\' ); return false;"><strong>$_ POST GET SERVER SESSION</strong></p>';
   echo '<div id="dbgData" style="display:none">';
-    echo "<pre>\$_GET";
-      var_dump($_GET);
-    echo "</pre>";
-    echo "<pre>\$_POST";
-      var_dump($_POST);
-    echo "</pre>";
-    echo "<pre>\$_SESSION";
-      var_dump($_SESSION);
-    echo "</pre>";
-    echo "<pre>\$_SERVER";
-      var_dump($_SERVER);
-    echo "</pre>";
+  echo "<pre>\$_GET";
+    var_dump($_GET);
+  echo "</pre>";
+  echo "<pre>\$_POST";
+    var_dump($_POST);
+  echo "</pre>";
+  echo "<pre>\$_SESSION";
+    var_dump($_SESSION);
+  echo "</pre>";
+  echo "<pre>\$_SERVER";
+    var_dump($_SERVER);
+  echo "</pre>";
   echo '</div>';
+  
   $errors = false;
   foreach($queryInfo as $id => $query) {
     if (isset($query['sql']['error'])) $errors = true;

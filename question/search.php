@@ -30,6 +30,9 @@ require_once '../classes/question_status.class.php';
 
 set_time_limit(0);
 
+$_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
+$_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
+
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html>
@@ -118,7 +121,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 </head>
 
 <?php
-  if (isset($_POST['submit'])) {
+  if (isset($_GET['submit'])) {
     echo "<body onselectstart=\"return false\">\n";
 
     require '../include/question_search_options.inc';
@@ -135,7 +138,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 		echo draw_toprightmenu();
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<table class=\"header\">\n";
-    echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
+    echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+    if ($_GET['module']) {
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+    }
+    echo "</div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
 ?>
   <tr>
     <th>&nbsp;</th>
@@ -149,24 +156,29 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php
   }
 
-if (isset($_POST['submit'])) {
+if (isset($_GET['submit'])) {
   $error = '';
 
-  if (!isset($_POST['theme']) and !isset($_POST['scenario']) and !isset($_POST['leadin']) and !isset($_POST['options']) and !isset($_POST['keywords'])) {
+  if (!isset($_GET['theme']) and !isset($_GET['scenario']) and !isset($_GET['leadin']) and !isset($_GET['options']) and !isset($_GET['keywords'])) {
     $error = $string['notickedfields'];
   }
 
-  if (!isset($_POST['status'])) {
+  if (!isset($_GET['status'])) {
     $error = $string['notickedstatus'];
   }
 
-  if (($_POST['searchterm'] == '' or $_POST['searchterm'] == '%') and $_POST['owner'] == '' and  (isset($_POST['status']) and count($_POST['status']) == count($status_array)) and $_POST['bloom'] == '%' and $_POST['keywordID'] == '' and $_POST['module'] == '' and $_POST['question_date'] == 'dont remember' and $_POST['qType'] == '' ) {
+  if (($_GET['searchterm'] == '' or $_GET['searchterm'] == '%') and $_GET['owner'] == '' and  (isset($_GET['status']) and count($_GET['status']) == count($status_array)) and $_GET['bloom'] == '%' and $_GET['keywordID'] == '' and $_GET['module'] == '' and $_GET['question_date'] == 'dont remember' and $_GET['qType'] == '' ) {
     $error = $string['narrowyoursearch'];
   }
 
   if ($error != '') {
     echo "<table class=\"header\" style=\"table-layout:fixed\">\n";
-    echo "<tr><th colspan=\"6\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
+    echo '<tr><th colspan="6">';
+    echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div>';
+    if ($_GET['module']) {
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+    }
+    echo "<div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
     ?>
     <tr>
     <th>&nbsp;</th>
@@ -187,17 +199,17 @@ if (isset($_POST['submit'])) {
   $variables = array();
 
   $keywordsSQL = '';
-  if ($_POST['keywordID'] != '') {
+  if ($_GET['keywordID'] != '') {
     $keywordsSQL = 'AND keywordID = ?';
-    $variables[] = intval($_POST['keywordID']);
+    $variables[] = intval($_GET['keywordID']);
     $params .= 'i';
   }
 
-  $searchterm = $_POST['searchterm'];
+  $searchterm = $_GET['searchterm'];
   if ($searchterm == '') {
     $search_string = '';
   } else {
-    if (isset($_POST['theme']) and $_POST['theme']) {
+    if (isset($_GET['theme']) and $_GET['theme']) {
       $themeSQL = ' OR theme LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -205,7 +217,7 @@ if (isset($_POST['submit'])) {
       $themeSQL = '';
     }
 
-    if (isset($_POST['scenario']) and $_POST['scenario']) {
+    if (isset($_GET['scenario']) and $_GET['scenario']) {
       $scenarioSQL = ' OR scenario_plain LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -213,7 +225,7 @@ if (isset($_POST['submit'])) {
       $scenarioSQL = '';
     }
 
-    if (isset($_POST['leadin']) and $_POST['leadin']) {
+    if (isset($_GET['leadin']) and $_GET['leadin']) {
       $leadinSQL = ' OR leadin_plain LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -221,7 +233,7 @@ if (isset($_POST['submit'])) {
       $leadinSQL = '';
     }
 
-    if (isset($_POST['options']) and $_POST['options']) {
+    if (isset($_GET['options']) and $_GET['options']) {
       $stemsSQL = ' OR option_text LIKE ?';
       $variables[] = '%' . $searchterm . '%';
       $params .= 's';
@@ -233,21 +245,21 @@ if (isset($_POST['submit'])) {
     $search_string = 'AND (' . substr($search_string, 4) . ')';
   }
 
-  if ($_POST['module'] != '') {
+  if ($_GET['module'] != '') {
     $module_string = ' AND idMod = ?';
-    $variables[] = $_POST['module'];
+    $variables[] = $_GET['module'];
     $params .= 'i';
   } else {
     $module_string = '';
   }
 
-  if ($_POST['owner'] != '' or count($staff_modules) == 0) {
+  if ($_GET['owner'] != '' or count($staff_modules) == 0) {
     $user_string = ' AND questions.ownerID=?';
-    $variables[] = $_POST['owner'];
+    $variables[] = $_GET['owner'];
     $params .= 'i';
   } else {
     // If no specific owner set lock down by team (apart from SysAdmin).
-    if (count($staff_modules) > 0 and $_POST['module'] == '') {
+    if (count($staff_modules) > 0 and $_GET['module'] == '') {
       $user_string = implode(',', array_keys($staff_modules));
       $user_string = " AND (idMod IN ($user_string) OR users.id={$userObject->get_user_ID()})";
     } else {
@@ -255,22 +267,22 @@ if (isset($_POST['submit'])) {
     }
   }
 
-  if (isset($_POST['status'])) {
-    $status_string = " AND questions.status IN (" . implode(',', $_POST['status']) . ")";
+  if (isset($_GET['status'])) {
+    $status_string = " AND questions.status IN (" . implode(',', $_GET['status']) . ")";
   } else {
     $status_string = '';
   }
 
-  if (isset($_POST['locked']) and $_POST['locked'] == '1') {
+  if (isset($_GET['locked']) and $_GET['locked'] == '1') {
     $locked_string = '';
   } else {
     $locked_string = " AND locked IS NULL";
   }
 
-  if ($_POST['question_date'] == 'dont remember') {
+  if ($_GET['question_date'] == 'dont remember') {
     $last_edited = '';
   } else {
-    switch ($_POST['question_date']) {
+    switch ($_GET['question_date']) {
       case 'week':
         $from_date = date('YmdHis', mktime(date("H"),date("i"),date("s"),date("m"),date("d")-7,date("Y")));
         $to_date = date("YmdHis");
@@ -284,29 +296,29 @@ if (isset($_POST['submit'])) {
         $to_date = date("YmdHis");
         break;
       case 'specify':
-        $from_date = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . "000000";
-        $to_date = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . "235959";
+        $from_date = $_GET['fyear'] . $_GET['fmonth'] . $_GET['fday'] . "000000";
+        $to_date = $_GET['tyear'] . $_GET['tmonth'] . $_GET['tday'] . "235959";
         break;
     }
-    $last_edited = 'AND last_edited>? AND last_edited<?';
+    $last_edited = 'AND last_edited > ? AND last_edited < ?';
     $variables[] = $from_date;
     $variables[] = $to_date;
     $params .= 'ss';
   }
 
-  if ($_POST['searchtype'] == '%') {
+  if ($_GET['searchtype'] == '%') {
     $q_type = '';
   } else {
     $q_type = 'AND q_type LIKE ?';
-    $variables[] = $_POST['searchtype'];
+    $variables[] = $_GET['searchtype'];
     $params .= 's';
   }
 
-  if ($_POST['bloom'] == '%') {
-    $bloom ='';
+  if ($_GET['bloom'] == '%') {
+    $bloom = '';
   } else {
     $bloom = 'AND bloom LIKE ?';
-    $variables[] = $_POST['bloom'];
+    $variables[] = $_GET['bloom'];
     $params .= 's';
   }
 
@@ -331,13 +343,17 @@ if (isset($_POST['submit'])) {
 
   // Empty first line to fix widths
   echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 130px\"></th><th style=\"width: 120px\"></th><th style=\"width: 70px\"></th><th style=\"width: 70px\"></th></tr>";
-  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
-  if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
-    echo "'" . $_POST['searchterm'] . "'";
-  } elseif (isset($_POST['searchtype']) and $_POST['searchtype'] != '%') {
-    echo $string[$_POST['searchtype']];
+  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+  if ($_GET['module']) {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+  }
+  echo "</div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
+  if (isset($_GET['searchterm']) and $_GET['searchterm'] != '') {
+    echo "'" . $_GET['searchterm'] . "'";
+  } elseif (isset($_GET['searchtype']) and $_GET['searchtype'] != '%') {
+    echo $string[$_GET['searchtype']];
   } else {
-    echo $_POST['module'];
+    echo $_GET['module'];
   }
   echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
 ?>

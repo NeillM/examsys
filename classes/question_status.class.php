@@ -360,7 +360,7 @@ Class QuestionStatus {
   }
 	
 	public static function get_all_statuses($db, $lang_strings, $with_index = false) {
-    if($with_index  == true) {
+    if ($with_index  == true) {
 			return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'id');
 		} else {
  			return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, '');
@@ -368,7 +368,7 @@ Class QuestionStatus {
   }
 	
 	public static function get_all_statuses_by_name($db, $lang_strings) {
- 			return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'name');
+ 		return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'name');
   }
 
   /**

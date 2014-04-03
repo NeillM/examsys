@@ -91,11 +91,11 @@ if (!$module_code) {
     }
     
     function editReference() {
-      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>";
+      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $modID; ?>";
     }
     
     function deleteReference() {
-      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $_GET['module']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $modID; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       notice.moveTo(screen.width/2-210, screen.height/2-85);
       if (window.focus) {
         notice.focus();
@@ -113,7 +113,7 @@ if (!$module_code) {
   $reference_materials = array();
 
   $result = $mysqli->prepare("SELECT reference_material.id, reference_material.title FROM reference_material, reference_modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND idMod = ? ORDER BY reference_material.id");
-  $result->bind_param('i', $_GET['module']);
+  $result->bind_param('i', $modID);
   $result->execute();
   $result->store_result();
   $result->bind_result($id, $title);
@@ -143,7 +143,7 @@ if (!$module_code) {
 <table class="header">
 <tr>
 <?php
-  echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . "</a></div><div style=\"margin-left:10px; font-size:200%; font-weight:bold\">" . $string['referencematerial'] . "</th>\n";
+  echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?module=" . $modID . "\">" . module_utils::get_moduleid_from_id($modID, $mysqli) . "</a></div><div style=\"margin-left:10px; font-size:200%; font-weight:bold\">" . $string['referencematerial'] . "</th>\n";
 ?>
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>

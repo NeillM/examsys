@@ -126,7 +126,7 @@ if (isset($_POST['submit'])) {
 <div id="content" class="content" style="font-size:80%">
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></td></tr>\n";
+  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../module/index.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></td></tr>\n";
   echo "</table>\n";
 ?>
 
@@ -137,7 +137,7 @@ if (isset($_POST['submit'])) {
 
 <table class="dialog_border" style="width:600px">
 <tr>
-<td align="left" style="background-color:white; width:32px"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" /></td><td><span style="font-size:160%; font-weight:bold; color:#5582D2"><?php echo $string['importobjectives']; ?></span></td>
+  <td align="left" style="background-color:white; width:32px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header"><?php echo $string['importobjectives']; ?></td>
 </tr>
 <tr>
 <td align="left" class="dialog_body" colspan="2">

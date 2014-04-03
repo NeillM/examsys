@@ -96,7 +96,7 @@
 
 <table style="width:730px" class="dialog_border">
 <tr>
-<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%" class="midblue_header"><?php echo $string['importusers']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importusers']; ?></span></td>
 </tr>
 <tr>
 <td align="left" class="dialog_body" colspan="2">
@@ -120,7 +120,7 @@ if ($file_problem) {
 ?>
 
 <div align="center"><input type="checkbox" name="welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></div>
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

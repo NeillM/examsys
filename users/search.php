@@ -330,7 +330,11 @@ if (isset($_GET['paperID'])) {
 <table class="header" id="usertable">
 
 <?php
-echo "<tr><th style=\"padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
+echo "<tr><th style=\"padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+if (isset($_GET['team'])) {
+  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['team'] . '">' . module_utils::get_moduleid_from_id($_GET['team'], $mysqli) . '</a>';
+}
+echo "</div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
 if (isset($_GET['paperID'])) {
   echo implode(', ', array_values($paper_modules)) . ' (' . $paper_calendar_year . ')';
 } elseif (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {

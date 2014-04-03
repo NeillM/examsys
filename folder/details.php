@@ -35,6 +35,8 @@ require_once '../classes/folderutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
 
+$folder = check_var('folder', 'GET', true, false, true);
+
 function getLastFolder($path) {
   $parts = explode(';' , $path);
   $part_no = count($parts);
@@ -55,66 +57,45 @@ $parent_list = array();
 $add_member = false;
 
 // Folder security checks
-if (isset($_GET['folder'])) {
-  $folder = $_GET['folder'];
-} else {
-  $folder = '';
+$orig_folder_name = '';
+
+$result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id = ?");
+$result->bind_param('i', $folder);
+$result->execute();
+$result->store_result();
+$result->bind_result($folder_ownerID, $orig_folder_name);
+$result->fetch();
+$result->close();
+
+if ($orig_folder_name == '') {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-if ($folder != '') {
-  $orig_folder_name = '';
 
-  $result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id = ?");
-  $result->bind_param('i', $folder);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($folder_ownerID, $orig_folder_name);
-  $result->fetch();
-  $result->close();
-  
-  if ($orig_folder_name == '') {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
-
-  $parent_list = array();
-  if (substr_count($orig_folder_name, ';') > 0) {
-    $last_semicolon = strrpos($orig_folder_name, ';');
-    $path = substr($orig_folder_name, 0, $last_semicolon);
-    $parts = explode(';', $path);
-    $part_sql = '';
-    foreach ($parts as $part) {
-      if ($part_sql == '') {
-        $part_sql = $part;
-      } else {
-        $part_sql .= ';' . $part;
-      }
-      $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
-      $parent_results->bind_param('si', $part_sql, $userObject->get_user_ID());
-      $parent_results->execute();
-      $parent_results->bind_result($parent_id, $parent_name);
-      $parent_results->fetch();
-      $parent_results->close();
-      $parent_list[$parent_id] = $parent_name;
+$parent_list = array();
+if (substr_count($orig_folder_name, ';') > 0) {
+  $last_semicolon = strrpos($orig_folder_name, ';');
+  $path = substr($orig_folder_name, 0, $last_semicolon);
+  $parts = explode(';', $path);
+  $part_sql = '';
+  foreach ($parts as $part) {
+    if ($part_sql == '') {
+      $part_sql = $part;
+    } else {
+      $part_sql .= ';' . $part;
     }
+    $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
+    $parent_results->bind_param('si', $part_sql, $userObject->get_user_ID());
+    $parent_results->execute();
+    $parent_results->bind_result($parent_id, $parent_name);
+    $parent_results->fetch();
+    $parent_results->close();
+    $parent_list[$parent_id] = $parent_name;
   }
 }
 
-if (isset($_GET['module']) and $_GET['module'] != '') {
-  $module = $_GET['module'];
-  
-  $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
-    
-  if (!$module_details) {
-   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  } elseif ($module_details['active'] == 0) {
-   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
-	}
-	
-} else {
-  $module = '';
-}
+
+$module = '';
 
 if (isset($_POST['submit'])) {
   $folder_results = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
@@ -132,11 +113,10 @@ if (isset($_POST['submit'])) {
   }
 }
 
-if ($folder != '') {
-  $folders_array = explode(';', $orig_folder_name);
-  $parts = count($folders_array) - 1;
-  $selfenrol = 0;
-}
+$folders_array = explode(';', $orig_folder_name);
+$parts = count($folders_array) - 1;
+$selfenrol = 0;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -237,69 +217,25 @@ echo " /> " . $string['showretired'] . "</th></tr>\n";
 
 echo "</table>\n<br />\n";
 
-$display_papers = true;
-// Get members of current folder.
-if (isset($_GET['module']) and $_GET['module'] != '') {
-
-  $member_details = $mysqli->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users, modules) WHERE modules_staff.idMod = modules.id AND modules_staff.memberID = users.id AND modules.id = ? ORDER BY surname, initials");
-  $member_details->bind_param('s', $module);
-  $member_details->execute();
-  $member_details->store_result();
-  $member_details->bind_result($surname, $initials, $title, $tmp_userID);
-
-  $tmp_html = '';
-  if ($userObject->has_role('Demo')) {
-    $i = 0;
-  }
-  if ($member_details->num_rows > 0) $tmp_html = '<ul type="square" style="line-height:155%; font-size:90%; color:#C0C0C0; margin-top:4px; margin-bottom:4px; margin-left:20px; padding-left:0px">';
-  while ($member_details->fetch()) {
-    if ($userObject->has_role('Demo')) {
-      $tmp_html .= "<li><span style=\"color:#254280\">" . demo_replace_name($i) . "</span></li>\n";
-      $i++;
-    } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-      $tmp_html .= "<li><a style=\"color:#254280\" href=\"../users/details.php?userID=$tmp_userID&module=" . $_GET['module'] . "\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</a></li>\n";
-    } else {
-      $tmp_html .= "<li><span style=\"color:#254280\">$surname, $initials. " . str_replace('Professor','Prof',$title) . "</span></li>\n";
-    }
-    if ($tmp_userID == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
-  }
-  if ($member_details->num_rows > 0) $tmp_html .= '</ul>';
-  echo '<div style="float:right; width:165px; margin-right:10px; border:1px solid #C0C0C0">';
-  if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
-    echo '<div style="float:left; width:95%; padding:4px; background-color:#EBF3FF"><div style="float:left"><a href="" style="color:#254280" onclick="addTeamMember(); return false;" class="recent">' . $string['teammembers'] . '</a></div><div style="float:right"><a href="" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" border="0" /></a></div></div>';
-  } else {
-    echo '<div style="padding:4px; background-color:#EBF3FF">' . $string['teammembers'] . '</div>';
-  }
-  echo "<br clear=\"all\" />$tmp_html</div>\n";
-  $member_details->close();
-}
-
-// Is it a self-enrol module.
-if (isset($module_details['selfenroll']) and $module_details['selfenroll'] == 1) {
-  $selfenrol_url = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/self_enrol.php?moduleid=' . $module_details['moduleid'];
-  echo "<div style=\"padding-left:10px\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" alt=\"modules\" /> <span style=\"color:#C00000\">" . $string['SelfenrolURL'] . ":</span> <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n<br />";
-}
-
 // Get any sub-folders first.
-if ($folder != '') {
-  $tmp_string = '';
-  if (count($staff_modules) > 0) {
-    $tmp_string = " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
-  }
-
-  $tmp_folder_name = $orig_folder_name . ';%';
-  $folder_details = $mysqli->prepare("SELECT folders.id, name, color FROM folders WHERE (ownerID=?) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
-  $folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
-  $folder_details->execute();
-  $folder_details->bind_result($id, $name, $color);
-  while ($folder_details->fetch()) {
-    $display_name = str_replace("$orig_folder_name;","",$name);
-    if (substr_count($display_name,';') == 0) {
-      echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" />$display_name</a></div>\n";
-    }
-  }
-  $folder_details->close();
+$tmp_string = '';
+if (count($staff_modules) > 0) {
+  $tmp_string = " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
 }
+
+$tmp_folder_name = $orig_folder_name . ';%';
+$folder_details = $mysqli->prepare("SELECT folders.id, name, color FROM folders WHERE (ownerID=?) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
+$folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
+$folder_details->execute();
+$folder_details->bind_result($id, $name, $color);
+while ($folder_details->fetch()) {
+  $display_name = str_replace("$orig_folder_name;","",$name);
+  if (substr_count($display_name,';') == 0) {
+    echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" />$display_name</a></div>\n";
+  }
+}
+$folder_details->close();
+
 
 // New folder.
 if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['submit'])) {
@@ -307,53 +243,20 @@ if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['s
 }
 
 // Get current owner papers.
-if ($folder != '') {
-  $query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
-  $results = $mysqli->prepare($query_string);
-} elseif ($_GET['module'] != '') {
-  $paper_types = array();
-
-  $results = $mysqli->prepare("SELECT DISTINCT paper_type, COUNT(paper_type) AS no_papers FROM properties, modules, properties_modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND modules.id = ? AND deleted IS NULL GROUP BY paper_type");
-  $results->bind_param('i', $_GET['module']);
-  $results->execute();
-  $results->bind_result($paper_type, $no_papers);
-  while ($results->fetch()) {
-    $paper_types[$paper_type] = $no_papers;
-  }
-  $results->close();
-	// UPDATED sql query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data don't display
-  $query_string = "SELECT paper_ownerID, properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND properties.paper_ownerID=users.id  AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
-  $results = $mysqli->prepare($query_string);
-  $results->bind_param('i', $_GET['module']);
-}
+$query_string = "SELECT DISTINCT paper_ownerID, property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.paper_ownerID=users.id AND folder=\"$folder\" AND deleted IS NULL GROUP BY paper_title ORDER BY paper_type, paper_title";
+$results = $mysqli->prepare($query_string);
 $results->execute();
 $results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
 $results->store_result();
-$old_p_type = '';
 $sent_clear_all = false;
-if ($display_papers) {
-  if ($results->num_rows > 0) {
-    while ($results->fetch()) {
-      if ($old_p_type != $paper_type and (isset($_GET['module']) and $_GET['module'] != '') ) {
-        if ($sent_clear_all) {
-          echo "<br clear=\"left\" />";
-        }
-        $sent_clear_all = true;
-
-        echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string[strtolower($types_array[$paper_type])] . " (" . $paper_types[$paper_type] . ")";
-        if ($paper_type == 2) {
-          echo "&nbsp;&nbsp;&nbsp;<span style=\"font-weight:normal\"><a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"16\" alt=\"Calendar\" /></a>&nbsp;<a href=\"../admin/calendar.php?module=" . $_GET['module'] . "#" . date("n") . "\">" . $string['calendar'] . "</a></span>\n";
-        }
-        echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-        echo "<br />\n";
-      }
-      display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
-      $old_p_type = $paper_type;
-      $file_no++;
-    }
-    $results->close();
+if ($results->num_rows > 0) {
+  while ($results->fetch()) {
+    display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
+    $file_no++;
   }
+  $results->close();
 }
+
 $mysqli->close();
 ?>
 </form>

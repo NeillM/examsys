@@ -54,13 +54,6 @@ if (!isset($properties)) {
   $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 }
 
-$modules_array = array();
-
-$my_folders_array     = get_folders($staff_modules, $userObject->get_user_ID(), $mysqli);
-$full_modules_array   = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
-$staff_modules_array  = get_staff_module_links($staff_modules, $mysqli);
-$keywords_array       = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
-
 $moduleIDs = $properties->get_modules();
 $checklist = '';
 if (count($moduleIDs) > 0) {
@@ -141,7 +134,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function editQuestion() {
-    var loc = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&qNo=' + $('#questionNo').val() + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&calling=paper&scrOfY=' + document.PapersMenu.scrOfY.value;
+    var loc = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&qNo=' + $('#questionNo').val() + '&paperID=<?php echo $paperID; ?>&folder=<?php echo $folder; ?>&module=<?php echo $module; ?>&calling=paper&scrOfY=' + document.PapersMenu.scrOfY.value;
     if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
       loc += '&type=' + $('#qType').val();
     }
@@ -149,7 +142,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function deleteQuestion() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_q_pointer.php?questionID=" + $('#questionID').val() + "&pID=" + $('#pID').val() + "&paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&q_id=" + document.PapersMenu.questionID.value + "&scrOfY=" + document.PapersMenu.scrOfY.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_q_pointer.php?questionID=" + $('#questionID').val() + "&pID=" + $('#pID').val() + "&paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&q_id=" + document.PapersMenu.questionID.value + "&scrOfY=" + document.PapersMenu.scrOfY.value + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -466,27 +459,17 @@ if ($properties->get_summative_lock() == true) {
   }
   echo '</ul>';
 }
-
-// - Question Bank Tasks ----------------------------------------------------------
 ?>
-<div class="submenuheading" id="banktasks"><?php echo $string['questionbanktasks']; ?></div>
-
-<div style="font-size:90%" id="menu3">
-	<div class="menuitem cascade" id="type" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','type',myOptions0,myURLs0,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/question_list_icon.gif" alt="<?php echo $string['questionsbytype']; ?>" /><a href="#" onclick="return false"><?php echo $string['questionsbytype']; ?></a></div>
-	<?php
-		if (count($staff_modules) == 0) {
-			echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/question_list_icon_grey.gif\" alt=\"" . $string['questionsbyteam'] . "\" />" . $string['questionsbyteam'] . "</div>\n";
-		} else {
-			echo "<div class=\"menuitem cascade\" id=\"team\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','banktasks','team',myOptions1,myURLs1,event)\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/question_list_icon.gif\" alt=\"" . $string['questionsbyteam'] . "\" /><a href=\"#\" onclick=\"return false;\">" . $string['questionsbyteam'] . "</a></div>\n";
-		}
-		if (count($keywords_array) == 0) {
-			echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon_grey.gif\" alt=\"{$string['questionsbykeyword']}\" />" . $string['questionsbykeyword'] . "</div>\n";
-		} else {
-			echo "<div class=\"menuitem cascade\" id=\"keyword\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','banktasks','keyword',myOptions2,myURLs2,event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/question_list_icon.gif\" alt=\"{$string['questionsbykeyword']}\" /><a href=\"#\" onclick=\"return false\">{$string['questionsbykeyword']}</a></div>\n";
-		}
-	?>
-	<div class="menuitem cascade" id="search" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup3','banktasks','search',myOptions3,myURLs3,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="<?php echo $string['search']; ?>" /><a href="#" onclick="return false"><?php echo $string['search']; ?></a></div>
-	<div class="menuitem cascade" id="newquestion" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup4','banktasks','newquestion',myOptions4,myURLs4,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
+<div style="font-size:90%" id="menu2a">
+<?php
+  $extra_url = '';
+	if (isset($_GET['module'])) {
+    $extra_url .= '&module=' . $_GET['module'];
+  }
+  if ($extra_url != '') $extra_url = '?' . $extra_url;
+  echo '<div class="menuitem"><a href="../question/search.php' . $extra_url . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="' . $string['search'] . '" />' . $string['search'] . '</a></div>';
+?>
+  <div class="menuitem cascade" id="newquestion" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','banktasks','newquestion',myOptions1,myURLs1,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
 <?php
@@ -683,9 +666,6 @@ if ($properties->get_paper_type() == '2') {
 </form>
 </div>
 <?php
-  makeMenu(array($string['info']=>$configObject->get('cfg_root_path') . '/question/list.php?type=info',$string['keyword_based']=>$configObject->get('cfg_root_path') . '/question/list.php?type=keyword',$string['random']=>$configObject->get('cfg_root_path') . '/question/list.php?type=random','-'=>'-',$string['area']=>$configObject->get('cfg_root_path') . '/question/list.php?type=area',$string['calculation']=>$configObject->get('cfg_root_path') . '/question/list.php?type=enhancedcalc',$string['dichotomous']=>$configObject->get('cfg_root_path') . '/question/list.php?type=dichotomous',$string['extmatch']=>$configObject->get('cfg_root_path') . '/question/list.php?type=extmatch',$string['blank']=>$configObject->get('cfg_root_path') . '/question/list.php?type=blank',$string['hotspot']=>$configObject->get('cfg_root_path') . '/question/list.php?type=hotspot',$string['labelling']=>$configObject->get('cfg_root_path') . '/question/list.php?type=labelling',$string['likert']=>$configObject->get('cfg_root_path') . '/question/list.php?type=likert',$string['matrix']=>$configObject->get('cfg_root_path') . '/question/list.php?type=matrix',$string['mcq']=>$configObject->get('cfg_root_path') . '/question/list.php?type=mcq',$string['mrq']=>$configObject->get('cfg_root_path') . '/question/list.php?type=mrq',$string['rank']=>$configObject->get('cfg_root_path') . '/question/list.php?type=rank',$string['sct']=>$configObject->get('cfg_root_path') . '/question/list.php?type=sct',$string['textbox']=>$configObject->get('cfg_root_path') . '/question/list.php?type=textbox', $string['true_false']=>$configObject->get('cfg_root_path') . '/question/list.php?type=true_false'));
-  makeMenu($staff_modules_array);
-  makeMenu($keywords_array);
   makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
 
   if ($properties->get_summative_lock()) {

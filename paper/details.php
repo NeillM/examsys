@@ -44,6 +44,9 @@ require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
+$_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
+$_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
+
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
@@ -78,7 +81,7 @@ if ($properties->get_paper_type() == '4') {		// OSCE
 	$killer_questions->load();
 }
 
-$exclusions = new Exclusion($_GET['paperID'], $mysqli);
+$exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();
 
 /**
@@ -487,7 +490,7 @@ function check_latex_random($q_ids, $mysqli) {
 
 
   function edQ(questionNo, questionID, qType) {
-    var loc = "../question/edit/index.php?q_id=" + questionID + "&qNo=" + questionNo + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + $('#scrOfY').val();
+    var loc = "../question/edit/index.php?q_id=" + questionID + "&qNo=" + questionNo + "&paperID=<?php echo $paperID; ?>&calling=paper&scrOfY=" + $('#scrOfY').val();
     if (qType == 'random' || qType == 'keyword_based') {
       loc += '&type=' + qType;
     }
@@ -802,8 +805,9 @@ function check_latex_random($q_ids, $mysqli) {
   echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
 
   echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
-  if (isset( $_GET['module'] ) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
   } elseif (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } else {
@@ -812,7 +816,8 @@ function check_latex_random($q_ids, $mysqli) {
     $moduleID = key($paper_modules);
     if ($moduleID != '') {
       $module_code = $paper_modules[$moduleID];
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $moduleID . '">' . $module_code . '</a>';
+      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
     }
   }
   echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';

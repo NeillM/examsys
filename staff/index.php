@@ -187,23 +187,6 @@ require_once '../include/staff_auth.inc';
   }
   $result->close();
 
-  echo "<br />\n";
-  $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
-
-  // -- Display top 10 recent papers ----------------------------------
-  $result = $mysqli->prepare("SELECT paperID, paper_title, accessed, paper_type FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
-  $result->bind_param('i', $userObject->get_user_ID());
-  $result->execute();
-  $result->bind_result($paperID, $paper_title, $accessed, $paper_type);
-  $result->store_result();
-  echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myrecentpapers'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-  while ($result->fetch()) {
-    echo "<div style=\"padding-left:22px\"><a href=\"../paper/details.php?paperID=$paperID\"><img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" class=\"recent_icon\" alt=\"$paper_type\" /></a><a ";
-    if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
-    echo "href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></div>\n";
-  }
-  $result->close();
-
   // -- Display any papers for review ---------------------------------
   $result = $mysqli->prepare("SELECT paper_title, property_id, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
   $tmp = $userObject->get_user_ID();
@@ -213,7 +196,7 @@ require_once '../include/staff_auth.inc';
   $result->store_result();
   if ($result->num_rows() > 0) {
     echo "<br />\n";
-    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['papersforreview'] . " (" . $result->num_rows() . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['papersforreview'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   }
   while ($result->fetch()) {
     $reviewed = '';
@@ -234,10 +217,7 @@ require_once '../include/staff_auth.inc';
   }
   if ($result->num_rows() > 0) echo '<br clear="left" />';
   $result->close();
-?>
 
-<br />
-<?php
   // -- Display personal folders --------------------------------------
   $module_sql = '';
   if (count($userObject->get_staff_modules()) > 0) {
@@ -250,7 +230,7 @@ require_once '../include/staff_auth.inc';
   $result->bind_result($id, $name, $color);
   $result->store_result();
 
-  echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myfolders'] . " (" . ($result->num_rows() + 1) . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myfolders'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   while ($result->fetch()) {
     echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\"  alt=\"Folder\" />$name</a></div>\n";
   }
@@ -274,39 +254,23 @@ require_once '../include/staff_auth.inc';
     // -- Display module folders ------------------------------------
     $staff_team_array = $userObject->get_staff_team_modules();
 
-    $module_no = count($staff_team_array);
-    if ($userObject->has_role('Admin')) $module_no++;
-
-    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['mymodules'] . " ($module_no)</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['mymodules'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     if ($userObject->has_role('SysAdmin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../module/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"../module/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
     } elseif ($userObject->has_role('Admin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../folder/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"../folder/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
+      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../module/all.php\"><img src=\"../artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"../module/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
     }
     foreach ($staff_team_array as $idMod => $folder_title) {
-      $url = '../folder/details.php?module=' . $idMod;
+      $url = '../module/index.php?module=' . $idMod;
 	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
     }
+    $url = '../module/index.php?module=0';
+    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/red_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Unassigned</a><br /><span class=\"grey\">Questions/papers not on any module</span></td></tr></table></div>\n";
 
+    $module_no = count($staff_team_array);
     if ($module_no == 0) {
       echo '<div style="color:#C00000; padding-left:15px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
     }
-		
-    echo '<br clear="left" /><br />';
-
-    // -- Display papers not assigned to a module -------------------
-    $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,' {$configObject->get('cfg_short_date')}') AS start_date, DATE_FORMAT(start_date,' {$configObject->get('cfg_short_date')} %H:%i') AS display_start_date, DATE_FORMAT(end_date,'%d/%m/%y %H:%i') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id LEFT JOIN papers ON properties.property_id=papers.paper LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id WHERE paper_ownerID=? AND idMod is NULL AND deleted IS NULL GROUP BY paper_title ORDER BY paper_title");
-    $result->bind_param('i', $userObject->get_user_ID());
-    $result->execute();
-    $result->bind_result($property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
-    $result->store_result();
-    if ($result->num_rows > 0) {
-      echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['unassignedpapers'] . " (" . $result->num_rows . ")<nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-      while ($result->fetch()) {
-        display_paper_icon($userObject->get_user_ID(), $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
-      }
-    }
-    $result->close();
   }
 
   $mysqli->close();
