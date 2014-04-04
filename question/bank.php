@@ -35,6 +35,7 @@ require_once '../classes/keywordutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/question_status.class.php';
+require_once '../classes/questionbank.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -50,6 +51,8 @@ if (!$module_details) {
  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
 }
+
+$qbank = new QuestionBank($module, $string, $mysqli);
 
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
@@ -108,31 +111,6 @@ echo "</div></th><th></th></tr>\n";
 
 echo "</table>\n";
 
-function get_stats($idMod, $type, $db) {
-  $stats = array();
-  
-  if ($type == 'type') {
-    $sql = 'SELECT COUNT(questions.q_id), q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY q_type';
-  } elseif ($type == 'status') {
-    $sql = 'SELECT COUNT(questions.q_id), name FROM questions, questions_modules, question_statuses WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY status';
-  } elseif ($type == 'bloom') {
-    $sql = 'SELECT COUNT(questions.q_id), bloom FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY bloom';
-  } elseif ($type == 'keyword') {
-    $sql = 'SELECT COUNT(questions.q_id), keyword FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keyword';
-  }
-  
-  $result = $db->prepare($sql);
-  $result->bind_param('i', $idMod);
-  $result->execute();
-  $result->bind_result($number, $type);
-  while ($result->fetch()) {
-    $stats[$type] = $number;
-  } 
-  $result->close();
-  
-  return $stats;
-}
-
 function get_keywords($idMod, $db) {
   $keywords_array = array();
   
@@ -147,97 +125,19 @@ function get_keywords($idMod, $db) {
   return $keywords_array;
 }
 
-switch($type) {
-  case 'keyword':
-    $stats = get_stats($module, 'keyword', $mysqli);
-    $keywords = get_keywords($module, $mysqli);
-    if (count($keywords) == 0) {    // Stop we have no keywords.
-      echo $notice->info_strip($string['nokeywords'], 100) . "</div>\n</body>\n</html>\n";
-      exit;
-    }
-    foreach ($keywords as $keywordID=>$keyword) {
-      $bank_types[$keyword] = 'list.php?keyword=' . $keywordID;
-    }
-    break;
-  case 'type':
-    $stats = get_stats($module, 'type', $mysqli);
-    $bank_types = array(
-        'area' => 'list.php?type=area',
-        'calculation' => 'list.php?type=enhancedcalc',
-        'dichotomous' => 'list.php?type=dichotomous',
-        'extmatch' => 'list.php?type=extmatch',
-        'blank' => 'list.php?type=blank',
-        'hotspot' => 'list.php?type=hotspot',
-        'info' => 'list.php?type=info',
-        'keyword_based' => 'list.php?type=keyword',
-        'labelling' => 'list.php?type=labelling',
-        'likert' => 'list.php?type=likert',
-        'matrix' => 'list.php?type=matrix',
-        'mcq' => 'list.php?type=mcq',
-        'mrq' => 'list.php?type=mrq',
-        'random' => 'list.php?type=random',
-        'rank' => 'list.php?type=rank',
-        'sct' => 'list.php?type=sct',
-        'textbox' => 'list.php?type=textbox',
-        'true_false' => 'list.php?type=true_false'
-      );
-    break;
-  case 'status':
-    $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
-    $stats = get_stats($module, 'status', $mysqli);
-    $bank_types = array();
-    foreach ($statuses as $status) {
-      $status_name = $status->get_name();
-      $bank_types[$status_name] = 'list.php?status=' . $status->id;
-    }
-    break;
-  case 'bloom':
-    $stats = get_stats($module, 'bloom', $mysqli);
-    $bank_types = array(
-        'Knowledge' => 'list.php?bloom=knowledge',
-        'Comprehension' => 'list.php?bloom=comprehension',
-        'Application' => 'list.php?bloom=application',
-        'Analysis' => 'list.php?bloom=analysis',
-        'Synthesis' => 'list.php?bloom=synthesis',
-        'Evaluation' => 'list.php?bloom=evaluation'
-      );
-    break;
-  case 'difficulty':
-    //$stats = get_stats($module, 'bloom', $mysqli);
-    $bank_types = array(
-        'Very Easy' => 'list.php?p=ve',
-        'Easy' => 'list.php?p=e',
-        'Moderate' => 'list.php?p=m',
-        'Hard' => 'list.php?p=h',
-        'Very Hard' => 'list.php?p=vh'
-      );
-    break;
-  case 'discrimination':
-    //$stats = get_stats($module, 'bloom', $mysqli);
-    $bank_types = array(
-        'Highest' => 'list.php?d=h2',
-        'High' => 'list.php?d=h1',
-        'Intermediate' => 'list.php?d=i',
-        'Low' => 'list.php?d=l'
-      );
-    break;
-}
+
+$bank_types = $qbank->get_categories($type);
+$stats      = $qbank->get_stats($type);
 
 if ($type != 'keyword') {
   echo "<br />\n";
 }
 
 $old_section = '';
-foreach ($bank_types as $type_name=>$url) {
+foreach ($bank_types as $id=>$type_name) {
   $grey_text = '';
-  $modified_url = $url . '&module=' . $module;
-  if ($type == 'type') {
-    $display_name = $string[$type_name];
-  } elseif ($type == 'bloom') {
-    $display_name = $string[strtolower($type_name)];
-  } else {
-    $display_name = $type_name;
-  }
+  $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
+  
   if ($type == 'keyword') {
     if ($old_section != $type_name{0}) {
       echo "<br clear=\"left\" />\n";
@@ -245,10 +145,12 @@ foreach ($bank_types as $type_name=>$url) {
     }
     $old_section = $type_name{0};
   }
-  if (isset($stats[$type_name])) {
+  if (isset($stats[$id])) {
+    $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' questions</span>';
+  } elseif(isset($stats[$type_name])) {
     $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' questions</span>';
   }
-  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$modified_url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$modified_url\" class=\"blacklink\">" . $display_name . "</a>$grey_text</td></tr></table></div>\n";
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
 }
 $mysqli->close();
 ?>

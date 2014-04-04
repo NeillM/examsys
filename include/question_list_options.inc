@@ -142,35 +142,34 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
     clearAll();
   }
   
-  function toggleMyQ() {
-    if ($("#myquestions").attr('checked')) {
-      $(".notmyq").hide();
-    } else {
-      $(".notmyq").show();
-    }
+  function check_checkboxes() {
+    $('input[type=checkbox]').each(function () {
+      if ($(this).attr("class") == 'check_type') {
+        q_type = $(this).val();
+        if (this.checked) {
+          $("." + q_type).show(); 
+        } else {
+          $("." + q_type).hide(); 
+        }
+      }
+    });
+
     var n = $(".q:visible").length;
     $("#q_count").text(n.toLocaleString());
   }
   
-  function toggleLockedQ() {
-    if ($("#lockedquestions").attr('checked')) {
-      $(".lockedq").show();
-    } else {
-      $(".lockedq").hide();
-    }
-    var n = $(".q:visible").length;
-    $("#q_count").text(n.toLocaleString());
-  }
+  $(document).ready(function() {
+    $(".check_type").click(function() {
+      check_checkboxes();
+    });
+    
+    check_checkboxes();
+  });
 </script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="PapersMenu" action="">
 
-<br />
-
-<div style="padding-left:12px"><input class="chk" type="checkbox" onclick="toggleMyQ();" name="myquestions" id="myquestions" value="on" />&nbsp;<?php echo $string['myquestionsonly']; ?></div>
-<div style="padding-left:12px"><input class="chk" type="checkbox" onclick="toggleLockedQ();" name="lockedquestions" id="lockedquestions" value="on" checked />&nbsp;include Locked questions</div>
-<br />
 <br />
 
 <div id="menu2a" style="font-size:90%">
@@ -205,15 +204,33 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
 <div class="menuitem cascade" id="newquestion" onclick="showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event); return false;"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
+<div style="padding-left:12px; padding-top:30px">
+<?php
+  if (isset($_GET['type'])) {
+    $subtypes = $qbank->get_categories($type);
+    
+    foreach($subtypes as $id=>$subtype) {
+      if ($_GET['subtype'] == $id) {
+        $checked = ' checked';
+      } else {
+        $checked = '';
+      }
+      
+      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked/>$subtype</div>\n";
+    }
+  }
+?>
+</div>
+
 <input type="hidden" name="questionID" id="questionID" value="" />
 <input type="hidden" name="qType" id="qType" value="" />
 <input type="hidden" name="oldQuestionID" id="oldQuestionID" value="" />
 <input type="hidden" name="team" id="team" value="<?php if(isset($_GET['team'])) echo $_GET['team'];?>" />
+
 </form>
-
 </div>
-
 <?php
+
   makeMenu(array($string['info']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info",$string['keyword_based']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based",$string['random']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random","-"=>"-",$string['area']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area",$string['calculation']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc",$string['dichotomous']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous",$string['extmatch']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch",$string['blank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank",$string['hotspot']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot",$string['labelling']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling",$string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert",$string['matrix']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq",$string['mrq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq",$string['rank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank",$string['sct']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct",$string['textbox']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox",$string['true_false']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false"));
 
   hideMenuScript($menuNo);

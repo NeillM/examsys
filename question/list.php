@@ -29,6 +29,7 @@ require_once '../classes/stateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/keywordutils.class.php';
 require_once '../classes/question_status.class.php';
+require_once '../classes/questionbank.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -38,22 +39,10 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
-$typeSQL    = '';
-$bloomSQL   = '';
 $statusSQL  = '';
-$type       = '';
+$type       = $_GET['type'];
 
-if (isset($_GET['type'])) {
-  $type = $_GET['type'];
-  if ($_GET['type'] != '%') {
-    $typeSQL = " AND q_type = '" . $_GET['type'] . "'";
-  }
-}
-if (isset($_GET['bloom'])) {
-  if ($_GET['bloom'] != '%') {
-    $bloomSQL = " AND bloom = '" . $_GET['bloom'] . "'";
-  }
-}
+
 if (isset($_GET['status'])) {
   $statusSQL = " AND status = " . $_GET['status'];
 }
@@ -81,6 +70,8 @@ if (isset($_GET['module'])) {
 } else {
   $module = '';
 }
+
+$qbank = new QuestionBank($module, $string, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -94,13 +85,15 @@ if (isset($_GET['module'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
+    .theme {font-weight:bold; color:#316ac5}
     .d {padding-left:6px; padding-right:2px; padding-top:4px; padding-bottom:2px; vertical-align:top}
     .o {color:#A5A5A5}
-    .q {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
+    .q {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none; display:none}
     .q:hover {background-color:#FFE7A2}
     .q.highlight {background-color:#FFBD69}
     .nobr {white-space:nowrap}
     .plock {width:16px; height:16px}
+    input[type=checkbox] {margin-right:8px}
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
@@ -213,36 +206,36 @@ if (isset($_GET['module'])) {
 	}
 
   if ($_GET['module'] == '0') {
-    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status FROM (users, questions) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " AND idMod IS NULL GROUP BY q_id";
+    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " AND idMod IS NULL GROUP BY q_id";
   } elseif (isset($_GET['p'])) {
     $range = array('ve' => 'p >= 80', 'e'  => 'p >= 60 AND p < 80', 'm'  => 'p >= 40 AND p < 60', 'h'  => 'p >= 20 AND p < 40', 'vh' => 'p < 20');
-    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status FROM (users, questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND users.id = questions.ownerID AND performance_main.id = performance_details.perform_id AND " . $range[$_GET['p']] . " AND questions.q_id = questions_modules.q_id AND idMod = $module";
+    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND users.id = questions.ownerID AND performance_main.id = performance_details.perform_id AND " . $range[$_GET['p']] . " AND questions.q_id = questions_modules.q_id AND idMod = $module";
   } elseif (isset($_GET['d'])) {
     $range = array('h1' => 'd >= 35', 'h2' => 'd >= 25 and d < 35', 'i'  => 'd >= 15 and d < 25', 'l'  => 'd < 15');
-    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status FROM (users, questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND users.id = questions.ownerID AND performance_main.id = performance_details.perform_id AND " . $range[$_GET['d']] . " AND questions.q_id = questions_modules.q_id AND idMod = $module";
+    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND users.id = questions.ownerID AND performance_main.id = performance_details.perform_id AND " . $range[$_GET['d']] . " AND questions.q_id = questions_modules.q_id AND idMod = $module";
   } else {
-    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status FROM (users, questions, questions_modules)";
+    $sql = "SELECT DISTINCT questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions, questions_modules)";
     if ($keyword != '%' and $keyword != '') {
       $sql .= " LEFT JOIN keywords_question ON questions.q_id = keywords_question.q_id";
     }
-    $sql .= " WHERE questions.q_id = questions_modules.q_id AND users.id = questions.ownerID $module_sql $staff_modules_sql $typeSQL $bloomSQL $statusSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL";
+    $sql .= " WHERE questions.q_id = questions_modules.q_id AND users.id = questions.ownerID $module_sql $staff_modules_sql $statusSQL $keyword AND status NOT IN ($retired_in) AND deleted IS NULL";
   }
   $sql .= ' ORDER BY ' . $tmp_sortby . ' ' . $ordering;
   
   $search_results = $mysqli->prepare($sql);
   $search_results->execute();
-  $search_results->bind_result($q_id, $ownerID, $title, $initials, $surname, $leadin, $q_type, $last_edited, $modified, $locked, $status);
+  $search_results->bind_result($q_id, $ownerID, $title, $initials, $surname, $theme, $leadin, $q_type, $last_edited, $modified, $locked, $status, $bloom);
   $search_results->store_result();
   
   echo "<tr onclick=\"qOff();\"><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module'])) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
     
-    if (isset($_GET['type'])) {
+    if ($_GET['type'] == 'type') {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">Question Type</a>'; 
     } elseif (isset($_GET['bloom'])) {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">Bloom\'s Taxonomy</a>'; 
-    } elseif (isset($_GET['status'])) {
+    } elseif ($_GET['type'] == 'status') {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">Status</a>'; 
     } elseif (isset($_GET['keyword'])) {
       echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">Keyword</a>'; 
@@ -282,12 +275,13 @@ if (isset($_GET['module'])) {
   while ($search_results->fetch()) {
     $status_class = ' status' . $status;
     echo '<tr class="q' . $status_class;
-    if ($ownerID != $userObject->get_user_ID()) {
-      echo ' notmyq';
+    
+    if ($_GET['type'] == 'type') {
+      echo ' ' . $q_type;
+    } elseif ($_GET['type'] == 'bloom' and $bloom != '') {
+      echo ' ' . strtolower($bloom);
     }
-    if ($locked != '') {
-      echo ' lockedq';
-    }
+    
     echo '"';
     if ($locked != '') {
       echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2c',event)\" ondblclick=\"editQ()\">";
@@ -300,7 +294,11 @@ if (isset($_GET['module'])) {
     if (trim($leadin) == '') $leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
     if ($userObject->has_role('Demo')) $owner = 'Dr J Bloggs';
 
-    echo "<td class=\"d\">$leadin</td>";
+    echo "<td class=\"d\">";
+    if (trim($theme) != '') {
+      echo '<span class="theme">' . $theme . '</span><br />';
+    }
+    echo "$leadin</td>";
     echo "<td class=\"d nobr\">" . $title . ' ' . $initials . ' ' . $surname . "</td>";
     echo "<td class=\"d nobr\">" . $string[$q_type] . "</td>";
     echo "<td class=\"d\">" . $modified . "</td>\n";
