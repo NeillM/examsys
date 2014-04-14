@@ -154,7 +154,8 @@ echo "<br />\n";
 echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Question Bank</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 echo "<br />\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?module=$module\" class=\"blacklink\">All Questions</a></td></tr></table></div>\n";
-$bank_types = array('by Keyword'=>'../question/bank.php?type=keyword&module=' . $module, 'by Question Type'=>'../question/bank.php?type=type&module=' . $module, 'by Status'=>'../question/bank.php?type=status&module=' . $module, 'by Bloom\'s Taxonomy'=>'../question/bank.php?type=bloom&module=' . $module, 'by Difficulty'=>'../question/bank.php?type=difficulty&module=' . $module, 'by Discrimination'=>'../question/bank.php?type=discrimination&module=' . $module);
+
+$bank_types = array('by Keyword'=>'../question/bank.php?type=keyword&module=' . $module, 'by Question Type'=>'../question/bank.php?type=type&module=' . $module, 'by Status'=>'../question/bank.php?type=status&module=' . $module, 'by Bloom\'s Taxonomy'=>'../question/bank.php?type=bloom&module=' . $module, 'by Performance'=>'../question/bank.php?type=performance&module=' . $module);
 foreach ($bank_types as $type_name=>$url) {
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a></td></tr></table></div>\n";
 }

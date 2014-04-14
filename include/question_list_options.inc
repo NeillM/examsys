@@ -147,9 +147,12 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
       if ($(this).attr("class") == 'check_type') {
         q_type = $(this).val();
         if (this.checked) {
-          $("." + q_type).show(); 
+          $("." + q_type).show();
+          if (!$('#check_locked').attr('checked')) {
+            $("." + q_type + '.locked').hide();
+          }
         } else {
-          $("." + q_type).hide(); 
+          $("." + q_type).hide();
         }
       }
     });
@@ -158,12 +161,28 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
     $("#q_count").text(n.toLocaleString());
   }
   
+  function resizeList() {
+    var offset = $('#list').offset();
+    winH = ($(window).height() - offset.top) - 2;
+
+    $('#list').css('height', winH + 'px');
+  }
+
   $(document).ready(function() {
     $(".check_type").click(function() {
       check_checkboxes();
     });
     
+    $("#check_locked").click(function() {
+      check_checkboxes();
+    });
+    
     check_checkboxes();
+    resizeList();
+      
+    $(window).resize(function(){
+      resizeList();
+    });
   });
 </script>
 
@@ -204,8 +223,29 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
 <div class="menuitem cascade" id="newquestion" onclick="showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event); return false;"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
-<div style="padding-left:12px; padding-top:30px">
 <?php
+switch ($_GET['type']) {
+  case 'type':
+    $display_type = 'Types';
+    break;
+  case 'status':
+    $display_type = 'Status';
+    break;
+  case 'bloom':
+    $display_type = 'Bloom\'s Taxonomy';
+    break;
+  case 'keyword':
+    $display_type = 'Keywords';
+    break;
+  case 'performance':
+    $display_type = 'Performance';
+    break;
+}
+echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
+?>
+<div style="padding-left:12px; height:78%; overflow:auto" id="list">
+<?php
+  echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">&nbsp;show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
     $subtypes = $qbank->get_categories($type);
     
@@ -216,7 +256,7 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
         $checked = '';
       }
       
-      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked/>$subtype</div>\n";
+      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked/><label for=\"check_$id\">$subtype</lable></div>\n";
     }
   }
 ?>

@@ -40,7 +40,7 @@
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><?php echo $string['mypersonalkeywords']; ?></a></div>
 </div>
 
-<div style="font-size:170%; padding-top:40px; color:#606060" id="papertasks">Recent</div>
+<div style="font-size:170%; padding-top:40px" id="papertasks">Recent</div>
 
 <?php
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');

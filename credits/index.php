@@ -33,7 +33,7 @@
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
-    body {background-image:url('./background.jpg'); line-height:100%}
+    body {background-color:#EEF4FF; line-height:100%}
   </style>
 </head>
 <body>

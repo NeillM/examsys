@@ -107,7 +107,7 @@ echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7
 echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
 echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
-echo $string[strtolower($types_array[$type])] . ': <span style="font-weight:normal">' . $types_used[$type] . '</span>';
+echo $string['papers'] . ': <span style="font-weight:normal">' . $string[strtolower($types_array[$type])] . ' (' . $types_used[$type] . ')</span>';
 echo '</div></th>';
 echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\" onclick=\"refreshPage();\"";
 if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';

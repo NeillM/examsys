@@ -52,7 +52,7 @@ if (!$module_details) {
  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
 }
 
-$qbank = new QuestionBank($module, $string, $mysqli);
+$qbank = new QuestionBank($module, $string, $notice, $mysqli);
 
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
@@ -101,36 +101,22 @@ if ($type == 'type') {
   echo $string['bykeyword']; 
 } elseif ($type == 'status') {
   echo $string['bystatus'];
-} elseif ($type == 'difficulty') {
-  echo $string['bydifficulty'];
-} elseif ($type == 'discrimination') {
-  echo $string['bydiscrimination'];
+} elseif ($type == 'performance') {
+  echo $string['byperformance'];
 }
 echo '</span>';
 echo "</div></th><th></th></tr>\n";
 
 echo "</table>\n";
 
-function get_keywords($idMod, $db) {
-  $keywords_array = array();
-  
-  $result = $db->prepare("SELECT keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND modules.id = $idMod ORDER BY keyword");
-  $result->execute();
-  $result->bind_result($keyword, $keywordID);
-  while ($result->fetch()) {
-    $keywords_array[$keywordID] = $keyword;
-  }
-  $result->close();
-  
-  return $keywords_array;
-}
-
-
 $bank_types = $qbank->get_categories($type);
 $stats      = $qbank->get_stats($type);
 
 if ($type != 'keyword') {
   echo "<br />\n";
+}
+if ($type == 'performance') {
+  echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['bydifficulty'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 }
 
 $old_section = '';
@@ -144,12 +130,17 @@ foreach ($bank_types as $id=>$type_name) {
       echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $type_name{0} . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     }
     $old_section = $type_name{0};
+  } elseif ($type == 'performance' and $id == 'highest') {
+    echo "<br clear=\"left\" />\n";
+    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['bydiscrimination'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   }
+  
   if (isset($stats[$id])) {
     $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' questions</span>';
   } elseif(isset($stats[$type_name])) {
     $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' questions</span>';
   }
+
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
 }
 $mysqli->close();

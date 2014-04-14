@@ -31,13 +31,15 @@ class QuestionBank {
   private $db;
   private $idMod;
   private $string;
+  private $notice;
   private $bank_types = null;
   private $stats = null;
 
-  public function __construct($idMod, $string, $db) {
+  public function __construct($idMod, $string, $notice, $db) {
     $this->db     = $db;
     $this->string = $string;
     $this->idMod  = $idMod;
+    $this->notice = $notice;
   }
   
   public function get_categories($type) {
@@ -52,17 +54,32 @@ class QuestionBank {
     return $this->stats;
   }
   
+  private function get_keywords() {
+    $keywords_array = array();
+
+    $result = $this->db->prepare("SELECT keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND modules.id = $this->idMod ORDER BY keyword");
+    $result->execute();
+    $result->bind_result($keyword, $keywordID);
+    while ($result->fetch()) {
+      $keywords_array[$keywordID] = $keyword;
+    }
+    $result->close();
+
+    return $keywords_array;
+  }
+
   private function load_categories($type) {
     switch($type) {
       case 'keyword':
-        $this->get_stats($type);
-        $keywords = get_keywords($this->idMod, $this->db);
+        $this->load_stats($type);
+        $keywords = $this->get_keywords();
         if (count($keywords) == 0) {    // Stop we have no keywords.
-          echo $notice->info_strip($string['nokeywords'], 100) . "</div>\n</body>\n</html>\n";
+          echo $this->notice->info_strip($this->string['nokeywords'], 100) . "</div>\n</body>\n</html>\n";
           exit;
         }
         foreach ($keywords as $keywordID=>$keyword) {
-          $this->bank_types[$keyword] = 'list.php?keyword=' . $keywordID;
+          //$this->bank_types[$keyword] = 'list.php?keyword=' . $keywordID;
+          $this->bank_types[$keywordID] = $keyword;
         }
         break;
       case 'type':
@@ -108,13 +125,19 @@ class QuestionBank {
           'evaluation' => $this->string['evaluation']
         );
         break;
-      case 'difficulty':
+      case 'performance':
         //$this->load_stats($type);
-        $this->bank_types = array('ve', 'e', 'm', 'h', 'vh');
-        break;
-      case 'discrimination':
-        //$this->load_stats($type);
-        $this->bank_types = array('h2', 'h1', 'i', 'l');
+        $this->bank_types = array(
+            'veryeasy' => $this->string['veryeasy'],
+            'easy' => $this->string['easy'],
+            'moderate' => $this->string['moderate'],
+            'hard' => $this->string['hard'],
+            'veryhard' => $this->string['veryhard'],
+            'highest' => $this->string['highest'],
+            'high' => $this->string['high'],
+            'intermediate' => $this->string['intermediate'],
+            'low' => $this->string['low']
+        );
         break;
     }
   }
@@ -129,7 +152,7 @@ class QuestionBank {
     } elseif ($type == 'bloom') {
       $sql = 'SELECT COUNT(questions.q_id), bloom FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY bloom';
     } elseif ($type == 'keyword') {
-      $sql = 'SELECT COUNT(questions.q_id), keyword FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keyword';
+      $sql = 'SELECT COUNT(questions.q_id), keywordID FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keywordID';
     }
     
     $result = $this->db->prepare($sql);
