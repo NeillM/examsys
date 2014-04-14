@@ -57,7 +57,7 @@ if ($paper_match == false) {
   $notice->access_denied($mysqli, $string, $string['cannotfindexams'], false, true);
 } elseif ($lab_match == false) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
