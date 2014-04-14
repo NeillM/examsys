@@ -14,6 +14,11 @@ $(document).ready(function(event) {
 		}
 	});
 	
+	$('#admintools').click(function() {
+		$('#toprightmenu').hide();
+	  location.href = cfgRootPath + '/admin/index.php';
+	});
+
 	$('#signout').click(function() {
 		$('#toprightmenu').hide();
 	  location.href = cfgRootPath + '/logout.php';

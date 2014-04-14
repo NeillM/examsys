@@ -69,7 +69,7 @@ if (!$module_details) {
 
 <body onclick="hideMenus()">
 <?php
-  require '../include/folder_options.inc';
+  require '../include/module_options.inc';
 ?>
 <div id="content" class="content" style="font-size:90%; padding-left:10px">
 <br />
@@ -214,7 +214,7 @@ if ($file_problem) {
 ?></td></tr>
 </table>
 <br />
-<p style="padding-bottom:10px"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p style="padding-bottom:10px"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

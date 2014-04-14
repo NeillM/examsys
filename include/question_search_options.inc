@@ -117,19 +117,19 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" onsubmit="return checkForm()">
+<form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get" onsubmit="return checkForm()">
 
 <br />
 
 <table cellpadding="4" cellspacing="0" border="0" width="185">
 <tr><td style="margin:4px">
-<div style="font-size:110%"><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
+<div style="font-size:110%"><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_GET['searchterm'])) echo $_GET['searchterm']; ?>" /></div>
 <div style="font-size:110%"><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
   $qTypes = array('area'=>$string['area'],'enhancedcalc'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox'],'true_false'=>$string['true_false']);
   foreach ($qTypes as $tmp_type=>$tmp_title) {
-    if (isset($_POST['searchtype']) and $_POST['searchtype'] == $tmp_type) {
+    if (isset($_GET['searchtype']) and $_GET['searchtype'] == $tmp_type) {
       echo "<option value=\"$tmp_type\" selected>$tmp_title</option>\n";
     } else {
       echo "<option value=\"$tmp_type\">$tmp_title</option>\n";
@@ -217,7 +217,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   $date_options = array("dont remember"=>$string['dont remember'], "week"=>$string['week'], "month"=>$string['month'], "year"=>$string['year'], "specify"=>$string['specify']);
   $i = 1;
   foreach ($date_options as $date_value=>$date_label) {
-    if ((isset($_POST['question_date']) and $_POST['question_date'] == $date_value) or (!isset($_POST['question_date']) and $date_value == 'dont remember')) {
+    if ((isset($_GET['question_date']) and $_GET['question_date'] == $date_value) or (!isset($_GET['question_date']) and $date_value == 'dont remember')) {
       echo "<tr><td colspan=\"2\"><input type=\"radio\" id=\"question_date$i\" name=\"question_date\" value=\"$date_value\" checked />&nbsp;" . $string[$date_value] . "</td></tr>";
     } else {
       echo "<tr><td colspan=\"2\"><input type=\"radio\" id=\"question_date$i\" name=\"question_date\" value=\"$date_value\" />&nbsp;" . $string[$date_value] . "</td></tr>";
@@ -228,8 +228,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <tr><td style="text-align:right"><?php echo $string['from']; ?>&nbsp;</td><td>
 <?php
-  if (isset($_POST['fday'])) {
-    $target = $_POST['fday'];
+  if (isset($_GET['fday'])) {
+    $target = $_GET['fday'];
   } else {
     $target = 0;
   }
@@ -249,8 +249,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
       }
     }
   }
-  if (isset($_POST['fmonth'])) {
-    $target = $_POST['fmonth'];
+  if (isset($_GET['fmonth'])) {
+    $target = $_GET['fmonth'];
   } else {
     $target = 0;
   }
@@ -272,7 +272,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
   echo "</select><select name=\"fyear\" onchange=\"selectDateRadio()\">\n";
   for ($i=1999; $i<=date("Y"); $i++) {
-    if (isset($_POST['fyear']) and $_POST['fyear'] == $i) {
+    if (isset($_GET['fyear']) and $_GET['fyear'] == $i) {
       echo "<option value=\"$i\" selected>$i</option>\n";
     } else {
       echo "<option value=\"$i\">$i</option>\n";
@@ -283,8 +283,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </td></tr>
 <tr><td style="text-align:right"><?php echo $string['to']; ?>&nbsp;</td><td>
 <?php
-  if (isset($_POST['tday'])) {
-    $target = $_POST['tday'];
+  if (isset($_GET['tday'])) {
+    $target = $_GET['tday'];
   } else {
     $target = date("d");
   }
@@ -304,8 +304,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
       }
     }
   }
-  if (isset($_POST['tmonth'])) {
-    $target = $_POST['tmonth'];
+  if (isset($_GET['tmonth'])) {
+    $target = $_GET['tmonth'];
   } else {
     $target = date("m");
   }
@@ -325,8 +325,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
       }
     }
   }
-  if (isset($_POST['tyear'])) {
-    $target = $_POST['tyear'];
+  if (isset($_GET['tyear'])) {
+    $target = $_GET['tyear'];
   } else {
     $target = date("Y");
   }
@@ -384,7 +384,7 @@ if (!isset($status_array)) {
 			if ($old_moduleID != '') echo "</optgroup>\n";
 			echo "<optgroup label=\"$moduleID\">\n";
 		}
-    if (isset($_POST['keywordID']) and $_POST['keywordID'] == $keywordID) {
+    if (isset($_GET['keywordID']) and $_GET['keywordID'] == $keywordID) {
       echo "<option value=\"$keywordID\" selected>$keyword</option>\n";
     } else {
       echo "<option value=\"$keywordID\">$keyword</option>\n";
@@ -400,7 +400,7 @@ if (!isset($status_array)) {
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);
   while ($stmt->fetch()) {
-    if (isset($_POST['keywordID']) and $_POST['keywordID'] == $keywordID) {
+    if (isset($_GET['keywordID']) and $_GET['keywordID'] == $keywordID) {
       echo "<option value=\"$keywordID\" selected>$keyword</option>\n";
     } else {
       echo "<option value=\"$keywordID\">$keyword</option>\n";
@@ -416,17 +416,7 @@ if (!isset($status_array)) {
 <br />
 
 
-<div style="text-align:center">
-<?php
-  if (isset($_GET['paperID'])) {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
-  } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/staff/index.php\'"/>';
-  }
-?>
-&nbsp;<input style="width:80px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
+<div style="text-align:center"><input style="width:100px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
 </td></tr>
 </table>
 

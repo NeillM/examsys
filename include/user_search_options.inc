@@ -236,36 +236,14 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <br />
 
-<div style="text-align:center">
-<?php
-  if (isset($_GET['module'])) {
-    $module = $_GET['module'];
-  } else {
-    $module = '';
-  }
-
-  if (isset($_GET['folder'])) {
-    $folder = $_GET['folder'];
-  } else {
-    $folder = '';
-  }
-
-  if (isset($_GET['paperID'])) {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $module . '&folder=' . $folder . '\'"/>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
-  } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/staff/index.php\'"/>';
-  }
-?>
-&nbsp;<input style="width:90px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
+<div style="text-align:center"><input style="width:100px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
 </td></tr>
 </table>
 
 <br />
 <br />
 
-<div class="submenuheading"><?php echo $string['currentusertasks']; ?></div>
+<div class="submenuheading"><?php echo $string['usertasks']; ?></div>
 
 <div style="font-size:90%" id="menu2a">
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><?php echo $string['viewuserfile']; ?></div>
@@ -276,6 +254,8 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
     if ($userObject->has_role('SysAdmin')) {
       echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="' . $string['deleteuser'] . '" />' . $string['deleteuser'] . '</div>';
     }
+    echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+    echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
   }
 ?>
 </div>
@@ -286,6 +266,8 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/small_user_icon_grey.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</div>';
+    echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+    echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
   }
 ?>
 </div>
@@ -300,20 +282,12 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   if ($userObject->has_role('SysAdmin')) {
     echo '<div class="menuitem" onclick="deleteUser()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#" onclick="return false">' . $string['deleteuser'] . '</a></div>';
   }
+  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+    echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+    echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
+  }
 ?>
 </div>
-
-<br />
-<?php
-if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-  echo "<div class=\"submenuheading\">{$string['cohorttasks']}</div>\n";
-
-  echo "<div style=\"font-size:90%\">\n";
-  echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
-  echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
-  echo "</div>\n";
-}
-?>
 
 <input type="hidden" id="userID" name="userID" value="" />
 <input type="hidden" id="roles" name="roles" value="<?php if (isset($tmp_roles)) echo $tmp_roles; ?>" />

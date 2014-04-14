@@ -84,7 +84,7 @@ if ($userObject->has_role('SysAdmin')) {
   $on_staff_module = false;
 
   // Can the user acsess the module?
-  if (isset($_GET['module']) and $_GET['module'] != '' and !isset($_GET['paperID'])) {
+  if (isset($_GET['module']) and $_GET['module'] != '' and $_GET['module'] != '0' and !isset($_GET['paperID'])) {
     $staff_module_match = false;
     $module_list = explode(',', $_GET['module']);
     foreach ($module_list as $module) {

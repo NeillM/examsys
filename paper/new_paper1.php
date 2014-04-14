@@ -131,8 +131,8 @@ require '../include/staff_auth.inc';
 <br />
 <?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="255" style="width:650px" required />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
+<input type="hidden" name="folder" value="<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="" />
-<input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <br />
 <br />
 <div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="margin-right:8px" /><input type="submit" name="submit" value="<?php echo $string['next']; ?>" class="ok" /></div>

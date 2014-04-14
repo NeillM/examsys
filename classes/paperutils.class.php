@@ -370,6 +370,34 @@ Class PaperUtils {
     $update->close();
   }
 
+  public function type_to_name($type, $string) {
+      switch ($type) {
+        case '0':
+          $name = $string['formative self-assessments'];
+          break;
+        case '1':
+          $name = $string['progress tests'];
+          break;
+        case '2':
+          $name = $string['summative exams'];
+          break;
+        case '3':
+          $name = $string['surveys'];
+          break;
+        case '4':
+          $name = $string['osce stations'];
+          break;
+        case '5':
+          $name = $string['offline papers'];
+          break;
+        case '6':
+          $name = $string['peer review'];
+          break;
+      }
+      
+      return $name;
+  }
+
   public function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {
 	  $configObj = Config::get_instance();
 
@@ -414,7 +442,7 @@ Class PaperUtils {
         $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
         break;
        default:
-         var_dump($paper_type);
+        var_dump($paper_type);
     }
     return $html;
   }

@@ -43,7 +43,7 @@ check_var('q_id', 'GET', true, false, false);
   <link rel="stylesheet" type="text/css" href="../css/add_edit.css" />
   <style type="text/css">
     body {background-color:#F1F5FB; font-size:80%}
-    th {background-color:#CFDBEB; text-align:left; font-weight:normal}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     td {vertical-align:top; padding-top:3px; padding-bottom:3px}
     .num {text-align:right}
   </style>
@@ -78,7 +78,7 @@ check_var('q_id', 'GET', true, false, false);
 </tr>
 <?php
   $q_id = (int)$_GET['q_id'];
-$lockformat=$configObject->get('cfg_long_date_time');
+  $lockformat=$configObject->get('cfg_long_date_time');
   $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$lockformat\") AS locked, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
   $question_data->bind_param('i', $q_id);
   $question_data->execute();

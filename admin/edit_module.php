@@ -197,7 +197,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   }
   ?>
   <?php
-    require '../include/module_options.inc';
+    require '../include/admin_module_options.inc';
   ?>
   <div id="content" class="content">
   <table class="header">

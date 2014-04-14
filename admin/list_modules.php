@@ -55,7 +55,7 @@ require '../include/sort.inc';
 
 <body>
 <?php
-  require '../include/module_options.inc';
+  require '../include/admin_module_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(233);

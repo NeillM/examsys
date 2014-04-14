@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../lang/' . $language . '/include/status.inc';
+require_once '../lang/' . $language . '/include/blooms.inc';
 
 $string['question'] = 'Question';
 $string['questionbank'] = 'Question Bank';
@@ -24,13 +25,8 @@ $string['owner'] = 'Owner';
 $string['modified'] = 'Modified';
 $string['status'] = 'Status';
 $string['myquestionsonly'] = 'my questions only';
-$string['questionbanktasks'] = 'Question Bank Tasks';
-$string['currentquestiontasks'] = 'Current Question Tasks';
-$string['questionsbytype'] = 'Questions by Type';
-$string['questionsbyteam'] = 'Questions by Module';
-$string['questionsbykeyword'] = 'Questions by Keyword';
 $string['search'] = 'Search';
-$string['createnewquestion'] = 'Create new Question';
+$string['createnewquestion'] = 'New Question';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';
 $string['people'] = 'People';

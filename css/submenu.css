@@ -38,8 +38,15 @@ div#left-sidebar {
 }
 .f {
   float:left;
-  width:375px;
-  padding-left:10px;
+  width:365px;
+  padding-left:35px;
+  font-size:90%;
+	padding-bottom:12px;
+}
+.f2 {
+  float:left;
+  width:300px;
+  padding-left:35px;
   font-size:90%;
 	padding-bottom:12px;
 }
@@ -53,7 +60,7 @@ div#left-sidebar {
 .file {
   float:left;
   width:375px;
-  padding-left:12px;
+  padding-left:32px;
   font-size:90%;
 	padding-bottom:12px;
 }

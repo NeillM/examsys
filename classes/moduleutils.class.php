@@ -54,6 +54,39 @@ Class module {
   * constructor
   */
   public function __construct() {}
+  
+  public function get_staff_members($idMod, $db) {
+    $members = array();
+    
+    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? ORDER BY surname, initials");
+    $result->bind_param('i', $idMod);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($surname, $initials, $title, $userID);
+    while ($result->fetch()) {
+      $title = str_replace('Professor', 'Prof', $title);
+      $members[] = array('surname'=>$surname, 'initials'=>$initials, 'title'=>$title, 'userID'=>$userID);
+    }
+    $result->close();
+    
+    return $members;
+  }
+
+  public function get_student_members($calendar_year, $idMod, $db) {
+    $members = array();
+    
+    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_student, users) WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
+    $result->bind_param('si', $calendar_year, $idMod);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($surname, $initials, $title, $userID);
+    while ($result->fetch()) {
+      $members[] = array('surname'=>$surname, 'initials'=>$initials, 'title'=>$title, 'userID'=>$userID);
+    }
+    $result->close();
+    
+    return $members;
+  }
 
   public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0) {
 
@@ -506,6 +539,7 @@ Class module {
   public static function get_vle_api_data($vle_apis) {
     // Set up mapping APIs
     $configObject = Config::get_instance();
+    
     if (is_array($vle_apis)) {
       foreach (array_keys($vle_apis) as $vle_api_id) {
         $classname = 'CM_' .$vle_api_id;
@@ -516,6 +550,44 @@ Class module {
       }
     }
     return $vle_apis;
+  }
+  
+  public static function paper_types($idMod, $db) {
+    $userObject = UserObject::get_instance();
+
+    $paper_types = array();
+    
+    if ($idMod == '0') {    // Unused papers.
+      $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+           FROM properties LEFT JOIN properties_modules
+           ON properties.property_id = properties_modules.property_id
+           WHERE idMod IS NULL
+           AND paper_ownerID = ?
+           AND deleted IS NULL
+           GROUP BY paper_type
+           ORDER BY paper_type';
+      $result = $db->prepare($sql);
+      $result->bind_param('i', $userObject->get_user_ID());
+    } else {
+      $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+           FROM properties, properties_modules
+           WHERE properties.property_id = properties_modules.property_id
+           AND idMod = ?
+           AND deleted IS NULL
+           GROUP BY paper_type
+           ORDER BY paper_type';
+      $result = $db->prepare($sql);
+      $result->bind_param('i', $idMod);
+    }    
+    
+    $result->execute();
+    $result->bind_result($type, $number);
+    while ($result->fetch()) {
+      $paper_types[$type] = $number;
+    }
+    $result->close();
+    
+    return $paper_types;
   }
 }
 ?>

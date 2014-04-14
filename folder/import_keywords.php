@@ -117,7 +117,7 @@ if (isset($_POST['submit'])) {
 
 <table class="dialog_border" style="width:600px">
 <tr>
-<td class="dialog_header" style="width:32px;"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importkeywords']; ?></td>
+<td class="dialog_header" style="width:32px;"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importkeywords']; ?></td>
 </tr>
 <tr>
 <td align="left" colspan="2" class="dialog_body">
