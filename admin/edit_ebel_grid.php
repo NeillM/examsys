@@ -90,8 +90,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    h1 {font-size:120%; color:#1E3287}
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    h1 {font-size:120%; color:#1E3287; margin-bottom:0px}
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
@@ -137,7 +136,6 @@ if (isset($_POST['submit'])) {
     <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', $HE, true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', $HI, true); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', $HN, true); ?></td><td style="border:0px"><input type="text" value="" name="hard_total" size="8" style="border:0px" /></td></tr>
     <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0px" /></td></tr>
     
-    <tr><td colspan="4">&nbsp;</td></tr>
     <tr><td colspan="4"><h1><?php echo $string['distinctionlevel']; ?></h1></td></tr>
     
     <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow']; ?></td></tr>
@@ -146,9 +144,7 @@ if (isset($_POST['submit'])) {
     <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE2', $HE2); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI2', $HI2); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN2', $HN2); ?></td><td style="border:0px"><input type="text" value="" name="hard_total" size="8" style="border:0px" /></td></tr>
     <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0px" /></td></tr>
     
-    
-    <tr><td colspan="4">&nbsp;</td></tr>
-    <tr><td colspan="4"style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
+    <tr><td colspan="4"style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
     </table>
     
     <br />

@@ -64,7 +64,7 @@ function returnTrueFalse($value) {
 
   <body>
 <?php
-  require '../include/module_options.inc';
+  require '../include/admin_module_options.inc';
 ?>
 <div id="content" class="content" style="font-size:80%">
 <br />
@@ -187,11 +187,11 @@ function returnTrueFalse($value) {
 <td style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['bulkmoduleimport']; ?></span></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB" colspan="2">
+<td align="left" style="padding:10px; background-color:#F1F5FB" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <blockquote>Module ID, Name, School, SMS API, Objectives API, Peer Review, External Examiners, Standards Setting, Mapping, Active, Allow Self-enrol, Negative Marking</blockquote>
-<div style="text-align:center"><img src="../artwork/bulk_module_import_headings.png" width="891" height="59" alt="screenshot" border="1" /></div>
+<div style="text-align:center"><img src="../artwork/bulk_module_import_headings.png" width="891" height="59" alt="screenshot" style="border:1px solid black" /></div>
 <br />
 <div><?php echo $string['msg2']; ?></div>
 <br />
@@ -199,7 +199,7 @@ function returnTrueFalse($value) {
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

@@ -140,7 +140,7 @@ SCRIPT;
 <td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-<td colspan="2" style="text-align:center"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="history.back();" /></td>
+<td colspan="2" style="text-align:center"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" class="ok" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td>
 </tr>
 </table>
 

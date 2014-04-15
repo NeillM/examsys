@@ -152,7 +152,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
     </select></td></tr>
     </table>
     <input type="hidden" name="courseID" value="<?php echo $courseID; ?>" />
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input type="button" style="width:100px" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"><input type="button" class="cancel" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>
   </div>
 <?php

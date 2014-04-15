@@ -61,7 +61,6 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     h1 {font-size:120%; color:#1E3287; margin-bottom:0px}
-    .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -116,7 +115,7 @@ if (isset($_POST['submit'])) {
     
     
     <tr><td colspan="4">&nbsp;</td></tr>
-    <tr><td colspan="4"style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
+    <tr><td colspan="4"style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
     </table>
     
     <br />

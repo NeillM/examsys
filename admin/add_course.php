@@ -130,7 +130,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     ?>
     </select></td></tr>
     </table>
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
   </form>
   </div>
 <?php

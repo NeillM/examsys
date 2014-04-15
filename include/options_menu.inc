@@ -46,14 +46,14 @@
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 
   // -- Display top 10 recent papers ----------------------------------
-  echo '<ul type="square">';
+  echo '<ul type="square" style="font-size:90%">';
   $result = $mysqli->prepare("SELECT paperID, paper_title, accessed, paper_type FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($paperID, $paper_title, $accessed, $paper_type);
   $result->store_result();
   while ($result->fetch()) {
-    echo "<li style=\"margin-left:-25px; line-height:150%\" class=\"menuitem\"><a ";
+    echo "<li style=\"margin-left:-25px; padding-bottom:9px\" class=\"menuitem\"><a ";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
     echo "href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
   }

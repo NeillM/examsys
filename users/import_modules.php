@@ -209,7 +209,7 @@ ini_set("auto_detect_line_endings", true);
 ?>
 <table class="dialog_border" style="width:730px">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importmodules']; ?></span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importmodules']; ?></td>
 </tr>
 <tr>
 <td align="left" style="background-color:#F1F5FB" colspan="2">
@@ -231,7 +231,7 @@ if ($file_problem) {
 }
 ?>
 <br />
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 <br />
 </form>
 </div>

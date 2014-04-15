@@ -151,7 +151,7 @@ for ($i=1; $i<=7; $i++) {
 <td colspan="2">&nbsp;</td>
 </tr>
 <tr>
-<td colspan="2" style="text-align:center"><input type="submit" name="save" value="<?php echo $string['save']; ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="history.back();" /></td>
+<td colspan="2" style="text-align:center"><input type="submit" name="save" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td>
 </tr>
 </table>
 <input type="hidden" name="announcementid" value="<?php echo $_GET['announcementid']; ?>" />
