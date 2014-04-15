@@ -82,6 +82,7 @@ class QuestionBank {
           $this->bank_types[$keywordID] = $keyword;
         }
         break;
+      case 'all':
       case 'type':
         $this->load_stats($type);
         $this->bank_types = array(
@@ -126,7 +127,7 @@ class QuestionBank {
         );
         break;
       case 'performance':
-        //$this->load_stats($type);
+        $this->load_performance_stats();
         $this->bank_types = array(
             'veryeasy' => $this->string['veryeasy'],
             'easy' => $this->string['easy'],
@@ -142,17 +143,61 @@ class QuestionBank {
     }
   }
   
+  private function load_performance_stats() {
+    $this->stats = array('veryeasy'=>0, 'easy'=>0, 'moderate'=>0, 'hard'=>0, 'veryhard'=>0, 'highest'=>0, 'high'=>0, 'intermediate'=>0, 'low'=>0);
+    
+    $status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
+    $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
+    
+    $sql = 'SELECT DISTINCT p, d, questions.q_id FROM questions, questions_modules, performance_main, performance_details WHERE questions.q_id = questions_modules.q_id AND questions.q_id = performance_main.q_id AND performance_main.id = performance_details.perform_id AND idMod = ? AND deleted IS NULL AND status NOT IN (' . $retired_in . ')';
+    $result = $this->db->prepare($sql);
+    $result->bind_param('i', $this->idMod);
+    $result->execute();
+    $result->bind_result($p, $d, $q_id);
+    while ($result->fetch()) {
+      if ($p >= 80 and $p <= 100) {
+        $this->stats['veryeasy']++;
+      } elseif ($p >= 60 and $p < 80) {
+        $this->stats['easy']++;
+      } elseif ($p >= 40 and $p < 60) {
+        $this->stats['moderate']++;
+      } elseif ($p >= 20 and $p < 40) {
+        $this->stats['hard']++;
+      } elseif ($p >= 0 and $p < 20) {
+        $this->stats['veryhard']++;
+      }
+
+      if ($d >= 35 and $d <=100) {
+        $this->stats['highest']++;
+      } elseif ($d >= 25 and $d < 35) {
+        $this->stats['high']++;
+      } elseif ($d >= 15 and $d < 25) {
+        $this->stats['intermediate']++;
+      } elseif ($d >= 0 and $d < 15) {
+        $this->stats['low']++;
+      }
+      
+    } 
+    $result->close();
+  }
+  
   private function load_stats($type) {
     $this->stats = array();
 
-    if ($type == 'type') {
-      $sql = 'SELECT COUNT(questions.q_id), q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY q_type';
-    } elseif ($type == 'status') {
-      $sql = 'SELECT COUNT(questions.q_id), name FROM questions, questions_modules, question_statuses WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY status';
-    } elseif ($type == 'bloom') {
-      $sql = 'SELECT COUNT(questions.q_id), bloom FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY bloom';
-    } elseif ($type == 'keyword') {
-      $sql = 'SELECT COUNT(questions.q_id), keywordID FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keywordID';
+    switch ($type) {
+      case 'all':
+      case 'type':
+        $sql = 'SELECT COUNT(questions.q_id), q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY q_type';
+        break;
+      case 'status':
+        $sql = 'SELECT COUNT(questions.q_id), name FROM questions, questions_modules, question_statuses WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY status';
+        break;
+      case 'bloom':
+        $sql = 'SELECT COUNT(questions.q_id), bloom FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ? AND deleted IS NULL GROUP BY bloom';
+        break;
+      case 'keyword':
+        $sql = 'SELECT COUNT(questions.q_id), keywordID FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keywordID';
+        break;
     }
     
     $result = $this->db->prepare($sql);

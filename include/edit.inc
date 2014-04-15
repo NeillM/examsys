@@ -52,27 +52,11 @@ function redirect($userObj, $q_id, $configObj, $db) {
     $result->close();
   }
 
-  $url_prefix = 'location: ' . $configObj->get('cfg_root_path');
-
-  if (substr($_POST['paperID'], 0, 5) == 'list:') {
-    $type = substr($_POST['paperID'], 5);
-    $url =  $url_prefix . '/question/list.php?' . $_SESSION['navigation'];
-  } elseif ($_POST['calling'] == 'find') {
-    $url =  $url_prefix . '/question/search.php?' . $_SESSION['navigation'];
-  } elseif ($_POST['calling'] == 'paper') {
-    $path = $_SESSION['navigation'];
-    $path_sections = explode('&scrOfY', $path);
-    $url =  $url_prefix . '/paper/details.php?' . $path_sections[0] . '&scrOfY=' . $_POST['scrOfY'];
-  } elseif ($_POST['calling'] == 'external_comments') {
-    $url =  $url_prefix . "/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
-  } elseif ($_POST['calling'] == 'internal_comments') {
-    $url =  $url_prefix . "/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
-  } elseif (isset($_SESSION['nav_page'])) {
-    $url = 'location: ' . $_SESSION['nav_page'] . '?' . $_SESSION['nav_query'];
+  if (isset($_SESSION['nav_page'])) {
+    header('location: ' . $_SESSION['nav_page'] . '?' . $_SESSION['nav_query']);
   } else {
-    $url =  $url_prefix . "/staff/index.php";
+    header('location: ' . $configObj->get('cfg_root_path') . '/staff/index.php');
   }
-  header($url);
   $db->close();
   exit;   // Stop script execution after the redirect.
 }

@@ -122,11 +122,24 @@ require_once '../include/staff_auth.inc';
         notice.focus();
       }
     }
+    
+    function hideAnnouncement(announcementID) {
+      $('#announcement' + announcementID).hide();
+      
+      var request = $.ajax({
+        url: "../ajax/staff/hide_announcement.php",
+        type: "get",
+        data: {announcementID: announcementID},
+        timeout: 30000, // timeout after 30 seconds
+        dataType: "html",
+      });
+    
+    }
 
   </script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 
 <?php
   require '../include/options_menu.inc';
@@ -179,11 +192,13 @@ require_once '../include/staff_auth.inc';
 
   // Check for any news/announcements
   $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
-  $result = $mysqli->prepare("SELECT title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
+  $result = $mysqli->prepare("SELECT id, title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
   $result->execute();
-  $result->bind_result($news_title, $staff_msg, $icon);
+  $result->bind_result($announcementID, $news_title, $staff_msg, $icon);
   while ($result->fetch()) {
-    echo "<br /><div class=\"announcement\"><div style=\"min-height:64px; padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$staff_msg</div></div>\n";
+    if (!isset($_SESSION['announcement' . $announcementID])) {
+      echo "<br /><div class=\"announcement\" id=\"announcement$announcementID\"><img src=\"../artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement($announcementID)\" /><div style=\"min-height:64px; padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$staff_msg</div></div>\n";
+    }
   }
   $result->close();
 

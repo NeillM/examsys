@@ -92,7 +92,7 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
     .q:hover {background-color:#FFE7A2}
     .q.highlight {background-color:#FFBD69}
     .nobr {white-space:nowrap}
-    .plock {width:16px; height:16px}
+    .plock {width:16px; height:16px; border:1px solid white}
     input[type=checkbox] {margin-right:8px}
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
@@ -203,31 +203,39 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
 	}
 
   if ($_GET['module'] == '0') {
-    $sql = "SELECT DISTINCT NULL AS extra, questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " AND idMod IS NULL GROUP BY q_id";
+    $sql = "SELECT DISTINCT NULL AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " AND idMod IS NULL GROUP BY q_id";
   } elseif ($_GET['type'] == 'performance') {
-    $range = array('veryeasy' => 'p >= 80', 'easy'  => 'p >= 60 AND p < 80', 'moderate'  => 'p >= 40 AND p < 60', 'hard'  => 'p >= 20 AND p < 40', 'veryhard' => 'p < 20', 'highest' => 'd >= 35', 'high' => 'd >= 25 and d < 35', 'intermediate'  => 'd >= 15 and d < 25', 'low'  => 'd < 15');
-    $extra_field = substr($range[$_GET['subtype']], 0, 1);
-    $sql = "SELECT DISTINCT $extra_field AS extra, questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND users.id = questions.ownerID AND performance_main.id = performance_details.perform_id AND questions.q_id = questions_modules.q_id AND idMod = $module";
+    $sql = "SELECT DISTINCT NULL AS extra_field, p, d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND performance_main.id = performance_details.perform_id AND questions.q_id = questions_modules.q_id AND idMod = $module";
   } elseif ($_GET['type'] == 'keyword') {
-    $sql = "SELECT DISTINCT keywordID AS extra, questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions, questions_modules, keywords_question) WHERE questions.q_id = keywords_question.q_id AND questions.q_id = questions_modules.q_id AND users.id = questions.ownerID $module_sql $staff_modules_sql $statusSQL $keyword AND deleted IS NULL AND status NOT IN ($retired_in)";
+    $sql = "SELECT DISTINCT keyword AS extra_field, keywordID AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules, keywords_question, keywords_user) WHERE questions.q_id = keywords_question.q_id AND keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = $module AND deleted IS NULL AND status NOT IN ($retired_in)";
+  } elseif ($_GET['type'] == 'bloom') {
+    $sql = "SELECT DISTINCT bloom AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in)";
   } else {
-    $sql = "SELECT DISTINCT NULL AS extra, questions.q_id, ownerID, title, initials, surname, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (users, questions, questions_modules)";
-    if ($keyword != '%' and $keyword != '') {
-      $sql .= " LEFT JOIN keywords_question ON questions.q_id = keywords_question.q_id";
-    }
-    $sql .= " WHERE questions.q_id = questions_modules.q_id AND users.id = questions.ownerID $module_sql $staff_modules_sql $statusSQL $keyword AND deleted IS NULL";
+    $sql = "SELECT DISTINCT NULL AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL $keyword AND deleted IS NULL";
     if ($_GET['type'] != 'status') {
       $sql .= " AND status NOT IN ($retired_in)";
     }
   }
   $sql .= ' ORDER BY ' . $tmp_sortby . ' ' . $ordering;
   
+  //echo $sql . '<br />';
+  
   $search_results = $mysqli->prepare($sql);
   $search_results->execute();
-  $search_results->bind_result($extra, $q_id, $ownerID, $title, $initials, $surname, $theme, $leadin, $q_type, $last_edited, $modified, $locked, $status, $bloom);
+  $search_results->bind_result($extra_field, $p, $d, $q_id, $theme, $leadin, $q_type, $last_edited, $modified, $locked, $status, $bloom);
   $search_results->store_result();
   
-  echo "<tr onclick=\"qOff();\"><th colspan=\"4\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+  if ($type == 'keyword') {
+    $table_order = array(''=>'', $string['question']=>'leadin', $string['type']=>'q_type', 'Keyword'=>'keyword', $string['modified']=>'modified', $string['status']=>'status');
+  } elseif ($type == 'bloom') {
+    $table_order = array(''=>'', $string['question']=>'leadin', $string['type']=>'q_type', 'Bloom\'s Taxonomy'=>'bloom', $string['modified']=>'modified', $string['status']=>'status');
+  } elseif ($type == 'performance') {
+    $table_order = array(''=>'', $string['question']=>'leadin', $string['type']=>'q_type', 'P'=>'p', 'D'=>'d', $string['modified']=>'modified', $string['status']=>'status');
+  } else {
+    $table_order = array(''=>'', $string['question']=>'leadin', $string['type']=>'q_type', $string['modified']=>'modified', $string['status']=>'status');
+  }
+  
+  echo "<tr onclick=\"qOff();\"><th colspan=\"" . (count($table_order) - 1) . "\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module'])) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
     
@@ -251,8 +259,8 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
 	if (isset($_GET['module'])) $params .= '&module=' . $_GET['module'];
 	if (isset($_GET['keyword'])) $params .= '&keyword=' . $_GET['keyword'];
 	
-  $table_order = array(''=>'', $string['question']=>'leadin', $string['owner']=>'owner', $string['type']=>'q_type', $string['modified']=>'modified', $string['status']=>'status');
-	echo "<tr style=\"font-size:110%\">\n";
+
+  echo "<tr>\n";
 	foreach ($table_order as $display => $key) {
 		if ($key == '') {
 			echo "<th>";
@@ -273,63 +281,63 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
   while ($search_results->fetch()) {
     echo '<tr class="q';
     
-    if ($_GET['type'] == 'type') {
+    if ($_GET['type'] == 'type' or $_GET['type'] == 'all') {
       echo ' ' . $q_type;
     } elseif ($_GET['type'] == 'status') {
       echo ' ' . $status;
     } elseif ($_GET['type'] == 'keyword') {
-      echo ' ' . $extra;
+      echo ' ' . $p;
     } elseif ($_GET['type'] == 'bloom' and $bloom != '') {
       echo ' ' . strtolower($bloom);
-    } elseif ($_GET['type'] == 'performance' and $extra != '') {
-      if ($extra_field == 'p') {
-        if ($extra >= 80 and $extra <= 100) {
+    } elseif ($_GET['type'] == 'performance') {
+        if ($p >= 80 and $p <= 100) {
           echo ' veryeasy';
-        } elseif ($extra >= 60 and $extra < 80) {
+        } elseif ($p >= 60 and $p < 80) {
           echo ' easy';
-        } elseif ($extra >= 40 and $extra < 60) {
+        } elseif ($p >= 40 and $p < 60) {
           echo ' moderate';
-        } elseif ($extra >= 20 and $extra < 40) {
+        } elseif ($p >= 20 and $p < 40) {
           echo ' hard';
-        } elseif ($extra >= 0 and $extra < 20) {
+        } elseif ($p >= 0 and $p < 20) {
           echo ' veryhard';
         }
-      } else {
-        if ($extra >= 35) {
+
+        if ($d >= 35) {
           echo ' highest';
-        } elseif ($extra >= 25 and $extra < 35) {
+        } elseif ($d >= 25 and $d < 35) {
           echo ' high';
-        } elseif ($extra >= 15 and $extra < 25) {
+        } elseif ($d >= 15 and $d < 25) {
           echo ' intermediate';
-        } elseif ($extra >= 0 and $extra < 15) {
+        } elseif ($d >= 0 and $d < 15) {
           echo ' low';
         }
-      }
     }
     if ($locked != '') {
       echo ' locked';
-    } else {
-      echo ' unlocked';    
     }
     echo '"';
     if ($locked != '') {
       echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2c',event)\" ondblclick=\"editQ()\">";
-      echo "<td><img src=\"../artwork/small_padlock.png\" class=\"plock\" alt=\"Padlock\" style=\"border:1px solid white\" /></td>";
+      echo "<td><img src=\"../artwork/small_padlock.png\" class=\"plock\" alt=\"Padlock\" /></td>";
     } else {
       echo " id=\"link_$display_no\" onclick=\"selQ($q_id,$display_no,'$q_type','2b',event)\" ondblclick=\"editQ()\">";
       echo "<td></td>";
     }
 
     if (trim($leadin) == '') $leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
-    if ($userObject->has_role('Demo')) $owner = 'Dr J Bloggs';
 
     echo "<td class=\"d\">";
     if (trim($theme) != '') {
       echo '<span class="theme">' . $theme . '</span><br />';
     }
     echo "$leadin</td>";
-    echo "<td class=\"d nobr\">" . $title . ' ' . $initials . ' ' . $surname . "</td>";
     echo "<td class=\"d nobr\">" . $string[$q_type] . "</td>";
+    if ($type == 'keyword' or $type == 'bloom') {
+      echo "<td class=\"d\">" . $extra_field . "</td>\n";    
+    } elseif ($type == 'performance') {
+      echo "<td class=\"d\">" . ($p / 100) . "</td>\n";    
+      echo "<td class=\"d\">" . ($d / 100) . "</td>\n";    
+    }
     echo "<td class=\"d\">" . $modified . "</td>\n";
     echo "<td class=\"d\">" . $status_array[$status]->get_name() . "</td></tr>\n";
     $display_no++;

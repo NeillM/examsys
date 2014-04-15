@@ -470,26 +470,26 @@ foreach ($table_order as $display => $key) {
         echo '<td></td>';
       }
       if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" /></td><td>$tmp_surname, ";
+        echo "<td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" /></td><td>" . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . ", ";
         if ($tmp_first_names != '') {
-          echo '<span class="fn">' . $tmp_first_names . '</span>';
+          echo '<span class="fn">' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</span>';
         } else {
           echo $tmp_initials;
         }
-        echo  "</td><td>$tmp_username</td>";
+        echo  '</td><td>' . demo_replace($tmp_username, $demo, false) . '</td>';
       } else {
         if (isset($tmp_title) and $tmp_title != '') {
           $tmp_title = $tmp_title;
         } else {
           $tmp_title = '';
         }
-        echo "<td>$tmp_title</td><td></td><td>$tmp_surname, ";
+        echo "<td>$tmp_title</td><td></td><td>" . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . ", ";
         if ($tmp_first_names != '') {
-          echo '<span class="fn">' . $tmp_first_names . '</span>';
+          echo '<span class="fn">' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</span>';
         } else {
           echo $tmp_initials;
         }
-        echo "</td><td>$tmp_username</td>";
+        echo '</td><td>' . demo_replace($tmp_username, $demo, false) . '</td>';
       }
     } else {
       echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";

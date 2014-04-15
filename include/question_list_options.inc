@@ -143,6 +143,7 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
   }
   
   function check_checkboxes() {
+    $(".q").hide();
     $('input[type=checkbox]').each(function () {
       if ($(this).attr("class") == 'check_type') {
         q_type = $(this).val();
@@ -151,8 +152,6 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
           if (!$('#check_locked').attr('checked')) {
             $("." + q_type + '.locked').hide();
           }
-        } else {
-          $("." + q_type).hide();
         }
       }
     });
@@ -225,6 +224,9 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
 
 <?php
 switch ($_GET['type']) {
+  case 'all':
+    $display_type = 'All Questions';
+    break;    
   case 'type':
     $display_type = 'Types';
     break;
@@ -243,14 +245,16 @@ switch ($_GET['type']) {
 }
 echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 ?>
-<div style="padding-left:12px; height:78%; overflow:auto" id="list">
+<div style="padding-left:12px; height:78%; font-size:90%; overflow:auto" id="list">
 <?php
   echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">&nbsp;show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
     $subtypes = $qbank->get_categories($type);
     
     foreach($subtypes as $id=>$subtype) {
-      if ($_GET['subtype'] == $id) {
+      if ($_GET['type'] == 'all') {
+        $checked = ' checked';
+      } elseif (isset($_GET['subtype']) and $_GET['subtype'] == $id) {
         $checked = ' checked';
       } else {
         $checked = '';

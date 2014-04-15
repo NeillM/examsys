@@ -153,7 +153,7 @@ echo "<br clear=\"left\">\n";
 echo "<br />\n";
 echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Question Bank</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 echo "<br />\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?module=$module\" class=\"blacklink\">All Questions</a></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">All Questions</a></td></tr></table></div>\n";
 
 $bank_types = array('by Keyword'=>'../question/bank.php?type=keyword&module=' . $module, 'by Question Type'=>'../question/bank.php?type=type&module=' . $module, 'by Status'=>'../question/bank.php?type=status&module=' . $module, 'by Bloom\'s Taxonomy'=>'../question/bank.php?type=bloom&module=' . $module, 'by Performance'=>'../question/bank.php?type=performance&module=' . $module);
 foreach ($bank_types as $type_name=>$url) {
@@ -167,7 +167,7 @@ echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
 // User section
 echo "<br clear=\"left\">\n";
 echo "<br />\n";
-echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Students</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Users</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 echo "<br />\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../users/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">for users</span></td></tr></table></div>\n";
 
@@ -182,7 +182,7 @@ if ($_GET['module'] != '0') {
   } else {
     $student_class = 'grey';
   }
-  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Cohort List</a><br /><span class=\"$student_class\">" . $current_year . " - $student_no students</span></td></tr></table></div>\n";
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Student Cohort List</a><br /><span class=\"$student_class\">" . $current_year . " - $student_no students</span></td></tr></table></div>\n";
 
   $url = '../users/import_users_metadata.php?module=' . $module;
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Add Metadata</a><br /><span class=\"grey\">extra data about students</span></td></tr></table></div>\n";

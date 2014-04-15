@@ -99,13 +99,13 @@ Class debug_mysqli extends mysqli {
 	  return $stmt;
 	}
 
-  function change_user( $user , $password , $database ) {
+  function change_user($user, $password, $database) {
     $this->dbusername=$user;
     $this->dbname=$database;
-    return parent::change_user($user,$password,$database);
+    return parent::change_user($user, $password, $database);
   }
 
-	function query($sql,$log = true) {
+	function query($sql, $log = true) {
 	  global $queryInfo;
     
 	  if ($log) {
@@ -175,7 +175,7 @@ function outputLoadTimes() {
     $mysqli->cacheSqlProfile();
   } 
   
-  echo  '<div style="cursor:pointer; position:absolute; left:55%; top:0; z-index: 9999; font-size:75%; padding:1px; background-color:black; color:white; width:40%">';
+  echo  '<div style="cursor:pointer; position:absolute; left:55%; top:0; z-index: 9999; font-size:9pt; font-family:Arial, padding:1px; background-color:black; color:white; width:40%">';
   
   $start  = explode(' ',$debug_pagestart);
   $end    = explode(' ', microtime());
