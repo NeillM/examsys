@@ -360,11 +360,11 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 			if ($properties->get_paper_type() == '4') {
 				echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/osce/print.php?paperID=$paperID\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" />" . $string['printhardcopy'] . "</a></div>\n";
 			} else {
-				echo "<div class=\"menuitem cascade\" id=\"hardcopy\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup6','papertasks','hardcopy',myOptions6,myURLs6,event);\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['printhardcopy'] . "</a></div>\n";
+				echo "<div class=\"menuitem cascade\" id=\"hardcopy\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','papertasks','hardcopy',myOptions2,myURLs2,event);\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['printhardcopy'] . "</a></div>\n";
 			}
 		}
 	?>
-	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup5','papertasks','qti',myOptions5,myURLs5,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['importexport']; ?></a></div>
+	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','qti',myOptions1,myURLs1,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['importexport']; ?></a></div>
 </div>
 
 <br />
@@ -469,7 +469,7 @@ if ($properties->get_summative_lock() == true) {
   if ($extra_url != '') $extra_url = '?' . $extra_url;
   echo '<div class="menuitem"><a href="../question/search.php' . $extra_url . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="' . $string['search'] . '" />' . $string['search'] . '</a></div>';
 ?>
-  <div class="menuitem cascade" id="newquestion" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','banktasks','newquestion',myOptions1,myURLs1,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
+  <div class="menuitem cascade" id="newquestion" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
 <?php
@@ -666,7 +666,7 @@ if ($properties->get_paper_type() == '2') {
 </form>
 </div>
 <?php
-  makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
+  //makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
 
   if ($properties->get_summative_lock()) {
     $params = "&scrOfY=' + $('#scrOfY').val() + '";

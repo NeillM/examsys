@@ -36,8 +36,13 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
+  <style>
+    .l {padding-bottom: 4px}
+  </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -45,6 +50,14 @@ require '../include/sysadmin_auth.inc';
     function edit(lineID) {
       document.location.href='./edit_announcement.php?announcementid=' + lineID;
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        dateFormat: 'uk',
+        sortList: [[1,1]] 
+      });
+
+    });
   </script>
 </head>
 
@@ -62,40 +75,22 @@ require '../include/sysadmin_auth.inc';
 <th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['newsannouncements']; ?></th>
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
+</table>
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+<thead>
 <tr>
-<?php
-  if (isset($_GET['sortby'])) {
-    $sortby = $_GET['sortby'];
-    $ordering = $_GET['ordering'];
-  } else {
-    $sortby = 'startdate';
-    $ordering = 'desc';
-  }
-
-  // Output table header
-  $table_order = array($string['title']=>'title', $string['startdate']=>'startdate', $string['enddate']=>'enddate');
-  foreach($table_order as $display => $key) {
-    if ($key == 'title') {
-      echo '<th class="vert_div col10">';
-    } else {
-      echo '<th class="vert_div">';
-    }
-    if ($sortby == $key and $ordering == 'asc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" />";
-    } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" />";
-    } else {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>";
-    }
-		echo "</th>";
-  }
-?>
+  <th class="col" style="width:50%"><?php echo $string['title'] ?></th>
+  <th class="col" style="width:25%"><?php echo $string['startdate'] ?></th>
+  <th class="col" style="width:25%"><?php echo $string['enddate'] ?></th>
 </tr>
+</thead>
+
+<tbody>
 <?php
 $announce_no = 0;
 $announcements = array();
 
-$result = $mysqli->prepare("SELECT id, title, startdate, DATE_FORMAT(startdate, '" . $configObject->get('cfg_long_date_time') . "') AS startdate_display, DATE_FORMAT(enddate, '" . $configObject->get('cfg_long_date_time') . "') AS enddate_display FROM announcements WHERE deleted IS NULL ORDER BY $sortby $ordering");
+$result = $mysqli->prepare("SELECT id, title, startdate, DATE_FORMAT(startdate, '" . $configObject->get('cfg_long_date_time') . "') AS startdate_display, DATE_FORMAT(enddate, '" . $configObject->get('cfg_long_date_time') . "') AS enddate_display FROM announcements WHERE deleted IS NULL");
 $result->execute();
 $result->bind_result($announcementid, $title, $startdate, $startdate_display, $enddate_display);
 while ($result->fetch()) {
@@ -109,11 +104,12 @@ while ($result->fetch()) {
 $result->close();
 
 for ($i=0; $i<$announce_no; $i++) {
-  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td><div class=\"col10\">" . $announcements[$i]['title'] . "</div></td><td><div class=\"col\">" . $announcements[$i]['startdate_display']  . "</div></td><td><div class=\"col\">" . $announcements[$i]['enddate_display']  . "</div></td></tr>\n";
+  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td class=\"col\">" . $announcements[$i]['title'] . "</td><td class=\"col\">" . $announcements[$i]['startdate_display']  . "</td><td class=\"col\">" . $announcements[$i]['enddate_display']  . "</td></tr>\n";
 }
 
 $mysqli->close();
 ?>
+</tbody>
 </table>
 </div>
 

@@ -63,7 +63,11 @@ hr {
   width: 43px !important;
 	height: 20px !important;
 	top: 0px;
-	padding-right: 6px;
+	margin-right: 6px;
+  background-color: #7BA5D6;
+}
+#toprightmenu_icon:hover {
+  background-color: #4F81BD;
 }
 #toprightmenu {
   font-size: 80%;

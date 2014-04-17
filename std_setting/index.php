@@ -66,9 +66,9 @@ function displayReview($review, $userObj) {
 		$review['distinction_score'] = 'top 20%';
 	}
   if ($review['review_total'] == $review['total_marks']) {
-    $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td>{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   } else {
-    $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td>{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   }
   return $html;
 }
@@ -85,9 +85,11 @@ function displayReview($review, $userObj) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
@@ -128,6 +130,14 @@ function displayReview($review, $userObj) {
       var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
       return result;
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        dateFormat: 'uk',
+        sortList: [[1,0]] 
+      });
+
+    });
   </script>
 </head>
 
@@ -148,11 +158,12 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 $reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">' . $string['standardssetting'] . '</div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr></table>';
 
 $reviews_html .= <<< TABLEHEADER
-<table class="header">
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<thead>
 <tr>
   <th style="width:18px">&nbsp;</td>
   <th class="vert_div" style="width:18%">{$string['standardsetter']}</th>
-  <th class="vert_div" style="width:13%">{$string['date']}</th>
+  <th class="{sorter: 'datetime'} vert_div" style="width:13%">{$string['date']}</th>
   <th class="vert_div" style="width:10%">{$string['passscore']}</th>
   <th class="vert_div" style="width:10%">{$string['distinction']}</th>
   <th class="vert_div" style="width:12%">{$string['reviewmarks']}</th>
@@ -160,6 +171,8 @@ $reviews_html .= <<< TABLEHEADER
   <th class="vert_div" style="width:14%">{$string['method']}</th>
   <th class="vert_div" width="25%">&nbsp;</th>
 </tr>
+</thead>
+<tbody>
 TABLEHEADER;
 
 $no_reviews = 0;
@@ -179,8 +192,9 @@ echo draw_toprightmenu(97);
 <div id="content" class="content" style="font-size:80%">
 <?php
 echo $reviews_html;
-echo "</table>\n";
 $mysqli->close();
 ?>
+</tbody>
+</table>
 </body>
 </html>

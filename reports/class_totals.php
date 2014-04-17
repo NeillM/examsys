@@ -70,6 +70,66 @@ $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
 
+function check_late_submission_warnings($log_late, $string) {
+  if (count($log_late) > 0) {
+  ?>
+    <table border="0" cellpadding="0" cellspacing="0" style="font-size:80%; width:100%">
+      <tr>
+        <td class="redwarn" style="width:40px"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
+        <td class="redwarn"><?php echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $string['moredetails'] . '</a>)'; ?></td>
+      </tr>
+    </table>
+  <?php
+  }
+}
+
+function check_unmarked_textbox_warnings($report, $string) {
+  if ($report->unmarked_textbox()) {
+  ?>
+    <table border="0" cellpadding="0" cellspacing="0" style="font-size:80%; width:100%">
+      <tr>
+        <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
+        <td class="redwarn"><?php echo $string['unmarkedtextbox'] ?></td>
+      </tr>
+    </table>
+  <?php
+  }
+}
+
+function check_unmarked_enhancedcalc_warnings($report, $string) {
+  if ($report->unmarked_enhancedcalc()) {
+  ?>
+    <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
+      <tr>
+        <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
+        <td class="redwarn"><?php echo $string['unmarkedenhancedcalc'] ?></td>
+      </tr>
+    </table>
+  <?php
+  }
+}
+
+function check_temp_account_warnings($user_results, $string) {
+  // Check for any temporary accounts and if so display warning banner
+  $temp_user_no = 0;
+  $user_no = count($user_results);
+  for ($i=0; $i<$user_no; $i++) {
+    if (strpos($user_results[$i]['username'], 'user') === 0) {
+      $temp_user_no++;
+    }
+  }
+  if ($temp_user_no > 0) {
+  ?>
+    <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
+      <tr>
+        <td class="redwarn" style="width:40px"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="Warning" /></td>
+        <td class="redwarn"><?php echo $string['temporaryaccountswarning'] ?></td>
+      </tr>
+    </table>
+  <?php
+  }
+}
+
 if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) or ($paper_type == '1' and $report->unmarked_enhancedcalc())) {
 // Only mark calculation questions when the exam is not active.
 ?>
@@ -160,9 +220,11 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+<link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script type="text/javascript" src="../js/popup_menu.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -305,9 +367,14 @@ ob_start();
     });
   }
 	
-	$(document).ready(function(){
-	  $('#maindata').click(function() {
-		  $('#menudiv').hide();
+	$(document).ready(function() {
+    $("#maindata").tablesorter({ 
+      // sort on the first column and third column, order asc 
+      sortList: [[2,0],[3,0]] 
+    });
+    
+    $(document).click(function() {
+      $('#menudiv').hide();
 		});
 	});
 </script>
@@ -331,9 +398,9 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 }
 ?>
 <div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
+<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; width:100%">
   <tr><td>
-    <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
+    <table cellspacing="0" cellpadding="1" border="0" style="width:100%">
       <tr>
         <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
       </tr>
@@ -438,25 +505,26 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
   //output table heading
 	if ($configObject->get('cfg_client_lookup') == 'name') {
-		$table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['hostnames']=>'ipaddress');
+		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['hostnames']=>100);
 	} else {
-		$table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'student_grade', $string['mark']=>'mark', $marking_label=>$marking_key, $string['classification']=>'classification', $string['rank']=>'rank', $string['decile']=>'decile', $string['starttime']=>'started', $string['duration']=>'duration', $string['ipaddress']=>'ipaddress');
+		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
   }
-	if ($paper_type == '2') $table_order[$string['room']] = 'room';
+	if ($paper_type == '2') $table_order[$string['room']] = 200;
   $metadata_cols = array();
   if (isset($user_results[0])){
     foreach ($user_results[0] as $key => $val) {
-      if (strrpos($key,'meta_') !== false) {
+      if (strrpos($key, 'meta_') !== false) {
         $key_display = ucfirst(str_replace('meta_','',$key));
-        $table_order[$key_display] = $key;
+        $table_order[$key_display] = 150;
         $metadata_cols[$key] = $key;
       }
     }
   }
 
   $cols = count($table_order);
-
-  echo "<table id=\"maindata\" class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
+  
+  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
+  echo "<thead>\n";
   if ($paper_type == '2') {
     echo "<tr><th class=\"h\" colspan=\"" . ($cols - 1) . "\">";
   } else {
@@ -478,123 +546,38 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo "</table>\n";
+  
+  // Warning display banners
+  check_late_submission_warnings($log_late, $string);
+  check_unmarked_textbox_warnings($report, $string);
+  check_unmarked_enhancedcalc_warnings($report, $string);
+  check_temp_account_warnings($user_results, $string);
 
-  if (isset($_GET['folder'])) {
-    $tmp_folder = '&folder=' . $_GET['folder'];
-  } else {
-    $tmp_folder = '';
-  }
-
-  if (isset($_GET['module'])) {
-    $tmp_module = '&module=' . $_GET['module'];
-  } else {
-    $tmp_module = '';
-  }
-
-  // output table header
-  $sortby = $_GET['sortby'];
-  $ordering = $_GET['ordering'];
-  if (isset($_GET['absent'])) {
-    $absent = $_GET['absent'];
-  } else {
-    $absent = 0;
-  }
+  // Output table header
+  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+  echo "<thead>\n";
   if (isset($user_results[0])) {
-    echo "<tr style=\"font-size:110%\">\n";
-    foreach ($table_order as $display => $key) {
-      if ($key == '') {
-        echo "<th>";
-      } else {
-        echo "<th class=\"vert_div\">";
-      }
-      if ($sortby == $key and $ordering == 'asc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
-      } elseif ($sortby == $key and $ordering == 'desc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
-      } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=" . $_GET['percent'] . "&absent=$absent&studentsonly=$studentsonly\">$display</a></th>";
-      }
+    echo "<tr>\n";
+    foreach ($table_order as $display => $col_width) {
+      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
     }
     echo "</tr>\n";
   }
-
+  echo "</thead>\n";
+  
   if ($sortby == 'classification') {
     $sortby = 'mark';
   }
 
-  // Check for any temporary accounts and if so display warning banner
-  $temp_user_no = 0;
-  for ($i=0; $i<$user_no; $i++) {
-    if (strpos($user_results[$i]['username'], 'user') === 0) {
-      $temp_user_no++;
-    }
-  }
-  if ($temp_user_no > 0) {
-?>
-    <tr>
-      <td colspan="<?php echo $cols ?>">
-        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-          <tr>
-            <td class="redwarn" style="width:40px"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="Warning" /></td>
-            <td class="redwarn"><?php echo $string['temporaryaccountswarning'] ?></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-<?php
-  }
-
-  if (count($log_late) > 0) {
-?>
-    <tr>
-      <td colspan="<?php echo $cols ?>">
-        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-          <tr>
-            <td class="redwarn" style="width:40px"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
-            <td class="redwarn"><?php echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $string['moredetails'] . '</a>)'; ?></td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	<?php
-  }
-	
-	if ($report->unmarked_enhancedcalc()) {
-?>
-    <tr>
-      <td colspan="<?php echo $cols ?>">
-        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-          <tr>
-            <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
-            <td class="redwarn"><?php echo $string['unmarkedenhancedcalc'] ?></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-<?php
-	}
-
-	if ($report->unmarked_textbox()) {
-?>
-    <tr>
-      <td colspan="<?php echo $cols ?>">
-        <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-          <tr>
-            <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
-            <td class="redwarn"><?php echo $string['unmarkedtextbox'] ?></td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-<?php
-	}
-
   $percent_decimals = $configObject->get('percent_decimals');
   $absent_no = 0;
   $scatter_data = '';
+
+  echo "<tbody>\n";
+
   for ($i=0; $i<$user_no; $i++) {
     extract($user_results[$i]);
-    $onclick = '';
 
     if ($user_results[$i]['visible'] == 1) {
       if (strpos($user_results[$i]['username'], 'user') !== 0) {
@@ -607,10 +590,13 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         $bg_color = '#FFC0C0';
         $late_submissions = '';
         ?>
-        <tr class="nonattend" id="res<?php echo $i+1 ?>"><td>&nbsp;</td>
-        <td class="padl" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');<?php echo $onclick; ?>" />
-        <?php echo "$title&nbsp;$surname ,&nbsp;"; ?><span class="grey"><?php echo $first_names ?></span>
+        <tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
         <?php
+        echo "<td class=\"padl\">$title</td>";
+        echo "<td class=\"padl\">$surname</td>";
+        echo "<td class=\"padl\">$first_names</td>";
+        
+        
         if ($user_results[$i]['student_id'] == '') {
           echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";
         } else {
@@ -665,17 +651,17 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
           $icon = 'offline_16.gif';
           $alt = $string['displaypaper'];
         }
-        echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" width=\"16\" height=\"16\" alt=\"\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "', '$reassign', '$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\" /></td>";
-        if ($_GET['sortby'] == 'name') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-				
+        echo " style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . "\"";
+        echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" class=\"picon\" /></td>";
+        
         if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class$ordered padl tmpacc $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick ."\">" . str_replace('User','Guest Account #',$user_results[$i]['surname']) . "</span>";
+          echo "<td class=\"$class padl tmpacc $role_css\">Mr</td>";
+          echo "<td class=\"$class padl tmpacc $role_css\">Guest</td>";
+          echo "<td class=\"$class padl tmpacc $role_css\">" . str_replace('User','Account #',$user_results[$i]['surname']);
         } else {
-          echo "<td class=\"$class$ordered padl $role_css\"><span style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . $onclick . "\">" . $user_results[$i]['title'] . "&nbsp;" . $user_results[$i]['surname'] . ",&nbsp;<span class=\"grey\">" . $user_results[$i]['first_names'] . "</span></span>";
+          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['title'] . "</td>";
+          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['surname'] . "</td>";
+          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['first_names'];
         }
         if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
           echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
@@ -688,112 +674,63 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
           echo '&nbsp;<a href="" onclick="viewNote(\'' . $user_results[$i]['userID'] . '\', event); return false;"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Notes" /></a>';
         }
         echo "</td>";
-        if ($_GET['sortby'] == 'student_id') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
+        
         if ($user_results[$i]['student_id'] == '') {
           if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
-            echo "<td class=\"grey $class$ordered padl $role_css\">&nbsp;</td>";
+            echo "<td class=\"grey $class padl $role_css\">&nbsp;</td>";
           } else {
-            echo "<td class=\"grey $class$ordered padl $role_css\">" . $string['unknown'] . "</td>";
+            echo "<td class=\"grey $class padl $role_css\">" . $string['unknown'] . "</td>";
           }
         } else {
-          echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['student_id'] . "</td>";
+          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_id'] . "</td>";
         }
-        if ($_GET['sortby'] == 'student_grade') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-        echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
-        if ($_GET['sortby'] == 'mark') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-				
+        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
+       			
 				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
 				
         if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
-          echo "<td class=\"mk $class$ordered fail r $role_css\">";
+          echo "<td class=\"mk $class fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
           echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
         } else {
           if (round($user_results[$i]['percent'], $percent_decimals) >= $distinction_mark) {
-            echo "<td class=\"mk $class$ordered dist r $role_css\">";
+            echo "<td class=\"mk $class dist r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td class=\"dist $class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class dist $role_css\">&nbsp;" . $string['distinction'] . "</td>";
           } else {
-            echo "<td class=\"mk $class$ordered r $role_css\">";
+            echo "<td class=\"mk $class r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
             echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . "</td>";
           }
         }
         // Rank column
-        if ($_GET['sortby'] == 'rank') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-        echo "<td class=\"$class$ordered r $role_css\">" . $user_results[$i]['rank'] . "</td>";
+        echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . "</td>";
         // Decile column
-        if ($_GET['sortby'] == 'decile') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-        echo "<td class=\"$class$ordered r $role_css\">" . $user_results[$i]['decile'] . "</td>";
+        echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . "</td>";
         // Start Time column
-        if ($_GET['sortby'] == 'started') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-        echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['display_started'] . "</td>";
+        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['display_started'] . "</td>";
         // Duration column
-        if ($_GET['sortby'] == 'duration') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-        echo "<td class=\"$class$ordered padl $role_css\">" . $report->formatsec($user_results[$i]['duration']);
+        echo "<td class=\"$class padl $role_css\">" . $report->formatsec($user_results[$i]['duration']);
         if ($late_submissions == 'y') {
           echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" />';
         }
         echo "</td>";
 
-        if ($_GET['sortby'] == 'ipaddress') {
-          $ordered = ' ordered';
-        } else {
-          $ordered = '';
-        }
-        echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['ipaddress'] . "</td>";
+        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['ipaddress'] . "</td>";
         if ($paper_type == 2) {
-          if ($_GET['sortby'] == 'room') {
-            $ordered = ' ordered';
-          } else {
-            $ordered = '';
-          }
-          echo "<td class=\"$class$ordered padl $role_css\">" . $user_results[$i]['room'] . "</td>";
+          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['room'] . "</td>";
         }
 
         // Display any associated metadata
         if (count($metadata_cols) > 0) {
           foreach ( $metadata_cols as $type) {
-            if ($_GET['sortby'] == $type) {
-              $ordered = ' ordered';
-            } else {
-              $ordered = '';
-            }
             if (isset($user_results[$i][$type])) {
-              echo "<td class=\"$class$ordered $role_css\">&nbsp;" . $user_results[$i][$type] . "</td>";
+              echo "<td class=\"$class $role_css\">&nbsp;" . $user_results[$i][$type] . "</td>";
             } else {
-              echo "<td class=\"$class$ordered $role_css\">&nbsp;</td>";
+              echo "<td class=\"$class $role_css\">&nbsp;</td>";
             }
           }
         }
@@ -801,7 +738,10 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
       }
     }
   }
-
+  echo "<tbody>\n</table>\n";
+  
+  // Summary information after the cohort listing.
+  // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   $scatter_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
   fwrite($scatter_file, $scatter_data . "\n");
   fclose($scatter_file);
@@ -812,15 +752,12 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 	
   if ($user_no > 0) {
     //Check for any paper notes
-    echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . ($cols) . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . ($cols) . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'" . $configObject->get('cfg_long_date_time') . "'), note_workstation FROM paper_notes WHERE paper_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->store_result();
     $result->bind_result($note, $note_date, $note_workstation);
-    echo "<tr><td></td><td colspan=\"" . ($cols - 1) . "\">";
     while ($result->fetch()) {
       $lab_name = '';
       $result2 = $mysqli->prepare("SELECT name FROM labs, client_identifiers WHERE labs.id = client_identifiers.lab AND address = ?");
@@ -833,13 +770,12 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
       if ($lab_name != '') echo " ($lab_name)";
       echo "</span></div>\n";
     }
-    echo "</td></tr>";
+    echo "<br clear=\"all\" />";
     $result->close();
 
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     $exam_announcements = $exam_announcementObj->get_announcements();
-    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['midexamclarifications'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+    echo "<br />\n<table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['midexamclarifications'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\"><table cellspacing=\"0\" cellpadding=\"2\">\n";
     foreach ($exam_announcements as $exam_announcement) {
       $msg = $exam_announcement['msg'];
@@ -850,26 +786,22 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
       echo "<tr><td class=\"q_no\">Q" . $exam_announcement['q_number'] . "</td><td class=\"q_msg\">(" . $exam_announcement['created'] .")<br />" . $msg . "</td></tr>\n";
     }
-    echo "</table></td></tr>\n";
-
-    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-
-    echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . "&q2=" . $stats['q2'] . "&q3=" . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></td></tr>\n";
-
-    echo "<tr><td colspan=\"" . $cols . "\" height=\"9\">&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"" . $cols . "\"><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td colspan=\"" . ($cols - 1) . "\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></td></tr>\n";
     echo "</table>\n";
 
-    // Display summary -------------------------------------------------------------------------------------
+    echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
-    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"font-size:85%; width:100%\">";
+    echo "<div class=\"graph\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . "&q2=" . $stats['q2'] . "&q3=" . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></div>\n";
+
+    echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<div class=\"graph\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></div>\n";
+
+
+    // Display summary -------------------------------------------------------------------------------------
+    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"width:100%\">";
     echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['quartiles'] . "</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
 
-    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
+    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td class=\"field\" style=\"width:170px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
@@ -967,7 +899,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
     // Deciles
     $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
-    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
+    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
     for ($i=1; $i<10; $i++) {
       echo "<tr><td style=\"width:40px\">" . $i;
 			echo ($language == 'en') ? $suffix[$i] : '.';
@@ -978,7 +910,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     echo "<td></td>";
 
     // Quartiles
-    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\"  style=\"font-size:85%\">\n";
+    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($stats['q1'], 1) . "%</td></tr>\n";
     echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($stats['q2'], 1) . "%</td></tr>\n";
     echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($stats['q3'], 1) . "%</td></tr>\n";
@@ -1089,12 +1021,12 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         echo "</form>\n</div>\n";
       }
     }
+    echo "</table>\n";
   } else {
 		$msg = sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate));
-		echo "</table>\n" . $notice->info_strip($msg) . "\n</div>\n</body>\n</html>";
+		echo $notice->info_strip($msg) . "\n</div>\n</body>\n</html>";
     exit;
   }
-  echo "</table>\n";
   $mysqli->close();
 ?>
 <input type="hidden" id="metadataID" value="" /><input type="hidden" id="userID" value="" /><input type="hidden" id="log_type" value="" /><input type="hidden" id="reassign" value="" /><input type="hidden" id="loglate" value="" /><input type="hidden" id="percent" value="" />

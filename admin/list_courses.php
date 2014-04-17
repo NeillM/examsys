@@ -38,8 +38,10 @@ require '../include/sort.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -47,6 +49,13 @@ require '../include/sort.inc';
     function edit(courseID) {
       document.location.href='./edit_course.php?courseID=' + courseID;
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        sortList: [[0,0]] 
+      });
+
+    });
   </script>
 </head>
 
@@ -64,35 +73,18 @@ require '../include/sort.inc';
 <th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['courses']; ?></th>
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
-<tr style="font-size:90%">
-<?php
-  if (isset($_GET['sortby'])) {
-    $sortby = $_GET['sortby'];
-    $ordering = $_GET['ordering'];
-  } else {
-    $sortby = 'code';
-    $ordering = 'asc';
-  }
-
-  // output table header
-  $table_order = array($string['code']=>'code', $string['name']=>'name', $string['school']=>'school');
-  foreach($table_order as $display => $key) {
-    if ($key == 'code') {
-      echo "<th class=\"h vert_div col10\">";
-    } else {
-      echo "<th class=\"h vert_div\">";
-    }
-    if ($sortby == $key and $ordering == 'asc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
-    } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
-    } else {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a></th>";
-    }
-  }
+</table>
   
-?>
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+<thead>
+<tr>
+  <th class="col" style="width:15%"><?php echo $string['code'] ?></th>
+  <th class="col" style="width:50%"><?php echo $string['name'] ?></th>
+  <th class="col" style="width:25%"><?php echo $string['school'] ?></th>
 </tr>
+</thead>
+
+<tbody>
 <?php
 $course_no = 0;
 $courses = array();
@@ -111,31 +103,14 @@ while ($result->fetch()) {
 $result->close();
 $mysqli->close();
 
-if (count($courses) > 0) {
-  $courses = array_csort($courses, $sortby, $ordering);
-}
-$old_code_letter = '';
-$old_name_letter = '';
-$old_school = '';
-
 for ($i=0; $i<$course_no; $i++) {
   $id = $courses[$i]['id'];
-  
-  if ($sortby == 'code' and strtoupper(substr($courses[$i]['code'], 0, 1)) != $old_code_letter) {
-    echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:99%"><tr><td>' . substr($courses[$i]['code'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
-  } elseif ($sortby == 'name' and strtoupper(substr($courses[$i]['name'], 0, 1)) != $old_name_letter) {
-    echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:99%"><tr><td>' . substr($courses[$i]['name'], 0, 1) . '</td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
-  } elseif ($sortby == 'school' and $courses[$i]['school'] != $old_school) {
-    echo '<tr><td colspan="3"><table border="0" class="subsect" style="margin-left:10px; padding-bottom:5px; width:99%"><tr><td><nobr>' . $courses[$i]['school'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>';
-  }  
-  echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit($id)\" class=\"l\"><td class=\"col30\">" . $courses[$i]['code'] . "</td><td class=\"col\">" . $courses[$i]['name'] . "</td><td class=\"col\"><nobr>" . $courses[$i]['school'] . "</nobr></td></tr>\n";
 
-  $old_code_letter = strtoupper(substr($courses[$i]['code'], 0, 1));
-  $old_name_letter = strtoupper(substr($courses[$i]['name'], 0, 1));
-  $old_school = $courses[$i]['school'];
+  echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit($id)\" class=\"l\"><td class=\"col\">" . $courses[$i]['code'] . "</td><td class=\"col\">" . $courses[$i]['name'] . "</td><td class=\"col\"><nobr>" . $courses[$i]['school'] . "</nobr></td></tr>\n";
 }
 
 ?>
+</tbody>
 </table>
 </div>
 

@@ -1,41 +1,42 @@
 body {
   background-color:#F1F5FB;
-  margin:4px;
-  font-size:90%;
+  margin: 4px;
+  font-size: 90%;
 }
 h2 {
   font-size:100%;
-  margin:8px 0 0 0;
+  margin: 8px 0 0 0;
 }
 select {
-  margin:0px;
-  padding:0px;
+  margin: 0;
+  padding: 0;
 }
 input[type="text"] {
-  margin:0px;
+  margin: 0;
 }
 label {
-  margin-left:6px;
+  margin-left: 6px;
 }
 .r1 {
-  background-color:white;
+  background-color: white;
 }
 .r2 {
-  background-color:#B3C8E8;
+  background-color: #B3C8E8;
 }
 .icon {
-  padding-top:15px;
-  padding-bottom:15px;
-  padding-left:0px;
-  padding-right:0px;
-  vertical-align:top;
-  width:98px;
-  height:74px;
-  font-size:8pt;
-  background-repeat:no-repeat;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 0;
+  padding-right: 0;
+  vertical-align: top;
+  width: 98px;
+  height: 74px;
+  font-size: 8pt;
+  background-repeat: no-repeat;
 }
 .titlebar {
-  background-color:#CFDBEB;
-  padding:4px;
+  background-color: #295AAD;
+  color: white;
+  padding: 4px;
 }
 

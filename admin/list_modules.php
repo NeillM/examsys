@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/sort.inc';
 
 ?>
 <!DOCTYPE html>
@@ -38,11 +37,13 @@ require '../include/sort.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
 	<style>
 	  th a {color:black !important}
 	</style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -50,6 +51,13 @@ require '../include/sort.inc';
     function edit(moduleID) {
       document.location.href = './edit_module.php?moduleid=' + moduleID;
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        sortList: [[0,0]] 
+      });
+
+    });
   </script>
 </head>
 
@@ -67,37 +75,20 @@ require '../include/sort.inc';
 <th colspan="3"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['modules']; ?></div></th>
 <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
 </tr>
-<tr>
-<?php
-  if (isset($_GET['sortby'])) {
-    $sortby = $_GET['sortby'];
-    $ordering = $_GET['ordering'];
-  } else {
-    $sortby = 'moduleid';
-    $ordering = 'asc';
-  }
+</table>
 
-  // output table header
-  $table_order = array($string['moduleid']=>'moduleid', $string['name']=>'name', $string['school']=>'school', $string['active']=>'active');
-  foreach ($table_order as $display => $key) {
-    if ($key == 'moduleid') {
-      echo '<th class="col10">';
-    } else {
-      echo '<th class="vert_div">';
-    }
-    if ($sortby == $key and $ordering == 'asc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" />&nbsp;</div>";
-    } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" />&nbsp;</div>";
-    } else {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a></div>";
-    }
-    echo "</th>\n";
-  }
-?>
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+<thead>
+<tr>
+  <th class="col" style="width:15%"><?php echo $string['moduleid'] ?></th>
+  <th class="col" style="width:30%"><?php echo $string['name'] ?></th>
+  <th class="col" style="width:30%"><?php echo $string['school'] ?></th>
+  <th class="col" style="width:15%"><?php echo $string['active'] ?></th>
 </tr>
+</thead>
+
+<tbody>
 <?php
-$old_school = '';
 $id = 0;
 $module_no = 0;
 
@@ -116,12 +107,6 @@ while ($result->fetch()) {
   $module_no++;
 }
 
-$modules = array_csort($modules, $sortby, $ordering);
-$old_moduleid_letter = '';
-$old_name_letter = '';
-$old_school = '';
-$old_active = '';
-
 for ($i=0; $i<$module_no; $i++) {
   if ($modules[$i]['school'] == '') $modules[$i]['school'] = '<span style="color:#808080">unknown</span>';
   if ($modules[$i]['active'] == 1) {
@@ -131,28 +116,13 @@ for ($i=0; $i<$module_no; $i++) {
     $tmp_active = $string['no'];
 		$class = 'l grey';
   }
-  if ($sortby == 'school' and $old_school != $modules[$i]['school']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $modules[$i]['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'moduleid' and $old_moduleid_letter != mb_substr($modules[$i]['moduleid'], 0, 1)) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . mb_substr($modules[$i]['moduleid'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'name' and $old_name_letter != mb_substr($modules[$i]['name'], 0, 1)) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . mb_substr($modules[$i]['name'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'school' and $old_school != $modules[$i]['school']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . mb_substr($modules[$i]['school'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  }
   
-	echo "<tr class=\"$class\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col30\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
-  
-  $old_moduleid_letter = mb_substr($modules[$i]['moduleid'], 0, 1);
-  $old_name_letter = mb_substr($modules[$i]['name'], 0, 1);
-  $old_school = $modules[$i]['school'];
-  $old_active = $modules[$i]['active'];
+	echo "<tr class=\"$class\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
 }
 $result->close();
 $mysqli->close();
 ?>
+</tbody>
 </table>
 </div>
 

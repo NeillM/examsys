@@ -581,17 +581,12 @@ class ClassTotals {
       $blank_details[$i] = preg_replace("| size=\"([0-9]{1,3})\"|","",$blank_details[$i]);
       $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
       $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
+      
       $answer_list = explode(',', $blank_details[$i]);
       $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
-      //if ($display_method == 'textboxes') {
-        foreach ($answer_list as $individual_answer) {
-          $correct[$i-1][] = html_entity_decode(trim($individual_answer));
-        }
-      //} else {
-      //  foreach ($answer_list as $tmp_answer) {
-      //    $correct[$i-1][] = html_entity_decode(trim($tmp_answer));
-      //  }
-      //}
+      foreach ($answer_list as $individual_answer) {
+        $correct[$i-1][] = html_entity_decode(trim($individual_answer));
+      }
     }
 
     return $correct;
@@ -1239,7 +1234,7 @@ class ClassTotals {
                                     lab_name, 
                                     student_id, 
                                     attempt, 
-                                    DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, 
+                                    DATE_FORMAT(started, '{$this->config->get('cfg_short_date_time')}') AS display_started, 
                                     started, 
                                     student_grade 
                                   FROM 

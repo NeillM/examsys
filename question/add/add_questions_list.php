@@ -29,6 +29,7 @@ require_once '../../classes/question_status.class.php';
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -38,6 +39,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/tablesort.css" />
   <style type="text/css">
     body {font-size:80%}
     a {text-decoration:none}
@@ -45,6 +47,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
   <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">
     function Qpreview(qID) {
@@ -62,6 +65,14 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
         }
       }
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        // sort on the second column, order asc 
+        sortList: [[2,0]] 
+      });
+
+    });
   </script>
 </head>
 <body onload="populateTicks()">
@@ -122,35 +133,25 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       echo "<tr><th colspan=\"6\" style=\"font-size:160%; font-weight:bold\">&nbsp;By Keyword</th></tr>\n";
       break;
   }
+  echo "</table>\n";
 
+  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+  echo "<thead>\n";
   echo '<tr>';
-  $table_order = array('1'=>'', '2'=>'', $string['question']=>'leadin', $string['type']=>'q_type', $string['modified']=>'last_edited', $string['status']=>'status');
-  foreach ($table_order as $display => $key) {
-    if ($key == '') {
-      echo "<th></th>";
+  $table_order = array('#1'=>18, '#2'=>18, $string['question']=>400, $string['type']=>100, $string['modified']=>100, $string['status']=>120);
+  foreach ($table_order as $display => $col_width) {
+    if ($display{0} == '#') {
+      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\"></th>\n";
     } else {
-      if ($key == 'last_edited' or $key == 'status') {
-        echo '<th class="vert_div" style="width:120px">';
-      } else {
-        echo '<th class="vert_div">';
-      }
-      
-      $params = "sortby=$key&type=" . $_GET['type'];
-      if ($_GET['type'] == 'team') $params .= '&teamID=' . $_GET['teamID'];
-      if ($_GET['type'] == 'status') $params .= '&status=' . $_GET['status'];
-      if ($_GET['type'] == 'keyword') $params .= '&keyword_ids=' . $keyword_ids;
-      
-      if ($sortby == $key and $ordering == 'asc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=desc\">$display</a>&nbsp;<img src=\"../../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
-      } elseif ($sortby == $key and $ordering == 'desc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a>&nbsp;<img src=\"../../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
-      } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?$params&ordering=asc\">$display</a></th>";
-      }
+      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
     }
   }
-  echo '</tr>';
-
+  ?>
+  </tr>
+  </thead>
+  
+  <tbody>
+  <?php
   $id = 0;
   if ($sortby == 'leadin') $sortby = 'leadin_plain';
   if ($sortby == 'q_type') $sortby = 'CAST(q_type AS CHAR)';
@@ -239,6 +240,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   $result->close();
   $mysqli->close();
 ?>
+</tbody>
 </table>
 </form>
 </body>

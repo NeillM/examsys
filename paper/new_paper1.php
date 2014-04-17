@@ -108,7 +108,7 @@ require '../include/staff_auth.inc';
 
 <body>
 <form id="theform" name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
-<div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
+<div style="text-align:center; border:solid 1px #295AAD; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
 <td colspan="8" class="titlebar" style="text-align:left">&nbsp;<?php echo $string['papertype']; ?></td>

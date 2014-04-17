@@ -234,17 +234,20 @@ if (isset($_GET['paperID'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
     a {color:black}
     .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
     #usertable td {padding-left:6px}
     .fn {color:#A5A5A5}
+    .uline {line-height: 150%}
     .uline:hover {background-color:#FFE7A2}
     .uline.highlight {background-color:#FFBD69}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
@@ -299,6 +302,17 @@ if (isset($_GET['paperID'])) {
     function profile(userID) {
       document.location.href='details.php?search_surname=<?php if (isset($_GET['search_surname'])) echo $_GET['search_surname']; ?>&search_username=<?php if (isset($_GET['search_username'])) echo $_GET['search_username']; ?>&student_id=<?php if (isset($_GET['student_id'])) echo $_GET['student_id']; ?>&moduleID=<?php if (isset($_GET['team'])) echo $_GET['team']; if (isset($_GET['module'])) echo '&module=' . $_GET['module']; ?>&calendar_year=<?php if (isset($_GET['calendar_year'])) echo $_GET['calendar_year']; ?>&students=<?php if (isset($_GET['students'])) echo $_GET['students']; ?>&submit=Search&userID=' + userID + '&email=<?php if (isset($_GET['email'])) echo $_GET['email']; ?>&tmp_surname=<?php if (isset($_GET['tmp_surname'])) echo $_GET['tmp_surname']; ?>&tmp_courseID=<?php if (isset($_GET['tmp_courseID'])) echo $_GET['tmp_courseID']; ?>&tmp_yearID=<?php if (isset($_GET['tmp_yearID'])) echo $_GET['tmp_yearID']; ?>';
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        // sort on the third column, order asc 
+        sortList: [[3,0]] 
+      });
+
+      $(document).click(function() {
+        $('#menudiv').hide();
+      });
+    });
   </script>
 </head>
 
@@ -352,6 +366,8 @@ if (isset($_GET['paperID'])) {
   echo $_GET['calendar_year'];
 }
 echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+echo "</table>\n";
+
 
 if ($ordering == 'asc') {
   $new_order = 'desc';
@@ -411,140 +427,81 @@ if (isset($_GET['paperID'])) {
   $string['course'] = $string['module'];   // Override course with module if called from a paper.
 }
 
-$table_order = array('#1'=>'', $string['title']=>'title', '#2'=>'', $string['name']=>'surname', $string['username']=>'username', $string['studentid']=>'student_id', $string['year']=>'yearofstudy', $string['course']=>'grade');
+$table_order = array('#1'=>18, '#2'=>18, $string['title']=>40, 'Surname'=>300, 'First Names'=>300, $string['username']=>60, $string['studentid']=>70, $string['year']=>60, $string['course']=>70);
+echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+echo "<thead>\n";
 echo "<tr>\n";
-foreach ($table_order as $display => $key) {
-	if ($key == '') {
-		echo "<th>&nbsp;";
-	} else {
-		echo "<th class=\"vert_div\">";
-		if ($sortby == $key and $ordering == 'asc') {
-			echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc$additional_param\">$display</a><img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" />";
-		} elseif ($sortby == $key and $ordering == 'desc') {
-			echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc$additional_param\">$display</a><img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" />";
-		} else {
-			echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc$additional_param\">$display</a>";
-		}
-	}
-	echo "</th>";
-  }
-  echo "</tr>\n";
-  if ($roles_sql == '') {
-		echo "</table>" . $notice->info_strip($string['msg1'], 100) . "</div>\n</body>\n</html>\n";
-    exit;
-  }
-
-  if ($user_data->num_rows == 0) {
-		echo "</table>" . $notice->info_strip($string['msg2'], 100) . "</div>\n</body>\n</html>\n";
-		exit;
-  }
-
-  $old_letter		= '';
-  $old_title		= '';
-  $old_username = '';
-  $old_grade		= '';
-  $old_year			= '';
-	$old_moduleid = '';
-  $x = 0;
-	
-  while ($user_data->fetch()) {
-    if ($old_letter != mb_strtoupper(mb_substr($tmp_surname, 0, 1)) and $sortby == 'surname') {
-      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . mb_strtoupper(mb_substr($tmp_surname,0,1)) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_title != $tmp_title and $sortby == 'title') {
-      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_username != mb_substr($tmp_username, 0, 4) and $sortby == 'username') {
-      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . mb_substr($tmp_username,0,4) . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_grade != $tmp_grade and $sortby == 'grade') {
-      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td>" . $tmp_grade . "</td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_year != $tmp_yearofstudy and $sortby == 'yearofstudy') {
-      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td><nobr>Year " . $tmp_yearofstudy . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    } elseif ($old_moduleid != $tmp_moduleid and $sortby == 'moduleid') {
-      echo "<tr><td colspan=\"8\" style=\"padding-left:0px\"><table border=\"0\" class=\"subsect\" style=\"width:99%\"><tr><td><nobr>" . $tmp_moduleid . "</nobr></td><td style=\"width:99%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    }
-
-    if ($userObject->has_role('SysAdmin')) {
-      echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
-      if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
-        echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
-      } else {
-        echo '<td></td>';
-      }
-      if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>" . $string[mb_strtolower($tmp_title)] . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" /></td><td>" . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . ", ";
-        if ($tmp_first_names != '') {
-          echo '<span class="fn">' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</span>';
-        } else {
-          echo $tmp_initials;
-        }
-        echo  '</td><td>' . demo_replace($tmp_username, $demo, false) . '</td>';
-      } else {
-        if (isset($tmp_title) and $tmp_title != '') {
-          $tmp_title = $tmp_title;
-        } else {
-          $tmp_title = '';
-        }
-        echo "<td>$tmp_title</td><td></td><td>" . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . ", ";
-        if ($tmp_first_names != '') {
-          echo '<span class="fn">' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</span>';
-        } else {
-          echo $tmp_initials;
-        }
-        echo '</td><td>' . demo_replace($tmp_username, $demo, false) . '</td>';
-      }
-    } else {
-      echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
-      if (file_exists($cfg_web_root . '/users/photos/' . $tmp_username . '.jpg')) {
-        echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
-      } else {
-        echo '<td></td>';
-      }
-      if (array_key_exists($tmp_id, $needs_array)) {
-        echo "<td>&nbsp;" . $tmp_title . "</td><td style=\"width:20px\"><img src=\"../artwork/accessibility_16.png\" width=\"16\" height=\"16\" /></td><td>$tmp_surname, ";
-        if ($tmp_first_names != '') {
-          echo '<span class="fn">' . $tmp_first_names . '</span>';
-        } else {
-          echo $tmp_initials;
-        }
-        echo '</a></td><td>' . demo_replace($tmp_username, $demo, false) . '</td>';
-      } else {
-        echo "<td>&nbsp;$tmp_title</td><td></td><td>$tmp_surname, ";
-        if ($tmp_first_names != '') {
-          echo '<span class="fn">' . $tmp_first_names . '</span>';
-        } else {
-          echo $tmp_initials;
-        }
-        echo '</a></td><td>' . demo_replace($tmp_username, $demo, false) . '</td>';
-      }
-    }
-    if ($tmp_roles == 'Student') {
-      if ($tmp_student_id == NULL) {
-        echo '<td class="fn">' . $string['unknown'] . '</td>';
-      } else {
-        echo '<td>' . demo_replace_number($tmp_student_id, $demo) . '</td>';
-      }
-    } else {
-      echo "<td class=\"fn\">" . $string['na'] . "</td>";
-    }
-    echo "<td>$tmp_yearofstudy</td><td>&nbsp;";
-    if (isset($_GET['paperID'])) {
-      echo $tmp_moduleid;
-    } else {
-      echo $tmp_grade;
-    }
-    echo "</td></tr>\n";
-		
-    $old_letter		= mb_strtoupper(mb_substr($tmp_surname, 0, 1));
-    $old_title		= $tmp_title;
-    $old_username = mb_substr($tmp_username, 0, 4);
-    $old_grade		= $tmp_grade;
-    $old_year			= $tmp_yearofstudy;
-		$old_moduleid = $tmp_moduleid;
-    $x++;
-  }
-	
-  $user_data->close();
-  $mysqli->close();
+foreach ($table_order as $display => $col_width) {
+  if ($display{0} == '#') {
+    echo "<th style=\"width:" . $col_width . "px\">&nbsp;</th>";
+  } else {
+    echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+  }    
+}
 ?>
+</tr>
+</thead>
+
+<tbody>
+<?php
+if ($roles_sql == '') {
+  echo "</table>" . $notice->info_strip($string['msg1'], 100) . "</div>\n</body>\n</html>\n";
+  exit;
+}
+
+if ($user_data->num_rows == 0) {
+  echo "</table>" . $notice->info_strip($string['msg2'], 100) . "</div>\n</body>\n</html>\n";
+  exit;
+}
+
+$x = 0;
+while ($user_data->fetch()) {
+  if ($userObject->has_role('SysAdmin')) {
+    echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
+  } else {
+    echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
+  }
+  if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
+    echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
+  } else {
+    echo '<td></td>';
+  }
+  if (array_key_exists($tmp_id, $needs_array)) {
+    echo '<td><img src="../artwork/accessibility_16.png" width="16" height="16" /></td>';
+  } else {
+    echo '<td></td>';
+  }
+
+  echo '<td>' . $string[mb_strtolower($tmp_title)] . '</td>';
+  
+  echo '<td>' . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . '</td>';
+  echo '<td>' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</td>';
+  echo '<td>' . demo_replace($tmp_username, $demo, false) . '</td>';
+      
+  if ($tmp_roles == 'Student') {
+    if ($tmp_student_id == NULL) {
+      echo '<td class="fn">' . $string['unknown'] . '</td>';
+    } else {
+      echo '<td>' . demo_replace_number($tmp_student_id, $demo) . '</td>';
+    }
+  } else {
+    echo "<td class=\"fn\">" . $string['na'] . "</td>";
+  }
+  echo "<td>$tmp_yearofstudy</td><td>&nbsp;";
+  if (isset($_GET['paperID'])) {
+    echo $tmp_moduleid;
+  } else {
+    echo $tmp_grade;
+  }
+  echo "</td></tr>\n";
+
+  $x++;
+}
+
+$user_data->close();
+$mysqli->close();
+?>
+</tbody>
 </table>
 </div>
 

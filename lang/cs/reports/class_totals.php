@@ -53,7 +53,6 @@ $string['emailclassmarks'] = 'Zaslat známky';
 $string['title'] = 'Titul';
 $string['surname'] = 'Příjmení';
 $string['firstnames'] = 'Jména';
-$string['name'] = 'Jméno';
 $string['studentid'] = 'ID studenta';
 $string['username'] = 'Uživatelské jméno';
 $string['course'] = 'Kurz';
