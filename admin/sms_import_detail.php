@@ -61,9 +61,18 @@ function get_list($list, $db) {
   </style>
 	
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-</head>
+  <script language="javascript">    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        dateFormat: 'uk',
+        sortList: [[0,0]] 
+      });
+
+    });
+  </script></head>
 <body>
 <?php
   require '../include/admin_options.inc';
@@ -73,14 +82,25 @@ function get_list($list, $db) {
 ?>
 
 <div id="content" class="content" style="font-size:80%">
-<table class="header">
-<tr>
-<th colspan="5"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./list_modules.php"><?php echo $string['modules']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
-<div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4); ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr><th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th><th class="vert_div"><?php echo $string['enrolements']; ?></th><th class="vert_div"><?php echo $string['enrolementdetails']; ?></th><th class="vert_div"><?php echo $string['deletions']; ?></th><th class="vert_div"><?php echo $string['deletiondetails']; ?></th><th class="vert_div"><?php echo $string['importtype']; ?></th></tr>
+  
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
+  <div class="page_title"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4) ?></div>
+</div>
 
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">
+  <thead>
+    <tr>
+      <th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th>
+      <th class="vert_div"><?php echo $string['enrolements']; ?></th>
+      <th class="vert_div"><?php echo $string['enrolementdetails']; ?></th>
+      <th class="vert_div"><?php echo $string['deletions']; ?></th>
+      <th class="vert_div"><?php echo $string['deletiondetails']; ?></th>
+      <th class="vert_div"><?php echo $string['importtype']; ?></th>
+    </tr>
+</thead>
+<tbody>
 <?php
   $result = $mysqli->prepare("SELECT idMod, moduleid, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
   $db = $mysqli;
@@ -102,6 +122,7 @@ function get_list($list, $db) {
   }
 
 ?>
+</tbody>
 </table>
 
 </div>

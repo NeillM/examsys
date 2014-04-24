@@ -136,7 +136,7 @@ HTML;
     $result->close();
   }
 
-  $phase_description = '<strong>';
+  $phase_description = '';
   if (!isset($_GET['phase'])) {
     $phase_description .= $string['finalisemarks'];
     $tmp_phase = '';
@@ -147,7 +147,7 @@ HTML;
     $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  $phase_description .= ":</strong> " . number_format($candidate_no) . " " . $string['candidates'];
+  $phase_description .= ': <span style="font-weight: normal">' . number_format($candidate_no) . ' ' . $string['candidates'] . '</span>';
 
 ?>
 <form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
@@ -158,13 +158,13 @@ HTML;
 <?php
 
   echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
-  echo '<div class="breadcrumb"><a href="../staff/index.php" target="_top">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
   echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
   echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
@@ -192,14 +192,14 @@ $half_marks = true;
   <tr><td valign="top">
   <?php
 
-  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; border-bottom:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
+  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
   $question_offset = 1;
 	$no_screens = $properties->get_max_screen();
   if ($no_screens > 1) {
     echo '<table cellspacing="1" cellpadding="1" border="0" style="font-weight:bold; color:white"><tr>';
     for ($i=1; $i<=$no_screens; $i++) {
-      echo "<td class=\"s0\">$i</td>\n";
+      echo "<td class=\"scr_ans\">$i</td>\n";
     }
     echo '</tr></table>';
   }

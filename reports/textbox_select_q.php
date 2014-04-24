@@ -47,7 +47,6 @@ $paper = $propertyObj->get_paper_title();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
-    body {font-size:90%}
     table {font-size:100%}
     a {color:blue;text-decoration:none;cursor:pointer}
     p {margin-top:0px;padding-top:0px}
@@ -77,7 +76,7 @@ $paper = $propertyObj->get_paper_title();
     $result->close();
   }
 
-  $phase_description = '<strong>';
+  $phase_description = '';
   if (!isset($_GET['phase'])) {
     $phase_description .= $string['finalisemarks'];
     $tmp_phase = '';
@@ -88,20 +87,26 @@ $paper = $propertyObj->get_paper_title();
     $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  $phase_description .= '</strong>';
 
   if ($candidate_no > 0) $phase_description .= ": " . number_format($candidate_no) . " " . $string['candidates'];
 
-  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th>";
+  echo "<div style=\"font-size:80%\">\n";
+  
+  echo "<div class=\"head_title\">\n";
+  echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\">\n";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div><div style="margin-left:10px; font-size:220%">' . $phase_description . '</div></th>';
-  echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "</table>\n";
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+  echo '<div class="page_title">' . $phase_description . '</div>';
+  echo "</div>\n";
+  
+  
+  
+  
 
   echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
 
@@ -148,5 +153,6 @@ $paper = $propertyObj->get_paper_title();
   $mysqli->close();
   echo "</table>\n";
 ?>
+</div>
 </body>
 </html>

@@ -232,27 +232,27 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
     $table_order = array(''=>16, $string['question']=>800, $string['type']=>100, $string['modified']=>70, $string['status']=>70);
   }
   
-  echo "<table class=\"header\">\n";
-  echo "<tr onclick=\"qOff();\"><th colspan=\"" . (count($table_order) - 1) . "\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  
+  echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module'])) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
     
     if ($_GET['type'] == 'type') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">Question Type</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">Question Type</a>'; 
     } elseif ($_GET['type'] == 'bloom') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">Bloom\'s Taxonomy</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">Bloom\'s Taxonomy</a>'; 
     } elseif ($_GET['type'] == 'status') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">Status</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">Status</a>'; 
     } elseif ($_GET['type'] == 'keyword') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">Keyword</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">Keyword</a>'; 
     } elseif ($_GET['type'] == 'performance') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">Performance</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">Performance</a>'; 
     }
   }
-  echo "</div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionbank'] . "&nbsp;(<span id=\"q_count\">" . number_format($search_results->num_rows) . "</span>)</strong>$bank_type</div></th>";
-  echo "<th colspan=\"2\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "<tr>\n";
-  echo "</table>\n";
+  echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;(<span id=\"q_count\">" . number_format($search_results->num_rows) . "</span>)<span style=\"font-weight: normal\">$bank_type</span></div>";
+  echo "</div>\n";
 
 	$params = '';
 	if (isset($_GET['type'])) $params .= '&type=' . $_GET['type'];

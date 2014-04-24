@@ -95,27 +95,18 @@ if ($_GET['module'] != '0') {
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
+  
+  $types_used = module_utils::paper_types($module, $mysqli);
 ?>
 <div id="content" class="content">
-<table class="header">
+        
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
+  <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<?php echo $types_used[$type] ?>)</span></div>
+</div>
+
 <?php
-$types_used = module_utils::paper_types($module, $mysqli);
-
-
-echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="index.php?module=' . $module . '">' . $module_details['moduleid'] . '</a>';
-echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-
-echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
-echo $string['papers'] . ': <span style="font-weight:normal">' . $string[strtolower($types_array[$type])] . ' (' . $types_used[$type] . ')</span>';
-echo '</div></th>';
-echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\" onclick=\"refreshPage();\"";
-if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
-echo " /> " . $string['showretired'] . "</th></tr>\n";
-
-echo "</table>\n<br />\n";
-
-
 // UPDATED SQL query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data don't display
 if ($_GET['module'] != '0') {
   $sql = "SELECT calendar_year, paper_ownerID, properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND paper_type = ? AND properties.paper_ownerID = users.id  AND deleted IS NULL GROUP BY paper_title ORDER BY calendar_year DESC, paper_title";
@@ -140,7 +131,7 @@ if ($results->num_rows > 0) {
       $sent_clear_all = true;
       
       if ($calendar_year == '') {
-        $display_calendar_year = 'Unspecified Session';
+        $display_calendar_year = $string['unspecifiedsession'];
       } else {
         $display_calendar_year = $calendar_year;      
       }

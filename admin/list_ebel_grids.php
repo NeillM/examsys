@@ -52,13 +52,15 @@
 ?>
 <div id="content" class="content">
 
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon">
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['ebeltemplates'] ?></div>
+</div>
+  
 <table class="header">
 <tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['ebeltemplates']; ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th><div class="col10"><?php echo $string['gridnames']; ?>&nbsp;</div></th><th>&nbsp;</th></tr>
+<th class="col10"><?php echo $string['gridnames']; ?></th><th>&nbsp;</th></tr>
 <?php
 $old_faculty = '';
 $id = 0;

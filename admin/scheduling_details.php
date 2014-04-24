@@ -106,12 +106,11 @@ $results->close();
 ?>
 <div id="content" class="content">
 
-<table class="header">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="summative_scheduling.php"><?php echo $string['summativescheduling']; ?></a></div><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['Paper']; ?>:</strong> <?php echo $paper_title; ?></th>
-<th style="text-align:right; vertical-align:top; padding-right:6px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_scheduling.php"><?php echo $string['summativescheduling']; ?></a></div>
+  <div class="page_title"><?php echo $string['Paper']; ?>: <span style="font-weight: normal"><?php echo $paper_title; ?></span></div>
+</div>
 
 <table cellspacing="0" cellpadding="4" style="font-size:100%" class="data">
 <?php

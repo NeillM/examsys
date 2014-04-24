@@ -1,183 +1,183 @@
 body {
-  padding-top:0px;
-  padding-bottom:0px;
-  padding-right:0px;
-  padding-left:223px;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+  padding-left: 223px;
 }
 div#left-sidebar {
-  position:absolute;
-  top:0;
-  left:0;
-  width:209px;
-  height:100%;
-  padding-right:0;
-  padding-left:14px;
-  padding-top:4px;
-  padding-bottom:4px;
-  background-color:#D3E5FF;
-  overflow:auto;
-  font-size:75%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 209px;
+  height: 100%;
+  padding-right: 0;
+  padding-left: 14px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: #D3E5FF;
+  overflow: auto;
+  font-size: 75%;
 }
 @media screen {
   body>div#left-sidebar{
-    position:fixed
+    position: fixed;
   }
 }
 * html body{
-  overflow:hidden
+  overflow: hidden;
 }
 #content{
-  height:100px;
-  background-colour:#FFFFFF;
-  font-size:80%;
+  height: 100px;
+  background-colour: #FFFFFF;
+  font-size: 80%;
 } 
 .divider {
-  padding-left:10px;
-  padding-bottom:2px;
-  font-weight:bold;
+  padding-left: 10px;
+  padding-bottom: 2px;
+  font-weight: bold;
 }
 .f {
-  float:left;
-  width:365px;
-  padding-left:35px;
-  font-size:90%;
-	padding-bottom:12px;
+  float: left;
+  width: 365px;
+  padding-left: 35px;
+  font-size: 90%;
+	padding-bottom: 12px;
 }
 .f2 {
-  float:left;
-  width:300px;
-  padding-left:35px;
-  font-size:90%;
-	padding-bottom:12px;
+  float: left;
+  width: 300px;
+  padding-left: 35px;
+  font-size: 90%;
+	padding-bottom: 12px;
 }
 .f_icon {
-	vertical-align:middle;
-	padding-left:5px;
-	padding-right:9px;
-	width:48px;
-	text-align:center;
+	vertical-align: middle;
+	padding-left: 5px;
+	padding-right: 9px;
+	width: 48px;
+	text-align: center;
 }
 .file {
-  float:left;
-  width:375px;
-  padding-left:32px;
-  font-size:90%;
-	padding-bottom:12px;
+  float: left;
+  width: 375px;
+  padding-left: 32px;
+  font-size: 90%;
+	padding-bottom: 12px;
 }
 .mee {
-  font-size:120%;
-  display:inline
+  font-size: 120%;
+  display: inline;
 }
 a.blacklink:link {
-  color:#000000;
+  color: #000000;
 }
 a.blacklink:visited {
-  color:#000000;
+  color: #000000;
 }
 a.blacklink:hover {
-  color:#000000;
+  color: #000000;
 }
 a.greylink:link {
-  color:#808080;
+  color: #808080;
 }
 a.greylink:visited {
-  color:#808080;
+  color: #808080;
 }
 a.greylink:hover {
-  color:#808080;
+  color: #808080;
 }
 .menuheading {
-  padding-left:6px;
-  color:#215DC6;
-  font-weight:bold;
-  cursor:pointer;
+  padding-left: 6px;
+  color: #215DC6;
+  font-weight: bold;
+  cursor: pointer;
 }
 .menuheading a:link {
-  color:#215DC6;
-  cursor:pointer;
+  color: #215DC6;
+  cursor: pointer;
 }
 .menuheading a:visited {
-  color:#215DC6;
-  cursor:pointer;
+  color: #215DC6;
+  cursor: pointer;
 }
 .menuheading a:hover {
-  color:#428EFF;
-  cursor:pointer;
+  color: #428EFF;
+  cursor: pointer;
 }
 .sidebar {
-  background-color:#6375D6;
+  background-color: #6375D6;
 }
 .popup {
-  display:none;
-  top:0px;
-  left:200px;
-  font-size:75%;
-  position:fixed;
-  line-height:160%;
-  border:1px solid #868686;
-  padding:2px;
-  background-color:white;
-  -moz-border-radius:4px;
-  -webkit-border-radius:4px;
-  border-radius:4px;
+  display: none;
+  top: 0;
+  left: 200px;
+  font-size: 75%;
+  position: fixed;
+  line-height: 160%;
+  border: 1px solid #868686;
+  padding: 2px;
+  background-color: white;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
 }
 .popupitem {
-  padding-left:14px;
-  padding-right:14px;
-  cursor:pointer;
-  border:1px solid white;
+  padding-left: 14px;
+  padding-right: 14px;
+  cursor: pointer;
+  border: 1px solid white;
 }
 .popupitembold {
-  padding-left:4px;
-  font-weight:bold;
+  padding-left: 4px;
+  font-weight: bold;
 }
 .greymenuitem {
-  width:190px;
-  color:#808080;
+  width: 190px;
+  color: #808080;
 }
 .greymenuitem span {
-  width:100%;
-  float:left;
-  margin-right:15%;
+  width: 100%;
+  float: left;
+  margin-right: 15%;
 }
 .greymenuitem a:link {
-  color:#808080;
-  text-decoration:none;
-  cursor:pointer;
+  color: #808080;
+  text-decoration: none;
+  cursor: pointer;
 }
 .greymenuitem a:visited {
-  color:#808080;
-  text-decoration:none;
-  cursor:pointer;
+  color: #808080;
+  text-decoration: none;
+  cursor: pointer;
 }
 .greymenuitem a:hover {
-  color:#808080;
-  text-decoration:none;
-  cursor:pointer;
+  color: #808080;
+  text-decoration: none;
+  cursor: pointer;
 }
 .menuitem {
-  width:175px;
-	cursor:pointer;
+  width: 175px;
+	cursor: pointer;
 }
 .menuitem span {
-  width:100%;
-  float:left;
-  margin-right:15%;
+  width: 100%;
+  float: left;
+  margin-right: 15%;
 }
 .menuitem a:link {
-  color:black;
-  text-decoration:none;
-  cursor:pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 .menuitem a:visited {
-  color:black;
-  text-decoration:none;
-  cursor:pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 .menuitem a:hover {
-  color:#316AC5;
-  text-decoration:underline;
-  cursor:pointer;
+  color: #316AC5;
+  text-decoration: underline;
+  cursor: pointer;
 }
 .menuitem.sub span {
   background: transparent url('../artwork/submenu_arrow.png') no-repeat 90% top;
@@ -211,17 +211,17 @@ a.greylink:hover {
   background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat left center;
 }
 a.checklist {
-  color:black;
-  text-decoration:none;
+  color: black;
+  text-decoration: none;
 }
 .ico {
-  text-align:center;
-  width:16px;
+  text-align: center;
+  width: 16px;
 }
 .submenuheading {
-  font-weight:bold;
-  padding-top:15px;
-  margin-left:2px;
+  font-weight: bold;
+  padding-top: 15px;
+  margin-left: 2px;
 }
 #menu2b, #menu2c {
   display: none;
@@ -230,21 +230,21 @@ div.iefixdiv {
   padding-top: 1px;
 }
 .sidebar_icon {
-	width:16px;
-	height:16px;
-	padding-left:13px;
-	padding-right:8px;
-	padding-top:3px;
-	padding-bottom:6px;
-	vertical-align:middle;
+	width: 16px;
+	height: 16px;
+	padding-left: 13px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 6px;
+	vertical-align: middle;
 }
 .cascade {
-  background-image:url('../artwork/submenu_arrow.png');
-	background-repeat:no-repeat;
-	background-position:right center;
+  background-image: url('../artwork/submenu_arrow.png');
+	background-repeat: no-repeat;
+	background-position: right center;
 }
 .greycascade {
-  background-image:url('../artwork/submenu_arrow_grey.png');
-	background-repeat:no-repeat;
-	background-position:right center;
+  background-image: url('../artwork/submenu_arrow_grey.png');
+	background-repeat: no-repeat;
+	background-position: right center;
 }

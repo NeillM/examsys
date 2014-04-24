@@ -55,7 +55,6 @@ if (isset($_GET['folder'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .icon {width:20px; text-align:right; padding-right:8px}
@@ -136,13 +135,6 @@ if (isset($_GET['folder'])) {
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
-?>
-<div id="content" class="content">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
-<table class="header">
-<?php
-echo '<tr onclick="qOff();"><th colspan="3"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">' . $string['recyclebin'] . '</div>';
-
 $recycle_bin = RecycleBin::get_recyclebin_contents($userObject, $mysqli);
 
 $mysqli->close();
@@ -156,30 +148,26 @@ if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
 if (count($recycle_bin) > 0) {
   $recycle_bin = array_csort($recycle_bin, $sortby, $ordering);
 }
-?>
-  <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
-  <thead>
-  <tr>
-<?php
-  $table_order = array('#'=>16, $string['name']=>500, $string['datedeleted']=>130, $string['type']=>120);
-  /*
-   * foreach ($table_order as $display => $col_width) {
-   
-    if ($display{0} == '#') {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\"></th>\n";
-    } else {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
-    }
-  }
-  */
-  echo "<th style=\"width:16px\"></th>\n";
-  echo "<th style=\"width:500px\">" . $string['name'] . "</th>\n";
-  echo "<th style=\"width:130px\" class=\"{sorter: 'datetime'}\">" . $string['datedeleted'] . "</th>\n";
-  echo "<th style=\"width:120px\">" . $string['type'] . "</th>\n";
 
 ?>
+<div id="content" class="content">
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a></div>
+  <div class="page_title"><?php echo $string['recyclebin'] ?></div>
+</div>  
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<thead>
+  <tr>
+    <th style="width:16px"></th>
+    <th style="width:500px"><?php echo $string['name']; ?></th>
+    <th style="width:130px" class="{sorter: 'datetime'} col"><?php echo $string['datedeleted'] ?></th>
+    <th style="width:120px" class="col"><?php echo $string['type'] ?></th>
   </tr>
-  </thead>
+</thead>
+<tbody>
 <?php
 
 $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
@@ -189,16 +177,17 @@ for ($item=0; $item<$list_size; $item++) {
   $split_name = explode('[deleted', $recycle_bin[$item]['name']);
   if ($recycle_bin[$item]['type'] == 'paper') {
     $temp_type = $recycle_bin[$item]['subtype'];
-    echo "<tr class=\"qline\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'p" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>&nbsp;" . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
+    echo "<tr class=\"qline\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'p" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td class=\"col\">" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td class=\"col\"><nobr>" . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'folder') {
-    echo "<tr class=\"qline\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>&nbsp;" . $string['folder'] . "</nobr></td></tr>\n";
+    echo "<tr class=\"qline\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td class=\"col\">" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td class=\"col\"><nobr>" . $string['folder'] . "</nobr></td></tr>\n";
   } else {
-    echo "<tr class=\"qline\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>&nbsp;" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
+    echo "<tr class=\"qline\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td class=\"col\">" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td class=\"col\"><nobr>" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
   }
 }
-echo "</table>\n";
 ?>
-</form>
+</tbody>
+</table>
+
 </div>
 </body>
 </html>

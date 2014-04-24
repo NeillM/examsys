@@ -17,6 +17,7 @@
 $string['machine'] = 'machine';
 $string['machines'] = 'machines';
 $string['createnewlab'] = 'Create new lab';
+$string['computerlabs'] = 'Computer Labs';
 $string['vieweditdetails'] = 'View/Edit Details';
 $string['deletelab'] = 'Delete Lab';
 $string['lowbandwidth'] = 'Low Bandwidth';

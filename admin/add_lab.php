@@ -103,6 +103,7 @@ if (isset($_POST['submit'])) {
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
     $(function () {
       $('#theform').validate({
@@ -119,15 +120,23 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   require '../include/lab_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(233);
 ?>
 <div id="content" class="content">
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></th></tr>
+
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_labs.php"><?php echo $string['computerlabs'] ?></a></div>
+  <div class="page_title"><?php echo $string['createnewlab'] ?></div>
+</div>
+
 <?php
 if (count($bad_addresses) > 0) {
 ?>
-<tr><td style="color: #f00; font-weight: bold">
+<div style="color: #f00; font-weight: bold">
 <?php
   $address_list = '';
   foreach ($bad_addresses as $bad) {
@@ -136,8 +145,7 @@ if (count($bad_addresses) > 0) {
   $address_list = rtrim($address_list, ', ');
   printf($string['badaddressesmsg'], $address_list);
 ?>
-<br /><br /><a href="./list_labs.php"><?php echo $string['backtolabs'] ?></a></td></tr>
-</table>
+<br /><br /><a href="./list_labs.php"><?php echo $string['backtolabs'] ?></a></div>
 </body>
 </html>
 <?php

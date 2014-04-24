@@ -40,15 +40,27 @@ if (!$module_code) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  
   <title>Rog&#333;: <?php echo $string['referencematerial'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
 		.l {cursor:pointer}
+    .icon {
+      background-image: url('../artwork/ref_16.png');
+      background-repeat: no-repeat;
+      padding-left: 20px;
+      width: 16px;
+      height: 16px;
+    }
   </style>
+  
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">
     function selRef(divID, evt) {
@@ -101,6 +113,13 @@ if (!$module_code) {
         notice.focus();
       }
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        sortList: [[0,0]]
+      });
+
+    });
   </script>
 </head>
 
@@ -140,21 +159,29 @@ if (!$module_code) {
 ?>
 <div id="content" class="content">
 
-<table class="header">
-<tr>
-<?php
-  echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?module=" . $modID . "\">" . module_utils::get_moduleid_from_id($modID, $mysqli) . "</a></div><div style=\"margin-left:10px; font-size:200%; font-weight:bold\">" . $string['referencematerial'] . "</th>\n";
-?>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php?module=<?php echo $modID ?>"><?php echo module_utils::get_moduleid_from_id($modID, $mysqli) ?></a></div>
+  <div class="page_title"><?php echo $string['referencematerial'] ?></div>
+</div>  
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<thead>
+  <tr>
+    <th style="width:60%; padding-left: 20px">Reference Name</th>
+    <th style="width:40%" class="col">Modules</th>
+  </tr>
+</thead>
+<tbody>
 <?php
 foreach ($reference_materials as $id => $details) {
-  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td><img src=\"../artwork/ref_16.png\" width=\"16\" height=\"16\" alt=\"\">&nbsp;" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
+  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td class=\"icon\">" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
 }
-echo "</table>\n";
+
 $mysqli->close();
 ?>
+</tbody>
+</table>
 
 </div>
 

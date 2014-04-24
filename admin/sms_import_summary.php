@@ -39,8 +39,18 @@
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script language="javascript">    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        dateFormat: 'uk',
+        sortList: [[0,0]] 
+      });
+
+    });
+  </script>
 </head>
 <body>
 <?php
@@ -51,14 +61,25 @@
 ?>
 
 <div id="content" class="content" style="font-size:80%">
-<table class="header">
-<tr>
-<th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./list_modules.php"><?php echo $string['modules']; ?></a></div>
-<div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportsummary']; ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr><th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th><th class="vert_div"><?php echo $string['modules']; ?></th><th class="vert_div"><?php echo $string['enroled']; ?></th><th class="vert_div"><?php echo $string['deleted']; ?></th><th style="width:50%">&nbsp;</th></tr>
+  
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a></div>
+  <div class="page_title"><?php echo $string['smsimportsummary']; ?></div>
+</div>
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">
+<thead>
+  <tr>
+    <th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th>
+    <th class="vert_div"><?php echo $string['modules']; ?></th>
+    <th class="vert_div"><?php echo $string['enroled']; ?></th>
+    <th class="vert_div"><?php echo $string['deleted']; ?></th>
+    <th style="width:50%">&nbsp;</th>
+  </tr>
+</thead>
 
+<tbody>
 <?php
   $id = 1;
   $result = $mysqli->prepare("SELECT DATE_FORMAT(updated,'%Y%m%d'), DATE_FORMAT(updated,'%d/%m/%Y'), COUNT(id), SUM(enrolements), SUM(deletions) FROM sms_imports GROUP BY updated ORDER BY updated DESC");
@@ -70,6 +91,7 @@
     $id++;
   }
 ?>
+</tbody>
 </table>
 </div>
 

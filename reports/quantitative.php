@@ -473,13 +473,19 @@
     $result->fetch();
     $result->close();
   }
-  echo "<table class=\"header\" style=\"font-size:90%\">\n";
-  echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  if ($module != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  echo "<span style=\"margin-left:10px; font-size:220%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "\n</table>\n";
+  
+  
+  
+  
+  echo "<div class=\"head_title\">\n";
+  echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
+
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  if ($folder != '') echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if ($module != '' and $module != 0) echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo "<div class=\"page_title\">" . $string['quantitativereport'] . "</div>\n";
+  echo "</div>\n";
 
   echo '<table cellpadding="2" cellspacing="0" border="0" width="100%">';
   // Capture the paper makeup.

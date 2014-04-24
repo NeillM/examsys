@@ -62,7 +62,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
 	
 	echo draw_toprightmenu(30);
 ?>
-<table class="header" style="font-size:90%">
+<div style="font-size:90%">
 <?php
   // Get some paper properties
   $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
@@ -83,26 +83,27 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   $user_total = 0;
   $question_data = getCohortData($mysqli, $moduleID, $startdate, $enddate, $_GET['repcourse'], $_GET['repmodule'], '%', $paperID, $paper_type, $_GET['ordering'], $student_no, $user_total, $percent);
 
-  echo '<tr><th>';
+  echo '<div class="head_title">';
+  echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
   
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['learningobjectiveanalysis'] . "</strong>";
+  echo "<div class=\"page_title\">" . $string['learningobjectiveanalysis'];
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     echo ' (' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')';
   }
-  echo "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo "</div>\n";
 
   if ($student_no == 0) {
-		echo "</table>" . $notice->info_strip($string['msg1'], 100) . "</div>\n</body>\n</html>\n";
+		echo $notice->info_strip($string['msg1'], 100) . "</div>\n</body>\n</html>\n";
     exit;
   }
-  echo '</table>';
+  echo '</div>';
   
   $qid_list = substr($qid_list, 0, -1); 
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
@@ -152,10 +153,10 @@ $enddate = check_var('enddate', 'GET', true, false, true);
         }
       }
     ?>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/ok_comment.png" width="16" height="16" alt="<?php echo $string['completely']; ?>" /></td><td><?php echo $string['key1']; ?></td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="<?php echo $string['partically']; ?>" /></td><td><?php echo $string['key2']; ?></td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="<?php echo $string['mostly']; ?>" /></td><td><?php echo $string['key3']; ?></td></tr>
-    <tr><td style="margin:0px; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="11" height="11" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
+    <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/ok_comment.png" width="16" height="16" alt="<?php echo $string['completely']; ?>" /></td><td><?php echo $string['key1']; ?></td></tr>
+    <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="<?php echo $string['partically']; ?>" /></td><td><?php echo $string['key2']; ?></td></tr>
+    <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="<?php echo $string['mostly']; ?>" /></td><td><?php echo $string['key3']; ?></td></tr>
+    <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="11" height="11" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
     </table></div>
     <h1><?php echo $string['learningobjectives']; ?></h1>
     <p><?php printf($string['msg'], count($objectives)); ?></p>
@@ -184,5 +185,6 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   }
   ?>
 <br />
+</div>
 </body>
 </html>

@@ -46,6 +46,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .l {padding-left:6px; vertical-align:top}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
@@ -58,6 +59,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
@@ -117,6 +119,14 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
         $('#link_' + tmp_ID).css('background-color', 'white');
       }
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        dateFormat: 'uk',
+        sortList: [[1,0]]
+      });
+
+    });
   </script>
 </head>
 
@@ -137,21 +147,26 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 		echo draw_toprightmenu();
     echo "<div id=\"content\" class=\"content\">\n";
-    echo "<table class=\"header\">\n";
-    echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
-    if ($_GET['module']) {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+    
+    echo "<div class=\"head_title\">\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+    if (isset($_GET['module'])) {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
     }
-    echo "</div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
+    echo "</div><div class=\"page_title\">" . $string['questionsearch'] . "</div>\n</div>\n";
 ?>
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+  <thead>
   <tr>
-    <th>&nbsp;</th>
-    <th class="vert_div"><?php echo $string['question']; ?></th>
-    <th class="vert_div"><?php echo $string['owner']; ?></th>
-    <th class="vert_div"><?php echo $string['type']; ?></th>
-    <th class="vert_div"><?php echo $string['modified']; ?></th>
-    <th class="vert_div"><?php echo $string['status']; ?></th>
+    <th style="width:16px">&nbsp;</th>
+    <th class="vert_div" style="width:50%"><?php echo $string['question']; ?></th>
+    <th class="vert_div" style="width:12%"><?php echo $string['owner']; ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['type']; ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['modified']; ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['status']; ?></th>
   </tr>
+  </thead>
   </table>
 <?php
   }
@@ -172,29 +187,24 @@ if (isset($_GET['submit'])) {
   }
 
   if ($error != '') {
-    echo "<table class=\"header\" style=\"table-layout:fixed\">\n";
-    echo '<tr><th colspan="6">';
-    echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div>';
-    if ($_GET['module']) {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
-    }
-    echo "<div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questionsearch'] . "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
+    echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
     ?>
+    <thead>
     <tr>
-    <th>&nbsp;</th>
-    <th class="vert_div"><?php echo $string['question']; ?></th>
-    <th class="vert_div"><?php echo $string['owner']; ?></th>
-    <th class="vert_div"><?php echo $string['type']; ?></th>
-    <th class="vert_div"><?php echo $string['modified']; ?></th>
-    <th class="vert_div"><?php echo $string['status']; ?></th></tr>
+      <th style="width:16px">&nbsp;</th>
+      <th class="vert_div" style="width:50%"><?php echo $string['question']; ?></th>
+      <th class="vert_div" style="width:12%"><?php echo $string['owner']; ?></th>
+      <th class="vert_div" style="width:10%"><?php echo $string['type']; ?></th>
+      <th class="vert_div" style="width:10%"><?php echo $string['modified']; ?></th>
+      <th class="vert_div" style="width:10%"><?php echo $string['status']; ?></th>
+    </tr>
+    </thead>
     </table>
     <?php
  		echo $notice->info_strip($error, 100) . "\n</body>\n</html>\n";
     exit;
   }
-
-  echo "<table class=\"header fixed\">\n";
-
+  
   $params = '';
   $variables = array();
 
@@ -341,13 +351,14 @@ if (isset($_GET['submit'])) {
 
   $hits = $result->num_rows;
 
-  // Empty first line to fix widths
-  echo "<tr><th style=\"width: 18px\"></th><th></th><th style=\"width: 130px\"></th><th style=\"width: 120px\"></th><th style=\"width: 70px\"></th><th style=\"width: 70px\"></th></tr>";
-  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+
+  echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if ($_GET['module']) {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo "</div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;</strong>";
+  echo "</div><div class=\"page_title\">" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;";
   if (isset($_GET['searchterm']) and $_GET['searchterm'] != '') {
     echo "'" . $_GET['searchterm'] . "'";
   } elseif (isset($_GET['searchtype']) and $_GET['searchtype'] != '%') {
@@ -355,16 +366,20 @@ if (isset($_GET['submit'])) {
   } else {
     echo $_GET['module'];
   }
-  echo "</div></th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
+  echo "</div>\n</div>\n";
 ?>
+  <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+  <thead>
   <tr>
-    <th>&nbsp;</th>
-    <th class="vert_div"><?php echo $string['question']; ?></th>
-    <th class="vert_div"><?php echo $string['owner']; ?></th>
-    <th class="vert_div"><?php echo $string['type']; ?></th>
-    <th class="vert_div"><?php echo $string['modified']; ?></th>
-    <th class="vert_div"><?php echo $string['status']; ?></th>
+    <th style="width:16px">&nbsp;</th>
+    <th class="vert_div" style="width:50%"><?php echo $string['question']; ?></th>
+    <th class="vert_div" style="width:12%"><?php echo $string['owner']; ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['type']; ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['modified']; ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['status']; ?></th>
   </tr>
+  </thead>
+  <tbody>
 <?php
   while ($result->fetch()) {
     $status_class = ' status' . $status_array[$status]->id;
@@ -385,9 +400,10 @@ if (isset($_GET['submit'])) {
     echo '<td class="l">' . $status_name . '</td></tr>';
   }
   $result->close();
-
-  echo "</table>\n";
-
+?>
+  </tbody>
+  </table>
+<?php
   if ($hits == 0) {
 		echo $notice->info_strip($string['noquestionsfound'], 100);
   }

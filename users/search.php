@@ -234,7 +234,7 @@ if (isset($_GET['paperID'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
     a {color:black}
@@ -333,22 +333,24 @@ if (isset($_GET['paperID'])) {
     include '../include/user_search_options.inc';
 
     echo "<div id=\"content\" class=\"content\">\n";
-    echo "<table class=\"header\">\n";
-    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['usersearch'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
-    echo "</table>\n</div>\n</body></html>\n";
+    echo "<div class=\"head_title\">\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; padding-left:10px\"><strong>" . $string['usersearch'] . "</div>";
+    echo "</div>\n</div>\n</body></html>\n";
     exit;
   }
 ?>
 
 <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>?sortby=<?php echo $sortby; ?>&order=<?php echo $ordering; ?>">
-<table class="header" id="usertable">
 
+<div class="head_title">
+<div style="float:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
-echo "<tr><th style=\"padding-left:16px\" colspan=\"7\"><div class=\"breadcrumb\" style=\"margin-left:0px\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
 if (isset($_GET['team'])) {
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['team'] . '">' . module_utils::get_moduleid_from_id($_GET['team'], $mysqli) . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['team'] . '">' . module_utils::get_moduleid_from_id($_GET['team'], $mysqli) . '</a>';
 }
-echo "</div><div onclick=\"qOff()\" style=\"font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
+echo "</div><div onclick=\"qOff()\" style=\"padding-left:10px; font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
 if (isset($_GET['paperID'])) {
   echo implode(', ', array_values($paper_modules)) . ' (' . $paper_calendar_year . ')';
 } elseif (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
@@ -365,8 +367,8 @@ if (isset($_GET['paperID'])) {
 } elseif (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '%') {
   echo $_GET['calendar_year'];
 }
-echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-echo "</table>\n";
+echo "</div>\n";
+echo "</div>\n";
 
 
 if ($ordering == 'asc') {

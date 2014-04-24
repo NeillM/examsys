@@ -57,15 +57,15 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
   echo "<form name=\"analyse\" method=\"get\" action=\"" . $_SERVER['PHP_SELF'] . "\"><table class=\"header\" style=\"font-size:90%\">\n";
-  echo "<tr><th style=\"width:75%\">";
+  echo "<tr><th style=\"width:75%; vertical-align: top\">";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
-  echo "<span style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">" . $string['qualitativeanalysis'] . "</span></td>";
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
+  echo "<div class=\"page_title\">" . $string['qualitativeanalysis'] . "</div></td>";
   echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" id=\"keywords\" size=\"20\" value=\"";
   if (isset($_GET['keywords'])) echo $_GET['keywords'];
   echo "\" /><input type=\"button\" id=\"highlight\" value=\"" . $string['highlight'] . "\" />";

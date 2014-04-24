@@ -52,6 +52,11 @@ hr {
   background-color: grey;
   border: 0px;
 }
+.page_title {
+  padding-left: 10px !important;
+  font-size: 200%;
+  font-weight: bold;
+}
 .errfield {
   border: 1px solid #C00000  !important;
   box-shadow: 0 0 6px rgba(200, 0, 0, 0.85);
@@ -62,9 +67,10 @@ hr {
 #toprightmenu_icon {
   width: 43px !important;
 	height: 20px !important;
-	top: 0px;
-	margin-right: 6px;
+	top: 0 !important;
+	margin-right: 6px !important;
   background-color: #7BA5D6;
+  float: right;
 }
 #toprightmenu_icon:hover {
   background-color: #4F81BD;

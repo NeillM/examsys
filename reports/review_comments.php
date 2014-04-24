@@ -42,6 +42,9 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 $type = check_var('type', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
+$_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
+$_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
+
 function displayRank($rank_position, $string) {
   if ($rank_position == 1) {
     $html = '1st';
@@ -497,6 +500,31 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
+
+// Get some paper properties
+$result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark FROM properties WHERE property_id = ?");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($paper_type, $paper, $marking, $pass_mark);
+$result->fetch();
+$result->close();
+
+if (!isset($paper)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$reviewer_data = array();
+$result = $mysqli->prepare("SELECT users.id, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND type = ? AND paperID = ? ORDER BY surname, initials");
+$result->bind_param('si', $type, $paperID);
+$result->execute();
+$result->bind_result($id, $title, $initials, $surname);
+while ($result->fetch()) {
+  $reviewer_data[$id]['title'] = $title;
+  $reviewer_data[$id]['initials'] = $initials;
+  $reviewer_data[$id]['surname'] = $surname;
+}
+$result->close();
 ?>
 
 <!DOCTYPE html>
@@ -589,7 +617,29 @@ if (isset($_GET['scrOfY'])) {
 ?>>
 <div id="maincontent">
 <form name="theform">
-<table class="header">
+
+<div class="head_title" style="font-size:90%">
+<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<?php
+  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+
+  echo "<div class=\"page_title\">" . $string[$type . 'report'] . "</div></div>";
+
+  if (count($reviewer_data) == 0) {
+    echo $notice->info_strip($string['noreviewers'], 100) . "\n</body>\n</html>\n";
+    exit;
+  }
+?>
+  
+<br />
+  
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
 <?php
   require '../include/toprightmenu.inc';
 	
@@ -597,32 +647,6 @@ if (isset($_GET['scrOfY'])) {
 	
   $comments_array = array();
   
-  // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_type, $paper, $marking, $pass_mark);
-  $result->fetch();
-  $result->close();
-  
-  if (!isset($paper)) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
-  
-  
-  $reviewer_data = array();
-  $result = $mysqli->prepare("SELECT users.id, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND type = ? AND paperID = ? ORDER BY surname, initials");
-  $result->bind_param('si', $type, $paperID);
-  $result->execute();
-  $result->bind_result($id, $title, $initials, $surname);
-  while ($result->fetch()) {
-    $reviewer_data[$id]['title'] = $title;
-    $reviewer_data[$id]['initials'] = $initials;
-    $reviewer_data[$id]['surname'] = $surname;
-  }
-  $result->close();
-
   // Capture reviewer comments data first.
   $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM review_comments WHERE review_type = ? AND q_paper = ?");
   $result->bind_param('si', $type, $paperID);
@@ -639,7 +663,6 @@ if (isset($_GET['scrOfY'])) {
   
 
   // Capture the paper makeup.
-  $display_header = true;
   $question_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
@@ -652,24 +675,6 @@ if (isset($_GET['scrOfY'])) {
   $result->store_result();
   $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
   while ($result->fetch()) {
-    if ($display_header == true) {
-      echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-      if (isset($_GET['folder']) and $_GET['folder'] != '') {
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-      } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-      }
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-
-      echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-      echo "</table>\n";
-      if (count($reviewer_data) == 0) {
-				echo $notice->info_strip($string['noreviewers'], 100) . "</div>\n</body>\n</html>\n";
-        exit;
-      }
-      echo '<br /><table cellpadding="0" cellspacing="0" border="0" width="100%">';
-      $display_header = false;
-    }
     if ($question_no == 0) {
       $old_labelcolor = $labelcolor;
       $old_themecolor = $themecolor;

@@ -799,33 +799,34 @@ function check_latex_random($q_ids, $mysqli) {
   $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
   $exam_announcements = $exam_announcementObj->get_announcements();
 
-  echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
-
-  // Blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed.
-  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
-
-  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
   } elseif (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } else {
     $paper_modules = Paper_utils::get_modules($paperID, $mysqli);  // Get the modules from paper properties
     reset($paper_modules);
     $moduleID = key($paper_modules);
     if ($moduleID != '') {
       $module_code = $paper_modules[$moduleID];
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $moduleID . '">' . $module_code . '</a>';
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' . $module_code . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
     }
   }
-  echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
+  echo '</div><div onclick="qOff()" class="page_title"';
   if ($properties->get_retired() != '') {
     echo ' class="retired"';
   }
   echo '>' . $properties->get_paper_title() . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo "</div>\n";
+  
+  echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
+  // Blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed.
+  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
   if ($properties->get_retired() == '') {
     echo "<tr>\n";
   } else {

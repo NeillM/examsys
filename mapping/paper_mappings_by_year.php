@@ -138,17 +138,17 @@ function getPaper($paperID) {
   $result->store_result();
   $result->bind_result($paper_title, $session, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
-    echo "<table class=\"header\">\n";
-    echo '<tr><th>';
+    echo "<div class=\"head_title\">\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
     echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
     if (isset($_GET['folder']) and $_GET['folder'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
       $modules = explode(',', $_GET['module']);
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
     }
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
-    echo "<div style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['mappedobjectives'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n</table>\n";
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
+    echo "<div class=\"page_title\">" . $string['mappedobjectives'] . "</div>\n</div>\n";
   }
   $result->close();
 

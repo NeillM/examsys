@@ -17,6 +17,7 @@
 $string['machine'] = 'Počítač';
 $string['machines'] = 'Počítače';
 $string['createnewlab'] = 'Nová učebna';
+$string['computerlabs'] = 'Computer Labs';
 $string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
 $string['deletelab'] = 'Odstranit učebnu';
 $string['lowbandwidth'] = 'Pomalé připojení';

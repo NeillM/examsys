@@ -220,7 +220,7 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
-<link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
+<link rel="stylesheet" type="text/css" href="../css/list.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
 <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -523,30 +523,31 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
   $cols = count($table_order);
   
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
-  echo "<thead>\n";
-  if ($paper_type == '2') {
-    echo "<tr><th class=\"h\" colspan=\"" . ($cols - 1) . "\">";
-  } else {
-    echo "<tr><th class=\"h\" colspan=\"" . ($cols - 1) . "\">";
-  }
-  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $report_title = $string['classtotals'] . '</strong> (' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')';
-  } else {
-    $report_title = $string['classtotals'] . '</strong>';
-  }
-
+  echo "<div style=\"font-size:80%\">\n";
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
   echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
 
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif ( isset( $_GET['module'] ) and $_GET['module'] != '' ) {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "</table>\n";
+  $report_title = $string['classtotals'];
+  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
+    $report_title .= ' <span style="font-weight: normal">(' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')</span>';
+  } elseif (isset($_GET['percent']) and $_GET['percent'] < 100) {
+    if ($ordering == 'desc') {
+      $report_title .= ' <span style="font-weight: normal">(' . $string['top'] . ' ' . $_GET['percent'] . '%)</span>';
+    } else {
+      $report_title .= ' <span style="font-weight: normal">(' . $string['bottom'] . ' ' . $_GET['percent'] . '%)</span>';
+    }
+  }
+
+  echo "<div class=\"page_title\">$report_title</div>";
+  echo "</div>\n";
   
   // Warning display banners
   check_late_submission_warnings($log_late, $string);
@@ -555,7 +556,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   check_temp_account_warnings($user_results, $string);
 
   // Output table header
-  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:110%; width:100%\">\n";
   echo "<thead>\n";
   if (isset($user_results[0])) {
     echo "<tr>\n";
@@ -1024,11 +1025,12 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     echo "</table>\n";
   } else {
 		$msg = sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate));
-		echo $notice->info_strip($msg) . "\n</div>\n</body>\n</html>";
+		echo $notice->info_strip($msg, 100) . "\n</div>\n</body>\n</html>";
     exit;
   }
   $mysqli->close();
 ?>
 <input type="hidden" id="metadataID" value="" /><input type="hidden" id="userID" value="" /><input type="hidden" id="log_type" value="" /><input type="hidden" id="reassign" value="" /><input type="hidden" id="loglate" value="" /><input type="hidden" id="percent" value="" />
+</div>
 </body>
 </html>

@@ -40,6 +40,7 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css"/>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -47,6 +48,13 @@ require '../include/sysadmin_auth.inc';
     function edit(lineID) {
       document.location.href = './edit_LTIkeys.php?LTIkeysid=' + lineID;
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        sortList: [[0,0]] 
+      });
+
+    });
   </script>
 </head>
 
@@ -59,21 +67,23 @@ require '../include/sysadmin_auth.inc';
 ?>
 <div id="content" class="content">
 
-  <table class="header">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div>
+  <div class="page_title"><?php echo $string['ltikeys'] ?></th>
+</div>
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+  <thead>
     <tr>
-      <th colspan="3">
-        <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-"/>&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div>
-        <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['ltikeys']; ?></th>
-      <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+      <th class="col10" style="width:25%"><?php echo $string['name']; ?></th>
+      <th class="vert_div" style="width:25%"><?php echo $string['oauth_consume_key']; ?></th>
+      <th class="vert_div" style="width:25%"><?php echo $string['oauth_secret']; ?></th>
+      <th class="vert_div" style="width:25%"><?php echo $string['oauth_context_id']; ?></th>
     </tr>
-    <tr>
-      <th>
-        <div class="col10"><?php echo $string['name']; ?></div>
-      </th>
-      <th class="vert_div"><?php echo $string['oauth_consume_key']; ?></th>
-      <th class="vert_div"><?php echo $string['oauth_secret']; ?></th>
-      <th class="vert_div"><?php echo $string['oauth_context_id']; ?></th>
-    </tr>
+  </thead>
+  
+  <tbody>
     <?php
     $id = 0;
     $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE deleted IS NULL ORDER BY name");
@@ -81,13 +91,14 @@ require '../include/sysadmin_auth.inc';
     $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
     while ($result->fetch()) {
       $id = $ltis['id'];
-      echo "<tr id=\"$id\" onclick=\"selLine('$id',event)\" ondblclick=\"edit('$id')\" class=\"l\"><td><div class=\"col10\">" . $ltis['name'] . "</div></td><td class=\"col\">" . $ltis['oauth_consumer_key'] . "</td><td class=\"col\">" . $ltis['secret'] . "</td><td class=\"col\">" . $ltis['context_id'] . "</div></td></tr>\n";
+      echo "<tr id=\"$id\" onclick=\"selLine('$id',event)\" ondblclick=\"edit('$id')\" class=\"l\"><td class=\"col10\">" . $ltis['name'] . "</td><td class=\"col\">" . $ltis['oauth_consumer_key'] . "</td><td class=\"col\">" . $ltis['secret'] . "</td><td class=\"col\">" . $ltis['context_id'] . "</div></td></tr>\n";
     }
     $result->close();
     $mysqli->close();
 
     ?>
-  </table>
+  </tbody>
+</table>
 </div>
 
 </body>

@@ -79,10 +79,11 @@ $results->close();
   $results->bind_result($address, $hostname, $low_bandwidth);
   while ($results->fetch()) {
     if ($ip_no == 0) {
-      echo "<table class=\"header\">\n";
-      echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['computerlabs'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">$name</div></th>\n";
-      echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-      echo "</table>\n";
+      echo "<div class=\"head_title\">\n";
+      echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
+      echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php\">" . $string['administrativetools'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./list_labs.php\">" . $string['computerlabs'] . "</a></div>";
+      echo "<div class=\"page_title\">$name</div>\n";
+      echo "</div>\n";
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:440px\"><div><strong>" . $string['ipaddresses'] . " (" . $results->num_rows . ")</strong></div>\n<div style=\"height:590px; overflow-y:scroll; border: 1px solid #EEEDE5\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
     }
 

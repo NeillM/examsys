@@ -18,6 +18,7 @@ $string['machine'] = 'komputer';
 $string['machines'] = 'komputery(ów)';
 $string['createnewlab'] = 'Utwórz pracownię';
 $string['vieweditdetails'] = 'Zobacz/edytuj szczegóły';
+$string['computerlabs'] = 'Computer Labs';
 $string['deletelab'] = 'Usuń pracownię';
 $string['lowbandwidth'] = 'Mała przepustowość';
 $string['administrativetools'] = 'Narzędzia administracyjne';

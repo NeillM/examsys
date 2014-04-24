@@ -66,9 +66,9 @@ function displayReview($review, $userObj) {
 		$review['distinction_score'] = 'top 20%';
 	}
   if ($review['review_total'] == $review['total_marks']) {
-    $html .= "</td><td>{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   } else {
-    $html .= "</td><td>{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
   }
   return $html;
 }
@@ -85,7 +85,6 @@ function displayReview($review, $userObj) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -151,25 +150,28 @@ $total_marks = 0;
 $paper_title  = $propertyObj->get_paper_title();
 $total_mark   = $propertyObj->get_total_mark();
 
-$reviews_html .= '<table class="header"><tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+$reviews_html .= '<div class="head_title"><div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
+$reviews_html .= '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
 if (isset($_GET['module']) and $_GET['module'] != '') {
-  $reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  $reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-$reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">' . $string['standardssetting'] . '</div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr></table>';
+$reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div>';
+$reviews_html .= '<div class="page_title">' . $string['standardssetting'] . '</div>';
+$reviews_html .= '</div>';
 
 $reviews_html .= <<< TABLEHEADER
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
 <thead>
 <tr>
   <th style="width:18px">&nbsp;</td>
-  <th class="vert_div" style="width:18%">{$string['standardsetter']}</th>
-  <th class="{sorter: 'datetime'} vert_div" style="width:13%">{$string['date']}</th>
-  <th class="vert_div" style="width:10%">{$string['passscore']}</th>
-  <th class="vert_div" style="width:10%">{$string['distinction']}</th>
-  <th class="vert_div" style="width:12%">{$string['reviewmarks']}</th>
-  <th class="vert_div" style="width:10%">{$string['papertotal']}</th>
-  <th class="vert_div" style="width:14%">{$string['method']}</th>
-  <th class="vert_div" width="25%">&nbsp;</th>
+  <th class="col" style="width:18%">{$string['standardsetter']}</th>
+  <th class="{sorter: 'datetime'} col" style="width:13%">{$string['date']}</th>
+  <th class="col" style="width:10%">{$string['passscore']}</th>
+  <th class="col" style="width:10%">{$string['distinction']}</th>
+  <th class="col" style="width:12%">{$string['reviewmarks']}</th>
+  <th class="col" style="width:10%">{$string['papertotal']}</th>
+  <th class="col" style="width:14%">{$string['method']}</th>
+  <th class="col" width="25%">&nbsp;</th>
 </tr>
 </thead>
 <tbody>

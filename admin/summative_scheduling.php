@@ -77,11 +77,14 @@ function getLabs($labs, $mysqlidb) {
 	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
+  
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+  <div class="page_title"><?php echo $string['summativescheduling'] ?></div>
+</div>
+
 <table class="header">
-<tr>
-<th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['summativescheduling']; ?></div></th>
-<th style="text-align:right; vertical-align:top; padding-right:6px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
 <tr>
 <th><div class="col10 s"><?php echo $string['title']; ?></div></th>
 <th class="vert_div"><?php echo $string['month']; ?></th>
@@ -154,7 +157,7 @@ function getLabs($labs, $mysqlidb) {
     $cohort_size = str_replace('>', '&gt;', $cohort_size);
 
     echo "<tr class=\"l\" onclick=\"selLine($property_id,event)\" ondblclick=\"viewDetails()\" id=\"$property_id\">";
-    echo "<td class=\"col\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"14\" border=\"0\" />&nbsp;" . $paper_details['paper_title'] . "</td><td class=\"col\">" . $paper_details['start_date'] . "</td><td class=\"col\">$campus " . getLabs($paper_details['labs'], $mysqli) . "</td><td class=\"col\">";
+    echo "<td class=\"col\"><img src=\"../artwork/shortcut_calendar_icon.png\" width=\"16\" height=\"16\" border=\"0\" />&nbsp;" . $paper_details['paper_title'] . "</td><td class=\"col\">" . $paper_details['start_date'] . "</td><td class=\"col\">$campus " . getLabs($paper_details['labs'], $mysqli) . "</td><td class=\"col\">";
     $html = '';
     foreach ($paper_details['modules'] as $individual_module) {
       if ($html == '') {

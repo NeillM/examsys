@@ -143,18 +143,21 @@ require_once '../classes/moduleutils.class.php';
 ?>
 <div id="content" class="content">
 
-<table class="header">
-<tr>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
   if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-    echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../module/index.php?module=" . $_GET['module'] . "\">" . $module_code . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . sprintf($string['modulekeywords'], $module_code) . "</th>\n";
+    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../module/index.php?module=" . $_GET['module'] . "\">" . $module_code . "</a></div>";
+    echo "<div class=\"page_title\" style=\"font-weight:normal\">" . sprintf($string['modulekeywords'], $module_code) . "</div>\n";
   } else {
-    echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . $string['mypersonalkeywords'] . "</th>\n";
+    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+    echo "<div class=\"page_title\" style=\"font-weight:normal\">" . $string['mypersonalkeywords'] . "</div>\n";
   }
 ?>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
+</div>
+  
+<table class="header">
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
   echo "<tr class=\"qline\" id=\"link_$keywordID\" onclick=\"selKey($keywordID, event)\" ondblclick=\"editKeyword($keywordID)\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";

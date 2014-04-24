@@ -45,6 +45,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -52,6 +53,13 @@ $result->close();
     function edit(schoolID) {
       document.location.href='./edit_school.php?schoolid=' + schoolID;
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        sortList: [[0,0]]
+      });
+
+    });
   </script>
 </head>
 
@@ -64,42 +72,43 @@ $result->close();
 ?>
 <div id="content" class="content">
 
-<table class="header">
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['schools'] ?></div>
+</div>
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<thead>
 <tr>
-<th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['schools']; ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+  <th class="col10" style="width:50%"><?php echo $string['name']; ?></th>
+  <th class="col" style="width:40%"><?php echo $string['faculty']; ?></th>
+  <th class="col" style="width:10%"><?php echo $string['modules']; ?></th>
 </tr>
-<tr>
-<th><div class="col10"><?php echo $string['name']; ?></div></th>
-<th class="vert_div"><?php echo $string['faculty']; ?></th>
-<th class="vert_div"><?php echo $string['modules']; ?></th>
-</tr>
+</thead>
+
+<tbody>
 <?php
 
 if ($faculties > 0) {
-  $old_faculty = '';
   $id = 0;
 
   $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
   $result->execute();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
   while ($result->fetch()) {
-    if ($old_faculty != $faculty) {
-      $del = ($faculty_deleted != '') ? ' class="deleted"' : '';
-      echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; padding-bottom:5px; width:99%\"><tr><td{$del}><nobr>$faculty</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-    }
     echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit('$id')\" class=\"l\"><td><div class=\"col30\">$school</div></td><td class=\"col\">$faculty</td><td><div class=\"no\">" . number_format($module_no) . "</div></td></tr>\n";
-    $old_faculty = $faculty;
     $id++;
   }
   $result->close();
-  $mysqli->close();
 } else {
   echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
   echo "<tr><td colspan=\"4\">{$string['musthavefaculty']}</td></tr>\n";
 }
 
+$mysqli->close();
 ?>
+</tbody>
 </table>
 </div>
 

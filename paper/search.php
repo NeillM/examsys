@@ -123,17 +123,22 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
 	echo draw_toprightmenu();
 	
 	echo "<div id=\"content\" class=\"content\">\n";
-	echo "<table class=\"header\">\n";
+	echo "<div class=\"head_title\">\n";
 
   if (!isset($_POST['submit'])) {
-    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
-    echo "</table>\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+    echo "<div class=\"page_title\">" . $string['papersearch'] . "</div>";
+    echo "</div>\n";
   }
 
   if (isset($_POST['submit'])) {
 	  if ($type_problem) {
-			echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
-			echo "</table>\n";
+      echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+      echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+      echo "<div class=\"page_title\">" . $string['papersearch'] . "</div>";
+      echo "</div>\n";
+
 			echo $notice->info_strip('No paper types have been selected.', 100);
 			echo "</body>\n</html>\n";
 			exit;
@@ -159,8 +164,11 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     $results->store_result();
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
 
-    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-    echo "</table>\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+    echo "<div class=\"page_title\">" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;<span style=\"font-weight: normal\">" . $_POST['searchterm'] . "</span></div>";
+    echo "</div>\n";
+
     if ($results->num_rows > 0) {
       echo '<br />';
       while ($results->fetch()) {
@@ -189,8 +197,9 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
 			echo $notice->info_strip($msg, 100);
     }
     $results->close();
-    $mysqli->close();
   }
+  
+  $mysqli->close();
 ?>
 </div>
 </body>

@@ -83,32 +83,27 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
+  
+  if ($type == 'type') {
+    $display_type = $string['bytype']; 
+  } elseif ($type == 'bloom') {
+    $display_type = $string['byblooms']; 
+  } elseif ($type == 'keyword') {
+    $display_type = $string['bykeyword']; 
+  } elseif ($type == 'status') {
+    $display_type = $string['bystatus'];
+  } elseif ($type == 'performance') {
+    $display_type = $string['byperformance'];
+  }
 ?>
 <div id="content" class="content">
-<table class="header">
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
+  <div class="page_title"><?php echo $string['questionbank'] ?>: <span style="font-weight:normal"><?php echo $display_type ?></span></div>
+</div>
 <?php
-echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $module . '">' . $module_details['moduleid'] . '</a>';
-echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-
-echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
-echo 'Question Bank: <span style="font-weight:normal">';
-if ($type == 'type') {
-  echo $string['bytype']; 
-} elseif ($type == 'bloom') {
-  echo $string['byblooms']; 
-} elseif ($type == 'keyword') {
-  echo $string['bykeyword']; 
-} elseif ($type == 'status') {
-  echo $string['bystatus'];
-} elseif ($type == 'performance') {
-  echo $string['byperformance'];
-}
-echo '</span>';
-echo "</div></th><th></th></tr>\n";
-
-echo "</table>\n";
-
 $bank_types = $qbank->get_categories($type);
 $stats      = $qbank->get_stats($type);
 
@@ -116,7 +111,7 @@ if ($type != 'keyword') {
   echo "<br />\n";
 }
 if ($type == 'performance') {
-  echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['bydifficulty'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydifficulty'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 }
 
 $old_section = '';
@@ -127,21 +122,25 @@ foreach ($bank_types as $id=>$type_name) {
   if ($type == 'keyword') {
     if ($old_section != $type_name{0}) {
       echo "<br clear=\"left\" />\n";
-      echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $type_name{0} . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $type_name{0} . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     }
     $old_section = $type_name{0};
   } elseif ($type == 'performance' and $id == 'highest') {
     echo "<br clear=\"left\" />\n";
-    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['bydiscrimination'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydiscrimination'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
   }
   
   if (isset($stats[$id])) {
-    $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' questions</span>';
+    $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
+    echo display_folder($url, $type_name, $grey_text);
   } elseif(isset($stats[$type_name])) {
-    $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' questions</span>';
+    $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' ' . $string['questions'] . '</span>';
+    echo display_folder($url, $type_name, $grey_text);
   }
+}
 
-  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
+function display_folder($url, $type_name, $grey_text) {
+  return "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
 }
 $mysqli->close();
 ?>

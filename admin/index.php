@@ -61,7 +61,6 @@
 </head>
 
 <body>
-
 <?php
   require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
@@ -90,15 +89,14 @@
 
   $mysqli->close();
 ?>
+<div style="font-size:80%">
 
-<div id="content" class="content" style="font-size:80%">
-<table class="header">
-<tr>
-	<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th>
-	<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
-
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div>
+  <div class="page_title"><?php echo $string['administrativetools']; ?></div>
+</div>
+  
 <?php
   if ($temp_account_no > 0) {
     $string['clearguestaccounts'] .= ' <span class="corners"><span class="num">' . $temp_account_no . '</span></span>';
@@ -155,6 +153,8 @@
 	}
 
 ?>
+</div>
+  
 </div>
 
 </body>

@@ -116,12 +116,17 @@ if (!$module) {
 	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo $module ?></a></div>
+  <div class="page_title"><?php echo $string['manageobjectives'] ?></div>
+</div>
 <?php  
   echo "<table class=\"header\">\n";
-  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../module/index.php?module=$modID\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "</th>\n";
-  echo "<th class=\"vert_div\">" . $string['name'] . "</th>\n";
-  echo "<th class=\"vert_div\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
+  echo "<tr><th class=\"col10\">" . $string['date'] . "</th>\n";
+  echo "<th class=\"col\">" . $string['name'] . "</th>\n";
+  echo "<th class=\"col\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
 
   $old_session = '';
   $id = 0;

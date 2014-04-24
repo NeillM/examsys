@@ -59,6 +59,7 @@ $string['couldnotsend'] = 'Nie można było wysłać Emaila do';
 $string['emailclassmarks'] = 'wyślij Emaile z punktacją klasy';
 $string['title'] = 'Tytuł';
 $string['surname'] = 'Nazwisko';
+$string['firstnames'] = 'First Names';
 $string['studentid'] = 'Numer legitymacji';
 $string['username'] = 'Nazwa użytkownika';
 $string['course'] = 'Kurs';

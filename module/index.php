@@ -70,6 +70,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
+    a {color: black}
     .red {background-color:#C00000; color:white; padding:2px}
   </style>
 
@@ -125,51 +126,54 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
-<table class="header">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div>
+  <div class="page_title"><?php echo $module_details['moduleid'] ?>: <span style="font-weight:normal"><?php echo $module_details['fullname'] ?></span></div>
+</div>
 <?php
-echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
-echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
-echo $module_details['moduleid'] . ': <span style="font-weight:normal">' . $module_details['fullname'] . '</span>';
-echo "</div></th><th></th></tr>\n";
+  // Is it a self-enrol module.
+  if (isset($module_details['selfenroll']) and $module_details['selfenroll'] == 1) {
+    $selfenrol_url = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/self_enrol.php?moduleid=' . $module_details['moduleid'];
+    echo "<br /><div style=\"margin-left:auto; margin-right:auto; width:500px\"><img src=\"../artwork/self_enrol.png\" width=\"48\" height=\"48\" alt=\"modules\" style=\"float:left\" /> <div style=\"color:#F18103; font-weight:bold; line-height:200%\">" . $string['selfenrolmodule'] . "</div>" . $string['studenturl'] . ": <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n";
+  }
 
-echo "</table>\n";
 
 // Paper type folders
-echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Papers</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+echo "<table border=\"0\" class=\"subsect\" style=\"clear:both\"><tr><td>" . $string['papers'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 echo "<br />\n";
 $types_used = module_utils::paper_types($module, $mysqli);
 foreach ($types_used as $type=>$no_papers) {
   $url = '../module/type.php?module=' . $module . '&type=' . $type;
-  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " papers</span></td></tr></table></div>\n";
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></td></tr></table></div>\n";
 }
 echo "<br clear=\"left\">\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../paper/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../paper/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">for papers</span></td></tr></table></div>\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newPaper(); return false;\" class=\"blacklink\">New Paper</a></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../paper/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../paper/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newPaper(); return false;\" class=\"blacklink\">" . $string['newpaper'] . "</a></td></tr></table></div>\n";
 
 // Question bank section
 echo "<br clear=\"left\">\n";
 echo "<br />\n";
-echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Question Bank</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['questionbank'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 echo "<br />\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">All Questions</a></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">" . $string['allquestions'] . "</a></td></tr></table></div>\n";
 
-$bank_types = array('by Keyword'=>'../question/bank.php?type=keyword&module=' . $module, 'by Question Type'=>'../question/bank.php?type=type&module=' . $module, 'by Status'=>'../question/bank.php?type=status&module=' . $module, 'by Bloom\'s Taxonomy'=>'../question/bank.php?type=bloom&module=' . $module, 'by Performance'=>'../question/bank.php?type=performance&module=' . $module);
+$bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
 foreach ($bank_types as $type_name=>$url) {
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a></td></tr></table></div>\n";
 }
 echo "<br clear=\"left\">\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">for questions</span></td></tr></table></div>\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newQuestion(); return false;\" class=\"blacklink\">New Question</a></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newQuestion(); return false;\" class=\"blacklink\">" . $string['newquestion'] . "</a></td></tr></table></div>\n";
 
 
 // User section
 echo "<br clear=\"left\">\n";
 echo "<br />\n";
-echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>Users</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+echo "<table border=\"0\" class=\"subsect\"><tr><td>" . $string['users'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 echo "<br />\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../users/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">for users</span></td></tr></table></div>\n";
+echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../users/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></td></tr></table></div>\n";
 
 if ($_GET['module'] != '0') {
   $current_year = date_utils::get_current_academic_year();
@@ -182,10 +186,10 @@ if ($_GET['module'] != '0') {
   } else {
     $student_class = 'grey';
   }
-  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Student Cohort List</a><br /><span class=\"$student_class\">" . $current_year . " - $student_no students</span></td></tr></table></div>\n";
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $string['studentcohortlist'] . "</a><br /><span class=\"$student_class\">" . $current_year . " - $student_no " . $string['students'] . "</span></td></tr></table></div>\n";
 
   $url = '../users/import_users_metadata.php?module=' . $module;
-  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Add Metadata</a><br /><span class=\"grey\">extra data about students</span></td></tr></table></div>\n";
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $string['addmetadata'] . "</a><br /><span class=\"grey\">" . $string['extradataaboutstudents'] . "</span></td></tr></table></div>\n";
 }
 
 $mysqli->close();

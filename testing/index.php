@@ -35,7 +35,7 @@ require '../include/sysadmin_auth.inc';
 	<title>Rog&#333;: Test Suite</title>
 
 	<style>
-		.content {font-size:90%}
+		.content {font-size:80%}
 		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
 		article { width:50%; height: 80%; float: left }
 		ol {list-style-type:decimal}
@@ -56,10 +56,15 @@ require '../include/sysadmin_auth.inc';
 	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
-	<table class="header">
-		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="text-align:right; vertical-align:top; padding-right:6px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-	</table>
+  
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+    <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a></div>
+    <div class="page_title">Test Suite</div>
+  </div>
+
 	<br />
+  
 	<ol>
 		<li><a href="./unittest.php">Unit tests</a></li>
 		<li><a href="./selenium/README.txt">Selenium tests</a></li>

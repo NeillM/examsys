@@ -1667,7 +1667,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
-    body {font-size:90%; margin-bottom:10px}
+    body {margin-bottom:10px}
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:0px; margin-right:0px}
     .figures {text-align:right}
@@ -1761,8 +1761,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 	
 	echo draw_toprightmenu(154);
 ?>
+<div style="font-size:80%">
 <form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
-<table class="header" style="font-size:90%">
 <?php
   // Get some paper properties
   $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
@@ -1933,17 +1933,18 @@ SQL;
     $result->store_result();
     while ($result->fetch()) {
       if ($display_header == true) {
-        echo '<tr><th>';
+        echo '<div class="head_title">';
+        echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
         echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
         if (isset($_GET['folder']) and $_GET['folder'] != '') {
-          echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+          echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
         } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-          echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+          echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
         }
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-        echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-        echo "</table>\n";
+        echo "<div class=\"page_title\">" . $string['reporttitle'] . "</div>\n";
+        echo "</div>\n";
 
         echo '<br /><div class="key">';
         echo '<table cellpadding="2" cellspacing="0" border="0">';
@@ -2194,6 +2195,7 @@ SQL;
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />
   <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:150px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back()" style="width:80px" /></div>
   </form>
+</div>
 <?php
 }
 $mysqli->close();

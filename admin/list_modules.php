@@ -37,7 +37,6 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
 	<style>
 	  th a {color:black !important}
 	</style>
@@ -70,12 +69,11 @@ require '../include/sysadmin_auth.inc';
 ?>
 <div id="content" class="content">
 
-<table class="header">
-<tr>
-<th colspan="3"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['modules']; ?></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+  <div class="page_title"><?php echo $string['modules'] ?></div>
+</div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <thead>
