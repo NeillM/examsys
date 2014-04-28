@@ -331,6 +331,7 @@ if ($exam_duration !== null) {
   require './include/toprightmenu.inc';
 	echo draw_toprightmenu(31);
 ?>
+<br clear="all" />
 <form name="theform">
 <?php
 if ($textsize > 120) {

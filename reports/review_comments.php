@@ -66,21 +66,32 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
   $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
   $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
   
+  $image = '';
   foreach ($reviewer_data as $reviewerID=>$rev_data) {
     $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
     $comment = '';
     if (isset($comments_data[$questionID][$reviewerID])) {
       $comment = nl2br($comments_data[$questionID][$reviewerID]['comment']);
-    
-      $image = 'ok_comment.png';
-      $status = 'OK';
-      if ($comments_data[$questionID][$reviewerID]['category'] == 2) {
-        $image = 'minor_comment.png';
-        $status = 'Minor';
-      } elseif ($comments_data[$questionID][$reviewerID]['category'] == 3) {
-        $image = 'major_comment.png';
-        $status = 'Major';
+
+      switch($comments_data[$questionID][$reviewerID]['category']) {
+        case 1:
+          $image = 'ok_comment.png';
+          $status = 'OK';
+          break;
+        case 2:
+          $image = 'minor_comment.png';
+          $status = 'Minor';
+          break;
+        case 3:
+          $image = 'major_comment.png';
+          $status = 'Major';
+          break;
+        case 4:
+          $image = 'cannot_comment.png';
+          $status = 'Cannot Comment';
+          break;
       }
+
       if (trim($comment) == '') {
         $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
         $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
@@ -90,13 +101,16 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
         $response = nl2br($comments_data[$questionID][$reviewerID]['response']);
       }
       $extra = '';
-      $image = "<img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" />";
+      if ($image != '') {
+        $image = "<img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" />";
+      } else {
+        $image = '';
+      }
     } else {
       $comment = '';
       $action = $string['notreviewed'];
       $response = '';
       $extra = ' notreviewed';
-      $image = '';
     }
     
     $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
