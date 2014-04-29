@@ -27,7 +27,6 @@
  */
 
 require_once './include/staff_student_auth.inc';
-require_once './include/toprightmenu.inc';
 
 require_once './classes/networkutils.class.php';
 require_once './classes/paperutils.class.php';
@@ -143,6 +142,8 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
 	} else {
 		echo '<script type="text/javascript" src="./js/student_help.js"></script>';
 	}
+  
+  require_once './include/toprightmenu.inc';
 ?>
 </head>
 <body>
