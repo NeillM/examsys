@@ -23,7 +23,7 @@
 */
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-$cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
+$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $root), '/'), '/');
 ?>
 <!DOCTYPE html>
 <head>
