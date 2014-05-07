@@ -231,6 +231,8 @@ Class UpdaterUtils {
    * @param bool $update_display 	- If true then echo the SQL to the screen.
    */
   public function execute_query($sql, $update_display) {
+    $insertID = false;
+    
     if ($update_display) {
       echo "<li>$sql&hellip;";
       ob_flush();
@@ -240,10 +242,11 @@ Class UpdaterUtils {
     $this->mysqli->query($sql);
 
     if ($this->mysqli->errno == 0) {
+      $insertID = $this->mysqli->insert_id;
       if ($update_display) {
         echo "Done</li>\n";
       }
-    } elseif ($this->mysqli->warning_count>0) {
+    } elseif ($this->mysqli->warning_count > 0) {
       if ($update_display) echo '</li>';
       echo '<li class="warning">WARNING: ' . $sql;
       $e = $this->mysqli->get_warnings();
@@ -268,6 +271,8 @@ Class UpdaterUtils {
 
     ob_flush();
     flush();
+    
+    return $insertID;
   }
 
   /**

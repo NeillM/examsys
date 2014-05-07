@@ -79,7 +79,7 @@ require_once '../classes/paperutils.class.php';
   while ($result->fetch()) {
     $reviewed = '';
     if ($fullscreen == '') $fullscreen = 0;
-    $log_results = $mysqli->prepare("SELECT UNIX_TIMESTAMP(MAX(reviewed)) AS started FROM review_comments WHERE reviewer = ? and q_paper = ?");
+    $log_results = $mysqli->prepare("SELECT UNIX_TIMESTAMP(MAX(started)) AS started FROM review_metadata WHERE reviewerID = ? and paperID = ?");
     $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $log_results->execute();
     $log_results->store_result();

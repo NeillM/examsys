@@ -720,6 +720,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".review_metadata TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set_questions TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
@@ -810,6 +811,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".reference_papers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".relationships TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".review_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".scheduling TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sessions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sid TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
@@ -2622,20 +2624,31 @@ QUERY;
     $this->tableList['review_comments'] = <<<QUERY
         CREATE TABLE `review_comments` (
           `id` int(11) NOT NULL auto_increment,
-          `q_paper` mediumint(8) unsigned default NULL,
           `q_id` int(11) default NULL,
           `category` tinyint(4) default NULL,
           `comment` text,
-          `reviewer` int(10) unsigned default NULL,
-          `reviewed` datetime default NULL,
           `action` enum('Not actioned','Read - disagree','Read - actioned') default NULL,
           `response` text,
-          `review_type` enum('External','Internal') default NULL,
-          `ipaddress` varchar(60) default NULL,
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
+          `metadataID` int(11) unsigned NOT NULL,
           PRIMARY KEY (`id`),
           KEY `idx_q_paper` (`q_paper`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['review_metadata'] = <<<QUERY
+        CREATE TABLE `review_comments` (
+          `id` int(11)unsigned NOT NULL auto_increment,
+          `reviewerID` int(10) unsigned NOT NULL,
+          `paperID` mediumint(8) unsigned NOT NULL,
+          `started` datetime default NULL,
+          `complete` datetime default NULL,
+          `review_type` enum('External','Internal') default NULL,
+          `ipaddress` varchar(100) default NULL,
+          `paper_comment` text,
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

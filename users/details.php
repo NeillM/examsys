@@ -662,30 +662,30 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $external_array = array();
 
       $sql = "SELECT DISTINCT
-								crypt_name, paper_title, property_id, paper_type, reviewed, DATE_FORMAT(reviewed,'{$configObject->get('cfg_long_date_time')}') AS display_started
+								crypt_name, paper_title, property_id, paper_type, started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started
 							FROM
 								(properties, properties_reviewers)
 							LEFT JOIN
-								review_comments
+								review_metadata
 							ON
-								properties.property_id = review_comments.q_paper AND reviewer = ?
+								properties.property_id = review_metadata.paperID AND review_metadata.reviewerID = ?
 							WHERE
 								properties.property_id = properties_reviewers.paperID AND
-								reviewerID = ? AND
+								properties_reviewers.reviewerID = ? AND
 								deleted IS NULL
 							ORDER BY
 								paper_title";
       $stmt = $mysqli->prepare($sql);
       $stmt->bind_param('ii', $tmp_id, $tmp_id);
       $stmt->execute();
-      $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $reviewed, $display_started);
+      $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $started, $display_started);
       while ($stmt->fetch()) {
         $paper[$results_no]['crypt_name'] = $crypt_name;
         $paper[$results_no]['q_paper'] = $paper_title;
         $paper[$results_no]['id'] = $property_id;
         $paper[$results_no]['type'] = '2';
         $paper[$results_no]['paper_type'] = '2';
-        $paper[$results_no]['started'] = $reviewed;
+        $paper[$results_no]['started'] = $started;
         $paper[$results_no]['display_started'] = $display_started;
         $paper[$results_no]['duration'] = '';
         $paper[$results_no]['mark'] = '';

@@ -513,8 +513,8 @@ if ($properties->get_paper_type() == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-      $stmt = $mysqli->prepare("SELECT DISTINCT reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'internal'");
-      $stmt->bind_param('i', $_GET['paperID']);
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'internal'");
+      $stmt->bind_param('i', $paperID);
       $stmt->execute();
       $stmt->bind_result($reviewer);
       while ($stmt->fetch()) {
@@ -550,8 +550,8 @@ if ($properties->get_paper_type() == '2') {
       }
 
       $reviews_complete = 0;
-      $stmt = $mysqli->prepare("SELECT DISTINCT reviewer FROM review_comments WHERE q_paper = ? AND review_type = 'external'");
-      $stmt->bind_param('i', $_GET['paperID']);
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'external'");
+      $stmt->bind_param('i', $paperID);
       $stmt->execute();
       $stmt->bind_result($reviewer);
       while ($stmt->fetch()) {
@@ -579,7 +579,7 @@ if ($properties->get_paper_type() == '2') {
   $standards_set = 0;
   if (strpos($checklist, 'stdset') !== false) {
     $stmt = $mysqli->prepare("SELECT COUNT(std_set.id), setterID FROM std_set_questions, std_set WHERE std_set_questions.std_setID = std_set.id AND paperID = ? GROUP BY setterID");
-    $stmt->bind_param('i', $_GET['paperID']);
+    $stmt->bind_param('i', $paperID);
     $stmt->execute();
     $stmt->bind_result($set_set_records, $setterID);
     while ($stmt->fetch()) {

@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require 'display_functions.inc';
-require '../include/reviews.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 require '../config/start.inc';
@@ -32,6 +31,8 @@ require '../config/start.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/standard_setting.class.php';
+require_once '../classes/reviews.class.php';
+
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
@@ -92,6 +93,11 @@ if ($userObject->has_role('External Examiner')) {
 	$review_deadline = strtotime($propertyObj->get_internal_review_deadline());
 }
 
+// Create a new review object.
+$review = new Review($userObject->get_user_ID(), $review_type, $paperID, $mysqli);
+
+
+
 // Get standards setting data
 if ($marking{0} == '2') {
   $standards_setting = array();
@@ -148,7 +154,7 @@ function get_max_reference_width($reference_materials) {
 function load_reviews($paperID, $screen, $reviewerID, $db) {	
 	$reviews_array = array();
 	
-	$result = $db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments WHERE q_paper=? AND screen = ? AND reviewer = ?");
+	$result = $db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND screen = ? AND reviewerID = ?");
 	$result->bind_param('iii', $paperID, $screen, $reviewerID);
 	$result->execute();
 	$result->store_result();
@@ -170,17 +176,12 @@ $max_ref_width 				= get_max_reference_width($reference_materials);
 
 // Extract the posted variables.
 $current_screen = 1;
-if (isset($_POST['sessionid'])) {
-  if (isset($_POST['next'])) {
-    $current_screen = $_POST['current_screen'];
-  } elseif (isset($_POST['prev'])) {
-    $current_screen = $_POST['current_screen'] - 2;
-  } elseif (isset($_POST['jump_screen'])) {
-    $current_screen = $_POST['jump_screen'];
-  }
-  $sessionid = $_POST['sessionid'];
-} else {
-  $sessionid = date("YmdHis", time());
+if (isset($_POST['next'])) {
+  $current_screen = $_POST['current_screen'];
+} elseif (isset($_POST['prev'])) {
+  $current_screen = $_POST['current_screen'] - 2;
+} elseif (isset($_POST['jump_screen'])) {
+  $current_screen = $_POST['jump_screen'];
 }
 
 echo "<!DOCTYPE html>\n";
@@ -495,7 +496,6 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
 
   $current_screen++;
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"$current_screen\" />\n";
-  echo "<input type=\"hidden\" name=\"sessionid\" value=\"$sessionid\" />\n";
   echo "<input type=\"hidden\" name=\"page_start\" value=\"" . date("YmdHis", time()) . "\" />\n";
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
