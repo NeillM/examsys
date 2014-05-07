@@ -94,9 +94,7 @@ if ($userObject->has_role('External Examiner')) {
 }
 
 // Create a new review object.
-$review = new Review($userObject->get_user_ID(), $review_type, $paperID, $mysqli);
-
-
+$review = new Review($paperID, $userObject->get_user_ID(), $review_type, $mysqli);
 
 // Get standards setting data
 if ($marking{0} == '2') {
@@ -407,7 +405,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $screen_pre_submitted = 0;
 	
 	// Load past reviews from the database.
-	$reviews_array = $review->load_reviews($current_screen);
+	$review->load_reviews($current_screen);
 	
   $old_leadin = '';
   $old_q_type = '';

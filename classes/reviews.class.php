@@ -103,7 +103,7 @@ class Review {
           $extcomments = $_POST["extcomments$question_no"];
 
           $result = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
-          $result->bind_param('iisii', $q_id, $_POST["exttype$question_no"], $extcomments, $_POST['old_screen'], $metadataID);
+          $result->bind_param('iisii', $q_id, $_POST["exttype$question_no"], $extcomments, $_POST['old_screen'], $this->metadataID);
           $result->execute();  
           $result->close();
         }
@@ -137,7 +137,7 @@ class Review {
   }
 
   public function load_reviews($screen) {	
-    $reviews_array = array();
+    $this->reviews_array = array();
 
     $result = $this->db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND screen = ? AND reviewerID = ?");
     $result->bind_param('iii', $this->paperID, $screen, $this->reviewerID);
@@ -145,14 +145,44 @@ class Review {
     $result->store_result();
     $result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
     while ($result->fetch()) {
-      $reviews_array[$q_id]['category'] = $category;
-      $reviews_array[$q_id]['comment'] = $comment;
-      $reviews_array[$q_id]['action'] = $action;
-      $reviews_array[$q_id]['response'] = $response;
+      $this->reviews_array[$q_id]['category'] = $category;
+      $this->reviews_array[$q_id]['comment'] = $comment;
+      $this->reviews_array[$q_id]['action'] = $action;
+      $this->reviews_array[$q_id]['response'] = $response;
     }
     $result->close();
+  }
+  
+  public function get_category($q_id) {
+    if (isset($this->reviews_array[$q_id]['category'])) {
+      return $this->reviews_array[$q_id]['category'];
+    } else {
+      return null;
+    }
+  }
 
-    return $reviews_array;
+  public function get_comment($q_id) {
+    if (isset($this->reviews_array[$q_id]['comment'])) {
+      return $this->reviews_array[$q_id]['comment'];
+    } else {
+      return null;
+    }
+  }
+
+  public function get_action($q_id) {
+    if (isset($this->reviews_array[$q_id]['action'])) {
+      return $this->reviews_array[$q_id]['action'];
+    } else {
+      return null;
+    }
+  }
+
+  public function get_response($q_id) {
+    if (isset($this->reviews_array[$q_id]['response'])) {
+      return $this->reviews_array[$q_id]['response'];
+    } else {
+      return null;
+    }
   }
 
 }

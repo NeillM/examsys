@@ -28,6 +28,13 @@ require '../include/errors.inc';
 
 check_var('id', 'GET', true, false, false);
 
+// Get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
+if ($propertyObj == false) {  // No properties found, this crypt_name
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+  
 if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid = ?")) {
   $stmt->bind_param('i', $userObject->get_user_ID());
   $stmt->execute();
@@ -36,7 +43,7 @@ if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_col
   $stmt->fetch();
 }
 $stmt->close();
-  
+
 $screen_data = array();
 $stmt = $mysqli->prepare("SELECT property_id, paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline FROM properties WHERE crypt_name = ?");
 $stmt->bind_param('s', $_GET['id']);
@@ -61,6 +68,8 @@ if ($userObject->has_role('External Examiner')) {
 }
 
 $userid = $userObject->get_user_ID();
+
+$review = new Review($paperID, $userid, $review_type, $mysqli);
 
 if (isset($_POST['close'])) {
   record_general_comments($_POST['paper_comments'], $property_id, $userid, false, $review_type, $mysqli);
