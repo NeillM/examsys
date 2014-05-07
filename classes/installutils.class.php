@@ -362,7 +362,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_interactivequestions = $_POST['interactivequestions'];
   
     // Check we can write to the config file first if not passwords will be lost!
-    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
 
     if (file_exists($rogo_path . '/config/config.inc.php')) {
       if (!is_writable($rogo_path . '/config/config.inc.php')) {
@@ -1061,7 +1061,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   static function configFile() {
     global $string;
 
-    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     if (file_exists($rogo_path . '/config/config.inc.php')) {
       $errors['90'] =  sprintf($string['errors1'], $rogo_path."/config/config.inc.php");
@@ -1078,15 +1078,15 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $rogo_path = '';
 
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
-      $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+      $rogo_path = str_ireplace('/install/index.php','',  normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version4.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+      $rogo_path = str_ireplace('/updates/version4.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version5.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version5.php','',$_SERVER['SCRIPT_FILENAME']);
+      $rogo_path = str_ireplace('/updates/version5.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (is_writable($rogo_path . '/config/config.inc.php')) {
@@ -1105,15 +1105,15 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $rogo_path = '';
 
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
-      $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+      $rogo_path = str_ireplace('/install/index.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version4.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+      $rogo_path = str_ireplace('/updates/version4.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version5.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version5.php','',$_SERVER['SCRIPT_FILENAME']);
+      $rogo_path = str_ireplace('/updates/version5.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (is_writable($rogo_path . '/config')) {
@@ -1130,7 +1130,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   static function checkDirPermissionsPre() {
     global $string;
 
-    self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    // This should work for both windows and UNIX style paths.
+    self::$rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     //media
     if (!is_writable(self::$rogo_path . '/media')) {
@@ -1162,7 +1163,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkDirPermissionsPost() {
     global $string;
-    self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    self::$rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     //tmp
     if (!is_writable($_POST['tmpdir'])) {
@@ -1361,7 +1362,7 @@ require \$root . '/include/path_functions.inc.php';
 
 \$rogo_version = '{rogo_version}';
 \$cfg_web_root = get_root_path() . '/';
-\$cfg_root_path = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
+\$cfg_root_path = rtrim('/' . trim(normalise_path(str_replace(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';

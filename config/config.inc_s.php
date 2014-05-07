@@ -14,7 +14,7 @@ require $root . '/include/path_functions.inc.php';
 
 $rogo_version = '5.1';
 $cfg_web_root = get_root_path() . '/';
-$cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/'), '/');
+$cfg_root_path = rtrim('/' . trim(normalise_path(str_replace($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
 $cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 $cfg_page_charset 	   = 'UTF-8';
 $cfg_company = 'University of Nottingham';
