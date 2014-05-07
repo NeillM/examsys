@@ -151,25 +151,6 @@ function get_max_reference_width($reference_materials) {
 	return $max_ref_width;
 }
 
-function load_reviews($paperID, $screen, $reviewerID, $db) {	
-	$reviews_array = array();
-	
-	$result = $db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND screen = ? AND reviewerID = ?");
-	$result->bind_param('iii', $paperID, $screen, $reviewerID);
-	$result->execute();
-	$result->store_result();
-	$result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
-	while ($result->fetch()) {
-		$reviews_array[$q_id]['category'] = $category;
-		$reviews_array[$q_id]['comment'] = $comment;
-		$reviews_array[$q_id]['action'] = $action;
-		$reviews_array[$q_id]['response'] = $response;
-	}
-	$result->close();
-	
-	return $reviews_array;
-}
-
 // Load any reference materials.
 $reference_materials	= load_reference_materials($paperID, $mysqli);
 $max_ref_width 				= get_max_reference_width($reference_materials);
@@ -426,7 +407,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $screen_pre_submitted = 0;
 	
 	// Load past reviews from the database.
-	$reviews_array = load_reviews($paperID, $current_screen, $userObject->get_user_ID(), $mysqli);
+	$reviews_array = $review->load_reviews($current_screen);
 	
   $old_leadin = '';
   $old_q_type = '';
