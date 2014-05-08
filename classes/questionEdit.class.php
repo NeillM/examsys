@@ -1302,17 +1302,19 @@ QUERY;
 
       if ($paper_id != -1) {
         $query = <<< QUERY
-SELECT paper_title, review_comments.id, category, comment, reviewed, title, initials, surname, action, response, review_type
-FROM (review_comments, users) LEFT JOIN properties ON review_comments.q_paper=properties.property_id
-WHERE review_comments.reviewer=users.id AND q_id=? AND q_paper=? ORDER BY surname
+SELECT paper_title, review_comments.id, category, comment, started, title, initials, surname, action, response, review_type
+FROM (review_metadata, review_comments, users) LEFT JOIN properties ON review_metadata.paperID = properties.property_id
+WHERE review_metadata.id = review_comments.metadataID AND reviewerID = users.id AND q_id = ? AND paperID = ?
+ORDER BY surname
 QUERY;
         $result = $this->_mysqli->prepare($query);
         $result->bind_param('ii', $this->id, $paper_id);
       } else {
         $query = <<< QUERY
-SELECT paper_title, review_comments.id, category, comment, reviewed, title, initials, surname, action, response, review_type
-FROM (review_comments, users) LEFT JOIN properties ON review_comments.q_paper=properties.property_id
-WHERE review_comments.reviewer=users.id AND q_id=? ORDER BY q_paper, surname
+SELECT paper_title, review_comments.id, category, comment, started, title, initials, surname, action, response, review_type
+FROM (review_metadata, review_comments, users) LEFT JOIN properties ON review_metadata.paperID = properties.property_id
+WHERE review_metadata.id = review_comments.metadataID AND reviewerID = users.id AND q_id = ?
+ORDER BY paperID, surname
 QUERY;
         $result = $this->_mysqli->prepare($query);
         $result->bind_param('i', $this->id);

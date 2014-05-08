@@ -28,6 +28,7 @@ $string['qcomments'] = 'Q%d komentarze';
 $string['questionok'] = 'Pytanie poprawne';
 $string['minorproblems'] = 'Małe/nieliczne problemy';
 $string['majorproblems'] = 'Duże/liczne problemy';
+$string['cannotcomment'] = 'Cannot Comment';
 $string['deadlineexpired'] = 'Termin finalizacji upłynął'; 
 $string['deadlinepassed'] = 'Można przeglądać ten sprawdzian ale nie jest możliwe dokonywanie zmian w komentarzach, jako że termin finalizacji upłynął lub minął czas rozpoczęcia egzaminu.'; 
 $string['javacheck2'] = "Czy na pewno chcesz finalizować? Po wybraniu \'OK\' nie będziesz mógł powrócić.";

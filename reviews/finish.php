@@ -23,8 +23,10 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/reviews.inc';
 require '../include/errors.inc';
+
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/reviews.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -35,36 +37,22 @@ if ($propertyObj == false) {  // No properties found, this crypt_name
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
   
-if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid = ?")) {
-  $stmt->bind_param('i', $userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
-  $stmt->fetch();
-}
-$stmt->close();
+/*
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+*/
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
-$screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline FROM properties WHERE crypt_name = ?");
-$stmt->bind_param('s', $_GET['id']);
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $external_review_deadline, $internal_review_deadline);
-$stmt->fetch();
-$stmt->close();
-
-if ($bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-if ($fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-if ($textsize == 'NULL' or $textsize == '') $textsize = 90;
-if ($marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-if ($themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-if ($labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
+$paperID    = $propertyObj->get_property_id();
+$paper_type	= $propertyObj->get_paper_type();
 
 if ($userObject->has_role('External Examiner')) {
   $review_type = 'External';
+	$review_deadline = strtotime($propertyObj->get_external_review_deadline());
 } else {
   $review_type = 'Internal';
-  $external_review_deadline = $internal_review_deadline; //this is to fix internal reviews did not know where else $external_review_deadline was used!!
+	$review_deadline = strtotime($propertyObj->get_internal_review_deadline());
 }
 
 $userid = $userObject->get_user_ID();
@@ -72,13 +60,13 @@ $userid = $userObject->get_user_ID();
 $review = new Review($paperID, $userid, $review_type, $mysqli);
 
 if (isset($_POST['close'])) {
-  record_general_comments($_POST['paper_comments'], $property_id, $userid, false, $review_type, $mysqli);
+  $review->record_general_comments($_POST['paper_comments'], false);
   echo close_window();
-  exit;
+  exit();
 } elseif (isset($_POST['finish'])) {
-  record_general_comments($_POST['paper_comments'], $property_id, $userid, true, $review_type, $mysqli);
+  $review->record_general_comments($_POST['paper_comments'], true);
   echo close_window();
-  exit;  
+  exit(); 
 }
 
 function close_window() {
@@ -114,26 +102,25 @@ function close_window() {
   <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>?id=<?php echo $_GET['id'] ?>">
 <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div style="color:white; font-weight:bold">Review Complete</div></td><td align="center" class="raised_tbl" width="50"><img src="../config/logo.png" width="160" height="67" alt="University Logo" border="0" /></td></tr>';
+  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div><div style="color:white; font-weight:bold">' . $string['reviewcomplete'] . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../config/logo.png" width="160" height="67" alt="University Logo" border="0" /></td></tr>';
   echo '</table>';
 
   $configObject = Config::get_instance();
   $start_of_day_ts = strtotime('midnight');
 
-
-  if ($_POST['old_screen'] != '' and $start_of_day_ts <= $external_review_deadline) {
-    record_comments($property_id, $_POST['old_screen'], $mysqli, $userid, $review_type);
+  if ($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline) {
+    $review->record_comments($_POST['old_screen']);
   } else {
-    echo "Deadline = " . date($configObject->get('cfg_long_date_php'), $external_review_deadline);
+    echo $string['deadline'] . ' = ' . date($configObject->get('cfg_long_date_php'), $review_deadline);
   }
   ?>
   <blockquote>
-    <h1>General Comments</h1>
-    <p>Please use the area below to record any general comments about the difficulty, appropriateness or other comments about the paper as a whole.</p>
-    <textarea name="paper_comments" width="80" rows="6" style="width:100%"><?php get_paper_comments() ?></textarea>
+    <h1><?php echo $string['generalcomments'] ?></h1>
+    <p><?php echo $string['generalmsg'] ?></p>
+    <textarea name="paper_comments" width="80" rows="6" style="width:100%"><?php echo $review->get_paper_comments() ?></textarea>
   
   </blockquote>
-  <div style="text-align:center"><input type="submit" name="close" value="Save &amp; Close" class="ok" /><input type="submit" name="finish" value="Save &amp; Finish" class="ok" /></div>
+  <div style="text-align:center"><input type="submit" name="close" value="<?php echo $string['saveclose'] ?>" class="ok" /><input type="submit" name="finish" value="<?php echo $string['savefinish'] ?>" class="ok" /></div>
 <?php
   $mysqli->close();
 ?>

@@ -33,7 +33,6 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../classes/reviews.class.php';
 
-
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
@@ -171,7 +170,7 @@ echo "<html>\n<head>\n";
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 
-<title><?php echo $propertyObj->get_paper_title(); ?></title>
+<title><?php echo $propertyObj->get_paper_title() ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
@@ -348,7 +347,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   <tr><td valign="top">
   <?php
   if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
-    record_comments($paperID, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
+    $review->record_comments($_POST['old_screen']);
   }
 
   echo $top_table_html;

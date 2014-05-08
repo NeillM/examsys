@@ -513,7 +513,7 @@ if ($properties->get_paper_type() == '2') {
         $internal_array[$tmp_internal] = 0;
       }
 
-      $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'internal'");
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'internal' AND complete IS NOT NULL");
       $stmt->bind_param('i', $paperID);
       $stmt->execute();
       $stmt->bind_result($reviewer);
@@ -550,7 +550,7 @@ if ($properties->get_paper_type() == '2') {
       }
 
       $reviews_complete = 0;
-      $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'external'");
+      $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'external' AND complete IS NOT NULL");
       $stmt->bind_param('i', $paperID);
       $stmt->execute();
       $stmt->bind_result($reviewer);

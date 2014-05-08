@@ -45,6 +45,25 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
+function list_externals($reviewer_data) {
+  $html = '<table class="reviewer_list" cellspacing="0" cellpadding="4">';
+  $html .= '<thead><tr><th>Reviewers</th><th>Started</th><th>Completed</th><th style="width:60%">General Paper Comments</th></tr></thead>';
+  foreach ($reviewer_data as $reviewer) {
+    if ($reviewer['started'] == '') $reviewer['started'] = '<span style="color:#C0C0C0">N/A</span>';
+    if ($reviewer['complete'] == '') $reviewer['complete'] = '<span style="color:#C0C0C0">N/A</span>';
+    
+    $html .= '<tr>';
+    $html .= '<td>' . $reviewer['title'] . ' ' . $reviewer['initials'] . ' ' . $reviewer['surname'] . '</td>';
+    $html .= '<td>' . $reviewer['started'] . '</td>';
+    $html .= '<td>' . $reviewer['complete'] . '</td>';
+    $html .= '<td>' . $reviewer['paper_comment'] . '</td>';
+    $html .= '</tr>';
+  }
+  $html .= '</table>';
+  
+  return $html;
+}
+
 function displayRank($rank_position, $string) {
   if ($rank_position == 1) {
     $html = '1st';
@@ -529,14 +548,17 @@ if (!isset($paper)) {
 }
 
 $reviewer_data = array();
-$result = $mysqli->prepare("SELECT users.id, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND type = ? AND paperID = ? ORDER BY surname, initials");
+$result = $mysqli->prepare("SELECT users.id, title, initials, surname, DATE_FORMAT(started,'%d/%m/%Y %T') AS started, DATE_FORMAT(complete,'%d/%m/%Y %T') AS complete, paper_comment FROM (properties_reviewers, users) LEFT JOIN review_metadata ON properties_reviewers.reviewerID = review_metadata.reviewerID AND properties_reviewers.paperID = review_metadata.paperID WHERE properties_reviewers.reviewerID = users.id AND type = ? AND properties_reviewers.paperID = ? ORDER BY surname, initials");
 $result->bind_param('si', $type, $paperID);
 $result->execute();
-$result->bind_result($id, $title, $initials, $surname);
+$result->bind_result($id, $title, $initials, $surname, $started, $complete, $paper_comment);
 while ($result->fetch()) {
   $reviewer_data[$id]['title'] = $title;
   $reviewer_data[$id]['initials'] = $initials;
   $reviewer_data[$id]['surname'] = $surname;
+  $reviewer_data[$id]['started'] = $started;
+  $reviewer_data[$id]['complete'] = $complete;
+  $reviewer_data[$id]['paper_comment'] = $paper_comment;
 }
 $result->close();
 ?>
@@ -586,6 +608,9 @@ $result->close();
       padding:2px;
       border-bottom:solid 1px #C0C0C0;
     }
+    .reviewer_list {width: 95%; margin-left:auto; margin-right:auto; margin-bottom: 20px; border: 2px solid #FCE699; background-color: #FFFFEE}
+    .reviewer_list th {background-color: #FCE699}
+    .reviewer_list td {vertical-align:top; text-align:justify}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
@@ -612,14 +637,6 @@ $result->close();
 
     function editQ(qid, qno) {
       location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
-    }
-
-    function showHideSerious() {
-      if (document.styleSheets[0].rules) {
-        document.styleSheets[0].rules.item(7).style.display = (document.styleSheets[0].rules.item(7).style.display == 'none') ? 'block' : 'none';
-      } else {
-        document.styleSheets[0].cssRules[7].style.display = (document.styleSheets[0].cssRules[7].style.display == 'none') ? 'table-row' : 'none';
-      }
     }
   </script>
 </head>
@@ -649,33 +666,39 @@ if (isset($_GET['scrOfY'])) {
     echo $notice->info_strip($string['noreviewers'], 100) . "\n</body>\n</html>\n";
     exit;
   }
-?>
-  
-<br />
-  
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<?php
+ 
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(30);
+?>
+  
+<br />
+
+<?php
+  echo list_externals($reviewer_data);
+?>
+<br />
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<?php
+
 	
   $comments_array = array();
   
   // Capture reviewer comments data first.
-  $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM review_comments WHERE review_type = ? AND q_paper = ?");
+  $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(started,'%d/%m/%Y %T') AS reviewed, DATE_FORMAT(complete,'%d/%m/%Y %T') AS complete, reviewerID, action, response FROM review_comments, review_metadata WHERE review_metadata.id = review_comments.metadataID AND review_type = ? AND paperID = ?");
   $result->bind_param('si', $type, $paperID);
   $result->execute();
-  $result->bind_result($tmp_q_id, $comment, $category, $reviewed, $tmp_reviewer, $action, $response);
+  $result->bind_result($tmp_q_id, $comment, $category, $reviewed, $complete, $reviewerID, $action, $response);
   while ($result->fetch()) {
-    $comments_array[$tmp_q_id][$tmp_reviewer]['reviewed'] = $reviewed;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['comment']  = $comment;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['category'] = $category;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['action']   = $action;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['response'] = $response;
+    $comments_array[$tmp_q_id][$reviewerID]['reviewed'] = $reviewed;
+    $comments_array[$tmp_q_id][$reviewerID]['complete'] = $complete;
+    $comments_array[$tmp_q_id][$reviewerID]['comment']  = $comment;
+    $comments_array[$tmp_q_id][$reviewerID]['category'] = $category;
+    $comments_array[$tmp_q_id][$reviewerID]['action']   = $action;
+    $comments_array[$tmp_q_id][$reviewerID]['response'] = $response;
   }
   $result->close();
   
-
   // Capture the paper makeup.
   $question_no = 0;
   $old_q_id = 0;

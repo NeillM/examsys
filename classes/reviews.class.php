@@ -37,7 +37,8 @@ class Review {
     $this->paperID 			= $paperID;
 		$this->reviewerID		= $reviewerID;
 		$this->review_type 	= $review_type;
-		$this->$metadataID	= $this->get_metadataID();
+		
+    $this->get_metadataID();
   }
   
   private function time_to_seconds($seconds) {
@@ -54,14 +55,14 @@ class Review {
     $stmt = $this->db->prepare("INSERT INTO review_metadata VALUES(NULL, ?, ?, NOW(), NULL, ?, ?, NULL)");
     $stmt->bind_param('iiss', $this->reviewerID, $this->paperID, $this->review_type, $ipaddress);
     $stmt->execute();
-    $reviewID = $db->insert_id;
+    $reviewID = $this->db->insert_id;
     $stmt->close();
 
     return $reviewID;
   }
 
   private function get_metadataID() {
-    $stmt = $this->db->prepare("SELECT MAX(id) FROM review_metadata WHERE paperID = ? AND reviewerID = ?");
+    $stmt = $this->db->prepare("SELECT id FROM review_metadata WHERE paperID = ? AND reviewerID = ? ORDER BY id DESC LIMIT 1");
     $stmt->bind_param('ii', $this->paperID, $this->reviewerID);
     $stmt->execute();
     $stmt->bind_result($reviewID);
@@ -73,7 +74,7 @@ class Review {
     }
     $stmt->close();
 
-    return $reviewID;
+    $this->metadataID = $reviewID;
   }
 
   public function record_comments($screen_no) {
@@ -97,7 +98,7 @@ class Review {
           $result->execute();  
           $result->close();
 
-          $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($_POST['page_start']);
+          $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($_POST['page_start']);
           if ($tmp_duration < 0) $tmp_duration += 86400;
           $tmp_duration += $_POST['previous_duration'];
           $extcomments = $_POST["extcomments$question_no"];
@@ -115,7 +116,7 @@ class Review {
 
   public function record_general_comments($paper_comment, $finish) {
     if ($finish) {
-      $stmt = $this->db->prepare("UPDATE review_metadata SET paper_comment = ? AND complete = NOW() WHERE id = ?");
+      $stmt = $this->db->prepare("UPDATE review_metadata SET paper_comment = ?, complete = NOW() WHERE id = ?");
       $stmt->bind_param('si', $paper_comment, $this->metadataID);
     } else {
       $stmt = $this->db->prepare("UPDATE review_metadata SET paper_comment = ? WHERE id = ?");

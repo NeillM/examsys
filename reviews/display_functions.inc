@@ -1103,7 +1103,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:700px; font-size:100%\">";
     echo "<tr><td style=\"width:300px; font-weight:bold\">" . sprintf($string['qcomments'], ($question_no + $question_offset)) . "</td>";
     
-    $categories = array('#C5E0B3'=>$string['questionok'], '#FFE599'=>$string['minorproblems'], '#FF9090'=>$string['majorproblems'], '#C0C0C0'=>'Cannot Comment');
+    $categories = array('#C5E0B3'=>$string['questionok'], '#FFE599'=>$string['minorproblems'], '#FF9090'=>$string['majorproblems'], '#C0C0C0'=>$string['cannotcomment']);
 
     $value_no = 0;
     foreach ($categories as $bgcolor => $text) {
@@ -1116,14 +1116,15 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
 
     echo "<tr><td colspan=\"5\"><textarea cols=\"80\" rows=\"4\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extcomments$question_no\">" . $review->get_comment($q_id) . "</textarea></td></tr>";
-    if ($start_of_day_ts > $external_review_deadline and $review->get_action($q_id) != 'Not actioned') {
-      echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company') . ": ";
+
+    if ($start_of_day_ts > $external_review_deadline and ($review->get_action($q_id) != 'Not actioned' and $review->get_action($q_id) !== null)) {
+      echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company');
       if ($review->get_action($q_id) == 'Read - actioned') {
         echo '<span style="color:#008000">';
       } else {
         echo '<span style="color:#C00000">';
       }
-      echo $review->get_action($q_id) . "</span></strong><br /><textarea cols=\"80\" rows=\"3\" style=\"font-family:Arial,sans-serif; width:898px\" name=\"extreponse$question_no\">" . $review->get_response($q_id) . "</textarea></td></tr>";
+      echo $review->get_action($q_id) . "</span></strong><br /><textarea cols=\"80\" rows=\"3\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extreponse$question_no\">" . $review->get_response($q_id) . "</textarea></td></tr>";
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n</table>\n";
 
