@@ -56,40 +56,45 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
     $('.highlight').removeClass('highlight');
   }
   
-  function selQ(questionID, lineID, qType, menuID, evt) {
+  function selQ(questionID, lineID, evt) {
     $('#menu2a').hide();
     $('#menu2b').hide();
-    $('#menu2c').hide();
-    $('#menu' + menuID).show();
+    $('#menu2c').show();
 
+    highlight_line(questionID, lineID, evt);
+  }
+  
+  function selL(questionID, lineID, evt) {
+    $('#menu2a').hide();
+    $('#menu2c').hide();
+    $('#menu2b').show();
+
+    highlight_line(questionID, lineID, evt);
+  }
+  
+  function highlight_line(questionID, lineID, evt) {
     if (evt.ctrlKey == false) {
       clearAll();
-      $('#link_' + lineID).addClass('highlight');
+      $('#l' + lineID).addClass('highlight');
       addQID(questionID, true);
     } else {
-      if ($('#link_' + lineID).hasClass('highlight')) {
-        $('#link_' + lineID).removeClass('highlight');
+      if ($('#l' + lineID).hasClass('highlight')) {
+        $('#l' + lineID).removeClass('highlight');
         subQID(questionID);
       } else {
-        $('#link_' + lineID).addClass('highlight');
+        $('#l' + lineID).addClass('highlight');
         addQID(questionID, false);
       }
     }
-    <?php 
-    if (isset($_GET['type']) and $_GET['type'] == '%') {
-      echo "$('#qType').val('%');\n";
-    } else {
-      echo "$('#qType').val(qType);\n";
-    }
-    ?>
+    
   }
   
   function previewQ() {
     notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 	}
 	
-  function editQ() {
-    var url = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&paperID=list:' + $('#qType').val() + '&calling=list';
+  function edit() {
+    var url = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&calling=list';
     <?php 
       if (isset($_GET['team']) and $_GET['team'] != '') {
           echo "url = url + '&team=" . $_GET['team'] . "';\n";
