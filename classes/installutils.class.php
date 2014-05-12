@@ -824,7 +824,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".temp_users TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".textbox_marking TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".textbox_remark TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".textbox_reminders TO '" . $self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".track_changes TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".users TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".users_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
@@ -2889,17 +2888,7 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['textbox_remark'] = <<<QUERY
-        CREATE TABLE `textbox_reminders` (
-          `id` INT NOT NULL AUTO_INCREMENT,
-          `question_id` INT NOT NULL,
-          `text` VARCHAR(255) NOT NULL,
-          `display_order` SMALLINT NOT NULL,
-          PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
-QUERY;
-
-    $this->tableList['textbox_reminders'] = <<<QUERY
+    $this->tableList['track_changes'] = <<<QUERY
         CREATE TABLE `track_changes` (
           `id` int(4) NOT NULL auto_increment,
           `type` varchar(40) default NULL,
