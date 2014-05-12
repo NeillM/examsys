@@ -1999,7 +1999,10 @@ function ql_mouseDragUp(){
 					loc_width = this.labelWidthEffect;
 					loc_height = this.labelHeightEffect;
 				}
-				if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height) == true) dest_box = i;
+				//answer box center within pholderBox
+				if (this.testWithin(this.answerBox[this.drag_box_id][this.drag_box_combo][5]+loc_width/2,this.answerBox[this.drag_box_id][this.drag_box_combo][6]+loc_height/2,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height) == true) dest_box = i;
+				//mouse within pholderBox
+				//if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height) == true) dest_box = i;
 			}
 		}
 		if (this.qType == "menu") dest_box = this.drag_box_id;
