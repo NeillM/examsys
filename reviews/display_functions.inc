@@ -320,6 +320,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
   }
 
+  $textboxes_seen = array();
   // Processing for each stem.
   foreach ($question['options'] as $display_option) {
     $part_id++;
@@ -673,20 +674,23 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
-        $settings = json_decode($question['settings'], true);
-        if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
-          if ($settings['rows'] == 1) {
-            echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $settings['columns'] . "\" value=\"" . $question['correct_fback'] . "\" />";
+        if (!in_array($question_no, $textboxes_seen)) {
+          $textboxes_seen[] = $question_no;
+          $settings = json_decode($question['settings'], true);
+          if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+            if ($settings['rows'] == 1) {
+              echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $settings['columns'] . "\" value=\"" . $question['correct_fback'] . "\" />";
+            } else {
+              echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $question['correct_fback'] . "</textarea>";
+            }
           } else {
-            echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $question['correct_fback'] . "</textarea>";
+            include_once('../include/wysiwyg_editor.inc');
+            echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($settings['columns'] * 8)) . "px; height:" . ($settings['rows'] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
           }
-        } else {
-          include_once('../include/wysiwyg_editor.inc');
-          echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($settings['columns'] * 8)) . "px; height:" . ($settings['rows'] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
-        }
 
-        echo "</blockquote>\n";
-        $marks += $display_option['marks_correct'];
+          echo "</blockquote>\n";
+          $marks += $display_option['marks_correct'];
+        }
         break;
       case 'hotspot':
         echo "<div align=\"left\">";

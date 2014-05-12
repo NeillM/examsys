@@ -319,6 +319,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
 
   $question_no++;
+  $textboxes_seen = array();
 
   $li_set = 0;
   if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
@@ -1003,38 +1004,41 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
-        $settings = json_decode($question['settings'], true);
-        if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-            echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
-            $unanswered = true;
+        if (!in_array($question_no, $textboxes_seen)) {
+          $textboxes_seen[] = $question_no;
+          $settings = json_decode($question['settings'], true);
+          if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+              echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
+              $unanswered = true;
+            } else {
+              $ans = '';
+              if (isset($user_answers[$current_screen][$q_id])) {
+                $ans = $user_answers[$current_screen][$q_id];
+              }
+              echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea></blockquote>\n";
+            }
           } else {
+            include_once('wysiwyg_editor.inc');
             $ans = '';
             if (isset($user_answers[$current_screen][$q_id])) {
               $ans = $user_answers[$current_screen][$q_id];
             }
-            echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea></blockquote>\n";
-          }
-        } else {
-          include_once('wysiwyg_editor.inc');
-          $ans = '';
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $ans = $user_answers[$current_screen][$q_id];
-          }
 
-          $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
-          $textbox_height = ( $settings['rows'] * 28 );
+            $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
+            $textbox_height = ( $settings['rows'] * 28 );
 
-          $background_colour = '';
+            $background_colour = '';
 
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-            $background_colour = 'background-color:red;';
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+              $background_colour = 'background-color:red;';
+            }
+            ?>
+            <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
+            <?php
           }
-          ?>
-          <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
-          <?php
+          $marks += $display_option['marks_correct'];
         }
-        $marks += $display_option['marks_correct'];
         break;
       case 'hotspot':
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
