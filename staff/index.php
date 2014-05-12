@@ -215,7 +215,8 @@ require_once '../include/staff_auth.inc';
   }
   while ($result->fetch()) {
     $reviewed = '';
-    $result2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(reviewed),'%d/%m/%Y %T') AS started FROM review_comments WHERE reviewer = ? AND q_paper = ?");
+    $result2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),'%d/%m/%Y %T') AS started FROM review_comments rc INNER JOIN review_metadata rm ON rc.metadataID = rm.id WHERE reviewerID = ? AND paperID = ?");
+    echo $mysqli->error;
     $result2->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $result2->execute();
     $result2->bind_result($reviewed);
