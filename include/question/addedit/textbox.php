@@ -88,7 +88,7 @@ if($question->get_locked() == '') {
             <tr>
               <th>&nbsp;</th>
               <td colspan="2">
-                <input class="next-option" value="<?php echo $string['addoptions'] ?>" type="button" />
+                <input class="next-option" value="<?php echo $string['addreminders'] ?>" type="button" />
               </td>
             </tr>
           </tbody>

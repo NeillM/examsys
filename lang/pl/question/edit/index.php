@@ -164,6 +164,7 @@ $string['oeditsummary'] = 'Edytuj szczegóły opcji';
 $string['qmetasummary'] = 'Edytuj podstawowe metadane pytania';
 $string['qassessmentsummary'] = 'Edytuj dane oceny pytania';
 $string['addoptions'] = 'Dodaj więcej opcji...';
+$string['addreminders'] = 'Add More Reminders...';
 $string['correctanswer'] = 'Poprawna odpowiedź';
 $string['correctanswers'] = 'Poprawne odpowiedzi';
 $string['correctanswersmsg'] = '(Zastosuj kliknięcie z &lt;CTRL&gt;<br />by zaznaczyć kilka elementów)';

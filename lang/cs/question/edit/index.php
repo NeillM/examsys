@@ -163,6 +163,7 @@ $string['oeditsummary'] = 'Upravit volby úlohy';
 $string['qmetasummary'] = 'Upravit metadata úlohy';
 $string['qassessmentsummary'] = 'Upravit data hodnocení úlohy';
 $string['addoptions'] = 'Přidat další volby...';
+$string['addreminders'] = 'Add More Reminders...';
 $string['correctanswer'] = 'Správná odpověď';
 $string['correctanswers'] = 'Správné odpovědi';
 $string['correctanswersmsg'] = '(K výběru více položek použijte &lt;ctrl&gt; a myš<br />)';

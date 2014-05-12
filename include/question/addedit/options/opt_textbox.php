@@ -39,6 +39,13 @@ $locked = ($dis_class != '');
               <td<?php echo $spaced ?>>
                 <textarea name="option_text<?php echo $index ?>" id="option_text<?php echo $index ?>" cols="90" rows="2" class="form-med-large<?php echo $dis_class ?>"<?php echo $dis_readonly ?>><?php echo $option->get_text() ?></textarea>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
+<?php
+if ($index == 1) {
+?>
+                <input name="option_correct<?php echo $index ?>" value="placeholder" type="hidden" /> 
+<?php
+}
+?>
               </td>
             </tr>
           </tbody>
