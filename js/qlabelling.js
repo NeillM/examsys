@@ -1826,21 +1826,47 @@ function ql_mouseDragDown(e){
 	this.ev = e || window.event;
 	//this.x = e.clientX - this.canv_rect.left;
 	//this.y = e.clientY - this.canv_rect.top;
-	//alert(this.ev.type)
-	if (this.ev.type == 'mousemove') {
+	if (this.ev.type == 'mousedown') {
 		this.canv_rect = this.canvas.getBoundingClientRect();
-		this.loc_lft = this.canv_rect.left;
-		this.loc_top = this.canv_rect.top;
-		this.x = this.ev.clientX - this.loc_lft;
-		this.y = this.ev.clientY - this.loc_top;
+		this.x = this.ev.clientX - this.canv_rect.left;
+		this.y = this.ev.clientY - this.canv_rect.top;
 	}	
-	if (this.ev.type == 'touchmove') {
+	if (this.ev.type == 'touchstart') {
 		this.ev.preventDefault();
 		this.canv_rect = this.canvas.getBoundingClientRect();
-		this.loc_lft = this.canv_rect.left;
-		this.loc_top = this.canv_rect.top;
-		this.x = this.ev.targetTouches[0].pageX - this.loc_lft;
-		this.y = this.ev.targetTouches[0].pageY - this.loc_top;
+		this.x = this.ev.targetTouches[0].pageX - this.canv_rect.left;
+		this.y = this.ev.targetTouches[0].pageY - this.canv_rect.top;
+	
+		for (i=0;i<this.answerBox.length;i++) {
+			for (j=0;j<this.answerBox[i].length;j++) {
+				if (typeof(this.answerBox[i][j])!='undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4] == 0)) {
+					if (this.answerBox[i][j][1] == 'image') {
+						if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.imglabelWidth,this.imglabelHeight) == true) {
+							if (this.drag_box_id == -1 || this.answerBox[i][j][9]!='') {
+								this.drag_box_id = i;
+								this.drag_box_combo = j;
+							}
+						}
+					}
+					if (this.answerBox[i][j][1] == 'text') {
+						if (this.qType != 'menu') {
+							if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) {
+								if (this.drag_box_id == -1 || this.answerBox[i][j][9]!='') {
+									this.drag_box_id = i;
+									this.drag_box_combo = j;
+									}
+							}
+						} else {
+							if (typeof(this.pholderBox[i])!='undefined' && ((this.qmode == 'edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) || (this.qmode!='edit' && this.pholderBox[i][5]>=220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect) == true))) {
+								this.drag_box_id = i;
+								this.drag_pho_id = i;
+								this.drag_box_combo = j;
+							}
+						}
+					}
+				}
+			}
+		}	
 	}	
 	
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
