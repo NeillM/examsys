@@ -28,7 +28,7 @@ Class QuestionTEXTBOX extends QuestionEdit {
 
   protected $columns = 80;
   protected $rows = 4;
-  public $max_options = 1;
+  public $max_options = 10;
   protected $_allow_change_marking_method = false;
 
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');

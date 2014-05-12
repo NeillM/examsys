@@ -274,4 +274,7 @@ $string['withzeros'] = 'z uwzględnieniem zer wiodących';
 $string['enforcedisplay'] = 'Wymuś precyzję w odpowiedziach studenckich';
 $string['includetrailing0'] = 'Uwzględniając zera wiodące';
 $string['notenforced'] = 'Nie wymuszone';
+// Textbox
+$string['reminders'] = 'Reminders';
+$string['reminder_no'] = 'Reminder #%d';
 ?>
