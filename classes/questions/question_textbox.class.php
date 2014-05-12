@@ -33,7 +33,7 @@ Class QuestionTEXTBOX extends QuestionEdit {
   public $max_options = 10;
   protected $_allow_change_marking_method = false;
 
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'bloom', 'status');
   protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
