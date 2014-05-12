@@ -1787,6 +1787,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
         break;
       case 'textbox':
+        $settings = json_decode($paper[$question]['settings'], true);
         if ($paper[$question]['scenario'] != '') {
           echo echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') {
@@ -1808,7 +1809,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         } else {
           $tmp_answer = '';
         }
-        $correct_answers = explode(';', $paper[$question]['correct'][0]);
+        $correct_answers = explode(';', $settings['terms']);
         if ($tmp_display_correct_answer == '1') {
           foreach ($correct_answers as $single_answer) {
             $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);

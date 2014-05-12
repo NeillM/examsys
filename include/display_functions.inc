@@ -1004,7 +1004,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'textbox':
         $settings = json_decode($question['settings'], true);
-        if ($display_option['option_text'] == 'plain') {
+        if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
             echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
             $unanswered = true;
