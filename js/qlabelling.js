@@ -7,6 +7,9 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 		this.canvas.onmouseup   = this.ql_mouseDragUp.bind(this);
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
+		this.canvas.addEventListener("touchstart", this.ql_mouseDragDown.bind(this), false);
+		this.canvas.addEventListener("touchmove", this.ql_mouseDragMove.bind(this), false);
+		this.canvas.addEventListener("touchend", this.ql_mouseDragUp.bind(this), false);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		if (document.addEventListener){ 
       document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false); 
@@ -653,7 +656,13 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			if (i == this.active_box_id && this.qmode == 'answer') {
 				var tmp_height = this.labelHeightEffect*this.menuBox.length;
 				var tmp_trans = this.lineThickness-1;
-				if ((temp_y+tmp_height)>this.canvas.height) tmp_trans = -tmp_height-this.labelHeightEffect;
+
+				too_close = 0;
+				if ((temp_y+tmp_trans+this.labelHeightEffect+tmp_height)>this.canvas.height) too_close=2
+				if ((temp_y+tmp_trans+this.labelHeightEffect)<tmp_height) too_close++;
+				if (too_close==2) tmp_trans = -tmp_height-this.labelHeightEffect;
+				if (too_close==3) tmp_trans = this.canvas.height - tmp_height - temp_y - this.labelHeightEffect - 2;
+				
 				this.context.fillStyle='#fff';
 				this.context.fillRect(temp_x+0.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect,tmp_height);
 				
@@ -1487,7 +1496,14 @@ function ql_mouseDragMove(e){
 		this.x = this.ev.clientX - this.loc_lft;
 		this.y = this.ev.clientY - this.loc_top;
 	}	
-
+	if (this.ev.type == 'touchmove') {
+		this.ev.preventDefault();
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.loc_lft = this.canv_rect.left;
+		this.loc_top = this.canv_rect.top;
+		this.x = this.ev.targetTouches[0].pageX - this.loc_lft;
+		this.y = this.ev.targetTouches[0].pageY - this.loc_top;
+	}	
 	//dragging labels handlers
 	if (typeof(this.active_box_handler)!='undefined' && this.active_box_handler!=-1) {
 		var dim = new Array(this.answerBox[this.active_box_id][this.active_box_combo][5],this.answerBox[this.active_box_id][this.active_box_combo][6],this.answerBox[this.active_box_id][this.active_box_combo][5]+this.labelWidthEffect,this.answerBox[this.active_box_id][this.active_box_combo][6]+this.labelHeightEffect);
@@ -1807,8 +1823,26 @@ function ql_mouseDragMove(e){
 }
 
 function ql_mouseDragDown(e){
-	this.x = e.clientX - this.canv_rect.left;
-	this.y = e.clientY - this.canv_rect.top;
+	this.ev = e || window.event;
+	//this.x = e.clientX - this.canv_rect.left;
+	//this.y = e.clientY - this.canv_rect.top;
+	//alert(this.ev.type)
+	if (this.ev.type == 'mousemove') {
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.loc_lft = this.canv_rect.left;
+		this.loc_top = this.canv_rect.top;
+		this.x = this.ev.clientX - this.loc_lft;
+		this.y = this.ev.clientY - this.loc_top;
+	}	
+	if (this.ev.type == 'touchmove') {
+		this.ev.preventDefault();
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.loc_lft = this.canv_rect.left;
+		this.loc_top = this.canv_rect.top;
+		this.x = this.ev.targetTouches[0].pageX - this.loc_lft;
+		this.y = this.ev.targetTouches[0].pageY - this.loc_top;
+	}	
+	
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 		if (this.drag_box_id>-1 && this.drag_box_combo<99) {
 			this.sub_x = this.x - this.answerBox[this.drag_box_id][this.drag_box_combo][5];
