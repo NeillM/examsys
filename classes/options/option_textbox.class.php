@@ -34,7 +34,8 @@ Class OptionTEXTBOX extends OptionEdit {
    * @return boolean
    */
   public function minimum_fields_exist($data, $files, $index) {
-    return (isset($data['option_text']) and $data['option_text'] != '');
+    $exist = (isset($data["option_text$index"]) and $data["option_text$index"] != '');
+    return $exist;
   }
 }
 
