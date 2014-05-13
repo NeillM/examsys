@@ -137,6 +137,20 @@ HTML;
     $result->close();
   }
 
+  if ($phase == 2) {
+    // Get the usernames of papers to second mark.
+    $second_mark = array();
+
+    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($remark_userID);
+    while ($result->fetch()) {
+      $second_mark[] = $remark_userID;
+    }
+    $result->close();
+  }
+
   $phase_description = '';
   if (!isset($_GET['phase'])) {
     $phase_description .= $string['finalisemarks'];
@@ -148,7 +162,8 @@ HTML;
     $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  $phase_description .= ': <span style="font-weight: normal">' . number_format($candidate_no) . ' ' . $string['candidates'] . '</span>';
+  $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
+  $phase_description .= ': <span style="font-weight: normal">' . number_format($out_of) . ' ' . $string['candidates'] . '</span>';
 
 ?>
 <form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
@@ -158,32 +173,18 @@ HTML;
 <input type="hidden" id="phase" name="phase" value="<?php echo $phase; ?>" />
 <?php
 
-  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
-  echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
-  if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
-  echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
-  echo "</table>\n";
-
-if ($phase == 2) {
-  // Get the usernames of papers to second mark.
-  $second_mark = array();
-
-  $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($remark_userID);
-  while ($result->fetch()) {
-    $second_mark[] = $remark_userID;
-  }
-  $result->close();
+echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
+echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+} elseif (isset($_GET['module']) and $_GET['module'] != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
+echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
+if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
+echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
+echo "</table>\n";
 
 $half_marks = true;
 
@@ -360,14 +361,15 @@ SQL;
       $style = '';
       if (is_numeric($student_mark)) {  // Marked previously so grey out.
          $style = ' marked';
-         $style .= (($answer_no != $candidate_no)) ? ' hide' : '';
+         $style .= (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) ? ' hide' : '';
       } elseif ($answer_shown) {
          $style = ' hide';
       } else {
         $answer_shown = true;
       }
       echo '<div class="student-answer-block' . $style . '">';
-      echo '<h3>' . sprintf($string['mark_progress'], $answer_no, $candidate_no) . "</h3>\n";
+      $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
+      echo '<h3>' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</h3>\n";
 
       echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
       if (count($reminders) > 0) {
@@ -384,7 +386,7 @@ SQL;
       if ($answer_no != 1 and $answer_no <= $candidate_no) {
         echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
       }
-      if ($answer_no != $candidate_no) {
+      if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) {
         echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
       } else {
         echo '<button type="submit" id="finish_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['finish'] . '</button>';
