@@ -401,7 +401,7 @@ SQL;
       $answer_display = '<img src="../artwork/small_yellow_warning_icon.gif" alt="Warning" class="warn_icon" />' .$string['noanswer'];
     }
 
-    return $answer_display . $answer . 'Sed non quam euismod, rutrum mauris quis, iaculis massa. Nulla metus nisl, consectetur sed tincidunt sit amet, adipiscing sit amet lectus. Morbi et nibh ullamcorper lacus adipiscing consectetur. Mauris id augue lobortis, pulvinar urna non, tempus felis. Sed enim ante, gravida id tellus id, sodales rutrum elit. Curabitur commodo, quam in aliquet imperdiet, urna massa tincidunt purus, nec gravida mi orci id ligula. Morbi fringilla luctus molestie.';
+    return $answer_display . $answer;
   }
 ?>
 
