@@ -30,11 +30,12 @@ td {
 	margin-left: -1px;
 }
 .number {
-	vertical-align:top;
+	/*vertical-align:top;
 	text-align:right;
 	border-bottom:1px solid #CBC7B8;
+	padding-right: 6px;*/
 	width: 30px;
-	padding-right: 6px;
+	float: left;
 }
 .header {
 	overflow: auto;
@@ -44,11 +45,27 @@ td {
 	font-size: 90% !important;
 }
 .student_ans {
-	border-bottom: 1px solid #CBC7B8;
+	/*border-bottom: 1px solid #CBC7B8;*/
 	padding-right: 10px;
+	margin-left: 34px;
+	margin-bottom: 12px;
 }
 .student_unans {
 	border-bottom: 1px solid #CBC7B8;
 	padding-right: 10px;
 	color: #C00000;
+}
+.student-answer-block {
+	margin: 0 0 18px 8px;
+}
+
+.reminders {
+	list-style: none;
+	padding-left: 0;
+}
+.reminders li {
+	margin-left: 0;
+}
+.comment-box {
+	width: 95%;
 }

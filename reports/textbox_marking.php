@@ -207,23 +207,30 @@ $half_marks = true;
 	
 	$marks_array = array();
 
-  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, o_id, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($screen, $q_type, $q_id, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
+  $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
   $num_rows = $question_data->num_rows;
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   $q_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
+
+  $reminders = array();
+  
   while ($question_data->fetch()) {
 	  $marks_array[$q_id] = $marks_correct;
 		
     if ($old_screen != $screen) {
       echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
       echo '<tr><td colspan="2"><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div></td></tr>';
+    }
+
+    if ($q_id == $_GET['q_id']) {
+      $reminders[] = array('option_id' => $option_id, 'text' => $option_text);
     }
 
     if ($old_q_id != $q_id) {
@@ -284,13 +291,11 @@ $half_marks = true;
   }
 
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
-
 ?>
 </td></tr></table>
 </div>
 
 <div id="answer_pane">
-<table id="answers" cellpadding="0" cellspacing="0">
 <?php
   $q_id = $_GET['q_id'];
 	
@@ -346,25 +351,44 @@ SQL;
   }
   while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
-      $style = '';
-      if (trim($user_answer) != '') {
-        $answer_no++;
-        if (is_numeric($student_mark)) {  // Marked previously so grey out.
-           $style = ' class="marked"';
-        }
-        echo "<tr id=\"ans_" . $answer_no . "\"" . $style . "><td class=\"number\">$answer_no.</td><td class=\"student_ans\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</td></tr>\n";
-      } else {
-        $answer_no++;
-        if (is_numeric($student_mark)) {  // Marked previously so grey out.
-          $style = ' class="marked"';
-        }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td class=\"student_unans\"><img src=\"../artwork/small_yellow_warning_icon.gif\" alt=\"Warning\" class=\"warn_icon\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, 0, $string) . "</td></tr>\n";
+      if (is_numeric($student_mark)) {  // Marked previously so grey out.
+         $style = ' class="marked"';
       }
+      echo '<div class="student-answer-block">';
+      $style = '';
+      $answer_no++;
+      echo "<div id=\"ans_" . $answer_no . "\"" . $style . "><div class=\"number\">$answer_no.</div><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
+
+      if (count($reminders) > 0) {
+        echo '<ul class="reminders">';
+        foreach($reminders as $reminder) {
+          echo '<li><label><input type="checkbox" id="reminder_' . $answer_no . '_' . $reminder['option_id'] . '" name="reminder_' . $answer_no . '"> ' . $reminder['text'] . '</label></li>';
+        }
+        echo '</ul>' . "\n";
+      }
+      echo '<label for="comment_' . $answer_no . '"><b>' . $string['comments'] . '</b><br /><textarea name="comment_' . $answer_no . '" id="comment_' . $answer_no . '" rows="3" class="comment-box"></textarea>' . "\n";
+
+      if ($answer_no != 1) {
+        echo '<button type="submit" id="prev_' . $answer_no . '">' . $string['previous'] . '</button>';
+      }
+      if ($answer_no != $candidate_no) {
+        echo '<button type="submit" id="next_' . $answer_no . '">' . $string['next'] . '</button>';
+      }
+      echo '</div>' . "\n";
     }
   }
   $result->close();
+
+  function render_user_answer($answer, $string) {
+    $answer = trim($answer);
+    $answer_display = '';
+    if ($answer == '') {
+      $answer_display = '<img src="../artwork/small_yellow_warning_icon.gif" alt="Warning" class="warn_icon" />' .$string['noanswer'];
+    }
+
+    return $answer_display . $answer . 'Sed non quam euismod, rutrum mauris quis, iaculis massa. Nulla metus nisl, consectetur sed tincidunt sit amet, adipiscing sit amet lectus. Morbi et nibh ullamcorper lacus adipiscing consectetur. Mauris id augue lobortis, pulvinar urna non, tempus felis. Sed enim ante, gravida id tellus id, sodales rutrum elit. Curabitur commodo, quam in aliquet imperdiet, urna massa tincidunt purus, nec gravida mi orci id ligula. Morbi fringilla luctus molestie.';
+  }
 ?>
-</table>
 
 </div>
 </form>

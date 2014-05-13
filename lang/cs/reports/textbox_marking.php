@@ -28,4 +28,7 @@ $string['finalisemarks'] = 'Dokončit hodnocení';
 $string['candidates'] = 'Kandidáti';
 $string['screen'] = 'Obrazovka';
 $string['note'] = 'Poznámka';
+$string['comments'] = 'Comments';
+$string['next'] = 'Next';
+$string['previous'] = 'Previous';
 ?>

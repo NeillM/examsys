@@ -28,4 +28,7 @@ $string['finalisemarks'] = 'Ocena końcowa';
 $string['candidates'] = 'kandydatów';
 $string['screen'] = 'Ekran';//ąę
 $string['note'] = 'Notatka';
+$string['comments'] = 'Comments';
+$string['next'] = 'Next';
+$string['previous'] = 'Previous';
 ?>
