@@ -50,13 +50,13 @@ function doSuccess(data) {
     alert(langStrings['saveerror']);
     return false;
   } else {
-    $('#save_message').show().delay( 800 ).slideUp('slow');
+    $('#save_message').show().delay( 800 ).slideUp('slow'); 
   }
 
   if ($('#mark' + id).val() == 'NULL') {
-    $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);
+    $('#ans_' + id).closest('.student-answer-block').removeClass('marked');
   } else {
-    $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);
+    $('#ans_' + id).closest('.student-answer-block').addClass('marked').effect("highlight", {}, 1500);
   }
 
   if (action.indexOf('next') > -1) {
