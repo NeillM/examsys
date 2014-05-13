@@ -49,7 +49,7 @@ if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
 }
 
 function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
-  $html = '<select id="mark' . $id . '" name="mark' . $id . '" class="tbmark"><option value="NULL"></option>';
+  $html = '<select id="mark' . $id . '" name="mark' . $id . '" ><option value="NULL"></option>';
   $inc = 1;
   if ($halfmarks == true) $inc = 0.5;
   for ($i=0; $i<=$marks; $i+=$inc) {
@@ -207,7 +207,7 @@ $half_marks = true;
 	
 	$marks_array = array();
 
-  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, o_id, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
@@ -302,7 +302,7 @@ $half_marks = true;
   if ($paper_type == '0') {
 
     $sql = <<< SQL
-SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark
+SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   FROM (log0 l, log_metadata lm, users u)
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
@@ -313,7 +313,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
   AND lm.started <= ?
 UNION ALL
-SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark
+SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   FROM (log1 l, log_metadata lm, users u)
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
@@ -328,7 +328,7 @@ SQL;
     $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
   } else {
     $sql = <<< SQL
-SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark
+SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
 FROM (log{$paper_type} l, log_metadata lm, users u)
 LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
 WHERE lm.paperID = ?
@@ -345,7 +345,7 @@ SQL;
   $answer_no = 0;
   $result->execute();
   $result->store_result();
-  $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark);
+  $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark, $comments, $reminders_selected);
   if ($result->num_rows == 0) {
     echo "<p>" . $string['nostudents'] . "</p>";
   }
@@ -357,22 +357,24 @@ SQL;
       echo '<div class="student-answer-block">';
       $style = '';
       $answer_no++;
-      echo "<div id=\"ans_" . $answer_no . "\"" . $style . "><div class=\"number\">$answer_no.</div><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
 
+      echo "<div id=\"ans_" . $answer_no . "\"" . $style . "><div class=\"number\">$answer_no.</div><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
       if (count($reminders) > 0) {
+        $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
         foreach($reminders as $reminder) {
-          echo '<li><label><input type="checkbox" id="reminder_' . $answer_no . '_' . $reminder['option_id'] . '" name="reminder_' . $answer_no . '"> ' . $reminder['text'] . '</label></li>';
+          $checked = (in_array($reminder['option_id'], $reminders_selected)) ? ' checked="checked"' : '';
+          echo '<li><label><input type="checkbox" id="reminder_' . $answer_no . '" name="reminder_' . $answer_no . '" value="' . $reminder['option_id'] . '" class="reminder"' . $checked . '> ' . $reminder['text'] . '</label></li>';
         }
         echo '</ul>' . "\n";
       }
-      echo '<label for="comment_' . $answer_no . '"><b>' . $string['comments'] . '</b><br /><textarea name="comment_' . $answer_no . '" id="comment_' . $answer_no . '" rows="3" class="comment-box"></textarea>' . "\n";
+      echo '<label for="comment_' . $answer_no . '"><b>' . $string['comments'] . '</b><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="3" class="comment-box">' . $comments . '</textarea>' . "\n";
 
       if ($answer_no != 1) {
-        echo '<button type="submit" id="prev_' . $answer_no . '">' . $string['previous'] . '</button>';
+        echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
       }
       if ($answer_no != $candidate_no) {
-        echo '<button type="submit" id="next_' . $answer_no . '">' . $string['next'] . '</button>';
+        echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
       }
       echo '</div>' . "\n";
     }

@@ -5,6 +5,7 @@ SELECT o.id_num, o.o_id, o.option_text, o.correct, q.settings
 FROM options o
 INNER JOIN questions q ON o.o_id = q.q_id
 WHERE q_type='textbox'
+AND correct!='placeholder'
 SEL;
 
 $result = $mysqli->prepare($select_sql);

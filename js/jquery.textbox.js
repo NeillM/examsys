@@ -4,15 +4,26 @@ $(function () {
    doError();
  });
 
-  $('.tbmark').change(updateMark);
+  $('.tbmark').click(updateMark);
 });
 
 var id;
 
-function updateMark() {
-  var mark = $(this).val();
-  var name = $(this).attr('name');
-  id = name.replace('mark', '');
+function updateMark(e) {
+  e.preventDefault();
+
+  id = $(this).data('id');
+
+  var group = $(this).closest('.student-answer-block');
+  var reminders = new Array();
+
+  group.find('.reminder:checked').each(function() {
+    reminders.push($(this).val());
+  });
+  reminders = reminders.join('|')
+
+  var mark = $('#mark' + id).val();
+  var comment = $('#comment' + id).val();
 
   $.post('../ajax/reports/save_textbox_marks.php',
     {
@@ -23,7 +34,9 @@ function updateMark() {
       mark: mark,
       phase: $('#phase').val(),
       log: $('#log' + id).val(),
-      user_id: $('#username' + id).val()
+      user_id: $('#username' + id).val(),
+      comments: comment,
+      reminders: reminders
     },
     doSuccess
   ).fail(doError);
