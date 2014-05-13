@@ -85,6 +85,7 @@ HTML;
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/textbox_marking.css" />
+  <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
 	<link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
@@ -296,6 +297,7 @@ $half_marks = true;
 </div>
 
 <div id="answer_pane">
+  <div id="save_message" class="announcement"><?php echo $string['answer_saved'] ?></div>
 <?php
   $q_id = $_GET['q_id'];
 	
@@ -349,16 +351,25 @@ SQL;
   if ($result->num_rows == 0) {
     echo "<p>" . $string['nostudents'] . "</p>";
   }
+
+  $answer_shown = false;
   while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
-      if (is_numeric($student_mark)) {  // Marked previously so grey out.
-         $style = ' class="marked"';
-      }
-      echo '<div class="student-answer-block">';
-      $style = '';
       $answer_no++;
 
-      echo "<div id=\"ans_" . $answer_no . "\"" . $style . "><div class=\"number\">$answer_no.</div><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
+      $style = '';
+      if (is_numeric($student_mark)) {  // Marked previously so grey out.
+         $style = ' marked';
+         $style .= (($answer_no != $candidate_no)) ? ' hide' : '';
+      } elseif ($answer_shown) {
+         $style = ' hide';
+      } else {
+        $answer_shown = true;
+      }
+      echo '<div class="student-answer-block' . $style . '">';
+      echo '<h3>' . sprintf($string['mark_progress'], $answer_no, $candidate_no) . "</h3>\n";
+
+      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
       if (count($reminders) > 0) {
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
@@ -370,11 +381,13 @@ SQL;
       }
       echo '<label for="comment_' . $answer_no . '"><b>' . $string['comments'] . '</b><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="3" class="comment-box">' . $comments . '</textarea>' . "\n";
 
-      if ($answer_no != 1) {
+      if ($answer_no != 1 and $answer_no <= $candidate_no) {
         echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
       }
       if ($answer_no != $candidate_no) {
         echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
+      } else {
+        echo '<button type="submit" id="finish_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['finish'] . '</button>';
       }
       echo '</div>' . "\n";
     }

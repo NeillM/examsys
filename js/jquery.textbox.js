@@ -1,18 +1,21 @@
 $(function () {
- $.ajaxSetup({ timeout: 3000 });
- $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+  $.ajaxSetup({ timeout: 3000 });
+  $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
    doError();
- });
+  });
+
+  $('#save_message').hide();
 
   $('.tbmark').click(updateMark);
 });
 
-var id;
+var id, action;
 
 function updateMark(e) {
   e.preventDefault();
 
   id = $(this).data('id');
+  action = $(this).attr('id');
 
   var group = $(this).closest('.student-answer-block');
   var reminders = new Array();
@@ -46,6 +49,8 @@ function doSuccess(data) {
   if (data != 'OK') {
     alert(langStrings['saveerror']);
     return false;
+  } else {
+    $('#save_message').show().delay( 800 ).slideUp('slow');
   }
 
   if ($('#mark' + id).val() == 'NULL') {
@@ -54,6 +59,13 @@ function doSuccess(data) {
     $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);
   }
 
+  if (action.indexOf('next') > -1) {
+    $('#ans_' + id).closest('.student-answer-block').hide();
+    $('#ans_' + (++id)).closest('.student-answer-block').show();
+  } else if (action.indexOf('prev') > -1) {
+    $('#ans_' + id).closest('.student-answer-block').hide();
+    $('#ans_' + (--id)).closest('.student-answer-block').show();
+  }
 }
 
 function doError() {

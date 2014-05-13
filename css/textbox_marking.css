@@ -29,14 +29,6 @@ td {
 	border-left: 1px solid #808080;
 	margin-left: -1px;
 }
-.number {
-	/*vertical-align:top;
-	text-align:right;
-	border-bottom:1px solid #CBC7B8;
-	padding-right: 6px;*/
-	width: 30px;
-	float: left;
-}
 .header {
 	overflow: auto;
 	position: absolute;
@@ -47,7 +39,6 @@ td {
 .student_ans {
 	/*border-bottom: 1px solid #CBC7B8;*/
 	padding-right: 10px;
-	margin-left: 34px;
 	margin-bottom: 12px;
 }
 .student_unans {
@@ -68,4 +59,10 @@ td {
 }
 .comment-box {
 	width: 95%;
+}
+.hide {
+	display: none;
+}
+#save_message {
+	
 }
