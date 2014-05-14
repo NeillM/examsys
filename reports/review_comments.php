@@ -27,8 +27,10 @@
 require '../include/staff_auth.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
+
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
@@ -42,15 +44,18 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 $type = check_var('type', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
-function list_externals($reviewer_data) {
+function list_externals($reviewer_data, $string) {
   $html = '<table class="reviewer_list" cellspacing="0" cellpadding="4">';
-  $html .= '<thead><tr><th>Reviewers</th><th>Started</th><th>Completed</th><th style="width:60%">General Paper Comments</th></tr></thead>';
+  $html .= '<thead><tr><th>' . $string['reviewers'] . '</th><th>' . $string['started'] . '</th><th>' . $string['completed'] . '</th><th style="width:60%">' . $string['generalpapercomments'] . '</th></tr></thead>';
   foreach ($reviewer_data as $reviewer) {
-    if ($reviewer['started'] == '') $reviewer['started'] = '<span style="color:#C0C0C0">N/A</span>';
-    if ($reviewer['complete'] == '') $reviewer['complete'] = '<span style="color:#C0C0C0">N/A</span>';
+    if ($reviewer['started'] == '') $reviewer['started'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
+    if ($reviewer['complete'] == '') $reviewer['complete'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
     
     $html .= '<tr>';
     $html .= '<td>' . $reviewer['title'] . ' ' . $reviewer['initials'] . ' ' . $reviewer['surname'] . '</td>';
@@ -535,13 +540,22 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 }
 
 // Get some paper properties
+/*
 $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark FROM properties WHERE property_id = ?");
+
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($paper_type, $paper, $marking, $pass_mark);
 $result->fetch();
 $result->close();
+*/
 
+$paper      = $propertyObj->get_paper_title();
+$marking    = $propertyObj->get_marking();
+$paper_type = $propertyObj->get_paper_type();
+$labelcolor = $propertyObj->get_labelcolor();
+$themecolor = $propertyObj->get_themecolor();
+        
 if (!isset($paper)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -636,7 +650,7 @@ $result->close();
     }
 
     function editQ(qid, qno) {
-      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
+      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
     }
   </script>
 </head>
@@ -658,7 +672,7 @@ if (isset($_GET['scrOfY'])) {
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
   echo "<div class=\"page_title\">" . $string[$type . 'report'] . "</div></div>";
 
@@ -675,7 +689,7 @@ if (isset($_GET['scrOfY'])) {
 <br />
 
 <?php
-  echo list_externals($reviewer_data);
+  echo list_externals($reviewer_data, $string);
 ?>
 <br />
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -706,20 +720,16 @@ if (isset($_GET['scrOfY'])) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
+  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
   while ($result->fetch()) {
-    if ($question_no == 0) {
-      $old_labelcolor = $labelcolor;
-      $old_themecolor = $themecolor;
-    }
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
       $question_no++;
       if ($old_q_type == 'info') $question_no--;
-      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std, $reviewer_data, $type, $string, $language);
+      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
       $options_buffer = array();
       $correct_buffer = array();
       if ($old_screen != $screen) {
@@ -780,7 +790,7 @@ if (isset($_GET['scrOfY'])) {
   $result->close();
   $question_no++;
   if ($old_q_type == 'info') $question_no--;
-  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std, $reviewer_data, $type, $string, $language);
+  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
   $mysqli->close();
 ?>
 </table>
