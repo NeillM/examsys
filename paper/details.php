@@ -27,7 +27,7 @@
 // TODO: error handling for AJAX calls
 
 ob_start('ob_gzhandler');
-require '../include/staff_auth.inc';
+require '../include/staff_student_auth.inc';
 require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
@@ -73,6 +73,15 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
 }
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
+  header("location: user_index.php?id=" . $properties->get_crypt_name());
+  exit();
+}
+
+if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+  exit();
+}
 
 if ($properties->get_paper_type() == '4') {		// OSCE
 	require_once '../classes/killer_question.class.php';

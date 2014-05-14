@@ -55,7 +55,7 @@
   while ($result->fetch()) {
     echo "<li style=\"margin-left:-25px; padding-bottom:9px\" class=\"menuitem\"><a ";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
-    echo "href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
+    echo "href=\"./paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
   }
   $result->close();
   echo '</ul>';
