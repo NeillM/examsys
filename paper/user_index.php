@@ -24,20 +24,20 @@
 * @package
 */
 
-require_once './include/staff_student_auth.inc';
-require_once './include/errors.inc';
-require_once './include/paper_security.inc';
+require_once '../include/staff_student_auth.inc';
+require_once '../include/errors.inc';
+require_once '../include/paper_security.inc';
 
-require_once './classes/paperutils.class.php';
-require_once './classes/moduleutils.class.php';
-require_once './classes/logmetadata.class.php';
-require_once './classes/timer.class.php';
-require_once './classes/lab_factory.class.php';
-require_once './classes/lab.class.php';
-require_once './classes/log_extra_time.class.php';
-require_once './classes/log_lab_end_time.class.php';
-require_once './classes/summativetimer.class.php';
-require_once './classes/paperproperties.class.php';
+require_once '../classes/paperutils.class.php';
+require_once '../classes/moduleutils.class.php';
+require_once '../classes/logmetadata.class.php';
+require_once '../classes/timer.class.php';
+require_once '../classes/lab_factory.class.php';
+require_once '../classes/lab.class.php';
+require_once '../classes/log_extra_time.class.php';
+require_once '../classes/log_lab_end_time.class.php';
+require_once '../classes/summativetimer.class.php';
+require_once '../classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -122,7 +122,7 @@ function displayPrevTake($markTotal, $totalRandomMark, $marking_style, $disDate,
   global $total_marks, $low_bandwidth;
 
   if ($low_bandwidth == 0) {
-    echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" class=\"bullet\" alt=\"bullet\" /><a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
+    echo "<tr><td><img src=\"../artwork/bullet_outline.gif\" class=\"bullet\" alt=\"bullet\" /><a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
   } else {
     echo "<tr><td><a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
   }
@@ -153,7 +153,7 @@ if ($userObject->is_special_needs()) {
 $textsize -= 5;
 
 if ($userObject->is_temporary_account()) {
-  $person = '<img src="./artwork/guest_account_16.png" width="16" height="16" alt="Guest User" /> ' . $string['guestaccount'] . ' (' . $userObject->get_temp_title() . ' ' . $userObject->get_temp_surname() . ')';
+  $person = '<img src="../artwork/guest_account_16.png" width="16" height="16" alt="Guest User" /> ' . $string['guestaccount'] . ' (' . $userObject->get_temp_title() . ' ' . $userObject->get_temp_surname() . ')';
 } else {
   $person = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
 }
@@ -287,22 +287,22 @@ if ($exam_duration !== null) {
 
   <title><?php echo $string['startscreen']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="./css/body.css" />
-  <link rel="stylesheet" type="text/css" href="./css/user_index.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/user_index.css" />
   <style type="text/css">
     body { font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
   </style>
 
-  <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="./js/toprightmenu.js"></script>
-  <script type="text/javascript" src="./js/student_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/student_help.js"></script>
   <script language="JavaScript">
   function startPaper() {
 <?php
 	if ($userObject->has_role('External Examiner')) {
-		echo '  var paperURL = "./reviews/start.php?id=' . $_GET['id'] . '";'; // External examiners
+		echo '  var paperURL = "../reviews/start.php?id=' . $_GET['id'] . '";'; // External examiners
 	} else {
-		echo '  var paperURL = "./paper/start.php?id=' . $_GET['id'] . '";';   // Normal staff and students
+		echo '  var paperURL = "../paper/start.php?id=' . $_GET['id'] . '";';   // Normal staff and students
 	}
 	if ($userObject->has_role(array('Staff','Admin','SysAdmin')) and isset($_GET['mode']) and $_GET['mode'] == 'preview') {
 ?>
@@ -322,12 +322,18 @@ if ($exam_duration !== null) {
       exam.focus();
     }
   }
+  
+  $(document).ready(function() {
+    $(document).click(function() {
+      $('#toprightmenu').fadeOut();
+    });
+  });
   </script>
 </head>
 <body>
-<div style="text-align:right; padding-right:2px;"><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
-  require './include/toprightmenu.inc';
+  require '../include/toprightmenu.inc';
 	echo draw_toprightmenu(31);
 ?>
 <br clear="all" />
@@ -350,9 +356,9 @@ if ($textsize > 120) {
   } else {
     $timed_filename = '_timed';
   }
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="./artwork/' . $icon_types[$test_type] . $timed_filename . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
+  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="../artwork/' . $icon_types[$test_type] . $timed_filename . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
   echo "</td><td><span class=\"title\">$paper_title</span>";
-  echo "<div class=\"logout\"><a href=\"logout.php\"><img src=\"./artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"width:100px; padding-right:8px\"><a class=\"logout\" href=\"logout.php\">" . $string['signout'] . "</a></div>";
+  echo "<div class=\"logout\"><a href=\"../logout.php\"><img src=\"../artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"width:100px; padding-right:8px\"><a class=\"logout\" href=\"../logout.php\">" . $string['signout'] . "</a></div>";
   echo "</td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
@@ -364,7 +370,7 @@ if ($textsize > 120) {
       } else {
         echo '7';
       }
-      echo '" style="border-left:1px solid #95AEC8;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="./users/photos/' . $userObject->get_username() . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
+      echo '" style="border-left:1px solid #95AEC8;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="../users/photos/' . $userObject->get_username() . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
     }
   }
   echo '</tr>';
@@ -448,7 +454,7 @@ if ($textsize > 120) {
   }
 
   if ($sound_demo == '1') {
-    echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span class=\"testclip\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"./paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
+    echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span class=\"testclip\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"../paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
     echo "<param name=\"movie\" value=\"./paper/player_mp3_maxi.swf\" />\n";
     echo "<param name=\"FlashVars\" value=\"mp3={$configObject->get('cfg_root_path')}/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
@@ -472,16 +478,10 @@ if ($textsize > 120) {
        $remaining_available = true;
        break;
       case '1':
-       if (have_previously_started($prev_attempts)) {
-         $start_label = $string['restart'];
-       }
        $start_available = is_timedate_ok($paper_start, $paper_end);
        $remaining_available = has_time_remaining($propertyObj, $remaining_time);
        break;
       case '2':
-       if (have_previously_started($prev_attempts)) {
-         $start_label = $string['restart'];
-       }
        $start_available = is_timedate_ok_and_within_15min($paper_start, $paper_end);
        $remaining_available = has_time_remaining($propertyObj, $remaining_time);
        break;
@@ -544,7 +544,7 @@ if ($textsize > 120) {
 					displayPrevTake($log_mark, $total_random_mark, $marking, $log_temp_date, $log_paper_type, $metadataID);
 				} else {
 					if ($low_bandwidth == 0) {
-						echo "<tr><td><img src=\"./artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$log_temp_date</span></td><td>&nbsp;</td></tr>\n";
+						echo "<tr><td><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$log_temp_date</span></td><td>&nbsp;</td></tr>\n";
 					} else {
 						echo "<tr><td><span style=\"color:#808080\">$log_temp_date</span></td><td>&nbsp;</td></tr>\n";
 					}
@@ -563,21 +563,21 @@ if ($textsize > 120) {
 </form>
 
 	<!-- Cache often used scripts and images -->
-	<script src="js/start.js"></script>
-	<script src="js/jquery-1.6.1.min.js" /></script>
-	<script src="js/flash_include.js" /></script>
-	<script src="js/jquery.flash_q.js" /></script>
-	<script src="tools/mee/mee/js/mee_src.js" /></script>
-	<img class="noimg" src="artwork/calc.png" />
-	<img class="noimg" src="artwork/no_save.png" />
-	<img class="noimg" src="artwork/fire_exit.png" />
-	<img class="noimg" src="artwork/title_gradient.png" />
+	<script src="../js/start.js"></script>
+	<script src="../js/jquery-1.6.1.min.js" /></script>
+	<script src="../js/flash_include.js" /></script>
+	<script src="../js/jquery.flash_q.js" /></script>
+	<script src="../tools/mee/mee/js/mee_src.js" /></script>
+	<img class="noimg" src="../artwork/calc.png" />
+	<img class="noimg" src="../artwork/no_save.png" />
+	<img class="noimg" src="../artwork/fire_exit.png" />
+	<img class="noimg" src="../artwork/title_gradient.png" />
 	
-	<script src="js/html5.images.js"></script> 
-	<script src="js/qsharedf.js"></script> 
-	<script src="js/qarea.js"></script> 
-	<script src="js/qhotspot.js"></script> 
-	<script src="js/qlabelling.js"></script> 
-	<img class="noimg" src="js/images/combined.png" />
+	<script src="../js/html5.images.js"></script> 
+	<script src="../js/qsharedf.js"></script> 
+	<script src="../js/qarea.js"></script> 
+	<script src="../js/qhotspot.js"></script> 
+	<script src="../js/qlabelling.js"></script> 
+	<img class="noimg" src="../js/images/combined.png" />
 </body>
 </html>
