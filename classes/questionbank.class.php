@@ -30,6 +30,7 @@ class QuestionBank {
   
   private $db;
   private $idMod;
+  private $module_id;
   private $string;
   private $notice;
   private $bank_types = null;
@@ -42,7 +43,8 @@ class QuestionBank {
     $this->notice = $notice;
   }
   
-  public function get_categories($type) {
+  public function get_categories($type, $module_id='') {
+    $this->module_id = $module_id;
     if ($this->bank_types == null) {
       $this->load_categories($type);
     }
@@ -140,6 +142,9 @@ class QuestionBank {
             'low' => $this->string['low']
         );
         break;
+      case 'outcome':
+        $this->bank_types = $this->get_outcomes();
+        break;
     }
   }
   
@@ -208,6 +213,14 @@ class QuestionBank {
       $this->stats[$type] = $number;
     } 
     $result->close();
+  }
+
+  private function get_outcomes() {
+    // TODO: all years
+    $obs = getObjectives(array($this->idMod => $this->module_id), '2013/14', '', '', $this->db);
+    return array(
+          'test1' => 'Test 1'
+        );
   }
     
 }

@@ -26,6 +26,16 @@
 
 require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
+require_once $cfg_web_root . 'include/errors.inc';
+require_once $cfg_web_root . 'include/mapping.inc';
+
+$module = check_var('module', 'GET', true, false, true);
+
+$add_member = false;
+
+if (!isset($module_details) && $_GET['module'] != '0') {
+  $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+}
 ?>
 <?php echo $configObject->get('cfg_js_root') ?>
 <script src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js" type="text/javascript"></script>
@@ -247,6 +257,9 @@ switch ($_GET['type']) {
   case 'performance':
     $display_type = 'Performance';
     break;
+  case 'outcome':
+    $display_type = 'Learning Outcome';
+    break;
 }
 echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 ?>
@@ -254,7 +267,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 <?php
   echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">&nbsp;show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
-    $subtypes = $qbank->get_categories($type);
+    $subtypes = $qbank->get_categories($type, $module_details['moduleid']);
     
     foreach($subtypes as $id=>$subtype) {
       if ($_GET['type'] == 'all') {
