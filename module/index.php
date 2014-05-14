@@ -128,7 +128,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 <div id="content" class="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a></div>
   <div class="page_title"><?php echo $module_details['moduleid'] ?>: <span style="font-weight:normal"><?php echo $module_details['fullname'] ?></span></div>
 </div>
 <?php

@@ -69,7 +69,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <div id="content" class="content">
 <table class="header">
 <tr>
-  <th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrrorreport'] ?></div></th>
+  <th colspan="4"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrrorreport'] ?></div></th>
 <th colspan="3" style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" onclick="refreshPage();"<?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed']; ?>&nbsp;</div></th>
 </tr>
 <tr><th><div class="col10"><?php echo $string['date']; ?></div></th><th class="vert_div"><?php echo $string['type']; ?></th><th class="vert_div"><?php echo $string['message']; ?></th><th class="vert_div"><?php echo $string['file']; ?></th><th class="vert_div"><?php echo $string['lineno']; ?></th><th class="vert_div"><?php echo $string['user']; ?></th><th class="vert_div"><?php echo $string['userid']; ?></th></tr>

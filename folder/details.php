@@ -196,7 +196,7 @@ $selfenrol = 0;
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <table class="header">
 <?php
-echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+echo '<tr><th><div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if (count($parent_list) > 0) {
   foreach ($parent_list as $parent_id=>$parent_name) {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';

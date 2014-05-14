@@ -65,7 +65,7 @@ $mysqli->close();
         } elseif ($_POST['folder'] != '') {
           echo "self.opener.location.href = '../folder/details.php?folder=" . $_POST['folder'] . "';\n";
         } else {
-          echo "self.opener.location.href = '../staff/index.php';\n";
+          echo "self.opener.location.href = '../index.php';\n";
         }
       ?>
       self.close();

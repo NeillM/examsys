@@ -127,7 +127,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
 
   if (!isset($_POST['submit'])) {
     echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
-    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div>";
     echo "<div class=\"page_title\">" . $string['papersearch'] . "</div>";
     echo "</div>\n";
   }
@@ -135,7 +135,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   if (isset($_POST['submit'])) {
 	  if ($type_problem) {
       echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
-      echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+      echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div>";
       echo "<div class=\"page_title\">" . $string['papersearch'] . "</div>";
       echo "</div>\n";
 
@@ -165,7 +165,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
 
     echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
-    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div>";
     echo "<div class=\"page_title\">" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;<span style=\"font-weight: normal\">" . $_POST['searchterm'] . "</span></div>";
     echo "</div>\n";
 

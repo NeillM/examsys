@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
 <table class="header">
   <tr>
     <th>
-      <div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img
+      <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img
         src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-"/>&nbsp;&nbsp;<a
         href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img
         src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-"/>&nbsp;&nbsp;<a

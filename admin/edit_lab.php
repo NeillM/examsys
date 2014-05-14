@@ -149,7 +149,7 @@ if (isset($_POST['submit'])) {
     if ($ip_no == 0) {
       echo "<div class=\"head_title\">\n";
       echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
-      echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php\">" . $string['administrativetools'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div>\n";
+      echo "<tr><th><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php\">" . $string['administrativetools'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div>\n";
       echo "<div class=\"page_title\">Edit Lab</div>\n";
       echo "</div>\n";
       if (count($bad_addresses) > 0) {
