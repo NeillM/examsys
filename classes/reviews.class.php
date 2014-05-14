@@ -137,11 +137,11 @@ class Review {
     return $paper_comment;
   }
 
-  public function load_reviews($screen) {	
+  public function load_reviews() {	
     $this->reviews_array = array();
 
-    $result = $this->db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND screen = ? AND reviewerID = ?");
-    $result->bind_param('iii', $this->paperID, $screen, $this->reviewerID);
+    $result = $this->db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND reviewerID = ?");
+    $result->bind_param('ii', $this->paperID, $this->reviewerID);
     $result->execute();
     $result->store_result();
     $result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);

@@ -31,6 +31,7 @@ require_once '../include/errors.inc';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/reviews.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
@@ -87,17 +88,18 @@ function displayRank($rank_position, $string) {
 function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_data, $type, $string, $language) {
 
   $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
+  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" class=\"pencil\" src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
   $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
   
-  $image = '';
   foreach ($reviewer_data as $reviewerID=>$rev_data) {
+    $image = '';
     $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
     $comment = '';
-    if (isset($comments_data[$questionID][$reviewerID])) {
-      $comment = nl2br($comments_data[$questionID][$reviewerID]['comment']);
+    
+    if ($comments_data[$reviewerID]->get_category($questionID) !== null) {
+      $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
 
-      switch($comments_data[$questionID][$reviewerID]['category']) {
+      switch($comments_data[$reviewerID]->get_category($questionID)) {
         case 1:
           $image = 'ok_comment.png';
           $status = 'OK';
@@ -121,18 +123,18 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
         $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
         $response = '<span style="color:#808080">' . $string['na'] . '</span>';
       } else {
-        $action = $string[$comments_data[$questionID][$reviewerID]['action']];
-        $response = nl2br($comments_data[$questionID][$reviewerID]['response']);
+        $action = $comments_data[$reviewerID]->get_action($questionID);
+        $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
       }
       $extra = '';
       if ($image != '') {
-        $image = "<img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" />";
+        $image = "<img src=\"../artwork/$image\" class=\"status\" alt=\"$status\" />";
       } else {
         $image = '';
       }
     } else {
       $comment = '';
-      $action = $string['notreviewed'];
+      $action = '';
       $response = '';
       $extra = ' notreviewed';
     }
@@ -540,16 +542,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 }
 
 // Get some paper properties
-/*
-$result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark FROM properties WHERE property_id = ?");
-
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($paper_type, $paper, $marking, $pass_mark);
-$result->fetch();
-$result->close();
-*/
-
 $paper      = $propertyObj->get_paper_title();
 $marking    = $propertyObj->get_marking();
 $paper_type = $propertyObj->get_paper_type();
@@ -600,6 +592,8 @@ $result->close();
     .Minor {}
     .Major {}
     .notreviewed {color:#C00000}
+    .pencil {cursor:pointer; width:16px; height:16px}
+    .status {width:16px; height:16px}
     .screenbrk {
       color:#15428B;
       font-weight:bold;
@@ -695,23 +689,12 @@ if (isset($_GET['scrOfY'])) {
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <?php
 
-	
-  $comments_array = array();
-  
   // Capture reviewer comments data first.
-  $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(started,'%d/%m/%Y %T') AS reviewed, DATE_FORMAT(complete,'%d/%m/%Y %T') AS complete, reviewerID, action, response FROM review_comments, review_metadata WHERE review_metadata.id = review_comments.metadataID AND review_type = ? AND paperID = ?");
-  $result->bind_param('si', $type, $paperID);
-  $result->execute();
-  $result->bind_result($tmp_q_id, $comment, $category, $reviewed, $complete, $reviewerID, $action, $response);
-  while ($result->fetch()) {
-    $comments_array[$tmp_q_id][$reviewerID]['reviewed'] = $reviewed;
-    $comments_array[$tmp_q_id][$reviewerID]['complete'] = $complete;
-    $comments_array[$tmp_q_id][$reviewerID]['comment']  = $comment;
-    $comments_array[$tmp_q_id][$reviewerID]['category'] = $category;
-    $comments_array[$tmp_q_id][$reviewerID]['action']   = $action;
-    $comments_array[$tmp_q_id][$reviewerID]['response'] = $response;
+  $comments_array = array();
+  foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
+    $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
+    $comments_array[$reviewerID]->load_reviews();
   }
-  $result->close();
   
   // Capture the paper makeup.
   $question_no = 0;

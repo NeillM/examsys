@@ -404,7 +404,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $screen_pre_submitted = 0;
 	
 	// Load past reviews from the database.
-	$review->load_reviews($current_screen);
+	$review->load_reviews();
 	
   $old_leadin = '';
   $old_q_type = '';
