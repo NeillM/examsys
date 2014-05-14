@@ -102,8 +102,8 @@ require_once '../include/staff_auth.inc';
 
     <ul>
       <?php
-        $staff_homepage = 'https://' . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/';
-        $summative_homepage = 'https://' . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/paper/';
+        $staff_homepage = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/';
+        $summative_homepage = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/paper/';
       ?>
       <li>New staff homepage: <a href="<?php echo $staff_homepage ?>"><?php echo $staff_homepage ?></a></li>
       <li>Summative exam homepage: <a href="<?php echo $summative_homepage ?>"><?php echo $summative_homepage ?></a></li>
