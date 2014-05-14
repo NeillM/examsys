@@ -34,4 +34,8 @@ $string['noreviewers'] = '<strong>Varování:</strong> Tento dokument nebyl rece
 $string['screen'] = 'Obrazovka';
 $string['papernotfound'] = 'Dokument nebyl nalezen';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';
+$string['reviewers'] = 'Reviewers';
+$string['started'] = 'Started';
+$string['completed'] = 'Completed';
+$string['generalpapercomments'] = 'General Paper Comments';
 ?>

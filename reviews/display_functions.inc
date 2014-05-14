@@ -45,7 +45,7 @@ function display_std($std_value, $inline=1) {
 }
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts) {
-  global $external_review_deadline, $reviews_array, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $string, $language, $configObject;
+  global $external_review_deadline, $review, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $string, $language, $configObject;
 
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
@@ -1103,44 +1103,28 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:700px; font-size:100%\">";
     echo "<tr><td style=\"width:300px; font-weight:bold\">" . sprintf($string['qcomments'], ($question_no + $question_offset)) . "</td>";
     
-    $categories = array('#C5E0B3'=>$string['questionok'], '#FFE599'=>$string['minorproblems'], '#FF9090'=>$string['majorproblems'], '#C0C0C0'=>'Cannot Comment');
+    $categories = array('#C5E0B3'=>$string['questionok'], '#FFE599'=>$string['minorproblems'], '#FF9090'=>$string['majorproblems'], '#C0C0C0'=>$string['cannotcomment']);
 
     $value_no = 0;
     foreach ($categories as $bgcolor => $text) {
       $value_no++;
-      if (isset($reviews_array[$q_id]['category']) and $reviews_array[$q_id]['category'] == $value_no) {
+      if ($review->get_category($q_id) == $value_no) {
         echo "<td style=\"background-color:$bgcolor; text-align:center; width:170px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"$value_no\" checked=\"checked\" />&nbsp;" . $text . "</td>";
       } else {
         echo "<td style=\"background-color:$bgcolor; text-align:center; width:170px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"$value_no\" />&nbsp;" . $text . "</td>";
       }
     }
-    
-    /*
-     if (isset($reviews_array[$q_id]['category'])) {
-     
-      if ($reviews_array[$q_id]['category'] == 1) {
-        echo "<td style=\"background-color:#C5E0B3; color:#375623; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" checked />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFE599; color:#7F6000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FF9090; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
-      } elseif ($reviews_array[$q_id]['category'] == 2) {
-        echo "<td style=\"background-color:#C5E0B3; color:#375623; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFE599; color:#7F6000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" checked />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FF9090; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
-      } else {
-        echo "<td style=\"background-color:#C5E0B3; color:#375623; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFE599; color:#7F6000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FF9090; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" checked />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
-      }
-    } else {
-      echo "<td style=\"background-color:#C5E0B3; color:#375623; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"1\" />&nbsp;" . $string['questionok'] . "</td><td style=\"background-color:#FFE599; color:#7F6000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"2\" />&nbsp;" . $string['minorproblems'] . "</td><td style=\"background-color:#FF9090; color:#800000; text-align:center; width:180px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"3\" />&nbsp;" . $string['majorproblems'] . "</td></tr>\n";
-    }
-     * 
-     */
-    echo "<tr><td colspan=\"5\"><textarea cols=\"80\" rows=\"4\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extcomments$question_no\">";
-    if (isset($reviews_array[$q_id]['comment'])) echo $reviews_array[$q_id]['comment'];
-    echo "</textarea></td></tr>";
-    if ($start_of_day_ts > $external_review_deadline and isset($reviews_array[$q_id]['action']) and $reviews_array[$q_id]['action'] != 'Not actioned') {
-      echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company') . ": ";
-      if ($reviews_array[$q_id]['action'] == 'Read - actioned') {
+
+    echo "<tr><td colspan=\"5\"><textarea cols=\"80\" rows=\"4\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extcomments$question_no\">" . $review->get_comment($q_id) . "</textarea></td></tr>";
+
+    if ($start_of_day_ts > $external_review_deadline and ($review->get_action($q_id) != 'Not actioned' and $review->get_action($q_id) !== null)) {
+      echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company');
+      if ($review->get_action($q_id) == 'Read - actioned') {
         echo '<span style="color:#008000">';
       } else {
         echo '<span style="color:#C00000">';
       }
-      echo $reviews_array[$q_id]['action'] . "</span></strong><br /><textarea cols=\"80\" rows=\"3\" style=\"font-family:Arial,sans-serif; width:898px\" name=\"extreponse$question_no\">" . $reviews_array[$q_id]['response'] . "</textarea></td></tr>";
+      echo $review->get_action($q_id) . "</span></strong><br /><textarea cols=\"80\" rows=\"3\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extreponse$question_no\">" . $review->get_response($q_id) . "</textarea></td></tr>";
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n</table>\n";
 

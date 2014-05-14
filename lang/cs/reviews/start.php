@@ -27,6 +27,7 @@ $string['qcomments'] = 'Úl%d komentáře';
 $string['questionok'] = 'Úloha OK';
 $string['minorproblems'] = 'Nevýznamné/několik problémy';
 $string['majorproblems'] = 'Významné/mnoho problémů';
+$string['cannotcomment'] = 'Cannot Comment';
 $string['deadlineexpired'] = 'Uzávěrka vypršela';
 $string['deadlinepassed'] = 'Zde si můžete prohlédnout test, ale nemůžete měnit své komentáře, termín ukončení ani čas zpřístupnění zkoušky.';
 $string['confirmsubmit'] = 'Ukončil jste všechny úlohy v tomto okně, nebudete se moci vrátit zpět.\nJste si skutečně jisti, že chcete pokračovat?';

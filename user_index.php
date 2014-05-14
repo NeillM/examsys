@@ -314,7 +314,6 @@ if ($exam_duration !== null) {
     if (window.focus) {
       exam.focus();
     }
-    document.getElementById('start').value = '<?php echo $string['restart']; ?>';
   }
 
   function reviewPaper(metadataID, type) {

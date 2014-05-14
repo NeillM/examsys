@@ -33,7 +33,6 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../classes/reviews.class.php';
 
-
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
@@ -94,9 +93,7 @@ if ($userObject->has_role('External Examiner')) {
 }
 
 // Create a new review object.
-$review = new Review($userObject->get_user_ID(), $review_type, $paperID, $mysqli);
-
-
+$review = new Review($paperID, $userObject->get_user_ID(), $review_type, $mysqli);
 
 // Get standards setting data
 if ($marking{0} == '2') {
@@ -151,25 +148,6 @@ function get_max_reference_width($reference_materials) {
 	return $max_ref_width;
 }
 
-function load_reviews($paperID, $screen, $reviewerID, $db) {	
-	$reviews_array = array();
-	
-	$result = $db->prepare("SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND screen = ? AND reviewerID = ?");
-	$result->bind_param('iii', $paperID, $screen, $reviewerID);
-	$result->execute();
-	$result->store_result();
-	$result->bind_result($q_id, $category, $comment, $previous_duration, $action, $response);
-	while ($result->fetch()) {
-		$reviews_array[$q_id]['category'] = $category;
-		$reviews_array[$q_id]['comment'] = $comment;
-		$reviews_array[$q_id]['action'] = $action;
-		$reviews_array[$q_id]['response'] = $response;
-	}
-	$result->close();
-	
-	return $reviews_array;
-}
-
 // Load any reference materials.
 $reference_materials	= load_reference_materials($paperID, $mysqli);
 $max_ref_width 				= get_max_reference_width($reference_materials);
@@ -192,7 +170,7 @@ echo "<html>\n<head>\n";
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 
-<title><?php echo $propertyObj->get_paper_title(); ?></title>
+<title><?php echo $propertyObj->get_paper_title() ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
@@ -369,7 +347,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   <tr><td valign="top">
   <?php
   if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
-    record_comments($paperID, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
+    $review->record_comments($_POST['old_screen']);
   }
 
   echo $top_table_html;
@@ -426,7 +404,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   $screen_pre_submitted = 0;
 	
 	// Load past reviews from the database.
-	$reviews_array = load_reviews($paperID, $current_screen, $userObject->get_user_ID(), $mysqli);
+	$review->load_reviews();
 	
   $old_leadin = '';
   $old_q_type = '';
