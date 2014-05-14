@@ -33,6 +33,7 @@ $string['byquestiontype'] = 'by Question Type';
 $string['bystatus'] = 'by Status';
 $string['bybloom'] = 'by Bloom\'s Taxonomy';
 $string['byperformance'] = 'by Performance';
+$string['byoutcome'] = 'by Learning Outcome';
 $string['search'] = 'Search';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';

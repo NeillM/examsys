@@ -159,7 +159,7 @@ echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['questionb
 echo "<br />\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">" . $string['allquestions'] . "</a></td></tr></table></div>\n";
 
-$bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
+$bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module, $string['byoutcome']=>'../question/bank.php?type=outcome&module=' . $module);
 foreach ($bank_types as $type_name=>$url) {
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a></td></tr></table></div>\n";
 }
