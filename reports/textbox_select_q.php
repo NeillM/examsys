@@ -76,6 +76,21 @@ $paper = $propertyObj->get_paper_title();
     $result->close();
   }
 
+  $second_mark = array();
+  if (isset($_GET['phase']) and $_GET['phase'] == 2) {
+    // Get the usernames of papers to second mark.
+    $second_mark = array();
+
+    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($remark_userID);
+    while ($result->fetch()) {
+      $second_mark[] = $remark_userID;
+    }
+    $result->close();
+  }
+
   $phase_description = '';
   if (!isset($_GET['phase'])) {
     $phase_description .= $string['finalisemarks'];
@@ -88,7 +103,8 @@ $paper = $propertyObj->get_paper_title();
     $tmp_phase = '&phase=2';
   }
 
-  if ($candidate_no > 0) $phase_description .= ": " . number_format($candidate_no) . " " . $string['candidates'];
+  $out_of = ($_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
+  if ($candidate_no > 0) $phase_description .= ": " . number_format($out_of) . " " . $string['candidates'];
 
   echo "<div style=\"font-size:80%\">\n";
   
