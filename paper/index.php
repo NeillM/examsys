@@ -110,7 +110,7 @@ function display_labs($labs, $computer_lab, $string, &$warnings) {
 }
 
 $logger = new Logger($mysqli);
-$logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/');
+$logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/paper/');
 
 $paper_utils = Paper_utils::get_instance();
 $paper_display = array();
