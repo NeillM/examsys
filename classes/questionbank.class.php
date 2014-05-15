@@ -216,11 +216,23 @@ class QuestionBank {
   }
 
   private function get_outcomes() {
+    $outcomes = array();
+
     // TODO: all years
     $obs = getObjectives(array($this->idMod => $this->module_id), '2013/14', '', '', $this->db);
-    return array(
-          'test1' => 'Test 1'
-        );
+
+    if (is_array($obs) and isset($obs[$this->module_id])) {
+      foreach ($obs[$this->module_id] as $session) {
+        if (isset($session['objectives'])) {
+          foreach ($session['objectives'] as $objective) {
+            if (isset($objective['guid'] )) {
+              $outcomes[$objective['guid']] = array('ids' => array($objective['id']), 'label' => $objective['content']);
+            }
+          }
+        }
+      }
+    }
+    return $outcomes;
   }
     
 }

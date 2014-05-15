@@ -159,15 +159,11 @@ if (!isset($module_details) && $_GET['module'] != '0') {
   
   function check_checkboxes() {
     $(".q").hide();
-    $('input[type=checkbox]').each(function () {
-      if ($(this).attr("class") == 'check_type') {
-        q_type = $(this).val();
-        if (this.checked) {
-          $("." + q_type).show();
-          if (!$('#check_locked').attr('checked')) {
-            $("." + q_type + '.locked').hide();
-          }
-        }
+    $('input[type=checkbox].check_type:checked').each(function () {
+      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids');
+      $("." + q_type).show();
+      if (!$('#check_locked').attr('checked')) {
+        $("." + q_type + '.locked').hide();
       }
     });
 
@@ -270,6 +266,8 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
     $subtypes = $qbank->get_categories($type, $module_details['moduleid']);
     
     foreach($subtypes as $id=>$subtype) {
+      $data = '';
+
       if ($_GET['type'] == 'all') {
         $checked = ' checked';
       } elseif (isset($_GET['subtype']) and $_GET['subtype'] == $id) {
@@ -277,8 +275,15 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
       } else {
         $checked = '';
       }
+
+      if ($_GET['type'] == 'outcome') {
+        $ids = $subtype['ids'];
+        $data = ' data-ids="' . implode(',', $ids) . '"';
+
+        $subtype = $subtype['label'];
+      }
       
-      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked/><label for=\"check_$id\">$subtype</lable></div>\n";
+      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\">$subtype</lable></div>\n";
     }
   }
 ?>
