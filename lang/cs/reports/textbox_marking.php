@@ -28,4 +28,10 @@ $string['finalisemarks'] = 'Dokončit hodnocení';
 $string['candidates'] = 'Kandidáti';
 $string['screen'] = 'Obrazovka';
 $string['note'] = 'Poznámka';
+$string['comments'] = 'Comments';
+$string['next'] = 'Next';
+$string['previous'] = 'Previous';
+$string['finish'] = 'Finish';
+$string['mark_progress'] = '%d of %d';
+$string['answer_saved'] = 'Marks saved';
 ?>

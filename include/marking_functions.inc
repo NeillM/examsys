@@ -836,7 +836,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           $saved_response = '';
         }
         $mark = null;
-        $totalpos += $marks_correct;
+        $totalpos = $marks_correct;
         break;
       case 'hotspot':
         $qid = 'q' . $question_no;

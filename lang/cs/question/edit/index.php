@@ -163,6 +163,7 @@ $string['oeditsummary'] = 'Upravit volby úlohy';
 $string['qmetasummary'] = 'Upravit metadata úlohy';
 $string['qassessmentsummary'] = 'Upravit data hodnocení úlohy';
 $string['addoptions'] = 'Přidat další volby...';
+$string['addreminders'] = 'Add More Reminders...';
 $string['correctanswer'] = 'Správná odpověď';
 $string['correctanswers'] = 'Správné odpovědi';
 $string['correctanswersmsg'] = '(K výběru více položek použijte &lt;ctrl&gt; a myš<br />)';
@@ -273,4 +274,7 @@ $string['withzeros'] = 'incl. trailing zeros';	// translate
 $string['enforcedisplay'] = 'Vynutit přesnost studentovi odpovědi';
 $string['includetrailing0'] = 'Including trailing 0s';	// translate
 $string['notenforced'] = 'Nevynuceno';
+// Textbox
+$string['reminders'] = 'Reminders';
+$string['reminder_no'] = 'Reminder #%d';
 ?>

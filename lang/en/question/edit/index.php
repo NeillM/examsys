@@ -164,6 +164,7 @@ $string['oeditsummary'] = 'Edit question options';
 $string['qmetasummary'] = 'Edit basic question metadata';
 $string['qassessmentsummary'] = 'Edit question assessment data';
 $string['addoptions'] = 'Add More Options...';
+$string['addreminders'] = 'Add More Reminders...';
 $string['correctanswer'] = 'Correct Answer';
 $string['correctanswers'] = 'Correct Answers';
 $string['correctanswersmsg'] = '(Use &lt;ctrl&gt; plus mouse<br />to select several items)';
@@ -274,3 +275,7 @@ $string['withzeros'] = 'incl. trailing zeros';
 $string['enforcedisplay'] = 'Enforce precision of student answer';
 $string['includetrailing0'] = 'Including trailing 0s';
 $string['notenforced'] = 'Not enforced';
+// Textbox
+$string['reminders'] = 'Reminders';
+$string['reminder_no'] = 'Reminder #%d';
+

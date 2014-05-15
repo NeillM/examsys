@@ -49,7 +49,7 @@ if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
 }
 
 function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
-  $html = '<select id="mark' . $id . '" name="mark' . $id . '" class="tbmark"><option value="NULL"></option>';
+  $html = '<select id="mark' . $id . '" name="mark' . $id . '" ><option value="NULL"></option>';
   $inc = 1;
   if ($halfmarks == true) $inc = 0.5;
   for ($i=0; $i<=$marks; $i+=$inc) {
@@ -85,6 +85,7 @@ HTML;
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/textbox_marking.css" />
+  <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
 	<link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
@@ -136,6 +137,20 @@ HTML;
     $result->close();
   }
 
+  if ($phase == 2) {
+    // Get the usernames of papers to second mark.
+    $second_mark = array();
+
+    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($remark_userID);
+    while ($result->fetch()) {
+      $second_mark[] = $remark_userID;
+    }
+    $result->close();
+  }
+
   $phase_description = '';
   if (!isset($_GET['phase'])) {
     $phase_description .= $string['finalisemarks'];
@@ -147,7 +162,8 @@ HTML;
     $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
-  $phase_description .= ': <span style="font-weight: normal">' . number_format($candidate_no) . ' ' . $string['candidates'] . '</span>';
+  $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
+  $phase_description .= ': <span style="font-weight: normal">' . number_format($out_of) . ' ' . $string['candidates'] . '</span>';
 
 ?>
 <form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
@@ -157,32 +173,18 @@ HTML;
 <input type="hidden" id="phase" name="phase" value="<?php echo $phase; ?>" />
 <?php
 
-  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
-  echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
-  if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
-  echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
-  echo "</table>\n";
-
-if ($phase == 2) {
-  // Get the usernames of papers to second mark.
-  $second_mark = array();
-
-  $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($remark_userID);
-  while ($result->fetch()) {
-    $second_mark[] = $remark_userID;
-  }
-  $result->close();
+echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
+echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+} elseif (isset($_GET['module']) and $_GET['module'] != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
+echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
+if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
+echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
+echo "</table>\n";
 
 $half_marks = true;
 
@@ -207,23 +209,30 @@ $half_marks = true;
 	
 	$marks_array = array();
 
-  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($screen, $q_type, $q_id, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
+  $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
   $num_rows = $question_data->num_rows;
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   $q_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
+
+  $reminders = array();
+  
   while ($question_data->fetch()) {
 	  $marks_array[$q_id] = $marks_correct;
 		
     if ($old_screen != $screen) {
       echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
       echo '<tr><td colspan="2"><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div></td></tr>';
+    }
+
+    if ($q_id == $_GET['q_id']) {
+      $reminders[] = array('option_id' => $option_id, 'text' => $option_text);
     }
 
     if ($old_q_id != $q_id) {
@@ -284,20 +293,19 @@ $half_marks = true;
   }
 
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
-
 ?>
 </td></tr></table>
 </div>
 
 <div id="answer_pane">
-<table id="answers" cellpadding="0" cellspacing="0">
+  <div id="save_message" class="announcement"><?php echo $string['answer_saved'] ?></div>
 <?php
   $q_id = $_GET['q_id'];
 	
   if ($paper_type == '0') {
 
     $sql = <<< SQL
-SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark
+SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   FROM (log0 l, log_metadata lm, users u)
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
@@ -308,7 +316,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
   AND lm.started <= ?
 UNION ALL
-SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark
+SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   FROM (log1 l, log_metadata lm, users u)
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
@@ -323,7 +331,7 @@ SQL;
     $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
   } else {
     $sql = <<< SQL
-SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark
+SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
 FROM (log{$paper_type} l, log_metadata lm, users u)
 LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
 WHERE lm.paperID = ?
@@ -340,31 +348,64 @@ SQL;
   $answer_no = 0;
   $result->execute();
   $result->store_result();
-  $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark);
+  $result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark, $comments, $reminders_selected);
   if ($result->num_rows == 0) {
     echo "<p>" . $string['nostudents'] . "</p>";
   }
+
+  $answer_shown = false;
   while ($result->fetch()) {
     if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
+      $answer_no++;
+
       $style = '';
-      if (trim($user_answer) != '') {
-        $answer_no++;
-        if (is_numeric($student_mark)) {  // Marked previously so grey out.
-           $style = ' class="marked"';
-        }
-        echo "<tr id=\"ans_" . $answer_no . "\"" . $style . "><td class=\"number\">$answer_no.</td><td class=\"student_ans\">" . nl2br($user_answer) . "<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</td></tr>\n";
+      if (is_numeric($student_mark)) {  // Marked previously so grey out.
+         $style = ' marked';
+         $style .= (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) ? ' hide' : '';
+      } elseif ($answer_shown) {
+         $style = ' hide';
       } else {
-        $answer_no++;
-        if (is_numeric($student_mark)) {  // Marked previously so grey out.
-          $style = ' class="marked"';
-        }
-        echo "<tr" . $style . "><td style=\"vertical-align:top; text-align:right; border-bottom:1px solid #CBC7B8\">$answer_no.</td><td class=\"student_unans\"><img src=\"../artwork/small_yellow_warning_icon.gif\" alt=\"Warning\" class=\"warn_icon\" />".$string['noanswer']."<br />" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, 0, $string) . "</td></tr>\n";
+        $answer_shown = true;
       }
+      echo '<div class="student-answer-block' . $style . '">';
+      $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
+      echo '<h3>' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</h3>\n";
+
+      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
+      if (count($reminders) > 0) {
+        $reminders_selected = explode('|', $reminders_selected);
+        echo '<ul class="reminders">';
+        foreach($reminders as $reminder) {
+          $checked = (in_array($reminder['option_id'], $reminders_selected)) ? ' checked="checked"' : '';
+          echo '<li><label><input type="checkbox" id="reminder_' . $answer_no . '" name="reminder_' . $answer_no . '" value="' . $reminder['option_id'] . '" class="reminder"' . $checked . '> ' . $reminder['text'] . '</label></li>';
+        }
+        echo '</ul>' . "\n";
+      }
+      echo '<label for="comment_' . $answer_no . '"><b>' . $string['comments'] . '</b><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="3" class="comment-box">' . $comments . '</textarea>' . "\n";
+
+      if ($answer_no != 1 and $answer_no <= $candidate_no) {
+        echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
+      }
+      if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) {
+        echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
+      } else {
+        echo '<button type="submit" id="finish_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['finish'] . '</button>';
+      }
+      echo '</div>' . "\n";
     }
   }
   $result->close();
+
+  function render_user_answer($answer, $string) {
+    $answer = trim($answer);
+    $answer_display = '';
+    if ($answer == '') {
+      $answer_display = '<img src="../artwork/small_yellow_warning_icon.gif" alt="Warning" class="warn_icon" />' .$string['noanswer'];
+    }
+
+    return $answer_display . $answer;
+  }
 ?>
-</table>
 
 </div>
 </form>
