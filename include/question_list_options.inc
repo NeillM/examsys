@@ -178,6 +178,20 @@ if (!isset($module_details) && $_GET['module'] != '0') {
     $('#list').css('height', winH + 'px');
   }
 
+  var hide_unmapped_obs = function() {
+    $('.check_type').parent().hide();
+    $('.check_type').each(function() {
+      var ids = $(this).data('ids');
+      ids = ids.toString().split('|');
+      for (var i = 0; i < ids.length; i++) {
+        if ($('.q.' + ids[i]).length > 0) {
+          $(this).parent().show();
+          break;
+        }
+      };
+    });
+  }
+
   $(document).ready(function() {
     $(".check_type").click(function() {
       check_checkboxes();
@@ -186,7 +200,14 @@ if (!isset($module_details) && $_GET['module'] != '0') {
     $("#check_locked").click(function() {
       check_checkboxes();
     });
-    
+
+<?php
+if ($_GET['type'] == 'outcome') {
+?>
+    hide_unmapped_obs();
+<?php
+}
+?> 
     check_checkboxes();
     resizeList();
       
