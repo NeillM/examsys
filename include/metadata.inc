@@ -146,7 +146,7 @@ META;
           }
 
           $checked = $on = '';
-          if(in_array($keyword['keyword_id'], $question_keywords)) {
+          if (in_array($keyword['keyword_id'], $question_keywords)) {
             $checked = ' checked="checked"';
             $on = ' on';
           }

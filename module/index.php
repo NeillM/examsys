@@ -88,7 +88,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
     }
 
     function newQuestion() {
-      notice = window.open("../question/new.php?module=<?php echo $module ?>","question","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice = window.open("../question/new.php?module=<?php echo $module ?>","question","width=800,height=500,left="+(screen.width/2-400)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }

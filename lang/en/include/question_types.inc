@@ -50,4 +50,5 @@ $string['mean'] = 'Mean';
 $string['highest'] = 'Highest';
 $string['high'] = 'High';
 $string['intermediate'] = 'Intermediate';
-$string['low'] = 'Low';?>
+$string['low'] = 'Low';
+?>
