@@ -2,7 +2,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 
 	this.canvas = document.getElementById('canvas'+num);
 	this.canv_rect = this.canvas.getBoundingClientRect();
-  
+    
 	if (this.canvas && this.canvas.getContext){
 		this.canvas.onmouseup   = this.ql_mouseDragUp.bind(this);
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
@@ -87,7 +87,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			}
 		}
 
-		this.currentColours[2]	= existingInfo[4];	                        // text colour
+  	this.currentColours[2]	= existingInfo[4];	                        // text colour
 		this.labelWidth			    = Number(existingInfo[5]);					        // text label width
 		this.labelWidthEffect   = this.labelWidth;
 		this.labelHeight			  = Number(existingInfo[6]); 					        // text label height
