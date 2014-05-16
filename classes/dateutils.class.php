@@ -154,6 +154,52 @@ Class date_utils {
     
     return $html;
   }
+
+  /**
+   * Get the first academic year for which there are papers
+   * @param  mysqli $db DB connection
+   * @return string   The first academic year or current year if no records found
+   */
+  public static function get_start_year($db) {
+    $result = $db->prepare("SELECT min(calendar_year) FROM properties WHERE calendar_year IS NOT NULL AND calendar_year != ''");
+    $result->execute();
+    $result->bind_result($start_year);
+    $result->store_result();
+    $result->fetch();
+    echo $result->error;
+    if ($result->num_rows == 0) {
+      $start_year = self::get_current_academic_year();
+    }
+    $result->close();
+
+    return $start_year;
+  }
+
+  public static function get_all_academic_years($db) {
+    $start_ac_year = self::get_start_year($db);
+    $end_ac_year = self::get_current_academic_year();
+
+    if ($start_ac_year == $end_ac_year) {
+      return array('x' . $start_ac_year);
+    }
+
+    $year_parts = explode('/', $start_ac_year);
+    $start_year = $year_parts[0];
+    $year_sub = $year_parts[1];
+
+    $end_year_parts = explode('/', $end_ac_year);
+    $end_year = $end_year_parts[0];
+
+    $years = array();
+
+    do {
+      $years[] = $start_year . '/' . sprintf('%02d', $year_sub);
+      $start_year++;
+      $year_sub = ($year_sub + 1) % 100;
+    } while ($start_year < $end_year);
+
+    return $years;
+  }
 }
 
 ?>

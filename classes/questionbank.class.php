@@ -25,6 +25,7 @@
 */
 
 require_once '../classes/question_status.class.php';
+require_once $cfg_web_root . 'classes/dateutils.class.php';
 
 class QuestionBank {
   
@@ -218,22 +219,30 @@ class QuestionBank {
   private function get_outcomes() {
     $outcomes = array();
 
-    // TODO: all years
-    $obs = getObjectives(array($this->idMod => $this->module_id), '2013/14', '', '', $this->db);
+    // TODO: What about the NLE???
+    // $all_years = date_utils::get_all_academic_years($this->db));
+    $all_years = array('2012/13', '2013/14');
 
-    if (is_array($obs) and isset($obs[$this->module_id])) {
-      foreach ($obs[$this->module_id] as $session) {
-        if (isset($session['objectives'])) {
-          foreach ($session['objectives'] as $objective) {
-            if (isset($objective['guid'] )) {
-              $outcomes[$objective['guid']] = array('ids' => array($objective['id']), 'label' => $objective['content']);
+    foreach ($all_years as $ac_year) {
+      $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+
+      if (is_array($obs) and isset($obs[$this->module_id])) {
+        foreach ($obs[$this->module_id] as $session) {
+          if (isset($session['objectives'])) {
+            foreach ($session['objectives'] as $objective) {
+              if (isset($objective['guid'] )) {
+                // Build list of IDs but use the latest text
+                $ids = (isset($outcomes[$objective['guid']])) ? $outcomes[$objective['guid']]['ids'] : array();
+                $ids[] = $objective['id'];
+                $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => $objective['content']);
+              }
             }
           }
         }
       }
     }
+
     return $outcomes;
   }
-    
 }
 ?>
