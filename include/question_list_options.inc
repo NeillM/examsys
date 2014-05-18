@@ -160,7 +160,7 @@ if (!isset($module_details) && $_GET['module'] != '0') {
   function check_checkboxes() {
     $(".q").hide();
     $('input[type=checkbox].check_type:checked').each(function () {
-      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids');
+      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').replace(',', ',.');
       $("." + q_type).show();
       if (!$('#check_locked').attr('checked')) {
         $("." + q_type + '.locked').hide();
@@ -182,7 +182,7 @@ if (!isset($module_details) && $_GET['module'] != '0') {
     $('.check_type').parent().hide();
     $('.check_type').each(function() {
       var ids = $(this).data('ids');
-      ids = ids.toString().split('|');
+      ids = ids.toString().split(',');
       for (var i = 0; i < ids.length; i++) {
         if ($('.q.' + ids[i]).length > 0) {
           $(this).parent().show();
