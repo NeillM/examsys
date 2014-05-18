@@ -218,10 +218,14 @@ class QuestionBank {
 
   private function get_outcomes() {
     $outcomes = array();
+    $vle_api_cache = array();
 
-    // TODO: What about the NLE???
-    // $all_years = date_utils::get_all_academic_years($this->db));
-    $all_years = array('2012/13', '2013/14');
+    // Get the VLE API we're using currently
+    $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+    $vle = CMFactory::GetCMAPI($vle_api_data['api']);
+
+    // Get years for which there are mappings for the current mapping source
+    $all_years = $vle->getYearsForModules(array($this->idMod => $this->module_id), $this->db);
 
     foreach ($all_years as $ac_year) {
       $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);

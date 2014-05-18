@@ -166,7 +166,6 @@ Class date_utils {
     $result->bind_result($start_year);
     $result->store_result();
     $result->fetch();
-    echo $result->error;
     if ($result->num_rows == 0) {
       $start_year = self::get_current_academic_year();
     }
