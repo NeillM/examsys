@@ -28,4 +28,10 @@ $string['finalisemarks'] = 'Finalise Marks';
 $string['candidates'] = 'Candidates';
 $string['screen'] = 'Screen';
 $string['note'] = 'Note';
+$string['comments'] = 'Comments';
+$string['next'] = 'Next &gt;';
+$string['previous'] = '&lt; Previous';
+$string['finish'] = 'Finish';
+$string['mark_progress'] = 'Student %d of %d';
+$string['answer_saved'] = 'Marks saved';
 ?>

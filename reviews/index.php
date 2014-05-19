@@ -90,8 +90,8 @@ require_once '../classes/paperutils.class.php';
     $restartdate = '';
     $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
     
-    echo "<tr><td align=\"center\"><a href=\"../user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
-    echo "  <td><a href=\"../user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
+    echo "<tr><td align=\"center\"><a href=\"../paper/user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
+    echo "  <td><a href=\"../paper/user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if ($start_of_day_ts > $external_review_deadline) {
       printf($string['expired'], $configObject->get('cfg_company'));
     } else {

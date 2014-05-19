@@ -165,8 +165,8 @@ if (!$lti->isInstructor()) {
     }
 
     $_SESSION['lti']['paperlink'] = $returned[0];
-    header("location: ../user_index.php?id=" . $returned[0]);
-    echo "Please click <a href='../user_index.php?id=" . $returned[0] . ".>here</a> to continue";
+    header("location: ../paper/user_index.php?id=" . $returned[0]);
+    echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
     exit();
 
   }
@@ -193,8 +193,8 @@ if (!$lti->isInstructor()) {
 
     if (!$lti_i::allow_staff_edit_link()) {
       $_SESSION['lti']['paperlink'] = $returned[0];
-      header("location: ../user_index.php?id=" . $returned[0]);
-      echo "Please click <a href='../user_index.php?id=" . $returned[0] . ".>here</a> to continue";
+      header("location: ../paper/user_index.php?id=" . $returned[0]);
+      echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
       exit();
     } else {
       // allow editing of the stored link

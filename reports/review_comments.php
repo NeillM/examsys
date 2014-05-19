@@ -147,7 +147,7 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
   return $html;
 }
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language) {
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language) {
   $configObject = Config::get_instance();
 
   $cfg_root_path = $configObject->get('cfg_root_path');
@@ -438,7 +438,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         break;
       case 'textbox':
-        $correct_answers = explode(';', $correct);
+        $settings = json_decode($settings, true);
+        $correct_answers = explode(';', $settings['terms']);
         foreach ($correct_answers as $single_answer) {
           $answer_count[$single_answer] = 0;
         }
@@ -660,7 +661,7 @@ if (isset($_GET['scrOfY'])) {
 <div class="head_title" style="font-size:90%">
 <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
@@ -703,16 +704,16 @@ if (isset($_GET['scrOfY'])) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
+  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std, $settings);
   while ($result->fetch()) {
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
       $question_no++;
       if ($old_q_type == 'info') $question_no--;
-      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std, $reviewer_data, $type, $string, $language);
       $options_buffer = array();
       $correct_buffer = array();
       if ($old_screen != $screen) {
@@ -765,6 +766,7 @@ if (isset($_GET['scrOfY'])) {
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
     $old_correct = $correct;
+    $old_settings = $settings;
     $old_display_method = $display_method;
     $old_score_method = $score_method;
     $old_std = $std;
@@ -773,7 +775,7 @@ if (isset($_GET['scrOfY'])) {
   $result->close();
   $question_no++;
   if ($old_q_type == 'info') $question_no--;
-  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std, $reviewer_data, $type, $string, $language);
   $mysqli->close();
 ?>
 </table>

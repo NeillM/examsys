@@ -336,7 +336,7 @@ if (!$userObject->has_role('Student')) {
               $script_name = '../paper/feedback.php?id=' . $paper['crypt_name'];
             }
           } else {
-            $script_name = '../user_index.php?id=' . $paper['crypt_name'];
+            $script_name = '../paper/user_index.php?id=' . $paper['crypt_name'];
           }
 ?>
 			  <div class="file">

@@ -319,6 +319,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
 
   $question_no++;
+  $textboxes_seen = array();
 
   $li_set = 0;
   if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
@@ -1003,38 +1004,41 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
-        $settings = json_decode($question['settings'], true);
-        if ($display_option['option_text'] == 'plain') {
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-            echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
-            $unanswered = true;
+        if (!in_array($question_no, $textboxes_seen)) {
+          $textboxes_seen[] = $question_no;
+          $settings = json_decode($question['settings'], true);
+          if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+              echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
+              $unanswered = true;
+            } else {
+              $ans = '';
+              if (isset($user_answers[$current_screen][$q_id])) {
+                $ans = $user_answers[$current_screen][$q_id];
+              }
+              echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea></blockquote>\n";
+            }
           } else {
+            include_once('wysiwyg_editor.inc');
             $ans = '';
             if (isset($user_answers[$current_screen][$q_id])) {
               $ans = $user_answers[$current_screen][$q_id];
             }
-            echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea></blockquote>\n";
-          }
-        } else {
-          include_once('wysiwyg_editor.inc');
-          $ans = '';
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $ans = $user_answers[$current_screen][$q_id];
-          }
 
-          $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
-          $textbox_height = ( $settings['rows'] * 28 );
+            $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
+            $textbox_height = ( $settings['rows'] * 28 );
 
-          $background_colour = '';
+            $background_colour = '';
 
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-            $background_colour = 'background-color:red;';
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+              $background_colour = 'background-color:red;';
+            }
+            ?>
+            <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
+            <?php
           }
-          ?>
-          <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
-          <?php
+          $marks += $display_option['marks_correct'];
         }
-        $marks += $display_option['marks_correct'];
         break;
       case 'hotspot':
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
@@ -1096,9 +1100,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $max_col2 = 0;
         $tmp_first_split = explode(';', $question['options'][0]['correct']);
         $tmp_second_split = explode('|', $tmp_first_split[11]);
+        $label_width = $tmp_first_split[5];
+        $label_height = $tmp_first_split[6];
+        $hyphen = false;
         foreach ($tmp_second_split as $ind_label) {
           $label_parts = explode('$', $ind_label);
           if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+            if (mb_strstr($label_parts[4], '-') !== false) $hyphen = true;
             $tmp_labels++;
             if ($label_parts[2] > 219) $marks += $display_option['marks_correct'];
             if ($label_parts[0] < 10) {
@@ -1114,9 +1122,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         if ($question['score_method'] == 'Mark per Question') {
           $marks = $display_option['marks_correct'];
         }
-
-        $tmp_height = $question['q_media_height'];
-        if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
+        if (($label_width < 80 and $hyphen) or ($label_width < 104 and !$hyphen)) {    // Two columns
+          $computed_height = round(($label_height + 6) * ceil($tmp_labels / 2)) + 10;
+          $tmp_height = max($question['q_media_height'], $computed_height);
+        } else {                    // Single column
+          $computed_height = round(($label_height + 6) * $tmp_labels) + 10;
+          $tmp_height = max($question['q_media_height'], $computed_height);
+        }
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
           $unanswered = true;
@@ -1124,12 +1136,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_correct = trim($question['options'][0]['correct']);
         $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
   ?>
-			<div align="left" >
+			<div align="left">
 			<?php
 			if ($configObject->get('cfg_interactive_qs') == 'html5') {
 				//<!-- ======================== HTML5 part include disp ================= -->
-				echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
-				echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+				echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
+				echo "<br /><div id=\"canvasbox\"></div>\n";
 				echo "<script language='JavaScript' type='text/javascript'>\n";
 				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 				if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);

@@ -26,17 +26,15 @@ $num_options = count($question->options);
 $columns = range(10, 120, 10);
 $rows = range(1, 15);
 $editors = array('plain' => $string['plaintext'], 'WYSIWYG' => $string['wysiwyg']);
+$editor = $question->get_editor();
+$terms = $question->get_terms();
 
 if (count($question->options) > 0) {
   $option = reset($question->options);
   $marks_correct = $option->get_marks_correct();
-  $terms = $option->get_correct();
-  $editor = $option->get_text();
   $option_id = $option->id;
 } else {
   $marks_correct = 1;
-  $terms = '';
-  $editor = 'plain';
   $option_id = -1;
 }
 ?>
@@ -58,7 +56,7 @@ echo ViewHelper::render_options($rows, $question->get_rows(), 3, false, '', '', 
 ?>
                 </select>
                 <label for="editor" class="heavy"><?php echo $string['editor'] ?></label>
-                <select id="option_text" name="option_text">
+                <select id="editor" name="editor">
 <?php 
 echo ViewHelper::render_options($editors, $editor, 3);
 ?>
@@ -71,6 +69,34 @@ require_once 'detail_parts/details_marking.php';
 					</tbody>
 				</table>
 
+        <table id="q-options" class="form" summary="<?php echo $string['reminders'] ?>">
+<?php
+$index = 1;
+foreach ($question->options as $o_id => $option) {
+  include 'options/opt_textbox.php';
+  $index++;
+}
+
+for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
+  $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
+  include 'options/opt_textbox.php';
+}
+
+if($question->get_locked() == '') {
+?>
+          <tbody class="add-option-holder">
+            <tr>
+              <th>&nbsp;</th>
+              <td colspan="2">
+                <input class="next-option" value="<?php echo $string['addreminders'] ?>" type="button" />
+              </td>
+            </tr>
+          </tbody>
+<?php
+}
+?>
+        </table>
+
         <div class="form">
           <h2 class="midblue_header"><?php echo $string['assessmentdata'] ?></h2>
         </div>
@@ -80,8 +106,7 @@ require_once 'detail_parts/details_marking.php';
             <tr>
               <th><label for="terms"><?php echo $string['terms'] ?></label><br /><span class="note"><?php echo $string['termsmsg'] ?></span></th>
               <td>
-                <textarea id="option_correct" name="option_correct" cols="100" rows="3" class="form-large"<?php echo $allow_change_method ?>><?php echo $terms ?></textarea>
-                <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
+                <textarea id="terms" name="terms" cols="100" rows="3" class="form-large"<?php echo $allow_change_method ?>><?php echo $terms ?></textarea>
               </td>
             </tr>
           </tbody>

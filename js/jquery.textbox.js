@@ -1,18 +1,32 @@
 $(function () {
- $.ajaxSetup({ timeout: 3000 });
- $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+  $.ajaxSetup({ timeout: 3000 });
+  $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
    doError();
- });
+  });
 
-  $('.tbmark').change(updateMark);
+  $('#save_message').hide();
+
+  $('.tbmark').click(updateMark);
 });
 
-var id;
+var id, action;
 
-function updateMark() {
-  var mark = $(this).val();
-  var name = $(this).attr('name');
-  id = name.replace('mark', '');
+function updateMark(e) {
+  e.preventDefault();
+
+  id = $(this).data('id');
+  action = $(this).attr('id');
+
+  var group = $(this).closest('.student-answer-block');
+  var reminders = new Array();
+
+  group.find('.reminder:checked').each(function() {
+    reminders.push($(this).val());
+  });
+  reminders = reminders.join('|')
+
+  var mark = $('#mark' + id).val();
+  var comment = $('#comment' + id).val();
 
   $.post('../ajax/reports/save_textbox_marks.php',
     {
@@ -23,7 +37,9 @@ function updateMark() {
       mark: mark,
       phase: $('#phase').val(),
       log: $('#log' + id).val(),
-      user_id: $('#username' + id).val()
+      user_id: $('#username' + id).val(),
+      comments: comment,
+      reminders: reminders
     },
     doSuccess
   ).fail(doError);
@@ -33,14 +49,23 @@ function doSuccess(data) {
   if (data != 'OK') {
     alert(langStrings['saveerror']);
     return false;
+  } else {
+    $('#save_message').show().delay( 800 ).slideUp('slow'); 
   }
 
   if ($('#mark' + id).val() == 'NULL') {
-    $('#ans_' + id).removeClass('marked').effect("highlight", {}, 1500);
+    $('#ans_' + id).closest('.student-answer-block').removeClass('marked');
   } else {
-    $('#ans_' + id).addClass('marked').effect("highlight", {}, 1500);
+    $('#ans_' + id).closest('.student-answer-block').addClass('marked');
   }
 
+  if (action.indexOf('next') > -1) {
+    $('#ans_' + id).closest('.student-answer-block').hide();
+    $('#ans_' + (++id)).closest('.student-answer-block').show();
+  } else if (action.indexOf('prev') > -1) {
+    $('#ans_' + id).closest('.student-answer-block').hide();
+    $('#ans_' + (--id)).closest('.student-answer-block').show();
+  }
 }
 
 function doError() {

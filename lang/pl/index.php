@@ -14,40 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['noexamsfound'] = 'Rogō nie odnalazło żadnego egzaminu';
-$string['exams'] = 'Egzaminy';
-$string['staffmangscreens'] = 'Strony zarządzania dla kadry';
-$string['note1'] = '<strong>Uwaga:</strong> To jest ekran egzaminów końcowych dla studentów, czy potrzebujesz';
-$string['unknownIp'] = '(nieznany adres)';
-$string['mostLikely'] = 'Przyczyną jest prawdopodobnie niespełnienie wymogów bezpieczeństwa:';
-$string['IPaddress'] = 'Adresy IP';
-$string['Time/Date'] = 'Czas/Data';
-$string['yearofstudy'] = 'Rok studiów';
-$string['noyear'] = 'brak danych o roku użytkownika!';//no year held for user
-$string['Modules'] = 'Moduły';
-$string['nomodules'] = 'Uwaga: brak modułów!';
-$string['UserRoles'] = 'Role użytkownika';
-$string['try'] = 'Działania do podjęcia';
-$string['f5'] = 'Jeśli do egzaminu pozostało więcej niż 15 minut, odczekaj do jego czasu i naciśnij F5.';
-$string['RaiseYourHand '] = 'Podnieś rękę, aby przywołać kogoś z personelu.';
-$string['staff'] = 'Pracownik';
-$string['student'] = 'Student'; //cognate
-$string['sysadmin'] = 'Administrator systemu';
-$string['admin'] = 'Administrator';  //cognate
-$string['graduate'] = 'Absolwent';
-$string['inactive'] = 'Nieaktywny';
-$string['multipleExams'] = 'Znaleziono wiele egzaminów';
-$string['selectOne'] = 'Wybierz proszę ten, do który masz przystąpić:';
-$string['passwordRequired'] = 'wymagane hasło';
-$string['screen'] = 'ekran';
-$string['screens'] = 'ekrany';
-$string['Bidirectional'] = 'Nawigacja dwukierunkowa';
-$string['Unidirectional'] = 'Nawigacja jednokierunkowa';
-$string['requirespassword'] = 'Ten arkusz wymaga podania hasła.';
-$string['mins'] = 'min.';
-$string['summativetesting'] = 'Egzaminy końcowe dla testowania';
-$string['summativetestmsg'] = '<strong>Tylko dla kadry &ndash; ta sekcja nie jest widoczna dla studentów.</strong> Na najbliższe sześć tygodni zaplanowano dla twojego zespołu następujące egzaminy końcowe.'; 
-$string['nodurationwarning'] = 'Nie określono czasu trwania egzaminu'; 
-$string['startwarning'] = 'Arkusz zaplanowano na czas wcześniejszy niż %d:00'; 
-$string['nolabswarning'] = 'Nie określono pracowni'; 
+require '../lang/' . $language . '/include/question_types.inc';
+require '../lang/' . $language . '/include/paper_types.inc';
+
+$string['admintools'] = 'Narzędzia administracyjne';
+$string['calendar'] = 'Kalendarz';
+$string['usermanagement'] = 'Zarządzanie użytkownikami';
+$string['makeafolder'] = 'Utwórz nowy folder';
+$string['mypersonalkeywords'] = 'Moje własne słowa kluczowe';
+$string['papertasks'] = 'Działania dot. arkuszy';
+$string['createnewpaper'] = 'Utwórz nowy arkusz';
+$string['listpapers'] = 'Wyświetl listę arkuszy';
+$string['reviewed'] = 'Przejrzany';
+$string['notreviewed'] = 'Nie przejrzano';
+$string['myfolders'] = 'Moje foldery';
+$string['mymodules'] = 'Moje moduły';
+$string['sysadminonly'] = 'Tylko dla superadministratora';
+$string['adminonly'] = 'Tylko dla administratora';
+$string['unassignedpapers'] = 'Nieprzydzielone arkusze';
+$string['recyclebin'] = 'Kosz';
+$string['allmodules'] = 'Wszystkie moduły...';
+$string['allmodulesinschool'] = 'Wszystkie moduły dla katedry...';
+$string['myrecentpapers'] = 'Moje ostatnie arkusze';
+$string['create'] = 'Utwórz';
+$string['newfolder'] = 'Nowy folder';
+$string['questionbanktasks'] = 'Działania dot. banku pytań';
+$string['questionsbytype'] = 'Pytania wg. typu';
+$string['questionsbyteam'] = 'Pytania wg. zespołu';
+$string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
+$string['search'] = 'Szukaj';
+$string['createnewquestion'] = 'Utwórz nowe pytanie';
+$string['questions'] = 'Pytania';
+$string['papers'] = 'Arkusze';
+$string['people'] = 'Osoby';
+$string['nomodulesset'] = 'Brak modułów';
+$string['screen'] = 'Ekran';
+$string['screens'] = 'Ekrany';
+$string['mins'] = 'min.'; 
+$string['type'] = 'Typ';
+$string['author'] = 'Autor';
+$string['duplicatefoldername'] = 'Ta nazwa folderu jest już wykorzystywana, użyj innej.';
+$string['deadline'] = 'Termin finalizacji:';
+$string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';
+$string['papersforreview'] = 'Arkusze do recenzji';  
 ?>

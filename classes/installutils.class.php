@@ -407,7 +407,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (!is_array(self::$warnings)) {
       echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
       echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
-      echo "<p style=\"margin-left:10px\"><input type=\"button\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../staff/index.php'\" /></p>\n";
+      echo "<p style=\"margin-left:10px\"><input type=\"button\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../index.php'\" /></p>\n";
     } else {
       self::displayWarnings();
     }
@@ -1354,11 +1354,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
 if (empty(\$root)) \$root = str_replace('/config', '/', str_replace('\\\\', '/', dirname(__FILE__)));
 require \$root . '/include/path_functions.inc.php';
-
-// PHP session security settings
-	ini_set('session.cookie_secure', 1);
-	ini_set('session.cookie_httponly', 1);
-	ini_set('session.use_only_cookies', 1);
 
 \$rogo_version = '{rogo_version}';
 \$cfg_web_root = get_root_path() . '/';
@@ -2872,6 +2867,7 @@ QUERY;
 					`phase` tinyint(4) default NULL,
 					`logtype` tinyint(4) default NULL,
 					`student_userID` int(10) unsigned default NULL,
+          `reminders` VARCHAR(255) NULL
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `idx_unique` (`phase`,`answer_id`,`logtype`),
 					KEY `paperID` (`paperID`),

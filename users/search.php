@@ -335,7 +335,7 @@ if (isset($_GET['paperID'])) {
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<div class=\"head_title\">\n";
     echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
-    echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; padding-left:10px\"><strong>" . $string['usersearch'] . "</div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; padding-left:10px\"><strong>" . $string['usersearch'] . "</div>";
     echo "</div>\n</div>\n</body></html>\n";
     exit;
   }
@@ -346,7 +346,7 @@ if (isset($_GET['paperID'])) {
 <div class="head_title">
 <div style="float:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
-echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
 if (isset($_GET['team'])) {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['team'] . '">' . module_utils::get_moduleid_from_id($_GET['team'], $mysqli) . '</a>';
 }

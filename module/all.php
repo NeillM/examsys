@@ -70,7 +70,7 @@
 
 <div id="content" class="content">
 <table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['allmodules']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
+<tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['allmodules']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
 </table>
 
 <table style="width:100%">

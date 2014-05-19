@@ -351,23 +351,23 @@ if ($critical_error == '') {
               $q_teams = array_values($q_teams);
               if (is_array($q_teams) and count($q_teams) > 0) $team_for_state = $q_teams[0];
             }
-            $state = $stateutil->setState($userObject->get_user_ID(), 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);
+            $stateutil->setState($userObject->get_user_ID(), 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);
           }
 
           // Stuff not to do on correction/limited save
           if (!isset($_POST['submit']) or $_POST['submit'] != $string['correct']) {
             // Save review comments and responses
-            if(isset($_POST['comment_ids']) and isset($_POST['actions']) and isset($_POST['responses'])) {
+            if (isset($_POST['comment_ids']) and isset($_POST['actions']) and isset($_POST['responses'])) {
               save_external_responses($mysqli, $question, $_POST['comment_ids'], $_POST['actions'], $_POST['responses'], $paper_id);
             }
 
             // For likert, save the scale to a state to ease creation of multiple questions with same scale
             if ($mode == 'Add' and $question->get_type() == 'likert') {
               $scale_type = $question->get_scale_type();
-              $state = $stateutil->setState($userObject->get_user_ID(), 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
+              $stateutil->setState($userObject->get_user_ID(), 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
 
               if ($scale_type == 'custom') {
-                $state = $stateutil->setState($userObject->get_user_ID(), 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
+                $stateutil->setState($userObject->get_user_ID(), 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
               }
             }
           }
@@ -625,6 +625,8 @@ if (count($question->get_teams()) > 0) {
   $q_teams = $question->get_teams();
 } elseif (isset($state['default_team'])) {
   $q_teams = explode(',', $state['default_team']);
+} elseif (isset($module)) {
+  $q_teams[$module] = module_utils::get_moduleid_from_id($module, $mysqli);
 }
 
 echo render_metadata($mysqli, $question, $question->use_bloom(), $q_teams, $q_disabled, $string, $userObject);

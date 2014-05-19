@@ -27,7 +27,7 @@
 // TODO: error handling for AJAX calls
 
 ob_start('ob_gzhandler');
-require '../include/staff_auth.inc';
+require '../include/staff_student_auth.inc';
 require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
@@ -73,6 +73,15 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
 }
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
+  header("location: user_index.php?id=" . $properties->get_crypt_name());
+  exit();
+}
+
+if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+  exit();
+}
 
 if ($properties->get_paper_type() == '4') {		// OSCE
 	require_once '../classes/killer_question.class.php';
@@ -801,7 +810,7 @@ function check_latex_random($q_ids, $mysqli) {
 
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
-  echo "<div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
@@ -891,7 +900,7 @@ function check_latex_random($q_ids, $mysqli) {
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
     $status = $status_array[$temp_array[$x]['status']];
-    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
+    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and ($temp_array[$x]['q_type'] != 'textbox' or $temp_array[$x]['correct'] != 'placeholder')) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
     if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {

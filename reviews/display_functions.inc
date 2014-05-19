@@ -320,6 +320,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       break;
   }
 
+  $textboxes_seen = array();
   // Processing for each stem.
   foreach ($question['options'] as $display_option) {
     $part_id++;
@@ -673,20 +674,23 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
-        $settings = json_decode($question['settings'], true);
-        if ($display_option['option_text'] == 'plain') {
-          if ($settings['rows'] == 1) {
-            echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $settings['columns'] . "\" value=\"" . $question['correct_fback'] . "\" />";
+        if (!in_array($question_no, $textboxes_seen)) {
+          $textboxes_seen[] = $question_no;
+          $settings = json_decode($question['settings'], true);
+          if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+            if ($settings['rows'] == 1) {
+              echo "<blockquote><input type=\"text\" name=\"q" . $question_no . "\" size=\"" . $settings['columns'] . "\" value=\"" . $question['correct_fback'] . "\" />";
+            } else {
+              echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $question['correct_fback'] . "</textarea>";
+            }
           } else {
-            echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $question['correct_fback'] . "</textarea>";
+            include_once('../include/wysiwyg_editor.inc');
+            echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($settings['columns'] * 8)) . "px; height:" . ($settings['rows'] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
           }
-        } else {
-          include_once('../include/wysiwyg_editor.inc');
-          echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($settings['columns'] * 8)) . "px; height:" . ($settings['rows'] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
-        }
 
-        echo "</blockquote>\n";
-        $marks += $display_option['marks_correct'];
+          echo "</blockquote>\n";
+          $marks += $display_option['marks_correct'];
+        }
         break;
       case 'hotspot':
         echo "<div align=\"left\">";
@@ -760,9 +764,13 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $max_col2 = 0;
         $tmp_first_split = explode(";", $question['options'][0]['correct']);
         $tmp_second_split = explode('|', $tmp_first_split[11]);
+        $label_width = $tmp_first_split[5];
+        $label_height = $tmp_first_split[6];
+        $hyphen = false;
         foreach ($tmp_second_split as $ind_label) {
           $label_parts = explode('$', $ind_label);
           if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+            if (mb_strstr($label_parts[4], '-') !== false) $hyphen = true;
             $tmp_labels++;
             if ($label_parts[2] > 219) {
               $marks += $display_option['marks_correct'];
@@ -785,16 +793,21 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $marks = $display_option['marks_correct'];
         }
 
-        $tmp_height = $question['q_media_height'];
-        if ($tmp_height < ($tmp_labels * 55)) $tmp_height = ($tmp_labels * 55);
+        if (($label_width < 80 and $hyphen) or ($label_width < 104 and !$hyphen)) {    // Two columns
+          $computed_height = round(($label_height + 5) * ceil($tmp_labels / 2)) + 10;
+          $tmp_height = max($question['q_media_height'], $computed_height);
+        } else {                    // Single column
+          $computed_height = round(($label_height + 5) * $tmp_labels) + 10;
+          $tmp_height = max($question['q_media_height'], $computed_height);
+        }
     echo "<div align=\"center\">\n";
     $tmp_bgcolor = $bgcolor;
 ?>
 				<?php
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rev disp ================= -->
-					echo "<canvas id='canvas" . $question_no . "'  width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
-					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+          echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
+					echo "<br /><div id=\"canvasbox\"></div>\n";
 					echo "<script language='JavaScript' type='text/javascript'>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
 					if (isset($question['std'])) echo $question['std'];

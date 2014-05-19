@@ -191,17 +191,20 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
   $total_marks = 0;
   $user_mark = 0;
 
+  $o_no = 0;
+
   if (isset($preview_q_id)) {
-    $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question = questions.q_id AND paper =  ? AND questions.q_id = ? ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqlidb->prepare("SELECT 1, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, id_num, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question = questions.q_id AND paper =  ? AND questions.q_id = ? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('ii', $paperID, $preview_q_id);
   } else {
-    $answer_data = $mysqlidb->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question = questions.q_id AND paper =  ? ORDER BY screen, display_pos, id_num");
+    $answer_data = $mysqlidb->prepare("SELECT screen, questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, id_num, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, display_pos, status FROM (papers, questions) LEFT JOIN options on questions.q_id=options.o_id WHERE papers.question = questions.q_id AND paper =  ? ORDER BY screen, display_pos, id_num");
     $answer_data->bind_param('i', $paperID);
   }
   $answer_data->execute();
-  $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $settings, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $display_pos, $status);
+  $answer_data->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $settings, $notes, $q_media, $q_media_width, $q_media_height, $option_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $display_pos, $status);
   while ($answer_data->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {  // New question.
+     $o_no = 0;
      if ($old_q_id != 0) {
 				$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 				
@@ -242,6 +245,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       $paper[$q_no]['incorrect_fback'] = $incorrect_fback;
       $paper[$q_no]['status'] = $status;
 
+      $paper[$q_no]['option_id'] = array();
       $paper[$q_no]['option_text'] = array();
       $paper[$q_no]['feedback_right'] = array();
       $paper[$q_no]['feedback_wrong'] = array();
@@ -250,6 +254,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       $paper[$q_no]['o_media_height'] = array();
       $paper[$q_no]['correct'] = array();
     }
+    $paper[$q_no]['option_id'][$option_id] = $o_no;
     $paper[$q_no]['option_text'][] = $option_text;
     $paper[$q_no]['feedback_right'][] = $feedback_right;
     $paper[$q_no]['feedback_wrong'][] = $feedback_wrong;
@@ -274,6 +279,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
     $old_q_media_height = $q_media_height;
     $old_status = $status;
     $old_marks_correct = $marks_correct;
+    $o_no++;
   }
   $answer_data->close();
 	
@@ -314,11 +320,11 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       // Look up selected question and overwrite data.
       if (isset($selected_q_id) and $selected_q_id > 0) {
         $stems = 0;
-        $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions) LEFT JOIN options on questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
+        $question_data = $mysqlidb->prepare("SELECT questions.q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, score_method, settings, notes, q_media, q_media_width, q_media_height, id_num, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, status FROM (questions) LEFT JOIN options on questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
         $question_data->bind_param('i', $selected_q_id);
         $question_data->execute();
         $question_data->store_result();
-        $question_data->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $settings, $notes, $q_media, $q_media_width, $q_media_height, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $status);
+        $question_data->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $score_method, $settings, $notes, $q_media, $q_media_width, $q_media_height, $option_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $status);
         while ($question_data->fetch()) {
           if ($stems == 0) {
             $correct_no = 0;
@@ -349,6 +355,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
             $paper[$i]['o_media_height'] = array();
             $paper[$i]['correct'] = array();
           }
+          $paper[$i]['option_id'][$option_id] = $stems + 1;
           $paper[$i]['option_text'][] = $option_text;
           $paper[$i]['feedback_right'][] = $feedback_right;
           $paper[$i]['feedback_wrong'][] = $feedback_wrong;
@@ -1787,6 +1794,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
         break;
       case 'textbox':
+        $settings = json_decode($paper[$question]['settings'], true);
         if ($paper[$question]['scenario'] != '') {
           echo echo_content($paper[$question]['scenario']);
           if ($paper[$question]['q_media'] != '') {
@@ -1808,7 +1816,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         } else {
           $tmp_answer = '';
         }
-        $correct_answers = explode(';', $paper[$question]['correct'][0]);
+        $correct_answers = explode(';', $settings['terms']);
         if ($tmp_display_correct_answer == '1') {
           foreach ($correct_answers as $single_answer) {
             $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);
@@ -1822,6 +1830,11 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
 
         if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
           echo '<p class="fback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
+        }
+
+        if ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+          // print_r($paper[$question]);
+          echo render_marking_data($paperID, $paper[$question], $temp_userID, $mysqlidb);
         }
         break;
       case 'likert':
@@ -2468,4 +2481,55 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
 
   return $html;
 }
-?>
+
+function render_marking_data($paperID, $question, $userID, $db) {
+  $phases = array();
+
+  $marking_data = $db->prepare("SELECT markerID, mark, comments, phase, reminders FROM textbox_marking WHERE paperID = ? AND q_id = ? AND student_userID = ? ORDER BY phase");
+  $marking_data->bind_param('iii', $paperID, $question['q_id'], $userID);
+  $marking_data->execute();
+  $marking_data->store_result();
+  $marking_data->bind_result($markerID, $mark, $comments, $phase, $reminders);
+  while ($marking_data->fetch()) {
+    $phases[$phase]['comments'] = $comments;
+    $phases[$phase]['mark'] = $mark;
+    $phases[$phase]['reminders'] = array();
+
+    $reminders = explode('|', $reminders);
+    foreach ($reminders as $reminder_id) {
+      if (in_array($reminder_id, array_keys($question['option_id']))) {
+        $phases[$phase]['reminders'][] = '<li>' . $question['option_text'][$question['option_id'][$reminder_id]] . '</li>';
+      }
+    }
+
+    $user_data = $db->prepare("SELECT title, initials, surname FROM users WHERE id = ?");
+    $user_data->bind_param('i', $markerID);
+    $user_data->execute();
+    $user_data->store_result();
+    $user_data->bind_result($title, $initials, $surname);
+    $user_data->fetch();
+    $phases[$phase]['marker'] = trim($title . ' ' . $initials . ' ' . $surname);
+    $user_data->close();
+  }
+  $marking_data->close();
+
+  $html = '<div class="tb-marking key">';
+  $template = <<< TEMP
+<div class="tb-mark">
+  <h3>Phase %d, Marked by %s</h3>
+  <p><b>Mark:</b> %d</p>
+  %s
+  %s
+</div>
+TEMP;
+
+  foreach ($phases as $phase_no => $phase) {
+    $comment_html = ($phase['comments'] == '') ? '' : '<p><b>Comments:</b> ' . $phase['comments'];
+    $reminder_html = (count($phase['reminders']) > 0) ? '<ul>' . implode('', $phase['reminders']) . '</ul>' : '';
+
+    $html .= sprintf($template, $phase_no, $phase['marker'], $phase['mark'], $comment_html, $reminder_html);
+  }
+  $html .= "</div>\n";
+
+  return (count($phases) > 0) ? $html : '';
+}

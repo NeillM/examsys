@@ -34,21 +34,24 @@ $q_id = check_var('q_id', 'POST', true, false, true);
 $log_id = check_var('log_id', 'POST', true, false, true);
 $marker_id = check_var('marker_id', 'POST', true, false, true);
 $mark = check_var('mark', 'POST', true, false, true);
+$comments = isset($_POST['comments']) ? $_POST['comments'] : '';
 $phase = check_var('phase', 'POST', true, false, true);
 $log = check_var('log', 'POST', true, false, true);
 $user_id = check_var('user_id', 'POST', true, false, true);
+$reminders = isset($_POST['reminders']) ? $_POST['reminders'] : '';
 
 if ($mark != 'NULL') {
   $sql = <<< QUERY
-INSERT INTO textbox_marking (paperID, q_id, answer_id, markerID, mark, comments, date, phase, logtype, student_userID)
-VALUES (?, ?, ?, ?, ?, '', NOW(), ?, ?, ?) ON DUPLICATE KEY UPDATE
-markerID = ?, mark = ?, date = NOW()
+INSERT INTO textbox_marking (paperID, q_id, answer_id, markerID, mark, comments, date, phase, logtype, student_userID, reminders)
+VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
+markerID = ?, mark = ?, comments = ?, reminders = ?, date = NOW()
 QUERY;
 
   try {
     $result = $mysqli->prepare($sql);
+    $x = $mysqli->error;
     if ($result) {
-      $result->bind_param('iiiidiiiid', $paperID, $q_id, $log_id, $marker_id, $mark, $phase, $log, $user_id, $marker_id, $mark);
+      $result->bind_param('iiiidsiiisidss', $paperID, $q_id, $log_id, $marker_id, $mark, $comments, $phase, $log, $user_id, $reminders, $marker_id, $mark, $comments, $reminders);
       $result2 = $result->execute();
       if ($result !== false) {
         $status = 'OK';

@@ -90,7 +90,7 @@ $mysqli->close();
     function closeWindow() {
       <?php
       if ($parent == '') {
-        echo "window.opener.location.href = '../staff/index.php'\n";
+        echo "window.opener.location.href = '../index.php'\n";
       } else {
         echo "window.opener.location.href = '../folder/details.php?folder=$parentID'\n";
       }

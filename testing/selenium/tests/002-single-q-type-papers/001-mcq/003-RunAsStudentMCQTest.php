@@ -17,7 +17,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testQuestionPresenceAndOrderPlusUnanswered() {
     do_student_login($this, 'teststudent10', 'jgl!34Z^');
 
-    $this->open("/user_index.php?id=11355244387102");
+    $this->open("/paper/user_index.php?id=11355244387102");
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -95,7 +95,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testCompletePaperCorrect() {
     do_student_login($this, 'teststudent11', 'bkt_66Y4');
 
-    $this->open("/user_index.php?id=11355244387102");
+    $this->open("/paper/user_index.php?id=11355244387102");
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -143,7 +143,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testCompletePaperIncorrect() {
     do_student_login($this, 'teststudent12', 'rmu_74L4');
 
-    $this->open("/user_index.php?id=11355244387102");
+    $this->open("/paper/user_index.php?id=11355244387102");
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");
@@ -191,7 +191,7 @@ class RunAsStudentMCQTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testCompletePaperMixed() {
     do_student_login($this, 'teststudent13', 'hii.420R');
 
-    $this->open("/user_index.php?id=11355244387102");
+    $this->open("/paper/user_index.php?id=11355244387102");
     $this->click("id=start");
     $this->waitForPopUp("paper", "30000");
     $this->selectWindow("name=paper");

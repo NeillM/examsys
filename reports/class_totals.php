@@ -184,7 +184,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
   echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
   echo "<tr><th class=\"h\">";
 
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
@@ -526,7 +526,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo "<div style=\"font-size:80%\">\n";
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';

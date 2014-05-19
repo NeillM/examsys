@@ -332,7 +332,7 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testPaperBlueScreenNonExistent() {
     do_student_login($this, 'teststudent10', 'jgl!34Z^');
 
-    $this->open("user_index.php?id=2607128816754214438");
+    $this->open("/paper/user_index.php?id=2607128816754214438");
     $this->assertTextPresent('Page not Found');
   }
 

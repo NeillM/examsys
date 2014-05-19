@@ -90,3 +90,10 @@ input.exclude, select.exclude {
   background-image: -ms-linear-gradient(top, #FF8282 0%, #FFFFFF 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='#FFFFFF');
 }
+
+/* Textbox marking report */
+div.tb-marking {
+  margin-left: 0;
+  width: 95%;
+  font-size: 80%;
+}

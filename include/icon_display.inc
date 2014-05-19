@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once '../classes/paperutils.class.php';
+require_once $cfg_web_root . 'classes/paperutils.class.php';
 
 function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj) {
   global $folder, $module, $string;
@@ -53,7 +53,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     }
     echo '<br />';
   } else {
-		echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
+		echo "<a class=\"blacklink\" href=\"./paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></td>\n";
 		echo "<td><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"blacklink\">" . $paper_title . '</a><br />';
   }
   if ($retired == '') {

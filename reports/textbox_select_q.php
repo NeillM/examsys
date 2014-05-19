@@ -76,6 +76,21 @@ $paper = $propertyObj->get_paper_title();
     $result->close();
   }
 
+  $second_mark = array();
+  if (isset($_GET['phase']) and $_GET['phase'] == 2) {
+    // Get the usernames of papers to second mark.
+    $second_mark = array();
+
+    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($remark_userID);
+    while ($result->fetch()) {
+      $second_mark[] = $remark_userID;
+    }
+    $result->close();
+  }
+
   $phase_description = '';
   if (!isset($_GET['phase'])) {
     $phase_description .= $string['finalisemarks'];
@@ -88,13 +103,14 @@ $paper = $propertyObj->get_paper_title();
     $tmp_phase = '&phase=2';
   }
 
-  if ($candidate_no > 0) $phase_description .= ": " . number_format($candidate_no) . " " . $string['candidates'];
+  $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
+  if ($candidate_no > 0) $phase_description .= ": " . number_format($out_of) . " " . $string['candidates'];
 
   echo "<div style=\"font-size:80%\">\n";
   
   echo "<div class=\"head_title\">\n";
   echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\">\n";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
