@@ -222,23 +222,26 @@ class QuestionBank {
 
     // Get the VLE API we're using currently
     $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
-    $vle = CMFactory::GetCMAPI($vle_api_data['api']);
 
-    // Get years for which there are mappings for the current mapping source
-    $all_years = $vle->getYearsForModules(array($this->idMod => $this->module_id), $this->db);
+    if ($vle_api_data['api'] != '') {
+      $vle = CMFactory::GetCMAPI($vle_api_data['api']);
 
-    foreach ($all_years as $ac_year) {
-      $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+      // Get years for which there are mappings for the current mapping source
+      $all_years = $vle->getYearsForModules(array($this->idMod => $this->module_id), $this->db);
 
-      if (is_array($obs) and isset($obs[$this->module_id])) {
-        foreach ($obs[$this->module_id] as $session) {
-          if (isset($session['objectives'])) {
-            foreach ($session['objectives'] as $objective) {
-              if (isset($objective['guid'] )) {
-                // Build list of IDs but use the latest text
-                $ids = (isset($outcomes[$objective['guid']])) ? $outcomes[$objective['guid']]['ids'] : array();
-                $ids[] = $objective['id'];
-                $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => $objective['content']);
+      foreach ($all_years as $ac_year) {
+        $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+
+        if (is_array($obs) and isset($obs[$this->module_id])) {
+          foreach ($obs[$this->module_id] as $session) {
+            if (isset($session['objectives'])) {
+              foreach ($session['objectives'] as $objective) {
+                if (isset($objective['guid'] )) {
+                  // Build list of IDs but use the latest text
+                  $ids = (isset($outcomes[$objective['guid']])) ? $outcomes[$objective['guid']]['ids'] : array();
+                  $ids[] = $objective['id'];
+                  $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => $objective['content']);
+                }
               }
             }
           }

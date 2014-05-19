@@ -41,4 +41,5 @@ $string['deletequestion'] = 'Odstranit úlohu';
 $string['noquestionleadin'] = 'Varování: v hlavičce není text úlohy!';
 $string['owner'] = 'Vlastník';
 $string['quickview'] = 'Náhled';
+$string['modulenomappings'] = 'Module does not allow objectives mapping';
 ?>

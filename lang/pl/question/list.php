@@ -41,4 +41,5 @@ $string['copyontopaperx'] = 'Przekopiuj do arkusza X...';
 $string['linktopaperx'] = 'Powiąż z arkuszem X...';
 $string['deletequestion'] = 'Usuń pytanie';
 $string['noquestionleadin'] = 'Uwaga: brak sformułowania pytania!';
+$string['modulenomappings'] = 'Module does not allow objectives mapping';
 ?>

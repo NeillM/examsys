@@ -60,7 +60,10 @@ if (isset($_GET['keyword'])) {
 if (isset($_GET['module'])) {
   $module = $_GET['module'];
   if ($module != '0') {
-    $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
+    if (!isset($module_details)) {
+      $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+    }
+    $module_code = $module_details['moduleid'];
     if (!$module_code) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -269,7 +272,6 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
 	if (isset($_GET['module'])) $params .= '&module=' . $_GET['module'];
 	if (isset($_GET['keyword'])) $params .= '&keyword=' . $_GET['keyword'];
 	
-  
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
   echo "<thead>\n";
   foreach ($table_order as $display => $col_width) {
@@ -369,6 +371,11 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
 ?>
 </tbody>
 </table>
+<?php
+if (strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'outcome') {
+  echo '<p><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> ' . $string['modulenomappings'] . '</p>';
+}  
+?>
 </div>
 
 </body>
