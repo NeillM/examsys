@@ -160,7 +160,7 @@ if (!isset($module_details) && $_GET['module'] != '0') {
   function check_checkboxes() {
     $(".q").hide();
     $('input[type=checkbox].check_type:checked').each(function () {
-      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').replace(',', ',.');
+      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').toString().replace(',', ',.');
       $("." + q_type).show();
       if (!$('#check_locked').attr('checked')) {
         $("." + q_type + '.locked').hide();
