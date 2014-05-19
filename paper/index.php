@@ -338,7 +338,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     } else {
       echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . Paper_utils::displayIcon($paper_display[$i]['paper_type'], '', '', '', '', '') . "</a></td>\n";
       echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . $paper_display[$i]['paper_title'] . "</a>";
-      echo ' <img src="./artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
+      echo ' <img src="../artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
     }
     echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];
     if ($paper_display[$i]['max_screen'] == 1) {

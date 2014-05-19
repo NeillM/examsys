@@ -37,19 +37,23 @@ require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exceptions.inc.php';
 
+if ($_GET['ans_changed'] == '0') {
+  echo $_POST['randomPageID'];
+  exit();
+}
 
-$displayDebug = false; //ajax call so debug info messes up the output
+$displayDebug = false; // AJAX call so debug info messes up the output.
 
 check_var('id', 'GET', true, false, false);
 
-//calculate how long this request should be processed based on the config vars and the retry number
+// Calculate how long this request should be processed based on the config vars and the retry number.
 if ( isset($_GET['retry']) and is_numeric($_GET['retry']) and $_GET['retry'] > 0 and $_GET['retry'] <= $configObject->get('cfg_autosave_retrylimit') ) {
   $extra_time = 1 + ceil($configObject->get('cfg_autosave_backoff_factor') * intval($_GET['retry']) *  $configObject->get('cfg_autosave_settimeout'));
 } else {
   $extra_time = 1;
 }
 
-//kill this request if it is taking to long the javascript will retry if it can
+// Kill this request if it is taking to long the javascript will retry if it can.
 set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
 
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
@@ -128,7 +132,7 @@ try {
 }
 
 if ($ret === true) {
-  // Everthing worked ;-)
+  // Everthing worked.
   echo $_POST['randomPageID'];
 } else {
   echo "ERROR";
