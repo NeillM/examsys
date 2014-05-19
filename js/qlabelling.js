@@ -760,6 +760,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}	
 	}
+	if (this.tested_canvas_height > -1 &&	this.tested_canvas_height < temp_y) this.tested_canvas_height = temp_y;
 }
 
 function ql_redraw_box(i,j) {
@@ -1014,13 +1015,19 @@ function ql_redraw_canvas() {
 		
       
 		//draw labels placeholders
-		var loc_width = this.imglabelWidth;
-		var loc_height = this.imglabelHeight;
+		var loc_width,loc_height;
+		
 		if (this.qmode != 'edit' && this.qType != 'menu') {
 			for (i=0;i<this.pholderBox.length;i++) {
 				if (typeof(this.pholderBox[i])!='undefined') {
 					//selecting width and height
-					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
+					loc_width = this.imglabelWidth;
+					loc_height = this.imglabelHeight;
+					
+					if (this.pholderBox[i][1] == 'text' ) {
+						loc_width = this.labelWidthEffect;
+						loc_height=this.labelHeightEffect;
+					}
 
 					//drawing background (unanswered)
 					this.context.fillStyle=this.currentColours[0];
@@ -1031,6 +1038,8 @@ function ql_redraw_canvas() {
 					//fill and strike background rectangle
 					if (this.qmode!='script' && this.qmode!='answer') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 					this.context.strokeRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					if (this.tested_canvas_width > -1 &&	this.tested_canvas_width < (this.pholderBox[i][5]+loc_width)) this.tested_canvas_width = (this.pholderBox[i][5]+loc_width);
+
 				}
 			}
 		}
@@ -1260,7 +1269,13 @@ function ql_redraw_canvas() {
 				}
 			}
 		}
-		
+		if (this.tested_canvas_height > -1) {
+			if (this.canvas.height<this.tested_canvas_height) this.canvas.height = Math.floor(this.tested_canvas_height);
+			if (this.canvas.width<this.tested_canvas_width) this.canvas.width = Math.floor(this.tested_canvas_width)+5;
+			this.tested_canvas_height = -1;
+			this.tested_canvas_width = -1;
+			this.redraw_once = true;
+		}
 		this.context.fillStyle=this.currentColours[0]; //resetting colour
 		
 		//redraw active label to have it on top
@@ -2527,4 +2542,6 @@ function rql(num) {
 	this.keypressed = false;
 	this.all_images = new Array();
 	this.imageerrordisplay = 0;
+	this.tested_canvas_width = 0;
+	this.tested_canvas_height = 0;
 }
