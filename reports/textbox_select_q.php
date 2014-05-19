@@ -103,7 +103,7 @@ $paper = $propertyObj->get_paper_title();
     $tmp_phase = '&phase=2';
   }
 
-  $out_of = ($_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
+  $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
   if ($candidate_no > 0) $phase_description .= ": " . number_format($out_of) . " " . $string['candidates'];
 
   echo "<div style=\"font-size:80%\">\n";

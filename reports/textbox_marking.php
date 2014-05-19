@@ -16,7 +16,7 @@
 
 /**
 *
-* @author Simon Wilkinson
+* @author Simon Wilkinson, Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -108,12 +108,7 @@ HTML;
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
 		
 		$(document).ready(function() {
-			window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';
-			
-			$('#hidemarked').click(function() {
-			  $('.marked').toggle();
-			});
-			
+			window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';			
 		});
   </script>
 </head>
@@ -181,9 +176,7 @@ if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
 echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
-echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
-if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
-echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
+echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 echo "</table>\n";
 
 $half_marks = true;
@@ -381,15 +374,15 @@ SQL;
         }
         echo '</ul>' . "\n";
       }
-      echo '<label for="comment_' . $answer_no . '"><b>' . $string['comments'] . '</b><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="3" class="comment-box">' . $comments . '</textarea>' . "\n";
+      echo '<label for="comment_' . $answer_no . '"><strong>' . $string['comments'] . '</strong><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="6" class="comment-box">' . $comments . '</textarea>' . "\n";
 
       if ($answer_no != 1 and $answer_no <= $candidate_no) {
-        echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
+        echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
       }
       if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) {
-        echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
+        echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
       } else {
-        echo '<button type="submit" id="finish_' . $answer_no . '" class="tbmark" data-id="' . $answer_no . '">' . $string['finish'] . '</button>';
+        echo '<button type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '">' . $string['finish'] . '</button>';
       }
       echo '</div>' . "\n";
     }

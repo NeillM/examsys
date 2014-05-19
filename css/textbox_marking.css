@@ -47,7 +47,7 @@ td {
 	color: #C00000;
 }
 .student-answer-block {
-	margin: 0 0 18px 8px;
+	margin: 18px 18px 48px 18px;
 }
 
 .reminders {
@@ -58,11 +58,14 @@ td {
 	margin-left: 0;
 }
 .comment-box {
-	width: 95%;
+	width: 100%;
 }
 .hide {
 	display: none;
 }
 #save_message {
 	
+}
+.tbmark {
+  margin: 1px;
 }
