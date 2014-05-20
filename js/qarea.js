@@ -5,6 +5,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		this.canvas.onmouseup   = this.qa_mouseDragUp.bind(this);
 		this.canvas.onmousedown = this.qa_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qa_mouseDragMove.bind(this);
+		document.onmousemove = this.qa_mouseDragMoveOutside.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		if (document.addEventListener){ //FF+, IE10+, Ch+
       document.addEventListener("keydown",	qa_mouseDragMove.bind(this),false);
@@ -430,8 +431,21 @@ function qa_redraw_canvas() {
     }		
   }
 }
+function qa_mouseDragMoveOutside(e){
+	if (this.isMouseOutsiceCanvas && this.poly_temp.length>2)  {      
+		if (this.qmode == 'edit' && this.qconfig == '') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+		if (this.qmode == 'answer' && this.qanswer == '') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+		this.global_delpoint_avail = true; 
+		this.poly_temp = '';
+		this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
+		//this.do_the_test = true;
+		this.redraw_once = true;
+	}
+	this.isMouseOutsiceCanvas = true;
+}
 
 function qa_mouseDragMove(e){
+	this.isMouseOutsiceCanvas = false;
 	this.ev = e || window.event;
 	if (this.ev.target.id != this.canvas.id) return true;
 	this.get_char_key();
@@ -495,7 +509,7 @@ function qa_mouseDragMove(e){
 		}
 		this.key_code = 0;
 	}
-	 
+	
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
     if (this.handler_sqr>-1) {
@@ -729,9 +743,10 @@ function qa_mouseDragUp(){
   this.dx = this.x - this.poly_temp_points[6]; 
   this.dy = this.oy - this.poly_temp_points[7];
   this.distn = Math.sqrt(this.dx*this.dx+this.dy*this.dy);
+
   if (this.oy>0) {
     //condition for the finish
-    if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.oy)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.oy)<3))  {      
+    if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<7 && Math.abs(this.poly_temp_points[1]-this.oy)<7)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.oy)<3))  {      
       if (this.qmode == 'edit' && this.qconfig == '') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
       if (this.qmode == 'answer' && this.qanswer == '') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
 			this.global_delpoint_avail = true; 
@@ -837,6 +852,7 @@ function rqa(num) {
 	this.qa_test_calc			 			=  	qa_test_calc;
 	this.qa_redraw_canvas	 			= 	qa_redraw_canvas;
 	this.qa_mouseDragMove	 			= 	qa_mouseDragMove;
+	this.qa_mouseDragMoveOutside = 	qa_mouseDragMoveOutside;
 	this.qa_mouseDragDown	 			= 	qa_mouseDragDown;
 	this.qa_ReturnInfo	   			= 	qa_ReturnInfo;
 	this.qa_mouseDblClick	 			= 	qa_mouseDblClick;
@@ -845,6 +861,7 @@ function rqa(num) {
 	this.qa_redraw_canvas_main 	= qa_redraw_canvas_main;
 	this.get_char_key 					=	get_char_key;
 
+	this.isMouseOutsiceCanvas = false;
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
 	this.wrapText=wrapText;
