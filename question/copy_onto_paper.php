@@ -73,13 +73,21 @@ if (!isset($_POST['submit'])) {
       $('#paperlist').css('height', winH + 'px');
     }
 
-		$(document).ready(function() {
-		  resizeList();
-			
-			$(window).resize(function() {
-				resizeList();
-			});
-		});
+    $(document).ready(function() {
+      resizeList();
+
+      $(window).resize(function() {
+        resizeList();
+      });
+
+<?php
+  if (isset($_GET['type']) and $_GET['type'] = 'outcome') {
+?>
+      $('#outcomes').val(window.opener.getSelectedOutcomes());
+<?php
+  }
+?>
+    });
   </script>
 </head>
 
@@ -115,6 +123,7 @@ if (!isset($_POST['submit'])) {
   $result->close();
 
   echo "</table>\n</div>";
+  echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
   echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>

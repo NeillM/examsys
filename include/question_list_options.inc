@@ -134,11 +134,32 @@ if (!isset($module_details) && $_GET['module'] != '0') {
   }
 
   function copyToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    <?php
+    $url = $configObject->get('cfg_root_path') . '/question/copy_onto_paper.php?q_id=" + $(\'#questionID\').val()';
+    if (isset($_GET['type']) and $_GET['type'] != '') {
+      $url .= ' + "&type=' . $_GET['type'];
+    }
+    ?>
+    notice=window.open("<?php echo $url ?>","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300, 20);
+
     if (window.focus) {
       notice.focus();
     }
+  }
+
+  function getSelectedOutcomes() {
+    var outcomes = {};
+    $('.check_type:checked').each(function() {
+      var ids = $(this).data('ids');
+      if (ids != '') {
+        ids = ids.toString().split(',');
+        for (var i = 0; i < ids.length; i++) {
+          outcomes[ids[i].toString()] = $(this).val();
+        }
+      }
+    });
+    return JSON.stringify(outcomes);
   }
 
   function linkToPaper() {
