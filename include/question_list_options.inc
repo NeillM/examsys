@@ -33,7 +33,7 @@ $module = check_var('module', 'GET', true, false, true);
 
 $add_member = false;
 
-if (!isset($module_details) && $_GET['module'] != '0') {
+if (!isset($module_details) && $module != '0') {
   $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 }
 ?>
@@ -137,7 +137,7 @@ if (!isset($module_details) && $_GET['module'] != '0') {
     <?php
     $url = $configObject->get('cfg_root_path') . '/question/copy_onto_paper.php?q_id=" + $(\'#questionID\').val()';
     if (isset($_GET['type']) and $_GET['type'] != '') {
-      $url .= ' + "&type=' . $_GET['type'];
+      $url .= ' + "&type=' . $_GET['type'] . '&module=' . $module;
     }
     ?>
     notice=window.open("<?php echo $url ?>","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");

@@ -39,6 +39,8 @@ if (!QuestionUtils::question_exists(substr($_GET['q_id'],1), $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+$map_outcomes = (isset($_GET['type']) and $_GET['type'] == 'outcome') ? true : false;
+
 if (!isset($_POST['submit'])) {
 ?>
 <!DOCTYPE html>
@@ -81,7 +83,7 @@ if (!isset($_POST['submit'])) {
       });
 
 <?php
-  if (isset($_GET['type']) and $_GET['type'] = 'outcome') {
+  if ($map_outcomes) {
 ?>
       $('#outcomes').val(window.opener.getSelectedOutcomes());
 <?php
@@ -94,7 +96,7 @@ if (!isset($_POST['submit'])) {
 <body>
 
 <?php
-  echo "<form style=\"width:100%; height:100%;\" method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?q_id=" . $_GET['q_id'] . "\">\n";
+  echo "<form style=\"width:100%; height:100%;\" method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\">\n";
 ?>
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/copy_onto_paper.png" width="32" height="32 alt="<?php echo $string['copyontopaper']; ?>" /></td><td class="midblue_header" style="background-color:white; font-size:150%; font-weight:bold; border-bottom:1px solid #CCD9EA"><?php echo $string['copyontopaper']; ?></td></tr>
@@ -124,7 +126,8 @@ if (!isset($_POST['submit'])) {
 
   echo "</table>\n</div>";
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
-  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+//  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
 <!DOCTYPE html>
@@ -292,6 +295,24 @@ if (!isset($_POST['submit'])) {
         // Lookup modules
         $modules = QuestionUtils::get_modules($q_IDs[$i], $mysqli);
         QuestionUtils::add_modules($modules, $question_id, $mysqli);
+
+        if ($map_outcomes) {
+          if (isset($_POST['outcomes']) and $_POST['outcomes'] != '') {
+            $outcomes = json_decode($_POST['outcomes'], true);
+
+            $mappings = $mysqli->prepare("SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?");
+            echo $mysqli->error;
+            $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);
+            $mappings->execute();
+            $mappings->store_result();
+            $mappings->bind_result($q_id, $obj_id);
+            while($mappings->fetch()) {
+              $map_guid[$outcomes[$obj_id]] = true;
+            }
+            $mappings->close();
+            print_r($map_guid);
+          }
+        }
       }
     }
     $result->free_result();
