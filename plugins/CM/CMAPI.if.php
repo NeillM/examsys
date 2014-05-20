@@ -58,12 +58,4 @@ interface iCMAPI
    * @param integer $level Mapping level
    */
   public function setMappingLevel($level);
-
-  /**
-   * Get all academic years for which there are mappings for the given modules
-   * @param  array   $moduleID    Array of id => module codes
-   * @param  mysqli  $db          Database link
-   * @return array[string]        Array of academic years
-   */
-  public function getYearsForModules($moduleID, $db);
 }

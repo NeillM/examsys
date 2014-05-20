@@ -227,7 +227,7 @@ class QuestionBank {
       $vle = CMFactory::GetCMAPI($vle_api_data['api']);
 
       // Get years for which there are mappings for the current mapping source
-      $all_years = $vle->getYearsForModules(array($this->idMod => $this->module_id), $this->db);
+      $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
 
       foreach ($all_years as $ac_year) {
         $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
