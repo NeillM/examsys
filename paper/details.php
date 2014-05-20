@@ -434,7 +434,7 @@ function check_latex_random($q_ids, $mysqli) {
     $('#screenNo').val(screenNo);
     $('#current_pos').val(current_pos);
 
-    if (evt.ctrlKey == false) {
+    if (evt.ctrlKey == false && evt.metaKey == false) {
       clearAll();
       $('#link_' + lineID).addClass('highlight');
       addQID(questionID, pID, true);

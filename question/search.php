@@ -88,7 +88,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
       lineID = questionID;
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#id' + lineID).addClass('highlight');
         addQID(questionID, true);

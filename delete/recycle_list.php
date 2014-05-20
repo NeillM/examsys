@@ -93,7 +93,7 @@ if (isset($_GET['folder'])) {
       $('#menu1a').hide();
       $('#menu1b').show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#link_' + lineID).addClass('highlight');
         addQID(itemID, true);

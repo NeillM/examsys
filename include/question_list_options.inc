@@ -83,7 +83,7 @@ if (!isset($module_details) && $module != '0') {
   }
   
   function highlight_line(questionID, lineID, evt) {
-    if (evt.ctrlKey == false) {
+    if (evt.ctrlKey == false && evt.metaKey == false) {
       clearAll();
       $('#l' + lineID).addClass('highlight');
       addQID(questionID, true);
