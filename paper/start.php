@@ -636,6 +636,7 @@ if ($css != '') {
 <!-- HTML5 part end -->
 <?php
   echo $configObject->get('cfg_js_root');
+
 ?>
 <script language="javascript">
   window.history.go(1);
@@ -773,6 +774,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   $(document).ready(function () {
 		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
 		usingAjax = true;
+    last_saved_user_answers = $('#qForm').serialize();
 		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
 		$('#next').click(userSubmit);
 
@@ -803,6 +805,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   <?php // Normal user submit by clicking on next, prevous, finish or jump screen ?>
   var userSubmit = function (event) {
+    var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     stopAutoSave();
     if (!!event) {
@@ -820,7 +823,11 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
         }
       }
-      ajaxSave();
+      if (last_saved_user_answers !== formData<?php if (!isset($user_answers[$current_screen])) echo ' || true' ?>) {
+        ajaxSave(1);
+      } else {
+        ajaxSave(0);
+      }
     }
   }
 
@@ -829,7 +836,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     stopAutoSave();
     submitType = 'forcedSubmit';
     $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
-    ajaxSave();
+    ajaxSave(1);
   }
 
   <?php  // Called on auto save time out ?>
@@ -848,9 +855,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     <?php // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
 		var now_milliseconds = (new Date).getTime();
 		var save_diff = now_milliseconds - last_save_point;
-    if (last_saved_user_answers !== formData || save_diff > (1000 * 1200)) {
+    if (last_saved_user_answers !== formData) {
       $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
-      ajaxSave();
+      ajaxSave(1);
+			last_save_point = (new Date).getTime();
+    } else if (save_diff > (1000 * 1200)) {
+      ajaxSave(0);
 			last_save_point = (new Date).getTime();
     } else {
       <?php // Re-register the autosave timer ?>
@@ -867,7 +877,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     clearTimeout(autoSaveRef);
   }
 
-  var ajaxSave = function () {
+  var ajaxSave = function (ans_changed) {
     <?php // Hide any errors ?>
     $('#saveError').fadeOut('fast');
     <?php // Random page ID to stop IE caching results. ?>
@@ -878,13 +888,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       tinyMCE.triggerSave();
     }
     $.ajax({
-          url: 'save_screen.php?id=<?php echo $_GET['id'] . $url_mod; ?>&rnd=' + randomPageID + '<?php echo html_entity_decode($url_mod) ?>',
+          url: 'save_screen.php?id=<?php echo $_GET['id'] . $url_mod; ?>&ans_changed=' + ans_changed + '&rnd=' + randomPageID + '<?php echo html_entity_decode($url_mod) ?>',
           type: 'post',
           data: $('#qForm').serialize(),
           dataType: 'html',
           timeout: <?php
 											// Set the time out of one requst to be the maximum total time plus 5s for network latency
-											// PHP handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
+											// PHP handles nomal timeouts. This is just to make sure the user won't wait forever if somthing
 											// weird happens.
 											echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
                    ?>,
@@ -988,7 +998,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     } else {
       document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
     }
-    ajaxSave();
+    ajaxSave(1);
   }
 <?php
 }
