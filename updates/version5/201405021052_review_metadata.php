@@ -41,7 +41,7 @@ QUERY;
   $result->close();
 }
 
-if (!$updater_utils->does_column_exist('review_comments', 'q_paper')) {
+if ($updater_utils->does_column_exist('review_comments', 'q_paper')) {
   // Remove old column from 'review_comments' table.
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN q_paper", true);
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN reviewer", true);
