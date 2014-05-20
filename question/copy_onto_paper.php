@@ -363,7 +363,6 @@ if (!isset($_POST['submit'])) {
               // Add new relationship records for the paper and question
               $sql = 'INSERT INTO relationships(idMod, paper_id, question_id, obj_id, calendar_year, vle_api, map_level) VALUES(?, ?, ?, ?, ?, ?, ?)';
               $addRel = $mysqli->prepare($sql);
-              echo $mysqli->error;
               $addRel->bind_param('iiiissi', $_GET['module'], $property_id, $question_id, $obj_id, $calendar_year, $vle_api_data['api'], $vle_api_data['level']);
               $addRel->execute();
               $addRel->close();
