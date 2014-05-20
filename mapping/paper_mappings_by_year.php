@@ -194,46 +194,49 @@ foreach ($papers as $p_id => $paper) {
   $objsBySession[$p_id] = getObjectives($moduleIDs, $paper['session'], $p_id,$paper['questionID'], $mysqli);
 }
 
-$allsession = array();
 $n = 0;
-$id_guid_map = array();
-$guid_id_map = array();
-$obs_canonical = array();
+$allsession     = array();
+$id_guid_map    = array();
+$guid_id_map    = array();
+$obs_canonical  = array();
+
 foreach ($objsBySession as $p_id => $module) {
-  foreach ($module as $moduleID => $sessions) {
-    foreach ($sessions as $id => $session) {
-      if (isset($session['GUID']) and $session['GUID'] != '') {
-        $guid = $session['GUID'];
-      } elseif (isset($id_guid_map[$id])){
-        $guid = $id_guid_map[$id];
-      } else {
-        $guid = $id;
-      }
-      $id_guid_map[$id] = $guid;
-      $guid_id_map[$guid][$p_id] = $id;
-
-      if (isset($session['objectives'])) {
-        $objbuffer = $session['objectives'];
-        if (!isset($allsession[$moduleID][$guid])) {
-          $allsession[$moduleID][$guid] = $session;
-          unset($allsession[$moduleID][$guid]['objectives']);
+  if ($module !== 'error') {
+    foreach ($module as $moduleID => $sessions) {
+      foreach ($sessions as $id => $session) {
+        if (isset($session['GUID']) and $session['GUID'] != '') {
+          $guid = $session['GUID'];
+        } elseif (isset($id_guid_map[$id])){
+          $guid = $id_guid_map[$id];
+        } else {
+          $guid = $id;
         }
+        $id_guid_map[$id] = $guid;
+        $guid_id_map[$guid][$p_id] = $id;
 
-        foreach ($objbuffer as $obj) {
-          if (isset($obs_canonical[md5($obj['content'])])) {
-            $tmp_obj_id = $obs_canonical[md5($obj['content'])];
-          } else {
-            $tmp_obj_id = $obj['id'];
-            $obs_canonical[md5($obj['content'])] = $tmp_obj_id;
+        if (isset($session['objectives'])) {
+          $objbuffer = $session['objectives'];
+          if (!isset($allsession[$moduleID][$guid])) {
+            $allsession[$moduleID][$guid] = $session;
+            unset($allsession[$moduleID][$guid]['objectives']);
           }
-          if (isset($allsession[$moduleID][$guid]['objectives'][$tmp_obj_id])) {
-            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['id_by_paper'][$p_id] = $obj['id'];
-          } else {
-            $obj['id_by_paper'][$p_id] = $obj['id'];
-            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id] = $obj;
+
+          foreach ($objbuffer as $obj) {
+            if (isset($obs_canonical[md5($obj['content'])])) {
+              $tmp_obj_id = $obs_canonical[md5($obj['content'])];
+            } else {
+              $tmp_obj_id = $obj['id'];
+              $obs_canonical[md5($obj['content'])] = $tmp_obj_id;
+            }
+            if (isset($allsession[$moduleID][$guid]['objectives'][$tmp_obj_id])) {
+              $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['id_by_paper'][$p_id] = $obj['id'];
+            } else {
+              $obj['id_by_paper'][$p_id] = $obj['id'];
+              $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id] = $obj;
+            }
+            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['session'] = $papers[$p_id]['session'];
+            $n++;
           }
-          $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['session'] = $papers[$p_id]['session'];
-          $n++;
         }
       }
     }

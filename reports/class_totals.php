@@ -398,7 +398,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 }
 ?>
 <div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; width:100%">
+<table cellspacing="2" cellpadding="0" border="0" style="font-size:90%; width:100%">
   <tr><td>
     <table cellspacing="0" cellpadding="1" border="0" style="width:100%">
       <tr>

@@ -625,12 +625,14 @@ if ($properties->get_paper_type() == '2') {
 
     $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $objsBySession = getObjectives($moduleIDs, $tmp_session, $paperID, $tmp_question_list, $mysqli);
-    foreach ($objsBySession as $moduleCode) {
-      foreach ($moduleCode as $sessionID) {
-        if (isset($sessionID['objectives'])) {
-          foreach ($sessionID['objectives'] as $objective) {
-            $ID = $objective['id'];
-            $objIDs[$ID] = $ID;
+    if ($objsBySession !== 'error') {
+      foreach ($objsBySession as $moduleCode) {
+        foreach ($moduleCode as $sessionID) {
+          if (isset($sessionID['objectives'])) {
+            foreach ($sessionID['objectives'] as $objective) {
+              $ID = $objective['id'];
+              $objIDs[$ID] = $ID;
+            }
           }
         }
       }
@@ -648,7 +650,9 @@ if ($properties->get_paper_type() == '2') {
 
     $mappings_complete = count($mappings);
 
-    if ($mappings_complete < $properties->get_question_no()) {
+    if ($objsBySession == 'error') {
+      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#C00000\"><strong>Error</strong></td></tr>\n";
+    } elseif ($mappings_complete < $properties->get_question_no()) {
       if ($mappings_complete == 0) {
         $tmp_color = '#C00000';
       } else {
@@ -666,8 +670,6 @@ if ($properties->get_paper_type() == '2') {
 </form>
 </div>
 <?php
-  //makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
-
   if ($properties->get_summative_lock()) {
     $params = "&scrOfY=' + $('#scrOfY').val() + '";
   } else {
