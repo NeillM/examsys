@@ -297,20 +297,29 @@ if (!isset($_POST['submit'])) {
         QuestionUtils::add_modules($modules, $question_id, $mysqli);
 
         if ($map_outcomes) {
-          if (isset($_POST['outcomes']) and $_POST['outcomes'] != '') {
-            $outcomes = json_decode($_POST['outcomes'], true);
+          // Make sure tha paper is on the module we're copying from
+          $paper_modules = $properties->get_modules();
 
-            $mappings = $mysqli->prepare("SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?");
-            echo $mysqli->error;
-            $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);
-            $mappings->execute();
-            $mappings->store_result();
-            $mappings->bind_result($q_id, $obj_id);
-            while($mappings->fetch()) {
-              $map_guid[$outcomes[$obj_id]] = true;
+          if (in_array($_GET['module'], array_keys($paper_modules))) {
+            if (isset($_POST['outcomes']) and $_POST['outcomes'] != '') {
+              $outcomes = json_decode($_POST['outcomes'], true);
+
+              $mappings = $mysqli->prepare("SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?");
+              echo $mysqli->error;
+              $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);
+              $mappings->execute();
+              $mappings->store_result();
+              $mappings->bind_result($q_id, $obj_id);
+              while($mappings->fetch()) {
+                if (isset($outcomes[$obj_id])) {
+                  $map_guid[$outcomes[$obj_id]] = true;
+                }
+              }
+              $mappings->close();
+              print_r($map_guid);
             }
-            $mappings->close();
-            print_r($map_guid);
+          } else {
+            echo '<p>Destination paper not on module of mapped questions</p>';
           }
         }
       }
