@@ -216,12 +216,14 @@ class QuestionBank {
     $result->close();
   }
 
-  public function get_outcomes($ac_year = 'all') {
+  public function get_outcomes($ac_year = 'all', $vle_api_data = null) {
     $outcomes = array();
     $vle_api_cache = array();
 
     // Get the VLE API we're using currently
-    $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+    if (is_null($vle_api_data)) {
+      $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+    }
 
     if ($vle_api_data['api'] != '') {
       $vle = CMFactory::GetCMAPI($vle_api_data['api']);

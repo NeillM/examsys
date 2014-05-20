@@ -161,6 +161,11 @@ if (!isset($_POST['submit'])) {
   $q_id = $_GET['q_id'];
   $logger = new Logger($mysqli);
 
+  if ($map_outcomes) {
+    $vle_api_cache = array();
+    $vle_api_data = MappingUtils::get_vle_api($_GET['module'], date_utils::get_current_academic_year(), $vle_api_cache, $mysqli);
+  }
+
   //- Handle paper data first ------------------------------------------------------------------------------------------------------------------------------------
 
   // Get the maximum display position for an existing paper.
@@ -348,11 +353,23 @@ if (!isset($_POST['submit'])) {
 
       if (count($map_guid) > 0) {
         // Get the mappings for the module in the paper's academic year
-        $outcomes = $qbank->get_outcomes($properties->get_calendar_year());
+        $calendar_year = $properties->get_calendar_year();
+        $outcomes = $qbank->get_outcomes($calendar_year, $vle_api_data);
         
-        // get the IDs of the outcomes for the GUIDs we've been passed
-        
-        // Add new ralationship records for the paper and question
+        foreach(array_keys($map_guid) as $guid) {
+          // get the IDs of the outcomes for the GUIDs we've been passed
+          if (isset($outcomes[$guid])) {
+            foreach($outcomes[$guid]['ids'] as $obj_id) {
+              // Add new relationship records for the paper and question
+              $sql = 'INSERT INTO relationships(idMod, paper_id, question_id, obj_id, calendar_year, vle_api, map_level) VALUES(?, ?, ?, ?, ?, ?, ?)';
+              $addRel = $mysqli->prepare($sql);
+              echo $mysqli->error;
+              $addRel->bind_param('iiiissi', $_GET['module'], $property_id, $question_id, $obj_id, $calendar_year, $vle_api_data['api'], $vle_api_data['level']);
+              $addRel->execute();
+              $addRel->close();
+            }
+          }
+        }
       }
     } else {
       display_error($string['qcopyerrorno'], sprintf($string['qcopyerror'], $q_id));
