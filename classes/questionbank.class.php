@@ -37,15 +37,15 @@ class QuestionBank {
   private $bank_types = null;
   private $stats = null;
 
-  public function __construct($idMod, $string, $notice, $db) {
+  public function __construct($idMod, $moduleID, $string, $notice, $db) {
     $this->db     = $db;
     $this->string = $string;
     $this->idMod  = $idMod;
+    $this->module_id = $moduleID;
     $this->notice = $notice;
   }
   
-  public function get_categories($type, $module_id='') {
-    $this->module_id = $module_id;
+  public function get_categories($type) {
     if ($this->bank_types == null) {
       $this->load_categories($type);
     }
@@ -216,7 +216,7 @@ class QuestionBank {
     $result->close();
   }
 
-  private function get_outcomes() {
+  public function get_outcomes($ac_year = 'all') {
     $outcomes = array();
     $vle_api_cache = array();
 
@@ -227,7 +227,11 @@ class QuestionBank {
       $vle = CMFactory::GetCMAPI($vle_api_data['api']);
 
       // Get years for which there are mappings for the current mapping source
-      $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+      if ($ac_year == 'all') {
+        $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+      } else {
+        $all_years = array($ac_year);
+      }
 
       foreach ($all_years as $ac_year) {
         $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);

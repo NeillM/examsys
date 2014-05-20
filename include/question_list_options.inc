@@ -305,7 +305,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 <?php
   echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">&nbsp;show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
-    $subtypes = $qbank->get_categories($type, $module_details['moduleid']);
+    $subtypes = $qbank->get_categories($type);
     
     foreach($subtypes as $id=>$subtype) {
       $data = '';

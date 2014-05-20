@@ -75,7 +75,7 @@ if (isset($_GET['module'])) {
   $module = '';
 }
 
-$qbank = new QuestionBank($module, $string, $notice, $mysqli);
+$qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>

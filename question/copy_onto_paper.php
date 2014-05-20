@@ -31,6 +31,10 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../include/mapping.inc';
+require_once '../classes/mappingutils.class.php';
+require_once '../classes/moduleutils.class.php';
+require_once '../classes/questionbank.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 
@@ -39,7 +43,13 @@ if (!QuestionUtils::question_exists(substr($_GET['q_id'],1), $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$map_outcomes = (isset($_GET['type']) and $_GET['type'] == 'outcome') ? true : false;
+if (isset($_GET['type']) and $_GET['type'] == 'outcome') {
+  $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+  $qbank = new QuestionBank($_GET['module'], $module_code, $string, $notice, $mysqli);
+  $map_outcomes = true;
+} else {
+  $map_outcomes = false;
+}
 
 if (!isset($_POST['submit'])) {
 ?>
@@ -162,6 +172,8 @@ if (!isset($_POST['submit'])) {
   $q_IDs = explode(',', $_GET['q_id']);
 
   for ($i=1; $i<count($q_IDs); $i++) {
+    $map_guid = array();
+
     $result = $mysqli->prepare("SELECT * FROM questions WHERE q_id = ?");
     $result->bind_param('i', $q_IDs[$i]);
     $result->execute();
@@ -309,14 +321,14 @@ if (!isset($_POST['submit'])) {
               $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);
               $mappings->execute();
               $mappings->store_result();
-              $mappings->bind_result($q_id, $obj_id);
+              $mappings->bind_result($map_q_id, $obj_id);
               while($mappings->fetch()) {
                 if (isset($outcomes[$obj_id])) {
                   $map_guid[$outcomes[$obj_id]] = true;
                 }
               }
               $mappings->close();
-              print_r($map_guid);
+              // echo '<br />'.$q_IDs[$i].'<br />';print_r($map_guid);
             }
           } else {
             echo '<p>Destination paper not on module of mapped questions</p>';
@@ -333,6 +345,15 @@ if (!isset($_POST['submit'])) {
 
       // Create a track changes record to say new question added.
       $success = $logger->track_change('Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
+
+      if (count($map_guid) > 0) {
+        // Get the mappings for the module in the paper's academic year
+        $outcomes = $qbank->get_outcomes($properties->get_calendar_year());
+        
+        // get the IDs of the outcomes for the GUIDs we've been passed
+        
+        // Add new ralationship records for the paper and question
+      }
     } else {
       display_error($string['qcopyerrorno'], sprintf($string['qcopyerror'], $q_id));
     }
