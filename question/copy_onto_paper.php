@@ -136,8 +136,7 @@ if (!isset($_POST['submit'])) {
 
   echo "</table>\n</div>";
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
-//  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
-  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+  echo "<div align=\"center\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
 <!DOCTYPE html>
@@ -336,7 +335,7 @@ if (!isset($_POST['submit'])) {
               // echo '<br />'.$q_IDs[$i].'<br />';print_r($map_guid);
             }
           } else {
-            echo '<p>Destination paper not on module of mapped questions</p>';
+            echo '<p>' . $string['papernotonmodule'] . '</p>';
           }
         }
       }

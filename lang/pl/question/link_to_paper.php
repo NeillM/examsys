@@ -25,4 +25,5 @@ $string['success'] = 'Pytanie dodane.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
 $string['cancel'] = 'Anuluj';
 $string['ok'] = 'OK'; //cognate
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

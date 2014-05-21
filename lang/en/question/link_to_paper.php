@@ -25,4 +25,5 @@ $string['msg2'] = 'A summative paper is locked and cannot be altered.';
 $string['newassessmentpaper'] = 'New Assessment Paper';
 $string['success'] = 'Question added.';
 $string['duplicatename'] = "Sorry <strong>'%s'</strong> is a name already in use.";
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

@@ -190,7 +190,7 @@ if (!isset($_POST['submit'])) {
           // echo '<br />'.$q_IDs[$i].'<br />';print_r($map_guid);
         }
       } else {
-        echo '<p>Destination paper not on module of mapped questions</p>';
+        echo '<p>' . $string['papernotonmodule'] . '</p>';
       }
     }
 

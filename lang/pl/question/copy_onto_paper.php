@@ -28,5 +28,6 @@ $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używ
 $string['cancel'] = 'Anuluj';
 $string['ok'] = 'OK'; //cognate
 $string['qcopyerrorno'] = 'Błąd kopiowania pytania'; 
-$string['qcopyerror'] = 'Pytanie %d nie mogło być skopiowane'; 
+$string['qcopyerror'] = 'Pytanie %d nie mogło być skopiowane';
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

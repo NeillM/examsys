@@ -25,4 +25,5 @@ $string['msg2'] = 'Sumativní dokument je v současnosti uzamčen a nemohou v n�
 $string['newassessmentpaper'] = 'Nový dokument';
 $string['success'] = 'Úloha přidána';
 $string['duplicatename'] = "Promiňte <strong>'%s'</strong> jméno je již použito.";
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

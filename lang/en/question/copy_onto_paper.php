@@ -29,4 +29,5 @@ $string['success'] = 'Question copied onto <strong>%s</strong>.';
 $string['duplicatename'] = "Sorry <strong>'%s'</strong> is a name already in use.";
 $string['qcopyerrorno'] = 'Question copy error';
 $string['qcopyerror'] = 'Question %d could not be copied';
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>
