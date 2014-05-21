@@ -67,6 +67,7 @@ if (!isset($_POST['submit'])) {
         alert("Please select which paper you would like to add the question to.");
         return false;
       }
+      $('#working').show();
     }
 
     function resizeList() {
@@ -125,7 +126,7 @@ if (!isset($_POST['submit'])) {
   echo "</table>\n</div>";
   
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
-  echo "<div style=\"text-align:center; padding-top:4px;\"><input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+  echo "<div style=\"text-align:center; padding-top:4px;\"><img src=\"../artwork/working.gif\" id=\"working\" width=\"16\" height=\"16\" alt=\"Working\" style=\"display: none\" /> <input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
 ?>
 <!DOCTYPE html>
