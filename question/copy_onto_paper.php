@@ -314,7 +314,7 @@ if (!isset($_POST['submit'])) {
         QuestionUtils::add_modules($modules, $question_id, $mysqli);
 
         if ($map_outcomes) {
-          // Make sure tha paper is on the module we're copying from
+          // Make sure that paper is on the module we're copying from
           $paper_modules = $properties->get_modules();
 
           if (in_array($_GET['module'], array_keys($paper_modules))) {

@@ -163,7 +163,13 @@ if (!isset($module_details) && $module != '0') {
   }
 
   function linkToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/link_to_paper.php?q_id=" + $('#questionID').val() + "","properties","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    <?php
+    $url = $configObject->get('cfg_root_path') . '/question/link_to_paper.php?q_id=" + $(\'#questionID\').val()';
+    if (isset($_GET['type']) and $_GET['type'] != '') {
+      $url .= ' + "&type=' . $_GET['type'] . '&module=' . $module;
+    }
+    ?>
+    notice=window.open("<?php echo $url ?>","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300, 20);
     if (window.focus) {
       notice.focus();
