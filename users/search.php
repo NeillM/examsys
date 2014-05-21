@@ -274,7 +274,7 @@ if (isset($_GET['paperID'])) {
       $('#menu2a').hide();
       $('#menu' + menuID).show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#' + lineID).addClass('highlight');
         addUserID(userID, true);

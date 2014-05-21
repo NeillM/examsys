@@ -28,6 +28,7 @@ require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/keywordutils.class.php';
+require_once '../classes/dateutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
 
@@ -59,7 +60,10 @@ if (isset($_GET['keyword'])) {
 if (isset($_GET['module'])) {
   $module = $_GET['module'];
   if ($module != '0') {
-    $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
+    if (!isset($module_details)) {
+      $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+    }
+    $module_code = $module_details['moduleid'];
     if (!$module_code) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -71,7 +75,7 @@ if (isset($_GET['module'])) {
   $module = '';
 }
 
-$qbank = new QuestionBank($module, $string, $notice, $mysqli);
+$qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -150,12 +154,12 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
  
   $staff_modules_sql = '';
   if ($module != '') {
-    $module_sql = "idMod = " . $_GET['module'];
+    $module_sql = "questions_modules.idMod = " . $_GET['module'];
   } else {
     if (count($staff_modules) > 0) {
-      $staff_modules_sql = implode(',', array_keys($staff_modules));
-      $staff_modules_sql = " AND (idMod IN ($staff_modules_sql)";
-      $staff_modules_sql .= " OR users.id=" . $userObject->get_user_ID() . ") ";
+      $staff_modules_list = implode(',', array_keys($staff_modules));
+      $staff_modules_sql = " AND ((questions_modules.idMod IN ($staff_modules_list)";
+      $staff_modules_sql .= ") OR users.id=" . $userObject->get_user_ID() . ") ";
     } else {
       // Reset to just look for current owners paper if not on any teams.
       $staff_modules_sql .= "AND users.id=" . $userObject->get_user_ID() . " ";
@@ -215,6 +219,10 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
     $sql = "SELECT DISTINCT keyword AS extra_field, keywordID AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules, keywords_question, keywords_user) WHERE questions.q_id = keywords_question.q_id AND keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = $module AND deleted IS NULL AND status NOT IN ($retired_in)";
   } elseif ($_GET['type'] == 'bloom') {
     $sql = "SELECT DISTINCT bloom AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in)";
+  } elseif ($_GET['type'] == 'objective') {
+    $vle_api_cache = array();
+    $vle_api_data = MappingUtils::get_vle_api($module, date_utils::get_current_academic_year(), $vle_api_cache, $mysqli);
+    $sql = "SELECT DISTINCT GROUP_CONCAT(obj_id SEPARATOR ' ') AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules, relationships) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = relationships.question_id AND relationships.vle_api = '{$vle_api_data['api']}' AND relationships.map_level = '{$vle_api_data['level']}' $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in) GROUP BY question_id";
   } else {
     $sql = "SELECT DISTINCT NULL AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL $keyword AND deleted IS NULL";
     if ($_GET['type'] != 'status') {
@@ -264,7 +272,6 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
 	if (isset($_GET['module'])) $params .= '&module=' . $_GET['module'];
 	if (isset($_GET['keyword'])) $params .= '&keyword=' . $_GET['keyword'];
 	
-  
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
   echo "<thead>\n";
   foreach ($table_order as $display => $col_width) {
@@ -313,7 +320,9 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
         } elseif ($d >= 0 and $d < 15) {
           echo ' low';
         }
-    }
+    } elseif ($_GET['type'] == 'objective' and $extra_field != '') {
+      echo ' ' . $extra_field;
+    } 
     if ($locked != '') {
       echo ' locked';
     }
@@ -362,6 +371,11 @@ $qbank = new QuestionBank($module, $string, $notice, $mysqli);
 ?>
 </tbody>
 </table>
+<?php
+if (strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+  echo '<p><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> ' . $string['modulenomappings'] . '</p>';
+}  
+?>
 </div>
 
 </body>

@@ -25,20 +25,23 @@
 */
 
 require_once '../classes/question_status.class.php';
+require_once $cfg_web_root . 'classes/dateutils.class.php';
 
 class QuestionBank {
   
   private $db;
   private $idMod;
+  private $module_id;
   private $string;
   private $notice;
   private $bank_types = null;
   private $stats = null;
 
-  public function __construct($idMod, $string, $notice, $db) {
+  public function __construct($idMod, $moduleID, $string, $notice, $db) {
     $this->db     = $db;
     $this->string = $string;
     $this->idMod  = $idMod;
+    $this->module_id = $moduleID;
     $this->notice = $notice;
   }
   
@@ -140,6 +143,9 @@ class QuestionBank {
             'low' => $this->string['low']
         );
         break;
+      case 'objective':
+        $this->bank_types = $this->get_outcomes();
+        break;
     }
   }
   
@@ -209,6 +215,47 @@ class QuestionBank {
     } 
     $result->close();
   }
-    
+
+  public function get_outcomes($ac_year = 'all', $vle_api_data = null) {
+    $outcomes = array();
+    $vle_api_cache = array();
+
+    // Get the VLE API we're using currently
+    if (is_null($vle_api_data)) {
+      $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+    }
+
+    if ($vle_api_data['api'] != '') {
+      $vle = CMFactory::GetCMAPI($vle_api_data['api']);
+
+      // Get years for which there are mappings for the current mapping source
+      if ($ac_year == 'all') {
+        $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+      } else {
+        $all_years = array($ac_year);
+      }
+
+      foreach ($all_years as $ac_year) {
+        $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+
+        if (is_array($obs) and isset($obs[$this->module_id])) {
+          foreach ($obs[$this->module_id] as $session) {
+            if (isset($session['objectives'])) {
+              foreach ($session['objectives'] as $objective) {
+                if (isset($objective['guid'] )) {
+                  // Build list of IDs but use the latest text
+                  $ids = (isset($outcomes[$objective['guid']])) ? $outcomes[$objective['guid']]['ids'] : array();
+                  $ids[] = $objective['id'];
+                  $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => $objective['content']);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return $outcomes;
+  }
 }
 ?>

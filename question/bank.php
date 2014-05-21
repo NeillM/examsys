@@ -52,7 +52,7 @@ if (!$module_details) {
  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
 }
 
-$qbank = new QuestionBank($module, $string, $notice, $mysqli);
+$qbank = new QuestionBank($module, $module_details['moduleid'], $string, $notice, $mysqli);
 
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];

@@ -29,4 +29,5 @@ $string['success'] = 'Úloha zkopírovaná do <strong>%s</strong>.';
 $string['duplicatename'] = "Promiňte <strong>'%s'</strong> jméno je již použito.";
 $string['qcopyerrorno'] = 'Chyba při kopírování úlohy';
 $string['qcopyerror'] = 'Úloha %d nebyla zkopírována';
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

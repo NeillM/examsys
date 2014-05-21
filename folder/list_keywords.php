@@ -76,7 +76,7 @@ require_once '../classes/moduleutils.class.php';
       $('#menu1a').hide();
       $('#menu1b').show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#link_' + questionID).addClass('highlight');
         addKeyID(questionID, true);

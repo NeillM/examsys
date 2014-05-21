@@ -39,7 +39,7 @@ $module = check_var('module', 'GET', true, false, true);
 
 $add_member = false;
 
-if ($_GET['module'] != '0') {
+if (!isset($module_details) && $_GET['module'] != '0') {
   $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 
   if (!$module_details) {
@@ -160,6 +160,9 @@ echo "<br />\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">" . $string['allquestions'] . "</a></td></tr></table></div>\n";
 
 $bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
+if (strpos($module_details['checklist'], 'mapping') !== false) {
+  $bank_types[$string['byobjective']] = '../question/list.php?type=objective&module=' . $module;
+}
 foreach ($bank_types as $type_name=>$url) {
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a></td></tr></table></div>\n";
 }

@@ -483,4 +483,28 @@ function copyObjectives($objectives, $idMod, $module, $dest_session, $db) {
 	}
 }
 
+/**
+ * Get all academic years for which there are mappings for the given modules
+ * @param  array   $moduleID    Array of id => module codes
+ * @param  mysqli  $db          Database link
+ * @return array[string]        Array of academic years
+ */
+function getYearsForModules($api_name, $moduleID, $db) {
+  $cal_years = array();
+  $id_mod_in = implode(',', array_keys($moduleID));
+
+  $sql = "SELECT distinct calendar_year FROM relationships WHERE calendar_year IS NOT NULL AND idMod IN ($id_mod_in) AND vle_api = ? ORDER BY calendar_year";
+  $result = $db->prepare($sql);
+  $result->bind_param('s', $api_name);
+  $result->execute();
+  $result->bind_result($calendar_year);
+  $result->store_result();
+  while($result->fetch()) {
+    $cal_years[] = $calendar_year;
+  }
+  $result->close();
+
+  return $cal_years;
+}
+
 ?>

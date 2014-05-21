@@ -26,6 +26,16 @@
 
 require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
+require_once $cfg_web_root . 'include/errors.inc';
+require_once $cfg_web_root . 'include/mapping.inc';
+
+$module = check_var('module', 'GET', true, false, true);
+
+$add_member = false;
+
+if (!isset($module_details) && $module != '0') {
+  $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+}
 ?>
 <?php echo $configObject->get('cfg_js_root') ?>
 <script src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js" type="text/javascript"></script>
@@ -73,7 +83,7 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
   }
   
   function highlight_line(questionID, lineID, evt) {
-    if (evt.ctrlKey == false) {
+    if (evt.ctrlKey == false && evt.metaKey == false) {
       clearAll();
       $('#l' + lineID).addClass('highlight');
       addQID(questionID, true);
@@ -124,15 +134,42 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
   }
 
   function copyToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    <?php
+    $url = $configObject->get('cfg_root_path') . '/question/copy_onto_paper.php?q_id=" + $(\'#questionID\').val()';
+    if (isset($_GET['type']) and $_GET['type'] != '') {
+      $url .= ' + "&type=' . $_GET['type'] . '&module=' . $module;
+    }
+    ?>
+    notice=window.open("<?php echo $url ?>","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300, 20);
+
     if (window.focus) {
       notice.focus();
     }
   }
 
+  function getSelectedOutcomes() {
+    var outcomes = {};
+    $('.check_type:checked').each(function() {
+      var ids = $(this).data('ids');
+      if (ids != '') {
+        ids = ids.toString().split(',');
+        for (var i = 0; i < ids.length; i++) {
+          outcomes[ids[i].toString()] = $(this).val();
+        }
+      }
+    });
+    return JSON.stringify(outcomes);
+  }
+
   function linkToPaper() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/link_to_paper.php?q_id=" + $('#questionID').val() + "","properties","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    <?php
+    $url = $configObject->get('cfg_root_path') . '/question/link_to_paper.php?q_id=" + $(\'#questionID\').val()';
+    if (isset($_GET['type']) and $_GET['type'] != '') {
+      $url .= ' + "&type=' . $_GET['type'] . '&module=' . $module;
+    }
+    ?>
+    notice=window.open("<?php echo $url ?>","notice","width=600,height=" + (screen.height-100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300, 20);
     if (window.focus) {
       notice.focus();
@@ -149,15 +186,11 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
   
   function check_checkboxes() {
     $(".q").hide();
-    $('input[type=checkbox]').each(function () {
-      if ($(this).attr("class") == 'check_type') {
-        q_type = $(this).val();
-        if (this.checked) {
-          $("." + q_type).show();
-          if (!$('#check_locked').attr('checked')) {
-            $("." + q_type + '.locked').hide();
-          }
-        }
+    $('input[type=checkbox].check_type:checked').each(function () {
+      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').toString().replace(',', ',.');
+      $("." + q_type).show();
+      if (!$('#check_locked').attr('checked')) {
+        $("." + q_type + '.locked').hide();
       }
     });
 
@@ -172,6 +205,20 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
     $('#list').css('height', winH + 'px');
   }
 
+  var hide_unmapped_obs = function() {
+    $('.check_type').parent().hide();
+    $('.check_type').each(function() {
+      var ids = $(this).data('ids');
+      ids = ids.toString().split(',');
+      for (var i = 0; i < ids.length; i++) {
+        if ($('.q.' + ids[i]).length > 0) {
+          $(this).parent().show();
+          break;
+        }
+      };
+    });
+  }
+
   $(document).ready(function() {
     $(".check_type").click(function() {
       check_checkboxes();
@@ -180,7 +227,14 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
     $("#check_locked").click(function() {
       check_checkboxes();
     });
-    
+
+<?php
+if ($_GET['type'] == 'objective') {
+?>
+    hide_unmapped_obs();
+<?php
+}
+?> 
     check_checkboxes();
     resizeList();
       
@@ -247,6 +301,9 @@ switch ($_GET['type']) {
   case 'performance':
     $display_type = 'Performance';
     break;
+  case 'objective':
+    $display_type = 'Learning Outcome';
+    break;
 }
 echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 ?>
@@ -257,6 +314,8 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
     $subtypes = $qbank->get_categories($type);
     
     foreach($subtypes as $id=>$subtype) {
+      $data = '';
+
       if ($_GET['type'] == 'all') {
         $checked = ' checked';
       } elseif (isset($_GET['subtype']) and $_GET['subtype'] == $id) {
@@ -264,8 +323,15 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
       } else {
         $checked = '';
       }
+
+      if ($_GET['type'] == 'objective') {
+        $ids = $subtype['ids'];
+        $data = ' data-ids="' . implode(',', $ids) . '"';
+
+        $subtype = $subtype['label'];
+      }
       
-      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked/><label for=\"check_$id\">$subtype</lable></div>\n";
+      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\">$subtype</lable></div>\n";
     }
   }
 ?>
