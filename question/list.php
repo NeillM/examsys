@@ -101,6 +101,8 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     input[type=checkbox] {margin-right:8px}
     .licon {background-image: url('../artwork/small_padlock.png'); background-repeat:no-repeat; background-position:left center; padding-left:20px !important}
     .unlicon {padding-left:20px !important}
+    input.check_type { float: left; clear: left; margin-right: 0;}
+    .check_label { display: block; float: left; margin-left: 10px; width: 80%; padding-bottom: 6px;}
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 

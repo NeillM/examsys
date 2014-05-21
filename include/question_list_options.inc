@@ -328,10 +328,10 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
         $ids = $subtype['ids'];
         $data = ' data-ids="' . implode(',', $ids) . '"';
 
-        $subtype = $subtype['label'];
+        $subtype = strip_tags($subtype['label']);
       }
       
-      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\">$subtype</lable></div>\n";
+      echo "<div><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</lable></div>\n";
     }
   }
 ?>
