@@ -45,6 +45,10 @@ require_once $path . '/classes/smsutils.class.php';
 require_once $path . '/classes/lang.class.php';
 require_once $path . '/include/custom_error_handler.inc';
 
+if ($configObject->get('cfg_sms_api') == '') {
+  log_error(0, 'CRON JOB', 'Application Error', "'cfg_sms_api' setting in config.inc.php is set to blank.", 'users_from_SMS.php', 0, '', null, null, null);
+  exit();
+}
 $sms_connection = SmsUtils::GetSmsUtils();
 
 //error_reporting(E_ALL);
@@ -59,7 +63,7 @@ $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session
 $session_parts = explode('/', $session);
 
 // Do not include deleted modules or non-active modules.
-$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid LIMIT 10");
+$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);
