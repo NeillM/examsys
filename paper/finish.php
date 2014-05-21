@@ -142,7 +142,7 @@ if ($userObject->has_role('Student')) {
 }
 
 //are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
+$is_preview_mode = ($userObject->has_role(array('Staff', 'SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
 $is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2');
 
 //are we in a staff test and preview mode and on the first screen?
@@ -151,7 +151,7 @@ $is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode'
 //are we in a staff single question testmode
 $is_question_preview_mode = (isset($_GET['q_id']));
 
-$is_exam_review_mode = ($userObject->has_role('Staff') and isset($_GET['userID']) and $_GET['userID'] != $userObject->get_user_ID());
+$is_exam_review_mode = ($userObject->has_role(array('Staff', 'External Examiner')) and isset($_GET['userID']) and $_GET['userID'] != $userObject->get_user_ID());
 
 $is_formative_review = (isset($_GET['metadataID']) and $paper_type == '0');
 
@@ -166,7 +166,7 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
 }
 
 if (isset($_GET['userID'])) {
-  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
     $log_metadata = new LogMetadata($_GET['userID'], $paperID, $mysqli);
   } else {   // Student is hacking the userid parameter
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -303,7 +303,9 @@ require '../config/finish.inc';
   if (!isset($_GET['q_id'])) {
     echo $top_table_html;
     echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-    if ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+    if ($userObject->has_role('External Examiner')) {
+      echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['student'] . ' ' . $tmp_student_id . '</span>';
+    } elseif ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
       $tmp_student_name = $tmp_title . ' ' . demo_replace($tmp_surname, $demo) . ', ' . demo_replace($tmp_initials, $demo);
       $tmp_student_id = demo_replace_number($tmp_student_id, $demo);
@@ -339,7 +341,7 @@ require '../config/finish.inc';
   } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
     if ($userObject->has_role('Student')) {
       $show_feedback = false;
-    } elseif ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+    } elseif ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
       $show_feedback = true;
     }
   }

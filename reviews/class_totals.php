@@ -16,7 +16,7 @@
 
 /**
 *
-* Class Totals report.
+* Class Totals (for externals) report.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -32,33 +32,30 @@ require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/exam_announcements.class.php';
 
-$paperID    = check_var('paperID', 'GET', true, false, true);
-$startdate  = check_var('startdate', 'GET', true, false, true);
-$enddate    = check_var('enddate', 'GET', true, false, true);
+$id         = check_var('id', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli);
 
 $paper            = $propertyObj->get_paper_title();
+$paperID          = $propertyObj->get_property_id();
 $marking          = $propertyObj->get_marking();
 $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
 $paper_type       = $propertyObj->get_paper_type();
+$startdate        = $propertyObj->get_raw_start_date();
+$enddate          = $propertyObj->get_raw_end_date();
 
-$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
-$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
-$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
-$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
-$studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
-$repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
-$repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
+$percent      = 100;
+$ordering     = 'asc';
+$absent       = 0;
+$sortby       = 'name';
+$studentsonly = 1;
+$repcourse    = '%';
+$repmodule    = '';
 
 $report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
-if (isset($_GET['recache']) and $_GET['recache'] == '1') {
-  $report->compile_report(true);  // Force a re-cache
-} else {
-  $report->compile_report(false);
-}
+$report->compile_report(false);
 
 $user_results = $report->get_user_results();
 $paper_buffer = $report->get_paper_buffer();
@@ -130,83 +127,6 @@ function check_temp_account_warnings($user_results, $string) {
   }
 }
 
-if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) or ($paper_type == '1' and $report->unmarked_enhancedcalc())) {
-// Only mark calculation questions when the exam is not active.
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-<title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
-<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/toprightmenu.js"></script>
-<script language="JavaScript">
-	$(document).ready(function() {
-		// Fire off the request to mark_all_enhancedcalc.php
-   var request = $.ajax({
-      url: "../ajax/reports/mark_all_enhancedcalc.php",
-      type: "get",
-      data: {paperID: <?php echo $paperID; ?>},
-			timeout: 30000, // timeout after 30 seconds
-			dataType: "html",
-			success: function (data, textStatus, jqXHR) {
-				data = data.replace(/(\r\n|\n|\r)/gm,"");
-			  if (data == 'Complete') {
-				  window.location.reload();
-				} else {
-					$("#msg").html(data);
-				}
-			},
-			error: function (xhr, textStatus, errorThrown) {
-				$("#msg").html('Error: ' + textStatus);
-			},
-			fail: function (jqXHR, textStatus) {
-				$("#msg").html('Failed: ' + textStatus);
-			},
-    });
-	});
-</script>
-</head>
-<body>
-<?php
-  require '../include/toprightmenu.inc';
-
-	echo draw_toprightmenu(30);
-
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:80%\">\n";
-  echo "<tr><th class=\"h\">";
-
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '' ) {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
-
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-
-  echo '</table>';
-	
-	echo "<div class=\"marking\"><img src=\"../artwork/large_spin.gif\" widht=\"32\" height=\"32\" style=\"float:left; padding-right:10px\" />\n";
-	echo "<div id=\"msg\">" . $string['marking'] . "</div>\n";
-	echo "</div>\n";
-?>
-</body>
-</html>
-<?php
-exit();
-}
-
 ob_start();
 ?>
 <!DOCTYPE html>
@@ -244,37 +164,6 @@ ob_start();
       $('#item1b').css('color', '#000000');
       $('#item2b').css('color', '#000000');
     }
-
-    if (tmpReassign == 'y') {
-      $('#item3b').css('color', '#C0C0C0');
-      $('#item5b').css('color', '#000000');
-    } else {
-      $('#item3b').css('color', '#000000');
-      $('#item5b').css('color', '#C0C0C0');
-    }
-
-    if (tmpLogLate == 'y') {
-      $('#item7b').css('color', '#000000');
-      $('#log_late_icon').show();
-    } else {
-      $('#item7b').css('color', '#C0C0C0');
-      $('#log_late_icon').hide();
-    }
-  }
-
-  function confirmSubmit() {
-    var agree = confirm("Are you sure you want to email everyone on this list their marks?");
-    if (agree)
-      return true;
-    else
-      return false;
-  }
-
-  function popupEmailTemplate() {
-    var winwidth = 785;
-    var winheight = 550;
-    templatewin = window.open("emailtemplate.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    templatewin.moveTo(screen.width/2-350,screen.height/2-275);
   }
 
   function viewScript() {
@@ -295,55 +184,6 @@ ob_start();
     }
   }
 
-  function viewProfile() {
-    $('#menudiv').hide();
-    if ($('#reassign').val() == 'n') {
-      window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
-    }
-  }
-
-  function newStudentNote() {
-    $('#menudiv').hide();
-    note = window.open("../users/new_student_note.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&calling=class_totals","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      note.focus();
-    }
-  }
-
-  function reassignScript() {
-    $('#menudiv').hide();
-    if ($('#reassign').val() == 'y') {
-      reassign = window.open("check_reassign_script.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        reassign.focus();
-      }
-    }
-  }
-
-<?php
-  if ($paper_type == '0' or $paper_type == '1') {   // Do not allow reset of timer for Summative exams.
-?>
-  function resetTimer() {
-    $('#menudiv').hide();
-    reassign = window.open("check_reset_timer.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&metadataID=" + $('#metadataID').val() + "","reassign","width=550,height=200,left="+(screen.width/2-275)+",top="+(screen.height/2-100)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      reassign.focus();
-    }
-  }
-<?php
-  }
-?>
-
-  function reassignLogLate() {
-    $('#menudiv').hide();
-    if ($('#loglate').val() == 'y') {
-      loglate = window.open("check_reassign_log_late.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "","reassign","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        reassign.focus();
-      }
-    }
-  }
-
   function viewNote(userID, e) {
     $('#menudiv').hide();
     if (!e) var e = window.event;
@@ -352,7 +192,7 @@ ob_start();
     var scrOfX = $(document).scrollLeft();
     var scrOfY = $(document).scrollTop();
 
-    dataSource = "getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
+    dataSource = "../reports/getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
 
     $("#noteMsg").load(dataSource, function(responseTxt, statusTxt, xhr) {
       if (statusTxt == "success") {
@@ -372,7 +212,7 @@ ob_start();
 	$(document).ready(function() {
     $("#maindata").tablesorter({ 
       // sort on the first column and third column, order asc 
-      sortList: [[2,0],[3,0]] 
+      sortList: [[4,0]] 
     });
     
     $(document).click(function() {
@@ -408,58 +248,6 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
       </tr>
       <tr>
         <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item3a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">
-          <img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" />
-          </td>
-          <td id="item3b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">
-          <?php echo $string['studentprofile']; ?>
-          </td>
-      </tr>
-      <tr>
-        <td id="item4a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">
-        <img src="../artwork/notes_icon.gif" width="14" height="14" alt="" />
-        </td>
-        <td id="item4b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">
-        <?php echo $string['newnote']; ?>
-        </td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right">
-        <img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item5a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
-        <img src="../artwork/guest_account_16.png" width="16" height="16" alt="" />
-        </td>
-        <td id="item5b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
-        <?php echo $string['reassigntouser']; ?></td>
-      </tr>
-      <tr>
-      <?php
-        if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
-          $action = 'resetTimer();';
-          $text_color = 'black';
-        } else {
-          $action = '$(\'#menudiv\').hide()';
-          $text_color = '#C0C0C0';
-        }
-      ?>
-        <td id="item6a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="<?php echo $action; ?>">
-        </td>
-        <td id="item6b" style="padding-left:8px; background-color:#FFFFFF; color:<?php echo $text_color; ?>; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="<?php echo $action; ?>">
-        <?php echo $string['resettimer']; ?></td>
-      </tr>
-      <tr>
-        <td id="item7a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
-        <img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></td>
-        <td id="item7b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
-        <?php echo $string['latesubmissions']; ?>
-        </td>
       </tr>
     </table>
   </td></tr>
@@ -507,9 +295,9 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
   //output table heading
 	if ($configObject->get('cfg_client_lookup') == 'name') {
-		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['hostnames']=>100);
+		$table_order = array(''=>16, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['hostnames']=>100);
 	} else {
-		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
+		$table_order = array(''=>16, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
   }
 	if ($paper_type == '2') $table_order[$string['room']] = 200;
   $metadata_cols = array();
@@ -538,16 +326,6 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
   $report_title = $string['classtotals'];
-  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
-    $report_title .= ' <span style="font-weight: normal">(' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')</span>';
-  } elseif (isset($_GET['percent']) and $_GET['percent'] < 100) {
-    if ($ordering == 'desc') {
-      $report_title .= ' <span style="font-weight: normal">(' . $string['top'] . ' ' . $_GET['percent'] . '%)</span>';
-    } else {
-      $report_title .= ' <span style="font-weight: normal">(' . $string['bottom'] . ' ' . $_GET['percent'] . '%)</span>';
-    }
-  }
-
   echo "<div class=\"page_title\">$report_title</div>";
   echo "</div>\n";
   
@@ -595,11 +373,6 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         ?>
         <tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
         <?php
-        echo "<td class=\"padl\">$title</td>";
-        echo "<td class=\"padl\">$surname</td>";
-        echo "<td class=\"padl\">$first_names</td>";
-        
-        
         if ($user_results[$i]['student_id'] == '') {
           echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";
         } else {
@@ -656,41 +429,32 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         }
         echo " style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . "\"";
         echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" class=\"picon\" /></td>";
-        
-        if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class padl tmpacc $role_css\">Mr</td>";
-          echo "<td class=\"$class padl tmpacc $role_css\">Guest</td>";
-          echo "<td class=\"$class padl tmpacc $role_css\">" . str_replace('User','Account #',$user_results[$i]['surname']);
-        } else {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['title'] . "</td>";
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['surname'] . "</td>";
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['first_names'];
-        }
-        if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
-          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
-        }
         $student_id = $user_results[$i]['username'];
+        
+        if ($user_results[$i]['student_id'] == '') {
+          if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
+            echo "<td class=\"grey $class padl $role_css\">&nbsp;";
+          } else {
+            echo "<td class=\"grey $class padl $role_css\">" . $string['unknown'];
+          }
+        } else {
+          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_id'];
+        }
+        
+        // Add icons
         if ($user_results[$i]['attempt'] > 1) {
           echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" />';
         }
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
           echo '&nbsp;<a href="" onclick="viewNote(\'' . $user_results[$i]['userID'] . '\', event); return false;"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Notes" /></a>';
         }
-        echo "</td>";
+        if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
+          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
+        }        
+        echo '</td>';
         
-        if ($user_results[$i]['student_id'] == '') {
-          if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
-            echo "<td class=\"grey $class padl $role_css\">&nbsp;</td>";
-          } else {
-            echo "<td class=\"grey $class padl $role_css\">" . $string['unknown'] . "</td>";
-          }
-        } else {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_id'] . "</td>";
-        }
         echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
        			
-				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
-				
         if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           echo "<td class=\"mk $class fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
@@ -793,28 +557,21 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
     echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
-    echo "<div class=\"graph\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . "&q2=" . $stats['q2'] . "&q3=" . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></div>\n";
+    echo "<div class=\"graph\"><img src=\"../reports/draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . "&q2=" . $stats['q2'] . "&q3=" . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></div>\n";
 
     echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    echo "<div class=\"graph\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></div>\n";
+    echo "<div class=\"graph\"><img src=\"../reports/draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></div>\n";
 
 
     // Display summary -------------------------------------------------------------------------------------
-    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"font-size:110%; width:100%\">";
+    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"width:100%; font-size:110%\">";
     echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['quartiles'] . "</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
 
     echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
     echo "<tr><td class=\"field\" style=\"width:170px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
-    if ($_GET['percent'] < 100) {
-      if ($ordering == 'desc') {
-        echo ' ('.$string['top'].' ' . $_GET['percent'] . '%)';
-      } else {
-        echo ' ('.$string['bottom'].' ' . $_GET['percent'] . '%)';
-      }
-    }
-
+    
     $size_msg = ($cohort_size < $user_no) ? $cohort_size . $string['of'] . $user_no : $user_no;
     echo "</td><td class=\"r\" style=\"width:60px\">$size_msg</td>";
     if (($stats['completed_no'] + $stats['out_of_range']) < $user_no) {
@@ -922,109 +679,6 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
     echo "</tr></table>\n<br />";
 
-    // Email Class -----------------------------------------------------------------------------------------
-    if (isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
-      // Save the latest template to disk.
-      $file = fopen("../email_templates/" . $userObject->get_user_ID(), "w");
-      fwrite($file,$_POST['from'] . "\n");
-      fwrite($file,$_POST['ccaddress'] . "\n");
-      fwrite($file,$_POST['bccaddress'] . "\n");
-      fwrite($file,$_POST['subject'] . "\n");
-      fwrite($file,$_POST['emailtemplate'] . "\n");
-      fclose($file);
-
-      for ($i=0; $i<$user_no; $i++) {
-        switch ($i) {
-          case 25:
-          case 50:
-          case 75:
-          case 100:
-          case 125:
-          case 150:
-          case 175:
-          case 200:
-          case 225:
-          case 250:
-          case 275:
-          case 300:
-          case 325:
-          case 350:
-          case 375:
-          case 400:
-          case 425:
-          case 450:
-          case 475:
-          case 500:
-          case 525:
-          case 550:
-          case 575:
-          case 600:
-            echo "<tr><td>&nbsp;</td><td colspan=\"8\" height=\"9\">$i sent</td></tr>\n";
-            flush();
-            ob_flush();
-        }
-
-        // Perform replacement.
-        $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html><head>\n<title>$paper</title>\n<style type=\"text/css\">\nbody {font-family: Arial,sans-serif; background-color: white; color:black}</style>\n</head>\n<body>";
-        $message .= $_POST['emailtemplate'];
-        $message = str_replace("{student-title}", $user_results[$i]['title'], $message);
-        $message = str_replace("{student-last-name}", $user_results[$i]['surname'], $message);
-        $message = str_replace("{student-mark}", $user_results[$i]['mark'], $message);
-        $message = str_replace("{student-percent}", $user_results[$i]['percent'], $message);
-        $message = str_replace("{total-paper-mark}", $report->get_total_marks(), $message);
-        $message = str_replace("{student-time}", formatsec($user_results[$i]['duration']), $message);
-        $message = str_replace("{class-mean-mark}", $stats['mean_mark'], $message);
-        $message = str_replace("{class-mean-percent}", $stats['mean_percent'], $message);
-        if ($stats['completed_no']-1 == 0) {
-          $message = str_replace("{class-stdev}", 0, $message);
-        } else {
-          $message = str_replace("{class-stdev}", number_format($stats['stddev_mark'], 2, '.', ','), $message);
-        }
-        $message = str_replace("{class-max-mark}", $stats['max_mark'], $message);
-        $message = str_replace("{class-min-mark}", $stats['min_mark'], $message);
-        $message = str_replace("{class-mean-time}", formatsec(round($total_time / $stats['completed_no'],0)), $message);
-        $message = str_replace("{random-mark}", number_format($report->get_total_random_mark(), 1, '.', ','), $message);
-        $message = str_replace("{paper-title}", $paper, $message);
-
-        $to = $user_results[$i]['email'];
-
-        $subject = $_POST['subject'];
-        $subject = str_replace("{total-paper-mark}", $report->get_total_marks(), $subject);
-        $subject = str_replace("{class-mean-mark}", round($total_mark / $stats['completed_no'], 1), $subject);
-        $subject = str_replace("{class-mean-percent}", $stats['mean_percent'], $subject);
-        $subject = str_replace("{class-max-mark}", $stats['max_mark'], $subject);
-        $subject = str_replace("{class-min-mark}", $stats['min_mark'], $subject);
-        $subject = str_replace("{class-mean-time}", formatsec(round($total_time / $stats['completed_no'],0)), $subject);
-        $subject = str_replace("{random-mark}", number_format($report->get_total_random_mark(), 1, '.', ','), $subject);
-        $subject = str_replace("{paper-title}", $paper, $subject);
-
-        $headers = "From: " . $_POST['from'] . "\n";
-        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
-        if ($_POST['ccaddress'] != '') {
-          $headers .= "cc: " . $_POST['ccaddress'] . "\n";
-        }
-        if ($_POST['bccaddress'] != '') {
-          $headers .= "bcc: " . $_POST['bccaddress'] . "\n";
-        }
-        $message .= "</body>\n</html>\n";
-        mail ($to, $subject, $message, $headers) or print "<div>" . $string['couldnotsend'] . " <strong>$to</strong>.</div>";
-      }
-      echo '<p>' . $string['emailssent'] . '</p>';
-    } else {
-      if ($paper_type < 2) {
-        echo "<div>\n";
-        echo "<form name=\"theform\" method=\"post\">\n";
-        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
-        echo '<input type="hidden" name="emailclass" value="" />';
-        echo '<input type="hidden" name="from" value="" />';
-        echo '<input type="hidden" name="emailtemplate" value="" />';
-        echo '<input type="hidden" name="ccaddress" value="" />';
-        echo '<input type="hidden" name="bccaddress" value="" />';
-        echo '<input type="hidden" name="subject" value="" />';
-        echo "</form>\n</div>\n";
-      }
-    }
-    echo "</table>\n";
   } else {
 		$msg = sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate));
 		echo $notice->info_strip($msg, 100) . "\n</div>\n</body>\n</html>";

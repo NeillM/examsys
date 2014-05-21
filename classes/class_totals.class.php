@@ -207,12 +207,8 @@ class ClassTotals {
 	 */
   public function compile_report($recache) {
     $results_cache = new ResultsCache($this->db);
-    if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
-      $this->recache = true;
-    } else {
-      $this->recache = false;
-    }
-
+    $this->recache = false;
+    
     $moduleID = Paper_utils::get_modules($this->paperID, $this->db);
     $this->moduleID_in = implode(',', array_keys($moduleID));
 
