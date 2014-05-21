@@ -33,7 +33,7 @@ require_once '../classes/questionbank.class.php';
 
 $q_id = check_var('q_id', 'GET', true, false, true);
 
-if (isset($_GET['type']) and $_GET['type'] == 'outcome') {
+if (isset($_GET['type']) and $_GET['type'] == 'objective') {
   $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   $qbank = new QuestionBank($_GET['module'], $module_code, $string, $notice, $mysqli);
   $map_outcomes = true;

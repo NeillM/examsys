@@ -229,7 +229,7 @@ if (!isset($module_details) && $module != '0') {
     });
 
 <?php
-if ($_GET['type'] == 'outcome') {
+if ($_GET['type'] == 'objective') {
 ?>
     hide_unmapped_obs();
 <?php
@@ -301,7 +301,7 @@ switch ($_GET['type']) {
   case 'performance':
     $display_type = 'Performance';
     break;
-  case 'outcome':
+  case 'objective':
     $display_type = 'Learning Outcome';
     break;
 }
@@ -324,7 +324,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
         $checked = '';
       }
 
-      if ($_GET['type'] == 'outcome') {
+      if ($_GET['type'] == 'objective') {
         $ids = $subtype['ids'];
         $data = ' data-ids="' . implode(',', $ids) . '"';
 

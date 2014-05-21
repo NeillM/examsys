@@ -43,7 +43,7 @@ if (!QuestionUtils::question_exists(substr($_GET['q_id'],1), $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_GET['type']) and $_GET['type'] == 'outcome') {
+if (isset($_GET['type']) and $_GET['type'] == 'objective') {
   $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   $qbank = new QuestionBank($_GET['module'], $module_code, $string, $notice, $mysqli);
   $map_outcomes = true;

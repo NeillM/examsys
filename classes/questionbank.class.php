@@ -143,7 +143,7 @@ class QuestionBank {
             'low' => $this->string['low']
         );
         break;
-      case 'outcome':
+      case 'objective':
         $this->bank_types = $this->get_outcomes();
         break;
     }
