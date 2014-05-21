@@ -71,6 +71,9 @@ require_once 'detail_parts/details_marking.php';
 
         <table id="q-options" class="form" summary="<?php echo $string['reminders'] ?>">
 <?php
+// For textbox only, option text is editable
+$dis_class = $dis_readonly = '';
+
 $index = 1;
 foreach ($question->options as $o_id => $option) {
   include 'options/opt_textbox.php';
@@ -81,8 +84,6 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
   $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
   include 'options/opt_textbox.php';
 }
-
-if($question->get_locked() == '') {
 ?>
           <tbody class="add-option-holder">
             <tr>
@@ -92,9 +93,6 @@ if($question->get_locked() == '') {
               </td>
             </tr>
           </tbody>
-<?php
-}
-?>
         </table>
 
         <div class="form">

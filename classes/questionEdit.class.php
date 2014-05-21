@@ -99,6 +99,10 @@ Class QuestionEdit extends RogoObject {
   protected $_comments = null;
   protected $_allow_partial_marks = false;
 
+  // Use with extreme caution
+  // In most cases the interface will ignore this and not let you edit optons that may have been displayed to the user
+  protected $_allow_option_edit = false;
+
   // These fields will be forced to the negative answer value. Useful for checkboxes that won't have a value posted if unset
   protected $_fields_force = array();
 
@@ -595,6 +599,15 @@ QUERY;
    */
   public function allow_partial_marks() {
     return $this->_allow_partial_marks;
+  }
+
+  /**
+   * Does this question type allow options to be edited after questions are locked
+   * Hint: This should almost NEVER happen
+   * @return boolean
+   */
+  public function allow_option_edit() {
+    return $this->_allow_option_edit;
   }
 
   /**

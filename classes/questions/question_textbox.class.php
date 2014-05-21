@@ -34,6 +34,10 @@ Class QuestionTEXTBOX extends QuestionEdit {
   protected $_allow_change_marking_method = false;
   protected $_answer_negative = '';
 
+  // Textbox is a rare example of a question type that will allow option editing
+  protected $_allow_option_edit = true;
+
+
   protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status');
   protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
 
