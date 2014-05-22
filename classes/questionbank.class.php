@@ -246,7 +246,7 @@ class QuestionBank {
                   // Build list of IDs but use the latest text
                   $ids = (isset($outcomes[$objective['guid']])) ? $outcomes[$objective['guid']]['ids'] : array();
                   $ids[] = $objective['id'];
-                  $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => $objective['content']);
+                  $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => trim(strip_tags($objective['content'])));
                 }
               }
             }
