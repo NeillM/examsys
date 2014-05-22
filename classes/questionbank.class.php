@@ -232,8 +232,8 @@ class QuestionBank {
       $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
     }
 
-    if ($vle_api_data['api'] != '') {
-      $vle = CMFactory::GetCMAPI($vle_api_data['api']);
+    // if ($vle_api_data['api'] != '') {
+    //   $vle = CMFactory::GetCMAPI($vle_api_data['api']);
 
       // Get years for which there are mappings for the current mapping source
       if ($ac_year == 'all') {
@@ -249,18 +249,26 @@ class QuestionBank {
           foreach ($obs[$this->module_id] as $session) {
             if (isset($session['objectives'])) {
               foreach ($session['objectives'] as $objective) {
-                if (isset($objective['guid'] )) {
+                if (isset($objective['guid'])) {
+                  $uid = $objective['guid'];
+                } elseif (isset($objective['id'])) {
+                  $uid = $objective['id'];
+                } else {
+                  $uid = '';
+                }
+
+                if ($uid != '') {
                   // Build list of IDs but use the latest text
-                  $ids = (isset($outcomes[$objective['guid']])) ? $outcomes[$objective['guid']]['ids'] : array();
+                  $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : array();
                   $ids[] = $objective['id'];
-                  $outcomes[$objective['guid']] = array('ids' => $ids, 'label' => trim(strip_tags($objective['content'])));
+                  $outcomes[$uid] = array('ids' => $ids, 'label' => $objective['content']);
                 }
               }
             }
           }
         }
       }
-    }
+    // }
 
     if (count($outcomes) > 0) {
       uasort($outcomes, function($a, $b)
@@ -270,6 +278,25 @@ class QuestionBank {
             }
             return ($a['label'] < $b['label']) ? -1 : 1;
         });
+    }
+
+    // Filter local mappings to remove duplicates
+    $last_id = -1;
+    $last_text = '';
+    if ($vle_api_data['api'] == '') {
+      foreach ($outcomes as $id => $outcome) {
+        if ($last_id != -1) {
+          if ($outcome['label'] == $last_text) {
+            $outcomes[$last_id]['ids'][] = $id;
+            unset($outcomes[$id]);
+          } else {
+            $last_id = $id;
+            $last_text = $outcome['label'];
+          }
+        } else {
+          $last_id = $id;
+        }
+      }
     }
 
     return $outcomes;
