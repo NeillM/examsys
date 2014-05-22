@@ -255,6 +255,16 @@ class QuestionBank {
       }
     }
 
+    if (count($outcomes) > 0) {
+      usort($outcomes, function($a, $b)
+        {
+            if ($a['label'] == $b['label']) {
+                return 0;
+            }
+            return ($a['label'] < $b['label']) ? -1 : 1;
+        });
+    }
+
     return $outcomes;
   }
 }
