@@ -28,14 +28,17 @@ require_once '../include/staff_auth.inc';
 require_once '../include/icon_display.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
+require_once '../include/mapping.inc';
 
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/keywordutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/mappingutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
+require_once '../classes/CMFactory.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -94,6 +97,8 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
     $display_type = $string['bystatus'];
   } elseif ($type == 'performance') {
     $display_type = $string['byperformance'];
+  } elseif ($type == 'objective') {
+    $display_type = $string['byobjective'];
   }
 ?>
 <div id="content" class="content">
@@ -115,6 +120,7 @@ if ($type == 'performance') {
 }
 
 $old_section = '';
+
 foreach ($bank_types as $id=>$type_name) {
   $grey_text = '';
   $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
@@ -128,11 +134,24 @@ foreach ($bank_types as $id=>$type_name) {
   } elseif ($type == 'performance' and $id == 'highest') {
     echo "<br clear=\"left\" />\n";
     echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydiscrimination'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  } elseif ($type == 'objective') {
+    $ids = $type_name['ids'];
+    $type_name = $type_name['label'];
+
+    $q_count = 0;
+    foreach ($ids as $o_id) {
+      if (isset($stats[$o_id])) {
+        $q_count += $stats[$o_id];
+      }
+    }
+    $stats[$id] = $q_count;
   }
-  
+
   if (isset($stats[$id])) {
-    $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
-    echo display_folder($url, $type_name, $grey_text);
+    if ($type != 'objective' or $stats[$id] > 0) {
+      $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
+      echo display_folder($url, $type_name, $grey_text);
+    }
   } elseif(isset($stats[$type_name])) {
     $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' ' . $string['questions'] . '</span>';
     echo display_folder($url, $type_name, $grey_text);

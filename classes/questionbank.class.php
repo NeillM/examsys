@@ -144,6 +144,7 @@ class QuestionBank {
         );
         break;
       case 'objective':
+        $this->load_stats($type);
         $this->bank_types = $this->get_outcomes();
         break;
     }
@@ -204,6 +205,12 @@ class QuestionBank {
       case 'keyword':
         $sql = 'SELECT COUNT(questions.q_id), keywordID FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keywordID';
         break;
+      case 'objective':
+        $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+        $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+        $all_years = implode("','", $all_years);
+        $sql = "SELECT COUNT(questions.q_id), relationships.obj_id FROM questions, questions_modules, relationships WHERE questions.q_id = relationships.question_id AND questions.q_id = questions_modules.q_id AND questions_modules.idMod = ? AND calendar_year IN ('{$all_years}') AND deleted IS NULL GROUP BY relationships.obj_id";
+        break;
     }
     
     $result = $this->db->prepare($sql);
@@ -256,7 +263,7 @@ class QuestionBank {
     }
 
     if (count($outcomes) > 0) {
-      usort($outcomes, function($a, $b)
+      uasort($outcomes, function($a, $b)
         {
             if ($a['label'] == $b['label']) {
                 return 0;
