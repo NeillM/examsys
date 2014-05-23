@@ -71,6 +71,9 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style>
+    p { margin: 0; padding: 0; }
+  </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
@@ -147,19 +150,26 @@ foreach ($bank_types as $id=>$type_name) {
     $stats[$id] = $q_count;
   }
 
+  if ($_GET['type'] == 'objective') {
+    $class = 'f100';
+  } else {
+    $class = 'f2';
+  }
+  
   if (isset($stats[$id])) {
     if ($type != 'objective' or $stats[$id] > 0) {
       $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
-      echo display_folder($url, $type_name, $grey_text);
+      echo display_folder($url, $type_name, $grey_text, $class);
     }
   } elseif(isset($stats[$type_name])) {
     $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' ' . $string['questions'] . '</span>';
-    echo display_folder($url, $type_name, $grey_text);
+    echo display_folder($url, $type_name, $grey_text, $class);
   }
 }
 
-function display_folder($url, $type_name, $grey_text) {
-  return "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
+function display_folder($url, $type_name, $grey_text, $class) {
+  $type_name = strip_tags($type_name);
+  return "<div class=\"$class\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
 }
 $mysqli->close();
 ?>
