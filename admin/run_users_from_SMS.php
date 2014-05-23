@@ -41,15 +41,59 @@ $sms_connection = SmsUtils::GetSmsUtils();
 // Calculate what the current academic session is.
 $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
 $session_parts = explode('/', $session);
+?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rog&#333;: Running SMS import <?php echo $configObject->get('cfg_install_type'); ?></title>
 
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+    <link rel="stylesheet" type="text/css" href="../css/list.css" />
+    
+    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
+    <script type="text/javascript" src="../js/staff_help.js"></script>
+    <script type="text/javascript" src="../js/toprightmenu.js"></script>
+    <script language="javascript">
+      $(document).ready(function() {
+        $("#maindata").tablesorter({ 
+          sortList: [[1,0]] 
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+<?php
+require '../include/toprightmenu.inc';
+require '../include/admin_module_options.inc';
+	
+echo draw_toprightmenu(233);
+?>
+<div id="content" class="content">
+
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_modules.php"><?php echo $string['modules'] ?></a></div>
+  <div class="page_title">Running SMS import</div>
+</div>
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+  <thead>
+    <tr><th class="col">Academic Year</th><th class="col">Module Code</th><th class="col">URL</th><th class="col">Enrolements</th><th class="col">Deletions</th></tr>
+  </thead>
+  
+<?php
 // Do not include deleted modules or non-active modules.
 $module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid LIMIT 10");
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
-  var_dump($module, $session);
   $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
+  echo "<tr class=\"l\"><td>$session</td><td>$module</td><td>$sms</td><td>" . $sms_connection->get_enrolement_no($module) . "</td><td>" . $sms_connection->get_deletion_no($module) . "</td></tr>\n";
 }
 $module_data->close();
 
@@ -87,11 +131,11 @@ if (count($errorinfo['modulenodata']) > 0) {
 
 $mysqli->close();
 ?>
-<html>
-  <head>
-    <title>Rogo</title>
-  </head>
-  <body>
-    Complete.
-  </body>
+</table>
+
+<br />
+<div>Complete.</div>
+
+</div>
+</body>
 </html>

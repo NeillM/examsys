@@ -46,7 +46,7 @@
     $(document).ready(function() {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
-        sortList: [[0,0]] 
+        sortList: [[0,1]] 
       });
 
     });
