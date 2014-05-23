@@ -238,8 +238,6 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   $search_results->bind_result($extra_field, $p, $d, $q_id, $theme, $leadin, $q_type, $last_edited, $modified, $locked, $status, $bloom);
   $search_results->store_result();
   
-  var_dump($configObject->get('cfg_long_date'));
-  
   if ($type == 'keyword') {
     $table_order = array($string['question']=>800, $string['type']=>100, 'Keyword'=>100, $string['modified']=>70, $string['status']=>70);
   } elseif ($type == 'bloom') {
