@@ -30,6 +30,7 @@ $string['questionsbytype'] = 'Pytania wg. typu';
 $string['questionsbyteam'] = 'Pytania wg. zespołu';
 $string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
 $string['search'] = 'Szukaj';
+$string['clear'] = 'Clear';
 $string['createnewquestion'] = 'Utwórz nowe pytanie';
 $string['questions'] = 'Pytania';
 $string['papers'] = 'Arkusze';

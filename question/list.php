@@ -103,6 +103,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     .unlicon {padding-left:20px !important}
     input.check_type { float: left; clear: left; margin-right: 0;}
     .check_label { display: block; float: left; margin-left: 10px; width: 80%; padding-bottom: 6px;}
+    .hidden, .filter { display: none; }
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 

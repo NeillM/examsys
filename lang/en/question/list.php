@@ -26,6 +26,7 @@ $string['modified'] = 'Modified';
 $string['status'] = 'Status';
 $string['myquestionsonly'] = 'my questions only';
 $string['search'] = 'Search';
+$string['clear'] = 'Clear';
 $string['createnewquestion'] = 'New Question';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';

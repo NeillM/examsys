@@ -187,7 +187,7 @@ if (!isset($module_details) && $module != '0') {
   function check_checkboxes() {
     $(".q").hide();
     $('input[type=checkbox].check_type:checked').each(function () {
-      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').toString().replace(',', ',.');
+      q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').toString().replace(/,/g, ',.');
       $("." + q_type).show();
       if (!$('#check_locked').attr('checked')) {
         $("." + q_type + '.locked').hide();
@@ -206,13 +206,13 @@ if (!isset($module_details) && $module != '0') {
   }
 
   var hide_unmapped_obs = function() {
-    $('.check_type').parent().hide();
+    $('.check_type').parent().addClass('hidden');
     $('.check_type').each(function() {
       var ids = $(this).data('ids');
       ids = ids.toString().split(',');
       for (var i = 0; i < ids.length; i++) {
         if ($('.q.' + ids[i]).length > 0) {
-          $(this).parent().show();
+          $(this).parent().removeClass('hidden');
           break;
         }
       };
@@ -229,9 +229,28 @@ if (!isset($module_details) && $module != '0') {
     });
 
 <?php
-if ($_GET['type'] == 'objective') {
+if (isset($_GET['type']) and $_GET['type'] == 'objective') {
 ?>
     hide_unmapped_obs();
+
+    $('#filter').keyup(function() {
+      var match = $(this).val().toLowerCase();
+
+      if (match.length > 2) {
+        $('.check_type').not('.hidden').each(function() {
+          if ($(this).next('label').text().toLowerCase().indexOf(match) == -1) {
+            $(this).closest('div').addClass('filter');
+          } else {
+            $(this).closest('div').removeClass('filter');
+          }
+        });
+      }
+    });
+
+    $('#filter_clear').click(function() {
+      $('.filter').removeClass('filter');
+      $('#filter').val('');
+    })
 <?php
 }
 ?> 
@@ -311,6 +330,10 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 <?php
   echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">&nbsp;show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
+    if ($_GET['type'] == 'objective') {
+      echo '<div style="margin-bottom:15px"><input type="text" name="filter" id="filter" placeholder="' . $string['search'] .'" /> <button type="button" id="filter_clear">' . $string['clear'] . '</button></div>';
+    }
+    
     $subtypes = $qbank->get_categories($type);
     
     foreach($subtypes as $id=>$subtype) {
@@ -324,14 +347,16 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
         $checked = '';
       }
 
+      $hidden = '';
       if ($_GET['type'] == 'objective') {
         $ids = $subtype['ids'];
         $data = ' data-ids="' . implode(',', $ids) . '"';
 
         $subtype = $subtype['label'];
+        $hidden = ' class="hidden"';
       }
       
-      echo "<div style=\"display: none\"><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</lable></div>\n";
+      echo "<div{$hidden}><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</lable></div>\n";
     }
   }
 ?>

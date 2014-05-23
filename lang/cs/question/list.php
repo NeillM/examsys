@@ -29,6 +29,7 @@ $string['questionsbytype'] = 'Úlohy podle typu';
 $string['questionsbyteam'] = 'Úlohy podle týmů';
 $string['questionsbykeyword'] = 'Úlohy podle klíčových slov';
 $string['search'] = 'Hledat';
+$string['clear'] = 'Clear';
 $string['createnewquestion'] = 'Nová úloha';
 $string['questions'] = 'Úlohy';
 $string['papers'] = 'Dokumenty';
