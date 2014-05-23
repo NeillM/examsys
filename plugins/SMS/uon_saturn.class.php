@@ -239,7 +239,7 @@ Class UON_SATURN extends SmsUtils {
 
     // Look up SMS
     $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
-    var_dump($returned_data);
+    var_dump($session);
     $xml = false;
     if ($returned_data !== false) {
       $xml = new SimpleXMLElement($returned_data);
