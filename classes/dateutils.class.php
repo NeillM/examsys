@@ -36,6 +36,12 @@ Class date_utils {
 		return date_utils::get_academic_year(date('Y/m/d'));
 	}
 
+	static function get_next_academic_year()	{
+    //$oneYearOn = date('Y-m-d',strtotime(date("Y/m/d", mktime()) . " + 365 day"));
+    $oneYearOn = date('Y-m-d', strtotime('+1 years'));
+		return date_utils::get_academic_year($oneYearOn);
+	}
+
   static function inc_academic_year($year) {
     $first_part = substr($year, 0, 4);
     $first_part++;
