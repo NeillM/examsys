@@ -45,7 +45,7 @@ $session_parts = explode('/', $session);
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Rog&#333;: Running SMS import <?php echo $configObject->get('cfg_install_type'); ?></title>
+    <title>Rog&#333; <?php echo $configObject->get('cfg_install_type'); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -77,12 +77,12 @@ echo draw_toprightmenu();
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_modules.php"><?php echo $string['modules'] ?></a></div>
-  <div class="page_title">Running SMS import</div>
+  <div class="page_title"><?php echo $string['runningsmsimport'] ?></div>
 </div>
   
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
   <thead>
-    <tr><th class="col">Academic Year</th><th class="col">Module Code</th><th class="col">URL</th><th class="col">Enrolements</th><th class="col">Deletions</th></tr>
+    <tr><th class="col"><?php echo $string['academicyear'] ?></th><th class="col"><?php echo $string['modulecode'] ?></th><th class="col"><?php echo $string['url'] ?></th><th class="col"><?php echo $string['enrolements'] ?></th><th class="col"><?php echo $string['deletions'] ?></th></tr>
   </thead>
   
 <?php
