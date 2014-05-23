@@ -65,15 +65,26 @@ a.user:hover {
 	border:1px solid #E6B10D;
 }
 .studentnote {
-  display:none;
-  position:absolute;
-  top:0px;
-  left:0px;
-  width:350px;
-  z-index:10000;
-  font-size:90%;
-  background-color:#FCE699;
-	border:1px solid #E6B10D;
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 350px;
+  z-index: 10000;
+  font-size: 90%;
+  background-color: #FCE699;
+	border: 1px solid #E6B10D;
+}
+.studentaccess {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 350px;
+  z-index: 10000;
+  font-size: 90%;
+  background-color: #D9E2F1;
+	border: 1px solid #295AAD;
 }
 .staff {
   background-color:#FCD5B4;
@@ -123,4 +134,27 @@ a.user:hover {
 .picon {
   width: 16px;
   height: 16px;
+}
+.note {
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  margin-left: 4px;
+}
+.accessibility {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+}
+.swatch {
+  display: inline-block;
+  width: 50px;
+  height: 14px;
+  border: 1px solid black;
+}
+.popupclose {
+  cursor: pointer;
+  width: 26px;
+  height: 14px;
 }

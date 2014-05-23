@@ -41,3 +41,12 @@ if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'relationships',
   $sql = "GRANT SELECT ON " . $cfg_db_database . ".relationships TO '" . $cfg_db_external_user . "'@'" . $cfg_web_host . "'";
   $updater_utils->execute_query($sql, true);
 }
+
+if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'feedback_release', $cfg_web_host)) {
+  $sql = "GRANT SELECT ON " . $cfg_db_database . ".feedback_release TO '" . $cfg_db_external_user . "'@'" . $cfg_web_host . "'";
+  $updater_utils->execute_query($sql, true);
+}
+
+if (!$updater_utils->does_column_type_value_exist('feedback_release', 'type', "enum('objectives','questions','cohort_performance','external_examiner')")) {
+  $updater_utils->execute_query("ALTER TABLE feedback_release CHANGE type type enum('objectives','questions','cohort_performance','external_examiner')", true);
+}

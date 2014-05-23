@@ -134,6 +134,7 @@ $string['on'] = 'On';
 $string['off'] = 'Off';
 $string['objectivesreport'] = 'Objectives-based Feedback';
 $string['questionfeedback'] = 'Question-based Feedback';
+$string['externalexaminerfeedback'] = 'External Examiner - Class Totals access';
 $string['cohortperformancefeedback'] = 'Cohort Performance Report';
 $string['textualfeedback'] = 'Textual Feedback';
 $string['above'] = 'Above';

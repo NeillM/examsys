@@ -56,7 +56,8 @@ $external_allowed_pages = array(
                               "$cfg_root_path/reviews/class_totals.php"=>1,
                               "$cfg_root_path/reports/draw_distribution_chart.php"=>1,
                               "$cfg_root_path/reports/draw_scatter_plot.php"=>1,
-                              "$cfg_root_path/reports/getNote.php"=>1,
+                              "$cfg_root_path/ajax/reports/getNote.php"=>1,
+                              "$cfg_root_path/ajax/reports/getAccessibility.php"=>1,
                               "$cfg_root_path/osce/form.php"=>1
                             );
 if ($userObject->has_role('External Examiner')) {

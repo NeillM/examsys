@@ -106,4 +106,8 @@ $string['of'] = ' of ';
 $string['percentofcohort'] = '% of cohort';
 $string['marking'] = 'Marking...';
 $string['markingcalcquestions'] = 'Marking Calculation Questions';
+
+$string['viewstudentnote'] = 'View student note...';
+$string['viewaccessibility'] = 'View accessibility settings...';
+$string['resitcandidate'] = 'Resit candidate';
 ?>

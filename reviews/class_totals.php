@@ -31,14 +31,21 @@ require_once '../include/errors.inc';
 require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/exam_announcements.class.php';
+require_once '../classes/noteutils.class.php';
+require_once '../classes/reviews.class.php';
 
-$id         = check_var('id', 'GET', true, false, true);
+$id = check_var('id', 'GET', true, false, true);
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli);
 
+$paperID = $propertyObj->get_property_id();
+if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+}
+
 $paper            = $propertyObj->get_paper_title();
-$paperID          = $propertyObj->get_property_id();
 $marking          = $propertyObj->get_marking();
 $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
@@ -54,7 +61,7 @@ $studentsonly = 1;
 $repcourse    = '%';
 $repmodule    = '';
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->compile_report(false);
 
 $user_results = $report->get_user_results();
@@ -67,166 +74,72 @@ $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
 
-function check_late_submission_warnings($log_late, $string) {
-  if (count($log_late) > 0) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:80%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
-        <td class="redwarn"><?php echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $string['moredetails'] . '</a>)'; ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
-function check_unmarked_textbox_warnings($report, $string) {
-  if ($report->unmarked_textbox()) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:80%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
-        <td class="redwarn"><?php echo $string['unmarkedtextbox'] ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
-function check_unmarked_enhancedcalc_warnings($report, $string) {
-  if ($report->unmarked_enhancedcalc()) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
-        <td class="redwarn"><?php echo $string['unmarkedenhancedcalc'] ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
-function check_temp_account_warnings($user_results, $string) {
-  // Check for any temporary accounts and if so display warning banner
-  $temp_user_no = 0;
-  $user_no = count($user_results);
-  for ($i=0; $i<$user_no; $i++) {
-    if (strpos($user_results[$i]['username'], 'user') === 0) {
-      $temp_user_no++;
-    }
-  }
-  if ($temp_user_no > 0) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="Warning" /></td>
-        <td class="redwarn"><?php echo $string['temporaryaccountswarning'] ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
 ob_start();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/header.css" />
-<link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
-<link rel="stylesheet" type="text/css" href="../css/list.css" />
-<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-<script type="text/javascript" src="../js/staff_help.js"></script>
-<script type="text/javascript" src="../js/popup_menu.js"></script>
-<script type="text/javascript" src="../js/toprightmenu.js"></script>
-<script language="JavaScript">
-  function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
-    $('#metadataID').val(tmpMetadataID);
-    $('#userID').val(tmpUserID);
-    $('#log_type').val(tmpLogType);
-    $('#reassign').val(tmpReassign);
-    $('#loglate').val(tmpLogLate);
-    $('#percent').val(tmpPercent);
+  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/popup_menu.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/class_totals.js"></script>
+  <script>
+    function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
+      $('#metadataID').val(tmpMetadataID);
+      $('#userID').val(tmpUserID);
+      $('#log_type').val(tmpLogType);
+      $('#reassign').val(tmpReassign);
+      $('#loglate').val(tmpLogLate);
+      $('#percent').val(tmpPercent);
 
-    if (tmpMetadataID == '') {
-      $('#item1b').css('color', '#C0C0C0');
-      $('#item2b').css('color', '#C0C0C0');
-    } else {
-      $('#item1b').css('color', '#000000');
-      $('#item2b').css('color', '#000000');
-    }
-  }
-
-  function viewScript() {
-    $('#menudiv').hide();
-    if ($('#metadataID').val() != '') {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-  }
-
-  function viewFeedback() {
-    $('#menudiv').hide();
-    if ($('#metadataID').val() != '') {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../students/objectives_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-  }
-
-  function viewNote(userID, e) {
-    $('#menudiv').hide();
-    if (!e) var e = window.event;
-	  var currentX = e.clientX;
-	  var currentY = e.clientY;
-    var scrOfX = $(document).scrollLeft();
-    var scrOfY = $(document).scrollTop();
-
-    dataSource = "../reports/getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
-
-    $("#noteMsg").load(dataSource, function(responseTxt, statusTxt, xhr) {
-      if (statusTxt == "success") {
-        $("#noteDiv").show();
-        $("#noteDiv").css('left', currentX + scrOfX + 16 + 'px');
-
-        top_pos = currentY+scrOfY-16;
-        if (top_pos > ($(window).height() + scrOfY - 130)) {
-          top_pos = $(window).height() + scrOfY - 130;
-        }
-        $("#noteDiv").css('top', top_pos + 'px');
+      if (tmpMetadataID == '') {
+        $('#item1b').css('color', '#C0C0C0');
+        $('#item2b').css('color', '#C0C0C0');
+      } else {
+        $('#item1b').css('color', '#000000');
+        $('#item2b').css('color', '#000000');
       }
-    });
-    e.stopPropagation();
-  }
-	
-	$(document).ready(function() {
-    $("#maindata").tablesorter({ 
-      // sort on the first column and third column, order asc 
-      sortList: [[4,0]] 
-    });
+    }
     
-    $(document).click(function() {
-      $('#menudiv').hide();
-		});
-	});
-</script>
+    var paperID = <?php echo $paperID ?>;
+    var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        // sort on the first column and third column, order asc 
+        sortList: [[4,0]] 
+      });
+
+      $(document).click(function() {
+        $('#menudiv').hide();
+      });
+    });
+  </script>
 </head>
 
 
 <body>
 <div id="noteDiv" class="studentnote">
-<div style="text-align:right"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" style="border-left:1px solid #E6B10D; border-bottom:1px solid #E6B10D; cursor:pointer" width="26" height="14" alt="Close" /></div>
+<div style="text-align:right; margin-right:5px;"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
 <div id="noteMsg"></div>
+</div>
+
+<div id="accessDiv" class="studentaccess">
+<div style="text-align:right; margin-right:5px;"><img onclick="$('#accessDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+<div id="accessMsg"></div>
 </div>
 
 <?php
@@ -256,34 +169,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 <?php
   for ($i=-100; $i<=100; $i++) $distribution[$i] = 0;
 
-  $notes = array();
-  // Query any student notes for the current paper
-  $result = $mysqli->prepare("SELECT userID FROM student_notes WHERE paper_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($userID);
-  while ($result->fetch()) {
-    $notes[$userID] = 'y';
-  }
-  $result->close();
-
-
-  // Query any student special needs for the current paper
-  $special_needs = array();
-  $users_in = array();
-  foreach($user_results as $u) {
-    $users_in[] = $u['userID'];
-  }
-  $users_in = implode(',',$users_in);
-  if ($users_in != '') {
-    $result = $mysqli->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
-    $result->execute();
-    $result->bind_result($special_userID);
-    while ($result->fetch()) {
-      $special_needs[$special_userID] = 'y';
-    }
-    $result->close();
-  }
+  $notes = PaperNotes::get_all_notes_by_paper($paperID, $mysqli);
 
   if ($marking == '0') {
     $marking_label = $string['%'];
@@ -300,6 +186,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 		$table_order = array(''=>16, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
   }
 	if ($paper_type == '2') $table_order[$string['room']] = 200;
+  
   $metadata_cols = array();
   if (isset($user_results[0])){
     foreach ($user_results[0] as $key => $val) {
@@ -316,24 +203,15 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo "<div style=\"font-size:80%\">\n";
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif ( isset( $_GET['module'] ) and $_GET['module'] != '' ) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
-
-  $report_title = $string['classtotals'];
-  echo "<div class=\"page_title\">$report_title</div>";
+  echo '<div class="breadcrumb"><a href="../reviews/index.php">' . $string['home'] . '</a></div>';
+  echo "<div class=\"page_title\">" . $string['classtotals'] . ": <span style=\"font-weight:normal\">" . $paper . "</span></div>";
   echo "</div>\n";
   
   // Warning display banners
-  check_late_submission_warnings($log_late, $string);
-  check_unmarked_textbox_warnings($report, $string);
-  check_unmarked_enhancedcalc_warnings($report, $string);
-  check_temp_account_warnings($user_results, $string);
+  $report->check_late_submission_warnings();
+  $report->check_unmarked_textbox_warnings();
+  $report->check_unmarked_enhancedcalc_warnings();
+  $report->check_temp_account_warnings();
 
   // Output table header
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:110%; width:100%\">\n";
@@ -442,14 +320,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         }
         
         // Add icons
-        if ($user_results[$i]['attempt'] > 1) {
-          echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" />';
-        }
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
-          echo '&nbsp;<a href="" onclick="viewNote(\'' . $user_results[$i]['userID'] . '\', event); return false;"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Notes" /></a>';
+          echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" onclick="viewNote(' . $user_results[$i]['userID'] . ', event)" />';
         }
-        if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
-          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
+        if ($report->has_special_need($user_results[$i]['userID'])) {
+          echo '<img src="../artwork/accessibility_16.png" class="accessibility" onclick="viewAccessibility(' . $user_results[$i]['userID'] . ', event)" alt="' . $string['alternativearrangements'] . '" />';
         }        
         echo '</td>';
         

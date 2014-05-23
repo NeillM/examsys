@@ -24,7 +24,7 @@
  * @package
  */
 
-require_once '../classes/networkutils.class.php';
+require_once $cfg_web_root . '/classes/networkutils.class.php';
 
 Class StudentNotes {
   static function get_note($paperID, $userID, $db) {
@@ -58,6 +58,21 @@ Class StudentNotes {
 }
 
 Class PaperNotes {
+  static function get_all_notes_by_paper($paperID, $db) {
+    $notes = array();
+    // Query any student notes for the current paper
+    $result = $db->prepare("SELECT userID FROM student_notes WHERE paper_id = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($userID);
+    while ($result->fetch()) {
+      $notes[$userID] = 'y';
+    }
+    $result->close();
+    
+    return $notes;
+  }
+  
   static function get_note($paperID, $address, $db) {
     $result = $db->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?");
     $result->bind_param('is', $_GET['paperID'], $address);

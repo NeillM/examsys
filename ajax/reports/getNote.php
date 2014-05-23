@@ -22,14 +22,14 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/errors.inc';
-require '../classes/noteutils.class.php';
+require '../../include/staff_auth.inc';
+require '../../include/errors.inc';
+require '../../classes/noteutils.class.php';
 
 $userID  = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-$details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
+$details = StudentNotes::get_note($paperID, $userID, $mysqli);
 
 if ($details === false) {
   echo "<div style=\"padding:10px\">" . $string['err'] . "</div>\n";

@@ -1792,7 +1792,7 @@ QUERY;
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` mediumint(8) unsigned default NULL,
           `date` datetime NOT NULL,
-          `type` enum('objectives','questions','cohort_performance') default NULL,
+          `type` enum('objectives','questions','cohort_performance','external_examiner') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
