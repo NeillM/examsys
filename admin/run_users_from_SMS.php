@@ -70,7 +70,7 @@ $session_parts = explode('/', $session);
 require '../include/toprightmenu.inc';
 require '../include/admin_module_options.inc';
 	
-echo draw_toprightmenu(233);
+echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
 

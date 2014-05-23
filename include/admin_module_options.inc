@@ -25,7 +25,7 @@
 require_once '../classes/dateutils.class.php';
 
 // Calculate what the current academic session is.
-$session = date_utils::get_current_academic_year();
+$current_session = date_utils::get_current_academic_year();
 $next_session = date_utils::get_next_academic_year();
 ?>
 <script language="JavaScript">
@@ -38,7 +38,7 @@ $next_session = date_utils::get_next_academic_year();
   }
 
   function studentCohort() {
-    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
+    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $current_session ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
   }
 
   function deleteModule() {
@@ -60,7 +60,7 @@ $next_session = date_utils::get_next_academic_year();
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editmodule']; ?>" /><?php echo $string['editmodule']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletemodule']; ?>" /><?php echo $string['deletemodule']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['modulefolder']; ?>" /><?php echo $string['modulefolder']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['studentcohort']; ?>" /><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['studentcohort']; ?>" /><?php echo $string['studentcohort']; ?> (<?php echo $current_session ?>)</div>
 </div>
 
 <div style="display:none; font-size:90%" id="menu1b">
@@ -69,7 +69,7 @@ $next_session = date_utils::get_next_academic_year();
 	<div class="menuitem" onclick="editModule()"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editmodule']; ?>" /><a href="" onclick="return false"><?php echo $string['editmodule']; ?></a></div>
 	<div class="menuitem" onclick="deleteModule()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletemodule']; ?>" /><a href="" onclick="return false"><?php echo $string['deletemodule']; ?></a></div>
 	<div class="menuitem" onclick="jumpToModule()"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['modulefolder']; ?>" /><a href="" onclick="return false"><?php echo $string['modulefolder']; ?></a></div>
-	<div class="menuitem" onclick="studentCohort()"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['studentcohort']; ?>" /><a href="" onclick="return false"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</a></div>
+	<div class="menuitem" onclick="studentCohort()"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['studentcohort']; ?>" /><a href="" onclick="return false"><?php echo $string['studentcohort']; ?> (<?php echo $current_session ?>)</a></div>
 </div>
 
 <br />
@@ -77,7 +77,7 @@ $next_session = date_utils::get_next_academic_year();
 <div class="submenuheading" id="currentmodule"><?php echo $string['moduleimports']; ?></div>
 <div style="font-size:90%" id="menu2">
 	<div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary']; ?></a></div>
-	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary']; ?>" />Run Imports (<?php echo $session ?>)</a></div>
+	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary']; ?>" />Run Imports (<?php echo $current_session ?>)</a></div>
 	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary']; ?>" />Run Imports (<?php echo $next_session ?>)</a></div>
 </div>
 
