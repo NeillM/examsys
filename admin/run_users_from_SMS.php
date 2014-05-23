@@ -85,3 +85,11 @@ if (count($errorinfo['modulenodata']) > 0) {
 
 $mysqli->close();
 ?>
+<html>
+  <head>
+    <title>Rogo</title>
+  </head>
+  <body>
+    Complete.
+  </body>
+</html>
