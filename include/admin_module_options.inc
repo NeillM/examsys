@@ -26,6 +26,7 @@ require_once '../classes/dateutils.class.php';
 
 // Calculate what the current academic session is.
 $session = date_utils::get_current_academic_year();
+$next_session = date_utils::get_next_academic_year();
 ?>
 <script language="JavaScript">
   function editModule() {
@@ -76,6 +77,8 @@ $session = date_utils::get_current_academic_year();
 <div class="submenuheading" id="currentmodule"><?php echo $string['moduleimports']; ?></div>
 <div style="font-size:90%" id="menu2">
 	<div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary']; ?></a></div>
+	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary']; ?>" />Run Imports (<?php echo $session ?>)</a></div>
+	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary']; ?>" />Run Imports (<?php echo $next_session ?>)</a></div>
 </div>
 
 <input type="hidden" name="lineID" id="lineID" value="" />
