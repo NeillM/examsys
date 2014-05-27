@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
 
 	CourseUtils::add_course($schoolID, 'A10DEMO', 'Demonstration BSc', $mysqli);  // Make sure demo course exists.
 	
-	$new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1);
+	$new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1, '07/01');
 
   if ($unique_username == true) {
     $_POST['new_grade'] = $new_moduleid;

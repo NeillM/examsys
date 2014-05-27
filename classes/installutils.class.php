@@ -1008,7 +1008,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 0,
                                 0,
                                 1,
-                                1
+                                1,
+																'07/01'
                              );
 
     module_utils::add_modules(  'SYSTEM',
@@ -1028,7 +1029,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 0,
                                 0,
                                 1,
-                                1
+                                1,
+																'07/01'
                              );
     self::$db->commit();
 
