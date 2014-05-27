@@ -16,6 +16,7 @@
 
 $string['administrativetools'] = 'Administrative Tools';
 $string['modules'] = 'Modules';
+$string['academicyear'] = 'Academic Year';
 $string['schools'] = 'Schools';
 $string['smsimportsummary'] = 'SMS Import Summary';
 $string['smsimportson'] = 'SMS Imports on';

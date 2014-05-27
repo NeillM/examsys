@@ -29,17 +29,17 @@ Class date_utils {
 	public static $academic_year_start = '07/01';
 	
 	/**
-	 * Get the current academic year in the format 'yyyy/yy', e.g. '2010/11'
+	 * Get the current academic year in the format 'yyyy/yy', e.g. '2013/14'
 	 * @return string
 	 */
-	static function get_current_academic_year()	{
-		return date_utils::get_academic_year(date('Y/m/d'));
+	static function get_current_academic_year($specific_year_start = '')	{
+		return date_utils::get_academic_year(date('Y/m/d'), $specific_year_start);
 	}
 
-	static function get_next_academic_year()	{
-    //$oneYearOn = date('Y-m-d',strtotime(date("Y/m/d", mktime()) . " + 365 day"));
+	static function get_next_academic_year($specific_year_start = '')	{
     $oneYearOn = date('Y-m-d', strtotime('+1 years'));
-		return date_utils::get_academic_year($oneYearOn);
+    
+		return date_utils::get_academic_year($oneYearOn, $specific_year_start);
 	}
 
   static function inc_academic_year($year) {
@@ -54,16 +54,18 @@ Class date_utils {
   }
 
 	/**
-	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2010/11'
+	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2013/14'
 	 * @param string $date - A date in a format that can be accepted by strtotime
 	 *
 	 * @return string - The current academic year.
 	 */
-	static function get_academic_year($date) {
-    global  $configObject;
+	static function get_academic_year($date, $specific_year_start) {
+    global $configObject;
     
 		$date_as_time = strtotime($date);
-    if ($configObject->get('cfg_academic_year_start')!='') {
+    if ($specific_year_start != '') {
+      $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
+    } elseif ($configObject->get('cfg_academic_year_start') != '') {
       $start_this_year = strtotime(date('Y') . '/' .  $configObject->get('cfg_academic_year_start'));
     } else {
       $start_this_year = strtotime(date('Y') . '/' . self::$academic_year_start);

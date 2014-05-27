@@ -22,6 +22,7 @@ $string['moduleid'] = 'ID modulu';
 $string['name'] = 'Název';
 $string['school'] = 'Škola';
 $string['smsapi'] = 'SMS API'; //cognate
+$string['academicyearstart'] = 'Academic Year Start';
 $string['objapi'] = 'API cílů';
 $string['summativechecklist'] = 'Sumativní kontrolní seznam';
 $string['peerreview'] = 'Recenze';

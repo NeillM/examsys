@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Nastavení';
+$string['academicyear'] = 'Academic Year';
 $string['schools'] ='Školy';
 $string['smsimportsummary'] = 'Přehled nahraných SMS';
 $string['smsimportson'] = 'SMS nahráno na';
