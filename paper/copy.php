@@ -55,7 +55,7 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
 
   <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
   <tr>
-  <td valign="middle" style="background-color: white"><img src="../artwork/red_warning.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
+  <td valign="middle" style="background-color: white"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
   </tr>
   <tr>
   <td style="background-color:#FFC0C0">

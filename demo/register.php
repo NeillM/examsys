@@ -233,7 +233,7 @@ MESSAGE;
 				<td>
 					<table border="0" cellspacing="4" cellpadding="0" width="100%" style="background-color:white">
 						<tr>
-							<td style="width:50px"><img src="../artwork/register_icon_48.png" width="48" height="48" alt="Key" /></td>
+							<td style="width:48px"><img src="../artwork/self_enrol.png" width="48" height="48" alt="Key" /></td>
 							<td class="dkblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['register']; ?></td>
 						</tr>
 					</table>

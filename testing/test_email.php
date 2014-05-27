@@ -38,7 +38,7 @@ require '../include/sysadmin_auth.inc';
 if (isset($_POST['submit'])) {
   $to = trim($_POST['email']);
   $subject = 'Test email from Rogo ' . $configObject->get('rogo_version');
-  $message = 'This is a test email message sent at ' . date("F j, Y, g:i a") . '.';
+  $message = 'This is a test email message sent at ' . date("F j, Y, g:i a") . ' from ' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . '.';
   $headers = 'From: ' . trim($_POST['email']);
 
   mail($to, $subject, $message, $headers);
