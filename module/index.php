@@ -39,7 +39,7 @@ $module = check_var('module', 'GET', true, false, true);
 
 $add_member = false;
 
-if (!isset($module_details) && $_GET['module'] != '0') {
+if (!isset($module_details) and $_GET['module'] != '0') {
   $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 
   if (!$module_details) {
@@ -179,7 +179,7 @@ echo "<br />\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../users/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></td></tr></table></div>\n";
 
 if ($_GET['module'] != '0') {
-  $current_year = date_utils::get_current_academic_year();
+  $current_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
   $student_cohort = module_utils::get_student_members($current_year, $module, $mysqli);
 
   $url = '../users/search.php?submit=Search&team=' . $module . '&calendar_year=' . $current_year . '&students=on&search_username=&student_id=';

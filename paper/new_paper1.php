@@ -25,6 +25,7 @@
 */
 
 require '../include/staff_auth.inc';
+require '../classes/dateutils.class.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -131,6 +132,15 @@ require '../include/staff_auth.inc';
 <br />
 <?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="255" style="width:650px" required />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
+<?php
+if (isset($_GET['module'])) {
+  $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
+  $default_academic_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
+} else {
+  $default_academic_year = $configObject->get('cfg_academic_year_start');
+}
+?>
+<input type="hidden" name="default_academic_year" value="<?php echo $default_academic_year ?>" />
 <input type="hidden" name="folder" value="<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="" />
 <br />

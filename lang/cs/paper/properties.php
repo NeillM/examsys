@@ -126,16 +126,21 @@ $string['referenceheading'] = 'Určit, které referenční materiály jsou v dok
 $string['nomaterials'] = 'K tomuto dokumentu nejsou dostupné žádné referenční materiály.<br /><br />Referenční materiál může být doplněn kliknutím na volbu \'Referenční materiáll\' v modulu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">viz nápověda</a>).';
 
 // Záložka zpětné vazby
-$string['feedbackheading'] = 'Komentář dostupný studentům';
+$string['feedbackheading'] = 'Feedback available to students and external examiners';
 $string['feedbackwarning'] = '<strong>Poznámka:</strong> Tímto se úlohy zveřejní, včetně správných odpovědí a známek studentů.';
 $string['on'] = 'Zapnuto';
 $string['off'] = 'Vypnuto';
-$string['objectivesreport'] = 'Komentář dle cílů';
-$string['questionfeedback'] = 'Komentáře dle úloh';
+$string['objectivesreport'] = 'Objectives-based Feedback (Students)';
+$string['questionfeedback'] = 'Question-based Feedback (Students)';
+$string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
+$string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report (Students)';
 $string['textualfeedback'] = 'Textový Komentář';
 $string['above'] = 'Nad';
 $string['message'] = 'Zpráva';
 $string['answerscreensettings'] = 'Nastavení okna Odpovědi';
+
+
 
 // Záložka změn
 $string['changes'] = 'Změny';

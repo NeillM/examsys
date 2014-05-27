@@ -1973,7 +1973,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       } else {
         echo "<input type=\"radio\" name=\"external_examiner\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"external_examiner\" value=\"0\" />" . $string['off'] . "</td>";
       }
-      echo "<td>" . $string['externalexaminerfeedback'] . "<br /><span style=\"color:#808080\">When on externals will be able to access Class Totals report for paper.</span><br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/reviews/\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/reviews/</a></td></tr>\n";
+      echo "<td>" . $string['externalexaminerfeedback'] . "<br /><span style=\"color:#808080\">" . $string['externalwarning'] . "</span><br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/reviews/\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/reviews/</a></td></tr>\n";
     }
 
     echo "</table>\n";

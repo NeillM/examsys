@@ -326,7 +326,7 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
     foreach ($year_options as $calendar_year) {
-      $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
+      $sel = ($_POST['default_academic_year'] == $calendar_year) ? ' selected="selected"' : '';
       echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
     }
     echo "</select></td>\n";
@@ -491,11 +491,11 @@ if ($_POST['paper_type'] == 'summative') {
 
   echo "</table>\n";
 
-  echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #95AEC8; border-left:1px solid #95AEC8; border-right:1px solid #95AEC8\">" . $string['modules'] . "</div>";
+  echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #295AAD; border-left:1px solid #295AAD; border-right:1px solid #295AAD\">" . $string['modules'] . "</div>";
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
-    echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+    echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   } else {
-    echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+    echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   }
   $staff_modules_sql = "'" . implode("','", array_keys($staff_modules)) . "'";
 

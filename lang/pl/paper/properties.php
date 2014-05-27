@@ -128,16 +128,18 @@ $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostę
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 
 // Feedback tab
-$string['feedbackheading'] = 'Odzew dostępny dla studentów'; 
-$string['feedbackwarning'] = '<strong>Uwaga:</strong> To uwolni pytania włączając w to poprawne odpowiedzi i oceny dla studentów.'; 
+$string['feedbackheading'] = 'Feedback available to students and external examiners';
+$string['feedbackwarning'] = '<strong>Uwaga:</strong> To uwolni pytania włączając w to poprawne odpowiedzi i oceny dla studentów.';
 $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
-$string['objectivesreport'] = 'Odzew dot. celów';
-$string['questionfeedback'] = 'Odzew dot. pytań';
-$string['cohortperformancefeedback'] = 'Raport postępów grupy';
+$string['objectivesreport'] = 'Objectives-based Feedback (Students)';
+$string['questionfeedback'] = 'Question-based Feedback (Students)';
+$string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
+$string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report (Students)';
 $string['textualfeedback'] = 'Odzew tekstowy';
 $string['above'] = 'Powyżej';
-$string['message'] = 'Wiadomość';  
+$string['message'] = 'Wiadomość';
 $string['answerscreensettings'] = 'Ustawienia ekranu odpowiedzi';
 
 // Changes tab

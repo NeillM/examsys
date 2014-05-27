@@ -128,14 +128,15 @@ $string['referenceheading'] = 'Control which reference materials are available t
 $string['nomaterials'] = 'There are no reference materials available for the module(s) assigned to this paper.<br /><br />Reference material can be added by clicking the \'Reference Material\' option from a module screen (<a href="" style="color:blue" onclick="launchHelp(296); return false;">see help</a>).';
 
 // Feedback tab
-$string['feedbackheading'] = 'Feedback available to students';
+$string['feedbackheading'] = 'Feedback available to students and external examiners';
 $string['feedbackwarning'] = '<strong>Note:</strong> This will release questions including the correct answers and marks to students.';
 $string['on'] = 'On';
 $string['off'] = 'Off';
-$string['objectivesreport'] = 'Objectives-based Feedback';
-$string['questionfeedback'] = 'Question-based Feedback';
-$string['externalexaminerfeedback'] = 'External Examiner - Class Totals access';
-$string['cohortperformancefeedback'] = 'Cohort Performance Report';
+$string['objectivesreport'] = 'Objectives-based Feedback (Students)';
+$string['questionfeedback'] = 'Question-based Feedback (Students)';
+$string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
+$string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report (Students)';
 $string['textualfeedback'] = 'Textual Feedback';
 $string['above'] = 'Above';
 $string['message'] = 'Message';
