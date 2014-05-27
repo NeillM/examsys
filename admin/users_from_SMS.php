@@ -65,13 +65,10 @@ $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms, $academic_year_start);
 while ($module_data->fetch()) {
   $session = date_utils::get_current_academic_year($academic_year_start);
-  var_dump($idMod, $session);
 
-  //$sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
+  $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
 }
 $module_data->close();
-
-exit;
 
 $errorinfo = $sms_connection->geterrors();
 
