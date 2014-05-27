@@ -35,7 +35,7 @@ require '../include/sysadmin_auth.inc';
 	<title>Rog&#333;: Test Suite</title>
 
 	<style>
-		.content {font-size:80%}
+		.content {font-size:90%}
 		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
 		article { width:50%; height: 80%; float: left }
 		ol {list-style-type:decimal}
@@ -75,6 +75,7 @@ require '../include/sysadmin_auth.inc';
 		<li><a href="./database_indexes.php">Database indexes</a></li>
 		<li><a href="./database_structure.php">Database structure</a></li>
     <li><a href="./checkenhancedcalc.php">Check enhancedcalc setup</a></li>
+    <li><a href="./test_email.php">Check email sending</a></li>
 	</ol>
 </div>
 </body>

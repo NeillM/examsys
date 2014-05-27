@@ -495,6 +495,15 @@ class UserObject extends RogoStaticSingleton {
   }
 
   /**
+   * Return the user's email address
+   *
+   * @return string email
+   */
+  public function get_email() {
+    return $this->email;
+  }
+
+  /**
    * Return the user's special needs
    *
    * @return string password
@@ -566,7 +575,7 @@ class UserObject extends RogoStaticSingleton {
     $this->studentModules = array();
 
     // studentmodule year -> module ->decode
-    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result = $this->db->prepare("SELECT idMod, moduleID, calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
     $result->bind_param('i', $this->get_user_ID());
     $result->execute();
 
