@@ -71,6 +71,8 @@ while ($module_data->fetch()) {
 }
 $module_data->close();
 
+exit;
+
 $errorinfo = $sms_connection->geterrors();
 
 if (count($errorinfo['usernamematch']) > 0) {
