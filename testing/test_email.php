@@ -23,13 +23,33 @@
 */
 
 require '../include/sysadmin_auth.inc';
+?><!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-$to = $userObject->get_email();
-$subject = 'Test email from Rogo';
-$message = 'This is a test email message';
-$headers = 'From: ' . $userObject->get_email();
+  <title>Rog&#333; Email Test</title>
 
-mail($to, $subject, $message, $headers);
-echo "Email sent, please check your inbox.";
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+</head>
+<body>
+<?php
+if (isset($_POST['submit'])) {
+  $to = trim($_POST['email']);
+  $subject = 'Test email from Rogo ' . $configObject->get('rogo_version');
+  $message = 'This is a test email message sent at ' . date("F j, Y, g:i a") . '.';
+  $headers = 'From: ' . trim($_POST['email']);
 
+  mail($to, $subject, $message, $headers);
+  echo "Email sent, please check your inbox.";
+} else {
 ?>
+  <form name="myform" action="post" method="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <input type="text" name="email" style="width: 250px" placeholder="email address" required /> <input type="submit" name="submit" value="Send" class="ok" /> 
+  </form>
+<?php
+}
+?>
+</body>
+</html>
