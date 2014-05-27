@@ -180,12 +180,13 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   }
 
   //output table heading
+	$table_order = array('', $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
 	if ($configObject->get('cfg_client_lookup') == 'name') {
-		$table_order = array(''=>16, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['hostnames']=>100);
+		$table_order[] = $string['hostnames'];
 	} else {
-		$table_order = array(''=>16, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
+		$table_order[] = $string['ipaddress'];
   }
-	if ($paper_type == '2') $table_order[$string['room']] = 200;
+	if ($paper_type == '2') $table_order[] = $string['room'];
   
   $metadata_cols = array();
   if (isset($user_results[0])){
@@ -218,8 +219,8 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo "<thead>\n";
   if (isset($user_results[0])) {
     echo "<tr>\n";
-    foreach ($table_order as $display => $col_width) {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+    foreach ($table_order as $col_title) {
+      echo "<th class=\"vert_div\">$col_title</th>\n";
     }
     echo "</tr>\n";
   }

@@ -385,24 +385,25 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     $marking_key = 'adj_percent';
   }
 
-  //output table heading
+  // Output table heading
+  $table_order = array('', 'Title', $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
 	if ($configObject->get('cfg_client_lookup') == 'name') {
-		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['hostnames']=>100);
+		$table_order[] = $string['hostnames'];
 	} else {
-		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
+		$table_order[] = $string['ipaddress'];
   }
-	if ($paper_type == '2') $table_order[$string['room']] = 200;
+	if ($paper_type == '2') $table_order[] = $string['room'];
+  
   $metadata_cols = array();
-  if (isset($user_results[0])){
+  if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
       if (strrpos($key, 'meta_') !== false) {
-        $key_display = ucfirst(str_replace('meta_','',$key));
-        $table_order[$key_display] = 150;
+        $table_order[] = ucfirst(str_replace('meta_','',$key));
         $metadata_cols[$key] = $key;
       }
     }
   }
-
+  
   $cols = count($table_order);
   
   echo "<div style=\"font-size:80%\">\n";
@@ -432,18 +433,18 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo "</div>\n";
   
   // Warning display banners
-  $report->check_late_submission_warnings($string);
-  $report->check_unmarked_textbox_warnings($string);
-  $report->check_unmarked_enhancedcalc_warnings($string);
-  $report->check_temp_account_warnings($user_results, $string);
+  $report->check_late_submission_warnings();
+  $report->check_unmarked_textbox_warnings();
+  $report->check_unmarked_enhancedcalc_warnings();
+  $report->check_temp_account_warnings();
 
   // Output table header
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:110%; width:100%\">\n";
   echo "<thead>\n";
   if (isset($user_results[0])) {
     echo "<tr>\n";
-    foreach ($table_order as $display => $col_width) {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+    foreach ($table_order as $col_title) {
+      echo "<th class=\"vert_div\">$col_title</th>\n";
     }
     echo "</tr>\n";
   }
@@ -498,7 +499,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
           $scatter_data .= "0\n0\n";
           $class = 'redln';
         } else {
-          $class = 'greyln';
+          if (strpos($user_results[$i]['username'], 'user') === 0) {
+            $class = 'guestln';
+          } else {
+            $class = 'greyln';
+          }
           $temp_location = round($user_results[$i]['percent']);
           if (isset($distribution[$temp_location])) {
 						$distribution[$temp_location]++;
@@ -609,7 +614,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
         // Display any associated metadata
         if (count($metadata_cols) > 0) {
-          foreach ( $metadata_cols as $type) {
+          foreach ($metadata_cols as $type) {
             if (isset($user_results[$i][$type])) {
               echo "<td class=\"$class $role_css\">&nbsp;" . $user_results[$i][$type] . "</td>";
             } else {
