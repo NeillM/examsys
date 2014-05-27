@@ -592,7 +592,8 @@ textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=t
 #media-upload {
 	width: 502px;
 /*	height: 276px; */
-	background-color: #fff;
+	background-color: white;
+  border: 1px solid black;
 	margin: 150px auto 0 auto;
 	padding: 12px 24px;
 }
