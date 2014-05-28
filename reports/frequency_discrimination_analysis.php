@@ -723,7 +723,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
+            echo "<td><input type=\"button\" onclick=\"blankCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
           }
           echo "</tr>";
         }
