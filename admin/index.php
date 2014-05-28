@@ -77,6 +77,11 @@
   $sys_error_no = $results->num_rows;
   $results->close();
 
+  // How many system errors are there
+  $results = $mysqli->query("SELECT id FROM save_fail_log");
+  $save_fail_log_no = $results->num_rows;
+  $results->close();
+
   // How many announcements are there
   $results = $mysqli->query("SELECT id FROM announcements WHERE startdate <= NOW() AND enddate >= NOW() AND deleted IS NULL");
   $announcement_no = $results->num_rows;
@@ -104,6 +109,10 @@
 
   if ($sys_error_no > 0) {
     $string['systemerrors'] .= ' <span class="corners"><span class="num">' . $sys_error_no . '</span></span>';
+  }
+  
+  if ($save_fail_log_no > 0) {
+    $string['savefailattempts'] .= ' <span class="corners"><span class="num">' . $save_fail_log_no . '</span></span>';    
   }
 
   if ($announcement_no > 0) {
@@ -136,6 +145,7 @@
 	$menudata['announcments']					= array('list_announcements.php', 'news_48.png');
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
+	$menudata['savefailattempts']			= array('list_save_fails.php', 'save_fail_48.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
 	$menudata['statistics']		= array('../statistics/index.php', 'pie_chart_48.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
