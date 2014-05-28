@@ -264,6 +264,17 @@ require '../config/finish.inc';
   window.history.go(1);
 	
 	$(document).ready(function () {
+    
+    $('.raw_textarea').each(function() {
+      var boxWidth = $(this).width();
+      var boxHeight = $(this).height();
+      
+      var targetID = 'div_' + $(this).attr('id');
+      
+      $('#' + targetID).width(boxWidth);
+      $('#' + targetID).height(boxHeight);
+    });
+    
 	});
 </script>
 </head>

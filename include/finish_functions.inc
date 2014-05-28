@@ -442,7 +442,7 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
       $paper[$question]['totalpos'] = qMarks($paper[$question]['q_type'], $tmp_exclude, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method']);
       $total_random_mark += qRandomMarks($paper[$question]['q_type'], $tmp_exclude, $paper[$question]['marks_correct'], $paper[$question]['option_text'], $paper[$question]['correct'], $paper[$question]['display_method'], $paper[$question]['score_method'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height']);
     }
- }
+  }
 
   if ($preview_q_id == null) {
   ?>
@@ -1827,7 +1827,9 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
             }
           }
         }
-        echo "<div class=\"textbox_answer\">" . $tmp_answer . "</div>\n<br />\n";
+        
+        echo "<textarea class=\"raw_textarea\" id=\"textarea$question\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\"></textarea>\n";
+        echo "<div class=\"textbox_answer\" id=\"div_textarea$question\">" . $tmp_answer . "</div>\n<br />\n";
 
         if ($tmp_answer == '') {
           reset_feedback($hide_if_unanswered);
