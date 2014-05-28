@@ -30,11 +30,14 @@ $configObject = Config::get_instance();
 
 function echo_content($html) {
   echo $html;
+  /*
   if (strpos($html,'<div>') === false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
     echo "<br />\n<br />\n";
   } elseif (strpos($html,'<div>') !== false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
     echo "<br />\n";
 	}
+   * 
+   */
 }
 
 function reset_feedback($hide) {
@@ -1807,22 +1810,24 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
           if ($paper[$question]['q_media'] != '') {
             echo "<br /><p align=\"center\">" . display_media($paper[$question]['q_media'], $paper[$question]['q_media_width'], $paper[$question]['q_media_height'], '') . "</p>\n";
           }
-          echo '<p class="leadin"';
+          echo '<div';
           if ($tmp_exclude{0} == '1') echo ' class="exclude"';
-          echo '>' . $paper[$question]['leadin'] . "</p>\n";
+          echo '>' . $paper[$question]['leadin'] . "</div>\n";
         }
         if (isset($paper[$question]['user_answer'])) {
           $tmp_answer = $paper[$question]['user_answer'];
         } else {
           $tmp_answer = '';
         }
-        $correct_answers = explode(';', $settings['terms']);
-        if ($tmp_display_correct_answer == '1') {
-          foreach ($correct_answers as $single_answer) {
-            $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);
+        if (isset($settings['terms'])) {
+          $correct_answers = explode(';', $settings['terms']);
+          if ($tmp_display_correct_answer == '1') {
+            foreach ($correct_answers as $single_answer) {
+              $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);
+            }
           }
         }
-        echo "<div style=\"border:1px solid #164994; padding:12px; text-align:justify; line-height:150%\">" . $tmp_answer . "</div>\n<br />\n";
+        echo "<div class=\"textbox_answer\">" . $tmp_answer . "</div>\n<br />\n";
 
         if ($tmp_answer == '') {
           reset_feedback($hide_if_unanswered);
@@ -1833,7 +1838,6 @@ function display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper
         }
 
         if ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-          // print_r($paper[$question]);
           echo render_marking_data($paperID, $paper[$question], $temp_userID, $mysqlidb);
         }
         break;

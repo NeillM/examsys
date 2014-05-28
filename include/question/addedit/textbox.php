@@ -104,7 +104,7 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
             <tr>
               <th><label for="terms"><?php echo $string['terms'] ?></label><br /><span class="note"><?php echo $string['termsmsg'] ?></span></th>
               <td>
-                <textarea id="terms" name="terms" cols="100" rows="3" class="form-large"<?php echo $allow_change_method ?>><?php echo $terms ?></textarea>
+                <textarea id="terms" name="terms" cols="100" rows="3" class="form-large"><?php echo $terms ?></textarea>
               </td>
             </tr>
           </tbody>

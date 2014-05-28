@@ -90,7 +90,12 @@ input.exclude, select.exclude {
   background-image: -ms-linear-gradient(top, #FF8282 0%, #FFFFFF 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='#FFFFFF');
 }
-
+.textbox_answer {
+  margin: 30px;
+  border: 1px solid #909090;
+  padding:2px;
+  text-align: justify;
+}
 /* Textbox marking report */
 div.tb-marking {
   margin-left: 0;

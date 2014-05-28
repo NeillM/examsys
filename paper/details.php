@@ -871,11 +871,11 @@ function check_latex_random($q_ids, $mysqli) {
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['farfuturewarning'], $properties->get_display_start_date());
       echo "</td></tr>\n";
     } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
       echo "</td></tr>\n";
     }
@@ -886,7 +886,7 @@ function check_latex_random($q_ids, $mysqli) {
 		
 		if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
 			echo "<tr><td colspan=\"6\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-			echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
+			echo "<tr><td class=\"redwarn\" style=\"width:40px; line-height:0\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
 			printf($string['nomatchsession'], $tmp_match, $properties->get_calendar_year());
 			echo "</td></tr>\n</table>\n</td></tr>\n";
 		}

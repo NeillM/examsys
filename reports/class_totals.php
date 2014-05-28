@@ -269,7 +269,7 @@ ob_start();
   }
   
   var paperID = <?php echo $paperID ?>;  
-  var crypt_name = <?php echo $propertyObj->get_crypt_name() ?>;
+  var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
 
   $(document).ready(function() {
     $("#maindata").tablesorter({ 
