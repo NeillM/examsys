@@ -37,9 +37,6 @@ require '../include/sidebar_menu.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  <style>
-    .d {background-image: url('../artwork/access_denied_16.gif'); background-repeat:no-repeat; background-position: left center; padding-left:20px}
-  </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
@@ -87,7 +84,7 @@ $result->execute();
 $result->store_result();
 $result->bind_result($surname, $title, $initials, $userID, $paperID, $ipaddress, $failed, $paper_title);
 while ($result->fetch()) {
-  echo "<tr><td class=\"l\">$title $initials $surname</td><td class=\"l\">$paper_title</td><td class=\"l\">$ipaddress</td><td class=\"l\">$failed</td></tr>\n";
+  echo "<tr><td class=\"l\">$title $initials $surname</td><td class=\"l\"><a href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></td><td class=\"l\">$ipaddress</td><td class=\"l\">$failed</td></tr>\n";
 }
 ?>
 </tbody>
