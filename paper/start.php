@@ -982,6 +982,14 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     <?php // Re-register the autosave timer ?>
     startAutoSave();
 
+    current_val =  $('#save_failed').val();
+    unix_now = Math.round($.now() / 1000);
+    if (current_val == '') {
+      $('#save_failed').val(unix_now);
+    } else {
+      $('#save_failed').val(current_val + '\n' + unix_now);
+    }
+
     $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
     document.body.style.cursor = 'default';
@@ -1382,6 +1390,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 ?>
 </td></tr></table>
+
+<textarea id="save_failed" name="save_failed" style="display:none"></textarea>
+
 </form>
 </div>
 <?php
