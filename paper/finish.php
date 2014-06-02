@@ -88,8 +88,9 @@ $paper_postscript           = $propertyObj->get_paper_postscript();
 $pass_mark                  = $propertyObj->get_pass_mark();
 $latex_needed               = $propertyObj->get_latex_needed();
 $password                   = $propertyObj->get_password();
+$moduleID                   = $propertyObj->get_modules();
 
-$attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
+$attempt = 1; // Default attempt to 1 overwritten if the student is resit candidate
 
 $log_type = $paper_type;    // Set log_type to current type of the paper.
 
@@ -99,10 +100,7 @@ if (isset($_GET['log_type']) and (($_GET['log_type'] == '0' or $_GET['log_type']
 
 $low_bandwidth = 0;
 
-$moduleID = Paper_utils::get_modules($paperID, $mysqli);
-$modIDs = array_keys($moduleID);
-
-//get lab info
+// Get lab info
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
@@ -113,12 +111,14 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
 $summative_exam_session_started = false;
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
-  //has this lab had an end time set?
+  // Has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
 if ($userObject->has_role('Student')) {
+  $modIDs = array_keys($moduleID);
+
   if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
   // Check for additional password on the paper
@@ -127,10 +127,10 @@ if ($userObject->has_role('Student')) {
   // Check time security
   check_datetime($start_date, $end_date);
 
-  //Check room security
+  // Check room security
   $low_bandwidth = check_labs($paper_type, $labs, $current_address, $password, $string, $mysqli);
 
-  // get modules if the user is a student and the paper is not formative
+  // Get modules if the user is a student and the paper is not formative
   $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
 
   // Check for any metadata security restrictions
@@ -141,14 +141,14 @@ if ($userObject->has_role('Student')) {
   }
 }
 
-//are we in a staff test and preview mode?
+// Are we in a staff test and preview mode?
 $is_preview_mode = ($userObject->has_role(array('Staff', 'SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
 $is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2');
 
-//are we in a staff test and preview mode and on the first screen?
+// Are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
 
-//are we in a staff single question testmode
+// Are we in a staff single question testmode?
 $is_question_preview_mode = (isset($_GET['q_id']));
 
 $is_exam_review_mode = ($userObject->has_role(array('Staff', 'External Examiner')) and isset($_GET['userID']) and $_GET['userID'] != $userObject->get_user_ID());
@@ -168,7 +168,7 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
 if (isset($_GET['userID'])) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
     $log_metadata = new LogMetadata($_GET['userID'], $paperID, $mysqli);
-  } else {   // Student is hacking the userid parameter
+  } else {   // Student is hacking the userid parameter.
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
@@ -184,7 +184,7 @@ if (isset($_GET['metadataID'])) {
 }
 
 if (!$is_exam_review_mode and !$is_question_preview_mode and !$is_formative_review) {
-  //only update log metadata if we are ending an exam
+  // Only update log metadata if we are ending an exam.
   $log_metadata->set_completed_to_now();
 }
 
@@ -295,18 +295,18 @@ require '../config/finish.inc';
   if (isset($_GET['userID'])) {
     $temp_userID = $_GET['userID'];
     $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id = ? LIMIT 1");
-    $result->bind_param('i', $_GET['userID']);
+    $result->bind_param('i', $temp_userID);
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_title, $tmp_initials, $tmp_surname, $tmp_student_id);
     $result->fetch();
     $result->close();
   } else {
-    $temp_userID = $userObject->get_user_ID();
-    $tmp_title = $userObject->get_title();
-    $tmp_initials = $userObject->get_initials();
-    $tmp_surname = $userObject->get_surname();
-    $tmp_student_id = $userObject->get_user_ID();
+    $temp_userID    = $userObject->get_user_ID();
+    $tmp_title      = $userObject->get_title();
+    $tmp_initials   = $userObject->get_initials();
+    $tmp_surname    = $userObject->get_surname();
+    $tmp_student_id = '';
   }
   $old_q_id = 0;
   $old_screen = 0;
@@ -320,8 +320,9 @@ require '../config/finish.inc';
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
       $tmp_student_name = $tmp_title . ' ' . demo_replace($tmp_surname, $demo) . ', ' . demo_replace($tmp_initials, $demo);
       $tmp_student_id = demo_replace_number($tmp_student_id, $demo);
-      if (isset($_GET['userID'])) {
-        echo " $tmp_student_name ($tmp_student_id)";
+      echo ' ' . $tmp_student_name;
+      if ($tmp_student_id != '') {
+        echo " ($tmp_student_id)";
       }
       echo '</span>';
     }
@@ -359,7 +360,7 @@ require '../config/finish.inc';
 
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   if ($show_feedback) {
-    display_feedback($temp_userID, $paperID, $paper_type, $log_type, $paper_title, $paper_postscript, $marking, $userObject, $metadataid, $mysqli, $status_array, $overrides, $preview_q_id);
+    display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $metadataid, $mysqli, $status_array, $overrides, $preview_q_id);
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);
@@ -370,12 +371,7 @@ require '../config/finish.inc';
     }
   } else {
     echo '<blockquote>';
-    if ($language == 'en') {
-      echo '<p style="font-size:450%;font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p>';
-    } else {
-      // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-      echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
-    }
+    echo '<div class="thankyou">' . $string['thankyou'] . '</div>';
     echo '<p>' . sprintf($string['msg1'], $paper_title) . '</p><br />';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';

@@ -27,10 +27,10 @@ require '../../include/errors.inc';
 
 $userID  = check_var('userID', 'GET', true, false, true);
 
-$result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss FROM special_needs WHERE userID = ?");
+$result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss, medical, breaks FROM special_needs WHERE userID = ?");
 $result->bind_param('i', $userID);
 $result->execute();
-$result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unanswered, $dismiss);
+$result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unanswered, $dismiss, $medical, $breaks);
 $result->fetch();
 $result->close();
 
@@ -65,6 +65,12 @@ if ($textsize != '') {
 }
 if ($font != '') {
   echo "<tr><td>" . $string['typeface'] . "</td><td style=\"font-family:$font, sans-serif\">$font</td></tr>";
+}
+if ($medical != '') {
+  echo "<tr><td>Medical</td><td style=\"font-family:$font, sans-serif\">$medical</td></tr>";
+}
+if ($breaks != '') {
+  echo "<tr><td>Breaks</td><td style=\"font-family:$font, sans-serif\">$breaks</td></tr>";
 }
 echo '</table>';
 

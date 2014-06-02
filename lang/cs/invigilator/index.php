@@ -26,7 +26,7 @@ $string['endtime'] = 'Čas ukončení';
 $string['extendtime'] = 'Prodloužení';
 $string['extendtimeby'] = 'Prodloužení času o';
 $string['addnote']        = 'Přidat poznámku';
-$string['currenttime']    = 'Aktuální čas:';
+$string['currenttime']    = 'Aktuální čas';
 $string['start'] = 'Start:';
 $string['end']       = 'Konec';
 $string['start_but'] = 'Start'; 
@@ -36,25 +36,22 @@ $string['duration'] = 'Trvání:';
 $string['mins'] = 'minut';
 $string['papernote'] = 'Poznámky dokumentu';
 $string['extratime'] = 'Prodloužení';
-$string['checklist'] = '<div><strong>Seznam úkonů</strong></div>
-    <div><em>Před zkouškou</em></div>
-    <ol>
+$string['preexam'] = 'Před zkouškou';
+$string['preexamlist'] = '<ol>
     <li>Umístěte přihlašovací pokyny ke každému počítači, který bude obsazen. </li>
     <li>Ke každému počítači, který bude obsazen, položte prázdný papír. </li>
     <li>Zkontrolujte, zda jsou všichni studenti správně přihlášeni.</li>
     <li>Každému, kdo není schopen se přihlásit, doporučte využít \'Dočasný\' účet.  </li>
     <li><strong>Poznámka:</strong> Nezačínejte před plánovaným časem zahájení!</li>
-    </ol>
-    
-    <div><em>V průběhu zkoušky</em></div>
-    <ol>
+    </ol>';
+$string['midexam'] = 'V průběhu zkoušky';
+$string['midexamlist'] = '<ol>
     <li>Zaznamenejte drobné problémy studentů\' do souboru (<a href="%shelp.html" target="_blank">příklady problémů</a>) . </li>
     <li>Zaznamenejte problémy s obsahem dokumentů/úloh. </li>
     <li>Při větších problémech volejte na níže uvedené číslo. </li>
-    </ol>
-    
-    <div><em>Po zkoušce</em></div>
-    <ol start="4">
+    </ol>';
+$string['postexam'] = 'Po zkoušce';
+$string['postexamlist'] = '<ol>
     <li>"Tímto zkouška končí. Prosím, přejděte na poslední okno a klikněte na tlačítko \'Konec\'."</li>
     <li>"Klikněte na \'Zavřít okno\', poté stiskněte CTRL, ALT, DELETE; tímto se odhlásíte z pracovního počítače."</li>
     <li>Posbírejte všechny papíry s přihlašovacími pokyny k opětovnému použití.</li>

@@ -169,8 +169,8 @@ function getPaper($paperID) {
 // Look for other papers.
 $papers[$paperID] =  getPaper($paperID);
 $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-$moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
-$sql = "SELECT properties.property_id from properties,properties_modules WHERE properties.property_id = properties_modules.property_id AND  idMod IN ($moduleIDs_in) AND properties.property_id != ? AND paper_type = 3 AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND labs IS NOT NULL AND start_date < ? order by start_date DESC LIMIT 3";
+$moduleIDs_in = "'" . implode("','", array_keys($moduleIDs)) . "'";
+$sql = "SELECT properties.property_id from properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN ($moduleIDs_in) AND properties.property_id != ? AND paper_type = '2' AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND start_date < ? ORDER BY start_date DESC LIMIT 3";
 $papersRes = $mysqli->prepare($sql);
 $papersRes->bind_param('is', $paperID, $start_date);
 $papersRes->execute();

@@ -84,10 +84,10 @@ a.user:hover {
   position: absolute;
   top: 0;
   left: 0;
-  width: 350px;
+  width: 450px;
   z-index: 10000;
   font-size: 90%;
-  background-color: #D9E2F1;
+  background-color: #EEF4FF;
 	border: 1px solid #295AAD;
 }
 .staff {

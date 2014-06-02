@@ -34,8 +34,10 @@ class PaperProperties {
   private $paper_title;
   private $start_date;
   private $display_start_date;
+  private $display_start_time;
   private $end_date;
   private $display_end_date;
+  private $display_end_time;
   private $timezone;
   private $paper_type;
   private $paper_prologue;
@@ -192,9 +194,12 @@ class PaperProperties {
       $property_object->set_exam_duration($exam_duration);
       $property_object->set_calendar_year($calendar_year);
       $property_object->set_calendar_year($calendar_year);
+      $property_object->set_password($password);
       $property_object->set_timezone($timezone);
       $property_object->set_display_start_date();
+      $property_object->set_display_start_time();
       $property_object->set_display_end_date();
+      $property_object->set_display_end_time();
       $properties[] = $property_object;
     }
 
@@ -324,7 +329,9 @@ class PaperProperties {
     $paper_results->close();
 
     $this->set_display_start_date();
+    $this->set_display_start_time();
     $this->set_display_end_date();
+    $this->set_display_end_time();
 
     $this->changes = array();
 
@@ -698,6 +705,13 @@ class PaperProperties {
   }
 
   /**
+   * @return string $display_start_time
+   */
+  public function get_display_start_time() {
+    return $this->display_start_time;
+  }
+
+  /**
    * @param string $display_start_date
    */
   public function set_display_start_date($display_start_date = '') {
@@ -710,6 +724,22 @@ class PaperProperties {
       }
     } else {
       $this->display_start_date = $display_start_date;
+    }
+  }
+
+  /**
+   * @param string $display_start_date
+   */
+  public function set_display_start_time($display_start_time = '') {
+    if ($display_start_time == '') {
+      // Summative papers may have no start date until scheduled
+      if ($this->start_date != '') {
+        $start_datetime = DateTime::createFromFormat('U', $this->start_date);
+        $start_datetime->setTimezone($this->get_date_time_zone());
+        $this->display_start_time = $start_datetime->format($this->configObject->get('cfg_long_time_php'));
+      }
+    } else {
+      $this->display_start_time = $display_start_time;
     }
   }
 
@@ -752,6 +782,13 @@ class PaperProperties {
   }
 
   /**
+   * @return string $end_date
+   */
+  public function get_display_end_time() {
+    return $this->display_end_time;
+  }
+
+  /**
    * @param string $end_date
    */
   public function set_display_end_date($display_end_date = '') {
@@ -764,6 +801,22 @@ class PaperProperties {
       }
     } else {
       $this->display_end_date = $display_end_date;
+    }
+  }
+
+  /**
+   * @param string $end_date
+   */
+  public function set_display_end_time($display_end_time = '') {
+    if ($display_end_time == '') {
+      // Summative papers may have no end date until scheduled
+      if ($this->end_date != '') {
+        $end_datetime = DateTime::createFromFormat('U', $this->end_date);
+        $end_datetime->setTimezone($this->get_date_time_zone());
+        $this->display_end_time = $end_datetime->format($this->configObject->get('cfg_long_time_php'));
+      }
+    } else {
+      $this->display_end_time = $display_end_time;
     }
   }
 

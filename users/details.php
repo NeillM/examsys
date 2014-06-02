@@ -190,15 +190,17 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   if ($_POST['unanswered_radio'] == '0') $unansweredcolor = NULL;
   $dismisscolor = $_POST['dismisscolor'];
   if ($_POST['dismiss_radio'] == '0') $dismisscolor = NULL;
+  $medical = trim($_POST['medical']);
+  $breaks = trim($_POST['breaks']);
 
   $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID = ?");
   $result->bind_param('i', $_GET['userID']);
   $result->execute();
   $result->close();
 
-  if ($background != NULL or $foreground != NULL or $marks_color != NULL or $textsize != 0 or $extra_time != 0 or $font != NULL or $themecolor != NULL or $labelcolor != NULL or $unansweredcolor != NULL or $dismisscolor != NULL) {
-    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('issiissssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor);
+  if ($background != NULL or $foreground != NULL or $marks_color != NULL or $textsize != 0 or $extra_time != 0 or $font != NULL or $themecolor != NULL or $labelcolor != NULL or $unansweredcolor != NULL or $dismisscolor != NULL or $medical != '' or $breaks != '') {
+    $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('issiissssssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
     $result->execute();
     $result->close();
 
@@ -231,15 +233,17 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   <style type="text/css">
     .coltitle {cursor:hand; background-color:#1E3C7B; color:white}
     .sch_check {text-align:right; width:40px; padding-right:6px}
+    .medical {background-image: url('../artwork/medical_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
+    .breaks {background-image: url('../artwork/moon_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script language="javascript">
-    function reviewPaper(started, userid, surname, papername, log_type) {
+    function reviewPaper(started, userid, surname, papername, log_type, metadataID) {
       var winwidth = screen.width - 80;
       var winheight = screen.height - 80;
-      window.open("../paper/finish.php?id="+papername+"&previous="+started+"&userid="+userid+"&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      window.open("../paper/finish.php?id="+papername+"&previous="+started+"&userid="+userid+"&metadataID=" + metadataID + "&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
 
     function showTab(tabID) {
@@ -297,7 +301,6 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
 
     function updateAccessDemo() {
-
       var textsize = $('select[name="textsize"] option:selected').text();
       if (textsize == '<default>') {
         textsize = '100%';
@@ -571,7 +574,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     } else {
       echo "<option value=\"\"></option>\n<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n";
     }
-    echo "</select></td><td>&nbsp;" . $string['databaseid'] . "</td><td colspan=\"2\">" . $_GET['userID'] . "</td></tr>\n";
+    echo "</select></td><td>&nbsp;" . $string['userid'] . "</td><td colspan=\"2\">" . $_GET['userID'] . "</td></tr>\n";
     echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
     if (stripos($tmp_roles, 'Student') !== false) {
@@ -698,15 +701,15 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       // Only allow Admin/SysAdmin or current user to view this information
       $queries = array();
 			
-      $queries[] = "SELECT crypt_name, paper_title, paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started";
-      $queries[] = "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? ORDER BY started";
-      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ORDER BY started";
+      $queries[] = "SELECT crypt_name, paper_title, paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? ORDER BY started";
+      $queries[] = "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress, NULL AS metadataID FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? ORDER BY started";
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress, NULL AS metadataID FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ORDER BY started";
 
       foreach ($queries as $query_sql) {
         $stmt = $mysqli->prepare($query_sql);
         $stmt->bind_param('i', $tmp_id);
         $stmt->execute();
-        $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $ipaddress);
+        $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $ipaddress, $metadataID);
         while ($stmt->fetch()) {
 					$paper[$results_no]['crypt_name']       = $crypt_name;
 					$paper[$results_no]['q_paper']          = $paper_title;
@@ -716,6 +719,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 					$paper[$results_no]['started']          = $started;
 					$paper[$results_no]['display_started']  = $display_started;
 					$paper[$results_no]['ipaddress']        = $ipaddress;
+					$paper[$results_no]['metadataID']       = $metadataID;
 					$results_no++;
         }
         $stmt->close();
@@ -735,6 +739,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         $paper[$results_no]['started']          = $accessed;
         $paper[$results_no]['display_started']  = $display_started;
         $paper[$results_no]['ipaddress']        = $ipaddress;
+        $paper[$results_no]['metadataID']       = null;
         $results_no++;
       }
       $stmt->close();
@@ -752,6 +757,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         $paper[$results_no]['started']          = $tried;
         $paper[$results_no]['display_started']  = $display_started;
         $paper[$results_no]['ipaddress']        = $ipaddress;
+        $paper[$results_no]['metadataID']       = null;
         $results_no++;
       }
       $stmt->close();
@@ -766,13 +772,13 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
       switch ($paper[$i]['type']) {
         case '0':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '1':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '2':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
           echo ">" . $paper[$i]['q_paper'] . "</a></td><td";
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
@@ -961,11 +967,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"padding-top:20px; text-align:left\">";
 
-  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss FROM special_needs WHERE userID = ? LIMIT 1");
+  $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss, medical, breaks FROM special_needs WHERE userID = ? LIMIT 1");
   $result->bind_param('i', $tmp_id);
   $result->execute();
   $result->store_result();
-  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor);
+  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
   $result->fetch();
   if ($result->num_rows > 0) {
     $special_needs = true;
@@ -999,16 +1005,16 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 ?>
 </select>
 </td>
-<td rowspan="11" style="width:40px">&nbsp;</td>
-<td rowspan="11" style="font-size:110%">
-<div id="demo_paper_background" style="width:450px; height:300px; border:1px solid #EAEAEA; box-shadow: 3px 3px 4px #808080; padding:15px; float:right">
+<td rowspan="10" style="width:40px">&nbsp;</td>
+<td rowspan="10" style="font-size:110%">
+<div id="demo_paper_background" style="width:450px; height:300px; border:1px solid #909090; padding:15px; float:right">
 
 <span id="demo_theme" style="font-size:150%; font-weight:bold; color:#316AC5"><?php echo $string['demo1']; ?></span>
 
 <p>1. &nbsp;<?php echo $string['demo2']; ?></p>
 
 <table cellspacing="0" cellpadding="2" border="0" style="margin-left:30px; width:200px">
-<tr><td style="text-align:center; color:#C00000" id="demo_true_label"><?php echo $string['demo3']; ?></td><td style="text-align:center; color:#C00000" id="demo_false_label"><?php echo $string['demo4']; ?></td><td></td>
+  <tr><td style="text-align:center; color:#C00000" id="demo_true_label"><?php echo $string['demo3']; ?></td><td style="text-align:center; color:#C00000" id="demo_false_label"><?php echo $string['demo4']; ?></td><td></tr>
 <tr><td style="text-align:center"><input type="radio" name="q1" value="t" checked="checked" /></td><td style="text-align:center"><input type="radio" name="q1" value="f" /></td><td><?php echo $string['demo5']; ?></td></tr>
 <tr><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td><?php echo $string['demo6']; ?></td></tr>
 <tr id="demo_unanswered" style="background-color:#FFC0C0"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td><?php echo $string['demo7']; ?></td></tr>
@@ -1147,10 +1153,13 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 ?>
 </td>
 </tr>
-<tr><td colspan="3">&nbsp;</td></tr>
+<tr><td colspan="5">&nbsp;</td></tr>
+<tr><td class="medical"><?php echo $string['medical'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="medical" style="width:100%"><?php echo $medical ?></textarea></td></tr>
+<tr><td class="breaks"><?php echo $string['breaks'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="breaks" style="width:100%"><?php echo $breaks ?></textarea></td></tr>
+<tr><td colspan="5">&nbsp;</td></tr>
 <?php
 if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-  echo "<tr><td colspan=\"3\" align=\"center\"><input type=\"submit\" name=\"updateaccess\" value=\"" . $string['save'] . "\" style=\"width:100px\" /></td></tr>\n";
+  echo "<tr><td colspan=\"5\" align=\"center\"><input type=\"submit\" name=\"updateaccess\" value=\"" . $string['save'] . "\" style=\"width:100px\" /></td></tr>\n";
 }
 ?>
 </table>
@@ -1162,6 +1171,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
 </table>
 
 <?php
+  // Metadata tab.
   $metadata_no = 0;
   if ($tab == 'metadata') {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%\">\n";
@@ -1171,7 +1181,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
   echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
   echo drawTabs('Metadata', 5, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
-  $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.idMod=modules.id AND userID=?");
+  $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND userID = ?");
   $stmt->bind_param('i', $_GET['userID']);
   $stmt->execute();
   $stmt->store_result();
