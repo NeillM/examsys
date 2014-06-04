@@ -84,7 +84,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
     $(function () {

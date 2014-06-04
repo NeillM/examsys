@@ -39,11 +39,11 @@ require_once '../classes/moduleutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#eee}
-    .qline.highlight {background-color:#B3C8E8}
+    .qline:hover {background-color:#FFE7A2}
+    .qline.highlight {background-color:#FFBD69}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">

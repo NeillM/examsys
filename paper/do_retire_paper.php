@@ -97,7 +97,7 @@ $mysqli->close();
 	  body {background-color:#F1F5FB; font-size:90%}
 	</style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
 		$(document).ready(function(){
       window.opener.location.reload(true);

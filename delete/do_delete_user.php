@@ -59,7 +59,7 @@ $mysqli->close();
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
 		$(document).ready(function(){
       window.opener.location.reload();

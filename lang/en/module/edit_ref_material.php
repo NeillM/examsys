@@ -14,5 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/folder/add_ref_material.php';
+require '../lang/' . $language . '/module/add_ref_material.php';
 ?>

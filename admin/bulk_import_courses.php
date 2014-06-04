@@ -49,7 +49,7 @@ ini_set("auto_detect_line_endings", true);
     .added {color:black}
     .failed {color:#C00000}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
     $(function () { $('#import_form').validate(); });

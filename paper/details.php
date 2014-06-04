@@ -360,7 +360,7 @@ function check_latex_random($q_ids, $mysqli) {
 }
 ?>
 <!DOCTYPE html>
-<html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
+<html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -390,8 +390,9 @@ function check_latex_random($q_ids, $mysqli) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
@@ -541,6 +542,11 @@ function check_latex_random($q_ids, $mysqli) {
 	
 		$(window).scroll(function() {
 			scrollXY();
+		});
+		
+		$(window).click(function(event) {
+			hideMenus();
+			hideAssStatsMenu(event);
 		});
 	});
 </script>

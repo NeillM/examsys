@@ -96,7 +96,7 @@ function display_q($target_id, $db) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['objectivemapping']; ?></title>
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>

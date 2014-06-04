@@ -80,7 +80,7 @@ if ($_GET['module'] != '0') {
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
@@ -90,7 +90,7 @@ if ($_GET['module'] != '0') {
   </script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
   require '../include/module_options.inc';
   require '../include/toprightmenu.inc';

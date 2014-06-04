@@ -44,10 +44,10 @@ require '../../include/staff_auth.inc';
     #main {height:100%; width:100%; overflow:scroll; margin:0px; padding:0px}
   </style>
 
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help_toc.js"></script>
 </head>
-<body onload="resizeTOC()" onresize="resizeTOC()">
+<body>
 
 <div id="main">
 <?php

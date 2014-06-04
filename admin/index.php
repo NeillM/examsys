@@ -41,7 +41,7 @@
 
 <?php echo $configObject->get('cfg_js_root') ?>
 <script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+<script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
 <script language="JavaScript" src="../js/sidebar.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">

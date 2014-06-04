@@ -59,7 +59,7 @@ if (!$module_code) {
   </style>
   
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">
@@ -103,7 +103,7 @@ if (!$module_code) {
     }
     
     function editReference() {
-      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $modID; ?>";
+      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/module/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $modID; ?>";
     }
     
     function deleteReference() {

@@ -86,7 +86,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <title>Rog&#333;: <?php echo $string['calendar'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
 <?php echo $configObject->get('cfg_js_root') ?>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script language="JavaScript">
   var lab_names = new Array();
 <?php

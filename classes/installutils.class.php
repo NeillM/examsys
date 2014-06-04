@@ -1314,7 +1314,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         form div {padding-left:2em}
       </style>
 
-      <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+      <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
       <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
       <script type="text/javascript">

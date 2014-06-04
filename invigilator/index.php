@@ -317,8 +317,8 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 <link rel="stylesheet" type="text/css" href="../css/header.css"/>
 <link rel="stylesheet" type="text/css" href="../css/invigilator.css"/>
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript">
 
   var ns6 = document.getElementById && !document.all;

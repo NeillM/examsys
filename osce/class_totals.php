@@ -57,7 +57,7 @@ $crypt_name = $propertyObj->get_crypt_name();
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();                                                  // Get any questions to exclude.
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->load_answers();
 $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();
@@ -129,7 +129,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
@@ -159,13 +159,19 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       window.top.location = '../users/details.php?userID=' + $('#userID').val();
     }
     
+	<?php
+		if (count($user_results) > 0) {
+	?>
     $(document).ready(function() {
       $("#maindata").tablesorter({ 
         // sort on the first column and third column, order asc 
         sortList: [[2,0],[3,0]] 
       });
-
     });
+	<?php
+		}
+	?>
+
   </script>
 </head>
 

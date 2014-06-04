@@ -72,7 +72,7 @@ require_once '../classes/dateutils.class.php';
 	});
 </script>
 
-<div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:330px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:335px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
@@ -83,7 +83,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <div id="table1div" style="width:100%">
 <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:100%" id="table1">
 <tr>
-<td colspan="5" style="background-color:#F2B100; height:5px; padding:0px"> </td>
+<td colspan="5" style="background-color:#F2B100; height:5px; padding:0"> </td>
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>

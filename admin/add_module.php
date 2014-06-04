@@ -131,7 +131,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -181,13 +181,16 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 		echo draw_toprightmenu(233);
   ?>
   <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['createmodule']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-  </table>
+  <div class="head_title">
+		<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+		<div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+		<div class="page_title"><?php echo $string['createmodule']; ?></div>
+  </div>
+	
   <br />
-  <div align="center">
+
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-    <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
+    <table cellpadding="0" cellspacing="2" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" required autofocus /></td></tr>
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" required /></td></tr>
 
@@ -250,11 +253,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     ?></select></td></tr>
-    </table>
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
-  </form>
-  </div>
-</div>
+
+    <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
+		</table>
+	</form>
+
+	</div>
 <?php
 }
 ?>

@@ -37,7 +37,7 @@
     .foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
   </style>
 
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="javascript">

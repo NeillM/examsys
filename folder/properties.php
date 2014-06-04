@@ -63,11 +63,14 @@ if (isset($_POST['moduleID'])) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {background-color:#F1F5FB}
-    td {font-size:90%}
+    body {background-color:#F1F5FB; font-size:90%}
+    input[type=checkbox] {margin-left:20px; margin-right:8px}
+    .r1 {background-color:white}
+    .r2 {background-color:#FFBD69}
+		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
     $(function () {
@@ -81,13 +84,15 @@ if (isset($_POST['moduleID'])) {
     });
     
     function toggle(objectID) {
-      if ($('#' + objectID).css('background-color') == 'white') {
-        $('#' + objectID).css('background-color', '#B3C8E8');
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        $('#' + objectID).css('background-color', 'white');
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
-
+		
     function checkForm() {
       if ($('#folder').val() == "") {
         alert ("<?php echo $string['enteraname']; ?>");
@@ -245,7 +250,7 @@ if ($unique_name) {
       $current_folder = $folder_array[$sections];
       $prefix = substr($full_path,0,strrpos($full_path,';'));
       echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" style=\"width:100%\" >\n";
-      echo "<tr><td align=\"right\"><nobr>" . $string['foldername'] . "&nbsp;</nobr></td><td colspan=\"3\"><input";
+      echo "<tr><td style=\"text-align:right\"><nobr>" . $string['foldername'] . "&nbsp;</nobr></td><td colspan=\"3\"><input";
       if (!$unique_name) {
         echo ' style="color:#800000; background-color:#FFC0C0; border:1px solid #400000"';
       }
@@ -271,23 +276,23 @@ if ($unique_name) {
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['owner'] . "&nbsp;</td><td>$owner</td></tr>\n";
       echo "<tr><td align=\"right\" valign=\"top\">" . $string['created'] . "&nbsp;</td><td>$created</td></tr>\n";
        
-      echo "<tr><td align=\"right\">" . $string['teams'] . "&nbsp;</td><td><div style=\"background-color:white; display:block; height:330px; width:100%; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
+      echo "<tr><td align=\"right\">" . $string['teams'] . "&nbsp;</td><td><div style=\"background-color:white; display:block; height:320px; width:100%; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%\">";
 
       $module_no = 0;
       $old_school = '';
       
       foreach ($userObject->get_staff_accessable_modules() as $IdMod => $module) {
-        if ($module['school'] != $old_school) {
-          echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
-        }
+				if ($module['school'] != $old_school) {
+					echo "<table border=\"0\" class=\"school\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+				}
         if (isset($folder_staff_modules[$IdMod])) {
           if ($userObject->is_staff_user_on_module($IdMod) or $userObject->has_role('SysAdmin')) {
-            echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           } else {
-            echo "<div style=\"background-color:#B3C8E8\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           }
         } else {
-          echo "<div style=\"background-color:white\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
+          echo "<div class=\"r1\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];
@@ -296,8 +301,7 @@ if ($unique_name) {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n</td></tr>";
       ?>
     </table>
-  <br />
-  <div align="center"><input type="submit" style="width:100px" name="Submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input type="button" name="home" style="width:100px" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+  <div style="text-align:center; padding-top:10px"><input type="submit" class="ok" name="Submit" value="<?php echo $string['save']; ?>"><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 </td>
 </tr>
 </table>

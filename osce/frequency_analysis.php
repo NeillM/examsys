@@ -51,14 +51,14 @@ $themecolor = $propertyObj->get_themecolor();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%}
-    .question {text-align:left; border:1px solid #808080}
-    .rating {width:40px; text-align:right; border:1px solid #808080}
+    .question {text-align:left; border:1px solid #909090}
+    .rating {width:40px; text-align:right; border:1px solid #909090}
     .theme {text-align:left; font-size:125%; color:<?php echo $themecolor; ?>; padding-top:10px}
-    .overall {border:1px solid #808080; width:20%; height:35px; text-align:center}
-    ul {margin-top:0px; margin-bottom:0px}
+    .overall {border:1px solid #909090; width:20%; height:35px; text-align:center}
+    ul {margin-top:0; margin-bottom:0}
   </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     function reviewOSCE(userid) {
@@ -75,26 +75,24 @@ $themecolor = $propertyObj->get_themecolor();
 	
 	echo draw_toprightmenu();
 	
-  echo "<table class=\"header\">\n";
-  echo "<tr><th>";
-  if(isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
+  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = $string['frequencyanalysis'] . ' (' . $_GET['repmodule'] . ' ' . $string['studentsonly'] . ')';
   } else {
     $report_title = $string['frequencyanalysis'];
   }
 
+  echo "<div class=\"head_title\">\n";
+	echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-
-  echo '</table>';
-
+  echo "<div class=\"page_title\">$report_title</div>";
+  echo '</div>';
 
   // Query Log4 to get stored ratings per question.
   $old_userID = '';
@@ -145,7 +143,7 @@ $themecolor = $propertyObj->get_themecolor();
       }
       echo "<tr id=\"row_" . $question_no . "\"><td class=\"question\">";
       if (trim($notes) != '') {
-        echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" border=\"0\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+        echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
       }
       echo "$leadin</td>";
 

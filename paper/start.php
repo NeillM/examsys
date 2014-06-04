@@ -620,7 +620,8 @@ if ($css != '') {
   echo "<style type=\"text/css\">\n$css\n</style>\n";
 }
 ?>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
 <?php if ($propertyObj->get_latex_needed() == 1) {?>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php }?>

@@ -133,8 +133,10 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
 <?php
   $vle_apis = $configObject->get('vle_apis');
@@ -199,11 +201,16 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   ?>
   <?php
     require '../include/admin_module_options.inc';
+		require '../include/toprightmenu.inc';
+		
+		echo draw_toprightmenu();
   ?>
   <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editmodule']; ?></div></th></tr>
-  </table>
+  <div class="head_title">
+		<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+		<div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+		<div class="page_title"><?php echo $string['editmodule']; ?></div>
+  </div>
   <br />
   <div align="center">
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">

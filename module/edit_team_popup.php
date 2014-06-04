@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
     .g {color:#808080}
     .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {

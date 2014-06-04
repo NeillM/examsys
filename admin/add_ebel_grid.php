@@ -55,8 +55,10 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rog&#333;: <?php echo $string['createtemplate'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  
+	<title>Rog&#333;: <?php echo $string['createtemplate'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  
+	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
@@ -64,7 +66,7 @@ if (isset($_POST['submit'])) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
@@ -89,14 +91,14 @@ if (isset($_POST['submit'])) {
   ?>
   <div id="content" class="content">
   <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./list_ebel_grids.php"><?php echo $string['ebelgridtemplates']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['createtemplate']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
+  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_ebel_grids.php"><?php echo $string['ebelgridtemplates']; ?></a></div><div class="page_title"><?php echo $string['createtemplate']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
   </table>
   
   <blockquote>
   <form id="theform" name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
  
     <table cellpadding="5" cellspacing="0" border="0">
-    <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="textbox" name="name" size="40" maxlength="255" required autofocus /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="text" name="name" size="40" maxlength="255" required autofocus /></td></tr>
     
     <tr><td colspan="4"><h1><?php echo $string['passmark']; ?></h1></td></tr>
     
