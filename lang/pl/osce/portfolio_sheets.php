@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/paper/properties.php';
+require '../lang/' . $language . '/osce/form.php';
 
 $string['osce'] = 'OSCE:'; //cognate
 $string['examiner'] = 'Egzaminator:';//ąę
