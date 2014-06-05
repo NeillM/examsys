@@ -134,7 +134,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/index.css"/>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <?php
 	if ($userObject->has_role('Staff')) {
@@ -313,7 +313,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/index.css"/>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <?php
     require_once '../include/toprightmenu.inc';

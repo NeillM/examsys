@@ -51,7 +51,7 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
     function over(id) {
       if (id != $('#paper_type').val()) {
@@ -204,9 +204,10 @@ require '../lang/' . $language. '/include/timezones.inc';
   $result->close();
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
   if ($paper_types[$_POST['paper_type']] == '2' or $paper_types[$_POST['paper_type']] == '4' or $paper_types[$_POST['paper_type']] == '5') {
 ?>
@@ -504,8 +505,9 @@ if ($_POST['paper_type'] == 'summative') {
   $current_school = '---';
   foreach($module_array as $module) {
     if ($module['school'] != $current_school) {
-      echo '<h2>' . $module['school'] . '</h2>';
+      //echo '<h2>' . $module['school'] . '</h2>';
       $current_school = $module['school'];
+      echo "<table border=\"0\" class=\"subsect\" style=\"width:98%\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
     }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
       echo "<div class=\"r2\" id=\"div$module_no\"><input type=\"checkbox\" onclick=\"toggle($module_no)\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";

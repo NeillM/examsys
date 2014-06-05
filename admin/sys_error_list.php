@@ -43,7 +43,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <style type="text/css">
     .errl {padding-right:6px; vertical-align:top; text-align:right}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>

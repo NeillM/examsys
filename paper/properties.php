@@ -856,7 +856,7 @@ if (isset($_POST['Submit'])) {
 
     <title><?php echo $string['edittitle']; ?></title>
 
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript">
       $(function () {
         $('#home').click(function () {
@@ -949,9 +949,10 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -961,7 +962,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <?php
   if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
 ?>
-  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
   <script type="text/javascript">
     $(function () {
@@ -1868,7 +1869,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $old_school = '';
       foreach ($module_array as $module) {
         if ($module['school'] != $old_school) {
-          echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
+          echo "<div class=\"subsect\">" . $module['school'] . "</div>";
+					//echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
         }
         $match = false;
         foreach ($modules_array as $separate_module) {
