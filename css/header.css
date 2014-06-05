@@ -58,3 +58,14 @@ table.header {
   margin-bottom: 4px;
   color: #1F497D;
 }
+.subsect_table {
+	margin-top: 4px;
+	display: table;
+	width: 98%;
+}
+.subsect_cell {
+	display: table-cell;
+	vertical-align: middle;
+	height: auto;
+  color: #1F497D;
+}
