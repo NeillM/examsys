@@ -169,7 +169,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     .symbol {width:24px; text-align:center}
   </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <?php
 	if ($userObject->has_role('Staff')) {

@@ -103,7 +103,7 @@ if (!isset($module_details) && $module != '0') {
     notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 	}
 	
-  function edit() {
+  function ed() {
     var url = '<?php echo $configObject->get('cfg_root_path') ?>/question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&calling=list';
     <?php 
       if (isset($_GET['team']) and $_GET['team'] != '') {

@@ -533,5 +533,17 @@ Class PaperUtils {
 
     return $paper_no;
   }
+  
+  function need_interactiveQ($screen_data, $screen) {
+    $interactive = false;
+
+    foreach($screen_data[$screen] as $question_part) {
+      if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
+        $interactive = true;
+      }
+    }
+
+    return $interactive;
+  }
 
 }

@@ -39,6 +39,7 @@ $string['unlock'] = 'Unlock';
 $string['nooptionsdefined'] = 'No options defined for question';
 $string['noquestionscreen'] = '<strong>Warning:</strong> there are no questions on this screen.<br />This will produce an error if the paper is tested!';
 $string['markswarning'] = 'Screen %d has %d marks which is %d%% of the paper total. Please insert additional screen breaks to minimise data loss in the event of a computer crash.';
+$string['duplicateoptions'] = 'Duplicate options. MCQ options must be unique.';
 $string['nocorrect'] = 'No correct answer specified';
 $string['zeromarks'] = 'Warning zero marks set.';
 $string['toomanycorrect'] = 'Too many correct options';

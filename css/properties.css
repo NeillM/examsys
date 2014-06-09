@@ -1,37 +1,39 @@
 body {
-  background-color:#F0F0F0;
+  background-color: #F0F0F0;
 }
 table {
-  text-align:left
+  text-align: left;
 }
+    input[type="checkbox"] {margin-left: 25px}
+
 .r1 {
-  text-indent:-23px;
-  padding-left:23px;
-  background-color:white;
+  text-indent: -23px;
+  padding-left: 23px;
+  background-color: white;
 }
 .r2 {
-  text-indent:-23px;
-  padding-left:23px;
-  background-color:#FFBD69;
+  text-indent: -23px;
+  padding-left: 23px;
+  background-color: #FFBD69;
 }
 .r1disabled {
-  text-indent:-23px;
-  padding-left:23px;
-  background-color:white;
-  color:#808080
+  text-indent: -23px;
+  padding-left: 23px;
+  background-color: white;
+  color: #808080
 }
 .r2disabled {
-  text-indent:-23px;
-  padding-left:23px;
-  background-color:#DDDDDD;
-  color:#808080;
+  text-indent: -23px;
+  padding-left: 23px;
+  background-color: #DDDDDD;
+  color: #808080;
 }
 select {
-  margin:0px;
-  padding:0px;
+  margin: 0;
+  padding: 0;
 }
 input[type="text"] {
-  margin:0px;
+  margin: 0;
 }
 extarea, input[type=text], select, textarea, input[type=password] {
   border: 1px solid #ABADB3;
@@ -52,5 +54,5 @@ extarea, input[type=text], select, textarea, input[type=password] {
 	padding-right: 10px;
 }
 .cancel {
-  margin-right: 0px;
+  margin-right: 0;
 }

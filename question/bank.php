@@ -72,18 +72,19 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
-    p { margin: 0; padding: 0; }
+    p { margin: 0; padding: 0}
+    .subsect_table {margin-left: 12px; margin-bottom: 8px}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
   require '../include/module_options.inc';
   require '../include/toprightmenu.inc';
@@ -119,7 +120,7 @@ if ($type != 'keyword') {
   echo "<br />\n";
 }
 if ($type == 'performance') {
-  echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydifficulty'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $string['bydifficulty'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 }
 
 $old_section = '';
@@ -130,13 +131,13 @@ foreach ($bank_types as $id=>$type_name) {
   
   if ($type == 'keyword') {
     if ($old_section != $type_name{0}) {
-      echo "<br clear=\"left\" />\n";
-      echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $type_name{0} . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<br clear=\"all\" />\n";
+      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $type_name{0} . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     $old_section = $type_name{0};
   } elseif ($type == 'performance' and $id == 'highest') {
     echo "<br clear=\"left\" />\n";
-    echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydiscrimination'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $string['bydiscrimination'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   } elseif ($type == 'objective') {
     $ids = $type_name['ids'];
     $type_name = $type_name['label'];

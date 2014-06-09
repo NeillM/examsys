@@ -87,7 +87,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">
 	$(document).ready(function() {
@@ -164,7 +164,7 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/list.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script type="text/javascript" src="../js/popup_menu.js"></script>

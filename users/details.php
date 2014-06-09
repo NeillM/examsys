@@ -237,7 +237,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     .breaks {background-image: url('../artwork/moon_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script language="javascript">
     function reviewPaper(started, userid, surname, papername, log_type, metadataID) {

@@ -15,8 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['copyontopaper'] = 'Kopírovat do dokumentu';
-$string['ok'] = 'OK'; //cognate
 $string['cancel'] = 'Zrušit';
+$string['close'] = 'Close';
+$string['gotopaper'] = 'Goto Paper';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';
 $string['msg1'] = "Dokument je v současné době "aktivní". Aktuální datum je uvedeno mezi datumem jeho zahájení a ukončení. Tento bezpečnostní prvek tedy zabraňuje úpravě aktivního dokumentu.";

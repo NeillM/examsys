@@ -107,7 +107,8 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -279,9 +280,9 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   echo "<thead>\n";
   foreach ($table_order as $display => $col_width) {
     if ($display == $string['modified']) {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"{sorter: 'datetime'} vert_div\">$display</th>";
+      echo "<th class=\"{sorter: 'datetime'} vert_div\">$display</th>";
     } else {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>";
+      echo "<th class=\"vert_div\">$display</th>";
     }
   }
   ?>

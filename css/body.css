@@ -48,9 +48,9 @@ table.fixed {
 }
 hr {
   height: 1px;
-  color: grey;
-  background-color: grey;
-  border: 0px;
+  color: #E5E5E5;
+  background-color: #E5E5E5;
+  border: 0;
 }
 .page_title {
   padding-left: 10px !important;

@@ -61,4 +61,5 @@ $string['screen'] = 'Ekran';
 $string['warning1'] = 'Uwaga: Trudność jest mniejsza niż 0.2';
 $string['warning2'] = 'Uwaga: Różnicowanie jest mniejsze niż 0.15';
 $string['abstain'] = 'Odmowa odpowiedzi';
+$string['unmarkedscripts'] = '%d unmarked scripts';
 ?>

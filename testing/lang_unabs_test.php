@@ -4,7 +4,7 @@
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
    <title>Lang unabstracted string search</title>
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript">
 		function chide(cl) {
 			if (cl.indexOf(';')>-1) {

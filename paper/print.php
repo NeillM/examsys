@@ -237,7 +237,7 @@ $current_screen = 1;
     }
   ?>
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/start.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>

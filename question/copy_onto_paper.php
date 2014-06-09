@@ -68,7 +68,7 @@ if (!isset($_POST['submit'])) {
     td {font-size:80%}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
     function checkForm() {
       var checkOption = $('input:radio[name=paperID]:checked').val();
@@ -139,6 +139,8 @@ if (!isset($_POST['submit'])) {
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
   echo "<div align=\"center\"><img src=\"../artwork/working.gif\" id=\"working\" width=\"16\" height=\"16\" alt=\"Working\" style=\"display: none\" /> <input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
+  $property_id = $_POST['paperID'];
+	$properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
 ?>
 <!DOCTYPE html>
 <html>
@@ -152,6 +154,20 @@ if (!isset($_POST['submit'])) {
   <style type="text/css">
     body {font-size:90%; text-align:center}
   </style>
+  
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#close").click(function() {
+        window.close();
+      });
+      
+      $("#gotopaper").click(function() {
+        window.opener.location.href = '../paper/details.php?paperID=<?php echo $property_id ?>';
+        window.close();
+      });
+    });
+  </script>
 </head>
 <body>
 <?php
@@ -376,7 +392,7 @@ if (!isset($_POST['submit'])) {
 }
 
   echo "<p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
-  echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\" /></p>\n";
+  echo "<p><input type=\"button\" value=\"" . $string['close'] . "\" class=\"ok\" id=\"close\" /><input type=\"button\" value=\"" . $string['gotopaper'] . "\" class=\"ok\" id=\"gotopaper\" /></p>\n";
 
   $mysqli->close();
 }

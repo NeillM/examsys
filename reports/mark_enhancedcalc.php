@@ -113,7 +113,7 @@ foreach ($q_ids as $q_id => $setting) {
 		.data td {text-align:right}
 	</style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
 	$(document).ready(function() {
 	  $('#submit').click(function() {

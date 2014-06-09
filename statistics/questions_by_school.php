@@ -44,7 +44,7 @@ require '../include/errors.inc';
 	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -54,18 +54,13 @@ require '../include/errors.inc';
 	
 	echo draw_toprightmenu();
 ?>
-<table class="header" style="font-size:90%">
-<tr>
-<th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['questionsbyschool']; ?></th>
-</tr>
-</table>
+<div class="head_title" style="font-size:90%">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
+  <div class="page_title"><?php echo $string['questionsbyschool']; ?></div>
+</div>
 
 <blockquote>
-
 <table border="0" style="width:100%; border-right: 1px solid #C0C0C0;border-bottom: 1px solid #C0C0C0" class="stats">
 <tr>
 <th>School</th>

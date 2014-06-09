@@ -59,13 +59,25 @@ table.header {
   color: #1F497D;
 }
 .subsect_table {
-	margin-top: 4px;
+	margin-top: 6px;
 	display: table;
 	width: 98%;
+  border-spacing: 0;
+  border-collapse: collapse;
+
 }
-.subsect_cell {
+.subsect_title {
 	display: table-cell;
 	vertical-align: middle;
 	height: auto;
+  min-width: auto;
+  padding-left: 2px;
+  padding-right: 5px;
   color: #1F497D;
+}
+.subsect_hr {
+	display: table-cell;
+	vertical-align: middle;
+	height: auto;
+  width: 100%;
 }

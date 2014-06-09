@@ -68,13 +68,14 @@ if ($_GET['module'] != '0') {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
   <?php
-  if (isset($state['showretired']) and $state['showretired'] == 'true') {
-    echo ".retired {display:block}\n";
-  } else {
-    echo ".retired {display:none}\n";
-  }
-  ?>
-  .sum_cal {margin-left: 36px; margin-top: 10px; margin-bottom: 12px}
+    if (isset($state['showretired']) and $state['showretired'] == 'true') {
+      echo ".retired {display:block}\n";
+    } else {
+      echo ".retired {display:none}\n";
+    }
+    ?>
+    .sum_cal {margin-left: 36px; margin-top: 10px; margin-bottom: 12px}
+    .subsect_table {margin-left: 12px; margin-bottom: 8px}
 	</style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
@@ -110,7 +111,7 @@ if ($_GET['module'] != '0') {
   
 <?php
 if ($_GET['type'] == 2) {
-  echo '<table class="sum_cal"><tr><td><a href="../admin/calendar.php"><img src="../artwork/calendar_icon.png" width="48" height="48" /></a></td><td><strong><a href="../admin/calendar.php">Summative Exam Calendar (' . date('Y') . ')</a></strong></td></tr></table>';
+  echo '<table class="sum_cal"><tr><td><a href="../admin/calendar.php"><img src="../artwork/calendar_icon.png" width="48" height="48" /></a></td><td><strong><a href="../admin/calendar.php">Summative Exam Calendar<br />' . date('Y') . '</a></strong></td></tr></table>';
 }
 
 // UPDATED SQL query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data don't display
@@ -142,7 +143,8 @@ if ($results->num_rows > 0) {
         $display_calendar_year = $calendar_year;      
       }
 
-      echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $display_calendar_year . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      //echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $display_calendar_year . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $display_calendar_year . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     display_paper_icon($paper_ownerID, $property_id, $type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
     $old_calendar_year = $calendar_year;

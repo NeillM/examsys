@@ -42,14 +42,15 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
-    function closeWindow() {
+    $(document).ready(function() {
       window.opener.location.href = '../users/details.php?userID=<?php echo $_POST['userID']; ?>&tab=teams';
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="closeWindow()">
+<body>
 </body>
 </html>
 <?php
@@ -125,7 +126,7 @@ if (isset($_POST['submit'])) {
   $result->bind_result($school, $moduleid, $fullname, $idMod);
   while ($result->fetch()) {
     if ($old_school != $school) {
-      echo "<table border=\"0\" class=\"school\"><tr><td><nobr>$school</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>$school</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\"/></div></div>\n";
     }
    
     if (isset($user_modules[$idMod])) {

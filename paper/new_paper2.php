@@ -505,12 +505,8 @@ if ($_POST['paper_type'] == 'summative') {
   $current_school = '---';
   foreach($module_array as $module) {
     if ($module['school'] != $current_school) {
-      //echo '<h2>' . $module['school'] . '</h2>';
       $current_school = $module['school'];
-			
-			echo "<div class=\"subsect_table\"><div class=\"subsect_cell\"><nobr>" . $module['school'] . "&nbsp;</nobr></div><div style=\"width:100%\" class=\"subsect_cell\"><hr noshade=\"noshade\" /></div></div>\n";
-			
-      //echo "<table border=\"0\" class=\"subsect\" style=\"width:98%\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
+			echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "&nbsp;</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
       echo "<div class=\"r2\" id=\"div$module_no\"><input type=\"checkbox\" onclick=\"toggle($module_no)\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";

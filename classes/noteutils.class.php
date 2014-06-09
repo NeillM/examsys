@@ -75,7 +75,7 @@ Class PaperNotes {
   
   static function get_note($paperID, $address, $db) {
     $result = $db->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?");
-    $result->bind_param('is', $_GET['paperID'], $address);
+    $result->bind_param('is', $paperID, $address);
     $result->execute();
     $result->bind_result($note_id, $note);
     $result->fetch();

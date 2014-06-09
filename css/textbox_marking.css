@@ -47,7 +47,7 @@ td {
 	color: #C00000;
 }
 .student-answer-block {
-	margin: 18px 18px 48px 18px;
+	margin: 0 18px 48px 18px;
 }
 
 .reminders {
@@ -64,7 +64,16 @@ td {
 	display: none;
 }
 #save_message {
-	
+  color: white;
+	background-color: #70AD47;
+  padding: 6px 6px 6px 18px;
+  font-weight: bold;
+}
+#save_fail_message {
+  color: white;
+	background-color: #C00000;
+  padding: 6px 6px 6px 18px;
+  font-weight: bold;
 }
 .tbmark {
   margin: 1px;

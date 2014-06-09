@@ -5,6 +5,7 @@ $(function () {
   });
 
   $('#save_message').hide();
+  $('#save_fail_message').hide();
 
   $('.tbmark').click(updateMark);
 });
@@ -47,9 +48,11 @@ function updateMark(e) {
 
 function doSuccess(data) {
   if (data != 'OK') {
+    $('#save_fail_message').show(); 
     alert(langStrings['saveerror']);
     return false;
   } else {
+    $('#save_fail_message').hide(); 
     $('#save_message').show().delay( 800 ).slideUp('slow'); 
   }
 
@@ -69,5 +72,6 @@ function doSuccess(data) {
 }
 
 function doError() {
+  $('#save_fail_message').show(); 
   alert(langStrings['saveerror']);
 }

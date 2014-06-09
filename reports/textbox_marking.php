@@ -98,8 +98,8 @@ HTML;
   }
   ?>
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.textbox.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
@@ -183,9 +183,7 @@ $half_marks = true;
 
 ?>
 <div id="question_pane">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
-  <tr><td valign="top">
-  <?php
+<?php
 
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div>';
@@ -202,20 +200,20 @@ $half_marks = true;
 	
 	$marks_array = array();
 
+  echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+  echo "<col width=\"40\"><col>\n";
+  
+  $q_no = 0;
+  $old_q_id = 0;
+  $old_screen = 1;
+  $reminders = array();
+  
   $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
   $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
   $num_rows = $question_data->num_rows;
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
-  echo "<col width=\"40\"><col>\n";
-  $q_no = 0;
-  $old_q_id = 0;
-  $old_screen = 1;
-
-  $reminders = array();
-  
   while ($question_data->fetch()) {
 	  $marks_array[$q_id] = $marks_correct;
 		
@@ -232,7 +230,6 @@ $half_marks = true;
       if ($q_no+1 == $_GET['qNo'] and $q_type != 'info') {
         $tmp_color = '#FFFFDD';
       } else {
-        //$tmp_color = $bgcolor;
         $tmp_color = 'white';
       }
     
@@ -248,7 +245,7 @@ $half_marks = true;
           $q_no++;
           echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
         }
-        if ($properties->get_calculator() == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.png" width="18" height="24" alt="Calculator" /></a>';
+        if ($properties->get_calculator() == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.png" width="24" height="24" alt="Calculator" /></a>';
         echo "</td><td>$scenario<br />\n<br />";
         $li_set = 1;
       }
@@ -287,11 +284,13 @@ $half_marks = true;
 
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
 ?>
-</td></tr></table>
 </div>
 
 <div id="answer_pane">
-  <div id="save_message" class="announcement"><?php echo $string['answer_saved'] ?></div>
+  <div style="height:30px">
+    <div id="save_message"><?php echo $string['answer_saved'] ?></div>
+    <div id="save_fail_message"><?php echo $string['saveerror'] ?></div>
+  </div>
 <?php
   $q_id = $_GET['q_id'];
 	
@@ -362,7 +361,7 @@ SQL;
       }
       echo '<div class="student-answer-block' . $style . '">';
       $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
-      echo '<h3>' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</h3>\n";
+      echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
 
       echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
       if (count($reminders) > 0) {

@@ -133,7 +133,7 @@ EMAIL;
   body {font-size:90%}
   .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
   $(function() {

@@ -137,13 +137,14 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <style>
-    body {font-size:90%}
-    .subsect {margin-top:20px; font-size:80%}
-    .indent {margin-left:30px}
-    .label {position:relative; left:171px; padding:0; margin:0; width:132px; height:11px}
+    body {font-size: 90%}
+    .indent {margin-left: 30px}
+    .label {position: relative; left: 171px; padding: 0; margin: 0; width: 132px; height: 11px}
+    .subsect_table {margin-left: 8px; margin-top: 20px; margin-bottom: 6px; font-size:90%}
+    .key {position: relative; width: 300px; height: 173px; border: 2px solid #FCE699; z-index: 10; float: right; top: 30px; right: 10px; font-size: 75%; padding: 5px; line-height: 100%; background-color: #FFFFEE; color: #404040}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
 <?php
@@ -199,17 +200,17 @@ if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 	echo draw_toprightmenu();
 ?>
 
-<div style="position:relative; width:300px; height:173px; border: 2px solid #FCE699; z-index:10; float:right; top:30px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
-<img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
-<div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
-<div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>
-<div style="top:-154px" class="label"><?php echo $string['topquartile']; ?></div>
-<div style="top:-145px" class="label"><?php echo $string['median']; ?></div>
-<div style="top:-138px" class="label"><?php echo $string['lowerquartile']; ?></div>
-<div style="top:-128px" class="label"><?php echo $string['passmark']; ?></div>
-<div style="top:-118px" class="label"><?php echo $string['minimumscore']; ?></div>
-<div style="top:-111px" class="label"><?php echo $string['examname']; ?></div>
-<div style="top:-105px" class="label"><?php echo $string['studentsmark']; ?></div>
+<div class="key">
+  <img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
+  <div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
+  <div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>
+  <div style="top:-154px" class="label"><?php echo $string['topquartile']; ?></div>
+  <div style="top:-145px" class="label"><?php echo $string['median']; ?></div>
+  <div style="top:-138px" class="label"><?php echo $string['lowerquartile']; ?></div>
+  <div style="top:-128px" class="label"><?php echo $string['passmark']; ?></div>
+  <div style="top:-118px" class="label"><?php echo $string['minimumscore']; ?></div>
+  <div style="top:-111px" class="label"><?php echo $string['examname']; ?></div>
+  <div style="top:-105px" class="label"><?php echo $string['studentsmark']; ?></div>
 </div>
 
 <?php
@@ -270,7 +271,8 @@ foreach ($papers as $paper) {
 
   if ($display_paper) {
     if ($old_calendar_year != $paper['calendar_year']) {
-      echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+      //echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+      echo '<a name="' . $paper['calendar_year'] . '"></a><div class="subsect_table"><div class="subsect_title"><nobr>' . $paper['calendar_year'] . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
       $col = 0;
     }
   

@@ -305,16 +305,17 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
   $old_campus = '';
   while ($result->fetch()) {
     if ($old_campus != $lab_campus) {
-      $html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+      //$html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+    	$html .= "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" /> $lab_campus</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     $match = false;
     foreach ($current_labs as $individual_lab) {
       if ($lab_id == $individual_lab) $match = true;
     }
     if ($match) {
-      $html .= "<div class=\"$r2class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+      $html .= "<div class=\"$r2class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
     } else {
-      $html .= "<div class=\"$r1class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\">&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+      $html .= "<div class=\"$r1class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\">&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
     }
     $lab_no++;
     $old_campus = $lab_campus;
@@ -1869,8 +1870,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $old_school = '';
       foreach ($module_array as $module) {
         if ($module['school'] != $old_school) {
-          echo "<div class=\"subsect\">" . $module['school'] . "</div>";
-					//echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
+    			echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
         }
         $match = false;
         foreach ($modules_array as $separate_module) {

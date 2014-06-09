@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title>syntax test</title>
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript">
 		function chide(cl) {
 			if (cl.indexOf(';')>-1) {
@@ -124,8 +124,8 @@ echo "</td></tr></table>";
 foreach ($files as $filename) {
   $file_point=fopen($filename,"r");
   $file_content=fread($file_point, filesize($filename));
-  $file_content=preg_replace('/\/\/.*\n/','¶',$file_content); 
-	$file_content=preg_replace('/\n/','¶',$file_content);
+  $file_content=preg_replace('/\/\/.*\n/','ï¿½',$file_content); 
+	$file_content=preg_replace('/\n/','ï¿½',$file_content);
 	$file_content=preg_replace('/\t/','  ',$file_content);
 	
   fclose($file_point);
@@ -147,7 +147,7 @@ foreach ($files as $filename) {
       if ($pop && $pos>-1 && $poz) {
         //calculate the line number
         //echo $pot.'--'.substr($file_content,$pos-1,1).':'.substr($file_content,$pos+strlen($part_element[0]),1).'<br>';
-        $line_number = substr_count(substr($file_content,0,$pos),'¶')+1;
+        $line_number = substr_count(substr($file_content,0,$pos),'ï¿½')+1;
         $diff_table[$diff_index++] = Array($part_index,$filename,$pos,$pot,$line_number,$part_element[0],$part_element[6]);
       }
     }

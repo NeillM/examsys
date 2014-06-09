@@ -35,7 +35,6 @@
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
-    body {background-color:#EEF4FF; line-height:100%}
 		td {vertical-align:top}
   </style>
 </head>

@@ -58,7 +58,7 @@ if (!isset($_POST['submit'])) {
     td {font-size:80%}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
     function checkForm() {
       var checkOption = $('input:radio[name=property_id]:checked').val();
@@ -128,6 +128,8 @@ if (!isset($_POST['submit'])) {
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
   echo "<div style=\"text-align:center; padding-top:4px;\"><img src=\"../artwork/working.gif\" id=\"working\" width=\"16\" height=\"16\" alt=\"Working\" style=\"display: none\" /> <input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
+  $property_id = $_POST['property_id'];
+  $properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
 ?>
 <!DOCTYPE html>
 <html>
@@ -136,12 +138,27 @@ if (!isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style>
+    body {font-size:90%; background-color:EEECDC; text-align:center}
+  </style>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#close").click(function() {
+        window.close();
+      });
+      
+      $("#gotopaper").click(function() {
+        window.opener.location.href = '../paper/details.php?paperID=<?php echo $property_id ?>';
+        window.close();
+      });
+    });
+  </script>
+    
 </head>
 
-<body style="font-size:90%;background-color:EEECDC;text-align:center">
+<body>
 <?php
-  $property_id = $_POST['property_id'];
-  $properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
 
   $q_id = $_GET['q_id'];
   
@@ -177,18 +194,16 @@ if (!isset($_POST['submit'])) {
           $outcomes = json_decode($_POST['outcomes'], true);
 
           $mappings = $mysqli->prepare("SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?");
-          echo $mysqli->error;
           $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);
           $mappings->execute();
           $mappings->store_result();
           $mappings->bind_result($map_q_id, $obj_id);
-          while($mappings->fetch()) {
+          while ($mappings->fetch()) {
             if (isset($outcomes[$obj_id])) {
               $map_guid[$outcomes[$obj_id]] = true;
             }
           }
           $mappings->close();
-          // echo '<br />'.$q_IDs[$i].'<br />';print_r($map_guid);
         }
       } else {
         echo '<p>' . $string['papernotonmodule'] . '</p>';
@@ -201,7 +216,7 @@ if (!isset($_POST['submit'])) {
       $outcomes = $qbank->get_outcomes($calendar_year, $vle_api_data);
       
       foreach(array_keys($map_guid) as $guid) {
-        // get the IDs of the outcomes for the GUIDs we've been passed
+        // Get the IDs of the outcomes for the GUIDs we've been passed
         if (isset($outcomes[$guid])) {
           foreach($outcomes[$guid]['ids'] as $obj_id) {
             // Add new relationship records for the paper and question
@@ -216,8 +231,8 @@ if (!isset($_POST['submit'])) {
     }
   }
 
-  echo "<p>" . $string['success'] . "</p>\n";
-  echo "<p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\" /></p>\n";
+  echo "<p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
+  echo "<p><input type=\"button\" value=\"" . $string['close'] . "\" class=\"ok\" id=\"close\" /><input type=\"button\" value=\"" . $string['gotopaper'] . "\" class=\"ok\" id=\"gotopaper\" /></p>\n";
 }
 $mysqli->close();
 ?>

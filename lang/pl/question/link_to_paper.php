@@ -23,7 +23,8 @@ $string['msg2'] = '= Arkusz egzaminu końcowego jest zablokowany i nie może by�
 $string['newassessmentpaper'] = 'Nowy arkusz oceny';
 $string['success'] = 'Pytanie dodane.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
+$string['gotopaper'] = 'Goto Paper';
 $string['cancel'] = 'Anuluj';
-$string['ok'] = 'OK'; //cognate
+$string['close'] = 'Close';
 $string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

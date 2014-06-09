@@ -46,7 +46,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script language="JavaScript">

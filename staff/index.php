@@ -65,8 +65,7 @@ require_once '../include/staff_auth.inc';
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/sidebar.js" type="text/javascript"></script>

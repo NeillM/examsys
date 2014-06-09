@@ -170,6 +170,13 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
     if ($q_type == 'mcq' and $score_method == 'vertical_other') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
     }
+    if ($q_type == 'mcq') {  // Check duplicate options
+      $option_text_copy = array_map('strtolower', $option_text);
+      $unique_options = array_unique($option_text_copy);
+      if (count($option_text_copy) > count($unique_options)) {
+        $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
+      }
+    }
   }
 }
 
@@ -397,6 +404,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/page_scroll.js"></script>
 <script defer="defer" type="text/javascript">
   var paperID = '<?php echo $paperID; ?>';
 
@@ -525,11 +533,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
-  function scrollXY() {
-    $('#scrOfY').val($('body,html').scrollTop());
-  }
-	
-	$(document).ready(function(){
+  $(document).ready(function(){
 		<?php
 		if (isset($_GET['scrOfY'])) {
 			echo "  window.scrollTo(0," . $_GET['scrOfY'] . ");\n";
@@ -539,11 +543,7 @@ function check_latex_random($q_ids, $mysqli) {
 		$('#left-sidebar').click(function() {
 			$('#copy_submenu').hide();
 		});
-	
-		$(window).scroll(function() {
-			scrollXY();
-		});
-		
+
 		$(window).click(function(event) {
 			hideMenus();
 			hideAssStatsMenu(event);
@@ -915,8 +915,8 @@ function check_latex_random($q_ids, $mysqli) {
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
         for ($missing=1; $missing<($temp_array[$x]['screen'] - $old_screen); $missing++) {
-          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '</span></h4></td></tr>';
-          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
+          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '&nbsp;</span></h4></td></tr>';
+          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; color:white; background-color:#C00000; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
         }
       }
       echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';

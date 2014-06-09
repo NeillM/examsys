@@ -164,25 +164,29 @@ require '../config/finish.inc';
   if ($css != '') {
     echo "<style type=\"text/css\">\n$css\n</style>\n";
   }
+  ?>
   
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <?php
   if ($propertyObj->get_latex_needed() == 1) {
-    echo "<script type=\"text/javascript\" src=\"../js/jquery-1.11.1.min.js\"></script>";
-    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }
+  
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+  } else {
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
   }
 ?>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/student_help.js"></script>
 
-  <!-- HTML5 part start -->
-  <script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-  <script type="text/javascript" src="../js/html5.images.js"></script>
-  <script type="text/javascript" src="../js/qsharedf.js"></script>
-  <script type="text/javascript" src="../js/qlabelling.js"></script>
-  <script type="text/javascript" src="../js/qhotspot.js"></script>
-  <script type="text/javascript" src="../js/qarea.js"></script>
-  <!-- HTML5 part end -->
   <script language="JavaScript">
     window.history.go(1);
   </script>

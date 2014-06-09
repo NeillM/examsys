@@ -120,19 +120,19 @@ $q_marks = array_flip($marks_arr);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {text-align: center; font-weight:normal; color:#001687; background-color:#CFDBEB }
-    td { text-align: center; }
-    .separate { border-bottom: 1px solid #CCD9EA; }
-    .o {text-align:right; padding-right:10px}
-    .c1 {width:65px; text-align:center}
-    .c2 {width:250px}
-    .r1 {background-color:white}
-    .r2 {background-color:#B3C8E8}
-    .msg {margin-left:5px; font-size:90%; color:#001687}
-    .overridden { background-color: #B3C8E8; }
+    th {text-align: center; font-weight:normal; color:#001687; background-color: #CFDBEB}
+    td {text-align: center}
+    .separate {border-bottom: 1px solid #CCD9EA}
+    .o {text-align:right; padding-right: 10px}
+    .c1 {width: 65px; text-align:center}
+    .c2 {width: 250px}
+    .r1 {background-color: white}
+    .r2 {background-color: #B3C8E8}
+    .msg {margin-left: 5px; font-size: 90%; color: #001687}
+    .overridden {background-color: #B3C8E8}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.enhancedcalc_override.js"></script>
   <script type="text/javascript">

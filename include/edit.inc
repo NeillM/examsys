@@ -53,7 +53,14 @@ function redirect($userObj, $q_id, $configObj, $db) {
   }
 
   if (isset($_SESSION['nav_page'])) {
-    header('location: ' . $_SESSION['nav_page'] . '?' . $_SESSION['nav_query']);
+    $url = $_SESSION['nav_page'] . '?' . $_SESSION['nav_query'];
+    $url = preg_replace("/&scrOfY=[0-9]+/", "", $url);
+
+    if (isset($_POST['scrOfY'])) {
+      $url .= '&scrOfY=' . $_POST['scrOfY'];
+    }
+    
+    header('location: ' . $url);
   } else {
     header('location: ' . $configObj->get('cfg_root_path') . '/staff/index.php');
   }
@@ -188,7 +195,7 @@ function hidden_edit_fields() {
   }
 
   if (isset($_GET['scrOfY'])) {
-    $html .= '<input type="hidden" name="scrOfY" value="' . $_GET['scrOfY'] . '" />';
+    $html .= '<input type="text" name="scrOfY" value="' . $_GET['scrOfY'] . '" />';
   } else {
     $html .= '<input type="hidden" name="scrOfY" value="" />';
   }

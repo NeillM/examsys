@@ -66,7 +66,7 @@ $result->close();
     }
   </style>
 
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script src="../js/jquery.validate.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(function () {

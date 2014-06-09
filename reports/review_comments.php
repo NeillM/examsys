@@ -569,7 +569,6 @@ while ($result->fetch()) {
 }
 $result->close();
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -580,9 +579,9 @@ $result->close();
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
+    body {font-size:90%}
     table {font-size:100%;table-layout:auto}
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
@@ -622,13 +621,15 @@ $result->close();
     .reviewer_list td {vertical-align:top; text-align:justify}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/page_scroll.js"></script>
 	<!-- HTML5 part start -->
 	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
 	<script type="text/javascript" src="../js/html5.images.js"></script>
@@ -639,22 +640,23 @@ $result->close();
 	<!-- HTML5 part end -->
 
 	
-  <script language="JavaScript">
-    function getScrollXY() {
-      document.getElementById('scrOfY').value = $('body,html').scrollTop();
-    }
-
+  <script>
     function editQ(qid, qno) {
-      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
+      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + $('#scrOfY').val() + '&tab=comments';
     }
+    <?php
+    if (isset($_GET['scrOfY'])) {
+    ?>
+    $(document).ready(function() {
+      window.scrollTo(0,<?php echo $_GET['scrOfY'] ?>);
+    });
+    <?php
+    }
+    ?>
   </script>
 </head>
 
-<body onscroll="getScrollXY()"<?php
-if (isset($_GET['scrOfY'])) {
-  if ($_GET['scrOfY'] > 0) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ')"';
-}
-?>>
+<body>
 <div id="maincontent">
 <form name="theform">
 
@@ -779,7 +781,7 @@ if (isset($_GET['scrOfY'])) {
   $mysqli->close();
 ?>
 </table>
-<input type="hidden" name="scrOfY" id="scrOfY" value="0" />
+<input type="text" name="scrOfY" id="scrOfY" value="0" /><br />
 </form>
 </div>
 </body>

@@ -16,8 +16,9 @@
 
 $string['linktopaper'] = 'Odkaz na dokument';
 $string['addtopaper'] = 'Přidat do dokumentu';
-$string['ok'] = 'OK'; //cognate
+$string['gotopaper'] = 'Goto Paper';
 $string['cancel'] = 'Zrušit';
+$string['close'] = 'Close';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';
 $string['msg1'] = "Dokument je v současné době "aktivní". Aktuální datum je uvedeno mezi datumem jeho zahájení a ukončení. Tento bezpečnostní prvek tedy zabraňuje úpravě aktivního dokumentu";

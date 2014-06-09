@@ -116,7 +116,7 @@ function check_ebel_distinction_type($reviewID, $db) {
 		#maincontent {height:auto}
   </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
