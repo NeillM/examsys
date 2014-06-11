@@ -512,8 +512,8 @@ if ($properties->get_paper_type() == '2') {
     } else {
       $tmp_array = $properties->get_internal_reviewers();
       $internal_array = array();
-      foreach ($tmp_array as $tmp_internal) {
-        $internal_array[$tmp_internal] = 0;
+      foreach ($tmp_array as $reviewerID => $reviewer_name) {
+        $internal_array[$reviewerID] = 0;
       }
 
       $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'internal' AND complete IS NOT NULL");
@@ -525,8 +525,8 @@ if ($properties->get_paper_type() == '2') {
       }
       $stmt->close();
       $reviews_complete = 0;
-      foreach ($tmp_array as $tmp_internal) {
-        if ($internal_array[$tmp_internal] == 1) $reviews_complete++;
+      foreach ($tmp_array as $reviewerID => $reviewer_name) {
+        if ($internal_array[$reviewerID] == 1) $reviews_complete++;
       }
       if ($reviews_complete < count($internal_array)) {
         if ($reviews_complete == 0) {
@@ -548,8 +548,8 @@ if ($properties->get_paper_type() == '2') {
     } else {
       $tmp_array = $properties->get_externals();
       $external_array = array();
-      foreach ($tmp_array as $tmp_external) {
-        $external_array[$tmp_external] = 0;
+      foreach ($tmp_array as $reviewerID => $reviewer_name) {
+        $external_array[$reviewerID] = 0;
       }
 
       $reviews_complete = 0;
