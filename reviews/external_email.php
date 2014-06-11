@@ -30,6 +30,13 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $externalID = check_var('externalID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
+
+$external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
+$external_review_deadline->setTimezone($local_time);
+
+$display_deadline = $external_review_deadline->format('d/m/Y');
+      
 ?>
 <!DOCTYPE html>
 <html>
@@ -64,8 +71,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   $to = $external_details['email'];
   $subject = $configObject->get('cfg_company') . ' e-assessment review';
   $message = "<div style=\"text-align:right\"><img src=\"http://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/config/black_uon_logo.png\" width=\"167\" height=\"70\" /></div><p>Dear " . $external_details['title'] . " " . $external_details['surname'] . ",</p>";
-  $message .= "<p>The online assessment <strong>" . $properties->get_paper_title() . "</strong> is now available for you to log in and review. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at:<br />\n";
-  $message .= "<a href=\"$url\">$url</a></p>\n";
+  $message .= "<p>The online assessment <strong>" . $properties->get_paper_title() . "</strong> is now available for you to log in and review. Please complete the review by <strong>$display_deadline</strong>. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at: <a href=\"$url\">$url</a></p>\n";
   $message .= "<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:$support_email\">$support_email</a></p>\n";
   $message .= "<p>Kind regards</p>\n";
   $message .= "<p>" . $userObject->get_first_first_name() . "</p>\n";
@@ -89,21 +95,25 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   <br />
 <?php
 if (isset($_POST['submit'])) {
-  $to = trim($_POST['toaddress']);
-  $subject = trim($_POST['subject']);
-  $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:140%; color:#3F3F3F; }\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
-
-  $headers = "MIME-Version: 1.0" . "\r\n";
-  $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
-  $headers .= 'From: ' . $userObject->get_email();
-  if (trim($_POST['ccaddress']) != '') {
-    $headers .= 'CC: ' . trim($_POST['ccaddress']);
-  }
-  if (trim($_POST['bccaddress']) != '') {
-    $headers .= 'BCC: ' . trim($_POST['ccaddress']);
-  }
+  $to_list = explode(';', $_POST['toaddress']);
   
-  mail($to, $subject, $message, $headers);
+  foreach ($to_list as $individual_to) {
+    $to = trim($individual_to);
+    $subject = trim($_POST['subject']);
+    $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; }\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
+
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
+    $headers .= 'From: ' . $userObject->get_email();
+    if (trim($_POST['ccaddress']) != '') {
+      $headers .= 'CC: ' . trim($_POST['ccaddress']);
+    }
+    if (trim($_POST['bccaddress']) != '') {
+      $headers .= 'BCC: ' . trim($_POST['ccaddress']);
+    }
+
+    mail($to, $subject, $message, $headers);
+  }
   echo "Email sent, please check your inbox.";
 } else {
 ?>
@@ -126,12 +136,12 @@ if (isset($_POST['submit'])) {
     <td><?php echo $string['subject'] ?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject ?>" /></td>
     </tr>
     <tr>
-    <td colspan="3"><textarea class="mceEditor" id="message" name="message" style="width:782px; height:350px"><?php echo htmlspecialchars($message, ENT_NOQUOTES); ?></textarea></p>
+    <td colspan="3"><textarea class="mceEditor" id="message" name="message" style="width:780px; height:450px"><?php echo htmlspecialchars($message, ENT_NOQUOTES) ?></textarea></p>
     </tr>
 
     <tr>
     <td colspan="3" style="text-align: center">
-    <input type="submit" class="ok" name="submit" value="<?php echo $string['email'];?>" />&nbsp;<input type="button" name="cancel" class="cancel" value="<?php echo $string['cancel'];?>" onclick="window.close();" />
+    <input type="submit" class="ok" name="submit" value="<?php echo $string['email'] ?>" />&nbsp;<input type="button" name="cancel" class="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" />
     <input type="hidden" name="from" value="<?php echo $userObject->get_email() ?>" /></td>
     </tr>
     </table>
