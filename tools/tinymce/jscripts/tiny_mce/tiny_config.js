@@ -1,5 +1,6 @@
 tinyMCE.init({ 
     mode : "specific_textareas",
+    relative_urls: false,
     forced_root_block : 'div',
     force_br_newlines : false,
     force_p_newlines : false,
