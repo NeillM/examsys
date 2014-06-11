@@ -35,7 +35,7 @@ $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
 $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
 $external_review_deadline->setTimezone($local_time);
 
-$display_deadline = $external_review_deadline->format('d/m/Y');
+$display_deadline = $external_review_deadline->format('l jS M Y');
       
 ?>
 <!DOCTYPE html>
@@ -44,7 +44,7 @@ $display_deadline = $external_review_deadline->format('d/m/Y');
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Email External</title>
+  <title><?php echo $string['emailtemplate'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -59,29 +59,49 @@ $display_deadline = $external_review_deadline->format('d/m/Y');
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_externals_email.js"></script>
+  <script>
+    $(document).ready(function() {
+      
+      $('#back').click(function (){
+        window.location.href = 'pick_external.php?paperID=<?php echo $_GET['paperID'] ?>&mode=<?php echo $_GET['mode'] ?>';
+      });
+      
+    });
+  </script>
 </head>
 
 <body>
 <?php
   $external_details = UserUtils::get_user_details($externalID, $mysqli);
-
+        
   $url = 'https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
+  $logo_path = 'http://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/config/black_uon_logo.png';
   $support_email = $configObject->get('support_email');
   
   $to = $external_details['email'];
   $subject = $configObject->get('cfg_company') . ' e-assessment review';
-  $message = "<div style=\"text-align:right\"><img src=\"http://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/config/black_uon_logo.png\" width=\"167\" height=\"70\" /></div><p>Dear " . $external_details['title'] . " " . $external_details['surname'] . ",</p>";
-  $message .= "<p>The online assessment <strong>" . $properties->get_paper_title() . "</strong> is now available for you to log in and review. Please complete the review by the end of <strong>$display_deadline</strong>. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at: <a href=\"$url\">$url</a></p>\n";
-  $message .= "<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:$support_email\">$support_email</a></p>\n";
-  $message .= "<p>Kind regards</p>\n";
-  $message .= "<p>" . $userObject->get_first_first_name() . "</p>\n";
 
+  if ($_GET['mode'] == 0) {
+    $message = $string['message0'];
+  } else {
+    $message = $string['message1'];    
+  }
+  $message = str_replace('$users_name', $userObject->get_first_first_name(), $message);
+  $message = str_replace('$support_email', $support_email, $message);
+  $message = str_replace('$rogo_url', $url, $message);
+  $message = str_replace('$deadline', $display_deadline, $message);
+  $message = str_replace('$paper_title', $properties->get_paper_title(), $message);
+  $message = str_replace('$external_surname', $external_details['surname'], $message);
+  $message = str_replace('$external_first_name', $external_details['first_name'], $message);
+  $message = str_replace('$external_title', $external_details['title'], $message);
+  $message = str_replace('$logo_path', $logo_path, $message);
+    
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu();
 ?>
   <div class="head_title" style="font-size:90%">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-    <div class="breadcrumb"><a href="../reviews/index.php"><?php echo $string['home'] ?></a>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
     <?php
     if (isset($_GET['module']) and $_GET['module'] != '') {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
@@ -89,7 +109,7 @@ $display_deadline = $external_review_deadline->format('d/m/Y');
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&module=' . $_GET['module'] . '">' . $properties->get_paper_title() . '</a>';
     ?>
     </div>
-    <div class="page_title">Email Template</div>
+    <div class="page_title"><?php echo $string['emailtemplate'] ?></div>
   </div>
   
   <br />
@@ -112,9 +132,10 @@ if (isset($_POST['submit'])) {
       $headers .= 'BCC: ' . trim($_POST['ccaddress']);
     }
 
-    mail($to, $subject, $message, $headers);
+    //mail($to, $subject, $message, $headers);
   }
-  echo "Email sent, please check your inbox.";
+  echo "<p>" . $string['emailsent'] . "</p>";
+  echo "<p><input type=\"button\" value=\"" . $string['back'] . "\" name=\"back\" id=\"back\" class=\"ok\" /></p>";
 } else {
 ?>
   <form name="templateform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] ?>">
@@ -141,8 +162,7 @@ if (isset($_POST['submit'])) {
 
     <tr>
     <td colspan="3" style="text-align: center">
-    <input type="submit" class="ok" name="submit" value="<?php echo $string['email'] ?>" />&nbsp;<input type="button" name="cancel" class="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" />
-    <input type="hidden" name="from" value="<?php echo $userObject->get_email() ?>" /></td>
+    <input type="submit" class="ok" name="submit" value="<?php echo $string['email'] ?>" /><input type="button" name="cancel" id="back" class="cancel" value="<?php echo $string['cancel'] ?>" /></td>
     </tr>
     </table>
 

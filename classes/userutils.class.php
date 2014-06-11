@@ -264,6 +264,9 @@ Class UserUtils {
       return false;
     }
     
+    $parts = explode(' ', $first_names);
+    $first_name = $parts[0];
+    
     if (stripos($roles, 'Student') !== false or stripos($roles, 'Graduate') !== false) {
       $stmt = $db->prepare("SELECT student_id FROM sid WHERE userID = ? LIMIT 1");
       $stmt->bind_param('i', $userID);
@@ -272,9 +275,9 @@ Class UserUtils {
       $stmt->fetch();
       $stmt->close();
 
-      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
+      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'first_name'=>$first_name, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
     } else {
-      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'');
+      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'first_name'=>$first_name, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'');
     }
     
   }

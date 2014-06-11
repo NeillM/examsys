@@ -36,7 +36,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Pick External</title>
+  <title><?php echo $string['externalexaminers'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -67,18 +67,22 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 ?>
   <div class="head_title" style="font-size:90%">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-    <div class="breadcrumb"><a href="../reviews/index.php"><?php echo $string['home'] ?></a>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
     <?php
     if (isset($_GET['module']) and $_GET['module'] != '') {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-    }    
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&module=' . $_GET['module'] . '">' . $properties->get_paper_title() . '</a>';
+    
+      $module_url = '&module=' . $_GET['module'];
+    } else {
+      $module_url = '';
+    }
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . $module_url . '">' . $properties->get_paper_title() . '</a>';
     ?>
     </div>
-    <div class="page_title">External Examiners</div>
+    <div class="page_title"><?php echo $string['externalexaminers'] ?></div>
   </div>
   
-  <br />
+  <div style="margin: 15px">
 <?php
 
 $externals = $properties->get_externals();
@@ -88,5 +92,6 @@ foreach ($externals as $externalID=>$external_name) {
 
 $mysqli->close();
 ?>
+  </div>
 </body>
 </html>
