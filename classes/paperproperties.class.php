@@ -479,13 +479,13 @@ class PaperProperties {
   private function load_externals() {
     $external_list = array();
 
-    $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'external'");
+    $result = $this->db->prepare("SELECT reviewerID, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND paperID = ? AND type = 'external'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
     $result->execute();
-    $result->bind_result($reviewerID);
+    $result->bind_result($reviewerID, $title, $initials, $surname);
     while ($result->fetch()) {
-      $external_list[] = $reviewerID;
+      $external_list[$reviewerID] = "$title $initials $surname";
     }
     $result->close();
 
@@ -495,13 +495,13 @@ class PaperProperties {
   private function load_internals() {
     $internal_list = array();
 
-    $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'internal'");
+    $result = $this->db->prepare("SELECT reviewerID, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND paperID = ? AND type = 'internal'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
     $result->execute();
-    $result->bind_result($reviewerID);
+    $result->bind_result($reviewerID, $title, $initials, $surname);
     while ($result->fetch()) {
-      $internal_list[] = $reviewerID;
+      $internal_list[$reviewerID] = "$title $initials $surname";
     }
     $result->close();
 

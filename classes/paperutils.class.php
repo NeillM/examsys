@@ -272,7 +272,7 @@ Class PaperUtils {
     $old_list = array_flip($old_list);
     $new_list = array_flip($new_list);
 
-    foreach ($old_list as $oldID=>$value) {
+    foreach ($old_list as $oldID => $value) {
       if (!isset($new_list[$oldID])) {
         $editProperties = $db->prepare("DELETE FROM properties_reviewers WHERE paperID = ? AND reviewerID = ? AND type = ?");
         $editProperties->bind_param('iis', $paperID, $oldID, $type);

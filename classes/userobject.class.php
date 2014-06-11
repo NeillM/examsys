@@ -462,6 +462,12 @@ class UserObject extends RogoStaticSingleton {
   public function get_first_names() {
     return $this->first_names;
   }
+  
+  public function get_first_first_name() {
+    $parts = explode(' ', $this->first_names);
+    
+    return $parts[0];
+  }
 
   /**
    * Return the user's surname
@@ -731,11 +737,11 @@ class UserObject extends RogoStaticSingleton {
     $this->userID = $userID;
     $this->impersonate = false;
 
-    $stmt = $this->db->prepare('SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
+    $stmt = $this->db->prepare('SELECT roles, title, initials, surname, first_names, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
+    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->first_names, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
     $stmt->fetch();
     $record_no = $stmt->num_rows();
     $stmt->close();
