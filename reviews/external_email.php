@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
   foreach ($to_list as $individual_to) {
     $to = trim($individual_to);
     $subject = trim($_POST['subject']);
-    $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; }\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
+    $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; font-size:90%}\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
 
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
