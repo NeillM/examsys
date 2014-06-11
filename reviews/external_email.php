@@ -71,7 +71,7 @@ $display_deadline = $external_review_deadline->format('d/m/Y');
   $to = $external_details['email'];
   $subject = $configObject->get('cfg_company') . ' e-assessment review';
   $message = "<div style=\"text-align:right\"><img src=\"http://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/config/black_uon_logo.png\" width=\"167\" height=\"70\" /></div><p>Dear " . $external_details['title'] . " " . $external_details['surname'] . ",</p>";
-  $message .= "<p>The online assessment <strong>" . $properties->get_paper_title() . "</strong> is now available for you to log in and review. Please complete the review by <strong>$display_deadline</strong>. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at: <a href=\"$url\">$url</a></p>\n";
+  $message .= "<p>The online assessment <strong>" . $properties->get_paper_title() . "</strong> is now available for you to log in and review. Please complete the review by the end of <strong>$display_deadline</strong>. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at: <a href=\"$url\">$url</a></p>\n";
   $message .= "<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:$support_email\">$support_email</a></p>\n";
   $message .= "<p>Kind regards</p>\n";
   $message .= "<p>" . $userObject->get_first_first_name() . "</p>\n";
