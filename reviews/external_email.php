@@ -51,7 +51,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_externals_email.js"></script>
 </head>
 
 <body>
@@ -63,14 +63,12 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   
   $to = $external_details['email'];
   $subject = $configObject->get('cfg_company') . ' e-assessment review';
-  $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif}\n</style>\n</head>\n<body>\n<div style=\"text-align:right\"><img src=\"$url/config/black_uon_logo.png\" width=\"167\" height=\"70\" /></div><p>Dear " . $external_details['title'] . " " . $external_details['surname'] . ",</p>";
+  $message = "<div style=\"text-align:right\"><img src=\"$url/config/black_uon_logo.png\" width=\"167\" height=\"70\" /></div><p>Dear " . $external_details['title'] . " " . $external_details['surname'] . ",</p>";
   $message .= "<p>The online assessment <strong>" . $properties->get_paper_title() . "</strong> is now available for you to log in and review. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at:<br />\n";
   $message .= "<a href=\"$url\">$url</a></p>\n";
   $message .= "<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:$support_email\">$support_email</a></p>\n";
   $message .= "<p>Kind regards</p>\n";
   $message .= "<p>" . $userObject->get_first_first_name() . "</p>\n";
-  $message .= "</body>\n</html>\n";
-  
 
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu();
@@ -93,7 +91,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 if (isset($_POST['submit'])) {
   $to = trim($_POST['toaddress']);
   $subject = trim($_POST['subject']);
-  $message = $_POST['message'];
+  $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
 
   $headers = "MIME-Version: 1.0" . "\r\n";
   $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
