@@ -4,8 +4,12 @@ body {
 table {
   text-align: left;
 }
-    input[type="checkbox"] {margin-left: 25px}
-
+#modules_list input[type="checkbox"] {
+  margin-left: 22px;
+}
+#labs_list input[type="checkbox"] {
+  margin-left: 22px;
+}
 .r1 {
   text-indent: -23px;
   padding-left: 23px;

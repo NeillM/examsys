@@ -36,14 +36,10 @@ require '../include/sysadmin_auth.inc';
 
 	<style>
 		.content {font-size:90%}
-		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
-		article { width:50%; height: 80%; float: left }
-		ol {list-style-type:decimal}
-		li {padding-left:10px; margin-left:40px !important}
+		li {margin-left:20px; line-height:150%}
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/screen.css" />
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>

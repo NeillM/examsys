@@ -425,7 +425,6 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
-<link rel="stylesheet" href="../../css/tipTip.css" type="text/css" />
 
 <?php
 // Override this variable with a specific configuration file for the question editor.
@@ -439,12 +438,12 @@ echo $cfg_editor_javascript;
 ?>
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/state.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
 <script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
-<script type="text/javascript" src="../../js/jquery.tipTip.minified.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
 <?php
 if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.js')):
@@ -493,6 +492,9 @@ $(function () {
 <?php
 endif;
 ?>
+  $(function () {
+    $(document).tooltip();
+  });
 </script>
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 </head>

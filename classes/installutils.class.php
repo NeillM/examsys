@@ -191,10 +191,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         </select></div>
 
         <table class="h"><tr><td><nobr><?php echo $string['authentication']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from successful LTI launch" /></div><br />
-        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from internal Rogo user database" /></div><br />
-        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
-        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
+        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow authentication from successful LTI launch" /></div><br />
+        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow authentication from internal Rogo user database" /></div><br />
+        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
+        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
         <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
           <br/>
@@ -202,7 +202,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
           <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /></div>
           <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /></div>
           <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /></div>
-          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/information_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div>
 
 
@@ -216,9 +216,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
             <div><label for="ldap_lookup_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" /></div>
             <div><label for="ldap_lookup_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" /></div>
             <div><label for="ldap_lookup_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" /></div>
-            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/information_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div><br clear="all" />
-        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
+        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
 
 
         <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -247,11 +247,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
+        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/> <img src="../artwork/information_icon.gif" class="help_tip" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
         <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
+        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
         <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
       
       <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -1294,7 +1294,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <link rel="stylesheet" type="text/css" href="../css/body.css" />
       <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
       <link rel="stylesheet" type="text/css" href="../css/header.css" />
-      <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
       <style type="text/css">
         body {font-size:90%}
         h1 {margin-left:16px; font-size:140%; color;#1F497D}
@@ -1308,18 +1307,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
         td.line {width:98%}
         input {width:200px}
-        input[type="text"] {margin:0px}
-        select {margin:0px; padding:0px}
         form {padding:1em}
         form div {padding-left:2em}
       </style>
 
       <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-      <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
+      <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
       <script type="text/javascript">
         $(function(){
-          $(".tipright").tipTip({defaultPosition: 'right'});
+          $(document).tooltip();
         });
       </script>
     </head>
@@ -1328,8 +1325,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     <tr>
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
       <img class="logo_img" src="../artwork/r_logo.gif" alt="logo" />
-      <div class="logo_lrg_txt">Rog&#333;</div>
-      <div class="logo_small_txt">System Installation (<?php echo $version; ?>)</div>
+      <div class="logo_lrg_txt">Rog&#333; <?php echo $version; ?></div>
+      <div class="logo_small_txt">System Installation</div>
       </th>
       <th style="text-align:right; padding-right:10px">
       <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />

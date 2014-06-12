@@ -379,8 +379,6 @@ function check_latex_random($q_ids, $mysqli) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
-
   <!--[if lt IE 8]>
   <style type="text/css">
     td.ie-fullwidth {
@@ -400,7 +398,6 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>

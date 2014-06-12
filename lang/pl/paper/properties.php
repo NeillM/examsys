@@ -74,6 +74,7 @@ $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Brak wzoru';
 $string['calculatrrandommark'] = "Oszacuj punkty na 'chybił-trafił'";
 $string['stdset'] = 'Wyznaczony standard';
+$string['borderlinemethod'] = 'Borderline Method';
 $string['ticks_crosses'] = 'Haczyki/Krzyżyki';
 $string['question_marks'] = 'Punktacja pytania';
 $string['hideallfeedback'] = 'Ukryj odzew<br />jeśli nie odpowiedziano';
@@ -86,6 +87,9 @@ $string['allpeerspergroup'] = 'wszystkich członków grupy';
 $string['singlereview'] = 'recenzja indywidualna';
 $string['numberfrom'] = 'Numeruj od';
 $string['groupdetails'] = 'Szczegóły dot. grupy';
+$string['tooltip_random'] = 'Rogo will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
+$string['tooltip_calculator'] = 'A JavaScript software calculator is available to students within the assessment.';
+$string['tooltip_audio'] = 'A test audio clip will be placed on the exam information page so students can test sound levels before starting.';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
@@ -102,6 +106,7 @@ $string['to'] = 'do';
 $string['restricttolabs'] = 'Ogranicz do pracowni';
 $string['restricttometadata'] = 'Ogranicz do metadanych';
 $string['na'] = 'Brak';//data
+$string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into Rogo with their own personal password. This password can be given out to students within the computer lab.';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';

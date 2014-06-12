@@ -283,17 +283,17 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
     $disabled = ' disabled';
-    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+    $html = "<div id=\"labs_list\" style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
   } elseif ($paper_type == '4') {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
     $disabled = ' disabled';
-    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+    $html = "<div id=\"labs_list\" style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
   } else {
     $r1class = 'r1';
     $r2class = 'r2';
     $disabled = '';
-    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #828790; font-size:90%\">";
+    $html = "<div id=\"labs_list\" style=\"height:278px; overflow-y:scroll;border:1px solid #828790; font-size:90%\">";
   }
 
   $current_labs = explode(',', $labs);
@@ -968,6 +968,8 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <script type="text/javascript">
     $(function () {
       $('.datecopy').change(dateCopy);
+      
+      $(document).tooltip();
     })
   </script>
 <?php
@@ -1370,14 +1372,14 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         } else {
           $checked = '';
         }
-        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
+        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_calculator'] . "\" /></td>";
 
         if ($properties->get_sound_demo() == 1) {
           $checked = ' checked="checked"';
         } else {
           $checked = '';
         }
-        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
+        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_audio'] . "\" /></td></tr>\n";
       }
 
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1394,9 +1396,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"102\" selected>N/A</option>";
       }
       if ($properties->get_pass_mark() == 101) {
-        echo "<option value=\"101\" selected>Borderline Method</option>";
+        echo "<option value=\"101\" selected>" . $string['borderlinemethod'] . "</option>";
       } else {
-        echo "<option value=\"101\">Borderline Method</option>";
+        echo "<option value=\"101\">" . $string['borderlinemethod'] . "</option>";
       }
       for ($i=0; $i<=100; $i++) {
         if ($i == $properties->get_pass_mark()) {
@@ -1471,7 +1473,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
     ?>
-       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
+       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment'] ?><br />
        <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
        if ($properties->get_marking() == MARK_RANDOM) {
           echo ' checked';
@@ -1480,9 +1482,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo ' disabled';
        }
        if ($neg_marking) {
-         echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span><br />';
+         echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/information_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
        } else {
-        echo '>' . $string['calculatrrandommark'] . '<br />';
+        echo '>' . $string['calculatrrandommark'] . '&nbsp;<img src="../artwork/information_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
        }
 
       // Look for any Standard Setting reviews for the paper.
@@ -1582,7 +1584,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($properties->get_paper_type() == '4') {
       echo "</select></td><td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\" /></td></tr>\n";
     } else {
-      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /></td></tr>\n";
+      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
     }
 
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
@@ -1853,7 +1855,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<tr><td class=\"headbar\" style=\"padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td class=\"headbar\" style=\"padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
 
-    echo "<div style=\"display:block; width:400px; height:435px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+    echo "<div id=\"modules_list\" style=\"display:block; width:400px; height:435px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
 
 		$modules_array = $properties->get_modules();
 

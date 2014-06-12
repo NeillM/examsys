@@ -4,8 +4,6 @@ $(function () {
     showAJAXError();
   });
 
-  $(".has_tip").tipTip();
-
   resetLinks();
   highlightQn();
 

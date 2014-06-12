@@ -196,7 +196,8 @@ input {
 	line-height: 150%;
 	background-image: url('../artwork/bullet_outline.gif');
 	background-repeat: no-repeat;
-	padding-left: 20px;
+  background-position: 15px center;
+	padding-left: 35px;
 }
 .greybullet {
 	line-height: 150%;
@@ -210,4 +211,14 @@ input {
   background-image: url('../artwork/skull_16.png');
 	background-repeat: no-repeat;
 	background-position: 1px center;
+}
+.reports_header {
+  margin-top: 12px;
+  margin-bottom: 5px;
+  padding-left: 4px;
+  background-color: #EEEEEE;
+	border-bottom: 1px solid #E2E4E7;
+}
+#stats_menu select {
+  border: 1px solid #ABADB3;
 }

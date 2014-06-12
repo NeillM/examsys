@@ -73,6 +73,7 @@ $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Neupraveno';
 $string['calculatrrandommark'] = 'Vypočítat náhodnou známku';
 $string['stdset'] = 'Nastavení standardů';
+$string['borderlinemethod'] = 'Borderline Method';
 $string['ticks_crosses'] = 'Odškrtnutí/Křížky';
 $string['question_marks'] = 'Hodnocení úlohy';
 $string['hideallfeedback'] = 'Skrýt veškeré komentáře';
@@ -85,6 +86,9 @@ $string['allpeerspergroup'] = 'Všichni členové skupiny';
 $string['singlereview'] = 'Jeden komentář';
 $string['numberfrom'] = 'Číslo z';
 $string['groupdetails'] = 'Podrobnosti skupiny';
+$string['tooltip_random'] = 'Rogo will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
+$string['tooltip_calculator'] = 'A JavaScript software calculator is available to students within the assessment.';
+$string['tooltip_audio'] = 'A test audio clip will be placed on the exam information page so students can test sound levels before starting.';
 
 // Security tab
 $string['securitytab'] = 'Bezpečnost';
@@ -100,6 +104,7 @@ $string['to'] = 'do';
 $string['restricttolabs'] = 'Omezit na učebny';
 $string['restricttometadata'] = 'Omezit na metadata';
 $string['na'] = 'N/A';
+$string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into Rogo with their own personal password. This password can be given out to students within the computer lab.';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenti';
