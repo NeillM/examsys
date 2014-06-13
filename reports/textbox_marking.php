@@ -157,6 +157,7 @@ HTML;
     $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
   }
+  $phase_description .= ' Q' . $_GET['qNo'];
   $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
   $phase_description .= ': <span style="font-weight: normal">' . number_format($out_of) . ' ' . $string['candidates'] . '</span>';
 
@@ -352,14 +353,15 @@ SQL;
 
       $style = '';
       if (is_numeric($student_mark)) {  // Marked previously so grey out.
-         $style = ' marked';
-         $style .= (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) ? ' hide' : '';
+        $style = ' marked';
+        $style .= (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no <= count($second_mark))) ? ' hide' : '';
       } elseif ($answer_shown) {
-         $style = ' hide';
+        $style = ' hide';
       } else {
         $answer_shown = true;
       }
       echo '<div class="student-answer-block' . $style . '">';
+
       $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
 

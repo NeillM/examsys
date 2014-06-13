@@ -38,4 +38,5 @@ $string['endtime'] = 'Czas zakończenia';
 $string['duration'] = 'Czas trwania';
 $string['labs'] = 'Pracownie';
 $string['metadata'] = 'Metadata';
+$string['extraevents'] = '<strong>SysAdmin:</strong> Double-click on the calender to add extra events.';
 ?>

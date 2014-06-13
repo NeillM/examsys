@@ -387,7 +387,8 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select>\n</td>";
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
-    // Available from Day
+    
+    // Available to Day
     $current_day = date('j');
     echo "<select id=\"tday\" name=\"tday\" class=\"datecopy\">\n";
     for ($i=1; $i<=31; $i++) {

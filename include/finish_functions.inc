@@ -893,7 +893,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
 				}
         if (!isset($paper[$question]['user_answer'])) {
           echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td></tr>\n";
-        } elseif ($paper[$question]['user_answer'] === 0) {
+        } elseif ($paper[$question]['user_answer'] == 0) {
           echo "\n<tr><td></td><td></td><td style=\"color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td></tr>\n";
         }
         if ($tmp_display_feedback == '1') {
@@ -1859,7 +1859,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
         }
 
         if ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-          echo render_marking_data($paperID, $paper[$question], $temp_userID, $mysqlidb);
+          echo render_marking_data($string, $paper[$question]['totalpos'], $paperID, $paper[$question], $temp_userID, $mysqlidb);
         }
         break;
       case 'likert':
@@ -1925,7 +1925,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
               }
             }
             if ($correct_flag == true) {
-              if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+              if (substr($tmp_exclude, $blank_count-1, 1) == '0') {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               }
               $have_answer = true;
@@ -1935,7 +1935,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
               if ($user_choices[$blank_count] == 'u') {
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\"$exclude_mod />";
               } else {
-                if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+                if (substr($tmp_exclude, $blank_count-1, 1) == '0') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 }
                 $have_answer = true;
@@ -2507,9 +2507,9 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
   return $html;
 }
 
-function render_marking_data($paperID, $question, $userID, $db) {
+function render_marking_data($string, $totalpos, $paperID, $question, $userID, $db) {
   $phases = array();
-
+  
   $marking_data = $db->prepare("SELECT markerID, mark, comments, phase, reminders FROM textbox_marking WHERE paperID = ? AND q_id = ? AND student_userID = ? ORDER BY phase");
   $marking_data->bind_param('iii', $paperID, $question['q_id'], $userID);
   $marking_data->execute();
@@ -2538,23 +2538,20 @@ function render_marking_data($paperID, $question, $userID, $db) {
   }
   $marking_data->close();
 
-  $html = '<div class="tb-marking key">';
-  $template = <<< TEMP
-<div class="tb-mark">
-  <h3>Phase %d, Marked by %s</h3>
-  <p><b>Mark:</b> %d</p>
-  %s
-  %s
-</div>
-TEMP;
-
+  $html = '';
   foreach ($phases as $phase_no => $phase) {
     $comment_html = ($phase['comments'] == '') ? '' : '<p><b>Comments:</b> ' . $phase['comments'];
     $reminder_html = (count($phase['reminders']) > 0) ? '<ul>' . implode('', $phase['reminders']) . '</ul>' : '';
 
-    $html .= sprintf($template, $phase_no, $phase['marker'], $phase['mark'], $comment_html, $reminder_html);
+    $html .= "<div style=\"font-weight:bold\">" . $phase['marker'] . " ($phase_no)</div>";
+    if ($reminder_html != '') {
+      $html .= $reminder_html;
+    }
+    if (trim($phase['comments']) != '') {
+      $html .= "<div>" . $phase['comments'] . "</div>";
+    }
+    $html .= '<p class="mkpad"><span class="textmks">' . $phase['mark'] . ' ' . $string['outof'] .  ' ' . $totalpos . '</span></p>';
   }
-  $html .= "</div>\n";
 
   return (count($phases) > 0) ? $html : '';
 }

@@ -66,8 +66,13 @@ td {
 #save_message {
   color: white;
 	background-color: #70AD47;
-  padding: 6px 6px 6px 18px;
+  background-image: url('../artwork/green_save.png');
+  background-repeat: no-repeat;
+  padding-left: 36px;
+  height: 27px;
+  line-height: 27px;
   font-weight: bold;
+  font-size: 110%;
 }
 #save_fail_message {
   color: white;

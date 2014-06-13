@@ -20,11 +20,18 @@ blockquote {
   color:#C00000
 }
 .usermk {
-  padding-left:8px;
-  padding-right:8px;
-  background-color:#FFFF00;
-  font-size:100%;
-  color:black
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: #FFFF00;
+  font-size: 100%;
+  color: black;
+}
+.textmks {
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: #EAEAEA;
+  font-size: 100%;
+  color: black;  
 }
 .mkpad {
   padding-top:10px
@@ -99,12 +106,6 @@ input.exclude, select.exclude {
   padding:2px;
   text-align: justify;
   overflow: scroll;
-}
-/* Textbox marking report */
-div.tb-marking {
-  margin-left: 0;
-  width: 95%;
-  font-size: 80%;
 }
 .thankyou {
   font-size: 450%;
