@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deletefolder'] = 'Usunąć folder?';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Czy na pewno usunąć ten folder?<br /><br />Usunięcie folderu <strong>nie</strong> usuwa zawartych w nim plików.';
-$string['delete'] = 'Usuń folder';
-$string['recyclebin'] = 'Kosz';
 ?>

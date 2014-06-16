@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
   $duration = $_POST['duration'];
   $bgcolor = '#' . $_POST['color'];
 
-  $result = $mysqli->prepare("INSERT INTO extra_cal_dates VALUES (NULL, ?, ?, ?, ?, ?)");
+  $result = $mysqli->prepare("INSERT INTO extra_cal_dates VALUES (NULL, ?, ?, ?, ?, ?, NULL)");
   $result->bind_param('sssis', $title, $message, $thedate, $duration, $bgcolor);
   $result->execute();  
   $result->close();

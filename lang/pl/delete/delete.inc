@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/delete/delete.inc';
-
-$string['msg1'] = 'Are you sure you wish to delete this user?';
-$string['msg2'] = 'Are you sure you wish to delete %d users?';
+$string['recyclebin'] = 'Kosz';
+$string['delete'] = 'Usuń';
 ?>

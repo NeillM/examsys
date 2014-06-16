@@ -16,7 +16,7 @@
 
 /**
 * 
-* Confirm that it is OK to proceed deleting a school.
+* Confirm that it is OK to proceed deleting a course.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -25,15 +25,9 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../include/errors.inc';
-require_once '../classes/schoolutils.class.php';
+require '../include/errors.inc';
 
-$schoolID = check_var('schoolID', 'GET', true, false, true);
-
-if (!SchoolUtils::schoolid_exists($schoolID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$eventID = check_var('eventID', 'GET', true, false, true);
 
 $mysqli->close();
 ?>
@@ -59,8 +53,8 @@ $mysqli->close();
 <br />
 <br />
 <div style="text-align:right">
-<form action="do_delete_school.php" method="post">
-<input type="hidden" name="schoolID" value="<?php echo $_GET['schoolID']; ?>" />
+<form action="do_delete_event.php" method="post">
+<input type="hidden" name="eventID" value="<?php echo $eventID ?>" />
 <input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>

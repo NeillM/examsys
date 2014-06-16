@@ -1788,6 +1788,19 @@ QUERY;
           ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['extra_cal_dates'] = <<<QUERY
+          CREATE TABLE `extra_cal_dates` (
+            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `title` varchar(255) NOT NULL,
+            `message` text,
+            `thedate` datetime NOT NULL,
+            `duration` int(11) NOT NULL,
+            `bgcolor` varchar(16) DEFAULT NULL,
+            `deleted` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+          ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,

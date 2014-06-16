@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Usunięcie wskaźnika do tego pytania usunie go tylko z arkusza pytań.<br /><br /><strong>Nie</strong> usunie to samego pytania z banku pytań.';
 $string['msg2'] = 'Próbujesz usunąć pytanie z zablokowanego arkusza - to nie jest dopuszczalne.';
 $string['delete'] = 'Usuń wskaźnik';
 $string['deletes'] = 'Usuń wskaźniki'; 
-$string['recyclebin'] = 'Kosz';
 ?>

@@ -16,8 +16,8 @@
 
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
+require '../lang/' . $language . '/delete/delete.inc';
 
-$string['recyclebin'] = 'Kosz';
 $string['recyclebintasks'] = 'Działania dot. kosza';
 $string['restorethisitem'] = 'Odzyskaj ten element';
 $string['name'] = 'Nazwa';

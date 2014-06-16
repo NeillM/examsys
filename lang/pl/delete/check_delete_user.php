@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmuserdelete'] = 'Potwierdź usunięcie użytkownika'; 
-$string['recyclebin'] = 'Kosz';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = 'Czy na pewno usunąć tego użytkownika?';
 $string['msg2'] = 'Czy na pewno usunąć %d użytkowników?';
-$string['delete'] = 'Usuń';
 ?>

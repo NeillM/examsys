@@ -14,9 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/delete/delete.inc';
-
-$string['msg'] = 'Pokoušíte se odstranit úlohu z banky úloh.<br /><br /><strong> Potvrďte, prosím, že je to opravdu Vaším záměrem.';
-$string['warning1'] = 'Tuto úlohu nelze odstranit, je používána v následujících dokumentech:';
-$string['warning2'] = 'Před odstraněním úlohy odeberte veškeré odkazy na úlohu.';
+$string['recyclebin'] = 'Koš';
+$string['delete'] = 'Odstranit';
 ?>

@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deleteebelgrid'] = 'Delete Ebel Grid Template';
-$string['recyclebin'] = 'Recycle Bin';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = "Are you sure you wish to delete Ebel grid template called '%s'?";
-$string['delete'] = 'Delete';
 ?>

@@ -62,7 +62,7 @@ $lti->delete_lti_key($LTIkeysid);
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
   <tr>
-    <td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="Recycle Bin"/></td>
+    <td valign="top"><img src="../artwork/delete_warning.png" class="recycleicon" alt="Recycle Bin" /></td>
 
     <td><p>LTI Key successfully deleted.<p>
 

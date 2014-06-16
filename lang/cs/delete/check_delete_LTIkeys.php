@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmschooldelete'] = 'Potvrdit odstranění LTI klíče';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Jste si skutečně jisti, že chcete tento LTI klíč odstranit?';
-$string['delete'] = 'Odstranit';
-$string['confirmltidelete']='Potvrdit odstranění LTI klíče';
 ?>

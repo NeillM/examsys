@@ -40,7 +40,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['confirmdelete']; ?></title>
+  <title><?php echo $string['confirmdelete'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -52,34 +52,32 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 <?php
   if ($properties->get_summative_lock()) {
-		echo "<td class=\"icon\"><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['recyclebin'] . "\" /></td>\n";
+		echo "<td class=\"icon\"><img src=\"../artwork/exclamation_48.png\" class=\"recycleicon\" alt=\"" . $string['recyclebin'] . "\" /></td>\n";
 		echo "<td><p>" . $string['msg2'] . "</p>\n";
 	} else {
 ?>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin'] ?>" /></td>
 <td><p><?php echo $string['msg']; ?></p>
 
 <div style="text-align: right">
 <form action="do_delete_q_pointer.php" method="post">
-<input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
-<input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<input type="hidden" name="scrOfY" value="<?php echo $_GET['scrOfY']; ?>" />
-<input type="hidden" name="questionID" value="<?php echo $questionID; ?>" />
-<input type="hidden" name="pID" value="<?php echo $pID; ?>" />
-<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
+<input type="hidden" name="module" value="<?php echo $_GET['module'] ?>" />
+<input type="hidden" name="folder" value="<?php echo $_GET['folder'] ?>" />
+<input type="hidden" name="scrOfY" value="<?php echo $_GET['scrOfY'] ?>" />
+<input type="hidden" name="questionID" value="<?php echo $questionID ?>" />
+<input type="hidden" name="pID" value="<?php echo $pID ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 
 <?php
-if (substr_count($_GET['pID'], ',')  > 1) {
-  echo '<input style="width:140px" type="submit" name="submit" value="' . $string['deletes'] . '" />';
-} else {
-  echo '<input style="width:140px" type="submit" name="submit" value="' . $string['delete'] . '" />';
+  if (substr_count($_GET['pID'], ',')  > 1) {
+    echo '<input class="ok" type="submit" name="submit" value="' . $string['deletes'] . '" />';
+  } else {
+    echo '<input class="ok" type="submit" name="submit" value="' . $string['delete'] . '" />';
+  }
+
 }
 ?>
-&nbsp;
-<?php
-}
-?>
-<input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>

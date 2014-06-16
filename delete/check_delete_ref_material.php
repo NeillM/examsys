@@ -52,7 +52,7 @@ $mysqli->close();
 
 <table>
 <tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td><p><?php echo $string['msg']; ?></p>
 <br />
@@ -60,8 +60,7 @@ $mysqli->close();
 <form action="do_delete_ref_material.php" method="post">
 <input type="hidden" name="refID" value="<?php echo $refID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>

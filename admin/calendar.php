@@ -76,7 +76,7 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
       }
     } else {
       if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
-        echo '<tr style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
+        echo '<tr onclick="deleteEvent(' . $paper['eventID'] . ')" style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
         if ($paper['start_minute'] != 0) {
           echo ':' . $paper['start_minute'];
         }
@@ -231,6 +231,13 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
       notice.focus();
     }
   }
+  
+  function deleteEvent(eventID) {
+    notice = window.open("../delete/check_delete_event.php?eventID=" + eventID + "","event","width=420,height=170,left="+(screen.width/2-210)+",top="+(screen.height/2-85)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (window.focus) {
+      notice.focus();
+    }
+  }
     
   $(document).ready(function() {
     
@@ -241,10 +248,16 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 	  $('#school').change(function() {
 		  $('#theform').submit();
 		});
-		
+	
+  <?php
+    if ($userObject->has_role('SysAdmin')) {
+  ?>
     $(document).dblclick(function() {
       newEvent();
     });
+  <?php
+    }
+  ?>
     
 	});
   
@@ -466,10 +479,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   
   // Get extra calendar events
   $paper_no = ($property_id + 1);
-  $result = $mysqli->prepare("SELECT title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . "0101000000 AND thedate <= " . $current_year . "1231235959");
+  $result = $mysqli->prepare("SELECT id, title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . "0101000000 AND thedate <= " . $current_year . "1231235959 AND deleted IS NULL");
   $result->execute();
-  $result->bind_result($title, $message, $duration, $bgcolor, $start_time, $am_pm, $start_hour, $start_minute, $start_day, $month);
+  $result->bind_result($eventID, $title, $message, $duration, $bgcolor, $start_time, $am_pm, $start_hour, $start_minute, $start_day, $month);
   while ($result->fetch()) {
+    $paper_details[$paper_no]['eventID']      = $eventID;
     $paper_details[$paper_no]['type']         = 'extra_date';
     $paper_details[$paper_no]['title']        = $title;
     $paper_details[$paper_no]['message']      = $message;

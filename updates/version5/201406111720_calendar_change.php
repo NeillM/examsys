@@ -5,10 +5,11 @@ if (!$updater_utils->does_table_exist('extra_cal_dates')) {
 CREATE TABLE `extra_cal_dates` (
   `id` int(11) unsigned NOT NULL primary key auto_increment,
   `title` varchar(255) NOT NULL,
+  `message` text,
   `thedate` datetime NOT NULL,
   `duration` int(11) NOT NULL,          
-  `bgcolor` varchar(16) NOT NULL);
-  `bordercolor` varchar(16) NOT NULL);
+  `bgcolor` varchar(16) NOT NULL,
+  `deleted` datetime DEFAULT NULL);
 QUERY;
   $updater_utils->execute_query($sql, true);
 

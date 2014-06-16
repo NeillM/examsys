@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmdelete'] = 'Potvrdit odstranění dokumentu';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Odstraněním dokumentu <em>nevymažete</em> úlohy v bance úloh.<br /><br /><strong>Jste si skutečně jisti, že chcete tento dokument odstranit?</strong>';
-$string['deletepaper'] = 'Odstranit dokument';
-$string['recyclebin'] = 'Koš';
 ?>

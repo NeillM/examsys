@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmschooldelete'] = 'Confirm LTI Key Delete';
-$string['recyclebin'] = 'Recycle Bin';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Are you sure you wish to delete this LTI Key?';
-$string['delete'] = 'Delete';
-$string['confirmltidelete']='Confirm LTI Key Delete';
 ?>

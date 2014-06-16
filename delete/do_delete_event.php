@@ -16,7 +16,7 @@
 
 /**
 *
-* Delete some reference material.
+* Delete a course - SysAdmin only.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -24,18 +24,16 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-$refID = check_var('refID', 'POST', true, false, true);
+$eventID = check_var('eventID', 'POST', true, false, true);
 
-if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$result = $mysqli->prepare("UPDATE extra_cal_dates SET deleted = NOW() WHERE id = ?");
+$result->bind_param('i', $eventID);
+$result->execute();  
+$result->close();
 
-refmaterials_utils::delete($refID, $mysqli);
-  
 $mysqli->close();
 ?>
 <!DOCTYPE html>
@@ -44,25 +42,25 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Reference Material Deleted</title>
+  <title>Event Deleted</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
-    function updateParent() {
+    $(document).ready(function() {
       window.opener.location.reload();
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
-
+<body>
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
 <td valign="top"><img src="../artwork/delete_warning.png" class="recycleicon" alt="Recycle Bin" /></td>
 
-<td><p>Reference Material Deleted.<p>
+<td><p>Event successfully deleted.<p>
 
 <div style="text-align: center">
 <form action="" method="get">
