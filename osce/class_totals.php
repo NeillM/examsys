@@ -127,6 +127,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -167,6 +168,12 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
         // sort on the first column and third column, order asc 
         sortList: [[2,0],[3,0]] 
       });
+      
+      $('.head_title').click(function() {
+        $('#menudiv').hide();
+        $('#toprightmenu').hide();
+      })      
+      
     });
 	<?php
 		}
@@ -186,25 +193,26 @@ if ($language != 'en') {
   $popup_width = 300;
 }
 ?>
-<div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
-  <tr><td>
-    <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
-      <tr>
-        <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['oscemarksheet']; ?></td>
-      </tr>
-      <tr>
-        <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"> </td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item3a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></td><td id="item3b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
+<div id="menudiv" class="popupmenu" style="padding:5px; width:<?php echo $popup_width; ?>px">
+  <div class="popup_row" onclick="viewScript();">
+    <div class="popup_icon"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item1"><?php echo $string['oscemarksheet'] ?></div>
+  </div>
+  
+  <div class="popup_row" onclick="viewFeedback();">
+    <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item2"><?php echo $string['feedback']; ?></div>
+  </div>
+  
+  <div class="popup_divider_row">
+    <div class="popup_icon"></div>
+    <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
+  </div>
+  
+  <div class="popup_row" onclick="viewProfile();">
+    <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item3"><?php echo $string['studentprofile'] ?></div>
+  </div>
 </div>
 
 <div style="font-size:90%">

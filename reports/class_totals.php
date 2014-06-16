@@ -128,11 +128,11 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '' ) {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 
@@ -161,6 +161,7 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+<link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
 <link rel="stylesheet" type="text/css" href="../css/list.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
@@ -180,26 +181,26 @@ ob_start();
     $('#percent').val(tmpPercent);
 
     if (tmpMetadataID == '') {
-      $('#item1b').css('color', '#C0C0C0');
-      $('#item2b').css('color', '#C0C0C0');
+      $('#item1').css('color', '#C0C0C0');
+      $('#item2').css('color', '#C0C0C0');
     } else {
-      $('#item1b').css('color', '#000000');
-      $('#item2b').css('color', '#000000');
+      $('#item1').css('color', '#000000');
+      $('#item2').css('color', '#000000');
     }
 
     if (tmpReassign == 'y') {
-      $('#item3b').css('color', '#C0C0C0');
-      $('#item5b').css('color', '#000000');
+      $('#item3').css('color', '#C0C0C0');
+      $('#item5').css('color', '#000000');
     } else {
-      $('#item3b').css('color', '#000000');
-      $('#item5b').css('color', '#C0C0C0');
+      $('#item3').css('color', '#000000');
+      $('#item5').css('color', '#C0C0C0');
     }
 
     if (tmpLogLate == 'y') {
-      $('#item7b').css('color', '#000000');
+      $('#item7').css('color', '#000000');
       $('#log_late_icon').show();
     } else {
-      $('#item7b').css('color', '#C0C0C0');
+      $('#item7').css('color', '#C0C0C0');
       $('#log_late_icon').hide();
     }
   }
@@ -306,71 +307,59 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   $popup_width = 300;
 }
 ?>
-<div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table cellspacing="2" cellpadding="0" border="0" style="font-size:90%; width:100%">
-  <tr><td>
-    <table cellspacing="0" cellpadding="1" border="0" style="width:100%">
-      <tr>
-        <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
-      </tr>
-      <tr>
-        <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item3a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">
-          <img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" />
-          </td>
-          <td id="item3b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();">
-          <?php echo $string['studentprofile']; ?>
-          </td>
-      </tr>
-      <tr>
-        <td id="item4a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">
-        <img src="../artwork/notes_icon.gif" width="14" height="14" alt="" />
-        </td>
-        <td id="item4b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="newStudentNote();">
-        <?php echo $string['newnote']; ?>
-        </td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right">
-        <img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item5a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
-        <img src="../artwork/guest_account_16.png" width="16" height="16" alt="" />
-        </td>
-        <td id="item5b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('5');" onmouseout="menuRowOff('5');" onclick="reassignScript();">
-        <?php echo $string['reassigntouser']; ?></td>
-      </tr>
-      <tr>
-      <?php
-        if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
-          $action = 'resetTimer();';
-          $text_color = 'black';
-        } else {
-          $action = '$(\'#menudiv\').hide()';
-          $text_color = '#C0C0C0';
-        }
-      ?>
-        <td id="item6a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="<?php echo $action; ?>">
-        </td>
-        <td id="item6b" style="padding-left:8px; background-color:#FFFFFF; color:<?php echo $text_color; ?>; cursor:default" onmouseover="menuRowOn('6');" onmouseout="menuRowOff('6');" onclick="<?php echo $action; ?>">
-        <?php echo $string['resettimer']; ?></td>
-      </tr>
-      <tr>
-        <td id="item7a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
-        <img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></td>
-        <td id="item7b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('7');" onmouseout="menuRowOff('7');" onclick="reassignLogLate();">
-        <?php echo $string['latesubmissions']; ?>
-        </td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
+<div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width ?>px">
+  <div class="popup_row" onclick="viewScript();">
+    <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item1"><?php echo $string['examscript'] ?></div>
+  </div>
+  
+  <div class="popup_row" onclick="viewFeedback();">
+    <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item2"><?php echo $string['feedback']; ?></div>
+  </div>
+  
+  <div class="popup_divider_row">
+    <div class="popup_icon"></div>
+    <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
+  </div>
+  
+  <div class="popup_row" onclick="viewProfile();">
+    <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item3"><?php echo $string['studentprofile'] ?></div>
+  </div>
+  
+  <div class="popup_row" onclick="newStudentNote();">
+    <div class="popup_icon"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="" /></div>
+    <div class="popup_title" id="item4"><?php echo $string['newnote'] ?></div>
+  </div>
+  
+  <div class="popup_divider_row">
+    <div class="popup_icon"></div>
+    <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
+  </div>
+
+  <div class="popup_row" onclick="reassignScript();">
+    <div class="popup_icon"><img src="../artwork/guest_account_16.png" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item5"><?php echo $string['reassigntouser']; ?></div>
+  </div>
+<?php
+  if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
+    $action = 'resetTimer();';
+    $text_color = 'black';
+  } else {
+    $action = '$(\'#menudiv\').hide()';
+    $text_color = '#C0C0C0';
+  }
+?>
+  <div class="popup_row" onclick="<?php echo $action ?>">
+    <div class="popup_icon"></div>
+    <div class="popup_title" id="item6" style="color:<?php echo $text_color ?>"><?php echo $string['resettimer']; ?></div>  
+  </div>
+      
+  <div class="popup_row" onclick="reassignLogLate();">
+    <div class="popup_icon"><img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item7"><?php echo $string['latesubmissions']; ?></div>
+  </div>
 </div>
 <?php
   for ($i=-100; $i<=100; $i++) $distribution[$i] = 0;

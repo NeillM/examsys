@@ -95,36 +95,23 @@ a.user:hover {
 }
 .subheading {
   font-size: 110%;
-  padding-right:2px;
-  padding-bottom:5px;
-  color:#1E3287;
-}
-.popupmenu {
-  display:none;
-  background-color:white;
-  padding:1px;
-  position:absolute;
-  top:0px;
-  left:0px;
-  z-index:10000;
-  border:1px solid #868686;
-  -moz-border-radius:4px;
-  -webkit-border-radius:4px;
-  border-radius:4px;
+  padding-right: 2px;
+  padding-bottom: 5px;
+  color: #1E3287;
 }
 .q_no {
-  padding-left:15px;
-  font-weight:bold;
-  vertical-align:top;
-  text-align:right;
+  padding-left: 15px;
+  font-weight: bold;
+  vertical-align: top;
+  text-align: right;
 }
 .q_msg {
-  padding-bottom:10px;
+  padding-bottom: 10px;
 }
 .marking {
   border: 2px solid #FCE699;
-	background-color:#FFFFEE;
-	color:#404040;
+	background-color: #FFFFEE;
+	color: #404040;
 	margin-top: 10px;
 	margin-left: auto;
 	margin-right: auto;

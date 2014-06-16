@@ -58,6 +58,7 @@ require_once 'summary_report.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
   <style type="text/css">
     td {font-size:110%}
     .fn {color:#808080}
@@ -118,20 +119,18 @@ require_once 'summary_report.inc';
 		$popup_width = 300;
 	}
 ?>
-  <div id="menudiv" class="popupmenu" style="font-size:90%; width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
-    <tr><td>
-      <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
-        <tr>
-          <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewReviews();"><?php echo $string['Review Form'];?></td>
-        </tr>
-        <tr>
-          <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><?php echo $string['Student Profile'];?></td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
+<div id="menudiv" class="popupmenu" style="padding:5px; width:<?php echo $popup_width; ?>px">
+  <div class="popup_row" onclick="viewReviews();">
+    <div class="popup_icon"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item1"><?php echo $string['Review Form'] ?></div>
   </div>
+  
+  <div class="popup_row" onclick="viewProfile();">
+    <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item2"><?php echo $string['Student Profile']; ?></div>
+  </div>
+</div>
+
 <?php
   echo "<div style=\"font-size:80%\">\n";
 

@@ -297,7 +297,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <?php
   // Get faculty and school info
   $schools = array($string['default']=>array('-1'=>$string['allschools']));
-  $stmt = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE faculty.id = schools.facultyID ORDER BY faculty.name, school");
+  $stmt = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE faculty.id = schools.facultyID AND faculty.deleted IS NULL and schools.deleted IS NULL ORDER BY faculty.name, school");
   $stmt->execute();
   $stmt->bind_result($id, $faculty, $school);
   while ($stmt->fetch()) {

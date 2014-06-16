@@ -377,16 +377,16 @@ function load_osce_medians($db) {
 function set_classification($marking, &$user_results, $passmark, $user_no, $string) {
   switch ($marking) {
     case '3':
-      $labels = $string['overallclass2'];
+      $labels = $string['marking3'];
       break;
     case '4':
-      $labels = $string['overallclass3'];
+      $labels = $string['marking4'];
       break;
     case '6':
-      $labels = $string['overallclass4'];
+      $labels = $string['marking6'];
       break;
     case '7':
-      $labels = $string['overallclass5'];
+      $labels = $string['marking7'];
       break;
   }
   

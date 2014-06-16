@@ -86,13 +86,13 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
   function checkAll() {
     if ($('#direction')[0].selectedIndex == 0) {
-      document.getElementById('percent').selectedIndex = 7;    
+      $("#percent").prop("selectedIndex", 7);
     }
   }
 </script>
 
 <div class="popup" style="z-index:20; display:none; position:fixed; left:200px; top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
-<form name="stats_menu" style="width:560px; border:0px solid #C0C0C0; font-size:110%">
+<form name="stats_menu" style="width:580px; border:0px solid #C0C0C0; font-size:110%">
 
 <div style="background-color:#F2B100; height:5px"></div>
 
@@ -299,7 +299,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
       echo "<option value=\"$display_minute\">$display_minute</option>\n";
     }
   }
-  echo "</select>\n</td></tr>\n";
+  echo "</select>&nbsp;<img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
   
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
   echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
@@ -342,7 +342,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "</td></tr>\n";
   }
   
-  echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /></td></tr>\n";
+  echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_studentattempts'] . "\" /></td></tr>\n";
 
   if ($properties->get_paper_type() == '3') {
     echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";

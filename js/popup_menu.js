@@ -27,9 +27,6 @@ function popMenu(option_no, e) {
   var scrOfY = $(document).scrollTop();
   
   $('#menudiv').show();
-  for (i=1; i<=option_no; i++) {
-    $('#item'+i+'b').css('background-color', '#FFFFFF');
-  }
   
   top_pos = currentY + scrOfY;
   div_height = $('#menudiv').height() + 6;
@@ -49,20 +46,14 @@ function cancelBubble(e) {
 	if (evt.stopPropagation)		evt.stopPropagation();
 	if (evt.cancelBubble!=null)	evt.cancelBubble = true;
 }
- 
-function menuRowOn(rowID) {
-  // Left menu column
-  $('#item'+rowID+'a').css('background-color', '#FFE7A2');
-  
-  // Right menu column
-  $('#item'+rowID+'b').css('background-color', '#FFE7A2');
-}
 
-function menuRowOff(rowID) {
-  // Left menu column
-  $('#item'+rowID+'a').css('background-color', '#F1F5FB');
+$(document).ready(function() {
+  $('#menudiv').mouseover(function() {
+    overpopupmenu=true;
+  });
   
-  // Right menu column
-  $('#item'+rowID+'b').css('background-color', '#FFFFFF');
-}    
+  $('#menudiv').mouseout(function() {
+    overpopupmenu=false;
+  });
 
+});

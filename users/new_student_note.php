@@ -83,10 +83,6 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
     $(document).ready(function() {
-	    var noteHeight = $(document).height() - 140;
-	    $("#note").css('height', noteHeight + 'px')
-      $("#note").focus();
-			
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -94,12 +90,19 @@ if (isset($_POST['submit'])) {
         }
       });
       $('form').removeAttr('novalidate');
+      
+      resizeTextbox();      
+      $("#note").focus();
     });
 	 
 	  $(window).resize(function() {
-	    var noteHeight = $(document).height() - 140;
-	    $("#note").css('height', noteHeight + 'px')
+	    resizeTextbox();
 	  });
+    
+    function resizeTextbox() {
+	    var noteHeight = $(window).height() - 100;
+	    $("#note").css('height', noteHeight + 'px');     
+    }
    
     $('#theform').submit(function() {
       if ($("#paperID").val() == '') {
@@ -120,6 +123,7 @@ if (isset($_POST['submit'])) {
 <body>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="theform" id="theform">
 <?php
+	$disabled = '';
 	$note_details = array('note_id'=>0, 'note'=>'');
 	
 	$student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
@@ -152,8 +156,6 @@ if (isset($_POST['submit'])) {
 			}
 			echo "</select>\n<br />\n";
 			$result->close();
-
-			$disabled = '';
 		} else {
 			$disabled = ' disabled="disabled"';
 		}
@@ -162,7 +164,6 @@ if (isset($_POST['submit'])) {
   echo "<br />" . $string['note'] . "<br />\n";
   echo "<div style=\"text-align:center\"><textarea name=\"note\" id=\"note\" required>" . $note_details['note'] . "</textarea></div>\n";
 ?>
-<br />
 <div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="userID" value="<?php echo $_GET['userID']; ?>" />
 <input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling']; ?>" />

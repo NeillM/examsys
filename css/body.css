@@ -156,5 +156,6 @@ title {
   width: 400px;
   font-size: 80%;
   text-align: justify;
+  z-index: 100;
 }
 
