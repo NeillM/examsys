@@ -175,8 +175,8 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				
 				if (yes_to_add) {
 					var mli_combo = (myLabelInfo[1]!=''?Number(myLabelInfo[1]):0); 	//combo indicator?  >0
-					var mli_pos_xa = Number(myLabelInfo[2]);  											//pos_x
-					var mli_pos_ya = Number(myLabelInfo[3]);  											//pos_y
+					var mli_pos_xa = Math.round(Number(myLabelInfo[2]));  											//pos_x
+					var mli_pos_ya = Math.round(Number(myLabelInfo[3]));  											//pos_y
 					var mli_pos_xb = apx[mli_index-blank_count];										//pos_x
 					var mli_pos_yb = apy[mli_index-blank_count];										//pos_y
 					var mli_answr = myLabelInfo[4];                       					//answer
