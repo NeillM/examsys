@@ -79,12 +79,13 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   $support_email = $configObject->get('support_email');
   
   $to = $external_details['email'];
-  $subject = $configObject->get('cfg_company') . ' e-assessment review';
 
   if ($_GET['mode'] == 0) {
     $message = $string['message0'];
+    $subject = sprintf($string['subject_msg0'], $configObject->get('cfg_company'));
   } else {
     $message = $string['message1'];    
+    $subject = sprintf($string['subject_msg1'], $configObject->get('cfg_company'));
   }
   $message = str_replace('$users_name', $userObject->get_first_first_name(), $message);
   $message = str_replace('$support_email', $support_email, $message);
@@ -132,7 +133,7 @@ if (isset($_POST['submit'])) {
       $headers .= 'BCC: ' . trim($_POST['ccaddress']);
     }
 
-    //mail($to, $subject, $message, $headers);
+    mail($to, $subject, $message, $headers);
   }
   echo "<p>" . $string['emailsent'] . "</p>";
   echo "<p><input type=\"button\" value=\"" . $string['back'] . "\" name=\"back\" id=\"back\" class=\"ok\" /></p>";
