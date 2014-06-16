@@ -88,8 +88,9 @@ if (isset($_POST['submit'])) {
     .r2 {background-color:#FFBD69}
     .g {color:#808080}
     .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
+    input[type="checkbox"] {margin-left: 25px}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
@@ -139,7 +140,7 @@ if (isset($_POST['submit'])) {
   $result->bind_result($tmp_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title);
   while ($result->fetch()) {
     if ($old_letter != strtoupper(substr($tmp_surname, 0, 1))) {
-      echo "<table border=\"0\" class=\"subsect\" style=\"width:98%\"><tr><td><nobr>" . strtoupper(substr($tmp_surname, 0, 1)) . "</nobr></td><td style=\"width:95%\"><hr noshade=\"noshade\" /></td></tr></table>\n";
+      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . strtoupper(substr($tmp_surname, 0, 1)) . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>";
     }
   
     $match = false;

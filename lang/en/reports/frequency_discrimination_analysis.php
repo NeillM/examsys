@@ -40,7 +40,7 @@ $string['u_definition'] = 'percent of <strong>upper</strong> group answering ite
 $string['l_definition'] = 'percentage of <strong>lower</strong> group answering item';
 $string['warning'] = 'Warning';
 $string['p_warning'] = '<strong>p < 0.2</strong> (i.e. very hard)';
-$string['d_warning'] = "<strong>d < 0.15</strong> (i.e. low)<br />Investigate the red flags and if you conclude that the item is poor, exclude using the <img src=\"../artwork/exclude_off.gif\" style=\"cursor:pointer\" width=\"23\" height=\"22\" border=\"0\" alt=\"Exclude\" /> icon and then click 'Save' at the bottom";
+$string['d_warning'] = "<strong>d < 0.15</strong> (i.e. low)<br />Investigate the red flags and if you conclude that the item is poor, exclude using the <img src=\"../artwork/exclude_off.gif\" style=\"cursor:pointer; background-color:white\" width=\"23\" height=\"22\" alt=\"Exclude\" /> icon and then click 'Save' at the bottom";
 $string['summary'] = 'Summary';
 $string['msg'] = 'The number of items can be more than the number of questions as dichotomous, labelling and extended matching questions are made up of multiple items each with their own p and d values.';
 $string['difficulty'] = 'Difficulty';
@@ -61,4 +61,5 @@ $string['screen'] = 'Screen';
 $string['warning1'] = 'Warning: Difficulty is less than 0.2';
 $string['warning2'] = 'Warning: Discrimination less than 0.15';
 $string['abstain'] = 'Abstain';
+$string['unmarkedscripts'] = '%d unmarked scripts';
 ?>

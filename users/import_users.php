@@ -39,7 +39,7 @@
   
 	<title><?php echo $string['importusers'] . " " . $configObject->get('cfg_install_type') ?></title>
 	
-	<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
   
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />

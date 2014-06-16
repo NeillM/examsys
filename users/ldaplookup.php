@@ -64,7 +64,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 		body {background-color: #F1F5FB; font-size: 90%}
 	</style>
 	
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title; ?>");
@@ -107,7 +107,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 		body {font-size: 90%}
 		th {background-color:#CFDBEB; font-weight:normal}
 	</style>
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 </head>
 <body>
 <?php

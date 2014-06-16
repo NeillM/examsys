@@ -40,13 +40,14 @@ $question_no = 0;
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Preview</title>
+  <title><?php echo $string['preview'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
 
   <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 	<!-- HTML5 part start -->

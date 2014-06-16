@@ -83,11 +83,12 @@ class ClassTotals {
   private $recache;
   private $question_statuses;
   private $marking_overrides;
+  private $string;
 	
 	private $unmarked_enhancedcalc = false;
 	private $unmarked_textbox = false;
 
-  public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
+  public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string) {
     $userObject = UserObject::get_instance();
 
     $this->db                 = $db;
@@ -116,6 +117,7 @@ class ClassTotals {
     $this->display_excluded   = '';
     $this->user_no            = 0;
     $this->marking_overrides  = array();
+    $this->string             = $string;
 		$unmarked_calculation			= false;
 		$unmarked_textbox					= false;
 
@@ -207,12 +209,8 @@ class ClassTotals {
 	 */
   public function compile_report($recache) {
     $results_cache = new ResultsCache($this->db);
-    if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
-      $this->recache = true;
-    } else {
-      $this->recache = false;
-    }
-
+    $this->recache = false;
+    
     $moduleID = Paper_utils::get_modules($this->paperID, $this->db);
     $this->moduleID_in = implode(',', array_keys($moduleID));
 
@@ -247,6 +245,8 @@ class ClassTotals {
     $this->add_deciles();                                                                                     // Add in deciles per student
 		
     $this->sort_results();                                                                                    // Sort the whole array by the right column
+    
+    $this->load_special_needs();                                                                               // Load which users have special needs
 		
     if ($this->recache) {
       $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
@@ -796,8 +796,8 @@ class ClassTotals {
         for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {
           if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-            $x = $tmp_second_split[$label_no-2];
-            $y = $tmp_second_split[$label_no-1] - 25;
+            $x = round($tmp_second_split[$label_no-2]);
+            $y = round($tmp_second_split[$label_no-1]) - 25;
             $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no],'|'));
             if ($tmp_exclude{$i} == '0') {
               $placeholders++;
@@ -807,7 +807,7 @@ class ClassTotals {
             $i++;
           }
         }
-
+    
         // Strip out width and height for graphical labels.
         $i = 0;
         foreach ($correct_labels as $key=>$value) {
@@ -819,13 +819,13 @@ class ClassTotals {
         if ($tmp_user_answer != '') {
           $user_split1 = explode(';', $tmp_user_answer);
           $user_split2 = explode('$', $user_split1[1]);
-
+    
           $i = 0;
           $correct = 0;
           $count_user_split2 = count($user_split2)-3;
           for ($a=0; $a<$count_user_split2; $a+=4) {
-            $x = $user_split2[$a];
-            $y = $user_split2[$a+1];
+            $x = round($user_split2[$a]);
+            $y = round($user_split2[$a+1]);
             $index = 0;
             if (isset($correct_labels[$x . 'x' . $y])) $index = $correct_labels_pos[$x . 'x' . $y];
             if ($tmp_exclude{$index} == '0') {
@@ -1704,6 +1704,111 @@ class ClassTotals {
     }
 
     return $mc;
+  }
+  
+  /**
+   * Loads special needs for all users in the current cohort.
+   */
+  private function load_special_needs() {
+    // Query any student special needs for the current paper
+    $this->special_needs = array();
+    $users_in = array();
+    foreach($this->user_results as $u) {
+      $users_in[] = $u['userID'];
+    }
+    $users_in = implode(',', $users_in);
+    if ($users_in != '') {
+      $result = $this->db->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
+      $result->execute();
+      $result->bind_result($special_userID);
+      while ($result->fetch()) {
+        $this->special_needs[$special_userID] = 'y';
+      }
+      $result->close();
+    }
+  }
+  
+  /**
+   * Returns true or false if a given user has special needs.
+   */
+  public function has_special_need($userID) {
+    if (isset($this->special_needs[$userID]) and $this->special_needs[$userID] == 'y') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  /**
+   * Checks and displays if necessary a late submissions warning banner at the top of the screen.
+   */
+  public function check_late_submission_warnings() {
+    if (count($this->log_late) > 0) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($this->string['latesubmissionsmsg']) ?>" /></td>
+          <td class="redwarn"><?php echo sprintf($this->string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $this->string['moredetails'] . '</a>)'; ?></td>
+        </tr>
+      </table>
+    <?php
+    }
+  }
+
+  /**
+   * Checks and displays if necessary an unmark textbox warning banner at the top of the screen.
+   */
+  public function check_unmarked_textbox_warnings() {
+    if ($this->unmarked_textbox()) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="<?php echo $this->string['warning'] ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['unmarkedtextbox'] ?></td>
+        </tr>
+      </table>
+    <?php
+    }
+  }
+
+  /**
+   * Checks and displays if necessary a numarked calculation question warning banner at the top of the screen.
+   */
+  public function check_unmarked_enhancedcalc_warnings() {
+    if ($this->unmarked_enhancedcalc()) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="<?php echo $this->string['warning'] ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['unmarkedenhancedcalc'] ?></td>
+        </tr>
+      </table>
+    <?php
+    }
+  }
+
+  /**
+   * Checks and displays if necessary a temporary account warning banner at the top of the screen.
+   */
+  public function check_temp_account_warnings() {
+    // Check for any temporary accounts and if so display warning banner
+    $temp_user_no = 0;
+    $user_no = count($this->user_results);
+    for ($i=0; $i<$user_no; $i++) {
+      if (strpos($this->user_results[$i]['username'], 'user') === 0) {
+        $temp_user_no++;
+      }
+    }
+    if ($temp_user_no > 0) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="<?php echo $this->string['warning'] ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['temporaryaccountswarning'] ?></td>
+        </tr>
+      </table>
+    <?php
+    }
   }
 
 }

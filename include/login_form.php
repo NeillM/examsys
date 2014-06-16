@@ -37,7 +37,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/warnings.css" />
 
-  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
 	<script>
     $(document).ready(function() {
@@ -133,13 +133,13 @@ HTML;
 									echo '<tr>';
 									echo '<td>' . $field->description . '</td>';
 									echo '<td><select name="' . $field->name . '">';
-											foreach($field->options as $name => $value) {
-												$select='';
-												if ($value == $field->default) {
-													$select = 'selected';
-												}
-												echo "<option value=\"$value\" $select>$name</option>\n";
-											}
+									foreach($field->options as $name => $value) {
+										$select='';
+										if ($value == $field->default) {
+											$select = 'selected';
+										}
+										echo "<option value=\"$value\" $select>$name</option>\n";
+									}
 									echo '</select></td>';
 									echo '</tr>';
 								} else {

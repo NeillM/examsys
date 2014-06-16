@@ -72,4 +72,5 @@ $string['errorrandomnotfound'] = 'ERROR: No random question selected. Perhaps th
 $string['overriddenby'] = 'Mark adjusted by';
 $string['questionclarification'] = 'Question Clarification';
 $string['EnhancedCalcCorrectError'] = 'Error: Correct answer could not be calculated';
+$string['student'] = 'Student';
 ?>

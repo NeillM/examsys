@@ -57,7 +57,7 @@ if (isset($_POST['submit'])) {
     }
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -81,18 +81,13 @@ if (isset($_POST['submit'])) {
 	echo draw_toprightmenu();
 ?>
 <div id="content" class="content" style="font-size:80%">
-<table class="header">
-  <tr>
-    <th>
-      <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img
-        src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-"/>&nbsp;&nbsp;<a
-        href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img
-        src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-"/>&nbsp;&nbsp;<a
-        href="lti_keys_list.php"><?php echo $string['ltikeys']; ?></a></div>
-      <div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['addltikeys']; ?></th>
-    <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-  </tr>
-</table>
+
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="lti_keys_list.php"><?php echo $string['ltikeys']; ?></a></div>
+  <div class="page_title"><?php echo $string['addltikeys']; ?></div>
+</div>
+
   <br/>
   <div align="center">
     <form id="theform" name="add_LTIkeys" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -114,7 +109,7 @@ if (isset($_POST['submit'])) {
           <td><input type="text" size="70" maxlength="255" name="lticontext" id="lticontext" /></td>
         </tr>
       </table>
-      <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>"/>&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();"/></p>
+      <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"/><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();"/></p>
     </form>
   </div>
   <?php

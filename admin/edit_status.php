@@ -115,7 +115,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
     }
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -139,8 +139,10 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
 <?php
   require '../include/status_options.inc.php';
   require '../include/toprightmenu.inc';
+  require '../tools/colour_picker/colour_picker.inc';
 	
 	echo draw_toprightmenu();
+	
 ?>
   <div id="content" class="content">
     <table class="header">
@@ -152,7 +154,6 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
 
     <form id="theform" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
 <?php
-  require '../tools/colour_picker/colour_picker.inc';
 
   if (isset($error) and $error = 'duplicate') {
 ?>
@@ -180,7 +181,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
         <tr>
           <td colspan="2" class="align-center">
             <input type="hidden" name="id" value="<?php echo $s_id ?>" />
-            <input type="submit" style="width:100px" name="submit" value="<?php echo $string['save'] ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" />
+            <input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" class="cancel" />
           </td>
         </tr>
       </table>

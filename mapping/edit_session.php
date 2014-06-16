@@ -159,7 +159,7 @@ if (isset($_POST['Edit'])) {
     </style>
 		
     <script src="../js/staff_help.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="../js/toprightmenu.js"></script>
     <script type="text/javascript">

@@ -29,6 +29,7 @@
 require '../include/staff_auth.inc';
 require '../config/index.inc';  // Get the logo
 require_once '../classes/paperutils.class.php';
+require_once '../classes/reviews.class.php';
 
 ?>
 <!DOCTYPE html>
@@ -42,9 +43,15 @@ require_once '../classes/paperutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
+  <link rel="stylesheet" type="text/css" href="../css/external_examiner.css" />
   <style type="text/css">
-    body {font-size:90%}
-    p {line-height:150%}
+    *, html {margin: 0; padding: 0}
+    body {font-size:90%; background-color: #EAEAEA}
+    p {line-height:150%; margin-bottom: 1em}
+    h1 {line-height:150%; color:#4A74B9; font-size:160%; font-weight:normal; margin-left:-25px; padding-top: 10px}
+    .datepad {padding-left: 30px}
+    .indent {margin-top: 0; padding-left: 40px; padding-right: 10px; padding-bottom: 50px; background-color: white; border-bottom: 1px solid #C0C0C0}
+    .oss {float:right; position:relative; top:-30px; border: 1px solid #C0C0C0; background-color:white; padding:4px; margin-right:10px; width: 460px; font-size: 80%; line-height:150%}
   </style>
 </head>
 
@@ -61,12 +68,13 @@ require_once '../classes/paperutils.class.php';
 <th style="text-align:right"><?php echo $logo_html; ?></th>
 </tr>
 </table>
-
-<p style="font-size:130%; font-weight:bold; margin-left:15px"><?php echo $string['instructions']; ?></p>
+  
+<div class="indent">
+<h1><?php echo $string['preexamreviewpapers'] ?></h1>
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg1']; ?></p>
 
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg2']; ?></p>
-<p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
+
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
   $start_of_day_ts = strtotime('midnight');
@@ -114,19 +122,35 @@ require_once '../classes/paperutils.class.php';
     echo "<tr><td colspan=\"2\"><p style=\"color:red\">" . $string['nopapersfound'] . "</p></td></tr>\n";
   }
   $result->close();
-  echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" align=\"left\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
+  
+  echo "</table>\n";
+  
+  
+  $released_papers = ReviewUtils::get_past_papers($userObject->get_user_ID(), $mysqli);
+  echo '<h1>' . $string['postexamreviews'] . '</h1>';
+  
+  echo "<p style=\"margin-left:15px; margin-right:15px; text-align:justify\">" .  $string['msg3'] . "</p>\n";
 
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:" . $configObject->get('support_email') . "\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" /></a></td>\n</td><td><a href=\"mailto:" . $configObject->get('support_email') . "\">" . $configObject->get('support_email') . "</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
+  echo "<table style=\"margin-left:15px\">\n";
+  foreach ($released_papers as $paperID=>$paper_details) {
+    echo "<tr><td><a href=\"class_totals.php?id=" . $paper_details['crypt_name'] . "\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" style=\"margin-right:5px\" />" . $paper_details['paper_title'] . "</a></td><td class=\"datepad\">" . $paper_details['start_date'] . "</td></tr>\n";
+  }
+  echo "</table>\n";
+  echo "</div>\n";
 
-  echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" /></td>\n</td><td><span style=\"color:#808080\">" . sprintf($string['rogodetails'], $configObject->get('rogo_version')) . "</a> <a href=\"https://bitbucket.org/rogoOOS/rog/wiki/Home\">bitbucket.org/rogoOOS/rog/wiki/Home</a></td></tr>\n";
   $mysqli->close();
 ?>
 
-</table>
-<br />&nbsp;<br />
+<br />
 
-<div style="margin-left:10px; font-size:80%; color:#808080"><?php printf($string['copyrightmsg'], $configObject->get('cfg_company')); ?></div>
+<table class="oss">
+  <tr>
+  <td><img src="../artwork/oss_logo.png" /></td>
+  <td style="padding-left:16px"><?php echo sprintf($string['rogodetails'], $configObject->get('rogo_version')) ?></a> <strong><a href="https://bitbucket.org/rogoOOS/rog/wiki/Home">bitbucket.org/rogoOOS/rog/wiki/Home</a></strong></td>
+  </tr>
+</table>
+
+<div style="margin-left:10px; font-size:90%; color:#3F3F3F"><?php printf($string['copyrightmsg'], $configObject->get('cfg_company')); ?></div>
 
 </body>
 </html>

@@ -53,6 +53,11 @@ $external_allowed_pages = array(
                               "$cfg_root_path/reviews/index.php"=>1,
                               "$cfg_root_path/reviews/start.php"=>1,
                               "$cfg_root_path/reviews/finish.php"=>1,
+                              "$cfg_root_path/reviews/class_totals.php"=>1,
+                              "$cfg_root_path/reports/draw_distribution_chart.php"=>1,
+                              "$cfg_root_path/reports/draw_scatter_plot.php"=>1,
+                              "$cfg_root_path/ajax/reports/getNote.php"=>1,
+                              "$cfg_root_path/ajax/reports/getAccessibility.php"=>1,
                               "$cfg_root_path/osce/form.php"=>1
                             );
 if ($userObject->has_role('External Examiner')) {
@@ -79,6 +84,7 @@ $system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 
 if ($userObject->has_role('SysAdmin')) {
   // SysAdmin can access anything!
+} elseif ($userObject->has_role('External Examiner')) {
 } else {
   // Normal users can access things they own or are on the staff_module of only.
   $on_staff_module = false;
@@ -94,7 +100,7 @@ if ($userObject->has_role('SysAdmin')) {
     }
     if ($staff_module_match == false) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
@@ -117,7 +123,7 @@ if ($userObject->has_role('SysAdmin')) {
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
         $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
       }
     }
   }
@@ -146,7 +152,7 @@ if ($userObject->has_role('SysAdmin')) {
         // Allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
           $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
         }
       }
     }
@@ -156,7 +162,7 @@ if ($userObject->has_role('SysAdmin')) {
   if (isset($_REQUEST['refID'])) {
     if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 }

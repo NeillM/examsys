@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deletelab'] = 'Delete Lab?';
-$string['recyclebin'] = 'Recycle Bin';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = 'All IP addresses assigned to this lab will be deleted.';
 $string['msg2'] = 'Are you sure you wish to delete';
-$string['delete'] = 'Delete';
 ?>

@@ -25,14 +25,14 @@
 ?>
 <script language="JavaScript">
   function addFaculty() {
-    facultywin=window.open("/admin/add_faculty.php","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    facultywin=window.open("add_faculty.php","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       facultywin.focus();
     }
   }
 
   function editFaculty() {
-    facultywin=window.open("/admin/edit_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    facultywin=window.open("edit_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       facultywin.focus();
     }

@@ -69,7 +69,7 @@ foreach ($keyword_list as $individualID) {
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
     $(function () {
       window.opener.location.href = '<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
@@ -82,7 +82,7 @@ foreach ($keyword_list as $individualID) {
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td valign="top"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td><p><?php echo $string['msg']; ?><p>
 

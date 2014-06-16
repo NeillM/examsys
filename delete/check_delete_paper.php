@@ -53,7 +53,7 @@ $mysqli->close();
 
 <table>
 <tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
 
 <td><p><?php echo $string['msg'] ; ?><p>
 <br />
@@ -63,8 +63,7 @@ $mysqli->close();
 <input type="hidden" name="paperID" value="<?php echo $paperid; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['deletepaper'] ; ?>" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
+<input class="ok" type="submit" name="submit" value="<?php echo $string['delete'] ; ?>" /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>

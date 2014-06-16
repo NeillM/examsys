@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
 
 	CourseUtils::add_course($schoolID, 'A10DEMO', 'Demonstration BSc', $mysqli);  // Make sure demo course exists.
 	
-	$new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1);
+	$new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, NULL, NULL, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1, '07/01');
 
   if ($unique_username == true) {
     $_POST['new_grade'] = $new_moduleid;
@@ -197,7 +197,7 @@ MESSAGE;
 		.h {font-weight: bold; padding-top: 10px}
 	</style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
 	<script type="text/javascript">
     $(function () {
@@ -233,7 +233,7 @@ MESSAGE;
 				<td>
 					<table border="0" cellspacing="4" cellpadding="0" width="100%" style="background-color:white">
 						<tr>
-							<td style="width:50px"><img src="../artwork/register_icon_48.png" width="48" height="48" alt="Key" /></td>
+							<td style="width:48px"><img src="../artwork/self_enrol.png" width="48" height="48" alt="Key" /></td>
 							<td class="dkblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['register']; ?></td>
 						</tr>
 					</table>

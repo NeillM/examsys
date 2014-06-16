@@ -159,7 +159,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(3);"><?php
-    if (isset($state['advanced']) and $state['advanced'] == 'block') {
+    if (isset($state['advanced']) and $state['advanced'] == 'true') {
       echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
       echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
@@ -168,7 +168,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
   </table>
 
 <?php
-  if (isset($state['advanced']) and $state['advanced'] == 'block') {
+  if (isset($state['advanced']) and $state['advanced'] == 'true') {
     echo "<table id=\"menu3\" style=\"width:100%; display:" . $state['advanced'] . "\">\n";
   } else {
     echo "<table id=\"menu3\" style=\"width:100%; display:none\">\n";

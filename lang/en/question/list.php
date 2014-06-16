@@ -26,6 +26,7 @@ $string['modified'] = 'Modified';
 $string['status'] = 'Status';
 $string['myquestionsonly'] = 'my questions only';
 $string['search'] = 'Search';
+$string['clear'] = 'Clear';
 $string['createnewquestion'] = 'New Question';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';
@@ -37,4 +38,5 @@ $string['copyontopaperx'] = 'Copy onto Paper X...';
 $string['linktopaperx'] = 'Link to Paper X...';
 $string['deletequestion'] = 'Delete Question';
 $string['noquestionleadin'] = 'WARNING: no question lead-in!';
+$string['modulenomappings'] = 'Module does not allow objectives mapping';
 ?>

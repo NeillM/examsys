@@ -21,6 +21,7 @@ $string['papertasks'] = 'Paper Tasks';
 $string['testpreview'] = 'Test &amp; Preview';
 $string['addquestionspaper'] = 'Add Questions to Paper';
 $string['editproperties'] = 'Edit Properties';
+$string['emailexternals'] = 'Email Externals';
 $string['reports'] = 'Reports';
 $string['mappedobjectives'] = 'Mapped Objectives';
 $string['importmarks'] = 'Upload Marks';

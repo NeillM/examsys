@@ -22,14 +22,24 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
-require '../include/errors.inc';
-require '../classes/noteutils.class.php';
+require '../../include/staff_auth.inc';
+require '../../include/errors.inc';
+require '../../classes/noteutils.class.php';
+require '../../classes/reviews.class.php';
 
 $userID  = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
-$details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
+if ($userObject->has_role('External Examiner')) {
+  // Security: Check the external can access this paper.
+  if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
+    echo "<div style=\"padding:10px\">" . $string['pagenotfound'] . "</div>\n";
+    $mysqli->close();
+    exit();
+  }
+}
+
+$details = StudentNotes::get_note($paperID, $userID, $mysqli);
 
 if ($details === false) {
   echo "<div style=\"padding:10px\">" . $string['err'] . "</div>\n";

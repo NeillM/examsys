@@ -39,12 +39,16 @@ QUERY;
     $updater_utils->execute_query("UPDATE review_comments SET metadataID = $insertID WHERE q_paper = $q_paper AND reviewer = $reviewer AND reviewed = '$reviewed'", true);
   }
   $result->close();
+}
 
+if ($updater_utils->does_column_exist('review_comments', 'q_paper')) {
+  echo "Column exists";
   // Remove old column from 'review_comments' table.
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN q_paper", true);
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN reviewer", true);
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN reviewed", true);
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN review_type", true);
   $updater_utils->execute_query("ALTER TABLE review_comments DROP COLUMN ipaddress", true);
-  
+} else {
+  echo "Does not exist";
 }

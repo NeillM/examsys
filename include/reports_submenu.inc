@@ -92,15 +92,11 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 </script>
 
 <div class="popup" style="z-index:20; display:none; position:fixed; left:200px; top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
-<table border="0" cellpadding="2" cellspacing="0" style="width:560px; border:0px solid #C0C0C0; font-size:110%">
-<tr>
-<td style="background-color:#F2B100; height:5px; padding:0px"></td>
-</tr>
-<tr>
-<td align="left">
+<form name="stats_menu" style="width:560px; border:0px solid #C0C0C0; font-size:110%">
 
-<form name="stats_menu">
-<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%">
+<div style="background-color:#F2B100; height:5px"></div>
+
+<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin:10px">
 <tr>
 
 <?php
@@ -208,7 +204,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
       echo "<option value=\"" . $display_hour . "\">" . $display_hour . "</option>\n";
     }
   }
-  echo "</select>\n";
+  echo "</select>";
   // Start Minute
   echo "<select name=\"start_minute\" id=\"start_minute\">\n";
 	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
@@ -319,7 +315,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   
-  //module drop down
+  // Module drop down
   if ($properties->get_paper_type() != '3') {
     echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" id=\"repmodule\" style=\"width:150px\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
@@ -389,26 +385,26 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . "\" />";
 
-  echo "<table style=\"width:100%; padding-bottom:5px\"><tr><td style=\"vertical-align:top; width:42%\">\n";
+  echo "<table style=\"width:100%; padding: 0px 10px 10px 10px\"><tr><td style=\"vertical-align:top; width:45%; padding-right:6px\">\n";
   
   if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
     // display Assessment stats options
 
-    echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['reviews'] . "</div>\n";
+    echo "<div class=\"reports_header\">" . $string['reviews'] . "</div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
 
 		if ($properties->q_type_exist('sct')) {
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_sct_answers.php?type=external&',event)\">" . $string['sctresponses'] . "</a></div>\n";
     }
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=external&',event)\">" . $string['externalexaminers'] . "</a></div>\n";
-    echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['cohortreports'] . "</div>\n";
+    echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
 
     if ($properties->get_paper_type() != '5') {
 			if ($properties->q_type_exist('textbox')) {
-        echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['textboxmarking'] . "</div>\n";
+        echo "<div class=\"reports_header\">" . $string['textboxmarking'] . "</div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_remark.php?',event)\">" . $string['selectpapersforremarking'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
@@ -417,7 +413,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     }
 
     echo "</td><td style=\"vertical-align:top\">";
-    echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['itemanalysis'] . "</div>\n";
+    echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
 
     if ($properties->get_paper_type() != '5') {
 		  echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/frequency_discrimination_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
@@ -428,7 +424,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     } else {
 			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/cohort_obj_perform.php?',event)\">" . $string['learningobjectiveanalysis'] . "</a></div>\n";
     }
-		echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
+		echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
     if ($properties->get_paper_type() != '5') {
 			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_data.php?',event)\">" . $string['exportresponsescsvnum'] . "</a></div>\n";
 			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_data.php?mode=text&',event)\">" . $string['exportresponsescsvtext'] . "</a></div>\n";
@@ -443,34 +439,33 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   switch ($properties->get_paper_type()) {
     case '3':     // Stats menu
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['quantitativereports'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['quantitativereports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/quantitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/quantitative_xml.php?',event)\">" . $string['word2003format'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['qualitativeanalysis'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['qualitativeanalysis'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/qualitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/qualitative_xml.php?',event)\">" . $string['word2003format'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/survey_xml_data.php?',event)\">" . $string['rawdataxml'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/survey_csv_data.php?',event)\">" . $string['rawdatacsv'] . "</a></div>\n";
       break;
     case '4':     // OSCE menu
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['cohortreports'] . "</div>\n";
-      //echo "<div style=\"line-height:150%\">inc. absent candidates&nbsp;<input type=\"checkbox\" name=\"absent\" value=\"1\" /></div>\n";
+      echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['itemanalysis'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/frequency_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/portfolio_sheets.php?',event)\">" . $string['individualportfoliosheets'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/export_ratings.php?',event)\">" . $string['exportratingscsv'] . "</a></div>\n";
       break;
     case '6':
-      echo "<br />\n<div style=\"line-height:150%; font-weight:bold\">Reports</div>\n";
+      echo "<br />\n<div class=\"reports_header\">Reports</div>\n";
       if ($properties->get_display_question_mark() == '1') {
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=0&',event)\">" . $string['ReviewSummary1'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=1&',event)\">" . $string['ReviewSummary2'] . "</a></div>\n";
@@ -484,8 +479,5 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
 </td></tr></table>
 </form>
-</td>
-</tr>
-</table>
 
 </div>

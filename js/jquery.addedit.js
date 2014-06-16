@@ -57,8 +57,6 @@ $(function () {
   $('#media-labels-link').click(function() { $('#media-label-upload').slideToggle(); return false;})
   
   $('#addquestion').click(addQuestion);
-
-  $(".tiptop").tipTip({defaultPosition: 'top'});
 });
 
 function changeTab() {

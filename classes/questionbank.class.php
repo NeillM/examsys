@@ -25,20 +25,23 @@
 */
 
 require_once '../classes/question_status.class.php';
+require_once $cfg_web_root . 'classes/dateutils.class.php';
 
 class QuestionBank {
   
   private $db;
   private $idMod;
+  private $module_id;
   private $string;
   private $notice;
   private $bank_types = null;
   private $stats = null;
 
-  public function __construct($idMod, $string, $notice, $db) {
+  public function __construct($idMod, $moduleID, $string, $notice, $db) {
     $this->db     = $db;
     $this->string = $string;
     $this->idMod  = $idMod;
+    $this->module_id = $moduleID;
     $this->notice = $notice;
   }
   
@@ -140,6 +143,10 @@ class QuestionBank {
             'low' => $this->string['low']
         );
         break;
+      case 'objective':
+        $this->load_stats($type);
+        $this->bank_types = $this->get_outcomes();
+        break;
     }
   }
   
@@ -198,6 +205,12 @@ class QuestionBank {
       case 'keyword':
         $sql = 'SELECT COUNT(questions.q_id), keywordID FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ? AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keywordID';
         break;
+      case 'objective':
+        $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+        $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+        $all_years = implode("','", $all_years);
+        $sql = "SELECT COUNT(questions.q_id), relationships.obj_id FROM questions, questions_modules, relationships WHERE questions.q_id = relationships.question_id AND questions.q_id = questions_modules.q_id AND questions_modules.idMod = ? AND calendar_year IN ('{$all_years}') AND deleted IS NULL GROUP BY relationships.obj_id";
+        break;
     }
     
     $result = $this->db->prepare($sql);
@@ -209,6 +222,84 @@ class QuestionBank {
     } 
     $result->close();
   }
-    
+
+  public function get_outcomes($ac_year = 'all', $vle_api_data = null) {
+    $outcomes = array();
+    $vle_api_cache = array();
+
+    // Get the VLE API we're using currently
+    if (is_null($vle_api_data)) {
+      $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+    }
+
+    // if ($vle_api_data['api'] != '') {
+    //   $vle = CMFactory::GetCMAPI($vle_api_data['api']);
+
+      // Get years for which there are mappings for the current mapping source
+      if ($ac_year == 'all') {
+        $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+      } else {
+        $all_years = array($ac_year);
+      }
+
+      foreach ($all_years as $ac_year) {
+        $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+
+        if (is_array($obs) and isset($obs[$this->module_id])) {
+          foreach ($obs[$this->module_id] as $session) {
+            if (isset($session['objectives'])) {
+              foreach ($session['objectives'] as $objective) {
+                if (isset($objective['guid'])) {
+                  $uid = $objective['guid'];
+                } elseif (isset($objective['id'])) {
+                  $uid = $objective['id'];
+                } else {
+                  $uid = '';
+                }
+
+                if ($uid != '') {
+                  // Build list of IDs but use the latest text
+                  $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : array();
+                  $ids[] = $objective['id'];
+                  $outcomes[$uid] = array('ids' => $ids, 'label' => $objective['content']);
+                }
+              }
+            }
+          }
+        }
+      }
+    // }
+
+    if (count($outcomes) > 0) {
+      uasort($outcomes, function($a, $b)
+        {
+            if ($a['label'] == $b['label']) {
+                return 0;
+            }
+            return ($a['label'] < $b['label']) ? -1 : 1;
+        });
+    }
+
+    // Filter local mappings to remove duplicates
+    $last_id = -1;
+    $last_text = '';
+    if ($vle_api_data['api'] == '') {
+      foreach ($outcomes as $id => $outcome) {
+        if ($last_id != -1) {
+          if ($outcome['label'] == $last_text) {
+            $outcomes[$last_id]['ids'][] = $id;
+            unset($outcomes[$id]);
+          } else {
+            $last_id = $id;
+            $last_text = $outcome['label'];
+          }
+        } else {
+          $last_id = $id;
+        }
+      }
+    }
+
+    return $outcomes;
+  }
 }
 ?>

@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deleteebelgrid'] = 'Odstranit šablonu Ebelovy mřížky';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = "Jste si skutečně jisti, že chcete šablonu Ebelovy mřížky nazvanou '%s' odstranit?";
-$string['delete'] = 'Odstranit';
 ?>

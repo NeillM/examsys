@@ -39,11 +39,10 @@ a.q_ok {
 	font-weight: normal;
 }
 .m_s {
-	background-image: url('../artwork/red_hash_background.png');
-	background-repeat: repeat;
+  background-color: #FFDDDD;
 }
 .o_s {
-	background-color: #EBF1DD;
+	background-color: #E2EFD9;
 }
 .nm_s {
 	background-color: white;

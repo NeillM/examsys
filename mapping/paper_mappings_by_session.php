@@ -57,7 +57,7 @@ $paper_type  = $propertyObj->get_paper_type();
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript">
@@ -154,14 +154,27 @@ $paper_type  = $propertyObj->get_paper_type();
 			printf($string['nomatchsession'], $tmp_match, $session);
 			echo "</td></tr>\n</table>\n</td></tr>\n";
 		}
+    $ul_start = false;
+    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+    $objsBySession = getObjectives($moduleIDs, $session, $paperID, $questionID_list, $mysqli);
+    if ($objsBySession == 'error') {
+      ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" /></td>
+          <td class="redwarn">Error connecting to the curriculum mapping system.</td>
+        </tr>
+      </table>
+      </body>
+      </html>
+      <?php
+      exit();
+    }
+    unset($objsBySession['none_of_the_above']);
     ?>
     <tr>
     <td style="padding:0px">
     <?php
-    $ul_start = false;
-    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-    $objsBySession = getObjectives($moduleIDs, $session, $paperID, $questionID_list, $mysqli);
-    unset($objsBySession['none_of_the_above']);
     foreach($objsBySession as $module => $sessions ) {
       if (count($objsBySession) > 1) {
         echo "<tr><td><h1>$module " . $string['objectives'] . "</h1></td></tr>";

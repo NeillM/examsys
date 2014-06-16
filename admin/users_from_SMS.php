@@ -45,6 +45,10 @@ require_once $path . '/classes/smsutils.class.php';
 require_once $path . '/classes/lang.class.php';
 require_once $path . '/include/custom_error_handler.inc';
 
+if ($configObject->get('cfg_sms_api') == '') {
+  log_error(0, 'CRON JOB', 'Application Error', "'cfg_sms_api' setting in config.inc.php is set to blank.", 'users_from_SMS.php', 0, '', null, null, null);
+  exit();
+}
 $sms_connection = SmsUtils::GetSmsUtils();
 
 //error_reporting(E_ALL);
@@ -54,33 +58,19 @@ $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configOb
 
 $useObject = new UserObject($configObject, $mysqli);
 
-// Calculate what the current academic session is.
-$session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
-$session_parts = explode('/', $session);
-
 // Do not include deleted modules or non-active modules.
-$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid LIMIT 10");
+$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms, academic_year_start FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
 $module_data->execute();
 $module_data->store_result();
-$module_data->bind_result($idMod, $module, $sms);
+$module_data->bind_result($idMod, $module, $sms, $academic_year_start);
 while ($module_data->fetch()) {
+  $session = date_utils::get_current_academic_year($academic_year_start);
+
   $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
 }
 $module_data->close();
 
 $errorinfo = $sms_connection->geterrors();
-
-/*
- *
-		$this->errorinfo['usernamematch']=array();
-    $this->errorinfo['unabletodetermineusername']=array();
-    $this->errorinfo['unabletodetermineusernamedata']=array();
-    $this->errorinfo['moduleerrorstate']=array();
-    $this->errorinfo['moduleerrorstatedata']=array();
-    $this->errorinfo['modulenodata']=array();
-    $this->errorinfo['modulenodatadata']=array();
- */
-
 
 if (count($errorinfo['usernamematch']) > 0) {
   log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['usernamematch']), 'users_from_SMS.php', 0, '', null, $errorinfo['usernamematchdata'], null);

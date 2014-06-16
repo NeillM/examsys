@@ -30,6 +30,7 @@ $string['questionsbytype'] = 'Pytania wg. typu';
 $string['questionsbyteam'] = 'Pytania wg. zespołu';
 $string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
 $string['search'] = 'Szukaj';
+$string['clear'] = 'Clear';
 $string['createnewquestion'] = 'Utwórz nowe pytanie';
 $string['questions'] = 'Pytania';
 $string['papers'] = 'Arkusze';
@@ -41,4 +42,5 @@ $string['copyontopaperx'] = 'Przekopiuj do arkusza X...';
 $string['linktopaperx'] = 'Powiąż z arkuszem X...';
 $string['deletequestion'] = 'Usuń pytanie';
 $string['noquestionleadin'] = 'Uwaga: brak sformułowania pytania!';
+$string['modulenomappings'] = 'Module does not allow objectives mapping';
 ?>

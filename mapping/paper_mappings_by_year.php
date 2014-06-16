@@ -114,7 +114,7 @@ function getPaper($paperID) {
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -169,8 +169,8 @@ function getPaper($paperID) {
 // Look for other papers.
 $papers[$paperID] =  getPaper($paperID);
 $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-$moduleIDs_in = "'" . implode("','",array_keys($moduleIDs)) . "'";
-$sql = "SELECT properties.property_id from properties,properties_modules WHERE properties.property_id = properties_modules.property_id AND  idMod IN ($moduleIDs_in) AND properties.property_id != ? AND paper_type = 3 AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND labs IS NOT NULL AND start_date < ? order by start_date DESC LIMIT 3";
+$moduleIDs_in = "'" . implode("','", array_keys($moduleIDs)) . "'";
+$sql = "SELECT properties.property_id from properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN ($moduleIDs_in) AND properties.property_id != ? AND paper_type = '2' AND paper_title NOT like '%resit%' AND paper_title NOT like '%supplementary%' AND paper_title NOT like '%test%' AND deleted IS NULL AND start_date < ? ORDER BY start_date DESC LIMIT 3";
 $papersRes = $mysqli->prepare($sql);
 $papersRes->bind_param('is', $paperID, $start_date);
 $papersRes->execute();
@@ -194,46 +194,49 @@ foreach ($papers as $p_id => $paper) {
   $objsBySession[$p_id] = getObjectives($moduleIDs, $paper['session'], $p_id,$paper['questionID'], $mysqli);
 }
 
-$allsession = array();
 $n = 0;
-$id_guid_map = array();
-$guid_id_map = array();
-$obs_canonical = array();
+$allsession     = array();
+$id_guid_map    = array();
+$guid_id_map    = array();
+$obs_canonical  = array();
+
 foreach ($objsBySession as $p_id => $module) {
-  foreach ($module as $moduleID => $sessions) {
-    foreach ($sessions as $id => $session) {
-      if (isset($session['GUID']) and $session['GUID'] != '') {
-        $guid = $session['GUID'];
-      } elseif (isset($id_guid_map[$id])){
-        $guid = $id_guid_map[$id];
-      } else {
-        $guid = $id;
-      }
-      $id_guid_map[$id] = $guid;
-      $guid_id_map[$guid][$p_id] = $id;
-
-      if (isset($session['objectives'])) {
-        $objbuffer = $session['objectives'];
-        if (!isset($allsession[$moduleID][$guid])) {
-          $allsession[$moduleID][$guid] = $session;
-          unset($allsession[$moduleID][$guid]['objectives']);
+  if ($module !== 'error') {
+    foreach ($module as $moduleID => $sessions) {
+      foreach ($sessions as $id => $session) {
+        if (isset($session['GUID']) and $session['GUID'] != '') {
+          $guid = $session['GUID'];
+        } elseif (isset($id_guid_map[$id])){
+          $guid = $id_guid_map[$id];
+        } else {
+          $guid = $id;
         }
+        $id_guid_map[$id] = $guid;
+        $guid_id_map[$guid][$p_id] = $id;
 
-        foreach ($objbuffer as $obj) {
-          if (isset($obs_canonical[md5($obj['content'])])) {
-            $tmp_obj_id = $obs_canonical[md5($obj['content'])];
-          } else {
-            $tmp_obj_id = $obj['id'];
-            $obs_canonical[md5($obj['content'])] = $tmp_obj_id;
+        if (isset($session['objectives'])) {
+          $objbuffer = $session['objectives'];
+          if (!isset($allsession[$moduleID][$guid])) {
+            $allsession[$moduleID][$guid] = $session;
+            unset($allsession[$moduleID][$guid]['objectives']);
           }
-          if (isset($allsession[$moduleID][$guid]['objectives'][$tmp_obj_id])) {
-            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['id_by_paper'][$p_id] = $obj['id'];
-          } else {
-            $obj['id_by_paper'][$p_id] = $obj['id'];
-            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id] = $obj;
+
+          foreach ($objbuffer as $obj) {
+            if (isset($obs_canonical[md5($obj['content'])])) {
+              $tmp_obj_id = $obs_canonical[md5($obj['content'])];
+            } else {
+              $tmp_obj_id = $obj['id'];
+              $obs_canonical[md5($obj['content'])] = $tmp_obj_id;
+            }
+            if (isset($allsession[$moduleID][$guid]['objectives'][$tmp_obj_id])) {
+              $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['id_by_paper'][$p_id] = $obj['id'];
+            } else {
+              $obj['id_by_paper'][$p_id] = $obj['id'];
+              $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id] = $obj;
+            }
+            $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['session'] = $papers[$p_id]['session'];
+            $n++;
           }
-          $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['session'] = $papers[$p_id]['session'];
-          $n++;
         }
       }
     }

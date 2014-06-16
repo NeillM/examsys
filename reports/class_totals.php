@@ -31,6 +31,7 @@ require_once '../include/errors.inc';
 require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/exam_announcements.class.php';
+require_once '../classes/noteutils.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -53,7 +54,7 @@ $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 $repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 if (isset($_GET['recache']) and $_GET['recache'] == '1') {
   $report->compile_report(true);  // Force a re-cache
 } else {
@@ -69,66 +70,6 @@ $ss_hon       = $report->get_ss_hon();
 $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
-
-function check_late_submission_warnings($log_late, $string) {
-  if (count($log_late) > 0) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:80%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($string['latesubmissionsmsg']) ?>" /></td>
-        <td class="redwarn"><?php echo sprintf($string['latesubmissionsmsg'],  count($log_late)) . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $string['moredetails'] . '</a>)'; ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
-function check_unmarked_textbox_warnings($report, $string) {
-  if ($report->unmarked_textbox()) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:80%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
-        <td class="redwarn"><?php echo $string['unmarkedtextbox'] ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
-function check_unmarked_enhancedcalc_warnings($report, $string) {
-  if ($report->unmarked_enhancedcalc()) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="Warning" /></td>
-        <td class="redwarn"><?php echo $string['unmarkedenhancedcalc'] ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
-
-function check_temp_account_warnings($user_results, $string) {
-  // Check for any temporary accounts and if so display warning banner
-  $temp_user_no = 0;
-  $user_no = count($user_results);
-  for ($i=0; $i<$user_no; $i++) {
-    if (strpos($user_results[$i]['username'], 'user') === 0) {
-      $temp_user_no++;
-    }
-  }
-  if ($temp_user_no > 0) {
-  ?>
-    <table border="0" cellpadding="0" cellspacing="0" style="font-size:90%; width:100%">
-      <tr>
-        <td class="redwarn" style="width:40px"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="Warning" /></td>
-        <td class="redwarn"><?php echo $string['temporaryaccountswarning'] ?></td>
-      </tr>
-    </table>
-  <?php
-  }
-}
 
 if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) or ($paper_type == '1' and $report->unmarked_enhancedcalc())) {
 // Only mark calculation questions when the exam is not active.
@@ -146,7 +87,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script language="JavaScript">
 	$(document).ready(function() {
@@ -223,11 +164,12 @@ ob_start();
 <link rel="stylesheet" type="text/css" href="../css/list.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
 <script type="text/javascript" src="../js/staff_help.js"></script>
 <script type="text/javascript" src="../js/popup_menu.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
+<script type="text/javascript" src="../js/class_totals.js"></script>
 <script language="JavaScript">
   function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
     $('#metadataID').val(tmpMetadataID);
@@ -275,24 +217,6 @@ ob_start();
     var winheight = 550;
     templatewin = window.open("emailtemplate.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     templatewin.moveTo(screen.width/2-350,screen.height/2-275);
-  }
-
-  function viewScript() {
-    $('#menudiv').hide();
-    if ($('#metadataID').val() != '') {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../paper/finish.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-  }
-
-  function viewFeedback() {
-    $('#menudiv').hide();
-    if ($('#metadataID').val() != '') {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../students/objectives_feedback.php?id=<?php echo $propertyObj->get_crypt_name(); ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
   }
 
   function viewProfile() {
@@ -343,31 +267,11 @@ ob_start();
       }
     }
   }
+  
+  var paperID = <?php echo $paperID ?>;  
+  var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
 
-  function viewNote(userID, e) {
-    if (!e) var e = window.event;
-	  var currentX = e.clientX;
-	  var currentY = e.clientY;
-    var scrOfX = $(document).scrollLeft();
-    var scrOfY = $(document).scrollTop();
-
-    dataSource = "getNote.php?paperID=<?php echo $paperID; ?>&userID=" + userID;
-
-    $("#noteMsg").load(dataSource, function(responseTxt, statusTxt, xhr) {
-      if (statusTxt == "success") {
-        $("#noteDiv").show();
-        $("#noteDiv").css('left', currentX + scrOfX + 16 + 'px');
-
-        top_pos = currentY+scrOfY-16;
-        if (top_pos > ($(window).height() + scrOfY - 130)) {
-          top_pos = $(window).height() + scrOfY - 130;
-        }
-        $("#noteDiv").css('top', top_pos + 'px');
-      }
-    });
-  }
-	
-	$(document).ready(function() {
+  $(document).ready(function() {
     $("#maindata").tablesorter({ 
       // sort on the first column and third column, order asc 
       sortList: [[2,0],[3,0]] 
@@ -383,8 +287,13 @@ ob_start();
 
 <body>
 <div id="noteDiv" class="studentnote">
-<div style="text-align:right"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" style="border-left:1px solid #E6B10D; border-bottom:1px solid #E6B10D; cursor:pointer" width="26" height="14" alt="Close" /></div>
+<div style="text-align:right; margin-right:5px;"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
 <div id="noteMsg"></div>
+</div>
+
+<div id="accessDiv" class="studentaccess">
+<div style="text-align:right; margin-right:5px;"><img onclick="$('#accessDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+<div id="accessMsg"></div>
 </div>
 
 <?php
@@ -398,7 +307,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 }
 ?>
 <div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; width:100%">
+<table cellspacing="2" cellpadding="0" border="0" style="font-size:90%; width:100%">
   <tr><td>
     <table cellspacing="0" cellpadding="1" border="0" style="width:100%">
       <tr>
@@ -466,34 +375,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 <?php
   for ($i=-100; $i<=100; $i++) $distribution[$i] = 0;
 
-  $notes = array();
-  // Query any student notes for the current paper
-  $result = $mysqli->prepare("SELECT userID FROM student_notes WHERE paper_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($userID);
-  while ($result->fetch()) {
-    $notes[$userID] = 'y';
-  }
-  $result->close();
-
-
-  // Query any student special needs for the current paper
-  $special_needs = array();
-  $users_in = array();
-  foreach($user_results as $u) {
-    $users_in[] = $u['userID'];
-  }
-  $users_in = implode(',',$users_in);
-  if ($users_in != '') {
-    $result = $mysqli->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
-    $result->execute();
-    $result->bind_result($special_userID);
-    while ($result->fetch()) {
-      $special_needs[$special_userID] = 'y';
-    }
-    $result->close();
-  }
+  $notes = PaperNotes::get_all_notes_by_paper($paperID, $mysqli);
 
   if ($marking == '0') {
     $marking_label = $string['%'];
@@ -503,24 +385,25 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     $marking_key = 'adj_percent';
   }
 
-  //output table heading
+  // Output table heading
+  $table_order = array('', 'Title', $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
 	if ($configObject->get('cfg_client_lookup') == 'name') {
-		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['hostnames']=>100);
+		$table_order[] = $string['hostnames'];
 	} else {
-		$table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['mark']=>50, $marking_label=>80, $string['classification']=>80, $string['rank']=>50, $string['decile']=>50, $string['starttime']=>170, $string['duration']=>70, $string['ipaddress']=>100);
+		$table_order[] = $string['ipaddress'];
   }
-	if ($paper_type == '2') $table_order[$string['room']] = 200;
+	if ($paper_type == '2') $table_order[] = $string['room'];
+  
   $metadata_cols = array();
-  if (isset($user_results[0])){
+  if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
       if (strrpos($key, 'meta_') !== false) {
-        $key_display = ucfirst(str_replace('meta_','',$key));
-        $table_order[$key_display] = 150;
+        $table_order[] = ucfirst(str_replace('meta_','',$key));
         $metadata_cols[$key] = $key;
       }
     }
   }
-
+  
   $cols = count($table_order);
   
   echo "<div style=\"font-size:80%\">\n";
@@ -550,18 +433,18 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   echo "</div>\n";
   
   // Warning display banners
-  check_late_submission_warnings($log_late, $string);
-  check_unmarked_textbox_warnings($report, $string);
-  check_unmarked_enhancedcalc_warnings($report, $string);
-  check_temp_account_warnings($user_results, $string);
+  $report->check_late_submission_warnings();
+  $report->check_unmarked_textbox_warnings();
+  $report->check_unmarked_enhancedcalc_warnings();
+  $report->check_temp_account_warnings();
 
   // Output table header
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:110%; width:100%\">\n";
   echo "<thead>\n";
   if (isset($user_results[0])) {
     echo "<tr>\n";
-    foreach ($table_order as $display => $col_width) {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+    foreach ($table_order as $col_title) {
+      echo "<th class=\"vert_div\">$col_title</th>\n";
     }
     echo "</tr>\n";
   }
@@ -616,7 +499,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
           $scatter_data .= "0\n0\n";
           $class = 'redln';
         } else {
-          $class = 'greyln';
+          if (strpos($user_results[$i]['username'], 'user') === 0) {
+            $class = 'guestln';
+          } else {
+            $class = 'greyln';
+          }
           $temp_location = round($user_results[$i]['percent']);
           if (isset($distribution[$temp_location])) {
 						$distribution[$temp_location]++;
@@ -664,15 +551,15 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
           echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['surname'] . "</td>";
           echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['first_names'];
         }
-        if (isset($special_needs[$user_results[$i]['userID']]) and $special_needs[$user_results[$i]['userID']] == 'y') {
-          echo '&nbsp;<img src="../artwork/accessibility_16.png" width="16" height="16" alt="' . $string['alternativearrangements'] . '" />';
+        if ($report->has_special_need($user_results[$i]['userID'])) {
+          echo '<img src="../artwork/accessibility_16.png" class="accessibility" alt="' . $string['alternativearrangements'] . '" onclick="viewAccessibility(' . $user_results[$i]['userID'] . ', event)" title="' . $string['viewaccessibility'] . '" />';
         }
         $student_id = $user_results[$i]['username'];
         if ($user_results[$i]['attempt'] > 1) {
-          echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" />';
+          echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" title="' . $string['resitcandidate'] . '" />';
         }
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
-          echo '&nbsp;<a href="" onclick="viewNote(\'' . $user_results[$i]['userID'] . '\', event); return false;"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Notes" /></a>';
+          echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" onclick="viewNote(' . $user_results[$i]['userID'] . ', event)" title="' . $string['viewstudentnote'] . '" />';
         }
         echo "</td>";
         
@@ -727,7 +614,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
         // Display any associated metadata
         if (count($metadata_cols) > 0) {
-          foreach ( $metadata_cols as $type) {
+          foreach ($metadata_cols as $type) {
             if (isset($user_results[$i][$type])) {
               echo "<td class=\"$class $role_css\">&nbsp;" . $user_results[$i][$type] . "</td>";
             } else {
@@ -798,7 +685,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
 
     // Display summary -------------------------------------------------------------------------------------
-    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"width:100%\">";
+    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"font-size:110%; width:100%\">";
     echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['quartiles'] . "</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
 

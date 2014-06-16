@@ -35,17 +35,13 @@ require '../include/sysadmin_auth.inc';
 	<title>Rog&#333;: Test Suite</title>
 
 	<style>
-		.content {font-size:80%}
-		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
-		article { width:50%; height: 80%; float: left }
-		ol {list-style-type:decimal}
-		li {padding-left:10px; margin-left:40px !important}
+		.content {font-size:90%}
+		li {margin-left:20px; line-height:150%}
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/screen.css" />
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -75,6 +71,7 @@ require '../include/sysadmin_auth.inc';
 		<li><a href="./database_indexes.php">Database indexes</a></li>
 		<li><a href="./database_structure.php">Database structure</a></li>
     <li><a href="./checkenhancedcalc.php">Check enhancedcalc setup</a></li>
+    <li><a href="./test_email.php">Check email sending</a></li>
 	</ol>
 </div>
 </body>

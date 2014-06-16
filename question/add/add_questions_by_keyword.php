@@ -43,7 +43,7 @@ require_once '../../classes/questionutils.class.php';
     .n {text-align:right; padding-right:2px}
     .mee { display: inline; }
   </style>
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript">
     function orderTable(order_val, direction_val) {
@@ -70,16 +70,18 @@ require_once '../../classes/questionutils.class.php';
 
     // Get the selected questions and make sure that they are re-checked when we re-order the questions
     $(function () {
+      populateTicks();
       var selected_qs = parent.top.controls.selected_q;
       for (var i = 0; i < selected_qs.length; i++) {
         $('#' + selected_qs[i]).prop('checked', true);
       }
+      
     });
 
   </script>
 </head>
 
-<body onload="populateTicks()">
+<body>
 <?php
   if (isset($_POST['order'])) {
     $order = $_POST['order'];
@@ -161,7 +163,7 @@ require_once '../../classes/questionutils.class.php';
   while($result->fetch()) {
     echo "<tr><td style=\"width:20px\">";
     if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
-    echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" id=\"$q_id\" name=\"$q_id\" value=\"$q_id\" /></td>";
+    echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this); populateTicks();\" type=\"checkbox\" id=\"$q_id\" name=\"$q_id\" value=\"$q_id\" /></td>";
     if ($parts == '') {
       echo '<td onclick="Qpreview(' . $q_id . ')">';
     } else {

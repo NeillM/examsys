@@ -49,14 +49,19 @@ class CM_UoNCM implements iCMAPI {
     $req->execute();
 
     $res = $req->getResponseBody();
-
-    switch ($this->_mapping_level) {
-      case self::LEVEL_MODULE:
-        $objectives = $this->transformCMResponseModule($res, $session);
-        break;
-      default:
-        $objectives = $this->transformCMResponse($res, $session);
-        break;
+    
+    $response = $req->getResponseInfo();
+    if ($response['http_code'] == 0) {
+      $objectives = 'error';
+    } else {
+      switch ($this->_mapping_level) {
+        case self::LEVEL_MODULE:
+          $objectives = $this->transformCMResponseModule($res, $session);
+          break;
+        default:
+          $objectives = $this->transformCMResponse($res, $session);
+          break;
+      }
     }
 		
     return $objectives;

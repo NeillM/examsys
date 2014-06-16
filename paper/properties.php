@@ -283,17 +283,17 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
     $disabled = ' disabled';
-    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+    $html = "<div id=\"labs_list\" style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
   } elseif ($paper_type == '4') {
     $r1class = 'r1disabled';
     $r2class = 'r2disabled';
     $disabled = ' disabled';
-    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
+    $html = "<div id=\"labs_list\" style=\"height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%\">";
   } else {
     $r1class = 'r1';
     $r2class = 'r2';
     $disabled = '';
-    $html = "<div style=\"height:278px; overflow-y:scroll;border:1px solid #828790; font-size:90%\">";
+    $html = "<div id=\"labs_list\" style=\"height:278px; overflow-y:scroll;border:1px solid #828790; font-size:90%\">";
   }
 
   $current_labs = explode(',', $labs);
@@ -305,16 +305,17 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
   $old_campus = '';
   while ($result->fetch()) {
     if ($old_campus != $lab_campus) {
-      $html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+      //$html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+    	$html .= "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" /> $lab_campus</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     $match = false;
     foreach ($current_labs as $individual_lab) {
       if ($lab_id == $individual_lab) $match = true;
     }
     if ($match) {
-      $html .= "<div class=\"$r2class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+      $html .= "<div class=\"$r2class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
     } else {
-      $html .= "<div class=\"$r1class\" style=\"padding-left:40px\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\">&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+      $html .= "<div class=\"$r1class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\">&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
     }
     $lab_no++;
     $old_campus = $lab_campus;
@@ -622,7 +623,7 @@ if (isset($_POST['Submit'])) {
     if (!$locked or $userObject->has_role(array('SysAdmin'))) {
 			$old_modules = $properties->get_modules(true);
 
-     Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
 
       $paper_modules = $properties->get_modules(true);
 			
@@ -632,10 +633,10 @@ if (isset($_POST['Submit'])) {
       }
 
       if (Paper_utils::update_reviewers($old_externals, $new_externals, 'external', $paperID, $mysqli)) {
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_externals), implode(',', $new_externals), 'externals');
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', array_keys($old_externals)), implode(',', $new_externals), 'externals');
       }
       if (Paper_utils::update_reviewers($old_internals, $new_internals, 'internal', $paperID, $mysqli)) {
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', $old_internals), implode(',', $new_internals), 'internals');
+        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), implode(',', array_keys($old_internals)), implode(',', $new_internals), 'internals');
       }
     }
 
@@ -691,6 +692,24 @@ if (isset($_POST['Submit'])) {
       $editProperties->close();
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Cohort Performance Feedback', 'feedback');
+    }
+    
+    // Release external examiner feedback
+    if (isset($_POST['old_external_examiner']) and $_POST['old_external_examiner'] != '' and isset($_POST['external_examiner']) and $_POST['external_examiner'] == '0') {
+      $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'external_examiner'");
+      $editProperties->bind_param('i', $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'External Examiner Feedback', '', 'feedback');
+    }
+    if (isset($_POST['old_external_examiner']) and $_POST['old_external_examiner'] == '' and isset($_POST['external_examiner']) and $_POST['external_examiner'] == '1') {
+      $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'external_examiner')");
+      $editProperties->bind_param('i', $paperID);
+      $editProperties->execute();
+      $editProperties->close();
+
+      $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'External Examiner Feedback', 'feedback');
     }
 
     if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {    // Update textual feedback if not a summative paper or OSCE station.
@@ -838,7 +857,7 @@ if (isset($_POST['Submit'])) {
 
     <title><?php echo $string['edittitle']; ?></title>
 
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript">
       $(function () {
         $('#home').click(function () {
@@ -931,9 +950,10 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
@@ -943,11 +963,13 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <?php
   if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
 ?>
-  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
   <script type="text/javascript">
     $(function () {
       $('.datecopy').change(dateCopy);
+      
+      $(document).tooltip();
     })
   </script>
 <?php
@@ -1350,14 +1372,14 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         } else {
           $checked = '';
         }
-        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label></td>";
+        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_calculator'] . "\" /></td>";
 
         if ($properties->get_sound_demo() == 1) {
           $checked = ' checked="checked"';
         } else {
           $checked = '';
         }
-        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label></td></tr>\n";
+        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_audio'] . "\" /></td></tr>\n";
       }
 
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1374,9 +1396,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"102\" selected>N/A</option>";
       }
       if ($properties->get_pass_mark() == 101) {
-        echo "<option value=\"101\" selected>Borderline Method</option>";
+        echo "<option value=\"101\" selected>" . $string['borderlinemethod'] . "</option>";
       } else {
-        echo "<option value=\"101\">Borderline Method</option>";
+        echo "<option value=\"101\">" . $string['borderlinemethod'] . "</option>";
       }
       for ($i=0; $i<=100; $i++) {
         if ($i == $properties->get_pass_mark()) {
@@ -1451,7 +1473,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
     ?>
-       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment']; ?><br />
+       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment'] ?><br />
        <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
        if ($properties->get_marking() == MARK_RANDOM) {
           echo ' checked';
@@ -1460,9 +1482,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo ' disabled';
        }
        if ($neg_marking) {
-         echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span><br />';
+         echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/information_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
        } else {
-        echo '>' . $string['calculatrrandommark'] . '<br />';
+        echo '>' . $string['calculatrrandommark'] . '&nbsp;<img src="../artwork/information_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
        }
 
       // Look for any Standard Setting reviews for the paper.
@@ -1562,7 +1584,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($properties->get_paper_type() == '4') {
       echo "</select></td><td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\" /></td></tr>\n";
     } else {
-      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /></td></tr>\n";
+      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
     }
 
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
@@ -1833,7 +1855,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<tr><td class=\"headbar\" style=\"padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td class=\"headbar\" style=\"padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
 
-    echo "<div style=\"display:block; width:400px; height:435px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+    echo "<div id=\"modules_list\" style=\"display:block; width:400px; height:435px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
 
 		$modules_array = $properties->get_modules();
 
@@ -1850,7 +1872,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $old_school = '';
       foreach ($module_array as $module) {
         if ($module['school'] != $old_school) {
-          echo "<div style=\"padding-top:2px\"><strong>" . $module['school'] . "</strong></div>";
+    			echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
         }
         $match = false;
         foreach ($modules_array as $separate_module) {
@@ -1891,98 +1913,111 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
   <tr><td class="tabtitle" colspan="2"><img src="../artwork/feedback_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['feedbackheading']; ?></td></tr>
 
   <?php
-     echo "<tr><td colspan=\"2\" valign=\"top\">";
+    echo "<tr><td colspan=\"2\" valign=\"top\">";
 
-     echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
+    echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
 
-     $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'');
+    $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'', 'external_examiner'=>'');
 
-     $feedback_details = $mysqli->prepare("SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?");
-     $feedback_details->bind_param('i', $paperID);
-     $feedback_details->execute();
-     $feedback_details->bind_result($idfeedback_release, $type);
-     $feedback_details->store_result();
-     while ($feedback_details->fetch()) {
+    $feedback_details = $mysqli->prepare("SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?");
+    $feedback_details->bind_param('i', $paperID);
+    $feedback_details->execute();
+    $feedback_details->bind_result($idfeedback_release, $type);
+    $feedback_details->store_result();
+    while ($feedback_details->fetch()) {
       $feedback_reports[$type] = 1;
-     }
-     $feedback_details->close();
+    }
+    $feedback_details->close();
 
-     if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
-       echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
-       echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"" . $feedback_reports['objectives'] . "\" />";
-       if ($feedback_reports['objectives'] === '') {
-         echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
-       } else {
-         echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />". $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />" . $string['off'] . "</td>";
-       }
-       echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
-     }
-     if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
-       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-       echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
-       // Question-based Feedback
-       echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"" . $feedback_reports['questions'] . "\" />";
-       if ($feedback_reports['questions'] === '') {
-         echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
-       } else {
-         echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" />" . $string['off'] . "</td>";
-       }
-       echo "<td>" . $string['questionfeedback'] . "<br />";
-       if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
-       echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
-     }
-
-     if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
-       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-       echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
-       // Cohort performance-based Feedback
-       echo "<td><input type=\"hidden\" name=\"old_cohort_performance\" value=\"" . $feedback_reports['cohort_performance'] . "\" />";
-       if ($feedback_reports['cohort_performance'] === '') {
-         echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
-       } else {
-         echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" />" . $string['off'] . "</td>";
-       }
-       echo "<td>" . $string['cohortperformancefeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php</a></td></tr>\n";
+    if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
+      echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
+      echo "<td><input type=\"hidden\" name=\"old_objectives_report\" value=\"" . $feedback_reports['objectives'] . "\" />";
+      if ($feedback_reports['objectives'] === '') {
+        echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
+      } else {
+        echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />". $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />" . $string['off'] . "</td>";
       }
-
-     echo "</table>\n";
-
-     if ($properties->get_paper_type() == '0') {
-       echo '<table cellpadding="3" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
-     } else {
-       echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%; display:none">';
-     }
-     if ($properties->get_paper_type() != '4') {
-     ?>
-     <tr><td colspan="4" class="headbar">&nbsp;<?php echo $string['answerscreensettings']; ?></td></tr>
-     <tr><td colspan="4">&nbsp;</td></tr>
-     <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($properties->get_display_students_response() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($properties->get_display_question_mark() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($properties->get_hide_if_unanswered() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
-     <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($properties->get_display_correct_answer() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($properties->get_display_feedback() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
-     <?php
-     }
-     echo "</table>\n";
+      echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+    }
+    if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+      echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
+      // Question-based Feedback
+      echo "<td><input type=\"hidden\" name=\"old_questions_report\" value=\"" . $feedback_reports['questions'] . "\" />";
+      if ($feedback_reports['questions'] === '') {
+        echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
+      } else {
+        echo "<input type=\"radio\" name=\"questions_report\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"questions_report\" value=\"0\" />" . $string['off'] . "</td>";
+      }
+      echo "<td>" . $string['questionfeedback'] . "<br />";
+      if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
+      echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+    }
      
-     echo "</td></tr>\n";
-		 echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+      echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
+      // Cohort performance-based Feedback
+      echo "<td><input type=\"hidden\" name=\"old_cohort_performance\" value=\"" . $feedback_reports['cohort_performance'] . "\" />";
+      if ($feedback_reports['cohort_performance'] === '') {
+        echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
+      } else {
+        echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" />" . $string['off'] . "</td>";
+      }
+      echo "<td>" . $string['cohortperformancefeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php</a></td></tr>\n";
+    }
 
-     if (!in_array($properties->get_paper_type(), array('2', '4'))) {
-       echo "<tr><td colspan=\"2\" class=\"headbar\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
-       echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
-       for ($i=1; $i<=10; $i++) {
-         echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
-         for ($percent=0; $percent<=100; $percent++) {
-           if (isset($textual_feedback[$i]['boundary']) and  $textual_feedback[$i]['boundary'] == $percent) {
-             echo "<option value=\"$percent\" selected>$percent%</option>";
-           } else {
-             echo "<option value=\"$percent\">$percent%</option>";
-           }
-         }
-         $msg = '';
-         if (isset($textual_feedback[$i]['msg'])) $msg = $textual_feedback[$i]['msg'];
-         echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px; height:18px;\">$msg</textarea></td></tr>\n";
-       }
-     }
-     ?>
+    if (in_array($properties->get_paper_type(), array('1', '2'))) {
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+      echo '<tr><td><img src="../artwork/external_examiner_icon.png" width="48" height="48" />';
+      // External Examiner Feedback
+      echo "<td><input type=\"hidden\" name=\"old_external_examiner\" value=\"" . $feedback_reports['external_examiner'] . "\" />";
+      if ($feedback_reports['external_examiner'] === '') {
+        echo "<input type=\"radio\" name=\"external_examiner\" value=\"1\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"external_examiner\" value=\"0\" checked=\"checked\" />" . $string['off'] . "</td>";
+      } else {
+        echo "<input type=\"radio\" name=\"external_examiner\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"external_examiner\" value=\"0\" />" . $string['off'] . "</td>";
+      }
+      echo "<td>" . $string['externalexaminerfeedback'] . "<br /><span style=\"color:#808080\">" . $string['externalwarning'] . "</span><br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/reviews/\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/reviews/</a></td></tr>\n";
+    }
+
+    echo "</table>\n";
+
+    if ($properties->get_paper_type() == '0') {
+      echo '<table cellpadding="3" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
+    } else {
+      echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%; display:none">';
+    }
+    if ($properties->get_paper_type() != '4') {
+    ?>
+    <tr><td colspan="4" class="headbar">&nbsp;<?php echo $string['answerscreensettings']; ?></td></tr>
+    <tr><td colspan="4">&nbsp;</td></tr>
+    <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($properties->get_display_students_response() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($properties->get_display_question_mark() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($properties->get_hide_if_unanswered() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
+    <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($properties->get_display_correct_answer() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($properties->get_display_feedback() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
+    <?php
+    }
+    echo "</table>\n";
+     
+    echo "</td></tr>\n";
+		echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+
+    if (!in_array($properties->get_paper_type(), array('2', '4'))) {
+      echo "<tr><td colspan=\"2\" class=\"headbar\">&nbsp;" . $string['textualfeedback'] . "</td></tr>\n";
+      echo "<tr><td style=\"text-align:center\">" . $string['above'] . "</td><td style=\"text-align:center\">" . $string['message'] . "</td></tr>\n";
+      for ($i=1; $i<=10; $i++) {
+        echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
+        for ($percent=0; $percent<=100; $percent++) {
+          if (isset($textual_feedback[$i]['boundary']) and  $textual_feedback[$i]['boundary'] == $percent) {
+            echo "<option value=\"$percent\" selected>$percent%</option>";
+          } else {
+            echo "<option value=\"$percent\">$percent%</option>";
+          }
+        }
+        $msg = '';
+        if (isset($textual_feedback[$i]['msg'])) $msg = $textual_feedback[$i]['msg'];
+        echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px; height:18px;\">$msg</textarea></td></tr>\n";
+      }
+    }
+    ?>
 </table>
 
 <table id="reviewers" style="font-size:90%; width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
@@ -2168,19 +2203,18 @@ SQL;
   $current_internals = $properties->get_internal_reviewers();
   $current_internals_sql = '';
   if (count($properties->get_internal_reviewers()) > 0) {
-    $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', $current_internals) . ')';
+    $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ')';
   }
 
   $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE roles != 'Left' AND users.id = modules_staff.memberID AND modules.id = modules_staff.idMod $school_sql $admin_school_sql $current_internals_sql AND user_deleted IS NULL ORDER BY surname, initials";
-
   $internal_details = $mysqli->prepare($query);
   $internal_details->execute();
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
   $internal_no = 0;
   while ($internal_details->fetch()) {
     $match = false;
-    foreach ($current_internals as $individual_internal) {
-      if ($internal_id == $individual_internal) $match = true;
+    foreach ($current_internals as $reviewerID => $reviewer_name) {
+      if ($internal_id == $reviewerID) $match = true;
     }
     if ($match) {
       echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked>&nbsp;<label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
@@ -2200,8 +2234,8 @@ SQL;
   $examiner_no = 0;
   while ($external_details->fetch()) {
     $match = false;
-    foreach ($current_externals as $individual_external) {
-      if ($external_id == $individual_external) $match = true;
+    foreach ($current_externals as $reviewerID => $reviewer_name) {
+      if ($external_id == $reviewerID) $match = true;
     }
     if ($match) {
       echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked>&nbsp;<label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";

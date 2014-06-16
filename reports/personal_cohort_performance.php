@@ -113,7 +113,8 @@ li {padding-bottom:10px}
 .label {position:relative; padding:0; margin:0; width:110px; height:11px}
 </style>
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 
 </head>
@@ -125,7 +126,7 @@ li {padding-bottom:10px}
 <div style="left:60px; top:-9px; width:160px" class="label"><?php echo $string['medianclassmark']; ?></div>
 </div>
 
-<div style="position:absolute; top:0px; left:0px; width:100%">
+<div style="position:absolute; top:0; left:0; width:100%">
 <?php
 $demo = is_demo($userObject);
 $student_details = UserUtils::get_user_details($userID, $mysqli);

@@ -108,7 +108,7 @@ $stmt->close();
       background: transparent url('../artwork/working.gif') no-repeat left top;
     }
   </style>
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
+  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(function () {
       setTimeout(refreshPage, 15000); // milliseconds

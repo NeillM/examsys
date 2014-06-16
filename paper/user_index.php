@@ -293,7 +293,7 @@ if ($exam_duration !== null) {
     body { font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/student_help.js"></script>
   <script language="JavaScript">
@@ -564,7 +564,7 @@ if ($textsize > 120) {
 
 	<!-- Cache often used scripts and images -->
 	<script src="../js/start.js"></script>
-	<script src="../js/jquery-1.6.1.min.js" /></script>
+	<script src="../js/jquery-1.11.1.min.js" /></script>
 	<script src="../js/flash_include.js" /></script>
 	<script src="../js/jquery.flash_q.js" /></script>
 	<script src="../tools/mee/mee/js/mee_src.js" /></script>

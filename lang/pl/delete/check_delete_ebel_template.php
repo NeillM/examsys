@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deleteebelgrid'] = 'Usuń szablon siatki metody Ebel';
-$string['recyclebin'] = 'Kosz';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = "Czy na pewno usunąć szablon siatki metody Ebel o nazwie '%s'?";
-$string['delete'] = 'Usuń';
 ?>

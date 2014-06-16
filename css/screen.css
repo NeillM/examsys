@@ -14,7 +14,7 @@ li.error {
 	padding-left: 20px;
 }
 input.error {
-	border: 1px solid #c00000
+	border: 1px solid #c00000;
 }
 label.error {
 	display: none;
@@ -146,68 +146,79 @@ label.error {
 	margin: 4px 0 4px 8px;
 	font-size: 80%;
 	line-height: 100%;
-	background: #fff url('../artwork/separator1x1.png') repeat-x left center
+	background: #fff url('../artwork/separator1x1.png') repeat-x left center;
 }
 
 #content .screenerror h4, .screenerror h4 {
-  color:#C00000;
-  font-weight:bold;
-  background:#fff url('../artwork/separator1x1-error.png') repeat-x left center
+  color: #C00000;
+  font-weight: bold;
+  background: #fff url('../artwork/separator1x1-error.png') repeat-x left center;
 }
 
 .opaque {
-	background-color:#fff;
-	padding-right:4px;
-  font-size:130%
+	background-color: #fff;
+	padding-right: 4px;
+  font-size: 130%;
 }
 
 .breakline:hover {
-	background-color:#fff
+	background-color: #fff;
 }
 
 .breakline.line-selected, .breakline.line-selected h4, .breakline.line-selected span {
-  background-color:#b3c8e8!important
+  background-color: #b3c8e8 !important;
 }
 
 #content tr.excluded td {
-  color:#f00
+  color: #f00;
 }
 
 #content tr.experimental td {
-  color:#808080
+  color: #808080;
 }
 .retired {
-  color:#808080
+  color: #808080;
 }
 #content .warn {
-  color:#C00000;
-  padding-left:1px
+  color: #C00000;
+  padding-left: 1px;
 }
 #content .warnicon {
-  text-align:right
+  text-align: right;
 }
 select {
-  margin:0px;
+  margin: 0;
 }
 input {
-  margin:0px;
+  margin: 0;
 }
 .bullet {
-	line-height:150%;
-	background-image:url('../artwork/bullet_outline.gif');
-	background-repeat:no-repeat;
-	padding-left:20px;
+	line-height: 150%;
+	background-image: url('../artwork/bullet_outline.gif');
+	background-repeat: no-repeat;
+  background-position: 15px center;
+	padding-left: 35px;
 }
 .greybullet {
-	line-height:150%;
-	background-image:url('../artwork/grey_bullet_outline.gif');
-	background-repeat:no-repeat;
-	padding-left:20px;
+	line-height: 150%;
+	background-image: url('../artwork/grey_bullet_outline.gif');
+	background-repeat: no-repeat;
+	padding-left: 20px;
 	color:#808080;
 }
 .killer_icon {
 	width: 17px;
-  background-image:url('../artwork/skull_16.png');
-	background-repeat:no-repeat;
-	background-position: 1px center
+  background-image: url('../artwork/skull_16.png');
+	background-repeat: no-repeat;
+	background-position: 1px center;
+}
+.reports_header {
+  margin-top: 12px;
+  margin-bottom: 5px;
+  padding-left: 4px;
+  background-color: #EEEEEE;
+	border-bottom: 1px solid #E2E4E7;
+}
+#stats_menu select {
+  border: 1px solid #ABADB3;
 }

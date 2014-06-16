@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deletequestion'] = 'Usuń pytanie';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Próbujesz usunąć pytanie z banku pytań.<br /><br /><strong>Potwierdź, że taki jest twój rzeczywisty zamiar.';
-$string['recyclebin'] = 'Kosz';
-$string['delete'] = 'Usuń';
 $string['warning1'] = 'Nie możesz usunąć tego pytania, gdyż używane jest ona w następujących arkuszach:';
 $string['warning2'] = 'Usuń wszystkie wskaźniki do tego pytania zanim usuniesz samo pytania.';
 ?>

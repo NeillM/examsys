@@ -462,6 +462,12 @@ class UserObject extends RogoStaticSingleton {
   public function get_first_names() {
     return $this->first_names;
   }
+  
+  public function get_first_first_name() {
+    $parts = explode(' ', $this->first_names);
+    
+    return $parts[0];
+  }
 
   /**
    * Return the user's surname
@@ -492,6 +498,15 @@ class UserObject extends RogoStaticSingleton {
    */
   public function get_password() {
     return $this->password;
+  }
+
+  /**
+   * Return the user's email address
+   *
+   * @return string email
+   */
+  public function get_email() {
+    return $this->email;
   }
 
   /**
@@ -566,7 +581,7 @@ class UserObject extends RogoStaticSingleton {
     $this->studentModules = array();
 
     // studentmodule year -> module ->decode
-    $result = $this->db->prepare("SELECT idMod,moduleID,calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
+    $result = $this->db->prepare("SELECT idMod, moduleID, calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID"); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
     $result->bind_param('i', $this->get_user_ID());
     $result->execute();
 
@@ -722,11 +737,11 @@ class UserObject extends RogoStaticSingleton {
     $this->userID = $userID;
     $this->impersonate = false;
 
-    $stmt = $this->db->prepare('SELECT roles, title, initials, surname, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
+    $stmt = $this->db->prepare('SELECT roles, title, initials, surname, first_names, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
+    $stmt->bind_result($this->userroles, $this->title, $this->initials, $this->surname, $this->first_names, $this->username, $this->email, $this->grade, $this->year, $this->special_needs);
     $stmt->fetch();
     $record_no = $stmt->num_rows();
     $stmt->close();

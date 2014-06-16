@@ -46,7 +46,7 @@ $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['confirmstatusdelete']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -59,7 +59,7 @@ $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
 if ($q_count == 0) {
 ?>
 <tr>
-  <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+  <td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
   <td>
     <p><strong><?php echo $string['msg']; ?></strong><p>
     <br />
@@ -67,8 +67,7 @@ if ($q_count == 0) {
     <div style="text-align:right">
     <form action="do_delete_status.php" method="post">
       <input type="hidden" name="status_id" value="<?php echo $_GET['id']; ?>" />
-      <input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-      <input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+      <input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
   </td>
@@ -84,7 +83,7 @@ if ($q_count == 0) {
     <br />
     <div style="text-align:right">
     <form action="do_delete_status.php" method="post">
-      <input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+      <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
   </td>

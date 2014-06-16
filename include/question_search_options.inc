@@ -51,8 +51,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 	}
 	
-	function editQ() {
-    var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val()) + '&paperID=find:<?php if(isset($_GET['paperID'])) echo $_GET['paperID']; ?>&calling=find';
+	function ed() {
+    var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val());
     if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
       loc += '&type=' + $('#qType').val();
     }

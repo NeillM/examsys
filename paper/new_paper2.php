@@ -51,7 +51,7 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
     function over(id) {
       if (id != $('#paper_type').val()) {
@@ -204,9 +204,10 @@ require '../lang/' . $language. '/include/timezones.inc';
   $result->close();
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
   if ($paper_types[$_POST['paper_type']] == '2' or $paper_types[$_POST['paper_type']] == '4' or $paper_types[$_POST['paper_type']] == '5') {
 ?>
@@ -326,7 +327,7 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
     foreach ($year_options as $calendar_year) {
-      $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
+      $sel = ($_POST['default_academic_year'] == $calendar_year) ? ' selected="selected"' : '';
       echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
     }
     echo "</select></td>\n";
@@ -386,7 +387,8 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select>\n</td>";
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
-    // Available from Day
+    
+    // Available to Day
     $current_day = date('j');
     echo "<select id=\"tday\" name=\"tday\" class=\"datecopy\">\n";
     for ($i=1; $i<=31; $i++) {
@@ -491,11 +493,11 @@ if ($_POST['paper_type'] == 'summative') {
 
   echo "</table>\n";
 
-  echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #95AEC8; border-left:1px solid #95AEC8; border-right:1px solid #95AEC8\">" . $string['modules'] . "</div>";
+  echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #295AAD; border-left:1px solid #295AAD; border-right:1px solid #295AAD\">" . $string['modules'] . "</div>";
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
-    echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+    echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   } else {
-    echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\">";
+    echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   }
   $staff_modules_sql = "'" . implode("','", array_keys($staff_modules)) . "'";
 
@@ -504,8 +506,8 @@ if ($_POST['paper_type'] == 'summative') {
   $current_school = '---';
   foreach($module_array as $module) {
     if ($module['school'] != $current_school) {
-      echo '<h2>' . $module['school'] . '</h2>';
       $current_school = $module['school'];
+			echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "&nbsp;</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
       echo "<div class=\"r2\" id=\"div$module_no\"><input type=\"checkbox\" onclick=\"toggle($module_no)\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";

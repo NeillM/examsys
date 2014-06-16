@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmsessiondelete'] = 'Potvrdit odstranění relace';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Jste si skutečně jisti, že chcete tuto relaci odstranit?';
-$string['deletesession'] = 'Odstranit relaci';
-$string['recyclebin'] = 'Koš';
 ?>

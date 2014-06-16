@@ -1,18 +1,17 @@
 body {
   background-color:#F1F5FB;
   margin: 4px;
-  font-size: 90%;
+  font-size: 80%;
 }
 h2 {
   font-size:100%;
   margin: 8px 0 0 0;
 }
-select {
-  margin: 0;
-  padding: 0;
-}
 input[type="text"] {
   margin: 0;
+}
+input[type="checkbox"] {
+	margin-left: 25px;
 }
 label {
   margin-left: 6px;
@@ -21,7 +20,7 @@ label {
   background-color: white;
 }
 .r2 {
-  background-color: #B3C8E8;
+  background-color: #FFBD69;
 }
 .icon {
   padding-top: 15px;

@@ -83,10 +83,11 @@ function get_log_ids_and_lock($paper_log_type, $screen_no, $metadataID, $db) {
  *
  * @return boolean                Did the save operation succeed?
  */
-function save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $db) {
+function save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $paper_id, $db) {
+  $userObject = UserObject::get_instance();
   $save_ok = true;
 
-  //turn off auto commit and start transaction. If php exits or we call rollback the inserts/updates will be rolledback
+  // Turn off auto commit and start transaction. If PHP exits or we call rollback the inserts/updates will be rolledback.
   $db->autocommit(false);
 
   $log_ids = get_log_ids_and_lock($paper_type, $screen_no, $metadataID, $db);
@@ -109,21 +110,35 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
   }
 
   //
-  // did the all the save to log operations succeed?
+  // Did the all the save to log operations succeed?
   //
   if ($save_ok === false) {
     $db->rollback();			// NO - rollback
   } else {    
     $db->commit();				// YES - commit the updates to the log tables
   }
-  //turn auto commit back on so future queries function as befor
+  // Turn auto commit back on so future queries function as before
   $db->autocommit(true);
 
   // Close prepared queries
   if (count($response_data) > 0) { 		// Could happen on a screen with just an info block
     $save_answers->close();
   }
-
+  
+  // Check for any save fails.
+  if ($paper_type == 2) {   // Only log fails on summative exams.
+    $ipaddress = NetworkUtils::get_client_address();
+    if (isset($_POST['save_failed']) and $_POST['save_failed'] != '') {
+      $failures = explode('<br />', nl2br($_POST['save_failed']));
+      foreach ($failures as $failure) {
+        $stmt = $db->prepare("INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?)");
+        $stmt->bind_param('iisi', $userObject->get_user_ID(), $paper_id, $ipaddress, $failure);
+        $stmt->execute();
+        $stmt->close();
+      }
+    }
+  }
+  
   return $save_ok;
 }
 
@@ -939,7 +954,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
   }
 
   // Save the results to the database
-  $save_ok = save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $db);
+  $save_ok = save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $paper_id, $db);
 
   return $save_ok;
 

@@ -42,19 +42,21 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
-    function closeWindow() {
+    $(document).ready(function() {
       window.opener.location.href = '../users/details.php?userID=<?php echo $_POST['userID']; ?>&tab=teams';
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="closeWindow()">
+<body>
 </body>
 </html>
 <?php
   } else {
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -64,11 +66,12 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    input[type=checkbox] {margin-right:8px}
+    input[type=checkbox] {margin-left:20px; margin-right:8px}
     .r1 {background-color:white}
-    .r2 {background-color:#B3C8E8}
+    .r2 {background-color:#FFBD69}
+		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
@@ -79,15 +82,24 @@ if (isset($_POST['submit'])) {
         $('#' + objectID).removeClass('r1');
       }
     }
-    
+
     function resizeList() {
-      winH = $(window).height() - 120;
+      winH = $(window).height() - 125;
 
       $('#list').css('height', winH + 'px');
     }
+		
+		$(document).ready(function() {
+			resizeList();
+			
+			$(window).resize(function(){
+				resizeList();
+			});
+		});
   </script>
 </head>
-<body onload="resizeList()" onresize="resizeList()">
+
+<body>
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
@@ -114,7 +126,7 @@ if (isset($_POST['submit'])) {
   $result->bind_result($school, $moduleid, $fullname, $idMod);
   while ($result->fetch()) {
     if ($old_school != $school) {
-      echo "<table border=\"0\" style=\"margin-top:10px; width:100%; background-color:white; color:#1E3287\"><tr><td><nobr>$school</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>$school</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\"/></div></div>\n";
     }
    
     if (isset($user_modules[$idMod])) {
@@ -130,7 +142,7 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"module_no\" value=\"$mod_no\" /><input type=\"hidden\" name=\"userID\" value=\"" . $_GET['userID'] . "\" /></div></td>\n</tr>\n";
 ?>
 
-<div align="center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

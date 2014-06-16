@@ -36,42 +36,57 @@ if (isset($_GET['calyear'])) {
   $current_year = date("Y");
 }
 
-function display_paper($day_no, $subtract, $current_year, $current_month, $paper, &$papers, &$cellID, $string, $default_timezone) {
-	
-	if ($paper['start_time'] == $paper['end_time'] or ($paper['labs'] == '' and $paper['password'] == '') or $paper['duration'] == '') {
-		$problem = true;
-	} else {
-		$problem = false;
-	}			
-	if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
-		$papers++;
-		echo '<tr><td class="warn_icon">';
-		if ($problem) {
-			echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="' . $string['warning'] . '" title="' . $string['warning'] . '" />';
-		}
-		if ($paper['timezone'] != $default_timezone) {
-			echo '<img src="../artwork/timezone_16.png" width="16" height="16" align="texttop" alt="' . $string['timezone'] . '" title="' . $string['timezone'] . '" />';
-		}
-		if ($paper['password'] != '') {
-			echo '<img src="../artwork/key_12.png" width="12" height="12" alt="' . $string['password'] . '" title="' . $string['password'] . '"  />';
-		}
-    $metadata = '';
-    if (isset($paper['metadata'])) {
-      foreach ($paper['metadata'] as $individual_metadata) {
-        if ($metadata != '') {
-          $metadata .= '<br />';
+function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone) {
+  echo "<table id=\"month_grid\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">\n";
+  foreach ($paper_details as $paper) {
+    if ($paper['type'] == 'paper') {
+      if ($paper['start_time'] == $paper['end_time'] or ($paper['labs'] == '' and $paper['password'] == '') or $paper['duration'] == '') {
+        $problem = true;
+      } else {
+        $problem = false;
+      }			
+      if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
+        $papers++;
+        echo '<tr><td class="warn_icon">';
+        if ($problem) {
+          echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" align="texttop" alt="' . $string['warning'] . '" title="' . $string['warning'] . '" />';
         }
-        $metadata .= $individual_metadata['name'] . ': ' . $individual_metadata['value'];
+        if ($paper['timezone'] != $default_timezone) {
+          echo '<img src="../artwork/timezone_16.png" width="16" height="16" align="texttop" alt="' . $string['timezone'] . '" title="' . $string['timezone'] . '" />';
+        }
+        if ($paper['password'] != '') {
+          echo '<img src="../artwork/key_12.png" width="12" height="12" alt="' . $string['password'] . '" title="' . $string['password'] . '"  />';
+        }
+        $metadata = '';
+        if (isset($paper['metadata'])) {
+          foreach ($paper['metadata'] as $individual_metadata) {
+            if ($metadata != '') {
+              $metadata .= '<br />';
+            }
+            $metadata .= $individual_metadata['name'] . ': ' . $individual_metadata['value'];
+          }
+        }
+        echo '</td><td>' . $paper['start_hour'];
+        if ($paper['start_minute'] != 0) {
+          echo ':' . $paper['start_minute'];
+        }
+        echo '&nbsp;' . $paper['am_pm'] . '</td>';
+        echo "<td class=\"p\"><div class=\"pd\"><a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showCallout($cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "', '$metadata')\" onmouseout=\"hideCallout()\">" . $paper['paper_title'] . "</a></div></td></tr>";
+        $cellID++;
+      }
+    } else {
+      if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
+        echo '<tr onclick="deleteEvent(' . $paper['eventID'] . ')" style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
+        if ($paper['start_minute'] != 0) {
+          echo ':' . $paper['start_minute'];
+        }
+        echo '&nbsp;' . $paper['am_pm'] . '</td>';
+        echo '<td class="p" id="p' . $cellID . '" onmouseover="showCallout2(' . $cellID . ', \'' . $paper['message'] . '\')" onmouseout="hideCallout2()">' . $paper['title'] . ' (' . ($paper['duration']/60) . ' hrs)</td></tr>';
+        $cellID++;
       }
     }
-		echo '</td><td>' . $paper['start_hour'];
-		if ($paper['start_minute'] != 0) {
-			echo ':' . $paper['start_minute'];
-		}
-		echo '&nbsp;' . $paper['am_pm'] . '</td>';
-		echo "<td class=\"p\"><div class=\"pd\"><a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showCallout($cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "', '$metadata')\" onmouseout=\"hideCallout()\">" . $paper['paper_title'] . "</a></div></td></tr>";
-		$cellID++;
-	}
+  }
+  echo "</table>";
 }
 
 $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
@@ -86,7 +101,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <title>Rog&#333;: <?php echo $string['calendar'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
 <?php echo $configObject->get('cfg_js_root') ?>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script language="JavaScript">
   var lab_names = new Array();
 <?php
@@ -185,11 +200,47 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		$('#callout').show();
   }
   
+  function showCallout2(cellID, message) {
+		var p = $('#p' + cellID);
+		var position = p.position();
+		
+		var left_pos = position.left;
+		if (left_pos + 302 > $(window).width()) {
+			left_pos = $(window).width() - 302;
+			$('.notch').css('left', '180px');
+		} else {
+			$('.notch').css('left', '20px');
+		}
+		$('#callout2').css('left', left_pos);
+		$('#callout2').css('top', position.top + p.height() + 12);
+		$('#message').html(message);
+		$('#callout2').show();
+  }
+  
   function hideCallout() {
     $('#callout').hide();
   }
 	
-	$(document).ready(function() {
+  function hideCallout2() {
+    $('#callout2').hide();
+  }
+	
+  function newEvent() {
+    notice = window.open("add_event.php","event","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (window.focus) {
+      notice.focus();
+    }
+  }
+  
+  function deleteEvent(eventID) {
+    notice = window.open("../delete/check_delete_event.php?eventID=" + eventID + "","event","width=420,height=170,left="+(screen.width/2-210)+",top="+(screen.height/2-85)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if (window.focus) {
+      notice.focus();
+    }
+  }
+    
+  $(document).ready(function() {
+    
 	  $('#lab').change(function() {
 		  $('#theform').submit();
 		});
@@ -197,8 +248,19 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 	  $('#school').change(function() {
 		  $('#theform').submit();
 		});
-		
+	
+  <?php
+    if ($userObject->has_role('SysAdmin')) {
+  ?>
+    $(document).dblclick(function() {
+      newEvent();
+    });
+  <?php
+    }
+  ?>
+    
 	});
+  
 </script>
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -226,8 +288,14 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 </table>
 </div>
 
+<div id="callout2" class="callout border-callout">
+<b class="border-notch notch"></b>
+<b class="notch"></b>
+<div style="padding:10px; line-height:160%; text-align:justify" id="message"></div>
+</div>
+
 <?php
-  //get faculty and school info
+  // Get faculty and school info
   $schools = array($string['default']=>array('-1'=>$string['allschools']));
   $stmt = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE faculty.id = schools.facultyID ORDER BY faculty.name, school");
   $stmt->execute();
@@ -237,7 +305,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   }
   $stmt->close();
 
-  //get computer lab info
+  // Get computer lab info
   $lab_details = array($string['default']=>array('-1'=>$string['alllabs']));
   $stmt = $mysqli->prepare("SELECT id, building, room_no, campus FROM labs ORDER BY campus, building, room_no");
   $stmt->execute();
@@ -262,7 +330,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     }
   }
 ?>
-<div style="font-size:200%; margin-left:10px"><strong><?php echo $string['calendar']; ?>:</strong> <?php echo $current_year; ?></div></th>
+<div class="page_title"><?php echo $string['calendar']; ?>: <span style="font-weight:normal"><?php echo $current_year ?></span></div></th>
 <th style="text-align:right">
 <?php
 
@@ -302,8 +370,13 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
-<br />
 <?php
+ if ($userObject->has_role('SysAdmin')) {
+   echo "<div style=\"margin:5px\"><span class=\"extraevents\">" . $string['extraevents'] . "</span></div>\n";
+  } else {
+    echo "<br />\n";
+  }
+
   function getDayOfWeek($day, $month, $year, $CalendarSystem) {
     // CalendarSystem = 1 for Gregorian Calendar
     if ($month < 3) {
@@ -337,7 +410,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
         }
       }
     }
-    //get the module list
+    // Get the module list
     $schools_sql = '';
     $stmt = $mysqli->prepare("SELECT moduleid FROM modules WHERE schoolid = ?");
     $stmt->bind_param('i', $_GET['school']);
@@ -361,15 +434,17 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $lab_sql = '';
   }
   
-  $paper_no = 0;
+  $max_property_id = 0;
   $paper_details = array();
   $paper_ids = array();
+  // Get scheduled summative exams
   if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
     // Get papers running on various dates.
-    $result = $mysqli->prepare("SELECT password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%Y') AS cal_year, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . "0101000000 AND end_date <= " . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
+    $result = $mysqli->prepare("SELECT password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . "0101000000 AND end_date <= " . $current_year . "1231235959 AND paper_type='2' AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
     $result->execute();
-    $result->bind_result($password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $cal_year, $start_day, $end_date, $idMod, $timezone);
+    $result->bind_result($password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $start_day, $end_date, $idMod, $timezone);
     while ($result->fetch()) {
+      $paper_details[$property_id]['type']        	= 'paper';
       $paper_details[$property_id]['labs']        	= $labs;
       $paper_details[$property_id]['date']        	= $main_date;
       $paper_details[$property_id]['start_day']   	= $start_day;
@@ -382,9 +457,9 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
       }
       $paper_details[$property_id]['property_id'] 	= $property_id;
       $paper_details[$property_id]['month']       	= $month;
-      $paper_details[$property_id]['cal_year']    	= $cal_year;
+      $paper_details[$property_id]['cal_year']    	= $current_year;
       $paper_details[$property_id]['start_hour']  	= $start_hour;
-      $paper_details[$property_id]['start_minute']  = $start_minute;
+      $paper_details[$property_id]['start_minute'] = $start_minute;
       $paper_details[$property_id]['end_time']    	= $end_time;
       $paper_details[$property_id]['idMod']       	= $idMod;
       $paper_details[$property_id]['password']    	= $password;
@@ -395,19 +470,46 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 				$paper_details[$property_id]['timezone']		= $timezone_array[$timezone];
 			}
       $paper_ids[] = $property_id;
-		}
+      if ($property_id > $max_property_id) {
+        $max_property_id = $property_id;
+      }
+    }
     $result->close();
   }
   
-  //get Metadata security
-  $result = $mysqli->prepare('SELECT paperID, name, value FROM paper_metadata_security WHERE paperID IN (' . implode(',', $paper_ids) . ')');
+  // Get extra calendar events
+  $paper_no = ($property_id + 1);
+  $result = $mysqli->prepare("SELECT id, title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . "0101000000 AND thedate <= " . $current_year . "1231235959 AND deleted IS NULL");
   $result->execute();
-  $result->bind_result($property_id, $metadata_name, $metadata_value);
+  $result->bind_result($eventID, $title, $message, $duration, $bgcolor, $start_time, $am_pm, $start_hour, $start_minute, $start_day, $month);
   while ($result->fetch()) {
-    $paper_details[$property_id]['metadata'][] = array('name'=>$metadata_name, 'value'=>$metadata_value);
+    $paper_details[$paper_no]['eventID']      = $eventID;
+    $paper_details[$paper_no]['type']         = 'extra_date';
+    $paper_details[$paper_no]['title']        = $title;
+    $paper_details[$paper_no]['message']      = $message;
+    $paper_details[$paper_no]['bgcolor']      = $bgcolor;
+    $paper_details[$paper_no]['start_time']   = $start_time;
+    $paper_details[$paper_no]['am_pm']        = $am_pm;
+    $paper_details[$paper_no]['start_day']    = $start_day;
+    $paper_details[$paper_no]['start_hour']  	= $start_hour;
+    $paper_details[$paper_no]['start_minute'] = $start_minute;
+    $paper_details[$paper_no]['month']        = $month;
+    $paper_details[$paper_no]['cal_year']     = $current_year;
+    $paper_details[$paper_no]['duration']     = $duration;
+    $paper_no++;
   }
-  $result->close();
-  
+    
+  // Get metadata security
+  if (count($paper_ids) > 0) {
+    $result = $mysqli->prepare('SELECT paperID, name, value FROM paper_metadata_security WHERE paperID IN (' . implode(',', $paper_ids) . ')');
+    $result->execute();
+    $result->bind_result($property_id, $metadata_name, $metadata_value);
+    while ($result->fetch()) {
+      $paper_details[$property_id]['metadata'][] = array('name'=>$metadata_name, 'value'=>$metadata_value);
+    }
+    $result->close();
+  }
+    
   // Sort all papers correctly by start time
   $sortby = 'start_time';
   $ordering = 'asc';
@@ -497,11 +599,9 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
             echo "\">";
           }
           $papers = 0;
-          echo "<table id=\"month_grid\" style=\"width:100%\">\n";
-          foreach ($paper_details as $individual_paper) {
-					  display_paper($day_no, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string, $default_timezone);
-          }
-          echo "</table>\n";
+          
+					display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone);
+
           if ($papers == 0) echo '&nbsp;';
           
           if ($col == 5) {  // Check for Saturday exams.
@@ -522,11 +622,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 								echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
 							}
 							echo "</table>";              
-              echo "<table style=\"padding-top:5px; width:100%\">";            
-              foreach ($paper_details as $individual_paper) {
-								display_paper($day_no + 1, $subtract, $current_year, $current_month, $individual_paper, $papers, $cellID, $string, $default_timezone);
-              }
-              echo "</table>";
+              display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone);
             }
           }
           

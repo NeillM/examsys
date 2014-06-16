@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmcoursedelete'] = 'Potvrdit odstranění modulu';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Jste si jisti, že chcete tento modul odstranit??';
-$string['delete'] = 'Odstranit';
 ?>

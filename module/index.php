@@ -39,7 +39,7 @@ $module = check_var('module', 'GET', true, false, true);
 
 $add_member = false;
 
-if ($_GET['module'] != '0') {
+if (!isset($module_details) and $_GET['module'] != '0') {
   $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 
   if (!$module_details) {
@@ -72,12 +72,13 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <style>
     a {color: black}
     .red {background-color:#C00000; color:white; padding:2px}
+    .subsect_table {margin-top: 22px; margin-left: 10px; margin-bottom: 12px}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
     function newPaper() {
@@ -141,8 +142,8 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
 
 // Paper type folders
-echo "<table border=\"0\" class=\"subsect\" style=\"clear:both\"><tr><td>" . $string['papers'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-echo "<br />\n";
+echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['papers'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+
 $types_used = module_utils::paper_types($module, $mysqli);
 foreach ($types_used as $type=>$no_papers) {
   $url = '../module/type.php?module=' . $module . '&type=' . $type;
@@ -154,12 +155,14 @@ echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
 
 // Question bank section
 echo "<br clear=\"left\">\n";
-echo "<br />\n";
-echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['questionbank'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-echo "<br />\n";
+echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['questionbank'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">" . $string['allquestions'] . "</a></td></tr></table></div>\n";
 
 $bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
+if (strpos($module_details['checklist'], 'mapping') !== false) {
+  $bank_types[$string['byobjective']] = '../question/bank.php?type=objective&module=' . $module;
+}
 foreach ($bank_types as $type_name=>$url) {
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a></td></tr></table></div>\n";
 }
@@ -170,13 +173,12 @@ echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
 
 // User section
 echo "<br clear=\"left\">\n";
-echo "<br />\n";
-echo "<table border=\"0\" class=\"subsect\"><tr><td>" . $string['users'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-echo "<br />\n";
+echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['users'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../users/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></td></tr></table></div>\n";
 
 if ($_GET['module'] != '0') {
-  $current_year = date_utils::get_current_academic_year();
+  $current_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
   $student_cohort = module_utils::get_student_members($current_year, $module, $mysqli);
 
   $url = '../users/search.php?submit=Search&team=' . $module . '&calendar_year=' . $current_year . '&students=on&search_username=&student_id=';

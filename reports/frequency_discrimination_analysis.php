@@ -594,6 +594,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1)  . "</td></tr>\n";
         break;
       case 'blank':
+        echo '<br />';
         $blank_details = explode('[blank',$options[0]);
         $array_size = count($blank_details);
 
@@ -607,17 +608,18 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
         $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|", "", $options[0]);
         $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|", "", $options[0]);
-
+        
         $blank_count = 0;
         echo $blank_details[0];
         while ($blank_count < $array_size) {
           if (strpos($blank_details[$blank_count],'[/blank]') !== false) {
-            $end_start_tag = strpos($blank_details[$blank_count],']');
-            $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
-            $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
-            $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
+            $end_start_tag = strpos($blank_details[$blank_count], ']');
+            $start_end_tag = strpos($blank_details[$blank_count], '[/blank]');
+            $cut_length = $start_end_tag - $end_start_tag - 1;
+            $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), $cut_length);
+            $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
             if (isset($excluded[$q_id])) {
-              $tmp_exclude = substr($excluded[$q_id],$blank_count-1,1);
+              $tmp_exclude = substr($excluded[$q_id], $blank_count - 1, 1);
             } else {
               $tmp_exclude = '';
             }
@@ -647,7 +649,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         for ($i=1; $i<count($blank_details); $i++) {
           $end_start_tag = strpos($blank_details[$i],']');
           $start_end_tag = strpos($blank_details[$i],'[/blank]');
-          $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
+          $cut_length = $start_end_tag - $end_start_tag - 1;
+          $blank_options = substr($blank_details[$i], ($end_start_tag+1), $cut_length);
 
           $blank_options = explode(',', $blank_options);
 
@@ -720,7 +723,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
+            echo "<td><input type=\"button\" onclick=\"blankCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
           }
           echo "</tr>";
         }
@@ -1342,14 +1345,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'flash') echo "</table></p>\n";
   } elseif ($q_type == 'textbox') {
-    echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><p ";
+    echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div ";
     if (isset($excluded[$q_id]) and substr($excluded[$q_id], 0, 1) == '1') echo ' class="excluded"';
     if (isset($excluded[$q_id])) {
       $tmp_exclude = $excluded[$q_id];
     } else {
       $tmp_exclude = '';
     }
-    echo "id=\"q_" . ($ex_no + 1) . "_1\">" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "&nbsp;$leadin</p>";
+    echo "id=\"q_" . ($ex_no + 1) . "_1\">" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "&nbsp;$leadin</div>";
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">";
 
     $sortby = 'used';
@@ -1403,7 +1406,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     if (isset($freq_log[$q_id]['unmarked']) and $freq_log[$q_id]['unmarked'] > 0) {
-      echo "<tr><td>p=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" /></td><td>d=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" /></td><td colspan=\"2\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $freq_log[$q_id]['unmarked'] . " unmarked scripts</td></tr>\n";
+      echo "<tr><td>p=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" /></td><td>d=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" /></td><td colspan=\"2\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . sprintf($string['unmarkedscripts'], $freq_log[$q_id]['unmarked']) . "</td></tr>\n";
     } else {
       if (empty($freq_log[$q_id]['totalpos'])) {
         $p = 0;
@@ -1666,41 +1669,28 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
+<link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
-    body {margin-bottom:10px}
-    h1 {margin-left:15px; font-size:18pt}
-    p {margin-left:0px; margin-right:0px}
-    .figures {text-align:right}
-    .q_no {text-align:right; vertical-align:top; width:50px}
-    .grey {color:#808080}
-    .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
-    .correct {color:#000; font-weight:bold}
-    .excluded {color:red; text-decoration:line-through}
-    .excluded img { border: 2px solid red}
-    .excluded img.in-exclusion {border:0}
-    td p:first-child {margin-top:0}
-    .matrix {border:1px solid #808080; border-collapse:collapse}
+    body {margin-bottom: 10px}
+    h1 {margin-left: 15px; font-size: 18pt}
+    p {margin-left: 0; margin-right: 0}
+    .figures {text-align: right}
+    .q_no {text-align: right; vertical-align: top; width: 50px}
+    .grey {color: #808080}
+    .extmatch li {padding-bottom: 14px; vertical-align: text-bottom; list-style-type: lower-roman}
+    .correct {color: #000; font-weight: bold}
+    .excluded {color:red; text-decoration: line-through}
+    .excluded img {border: 2px solid red}
+    .excluded img.in-exclusion {border: 0}
+    .in-exclusion:hover {background-color: #FFE7A2}
+    td p:first-child {margin-top: 0}
+    .matrix {border:1px solid #808080; border-collapse: collapse}
     .matrix td {border:1px solid #808080}
-    .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
-    .scr_no {margin-left:25px}
-    .screenbrk {
-      color:#15428B;
-      font-weight:bold;
-      font-size:90%;
-      height:70px;
-      width:100%;
-      border-top: 1px solid #B5C4DF;
-      background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-    }
-    .mee {
-      display: inline;
-    }
+    .mee {display: inline}
+    .subsect_table {margin-left: 6px; margin-bottom: 10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
@@ -1776,6 +1766,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
 
+  //TODO - refactor
   // Get any questions to exclude.
   $excluded = array();
   $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
@@ -1891,18 +1882,19 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   
   if ($user_total == 0) {
     // No one has taken the paper yet.
-    echo '<tr><th>';
+    echo '<div class="head_title">';
 
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if (isset($_GET['folder']) and $_GET['folder'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
     }
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-    echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-    echo "</table>\n";
+    echo "<div class=\"page_title\">" . $string['reporttitle'] . "</div>\n";
+    echo "</div>\n";
 		echo $notice->info_strip($string['PaperNotAttempted'], 100);
   } else {
   	// Capture the paper makeup.
@@ -2052,8 +2044,9 @@ SQL;
   </table>
   <br />
 
-  <table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><?php echo $string['summary']; ?></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
-
+  <div class="subsect_table"><div class="subsect_title"><?php echo $string['summary'] ?></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>
+  
+  
   <table cellpadding="0" cellspacing="0" style="width:650px; margin-left:40px">
   <tr><td colspan="2" style="padding-left:4px"><?php echo $string['msg']; ?></td></tr>
   <tr>
@@ -2065,7 +2058,11 @@ SQL;
   <tr><td><?php echo $string['moderate']; ?></td><td>0.4-0.6</td><td style="text-align:right"><?php echo $pstats['m']; ?></td><td></td></tr>
   <tr><td><?php echo $string['hard']; ?></td><td>0.2-0.4</td><td style="text-align:right"><?php echo $pstats['h']; ?></td><td></td></tr>
   <tr style="color:#C00000"><td><?php echo $string['veryhard']; ?></td><td>&lt; 0.2</td><td style="text-align:right"><?php echo $pstats['vh']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning1']; ?>" class="in-exclusion" /></td></tr>
-  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php echo number_format($pstats['total']/$pstats['no'],2); ?></td><td></td><td></td></tr>
+  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php
+  if (isset($pstats['no'])) {
+    echo number_format($pstats['total'] / $pstats['no'], 2); 
+  }
+  ?></td><td></td><td></td></tr>
   </table>
   </td>
   <td style="vertical-align:top">
@@ -2076,7 +2073,11 @@ SQL;
   <tr><td><?php echo $string['intermediate']; ?></td><td>0.15-0.25</td><td style="text-align:right"><?php echo $dstats['intermediate']; ?></td><td></td></tr>
   <tr style="color:#C00000"><td><?php echo $string['low']; ?></td><td>&lt; 0.15</td><td style="text-align:right"><?php echo $dstats['low']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning2']; ?>" class="in-exclusion" /></td></tr>
   <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
-  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php echo number_format($dstats['total']/$dstats['no'],2); ?></td><td></td><td></td></tr>
+  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php
+  if (isset($dstats['no'])) {
+    echo number_format($dstats['total'] / $dstats['no'], 2); 
+  }
+  ?></td><td></td><td></td></tr>
   </table>
   </td>
   </tr>
@@ -2116,84 +2117,85 @@ SQL;
       $tmp_percent = $_GET['percent'];
     }
 
-
-    // Write records into performance_main
-    //----------------------------------------------------------------------------------------------
-    $sql = '';
-    $params = '';
-    $variables = array();
-    $tmp = array();
-    foreach ($dstats_array as $qid=>$question_data) {
-      if ($sql == '') {
-        $sql = 'INSERT INTO performance_main VALUES (NULL, ?, ?, ?, ?, ?)';
-      } else {
-        $sql .= ', (NULL, ?, ?, ?, ?, ?)';
-      }
-      $params .= 'iiiis';
-      $variables[] = $qid;
-      $variables[] = $paperID;
-      $variables[] = $tmp_percent;
-      $variables[] = $user_total;
-      $variables[] = $date_started;
-    }
-
-    $record = $mysqli->prepare($sql);
-
-    array_unshift($variables, $params);
-    foreach ($variables as $key => $value) {
-      $tmp[$key] = &$variables[$key];
-    }
-    call_user_func_array(array($record,'bind_param'), $tmp);
-
-    $record->execute();
-    $record->close();
-
-    // Write records into performance_details
-    //----------------------------------------------------------------------------------------------
-    $q_rec_ids = array();
-    // First a quick query to get the IDs from performance_main to use in performance_details
-    $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?");
-    $result->bind_param('is', $paperID, $date_started);
-    $result->execute();
-    $result->bind_result($id, $tmp_q_id);
-    while ($result->fetch()) {
-      $q_rec_ids[$tmp_q_id] = $id;
-    }
-    $result->close();
-
-    $sql = '';
-    $params = '';
-    $variables = array();
-    $tmp = array();
-    foreach ($dstats_array as $qid=>$question_data) {
-      foreach ($question_data as $part_no=>$d_value) {
+    if (isset($pstats['no'])) {
+      // Write records into performance_main
+      //----------------------------------------------------------------------------------------------
+      $sql = '';
+      $params = '';
+      $variables = array();
+      $tmp = array();
+      foreach ($dstats_array as $qid=>$question_data) {
         if ($sql == '') {
-          $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
+          $sql = 'INSERT INTO performance_main VALUES (NULL, ?, ?, ?, ?, ?)';
         } else {
-          $sql .= ', (?, ?, ?, ?)';
+          $sql .= ', (NULL, ?, ?, ?, ?, ?)';
         }
-        $params .= 'iiii';
-        $variables[] = $q_rec_ids[$qid];
-        $variables[] = $part_no;
-        $variables[] = $pstats_array[$qid][$part_no];
-        $variables[] = $d_value;
+        $params .= 'iiiis';
+        $variables[] = $qid;
+        $variables[] = $paperID;
+        $variables[] = $tmp_percent;
+        $variables[] = $user_total;
+        $variables[] = $date_started;
       }
+
+      $record = $mysqli->prepare($sql);
+
+      array_unshift($variables, $params);
+      foreach ($variables as $key => $value) {
+        $tmp[$key] = &$variables[$key];
+      }
+      call_user_func_array(array($record,'bind_param'), $tmp);
+
+      $record->execute();
+      $record->close();
+
+      // Write records into performance_details
+      //----------------------------------------------------------------------------------------------
+      $q_rec_ids = array();
+      // First a quick query to get the IDs from performance_main to use in performance_details
+      $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?");
+      $result->bind_param('is', $paperID, $date_started);
+      $result->execute();
+      $result->bind_result($id, $tmp_q_id);
+      while ($result->fetch()) {
+        $q_rec_ids[$tmp_q_id] = $id;
+      }
+      $result->close();
+
+      $sql = '';
+      $params = '';
+      $variables = array();
+      $tmp = array();
+      foreach ($dstats_array as $qid=>$question_data) {
+        foreach ($question_data as $part_no=>$d_value) {
+          if ($sql == '') {
+            $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
+          } else {
+            $sql .= ', (?, ?, ?, ?)';
+          }
+          $params .= 'iiii';
+          $variables[] = $q_rec_ids[$qid];
+          $variables[] = $part_no;
+          $variables[] = $pstats_array[$qid][$part_no];
+          $variables[] = $d_value;
+        }
+      }
+
+      $record = $mysqli->prepare($sql);
+
+      array_unshift($variables, $params);
+      foreach ($variables as $key => $value) {
+        $tmp[$key] = &$variables[$key];
+      }
+      call_user_func_array(array($record,'bind_param'), $tmp);
+
+      $record->execute();
+      $record->close();
     }
-
-    $record = $mysqli->prepare($sql);
-
-    array_unshift($variables, $params);
-    foreach ($variables as $key => $value) {
-      $tmp[$key] = &$variables[$key];
-    }
-    call_user_func_array(array($record,'bind_param'), $tmp);
-
-    $record->execute();
-    $record->close();
   ?>
 
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />
-  <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:150px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back()" style="width:80px" /></div>
+  <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back()" class="cancel" /></div>
   </form>
 </div>
 <?php

@@ -28,6 +28,7 @@ $string['faculties'] = 'Faculties';
 $string['modules'] = 'Modules';
 $string['optimizetables'] = 'Optimize Tables';
 $string['questionstatuses'] = 'Question statuses';
+$string['savefailattempts'] = 'Save Fail Attempts';
 $string['schools'] = 'Schools';
 $string['smsimports'] = 'SMS Imports';
 $string['statistics'] = 'Statistics';

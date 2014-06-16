@@ -1,27 +1,28 @@
 .yellowwarn {
-  width:100%;
-  height:32px;
-  line-height:32px;
-	background-color:#FFEC82;
+  width: 100%;
+  height: 32px;
+  line-height: 32px;
+	background-color: #FFEC82;
   border-top: 1px solid #E1BB3B;
   border-bottom: 1px solid #E1BB3B;
-  vertical-align:middle !important;
+  vertical-align: middle !important;
 }
 
 .redwarn {
-  line-height:10px;
-	background-color:#FF9090;
+  height: 32px;
+  line-height: 32px;
+	background-color: #FF9090;
   border-top: 1px solid #CD0001;
   border-bottom: 1px solid #CD0001;
 }
 
 .greywarn {
   width:100%;
-  height:32px;
-  line-height:32px;
-	background-color:#E0E0E0;
+  height: 32px;
+  line-height: 32px;
+	background-color: #E0E0E0;
   border-top: 1px solid #828282;
   border-bottom: 1px solid #828282;
-  vertical-align:middle;
-  display:block;
+  vertical-align: middle;
+  display: block;
 }

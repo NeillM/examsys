@@ -65,7 +65,7 @@ if (isset($_GET['folder'])) {
     .qline.highlight {background-color:#B3C8E8}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -93,7 +93,7 @@ if (isset($_GET['folder'])) {
       $('#menu1a').hide();
       $('#menu1b').show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#link_' + lineID).addClass('highlight');
         addQID(itemID, true);

@@ -377,23 +377,20 @@ function load_osce_medians($db) {
 function set_classification($marking, &$user_results, $passmark, $user_no, $string) {
   switch ($marking) {
     case '3':
-      $labels = $string['marking3'];
+      $labels = $string['overallclass2'];
       break;
     case '4':
-      $labels = $string['marking4'];
-      break;
-    case '5':
-      $labels = $string['marking5'];
+      $labels = $string['overallclass3'];
       break;
     case '6':
-      $labels = $string['marking6'];
+      $labels = $string['overallclass4'];
       break;
     case '7':
-      $labels = $string['marking7'];
+      $labels = $string['overallclass5'];
       break;
   }
   
-  for ($i=0; $i<$user_no; $i++) {
+  for ($i=0; $i<(int)$user_no; $i++) {
     if ($user_results[$i]['killer_fail']) {
       $user_results[$i]['classification'] = $string['fail'];
     } elseif ($passmark == 'N/A') {     // Passmark is set to N/A - therefore use global rating from OSCE mark sheet

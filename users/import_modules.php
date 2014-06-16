@@ -47,7 +47,7 @@ ini_set("auto_detect_line_endings", true);
     label.error {display:block; color:#f00}
 		td {vertical-align:top}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 </head>
 
   <body>

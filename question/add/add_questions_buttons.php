@@ -39,7 +39,7 @@
 		.grey {color:#909090}
   </style>
 
-	<script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
     var selectedButton = 'unused';
   

@@ -46,6 +46,7 @@ function returnTrueFalse($value) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['bulkmoduleimport'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     p {margin:0px; padding:0px}
@@ -55,7 +56,7 @@ function returnTrueFalse($value) {
     .added {color:black}
     .failed {color:#C00000}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript">
     $(function () { $('#import_form').validate(); });
@@ -152,7 +153,7 @@ function returnTrueFalse($value) {
               if (in_array($moduleid, $module_list)) {
                 echo "<li class=\"existing\">$moduleid - " . $string['alreadyexists'] . "</li>\n";
               } else {
-                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, 0, 1, 1);
+                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, 0, 1, 1, '07/01');
                 if ($success) {
                   echo "<li class=\"added\">$moduleid - " . $string['added'] . "</li>\n";
                   $modulesAdded++;
@@ -184,7 +185,7 @@ function returnTrueFalse($value) {
 ?>
 <table border="0" cellpadding="4" cellspacing="0" style="width:650px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:150%; font-weight:bold; color:#5582D2; width:90%"><?php echo $string['bulkmoduleimport']; ?></span></td>
+<td style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:95%"><?php echo $string['bulkmoduleimport']; ?></span></td>
 </tr>
 <tr>
 <td align="left" style="padding:10px; background-color:#F1F5FB" colspan="2">

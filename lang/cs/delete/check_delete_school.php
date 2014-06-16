@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmschooldelete'] = 'Potvrdit odstranění školy';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Jste si skutečně jisti, že chcete tuto školu odstranit?';
-$string['delete'] = 'Odstranit';
 ?>

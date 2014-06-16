@@ -313,6 +313,9 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
     echo "<div class=\"menuitem\" onclick=\"addQuestions(" . ($properties->get_max_display_pos() + 1) . ", $max_screen)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_16.gif\" alt=\"" . $string['addquestionspaper'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['addquestionspaper'] . "</a></div>\n";
   }
   echo "<div class=\"menuitem\" onclick=\"return paperProperties()\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" alt=\"" . $string['editproperties'] . "\" /><a href=\"\" onclick=\"return false\">" . $string['editproperties'] . "</a></div>\n";
+  if ($properties->get_paper_type() == '2') {
+    echo "<div class=\"menuitem cascade\" id=\"emailexternals\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','emailexternals',myOptions1,myURLs1,event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email.png\" alt=\"" . $string['emailexternals'] . "\" />" . $string['emailexternals'] . "</div>\n";
+  }
   if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5' or $properties->get_paper_type() == '6') {
     if ($properties->get_item_no() == 0) {
       echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon_grey.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</div>\n";
@@ -360,11 +363,11 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 			if ($properties->get_paper_type() == '4') {
 				echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/osce/print.php?paperID=$paperID\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" />" . $string['printhardcopy'] . "</a></div>\n";
 			} else {
-				echo "<div class=\"menuitem cascade\" id=\"hardcopy\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','papertasks','hardcopy',myOptions2,myURLs2,event);\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['printhardcopy'] . "</a></div>\n";
+				echo "<div class=\"menuitem cascade\" id=\"hardcopy\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup3','papertasks','hardcopy',myOptions3,myURLs3,event);\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['printhardcopy'] . "</a></div>\n";
 			}
 		}
 	?>
-	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','qti',myOptions1,myURLs1,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['importexport']; ?></a></div>
+	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','papertasks','qti',myOptions2,myURLs2,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['importexport']; ?></a></div>
 </div>
 
 <br />
@@ -509,8 +512,8 @@ if ($properties->get_paper_type() == '2') {
     } else {
       $tmp_array = $properties->get_internal_reviewers();
       $internal_array = array();
-      foreach ($tmp_array as $tmp_internal) {
-        $internal_array[$tmp_internal] = 0;
+      foreach ($tmp_array as $reviewerID => $reviewer_name) {
+        $internal_array[$reviewerID] = 0;
       }
 
       $stmt = $mysqli->prepare("SELECT DISTINCT reviewerID FROM review_metadata WHERE paperID = ? AND review_type = 'internal' AND complete IS NOT NULL");
@@ -522,8 +525,8 @@ if ($properties->get_paper_type() == '2') {
       }
       $stmt->close();
       $reviews_complete = 0;
-      foreach ($tmp_array as $tmp_internal) {
-        if ($internal_array[$tmp_internal] == 1) $reviews_complete++;
+      foreach ($tmp_array as $reviewerID => $reviewer_name) {
+        if ($internal_array[$reviewerID] == 1) $reviews_complete++;
       }
       if ($reviews_complete < count($internal_array)) {
         if ($reviews_complete == 0) {
@@ -531,7 +534,7 @@ if ($properties->get_paper_type() == '2') {
         } else {
           $tmp_color = '#F27000';
         }
-        echo "<tr><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($internal_array) . "</strong></td></tr>\n";
+        echo "<tr style=\"height:16px\"><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($internal_array) . "</strong></td></tr>\n";
       } else {
         echo "<tr><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['peerreviewes'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
       }
@@ -541,12 +544,12 @@ if ($properties->get_paper_type() == '2') {
   // External examiners
   if (strpos($checklist, 'external') !== false) {
     if (count($properties->get_externals()) == 0) {
-      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td>" . $string['externalreviews'] . "</td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
+      echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td>" . $string['externalreviews'] . "</td><td style=\"color:#C00000\"><strong>" . $string['unset'] . "</strong></td></tr>\n";
     } else {
       $tmp_array = $properties->get_externals();
       $external_array = array();
-      foreach ($tmp_array as $tmp_external) {
-        $external_array[$tmp_external] = 0;
+      foreach ($tmp_array as $reviewerID => $reviewer_name) {
+        $external_array[$reviewerID] = 0;
       }
 
       $reviews_complete = 0;
@@ -567,7 +570,7 @@ if ($properties->get_paper_type() == '2') {
 				} else {
 					$tmp_color = '#F27000';
 				}
-        echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
+        echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:$tmp_color\"><strong>$reviews_complete/" . count($external_array) . "</strong></td></tr>\n";
       } else {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $_GET['paperID'] . "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . "&folder=" . $folder . "&percent=100&absent=0&direction=asc\">" . $string['externalreviews'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
       }
@@ -593,7 +596,7 @@ if ($properties->get_paper_type() == '2') {
     if ($standards_set == 1) {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
     } else {
-      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
+      echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $folder . "\">" . $string['standardsset'] . "</a></td>";
     }
 
     if ($standards_set == 1) {
@@ -625,12 +628,14 @@ if ($properties->get_paper_type() == '2') {
 
     $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $objsBySession = getObjectives($moduleIDs, $tmp_session, $paperID, $tmp_question_list, $mysqli);
-    foreach ($objsBySession as $moduleCode) {
-      foreach ($moduleCode as $sessionID) {
-        if (isset($sessionID['objectives'])) {
-          foreach ($sessionID['objectives'] as $objective) {
-            $ID = $objective['id'];
-            $objIDs[$ID] = $ID;
+    if ($objsBySession !== 'error') {
+      foreach ($objsBySession as $moduleCode) {
+        foreach ($moduleCode as $sessionID) {
+          if (isset($sessionID['objectives'])) {
+            foreach ($sessionID['objectives'] as $objective) {
+              $ID = $objective['id'];
+              $objIDs[$ID] = $ID;
+            }
           }
         }
       }
@@ -648,13 +653,15 @@ if ($properties->get_paper_type() == '2') {
 
     $mappings_complete = count($mappings);
 
-    if ($mappings_complete < $properties->get_question_no()) {
+    if ($objsBySession == 'error') {
+      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#C00000\"><strong>Error</strong></td></tr>\n";
+    } elseif ($mappings_complete < $properties->get_question_no()) {
       if ($mappings_complete == 0) {
         $tmp_color = '#C00000';
       } else {
         $tmp_color = '#F27000';
       }
-      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:$tmp_color\"><strong>$mappings_complete/" . $properties->get_question_no() . "</strong></td></tr>\n";
+      echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:$tmp_color\"><strong>$mappings_complete/" . $properties->get_question_no() . "</strong></td></tr>\n";
     } else {
       echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/bullet_icon.gif\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_mappings_by_question.php?paperID=" . $_GET['paperID'] . "&folder=" . $folder . "&module=" . $module . "\">" . $string['mapping'] . "</a></td><td style=\"color:#008000\"><strong>" . $string['ok'] . "</strong></td></tr>\n";
     }
@@ -666,8 +673,6 @@ if ($properties->get_paper_type() == '2') {
 </form>
 </div>
 <?php
-  //makeMenu(array($string['questions']=>$configObject->get('cfg_root_path') . '/question/search.php',$string['papers']=>$configObject->get('cfg_root_path') . '/paper/search.php',$string['people']=>$configObject->get('cfg_root_path') . '/users/search.php', '-'=>'-', $string['studentcohort']=>$configObject->get('cfg_root_path') . '/users/search.php?paperID=' . $_GET['paperID']));
-
   if ($properties->get_summative_lock()) {
     $params = "&scrOfY=' + $('#scrOfY').val() + '";
   } else {
@@ -692,6 +697,17 @@ if ($properties->get_paper_type() == '2') {
 		$importexport_menu[$string['export12']] = $configObject->get('cfg_root_path') . "/qti/export.php?dest=qti12&paperID=$paperID&module=$module";
 		$importexport_menu[$string['exportraf']] = $configObject->get('cfg_root_path') . "/export/rogo_assessment_format.php?paperID=$paperID";
 	}
+  
+  
+  
+	$external_menu['Initial Invitation'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=0";
+	$external_menu['Reminder'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=1";
+  
+  makeMenu($external_menu);
+  
+  
+  
+  
 
 	makeMenu($importexport_menu);
 	

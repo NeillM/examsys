@@ -58,7 +58,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
@@ -88,7 +88,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
       lineID = questionID;
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#id' + lineID).addClass('highlight');
         addQID(questionID, true);
@@ -132,7 +132,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 <?php
   if (isset($_GET['submit'])) {
-    echo "<body onselectstart=\"return false\">\n";
+    echo "<body>\n";
 
     require '../include/question_search_options.inc';
     require '../include/toprightmenu.inc';
@@ -385,9 +385,9 @@ if (isset($_GET['submit'])) {
     $status_class = ' status' . $status_array[$status]->id;
     echo '<tr class="qline' . $status_class;
     if ($locked != '') {
-      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event); return false;\" ondblclick=\"editQ(); return false;\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['locked'] . "\" /></td>";
+      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event)\" ondblclick=\"ed()\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['locked'] . "\" /></td>";
     } else {
-      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2b',event); return false;\" ondblclick=\"editQ(); return false;\"><td></td>";
+      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2b',event)\" ondblclick=\"ed()\"><td></td>";
     }
 
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);

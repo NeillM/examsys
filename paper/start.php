@@ -620,23 +620,27 @@ if ($css != '') {
   echo "<style type=\"text/css\">\n$css\n</style>\n";
 }
 ?>
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-<?php if ($propertyObj->get_latex_needed() == 1) {?>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<?php }?>
-<script type="text/javascript" src="../js/flash_include.js"></script>
-<script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-<!-- HTML5 part start -->
-<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-<script type="text/javascript" src="../js/html5.images.js"></script>
-<script type="text/javascript" src="../js/qsharedf.js"></script>
-<script type="text/javascript" src="../js/qlabelling.js"></script>
-<script type="text/javascript" src="../js/qhotspot.js"></script>
-<script type="text/javascript" src="../js/qarea.js"></script>
-<!-- HTML5 part end -->
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  echo $configObject->get('cfg_js_root');
+  if ($propertyObj->get_latex_needed() == 1) {
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }
+  
+  if (Paper_utils::need_interactiveQ($screen_data, $current_screen)) {
+    if ($configObject->get('cfg_interactive_qs') == 'html5') {
+      echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    } else {
+      echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+    }
+  }
 
+  echo $configObject->get('cfg_js_root');
 ?>
 <script language="javascript">
   window.history.go(1);
@@ -981,6 +985,14 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var saveFail = function () {
     <?php // Re-register the autosave timer ?>
     startAutoSave();
+
+    current_val =  $('#save_failed').val();
+    unix_now = Math.round($.now() / 1000);
+    if (current_val == '') {
+      $('#save_failed').val(unix_now);
+    } else {
+      $('#save_failed').val(current_val + '\n' + unix_now);
+    }
 
     $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
@@ -1382,6 +1394,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 ?>
 </td></tr></table>
+
+<textarea id="save_failed" name="save_failed" style="display:none"></textarea>
+
 </form>
 </div>
 <?php

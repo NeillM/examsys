@@ -24,6 +24,7 @@ $string['moduleid'] = 'Identyfikator modułu';
 $string['name'] = 'Nazwa';
 $string['school'] = 'Katedra';
 $string['smsapi'] = "API SMS'ów";
+$string['academicyearstart'] = 'Academic Year Start';
 $string['objapi'] = 'API celów';
 $string['summativechecklist'] = 'Zestawienie końcowe';
 $string['peerreview'] = 'Recenzja wewnętrzna';

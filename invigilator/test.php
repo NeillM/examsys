@@ -6,7 +6,7 @@ require_once '../include/invigilator_auth.inc';
 <head>
 <title>Test</title>
 
-<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script language="JavaScript">
 var timerId = setInterval(timerMethod, 1000);
 

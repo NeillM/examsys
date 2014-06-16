@@ -52,7 +52,7 @@ $old_version = $configObject->get('rogo_version');
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
     <link rel="stylesheet" type="text/css" href="../css/updater.css"/>
 
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
@@ -698,11 +698,6 @@ if (!isset($_POST['update'])) {
   }
   if (!$updater_utils->does_column_exist('log3', 'errorstate')) {
     $updater_utils->execute_query("ALTER TABLE log3 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-  }
-
-  // 05/07/2013 (brzsw) - add new type of feedback
-  if (!$updater_utils->does_column_type_value_exist('feedback_release', 'type', "enum('objectives','questions','cohort_performance')")) {
-    $updater_utils->execute_query("ALTER TABLE feedback_release CHANGE type type enum('objectives','questions','cohort_performance') DEFAULT NULL", true);
   }
 
   // 09/07/2013 - Add hofstee default settings.

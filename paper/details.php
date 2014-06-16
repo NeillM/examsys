@@ -170,6 +170,13 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
     if ($q_type == 'mcq' and $score_method == 'vertical_other') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
     }
+    if ($q_type == 'mcq') {  // Check duplicate options
+      $option_text_copy = array_map('strtolower', $option_text);
+      $unique_options = array_unique($option_text_copy);
+      if (count($option_text_copy) > count($unique_options)) {
+        $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
+      }
+    }
   }
 }
 
@@ -360,7 +367,7 @@ function check_latex_random($q_ids, $mysqli) {
 }
 ?>
 <!DOCTYPE html>
-<html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
+<html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -372,8 +379,6 @@ function check_latex_random($q_ids, $mysqli) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
-
   <!--[if lt IE 8]>
   <style type="text/css">
     td.ie-fullwidth {
@@ -390,12 +395,13 @@ function check_latex_random($q_ids, $mysqli) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/page_scroll.js"></script>
 <script defer="defer" type="text/javascript">
   var paperID = '<?php echo $paperID; ?>';
 
@@ -434,7 +440,7 @@ function check_latex_random($q_ids, $mysqli) {
     $('#screenNo').val(screenNo);
     $('#current_pos').val(current_pos);
 
-    if (evt.ctrlKey == false) {
+    if (evt.ctrlKey == false && evt.metaKey == false) {
       clearAll();
       $('#link_' + lineID).addClass('highlight');
       addQID(questionID, pID, true);
@@ -524,11 +530,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
-  function scrollXY() {
-    $('#scrOfY').val($('body,html').scrollTop());
-  }
-	
-	$(document).ready(function(){
+  $(document).ready(function(){
 		<?php
 		if (isset($_GET['scrOfY'])) {
 			echo "  window.scrollTo(0," . $_GET['scrOfY'] . ");\n";
@@ -538,9 +540,10 @@ function check_latex_random($q_ids, $mysqli) {
 		$('#left-sidebar').click(function() {
 			$('#copy_submenu').hide();
 		});
-	
-		$(window).scroll(function() {
-			scrollXY();
+
+		$(window).click(function(event) {
+			hideMenus();
+			hideAssStatsMenu(event);
 		});
 	});
 </script>
@@ -871,11 +874,11 @@ function check_latex_random($q_ids, $mysqli) {
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['farfuturewarning'], $properties->get_display_start_date());
       echo "</td></tr>\n";
     } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
       echo "</td></tr>\n";
     }
@@ -886,7 +889,7 @@ function check_latex_random($q_ids, $mysqli) {
 		
 		if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
 			echo "<tr><td colspan=\"6\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-			echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
+			echo "<tr><td class=\"redwarn\" style=\"width:40px; line-height:0\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
 			printf($string['nomatchsession'], $tmp_match, $properties->get_calendar_year());
 			echo "</td></tr>\n</table>\n</td></tr>\n";
 		}
@@ -909,8 +912,8 @@ function check_latex_random($q_ids, $mysqli) {
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
         for ($missing=1; $missing<($temp_array[$x]['screen'] - $old_screen); $missing++) {
-          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '</span></h4></td></tr>';
-          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
+          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '&nbsp;</span></h4></td></tr>';
+          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; color:white; background-color:#C00000; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
         }
       }
       echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';

@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['recyclebin'] = 'Koš';
-$string['deletekeyword'] = 'Odstranit klíčové slovo';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = "Jste si skutečně jisti, že chcete tato '%s' klíčová slova odstranit?";
-$string['delete'] = 'Odstranit';
 ?>

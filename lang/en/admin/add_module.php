@@ -24,6 +24,7 @@ $string['moduleid'] = 'Module ID';
 $string['name'] = 'Name';
 $string['school'] = 'School';
 $string['smsapi'] = 'SMS API';
+$string['academicyearstart'] = 'Academic Year Start';
 $string['objapi'] = 'Objectives API';
 $string['summativechecklist'] = 'Summative Checklist';
 $string['peerreview'] = 'Peer Review';

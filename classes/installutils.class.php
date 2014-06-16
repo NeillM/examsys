@@ -191,10 +191,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         </select></div>
 
         <table class="h"><tr><td><nobr><?php echo $string['authentication']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from successful LTI launch" /></div><br />
-        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from internal Rogo user database" /></div><br />
-        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
-        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
+        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow authentication from successful LTI launch" /></div><br />
+        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow authentication from internal Rogo user database" /></div><br />
+        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
+        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
         <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
         <div id="ldapOptions" style="display:none;">
           <br/>
@@ -202,7 +202,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
           <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /></div>
           <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /></div>
           <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /></div>
-          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/information_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div>
 
 
@@ -216,9 +216,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
             <div><label for="ldap_lookup_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" /></div>
             <div><label for="ldap_lookup_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" /></div>
             <div><label for="ldap_lookup_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" /></div>
-            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/information_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div><br clear="all" />
-        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
+        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
 
 
         <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -247,11 +247,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
+        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/> <img src="../artwork/information_icon.gif" class="help_tip" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
         <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
+        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /> <img src="../artwork/information_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
         <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
       
       <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -678,6 +678,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
 		$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".killer_questions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+		$priv_SQL[] = "GRANT INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     foreach($priv_SQL as $sql) {
@@ -739,8 +740,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".schools TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules_student TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_exclude TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".marking_override TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sid TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_notes TO '" . self::$cfg_db_external_user . "'@'" . $self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_notes TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".exam_announcements TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_hostt . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".relationships TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".feedback_release TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       @ob_flush();
       @flush();
@@ -832,6 +842,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
 		$priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".killer_questions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+		$priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
 
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
@@ -864,7 +875,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sct_reviews TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
         self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . self::$db->error));
@@ -903,7 +914,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       @ob_flush();
       @flush();
@@ -923,7 +934,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       @ob_flush();
       @flush();
@@ -1008,7 +1019,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 0,
                                 0,
                                 1,
-                                1
+                                1,
+																'07/01'
                              );
 
     module_utils::add_modules(  'SYSTEM',
@@ -1028,7 +1040,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 0,
                                 0,
                                 1,
-                                1
+                                1,
+																'07/01'
                              );
     self::$db->commit();
 
@@ -1281,7 +1294,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <link rel="stylesheet" type="text/css" href="../css/body.css" />
       <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
       <link rel="stylesheet" type="text/css" href="../css/header.css" />
-      <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
       <style type="text/css">
         body {font-size:90%}
         h1 {margin-left:16px; font-size:140%; color;#1F497D}
@@ -1295,18 +1307,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
         td.line {width:98%}
         input {width:200px}
-        input[type="text"] {margin:0px}
-        select {margin:0px; padding:0px}
         form {padding:1em}
         form div {padding-left:2em}
       </style>
 
-      <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+      <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-      <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
+      <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
       <script type="text/javascript">
         $(function(){
-          $(".tipright").tipTip({defaultPosition: 'right'});
+          $(document).tooltip();
         });
       </script>
     </head>
@@ -1315,8 +1325,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     <tr>
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
       <img class="logo_img" src="../artwork/r_logo.gif" alt="logo" />
-      <div class="logo_lrg_txt">Rog&#333;</div>
-      <div class="logo_small_txt">System Installation (<?php echo $version; ?>)</div>
+      <div class="logo_lrg_txt">Rog&#333; <?php echo $version; ?></div>
+      <div class="logo_small_txt">System Installation</div>
       </th>
       <th style="text-align:right; padding-right:10px">
       <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />
@@ -1778,6 +1788,19 @@ QUERY;
           ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['extra_cal_dates'] = <<<QUERY
+          CREATE TABLE `extra_cal_dates` (
+            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `title` varchar(255) NOT NULL,
+            `message` text,
+            `thedate` datetime NOT NULL,
+            `duration` int(11) NOT NULL,
+            `bgcolor` varchar(16) DEFAULT NULL,
+            `deleted` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+          ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,
@@ -1792,7 +1815,7 @@ QUERY;
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` mediumint(8) unsigned default NULL,
           `date` datetime NOT NULL,
-          `type` enum('objectives','questions','cohort_performance') default NULL,
+          `type` enum('objectives','questions','cohort_performance','external_examiner') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1939,7 +1962,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1977,7 +2001,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2015,7 +2040,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2035,7 +2061,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2046,7 +2073,8 @@ QUERY;
           `rating` text,
           `q_parts` varchar(50) DEFAULT NULL,
           `log4_overallID` int(11) unsigned DEFAULT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2079,7 +2107,8 @@ QUERY;
           `totalpos` tinyint(4) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid` (`metadataID`,`q_id`)
+          UNIQUE KEY `idx_metadataID_qid` (`metadataID`,`q_id`),
+          KEY `q_id` (`q_id`)
        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2093,7 +2122,8 @@ QUERY;
           `q_id` int(11) default NULL,
           `rating` tinyint(4) default NULL,
           PRIMARY KEY (`id`),
-          KEY `started` (`started`)
+          KEY `started` (`started`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2179,8 +2209,8 @@ QUERY;
 
     $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
-          `lti_context_key` VARCHAR(255) NOT NULL ,
-          `c_internal_id` VARCHAR(255) NOT NULL ,
+          `lti_context_key` VARCHAR(255) NOT NULL,
+          `c_internal_id` VARCHAR(255) NOT NULL,
           `updated_on` DATETIME NOT NULL,
           PRIMARY KEY (`lti_context_key`),
           KEY `c_internal_id` (`c_internal_id`)
@@ -2225,16 +2255,16 @@ QUERY;
 
     $this->tableList['marking_override'] = <<<QUERY
         CREATE TABLE `marking_override` (
-          `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
-          `log_id` INT(11) UNSIGNED NOT NULL ,
-          `log_type` TINYINT(4) UNSIGNED NOT NULL ,
-          `user_id` INT(10) UNSIGNED NOT NULL ,
-          `q_id` INT(4) UNSIGNED NOT NULL ,
-          `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL ,
-          `marker_id` INT(10) UNSIGNED NOT NULL ,
-          `date_marked` DATETIME NOT NULL ,
-          `new_mark_type` ENUM('correct', 'partial', 'incorrect') NOT NULL ,
-          `reason` VARCHAR(255) NULL ,
+          `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+          `log_id` INT(11) UNSIGNED NOT NULL,
+          `log_type` TINYINT(4) UNSIGNED NOT NULL,
+          `user_id` INT(10) UNSIGNED NOT NULL,
+          `q_id` INT(4) UNSIGNED NOT NULL,
+          `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL,
+          `marker_id` INT(10) UNSIGNED NOT NULL,
+          `date_marked` DATETIME NOT NULL,
+          `new_mark_type` ENUM('correct', 'partial', 'incorrect') NOT NULL,
+          `reason` VARCHAR(255) NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `log_id` (`log_id`, `log_type`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2258,6 +2288,7 @@ QUERY;
           `exam_q_feedback` tinyint(4) default NULL,
           `add_team_members` tinyint(4) default NULL,
           `map_level` smallint(2) NOT NULL DEFAULT '0',
+          `academic_year_start` char(5) NOT NULL,
           PRIMARY KEY (`id`),
           KEY `guideid` (`moduleid`),
           KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`),
@@ -2648,6 +2679,18 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['save_fail_log'] = <<<QUERY
+          CREATE TABLE `save_fail_log` (
+          `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
+          `userID` int(10) unsigned NOT NULL,
+          `paperID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+          `ipaddress` varchar(100) DEFAULT NULL,
+          `failed` int(4) unsigned NOT NULL DEFAULT '0',
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['scheduling'] = <<<QUERY
           CREATE TABLE `scheduling` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2719,7 +2762,8 @@ QUERY;
           `deletions` int(11) default NULL,
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
-          PRIMARY KEY  (`id`)
+          `academic_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2737,7 +2781,9 @@ QUERY;
           `font` varchar(50) default NULL,
           `unanswered` varchar(20) default NULL,
 					`dismiss` varchar(20) default NULL,
-          PRIMARY KEY (`special_id`),
+					`medical` text,
+					`breaks` text,
+					PRIMARY KEY (`special_id`),
           UNIQUE KEY `idx_userID` (`userID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;

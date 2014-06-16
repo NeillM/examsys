@@ -60,7 +60,7 @@ function get_list($list, $db) {
   .no {text-align:right}
   </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -93,6 +93,7 @@ function get_list($list, $db) {
   <thead>
     <tr>
       <th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th>
+      <th class="vert_div"><?php echo $string['academicyear']; ?></th>
       <th class="vert_div"><?php echo $string['enrolements']; ?></th>
       <th class="vert_div"><?php echo $string['enrolementdetails']; ?></th>
       <th class="vert_div"><?php echo $string['deletions']; ?></th>
@@ -102,7 +103,7 @@ function get_list($list, $db) {
 </thead>
 <tbody>
 <?php
-  $result = $mysqli->prepare("SELECT idMod, moduleid, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
+  $result = $mysqli->prepare("SELECT idMod, moduleid, academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
   $db = $mysqli;
   if ($db->error) {
     try {
@@ -116,9 +117,9 @@ function get_list($list, $db) {
   $result->bind_param('s', $_GET['day']);
   $result->execute();
   $result->store_result();
-  $result->bind_result($idMod, $moduleid, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
+  $result->bind_result($idMod, $moduleid, $academic_year, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td class=\"col10\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td class=\"no\">$enrolements</td><td class=\"col\">" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
+    echo "<tr><td class=\"col10\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td class=\"col\">" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
   }
 
 ?>

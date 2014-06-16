@@ -29,11 +29,17 @@ Class date_utils {
 	public static $academic_year_start = '07/01';
 	
 	/**
-	 * Get the current academic year in the format 'yyyy/yy', e.g. '2010/11'
+	 * Get the current academic year in the format 'yyyy/yy', e.g. '2013/14'
 	 * @return string
 	 */
-	static function get_current_academic_year()	{
-		return date_utils::get_academic_year(date('Y/m/d'));
+	static function get_current_academic_year($specific_year_start = '')	{
+		return date_utils::get_academic_year(date('Y/m/d'), $specific_year_start);
+	}
+
+	static function get_next_academic_year($specific_year_start = '')	{
+    $oneYearOn = date('Y-m-d', strtotime('+1 years'));
+    
+		return date_utils::get_academic_year($oneYearOn, $specific_year_start);
 	}
 
   static function inc_academic_year($year) {
@@ -48,16 +54,18 @@ Class date_utils {
   }
 
 	/**
-	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2010/11'
+	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2013/14'
 	 * @param string $date - A date in a format that can be accepted by strtotime
 	 *
 	 * @return string - The current academic year.
 	 */
-	static function get_academic_year($date) {
-    global  $configObject;
+	static function get_academic_year($date, $specific_year_start) {
+    global $configObject;
     
 		$date_as_time = strtotime($date);
-    if ($configObject->get('cfg_academic_year_start')!='') {
+    if ($specific_year_start != '') {
+      $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
+    } elseif ($configObject->get('cfg_academic_year_start') != '') {
       $start_this_year = strtotime(date('Y') . '/' .  $configObject->get('cfg_academic_year_start'));
     } else {
       $start_this_year = strtotime(date('Y') . '/' . self::$academic_year_start);
@@ -153,6 +161,51 @@ Class date_utils {
     $html .= "</select>\n";    
     
     return $html;
+  }
+
+  /**
+   * Get the first academic year for which there are papers
+   * @param  mysqli $db DB connection
+   * @return string   The first academic year or current year if no records found
+   */
+  public static function get_start_year($db) {
+    $result = $db->prepare("SELECT min(calendar_year) FROM properties WHERE calendar_year IS NOT NULL AND calendar_year != ''");
+    $result->execute();
+    $result->bind_result($start_year);
+    $result->store_result();
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $start_year = self::get_current_academic_year();
+    }
+    $result->close();
+
+    return $start_year;
+  }
+
+  public static function get_all_academic_years($db) {
+    $start_ac_year = self::get_start_year($db);
+    $end_ac_year = self::get_current_academic_year();
+
+    if ($start_ac_year == $end_ac_year) {
+      return array('x' . $start_ac_year);
+    }
+
+    $year_parts = explode('/', $start_ac_year);
+    $start_year = $year_parts[0];
+    $year_sub = $year_parts[1];
+
+    $end_year_parts = explode('/', $end_ac_year);
+    $end_year = $end_year_parts[0];
+
+    $years = array();
+
+    do {
+      $years[] = $start_year . '/' . sprintf('%02d', $year_sub);
+      $start_year++;
+      $year_sub = ($year_sub + 1) % 100;
+    } while ($start_year < $end_year);
+
+    return $years;
   }
 }
 

@@ -43,7 +43,7 @@ if (isset($_POST['submit'])) {
 
   <title><?php echo $string['note']; ?></title>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
     $(document).ready(function() {
       window.opener.location.reload(true);
@@ -72,7 +72,7 @@ if (isset($_POST['submit'])) {
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script language="JavaScript">
     $(document).ready(function() {
@@ -104,12 +104,12 @@ if (isset($_POST['submit'])) {
 <?php
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $paperID . "\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
-  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
+  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:99%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
 ?>
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
 </form>
 

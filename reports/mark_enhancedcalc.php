@@ -113,7 +113,7 @@ foreach ($q_ids as $q_id => $setting) {
 		.data td {text-align:right}
 	</style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
 	$(document).ready(function() {
 	  $('#submit').click(function() {
@@ -151,7 +151,7 @@ echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding
 echo "</table>\n";
 
 if (!$server_connection) {
-  echo "<table style=\"width:100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"redwarn\" style=\"width:30px\"><img style=\"margin-left:6px; margin-right:10px;\" src=\"../artwork/red_warning.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td class=\"redwarn\">{$string['serverconnectionerr']}</td></table>\n";
+  echo "<table style=\"width:100%\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"redwarn\" style=\"width:30px\"><img style=\"margin-left:6px; margin-right:10px;\" src=\"../artwork/exclamation_red_bg.png" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td class=\"redwarn\">{$string['serverconnectionerr']}</td></table>\n";
 	echo '<br /><input type="button" name="submit" id="submit" value="' . $string['back'] . '" style="width:100px" />';
 } else {
 

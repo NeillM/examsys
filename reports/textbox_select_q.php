@@ -48,11 +48,11 @@ $paper = $propertyObj->get_paper_title();
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
     table {font-size:100%}
-    a {color:blue;text-decoration:none;cursor:pointer}
-    p {margin-top:0px;padding-top:0px}
+    a {color:blue; text-decoration:none; cursor:pointer}
+    p {margin-top:0; padding-top:0}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>

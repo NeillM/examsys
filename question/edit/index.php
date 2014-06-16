@@ -48,6 +48,71 @@ $calling = (!isset($_REQUEST['calling'])) ? '' : $_REQUEST['calling'];
 $ListKeyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
 $team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
 
+function save_options($question, $userObject, $db) {
+  $unified_part_names = $question->get_unified_fields();
+
+  for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
+    $option = null;
+
+    if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
+      // Editing existing option
+      $option = $question->options[$_POST["optionid$option_no"]];
+      $part_names = $option->get_editable_fields();
+
+      // Build arrays for compound fields
+      $compound_fields = $option->get_compound_fields();
+      if (!isset($existing_values)) $existing_values = array();
+      $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
+
+      // Save editable fields that aren't unified
+      $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+
+      // Save fields that are the same across options
+      $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
+    } else {
+      // Create new option if have required data
+      $option = OptionEdit::option_factory($db, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
+
+      if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
+        $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
+        $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
+
+        $part_names = $option->get_editable_fields();
+
+        // Build arrays for compound fields
+        $compound_fields = $option->get_compound_fields();
+        if (!isset($existing_values)) $existing_values = array();
+        $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
+
+        // Save editable fields that aren't unified
+        $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+
+        // Save fields that are the same across options
+        $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
+
+        $question->options[] = $option;
+      }
+    }
+
+    if ($option != null and !in_array('media', $question->get_compound_fields())) {
+      // Handle changes in media
+      $old_media = $option->get_media();
+      if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
+        if ($old_media['filename'] != '') {
+          deleteMedia($old_media['filename']);
+        }
+        $option->set_media(uploadFile("option_media$option_no"));
+      } else {
+        // Delete existing media if asked
+        if (isset($_POST["delete_media$option_no"]) AND $_POST["delete_media$option_no"] == 'on') {
+          deleteMedia($old_media['filename']);
+          $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
+        }
+      }
+    }
+  }
+}
+
 $paper_count = 0;
 $critical_error = '';
 $q_no = '';
@@ -201,6 +266,10 @@ if ($critical_error == '') {
         }
       }
 
+      if ($question->allow_option_edit()) {
+        save_options($question, $userObject, $mysqli);
+      }
+
       $do_save = true;
     }
   } elseif ((isset($_POST['submit']) and $_POST['submit'] == $string['save']) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
@@ -237,69 +306,7 @@ if ($critical_error == '') {
       }
       $question->set_teams($question_teams);
 
-      $unified_part_names = $question->get_unified_fields();
-
-      for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
-        $option = null;
-
-        if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
-          // Editing existing option
-          $option = $question->options[$_POST["optionid$option_no"]];
-          $part_names = $option->get_editable_fields();
-
-          // Build arrays for compound fields
-          $compound_fields = $option->get_compound_fields();
-          if (!isset($existing_values)) $existing_values = array();
-          $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
-
-          // Save editable fields that aren't unified
-          $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
-
-          // Save fields that are the same across options
-          $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
-        } else {
-          // Create new option if have required data
-          $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
-
-          if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
-            $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
-            $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
-
-            $part_names = $option->get_editable_fields();
-
-            // Build arrays for compound fields
-            $compound_fields = $option->get_compound_fields();
-            if (!isset($existing_values)) $existing_values = array();
-            $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
-
-            // Save editable fields that aren't unified
-            $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
-
-            // Save fields that are the same across options
-            $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
-
-            $question->options[] = $option;
-          }
-        }
-
-        if ($option != null and !in_array('media', $question->get_compound_fields())) {
-          // Handle changes in media
-          $old_media = $option->get_media();
-          if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
-            if ($old_media['filename'] != '') {
-              deleteMedia($old_media['filename']);
-            }
-            $option->set_media(uploadFile("option_media$option_no"));
-          } else {
-            // Delete existing media if asked
-            if (isset($_POST["delete_media$option_no"]) AND $_POST["delete_media$option_no"] == 'on') {
-              deleteMedia($old_media['filename']);
-              $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
-            }
-          }
-        }
-
-      }
+      save_options($question, $userObject, $mysqli);
 
       $do_save = true;
     }
@@ -418,7 +425,6 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
-<link rel="stylesheet" href="../../css/tipTip.css" type="text/css" />
 
 <?php
 // Override this variable with a specific configuration file for the question editor.
@@ -430,13 +436,14 @@ SCRIPT;
 
 echo $cfg_editor_javascript;
 ?>
-<script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/state.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
 <script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
-<script type="text/javascript" src="../../js/jquery.tipTip.minified.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
 <?php
 if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.js')):
@@ -485,6 +492,9 @@ $(function () {
 <?php
 endif;
 ?>
+  $(function () {
+    $(document).tooltip();
+  });
 </script>
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 </head>

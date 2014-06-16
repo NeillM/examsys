@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmuserdelete'] = 'Potvrdit odstranění uživatele';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = 'Jste si skutečně jisti, že chcete tohoto uživatele odstranit?';
 $string['msg2'] = 'Jste si skutečně jisti, že chcete %d uživatelů odstranit?';
-$string['delete'] = 'Odstranit';
 ?>

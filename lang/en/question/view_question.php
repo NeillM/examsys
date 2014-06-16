@@ -15,4 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require $cfg_web_root . 'lang/' . $language . '/paper/start.php';
+
+$string['preview'] = 'Preview';
 ?>

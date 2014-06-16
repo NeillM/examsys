@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmreviewdelete'] = 'Potwierdź usunięcie recenzji';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['confirmmsg'] = 'Czy na pewno usunąć recenzję odnośnie <strong>%s</strong>?';
-$string['deletereview'] = 'Usuń recenzję';
-$string['recyclebin'] = 'Kosz';
 ?>

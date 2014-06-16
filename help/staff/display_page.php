@@ -97,7 +97,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
     function updateToolbar(editID, deleteID) {
       var obj = parent.frames[0].document.getElementById('editid');

@@ -88,7 +88,7 @@ Class module {
     return $members;
   }
 
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0) {
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01') {
 
     // Return false if missing madatory fields. schoolid is actually a number
     if ($moduleid == '' or $fullname == '' or $schoolID === '') {
@@ -107,8 +107,8 @@ Class module {
     if ($mapping == true) $checklist .= ',mapping';
     $tmp_checklist = substr($checklist, 1);
 
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)");
-    $result->bind_param('ssisssiiiiiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
+    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
+    $result->bind_param('ssisssiiiiiiiis', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -202,20 +202,22 @@ Class module {
                timed_exams = ?, 
                exam_q_feedback = ?, 
                add_team_members = ?,
-               map_level = ? 
+               map_level = ?,
+               academic_year_start = ?
             WHERE 
               id = ?
             LIMIT 1
             ";
     
     $result = $db->prepare($sql);
-    $result->bind_param('ssisssiiiiiiiii', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'], 
+    $result->bind_param('ssisssiiiiiiiisi', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'], 
                                         $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'], 
                                         $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'], 
-                                        $modinfo['exam_q_feedback'], $modinfo['add_team_members'],$modinfo['map_level'],$modinfo['idMod']);
+                                        $modinfo['exam_q_feedback'], $modinfo['add_team_members'], $modinfo['map_level'],
+                                        $modinfo['academic_year_start'], $modinfo['idMod']);
     $res = $result->execute();
     
-    //an array to convert db feilds to lang strings argghhh!!!!
+    // An array to convert DB fields to lang strings argghhh!!!!
     $lang_mappings = array(
                         'moduleid' => 'moduleid',
                         'fullname' => 'name',
@@ -230,6 +232,7 @@ Class module {
                         'timed_exams' => 'timedexams',
                         'exam_q_feedback' => 'questionbasedfeedback',
                         'add_team_members' => 'addteammembers',
+                        'academic_year_start' => 'academicyearstart',
                         );
     
     if ($res === true ) {
@@ -340,7 +343,8 @@ Class module {
                               timed_exams, 
                               exam_q_feedback, 
                               add_team_members,
-                              map_level 
+                              map_level,
+                              academic_year_start
                             FROM 
                               modules, schools 
                             WHERE 
@@ -360,7 +364,7 @@ Class module {
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
+    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
     
     $result->fetch();
     if ($result->num_rows == 0) {
@@ -369,13 +373,23 @@ Class module {
     }
     $result->close();
     
-    return array( 'idMod'=>$idMod, 'moduleid'=>$moduleid, 'fullname'=>$fullname, 
-                  'school'=>$school, 'active'=>$active, 'vle_api'=>$vle_api, 
-                  'checklist'=>$checklist, 'sms'=>$sms, 'selfenroll'=>$selfenroll, 
-                  'schoolid'=>$schoolid, 'neg_marking'=>$neg_marking, 
-                  'ebel_grid_template'=>$ebel_grid_template, 'timed_exams'=>$timed_exams, 
-                  'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members,
-                  'map_level'=>$map_level);
+    return array( 'idMod' => $idMod,
+                  'moduleid' => $moduleid,
+                  'fullname' => $fullname, 
+                  'school' => $school,
+                  'active' => $active,
+                  'vle_api' => $vle_api, 
+                  'checklist' => $checklist,
+                  'sms' => $sms,
+                  'selfenroll' => $selfenroll, 
+                  'schoolid' => $schoolid,
+                  'neg_marking' => $neg_marking, 
+                  'ebel_grid_template' => $ebel_grid_template,
+                  'timed_exams' => $timed_exams, 
+                  'exam_q_feedback' => $exam_q_feedback,
+                  'add_team_members' => $add_team_members,
+                  'map_level' => $map_level,
+                  'academic_year_start' => $academic_year_start);
   }
 
   /**

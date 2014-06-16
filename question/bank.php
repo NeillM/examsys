@@ -28,14 +28,17 @@ require_once '../include/staff_auth.inc';
 require_once '../include/icon_display.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
+require_once '../include/mapping.inc';
 
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/keywordutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/mappingutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
+require_once '../classes/CMFactory.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -52,7 +55,7 @@ if (!$module_details) {
  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
 }
 
-$qbank = new QuestionBank($module, $string, $notice, $mysqli);
+$qbank = new QuestionBank($module, $module_details['moduleid'], $string, $notice, $mysqli);
 
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
@@ -68,16 +71,20 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <style>
+    p { margin: 0; padding: 0}
+    .subsect_table {margin-left: 12px; margin-bottom: 8px}
+  </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
   require '../include/module_options.inc';
   require '../include/toprightmenu.inc';
@@ -94,6 +101,8 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
     $display_type = $string['bystatus'];
   } elseif ($type == 'performance') {
     $display_type = $string['byperformance'];
+  } elseif ($type == 'objective') {
+    $display_type = $string['byobjective'];
   }
 ?>
 <div id="content" class="content">
@@ -111,36 +120,57 @@ if ($type != 'keyword') {
   echo "<br />\n";
 }
 if ($type == 'performance') {
-  echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydifficulty'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $string['bydifficulty'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 }
 
 $old_section = '';
+
 foreach ($bank_types as $id=>$type_name) {
   $grey_text = '';
   $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
   
   if ($type == 'keyword') {
     if ($old_section != $type_name{0}) {
-      echo "<br clear=\"left\" />\n";
-      echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $type_name{0} . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+      echo "<br clear=\"all\" />\n";
+      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $type_name{0} . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     $old_section = $type_name{0};
   } elseif ($type == 'performance' and $id == 'highest') {
     echo "<br clear=\"left\" />\n";
-    echo "<table border=\"0\" width=\"98%\" class=\"subsect\"><tr><td><nobr>" . $string['bydiscrimination'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $string['bydiscrimination'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+  } elseif ($type == 'objective') {
+    $ids = $type_name['ids'];
+    $type_name = $type_name['label'];
+
+    $q_count = 0;
+    foreach ($ids as $o_id) {
+      if (isset($stats[$o_id])) {
+        $q_count += $stats[$o_id];
+      }
+    }
+    $stats[$id] = $q_count;
+  }
+
+  if ($_GET['type'] == 'objective') {
+    $class = 'f100';
+  } else {
+    $class = 'f2';
   }
   
   if (isset($stats[$id])) {
-    $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
-    echo display_folder($url, $type_name, $grey_text);
+    if ($type != 'objective' or $stats[$id] > 0) {
+      $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
+      echo display_folder($url, $type_name, $grey_text, $class);
+    }
   } elseif(isset($stats[$type_name])) {
     $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' ' . $string['questions'] . '</span>';
-    echo display_folder($url, $type_name, $grey_text);
+    echo display_folder($url, $type_name, $grey_text, $class);
   }
 }
 
-function display_folder($url, $type_name, $grey_text) {
-  return "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
+function display_folder($url, $type_name, $grey_text, $class) {
+  $type_name = strip_tags($type_name);
+  return "<div class=\"$class\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
 }
 $mysqli->close();
 ?>

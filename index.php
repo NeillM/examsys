@@ -69,7 +69,7 @@ require_once './include/staff_auth.inc';
 	</style>
 
   <script src="./js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="./js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="./js/toprightmenu.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
@@ -183,7 +183,7 @@ require_once './include/staff_auth.inc';
   }
 	if ($configObject->get('cfg_interactive_qs') == 'html5') {
 ?>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="./artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
 <?php
   }
 ?>
@@ -197,7 +197,7 @@ require_once './include/staff_auth.inc';
   $result->bind_result($announcementID, $news_title, $staff_msg, $icon);
   while ($result->fetch()) {
     if (!isset($_SESSION['announcement' . $announcementID])) {
-      echo "<br /><div class=\"announcement\" id=\"announcement$announcementID\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement($announcementID)\" /><div style=\"min-height:64px; padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$staff_msg</div></div>\n";
+      echo "<br /><div class=\"announcement\" id=\"announcement$announcementID\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement($announcementID)\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $news_icons[$icon] . "') no-repeat 5px 5px;\"><strong>$news_title</strong><br />\n<br />\n$staff_msg</div></div>\n";
     }
   }
   $result->close();

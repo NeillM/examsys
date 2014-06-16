@@ -3,7 +3,7 @@ body {
   background-color: white;
   font-family: Arial,sans-serif;
   font-size: 100%;
-  margin: 0px;
+  margin: 0;
 }
 a {
   text-decoration: none;
@@ -48,9 +48,9 @@ table.fixed {
 }
 hr {
   height: 1px;
-  color: grey;
-  background-color: grey;
-  border: 0px;
+  color: #E5E5E5;
+  background-color: #E5E5E5;
+  border: 0;
 }
 .page_title {
   padding-left: 10px !important;
@@ -139,3 +139,22 @@ hr {
 	width: 80px;
 	margin: 4px 0 4px 4px;
 }
+.help_tip {
+  width: 16px;
+  height: 16px;
+}
+title {
+  display: inline-block;
+  width: 5em;
+  background-color: red;
+}
+.ui-tooltip {
+  padding: 8px;
+  color: #4B3700;
+  background-color: #FFF2CB;
+  border: 1px solid #FFD965;
+  width: 400px;
+  font-size: 80%;
+  text-align: justify;
+}
+

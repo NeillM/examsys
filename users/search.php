@@ -246,7 +246,7 @@ if (isset($_GET['paperID'])) {
     .uline.highlight {background-color:#FFBD69}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -274,7 +274,7 @@ if (isset($_GET['paperID'])) {
       $('#menu2a').hide();
       $('#menu' + menuID).show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#' + lineID).addClass('highlight');
         addUserID(userID, true);
@@ -429,15 +429,15 @@ if (isset($_GET['paperID'])) {
   $string['course'] = $string['module'];   // Override course with module if called from a paper.
 }
 
-$table_order = array('#1'=>18, '#2'=>18, $string['title']=>40, 'Surname'=>300, 'First Names'=>300, $string['username']=>60, $string['studentid']=>70, $string['year']=>60, $string['course']=>70);
+$table_order = array('#1', '#2', $string['title'], 'Surname', 'First Names', $string['username'], $string['studentid'], $string['year'], $string['course']);
 echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
 echo "<thead>\n";
 echo "<tr>\n";
-foreach ($table_order as $display => $col_width) {
+foreach ($table_order as $display) {
   if ($display{0} == '#') {
-    echo "<th style=\"width:" . $col_width . "px\">&nbsp;</th>";
+    echo "<th>&nbsp;</th>";
   } else {
-    echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+    echo "<th class=\"vert_div\">$display</th>\n";
   }    
 }
 ?>
@@ -475,6 +475,8 @@ while ($user_data->fetch()) {
   }
 
   echo '<td>' . $string[mb_strtolower($tmp_title)] . '</td>';
+  
+  if ($tmp_first_names == '') $tmp_first_names = ' ';
   
   echo '<td>' . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . '</td>';
   echo '<td>' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</td>';

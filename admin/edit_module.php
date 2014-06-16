@@ -100,6 +100,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   }
 
   $module['sms'] = $_POST['sms_api'];
+  $module['academic_year_start'] = trim($_POST['academic_year_start']);
   $module['schoolid'] = $_POST['schoolid'];
   $module['ebel_grid_template'] = $_POST['ebel_grid_template'];
 
@@ -132,8 +133,10 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script language="JavaScript">
 <?php
   $vle_apis = $configObject->get('vle_apis');
@@ -198,11 +201,16 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   ?>
   <?php
     require '../include/admin_module_options.inc';
+		require '../include/toprightmenu.inc';
+		
+		echo draw_toprightmenu();
   ?>
   <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editmodule']; ?></div></th></tr>
-  </table>
+  <div class="head_title">
+		<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+		<div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+		<div class="page_title"><?php echo $string['editmodule']; ?></div>
+  </div>
   <br />
   <div align="center">
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">
@@ -261,7 +269,8 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     }
     echo '</select></td></tr>';
   ?>
-        <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
+      <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text" name="academic_year_start" value="<?php echo $module['academic_year_start'] ?>" style="width:50px" required /></td></tr>
+      <tr><td class="field"><?php echo $string['objapi'] ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup'] ?></option>
   <?php
     foreach ($vle_apis as $vle_name => $vle_api_data) {
       foreach ($vle_api_data['levels'] as $api_level) {
@@ -275,20 +284,20 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   ?>
     </select>
     </td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"'; ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
-    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active"<?php if ($module['active'] == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll"<?php if ($module['selfenroll'] == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking"<?php if ($module['neg_marking'] == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams"<?php if ($module['timed_exams'] == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback"<?php if ($module['exam_q_feedback'] == 1) echo ' checked="checked"'; ?> /></td></tr>
-    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members"<?php if ($module['add_team_members'] == 1) echo ' checked="checked"'; ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"' ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['active'] ?></td><td><input type="checkbox" name="active"<?php if ($module['active'] == 1) echo ' checked="checked"' ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['allowselfenrol'] ?></td><td><input type="checkbox" name="selfenroll"<?php if ($module['selfenroll'] == 1) echo ' checked="checked"' ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking'] ?></td><td><input type="checkbox" name="neg_marking"<?php if ($module['neg_marking'] == 1) echo ' checked="checked"' ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['timedexams'] ?></td><td><input type="checkbox" name="timed_exams"<?php if ($module['timed_exams'] == 1) echo ' checked="checked"' ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['questionbasedfeedback'] ?></td><td><input type="checkbox" name="exam_q_feedback"<?php if ($module['exam_q_feedback'] == 1) echo ' checked="checked"' ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['addteammembers'] ?></td><td><input type="checkbox" name="add_team_members"<?php if ($module['add_team_members'] == 1) echo ' checked="checked"' ?> /></td></tr>
     <tr id="ebelgrid" style="display:<?php
     if ($stdset == 1) {
       echo 'table-row';
     } else {
       echo 'none';
     }
-    ?>"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
+    ?>"><td class="field"><?php echo $string['ebelgrid'] ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
     $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
     $result->execute();
     $result->bind_result($id, $name);
@@ -305,7 +314,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $module['moduleid'] . "\" />\n";
   ?>
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></p>
   </form>
   </div>
 </div>

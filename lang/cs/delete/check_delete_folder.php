@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deletefolder'] = 'Odstranit složku?';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Jste si skutečně jisti, že chcete tuto složku odstranit?<br /><br />Odstraněním složky <strong>nebudou</strong> vymazány dokumenty ve složce obsažené.';
-$string['delete'] = 'Odstranit složku';
-$string['recyclebin'] = 'Koš';
 ?>

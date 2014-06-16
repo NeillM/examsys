@@ -26,6 +26,7 @@ $string['bystatus'] = 'by Status';
 $string['bydifficulty'] = 'by Difficulty';
 $string['bydiscrimination'] = 'by Discrimination';
 $string['byperformance'] = 'by Performance';
+$string['byobjective'] = 'by Learning Objective';
 $string['manageobjectives'] = 'Manage Objectives';
 $string['managekeywords'] = 'Manage Keywords';
 $string['referencematerial'] = 'Reference Material';

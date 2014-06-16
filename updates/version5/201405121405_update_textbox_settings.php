@@ -1,5 +1,5 @@
 <?php
-if(!file_exists("./stopfile_textbox_update.txt")) {
+if (!file_exists("./stopfile_textbox_update.txt")) {
   $select_sql = <<< SEL
   SELECT o.id_num, o.o_id, o.option_text, o.correct, q.settings
   FROM options o

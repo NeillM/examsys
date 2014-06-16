@@ -27,7 +27,9 @@
 require_once $configObject->get('cfg_web_root') . '/classes/dateutils.class.php';
 
 Class UON_SATURN extends SmsUtils {
-
+  private $enrolement_no;
+  private $deletion_no;
+  
   public $campus;
   public $url;
 
@@ -415,11 +417,14 @@ Class UON_SATURN extends SmsUtils {
         $import_type = 'SATURN UK';
       }
 
-      $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('sisiss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
+      $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)");
+      $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
       $result->execute();
       $result->close();
     }
+    
+    $this->set_enrolement_no($enrolements, $module);
+    $this->set_deletion_no($deletions, $module);
 
     $expdata = array();
     if ($demomode) {
@@ -436,6 +441,23 @@ Class UON_SATURN extends SmsUtils {
 
     }
   }
+  
+  private function set_enrolement_no($number, $module) {
+    $this->enrolement_no[$module] = $number;
+  }
+  
+  public function get_enrolement_no($module) {
+    return $this->enrolement_no[$module]; 
+  }
+  
+  private function set_deletion_no($number, $module) {
+    $this->deletion_no[$module] = $number;
+  }
+  
+  public function get_deletion_no($module) {
+    return $this->deletion_no[$module];
+  }
+  
 }
 
 ?>

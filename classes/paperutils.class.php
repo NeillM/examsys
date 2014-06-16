@@ -272,7 +272,7 @@ Class PaperUtils {
     $old_list = array_flip($old_list);
     $new_list = array_flip($new_list);
 
-    foreach ($old_list as $oldID=>$value) {
+    foreach ($old_list as $oldID => $value) {
       if (!isset($new_list[$oldID])) {
         $editProperties = $db->prepare("DELETE FROM properties_reviewers WHERE paperID = ? AND reviewerID = ? AND type = ?");
         $editProperties->bind_param('iis', $paperID, $oldID, $type);
@@ -532,6 +532,18 @@ Class PaperUtils {
     $paper_query->close();
 
     return $paper_no;
+  }
+  
+  function need_interactiveQ($screen_data, $screen) {
+    $interactive = false;
+
+    foreach($screen_data[$screen] as $question_part) {
+      if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
+        $interactive = true;
+      }
+    }
+
+    return $interactive;
   }
 
 }

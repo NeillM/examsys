@@ -223,11 +223,11 @@ if (isset($_POST['submit'])) {
     .c1 {width:65px; text-align:center}
     .c2 {width:250px}
     .r1 {background-color:white}
-    .r2 {background-color:#B3C8E8}
+    .r2 {background-color:#FFBD69}
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script language="JavaScript">
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
