@@ -277,7 +277,7 @@ if ($e6 == 'improved') {
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2" class="sechead">' . $string['clientcomputer'] . '</td></tr>';
   echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_client_address() . '</td></tr>';
-  echo '<tr><td>' . $string['clock'] . '</td><td><script language="JavaScript">the_date = new Date(); document.write(the_date.toLocaleString()); </script></td></tr>';
+  echo '<tr><td>' . $string['clock'] . '</td><td><script>the_date = new Date(); document.write(the_date.toLocaleString()); </script></td></tr>';
   echo '<tr><td>' . $string['browser'] . '</td><td>' . $_SERVER['HTTP_USER_AGENT'] . '</td></tr>';
 
   echo '<tr><td colspan="2">&nbsp;</td></tr>';

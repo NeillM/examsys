@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
   <?php
     if ($_POST['calling'] == 'class_totals') {
   ?>
-  <script language="JavaScript">
+  <script>
     function closeWindow() {
       window.opener.location.reload();
       window.close();
@@ -52,7 +52,7 @@ if (isset($_POST['submit'])) {
   <?php
     } else {
   ?>
-  <script language="JavaScript">
+  <script>
     function closeWindow() {
       window.opener.location = "details.php?userID=<?php echo $_POST['userID']; ?>&tab=notes";
       window.close();
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
       $('#theform').validate({
         errorClass: 'errfield',

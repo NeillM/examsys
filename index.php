@@ -74,7 +74,7 @@ require_once './include/staff_auth.inc';
   <script type="text/javascript" src="./js/toprightmenu.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script src="./js/sidebar.js" type="text/javascript"></script>
-  <script language="JavaScript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',

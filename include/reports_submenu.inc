@@ -23,7 +23,7 @@
 */
 require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
-<script language="JavaScript">
+<script>
 <?php
   $module_list = explode(',', $module);
 

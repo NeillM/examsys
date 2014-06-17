@@ -114,7 +114,7 @@ foreach ($q_ids as $q_id => $setting) {
 	</style>
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
 	$(document).ready(function() {
 	  $('#submit').click(function() {
 		  history.back();
@@ -125,8 +125,8 @@ foreach ($q_ids as $q_id => $setting) {
 
 <body>
 <?php
-foreach($statuses as $qid => $data) {
-  foreach($data as $typ => $cnt) {
+foreach ($statuses as $qid => $data) {
+  foreach ($data as $typ => $cnt) {
     $statuses2[$qid][$statusinfo[$typ]] = $cnt;
   }
 }

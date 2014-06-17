@@ -87,7 +87,7 @@ if (isset($_POST['submit'])) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     function doReassign(targetID) {
       window.location = "do_reassign_script.php?temp_userID=<?php echo $userID; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
     }

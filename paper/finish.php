@@ -261,7 +261,7 @@ require '../config/finish.inc';
 <?php
   echo $configObject->get('cfg_js_root');
 ?>
-<script language="JavaScript">
+<script>
   window.history.go(1);
 	
 	$(document).ready(function () {

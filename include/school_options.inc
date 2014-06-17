@@ -23,7 +23,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function editSchool() {
     window.location.href='./edit_school.php?schoolid=' + $('#lineID').val();
   }

@@ -102,7 +102,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 
 <?php echo $configObject->get('cfg_js_root') ?>
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<script language="JavaScript">
+<script>
   var lab_names = new Array();
 <?php
   // Get computer lab information.

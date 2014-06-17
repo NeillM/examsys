@@ -32,7 +32,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 ?>
 <script type="text/javascript" src="../js/state.js"></script>
-<script language="JavaScript">
+<script>
   function getLastID(IDs) {
     var id_list = IDs.split(",");
     last_elm = id_list.length - 1;

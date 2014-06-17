@@ -98,7 +98,7 @@ $mysqli->close();
 	</style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
 		$(document).ready(function(){
       window.opener.location.reload(true);
       window.close();

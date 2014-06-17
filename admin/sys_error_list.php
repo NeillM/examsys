@@ -48,7 +48,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
     function refreshPage() {
       window.location = 'sys_error_list.php';
     }

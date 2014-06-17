@@ -51,8 +51,8 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
     function over(id) {
       if (id != $('#paper_type').val()) {
 				$('#' + id).css('background-color', '#FFE7A2');
@@ -207,13 +207,13 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
   if ($paper_types[$_POST['paper_type']] == '2' or $paper_types[$_POST['paper_type']] == '4' or $paper_types[$_POST['paper_type']] == '5') {
 ?>
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('.datecopy').change(dateCopy);
     })
@@ -221,7 +221,7 @@ require '../lang/' . $language. '/include/timezones.inc';
 <?php
 }
 ?>
-<script language="JavaScript">
+<script>
   function toggle(objectID) {
     if ($('#div' + objectID).hasClass('r2')) {
       $('#div' + objectID).addClass('r1');

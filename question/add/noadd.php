@@ -45,7 +45,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
     .date {color:#C00000; font-weight: bold}
   </style>
   
-  <script language="javascript">
+  <script>
     function paperProperties() {
       notice=window.open("../../paper/properties.php?paperID=<?php echo $paperID; ?>&caller=details&noadd=y","properties","width=882,height=650,left="+(screen.width/2-325)+",top="+(screen.height/2-441)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {

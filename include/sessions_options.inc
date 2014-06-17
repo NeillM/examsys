@@ -48,7 +48,7 @@ if ($vle_api != '') {
   $objsBySession = getObjectives($modules_array, $session, '', '', $mysqli, 'all');
 }
 ?>
-<script language="JavaScript">
+<script>
   function addSession() {
     <?php
       if ($vle_api != '') {

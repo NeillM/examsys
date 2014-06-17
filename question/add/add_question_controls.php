@@ -36,7 +36,7 @@ require '../../include/staff_auth.inc';
     body {margin-right:4px; margin-bottom:2px; background-color:#F0F0F0; font-size:90%}
   </style>
   
-  <script language="JavaScript">
+  <script>
     var selected_q = Array();
 
     function in_array (needle, haystack) { 

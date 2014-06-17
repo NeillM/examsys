@@ -59,7 +59,7 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid']; ?></title>
-  <script language="JavaScript">
+  <script>
     function closeWindow() {
       window.opener.location.href = '../module/index.php?module=<?php echo $moduleID; ?>';
       self.close();
@@ -91,7 +91,7 @@ if (isset($_POST['submit'])) {
     input[type="checkbox"] {margin-left: 25px}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
         $('#' + objectID).addClass('r1');

@@ -152,7 +152,7 @@ if (isset($_POST['submit'])) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
         $('#' + objectID).addClass('r1');

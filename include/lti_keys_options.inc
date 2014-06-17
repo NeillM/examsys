@@ -24,7 +24,7 @@
 
 
 ?>
-<script language="JavaScript">
+<script>
   function editLTIkeys() {
     window.location.href = './edit_LTIkeys.php?LTIkeysid=' + $('#lineID').val();
   }

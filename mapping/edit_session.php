@@ -357,7 +357,7 @@ echo "</ul>\n";
 echo "<input type=\"hidden\" name=\"identifier\" value=\"$identifier\" />";
 echo "</td></tr>\n</table>\n</div>\n";
 echo "</form>\n";
-echo '<script language="Javascript">updateButtons();</script>';
+echo '<script>updateButtons();</script>';
 ?>
 </div>
 </body>

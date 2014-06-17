@@ -890,7 +890,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
 				echo "</script>\n";
 				//<!-- ==================================================== -->
 			} else {
-				echo '<script language="JavaScript">';
+				echo '<script>';
 				echo "function swfLoaded" . $question_no . "(message) {\n";
 				echo "var num = message.substring(5,message.length);\n";
 				echo "setUpFlash(num, message, '" . $language . "', '" . $display_option['q_media'] . "', '" . trim($display_option['correct']) . "', '','','#FFC0C0');}\n";
@@ -917,7 +917,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
     case 'flash':
 ?>
 
-  <script language="JavaScript">
+  <script>
     var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
     function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
       var flash<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $question_no; ?> : document.flash<?php echo $question_no; ?>;

@@ -44,7 +44,7 @@ require '../include/sort.inc';
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
+  <script>
     function edit(courseID) {
       document.location.href='./edit_course.php?courseID=' + courseID;
     }

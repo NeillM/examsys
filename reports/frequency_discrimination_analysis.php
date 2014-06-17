@@ -961,7 +961,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         echo $leadin;
         ?>
-          <script language="JavaScript">
+          <script>
           var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
           function flash<?php echo $q_no; ?>_DoFSCommand(command, args) {
             var flash<?php echo $q_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $q_no; ?> : document.flash<?php echo $q_no; ?>;
@@ -977,7 +977,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
         </script>
         <div style="text-align:center">
-        <script language="JavaScript">
+        <script>
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $q_media_width; ?>" height="<?php echo $q_media_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<param name="movie" value="../media/<?php echo $q_media; ?>" />');
@@ -1705,7 +1705,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 	<script type="text/javascript" src="../js/qarea.js"></script>
 	<!-- HTML5 part end -->
 
-  <script language="JavaScript">
+  <script>
     function toggle(qID, parts, marks) {
       for (i=1; i<=parts; i++) {
         if ($('#status_' + qID).val().substr(0,1) == '1') {

@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
   <html>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <head><title><?php echo $string['note']; ?></title>
-  <script language="JavaScript">
+  <script>
     function closeWindow() {
       window.opener.location.reload(true);
       window.close();
@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
 	    var noteHeight = $(document).height() - 110;
 	    $("#note").css('height', noteHeight + 'px')

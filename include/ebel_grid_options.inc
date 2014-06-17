@@ -23,7 +23,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function editTemplate() {
     document.location.href='<?php echo $configObject->get('cfg_root_path') ?>/admin/edit_ebel_grid.php?id=' + $('#lineID').val();
   }

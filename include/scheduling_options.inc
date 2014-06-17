@@ -23,7 +23,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function viewDetails() {
     window.location = "scheduling_details.php?paperID=" + $('#lineID').val();
   }

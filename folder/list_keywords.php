@@ -46,7 +46,7 @@ require_once '../classes/moduleutils.class.php';
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
+  <script>
     function getLastID(IDs) {
       var id_list = IDs.split(",");
       last_elm = id_list.length - 1;

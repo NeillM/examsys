@@ -655,7 +655,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     if (count($properties_list) < 2) {
       ?>
 
-        <script language="JavaScript" type="text/javascript">
+        <script>
           $('#theEndTime').val("<?php echo $string['end'] ?> <?php echo $end_time; ?>");
         </script>
 

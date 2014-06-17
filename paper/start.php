@@ -642,7 +642,7 @@ if ($css != '') {
 
   echo $configObject->get('cfg_js_root');
 ?>
-<script language="javascript">
+<script>
   window.history.go(1);
 <?php
   if (count($reference_materials) > 0) {

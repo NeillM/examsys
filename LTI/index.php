@@ -298,7 +298,7 @@ if (!$lti->isInstructor()) {
   .mod {padding-left:60px; text-indent:-30px}
   </style>
    {$configObject->get('cfg_js_root')}
-  <script language="JavaScript">
+  <script>
     function showHide(sectionID) {
       sectionID = 'block' + sectionID;
       current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';

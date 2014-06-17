@@ -37,7 +37,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō</title>
+  <title>Rog&#333;</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
@@ -53,7 +53,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../../js/state.js"></script>
-  <script language="JavaScript">
+  <script>
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;
     }

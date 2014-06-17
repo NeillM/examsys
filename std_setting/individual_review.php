@@ -133,7 +133,7 @@ function check_ebel_distinction_type($reviewID, $db) {
 	<script type="text/javascript" src="../js/qarea.js"></script>
 	<!-- HTML5 part end -->
 
-  <script language="JavaScript">
+  <script>
   <?php
     if ($_GET['method'] == 'ebel') {
   ?>

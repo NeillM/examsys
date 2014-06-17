@@ -77,7 +77,7 @@ function quick_links() {
   ?>
   </style>
   
-  <script language="JavaScript">
+  <script>
     function load(userID) {
       window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID;
     }

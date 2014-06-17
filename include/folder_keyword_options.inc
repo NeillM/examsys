@@ -28,7 +28,7 @@
     $module = '';
   }
 ?>
-<script language="JavaScript">
+<script>
   function newKeyword() {
     keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/folder/new_keyword.php?module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {

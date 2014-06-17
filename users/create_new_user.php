@@ -312,7 +312,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   $mysqli->close();
 
   if ($unique_username != true) {
-    echo '<script language="JavaScript">alert("' . sprintf($string['usernameinuse'],$_POST['new_username']) . '")</script>';
+    echo '<script>alert("' . sprintf($string['usernameinuse'], $_POST['new_username']) . '")</script>';
   }
 ?>
 </div>

@@ -102,10 +102,10 @@ if (isset($_POST['save_changes'])) {
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script language="JavaScript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_student.js"></script>
+  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_student.js"></script>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
 		  var docHeight = $(document).height();
 			docHeight = docHeight - 100;

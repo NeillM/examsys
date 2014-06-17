@@ -29,7 +29,7 @@ require_once '../classes/dateutils.class.php';
 	.cancel {margin-right:8px}
 </style>
 
-<script language="JavaScript">
+<script>
   function changeButton() {
     if ($("#paper_type").val() == '2') {
       $('#next_button').show();

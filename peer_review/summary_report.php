@@ -72,7 +72,7 @@ require_once 'summary_report.inc';
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
     function setVars(tmpUserID) {
       $('#userID').val(tmpUserID);
     }

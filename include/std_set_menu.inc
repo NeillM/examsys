@@ -35,7 +35,7 @@ if (isset($_GET['folder'])) {
 ?>
 <div id="left-sidebar" class="sidebar">
 <br />
-<script language="JavaScript">
+<script>
   function deleteReview() {
     notice=window.open("../delete/check_delete_review.php?std_setID=" + $('#std_setID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210, screen.height/2-85);

@@ -28,7 +28,7 @@ require_once '../classes/dateutils.class.php';
 $current_session = date_utils::get_current_academic_year();
 $next_session = date_utils::get_next_academic_year();
 ?>
-<script language="JavaScript">
+<script>
   function editModule() {
     window.location.href='./edit_module.php?moduleid=' + $('#lineID').val();
   }

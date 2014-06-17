@@ -305,7 +305,7 @@ if (isset($_POST['Save'])) {
     echo "</ul>\n";
 
     echo "</td></tr>\n</table>\n</div>\n</form>\n";
-    echo '<script language="Javascript">updateButtons();</script>';
+    echo '<script>updateButtons();</script>';
 ?>
     </div>
   </body>

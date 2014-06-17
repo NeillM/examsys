@@ -44,7 +44,7 @@ require '../../include/staff_auth.inc';
     .k {padding-left:2px}
   </style>
 
-  <script language="JavaScript">
+  <script>
     function findKeywords() {
       document.myform.submit();
     }

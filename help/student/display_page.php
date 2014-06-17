@@ -89,7 +89,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role(array('SysAdmin', 'External'))
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   
-  <script language="JavaScript">
+  <script>
     function updateToolbar(editID, deleteID) {
       var obj = parent.frames[0].document.getElementById('editid');
       if (obj != null) obj.value = editID;

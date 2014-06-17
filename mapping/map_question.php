@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
   // Write out curriculum mapping.
   save_objective_mappings($mysqli, $_POST['objective_modules'], $_POST['paperID'], $_POST['questionID']);
   ?>
-  <script language="JavaScript">
+  <script>
     window.opener.location = window.opener.location;
     window.close();
   </script>

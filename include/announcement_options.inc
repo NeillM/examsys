@@ -22,7 +22,7 @@
 * @package
 */
 ?>
-<script language="JavaScript">
+<script>
   function editAnnouncement() {
     window.location.href='./edit_announcement.php?announcementid=' + $('#lineID').val();
   }

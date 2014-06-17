@@ -39,7 +39,7 @@ if (!isset($module_details) && $module != '0') {
 ?>
 <?php echo $configObject->get('cfg_js_root') ?>
 <script src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js" type="text/javascript"></script>
-<script language="JavaScript">
+<script>
   function getLastID(IDs) {
     var id_list = IDs.split(",");
     last_elm = id_list.length - 1;

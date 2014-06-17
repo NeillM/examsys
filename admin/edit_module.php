@@ -137,7 +137,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
 <?php
   $vle_apis = $configObject->get('vle_apis');
   $mu = module_utils::get_instance();

@@ -135,7 +135,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">    
+  <script>    
     function setVars(metadataID, currentUserID) {
       $('#metadataID').val(metadataID);
       $('#userID').val(currentUserID);

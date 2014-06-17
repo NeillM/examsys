@@ -89,7 +89,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
-<script language="JavaScript">
+<script>
 	$(document).ready(function() {
 		// Fire off the request to mark_all_enhancedcalc.php
    var request = $.ajax({
@@ -171,7 +171,7 @@ ob_start();
 <script type="text/javascript" src="../js/popup_menu.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script type="text/javascript" src="../js/class_totals.js"></script>
-<script language="JavaScript">
+<script>
   function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
     $('#metadataID').val(tmpMetadataID);
     $('#userID').val(tmpUserID);

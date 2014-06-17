@@ -23,7 +23,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function addFaculty() {
     facultywin=window.open("add_faculty.php","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {

@@ -56,7 +56,7 @@ $session_parts = explode('/', $session);
     <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
     <script type="text/javascript" src="../js/staff_help.js"></script>
     <script type="text/javascript" src="../js/toprightmenu.js"></script>
-    <script language="javascript">
+    <script>
       $(document).ready(function() {
         $("#maindata").tablesorter({ 
           sortList: [[1,0]] 

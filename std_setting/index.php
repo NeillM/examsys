@@ -91,7 +91,7 @@ function displayReview($review, $userObj) {
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
     var groupReview;
 
     function selReview(std_setID, setterID, reviewID, methodType, menuID, group, evt) {

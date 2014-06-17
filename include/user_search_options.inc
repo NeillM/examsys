@@ -42,7 +42,7 @@ if (isset($_GET['calendar_year'])) {
 }
 ?>
 <script type="text/javascript" src="../js/state.js"></script>
-<script language="JavaScript">
+<script>
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
     updateState(NameOfState, setting);

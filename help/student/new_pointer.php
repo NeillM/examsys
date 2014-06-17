@@ -71,7 +71,7 @@ if (isset($_POST['submit'])) {
     a:visited {color:black}
   </style>
 
-  <script language="Javascript">
+  <script>
     function updateMenu(sectionID,imageID) {
       current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
       document.getElementById(sectionID).style.display = current;

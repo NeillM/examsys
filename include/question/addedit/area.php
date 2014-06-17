@@ -87,7 +87,7 @@ if ($configObject->get('cfg_interactive_qs') == 'html5') {
   //<!-- ======================== HTML5 part ================= -->
   echo '<canvas id="canvas1" width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
   echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";
-	echo '<script language="JavaScript" type="text/javascript">' . "\n";
+	echo '<script>' . "\n";
 	echo 'setUpQuestion(1, "option_correct", "' . $language . '", "' . $media['filename'] . '", "' . $correct . '", "", "", "#FFC0C0", "area", "2");' . "\n";
   echo '</script>' . "\n";
   //<!-- ==================================================== -->

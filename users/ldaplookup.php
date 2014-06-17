@@ -161,7 +161,7 @@ if (isset($_POST['submit'])) {
 				</table>
 			</div>
     </form>
-    <script language="JavaScript">
+    <script>
       alert(<?php echo $string['nousersalert'] ?>);
     </script>
     </body>

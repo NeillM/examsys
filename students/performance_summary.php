@@ -156,7 +156,7 @@ if ($userObject->has_role('Staff')) {
 }
 if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 ?>
-  <script language="javascript">
+  <script>
     function setVars (paper_type, crypt_name, paperID, metadataID) {
       $('#paper_type').val(paper_type);
       $('#crypt_name').val(crypt_name);

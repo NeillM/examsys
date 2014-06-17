@@ -104,7 +104,7 @@ if (isset($_POST['save_changes'])) {
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
 		  var docHeight = $(document).height();
 			docHeight = docHeight - 100;

@@ -58,7 +58,7 @@ $question_no = 0;
 	<script type="text/javascript" src="../js/qhotspot.js"></script>
 	<script type="text/javascript" src="../js/qarea.js"></script>
 	<!-- HTML5 part end -->
-  <script language="JavaScript">
+  <script>
     function write_string(p_string) {
       document.write(p_string);
     }

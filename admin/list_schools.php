@@ -49,7 +49,7 @@ $result->close();
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">    
+  <script>    
     function edit(schoolID) {
       document.location.href='./edit_school.php?schoolid=' + schoolID;
     }

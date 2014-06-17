@@ -2273,7 +2273,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-					echo '<script language="JavaScript">';
+					echo '<script>';
 					echo "function swfLoaded" . $question_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 					echo "setUpFlash(num, message, '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
@@ -2318,7 +2318,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
         }
 ?>
   <div align="center">
-  <script language="JavaScript">
+  <script>
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
     write_string('<param name="movie" value="../media/<?php echo $movie; ?>" />');

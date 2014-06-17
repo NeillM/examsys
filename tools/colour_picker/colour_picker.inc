@@ -25,7 +25,7 @@
 * @package
 */
 ?>
-<script language="JavaScript">
+<script>
   var textBox = '';
 
   function showPicker(pickerID, evt) {

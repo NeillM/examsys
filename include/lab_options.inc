@@ -23,7 +23,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function viewDetails() {
     document.location.href='./lab_details.php?labID=' + $('#labID').val();
     $('#menu1a').show();

@@ -131,7 +131,7 @@ if (isset($_POST) and count($_POST) > 0) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     function ans(q_id, rating) {
       $('#q' + q_id + '_val').val(rating);
       if (rating == 1) {

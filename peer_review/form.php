@@ -288,7 +288,7 @@ if (isset($_POST['submit'] )) {
     .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
   </style>
 
-  <script language="JavaScript">
+  <script>
     function changeGroup() {
       window.location = "form.php?id=<?php echo $_GET['id']; ?>&group=" + document.getElementById('group').value;
     }
@@ -338,7 +338,7 @@ if (isset($_POST['submit'] )) {
   .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
   </style>
 
-  <script language="JavaScript">
+  <script>
     function changeGroup() {
       window.location = "form.php?id=<?php echo $_GET['id']; ?>&group=" + document.getElementById('group').value;
     }

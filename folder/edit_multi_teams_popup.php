@@ -43,7 +43,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
       window.opener.location.href = '../users/details.php?userID=<?php echo $_POST['userID']; ?>&tab=teams';
       self.close();
@@ -72,7 +72,7 @@ if (isset($_POST['submit'])) {
 		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
         $('#' + objectID).addClass('r1');

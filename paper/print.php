@@ -252,7 +252,7 @@ $current_screen = 1;
 	<!-- HTML5 part end -->
 
 
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
       window.print();
     });

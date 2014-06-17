@@ -28,7 +28,7 @@ require_once '../classes/stateutils.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/paper/search.php');
 ?>
-<script language="JavaScript">
+<script>
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
     updateState(NameOfState, setting);

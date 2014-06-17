@@ -80,7 +80,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
     function newPaper() {
       notice = window.open("../paper/new_paper1.php?module=<?php echo $module ?>","paper","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {

@@ -62,7 +62,7 @@ if (!$module_code) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
+  <script>
     function selRef(divID, evt) {
       tmp_ID = $('#oldID').val();
       if (tmp_ID != '') {

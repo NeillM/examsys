@@ -25,7 +25,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function restoreItem() {
     document.location.href = 'restore_item.php?item_id=' + $('#itemID').val();
   }

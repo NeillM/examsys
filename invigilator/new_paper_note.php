@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['note']; ?></title>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
       window.opener.location.reload(true);
       window.close();
@@ -74,7 +74,7 @@ if (isset($_POST['submit'])) {
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
 	    var noteHeight = $(document).height() - 90;
 	    $("#note").css('height', noteHeight + 'px')

@@ -44,7 +44,7 @@ require '../include/sysadmin_auth.inc';
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
+  <script>
     function edit(lineID) {
       document.location.href = './edit_LTIkeys.php?LTIkeysid=' + lineID;
     }

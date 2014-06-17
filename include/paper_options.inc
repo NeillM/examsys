@@ -74,8 +74,8 @@ if (count($moduleIDs) > 0) {
 ?>
 
 <?php echo $configObject->get('cfg_js_root') ?>
-<script language="JavaScript" src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js"></script>
-<script language="JavaScript">
+<script type="text/javascript" src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js"></script>
+<script>
   function startPaper(fullsc, preview) {
     var urlMod = (typeof preview == 'undefined' || !preview) ? '' : '&q_id=' + getLastID($('#questionID').val() + '&qNo=' + $('#questionNo').val());
     <?php

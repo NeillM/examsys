@@ -135,7 +135,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
 <?php
   $vle_apis = $configObject->get('vle_apis');
   if (count($vle_apis) > 0) {

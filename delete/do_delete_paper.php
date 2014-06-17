@@ -57,7 +57,7 @@ $mysqli->close();
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   
-  <script language="javascript">
+  <script>
     function closeWindow() {
       <?php
         if ($_POST['module'] != '') {

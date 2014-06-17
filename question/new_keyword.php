@@ -83,7 +83,7 @@ require '../include/errors.inc';
     h1 {font-size:120%}
   </style>
 
-  <script language="JavaScript">
+  <script>
     function illegalChar(codeID) {
       if (codeID == 35) {
         alert("Character '#' illegal - please use alternative characters in keyword.");

@@ -93,7 +93,7 @@ function close_window() {
   </style>
 
   <script src="../js/ie_fix.js" type="text/javascript"></script>
-  <script language="JavaScript">
+  <script>
     window.history.go(1);
   </script>
 </head>

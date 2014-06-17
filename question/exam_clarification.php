@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript">
+  <script>
     $(document).ready(function() {
       opener.location.reload();
       window.close();
@@ -103,11 +103,11 @@ exit();
   </style>
   
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
-  <script language="JavaScript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script language="JavaScript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script language="JavaScript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
-  <script language="JavaScript">
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
+  <script>
     $(document).ready(function() {
       var new_height = $(window).height() - 105;
       $('#msg').height(new_height);

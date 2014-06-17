@@ -118,11 +118,11 @@ require '../config/start.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['sctreview']; ?></title>
-  <script language="JavaScript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <?php
     if (isset($_POST['submit'])) {
   ?>
-  <script language="JavaScript">
+  <script>
      $(function() { alert('<?php echo $string['saved_msg']; ?>'); });
    </script>
    <?php

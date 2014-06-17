@@ -90,7 +90,7 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
 		.divider {font-size:80%; font-weight:bold; padding-left:6px}
   </style>
 
-  <script language="JavaScript">
+  <script>
     function copyValue() {
       for (var i=0; i < document.myform.ref.length; i++) {
         if (document.myform.ref[i].checked) {

@@ -60,7 +60,7 @@ $themecolor = $propertyObj->get_themecolor();
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
     function reviewOSCE(userid) {
       var winwidth = 750;
       var winheight = screen.height-80;

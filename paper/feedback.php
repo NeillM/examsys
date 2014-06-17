@@ -187,7 +187,7 @@ require '../config/finish.inc';
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/student_help.js"></script>
 
-  <script language="JavaScript">
+  <script>
     window.history.go(1);
   </script>
   <?php

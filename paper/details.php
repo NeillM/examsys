@@ -402,7 +402,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
-<script defer="defer" type="text/javascript">
+<script defer="defer">
   var paperID = '<?php echo $paperID; ?>';
 
   function addQID(qID, pID, clearall) {
@@ -1113,7 +1113,7 @@ function check_latex_random($q_ids, $mysqli) {
     $startdate = $properties->get_raw_start_date();
     $enddate   = $properties->get_raw_end_date();
 ?>
-    <script language="JavaScript">
+    <script>
       $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'});  // AJAX off to class totals to recache marks.
     </script>
 <?php

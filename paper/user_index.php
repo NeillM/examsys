@@ -296,7 +296,7 @@ if ($exam_duration !== null) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/student_help.js"></script>
-  <script language="JavaScript">
+  <script>
   function startPaper() {
 <?php
 	if ($userObject->has_role('External Examiner')) {
