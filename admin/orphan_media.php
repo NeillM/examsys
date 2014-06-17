@@ -27,7 +27,7 @@ require '../include/sidebar_menu.inc';
 set_time_limit (0);
 
 // List of files that should be kept
-$exempt = array('formulary.gif','formulary.html');
+$exempt = array('formulary.gif', 'formulary.html');
 
 function getImages($html) {
   $image_array = array();

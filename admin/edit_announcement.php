@@ -40,7 +40,7 @@ if (isset($_POST['save'])) {
   $student_msg = $_POST['student_msg'];
   $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'] . '00';
   $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'] . '00';
-  $icon = $_POST['icon'];
+  $icon = str_replace('icon', '', $_POST['icon_type']);
   
   $result = $mysqli->prepare("UPDATE announcements SET title = ?, staff_msg = ?, student_msg = ?, icon = ?, startdate = ?, enddate = ? WHERE id = ?");
   $result->bind_param('ssssssi', $news_title, $staff_msg, $student_msg, $icon, $startdate, $enddate, $announcementid);
@@ -69,10 +69,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    h1 {font-size:120%}
-    .f {text-align:right; padding-right:6px; width:125px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/announcement.css" />
 <?php
 // Override this variable with a specific configuration file for announcements.
 $cfg_editor_javascript = <<< SCRIPT
@@ -87,7 +84,7 @@ SCRIPT;
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -96,6 +93,17 @@ SCRIPT;
         }
       });
       $('form').removeAttr('novalidate');
+   
+      $('.icon').click(function() {
+        current = $('#icon_type').val();
+        $('#' + current).css('border-color', 'white');
+
+        newvalue = $(this).attr('id');
+        $('#' + newvalue).css('border-color', '#FFBD69');
+        $('#icon_type').val(newvalue)
+        
+      });
+      
     });
   </script>
 </head>
@@ -108,15 +116,15 @@ SCRIPT;
 	echo draw_toprightmenu();
 ?>
 <div id="content" class="content">
-<table class="header">
-<tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editannouncement']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-</table>
-<br />
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+  <div class="page_title"><?php echo $string['editannouncement']; ?></div>
+</div>
 
-<br />
 <form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
-<table style="width:875px; margin-left:auto; margin-right:auto; font-size:110%">
+<table class="tblform">
 <tr>
 <td></td><td>
 <?php
@@ -124,39 +132,39 @@ $icons = array(1=>'news_64.png', 2=>'new_64.png', 3=>'tip_64.png', 4=>'software_
 
 for ($i=1; $i<=7; $i++) {
   if ($i == $news_icon) {
-    echo "<input type=\"radio\" name=\"icon\" value=\"$i\" checked=\"checked\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" />&nbsp;&nbsp;&nbsp;";
+    echo "<img class=\"icon\" id=\"icon$i\" src=\"../artwork/" . $icons[$i] . "\" style=\"border-color:#FFBD69\" />";
   } else {
-    echo "<input type=\"radio\" name=\"icon\" value=\"$i\" /><img src=\"../artwork/" . $icons[$i] . "\" width=\"64\" height=\"64\" />&nbsp;&nbsp;&nbsp;";
+    echo "<img class=\"icon\" id=\"icon$i\" src=\"../artwork/" . $icons[$i] . "\" />";
   }
 }
 ?>
 </td>
 </tr>
 <tr>
-<td class="f"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" maxlength="255" value="<?php echo $news_title; ?>" required /></td>
+<td class="field"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" maxlength="255" value="<?php echo $news_title; ?>" required /></td>
 </tr>
 <tr>
-<td class="f"><?php echo $string['Available from']; ?></td><td><?php echo date_utils::timedate_select('f', $startdate); ?></td>
+<td class="field"><?php echo $string['Available from']; ?></td><td><?php echo date_utils::timedate_select('f', $startdate); ?></td>
 </tr>
 <tr>
-<td class="f"><?php echo $string['Available to']; ?></td><td><?php echo date_utils::timedate_select('t', $enddate); ?></td>
+<td class="field"><?php echo $string['Available to']; ?></td><td><?php echo date_utils::timedate_select('t', $enddate); ?></td>
 </tr>
 <tr>
-<td class="f"><?php echo $string['Staff Message']; ?></td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:70px; margin: 0" rows="5" cols="20"><?php echo $staff_msg; ?></textarea></td>
+<td class="field"><?php echo $string['Staff Message']; ?></td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $staff_msg; ?></textarea></td>
 </tr>
 <tr>
-<td class="f"><?php echo $string['Student Message']; ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:70px; margin: 0" rows="5" cols="20"><?php echo $student_msg; ?></textarea></td>
+<td class="field"><?php echo $string['Student Message']; ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $student_msg; ?></textarea></td>
 </tr>
 <tr>
-<td colspan="2">&nbsp;</td>
-</tr>
-<tr>
-<td colspan="2" style="text-align:center"><input type="submit" name="save" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td>
+<td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="save" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td>
 </tr>
 </table>
+
+<input type="hidden" id="icon_type" name="icon_type" value="icon<?php echo $news_icon ?>" />
 <input type="hidden" name="announcementid" value="<?php echo $_GET['announcementid']; ?>" />
 </form>
 </div>
+  
 </body>
 </html>
 <?php
