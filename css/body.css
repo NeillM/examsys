@@ -31,6 +31,25 @@ textarea, input[type=text], select, input[type=password] {
   border: 1px solid #909090;
   margin: 1px;
 }
+input[type=submit], input[type=button] {
+  border: 1px solid #707070;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  background: -moz-linear-gradient(top, #EBEBEB, #D5D5D5);
+  background: -webkit-linear-gradient(top, #EBEBEB, #D5D5D5);
+  background-image: -ms-linear-gradient(top, #EBEBEB 0%, #D5D5D5 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EBEBEB', endColorstr='#D5D5D5');
+}
+input[type=submit]:hover {
+  border: 1px solid #26A0DA;
+  background: #A6F4FF;
+}
+input[type=button]:hover {
+  border: 1px solid #26A0DA;
+  background: #A6F4FF;
+}
 table {
   font-size: 100%;
 }

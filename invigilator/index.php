@@ -651,17 +651,6 @@ if ($properties_list !== false and count($properties_list) > 0) {
     $end_time_m = $end_datetime->format('i');
     
     $password = $property_object->get_password();
-
-    if (count($properties_list) < 2) {
-      ?>
-
-        <script>
-          $('#theEndTime').val("<?php echo $string['end'] ?> <?php echo $end_time; ?>");
-        </script>
-
-      <?php
-    }
-
     ?>
           
           <div class="exam_details">
