@@ -16,6 +16,7 @@
 
 require_once '../lang/' . $language . '/include/paper_options.inc';
 
+$string['showretired'] = 'Pokaż wycofane';
 $string['screen'] = 'Screen';
 $string['screens'] = 'Screens';
 $string['mins'] = 'mins';

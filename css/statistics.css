@@ -9,9 +9,11 @@ table.stats {
 	border-right: 1px solid #C0C0C0;
 	border-bottom: 1px solid #C0C0C0;
 }
+
 .stats {
-	font-size: 90%;
+	font-size: 100%;
 }
+
 .stats th {
 	background-color: #EAEAEA;
 	border-top: 1px solid #C0C0C0;
@@ -19,18 +21,26 @@ table.stats {
 	font-weight: normal;
 	vertical-align: bottom;
 }
+
 .stats td {
 	border-top: 1px solid #C0C0C0;
 	border-left: 1px solid #C0C0C0;
 }
+
 .n {
 	text-align: right;
 }
+
 .faculty {
   font-weight: bold;
 	padding-top: 10px;
 }
+
 .subtotal {
   border-top: 1px solid #808080 !important;
 	font-weight: bold;
+}
+
+.grey {
+  color: #C0C0C0;
 }

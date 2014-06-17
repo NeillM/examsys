@@ -44,10 +44,6 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-	<style>
-	  body {font-size:90%}
-		.grey {color:#C0C0C0}
-	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -60,14 +56,12 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 	
 	echo draw_toprightmenu();
 ?>
-<table class="header" style="font-size:90%">
-<tr>
-<th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="summative_feedback.php?calyear=<?php echo $_GET['calyear']; ?>"><?php echo $string['summativeexamfeedback']; ?></a></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php
-	echo $string['feedbackstats'] . ': </strong>';
+<div style="font-size:80%">
+<div class="head_title">
+<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_feedback.php?calyear=<?php echo $_GET['calyear']; ?>"><?php echo $string['summativeexamfeedback'] ?></a></div>
+<div class="page_title"><?php
+	echo $string['feedbackstats'] . ': <span style="font-weight:normal">';
 	switch ($_GET['type']) {
 		case 1:
 			echo $string['objectivefeedback'];
@@ -81,8 +75,10 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 	}
 	
 	$extra = "&school=$schoolID&type=" . $_GET['type'];
-?></th>
-</tr>
+  ?></span></div>
+</div>
+
+<table class="header">
 <tr>
 <th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1, $extra); ?></div></th>
 </tr>
@@ -208,6 +204,6 @@ function get_feedback_release_dates($date_range, $moduleIDs, &$papers, $db) {
 ?>
 </table>
 </blockquote>
-
+</div>
 </body>
 </html>

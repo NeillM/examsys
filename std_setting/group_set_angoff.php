@@ -159,20 +159,19 @@ $paper_prologue = $propertyObj->get_paper_prologue();
 ?>
   <div id="maincontent">
 	<form method="post" name="questions" action="record_review.php?group=true">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td valign="top">
+ 
   <?php
-  echo "\n<table class=\"header\">\n";
-  echo "<tr><th><div class=\"breadcrumb\"><a href=\"../index.php\">{$string['home']}</a>";
+  echo "\n<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">{$string['home']}</a>";
   if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif ($module != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
   }
-  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
-  echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:90%">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "</table>\n";
+  echo "<img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
+  echo '<div class="page_title">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
+  echo "</div>\n";
 ?>
   <br />
   <div align="center">
@@ -289,9 +288,8 @@ $stmt->close();
 $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
 display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
 
-echo '</td></tr></table></td></tr>';
-echo "<tr><td colspan=\"2\" style=\"border-top:dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
-echo '</table>';
+echo '</td></tr></table>';
+echo '<br />';
 echo '<input type="hidden" name="module" value="' . $module . '" />';
 echo '<input type="hidden" name="folder" value="' . $folder . '" />';
 echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';

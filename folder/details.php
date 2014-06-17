@@ -179,9 +179,11 @@ $selfenrol = 0;
       }
     }
 
-    function refreshPage() {
-      $('.retired').toggle();
-    }
+    $(document).ready(function() {
+      $('#showretired').click(function() {
+        $('.retired').toggle();
+      });
+    });
   </script>
 </head>
 
@@ -194,28 +196,32 @@ $selfenrol = 0;
 ?>
 <div id="content" class="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
-<table class="header">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
-echo '<tr><th><div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+  echo "<div style=\"position:absolute; right: 6px; top: 24px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\"\"";
+  if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
+  echo " /> " . $string['showretired'] . "</div>\n";
+?>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
+<?php
 if (count($parent_list) > 0) {
   foreach ($parent_list as $parent_id=>$parent_name) {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="details.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="details.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
   }
 }
-echo "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+echo "</div>\n";
 
-echo '<tr><th><div style="margin-left:10px; font-size:200%; font-weight:bold">';
+echo '<div class="page_title">';
 if ($folder != '') {
   echo $folders_array[$parts];
 } elseif ($_GET['module'] != '') {
   echo $module_details['moduleid'] . ': <span style="font-weight:normal">' . $module_details['fullname'] . '</span>';
 }
-echo '</div></th>';
-echo "<th style=\"text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\" onclick=\"refreshPage();\"";
-if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
-echo " /> " . $string['showretired'] . "</th></tr>\n";
+echo '</div>';
 
-echo "</table>\n<br />\n";
+
+echo "</div>\n<br />\n";
 
 // Get any sub-folders first.
 $tmp_string = '';

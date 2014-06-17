@@ -88,6 +88,12 @@ if ($_GET['module'] != '0') {
     function addQuestion(qType) {
       top.location.href='../question/edit/?type=' + qType + '&module=<?php echo $module; ?>';
     }
+    $(document).ready(function() {
+      $('#showretired').click(function() {
+        $('.retired').toggle();
+      });
+      
+    });
   </script>
 </head>
 
@@ -104,6 +110,11 @@ if ($_GET['module'] != '0') {
         
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<?php
+  echo "<div style=\"position:absolute; right: 6px; top: 24px\"><label><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\"\"";
+  if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
+  echo " /> " . $string['showretired'] . "</label></div>\n";
+?>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
   <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<?php echo $types_used[$type] ?>)</span></div>
 </div>

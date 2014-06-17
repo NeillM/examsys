@@ -77,21 +77,20 @@ echo draw_toprightmenu();
 ?>
 <div id="content" class="content" style="font-size:80%">
 <?php
-echo "<table class=\"header\">\n";
+echo "<div class=\"head_title\">\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
 echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
-  $modutils=module_utils::get_instance();
-
-  $module=$modutils->get_moduleid_from_id($module,$mysqli);
+$modutils = module_utils::get_instance();
+$module = $modutils->get_moduleid_from_id($module, $mysqli);
 if ($module != '') {
-  echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
 } elseif ($folder != '') {
-  echo '<a href="../index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
 } else {
   echo '<a href="../index.php">' . $string['home'] . '</a>';
 }
-echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-echo "</table>";
+echo "</div><div class=\"page_title\">$paper_title</div>";
+echo "</div>";
 ?>
 <br/>
 <br/>

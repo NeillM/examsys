@@ -17,4 +17,10 @@
 $string['summativeexamfeedback'] = 'Odzew dot. egzaminu końcowego';
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['statistics'] = 'Statystyka';
+$string['school'] = 'School';
+$string['exams'] = 'Exams';
+$string['objectivefeedback'] = 'Objective Feedback';
+$string['questionfeedback'] = 'Question Feedback';
+$string['cohortperformance'] = 'Cohort Performance';
+$string['externalexaminers'] = 'External Examiners';
 ?>

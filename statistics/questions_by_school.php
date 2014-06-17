@@ -38,8 +38,6 @@ require '../include/errors.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<style>
-	  body {font-size:90%}
-		.grey {color:#C0C0C0}
 		.qtype {width:4%}
 	</style>
 	
@@ -54,7 +52,8 @@ require '../include/errors.inc';
 	
 	echo draw_toprightmenu();
 ?>
-<div class="head_title" style="font-size:90%">
+<div style="font-size:80%">
+<div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
   <div class="page_title"><?php echo $string['questionsbyschool']; ?></div>
@@ -145,7 +144,7 @@ foreach ($master_array as $school => $data) {
 ?>
 </table>
 </blockquote>
-
+</div>
 </body>
 </html>
 <?php

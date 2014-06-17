@@ -386,7 +386,6 @@ function check_ebel_distinction_type($reviewID, $db) {
     $folder = '';
   }
 
-
   if ($_GET['method'] == 'ebel') {
     echo "<body onload=\"recountCategories();\">\n";
   } else {
@@ -421,29 +420,25 @@ function check_ebel_distinction_type($reviewID, $db) {
     echo "<input type=\"hidden\" name=\"old" . $questionID . "\" value=\"$std\" />\n";
   }
   $result->close();
-?>
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td valign="top">
-<?php
 
-  echo "\n<table class=\"header\" style=\"font-size:90%\">\n";
-  echo "<tr><th><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+  echo "\n<div class=\"head_title\" style=\"font-size:90%\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($module, $mysqli);
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">" . $string['standardssetting'] . "</a></div>";
+  echo "<img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">" . $string['standardssetting'] . "</a></div>";
   if ($_GET['method'] == 'modified_angoff') {
     $helpID = 98;
-    echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['modifiedangoffmethod'] . '</div>';
+    echo '<div class="page_title">' . $string['modifiedangoffmethod'] . '</div>';
   } elseif ($_GET['method'] == 'ebel') {
     $helpID = 99;
-    echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['ebelmethod'] . '</div>';
+    echo '<div class="page_title">' . $string['ebelmethod'] . '</div>';
   }
-  echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "</table>\n";
+  echo "</div>\n";
 
   switch ($_GET['method']) {
     case 'modified_angoff':

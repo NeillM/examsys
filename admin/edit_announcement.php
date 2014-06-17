@@ -85,7 +85,7 @@ SCRIPT;
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(function () {
+    $(document).ready(function() {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {

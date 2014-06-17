@@ -58,13 +58,14 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
   <title>Rog&#333;: <?php echo $string['secondmark']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-size:90%}
     .pad {padding-left:40px; width:20px}
   </style>
 
@@ -85,16 +86,26 @@ if (isset($_POST['submit'])) {
 	$paper_total = $properties->get_total_mark();
 	$pass_mark = $properties->get_pass_mark();
 	$paper_type = $properties->get_paper_type();
-	
+?>
+  <div style="font-size:80%">
+    
+<?php
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
-  echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th colspan=\"5\">";
+  echo "<div class=\"head_title\">";
+  echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div><div style="margin-left:10px; font-size:220%; color:black; font-weight:bold">' . $string['secondmarkselection'] . '</div></th><th style="width:50%; text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
+  ?>
+  <div class="page_title"><?php echo $string['secondmarkselection'] ?></div>
+  </div>
+  
+  <table>
+  <?php
 
 	if ($paper_type == '2') {
 		$time_int = 2;
@@ -223,12 +234,13 @@ SQL;
 <tr><td colspan="4" style="text-align:center">
 <input type="hidden" name="student_no" value="<?php echo $student_no; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="submit" name="submit" value="<?php echo $string['secondmark']; ?>" style="width:120px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['cancel']; ?>" style="width:120px" />
+<input type="submit" name="submit" value="<?php echo $string['secondmark']; ?>" class="ok" /><input type="submit" name="submit" value="<?php echo $string['cancel']; ?>" class="cancel" />
 </td><td>&nbsp;</td></tr>
 </table>
 <br />
 
 </form>
+</div>
 </body>
 </html>
 

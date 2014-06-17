@@ -86,8 +86,9 @@ if (isset($_POST['submit']) and $course_exists == false) {
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    $(function () {
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(document).ready(function() {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -109,11 +110,16 @@ if (isset($_POST['submit']) and $course_exists == false) {
     echo "<body>\n";
   }
   require '../include/course_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
   ?>
   <div id="content" class="content" style="font-size:80%">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editcourse']; ?></div></th></tr>
-  </table>
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+    <div class="page_title"><?php echo $string['editcourse']; ?></div>
+  </div>
   <br />
   <div align="center">
   <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?courseID=' . $courseID; ?>">

@@ -40,10 +40,6 @@ $current_year = check_var('calyear', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-	<style>
-	  body {font-size:90%}
-		.grey {color:#C0C0C0}
-	</style>
   
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -56,7 +52,8 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 	
 	echo draw_toprightmenu();
 ?>
-<div class="head_title" style="font-size:90%">
+<div style="font-size:80%">
+<div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
   <div class="page_title"><?php echo $string['summativeexamstats']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></span></div>
@@ -138,6 +135,7 @@ $mysqli->close();
   printf($string['uniquestudents'], number_format(count($distinct_users)));
 ?>
 </blockquote>
-
+</div>
+  
 </body>
 </html>
