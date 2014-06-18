@@ -530,7 +530,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
-  $(document).ready(function(){
+  $(document).ready(function() {
     $(document).tooltip();
 
 		<?php

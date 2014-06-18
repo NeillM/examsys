@@ -966,18 +966,19 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
   <script type="text/javascript">
-    $(function () {
+    $(document).ready(function() {
       $('.datecopy').change(dateCopy);
-      
-      $(document).tooltip();
     })
   </script>
 <?php
 }
 ?>
   <script type="text/javascript">
-    $(function () {
+    $(document).ready(function() {
       getMeta();
+      
+      $(document).tooltip();
+      
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {

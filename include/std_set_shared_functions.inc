@@ -994,20 +994,18 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
   
   $extra = '';
   if ($excluded) {
-    $bgcolor = '#FFC0C0';
-    $fgcolor = '#800000';
+    $dropdown_class = 'dropdown_excluded';
     $extra = 'exclude_';
     $std_excluded++;
   } else {
-    $bgcolor = '#FFCEA3';
-    $fgcolor = 'black';
+    $dropdown_class = 'dropdown';
   }
 
   $qID = $q_no;
   if ($part_no != '') $qID .= '_' . $part_no;
   switch ($method) {
     case 'modified_angoff':
-      $html = "<select name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>\n";
+      $html = "<select name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"\"></option>\n";
       for ($i=0; $i<=100; $i+=5) {
         $sel = ($valid and $value !== '' and $value == $i) ? ' selected="selected"' : '';
         +$html .= "<option value=\"$i\"$sel>$i%</option>\n";
@@ -1016,7 +1014,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
       $html .= $review_string;
       break;
     case 'ebel':
-      $html .= "<select onchange=\"recountCategories();\" id=\"valstd$stdID\" name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>";
+      $html .= "<select onchange=\"recountCategories();\" id=\"valstd$stdID\" name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"\"></option>";
       $options = array('EE'=>$string['ee_full'],'EI'=>$string['ei_full'],'EN'=>$string['en_full'],'ME'=>$string['me_full'],'MI'=>$string['mi_full'],'MN'=>$string['mn_full'],'HE'=>$string['he_full'],'HI'=>$string['hi_full'],'HN'=>$string['hn_full']);
       foreach ($options as $ebel_value=>$title) {
         if ($valid and str_replace('exclude_','',$value) == $ebel_value) {

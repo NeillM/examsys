@@ -61,7 +61,7 @@ $mysqli->close();
 <div style="text-align:right">
 <form action="do_delete_faculty.php" method="post">
 <input type="hidden" name="facultyID" value="<?php echo $_GET['facultyID']; ?>" />
-<input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 </td></tr>
