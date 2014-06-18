@@ -47,19 +47,16 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 </head>
 
 <body>
-<table>
-<tr>
+
 
 <?php
   if ($properties->get_summative_lock()) {
-		echo "<td class=\"icon\"><img src=\"../artwork/exclamation_48.png\" class=\"recycleicon\" alt=\"" . $string['recyclebin'] . "\" /></td>\n";
-		echo "<td><p>" . $string['msg2'] . "</p>\n";
+		echo "<p>" . $string['msg2'] . "</p>\n";
 	} else {
 ?>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin'] ?>" /></td>
-<td><p><?php echo $string['msg']; ?></p>
+<p><?php echo $string['msg'] ?></p>
 
-<div style="text-align: right">
+<div class="button_bar">
 <form action="do_delete_q_pointer.php" method="post">
 <input type="hidden" name="module" value="<?php echo $_GET['module'] ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder'] ?>" />
@@ -70,9 +67,9 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 <?php
   if (substr_count($_GET['pID'], ',')  > 1) {
-    echo '<input class="ok" type="submit" name="submit" value="' . $string['deletes'] . '" />';
+    echo '<input class="delete" type="submit" name="submit" value="' . $string['deletes'] . '" />';
   } else {
-    echo '<input class="ok" type="submit" name="submit" value="' . $string['delete'] . '" />';
+    echo '<input class="delete" type="submit" name="submit" value="' . $string['delete'] . '" />';
   }
 
 }
@@ -80,8 +77,6 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

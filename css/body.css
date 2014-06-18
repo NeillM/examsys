@@ -67,14 +67,6 @@ input[type=submit].ok:active {
   border: 1px solid #538135;
   background: #A8D08D;
 }
-input[type=submit].delete:hover {
-  border: 1px solid #C00000;
-  background: #FFC0C0;
-}
-input[type=submit].delete:active {
-  border: 1px solid #C00000;
-  background: #FF8080;
-}
 table {
   font-size: 100%;
 }
@@ -179,10 +171,7 @@ hr {
 	width: 140px;
 	margin: 4px 4px 4px 0;
 }
-.delete {
-	width: 140px;
-	margin: 4px 4px 4px 0;
-}
+
 .cancel {
 	margin: 4px 0 4px 4px;
   padding-left: 14px !important;

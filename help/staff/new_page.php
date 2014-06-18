@@ -105,7 +105,7 @@ if (isset($_POST['save_changes'])) {
 
   <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
 
-  <div style="text-align:center; padding-top:8px""><input style="width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px""><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

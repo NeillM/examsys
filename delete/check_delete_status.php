@@ -54,45 +54,29 @@ $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
 
 <body>
 
-<table>
 <?php
 if ($q_count == 0) {
 ?>
-<tr>
-  <td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
-  <td>
-    <p><strong><?php echo $string['msg']; ?></strong><p>
+    <p><?php echo $string['msg'] ?></p>
     <br />
-    <br />
-    <div style="text-align:right">
+    <div class="button_bar">
     <form action="do_delete_status.php" method="post">
       <input type="hidden" name="status_id" value="<?php echo $_GET['id']; ?>" />
-      <input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+      <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
-  </td>
-</tr>
 <?php
 } else {
 ?>
-<tr>
-  <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
-  <td>
-    <p><strong><?php echo $string['questionassigned']; ?></strong><p>
+    <p><?php echo $string['questionassigned'] ?></p>
     <br />
-    <br />
-    <div style="text-align:right">
+    <div class="button_bar">
     <form action="do_delete_status.php" method="post">
       <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
-  </td>
-</tr>
 <?php
 }
 ?>
-
-</table>
-
 </body>
 </html>

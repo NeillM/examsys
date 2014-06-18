@@ -175,7 +175,7 @@ if (isset($_POST['save_changes'])) {
   }
   ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
-  <div style="text-align:center; padding-top:8px"><input style="width:120px" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> />&nbsp;&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
   <input type="hidden" name="edit_id" value="<?php echo $edit_id; ?>" />
 </form>
 </body>

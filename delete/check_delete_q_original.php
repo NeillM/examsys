@@ -45,11 +45,6 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 </head>
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
-
-<td>
 <?php
   $qIDs = substr($_GET['q_id'], 1);
 
@@ -61,11 +56,11 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   if ($result->num_rows == 0) {
   ?>
 <p><?php echo $string['msg']; ?></p>
-<br />
-<div style="text-align:right">
+
+<div class="button_bar">
 <form action="do_delete_q_original.php" method="post">
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
     <?php
@@ -80,7 +75,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <div style="text-align:right">
 <form action="do_delete_q_original.php" method="post">
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
     <?php
@@ -88,9 +83,6 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   $result->free_result();
   $result->close();
   $mysqli->close();
-    ?>
-</td></tr>
-</table>
-
+?>
 </body>
 </html>
