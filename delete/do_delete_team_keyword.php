@@ -68,31 +68,26 @@ foreach ($keyword_list as $individualID) {
   <title>Keyword Deleted</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript">
-    $(function () {
+		$(document).ready(function(){
       window.opener.location.href = '<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
       self.close();
     });
   </script>
 </head>
 
-<body style="background-color:#EEEEEE; font-size:80%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
-
-<td><p><?php echo $string['msg']; ?><p>
+<p><?php echo $string['msg']; ?><p>
 
 <div style="text-align:center">
 <form action="" method="get">
 <input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>
