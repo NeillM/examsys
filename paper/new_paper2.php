@@ -206,6 +206,9 @@ require '../lang/' . $language. '/include/timezones.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
+  <style>
+    .ok {margin-right: 0; margin-top: 10px}
+  </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
@@ -526,8 +529,7 @@ if ($_POST['paper_type'] == 'summative') {
   echo "<input type=\"hidden\" name=\"current_year\" id=\"current_year\" value=\"year1\" />\n";
   echo "<input type=\"hidden\" name=\"folder\" value=\"" . $_POST['folder'] . "\" />\n";
 ?>
-<br />
-<div style="text-align:right"><input type="submit" name="submit2" value="<?php echo $string['finish']; ?>" style="width:100px" /></div>
+<div style="text-align:right"><input type="submit" name="submit2" value="<?php echo $string['finish']; ?>" class="ok" /></div>
 
 </td>
 </tr>
