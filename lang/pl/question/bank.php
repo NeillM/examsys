@@ -14,20 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/include/paper_options.inc';
+require_once '../lang/' . $language . '/include/question_types.inc';
+require_once '../lang/' . $language . '/include/paper_types.inc';
+require_once '../lang/' . $language . '/include/blooms.inc';
 
-$string['showretired'] = 'Pokaż wycofane';
-$string['screen'] = 'Ekran';
-$string['screens'] = 'Ekrany';
-$string['mins'] = 'min.';
-$string['SelfenrolURL'] = "URL do samodzielnego zapisywania się";
-$string['createnewpaper'] = 'Utwórz nowy arkusz';
+$string['questionbank'] = 'Bank pytań';
+$string['bytype'] = 'wg. typu';
+$string['byblooms'] = 'wg. taksonomii Blooma';
+$string['bykeyword'] = 'wg. słowa klucz.';
+$string['bystatus'] = 'wg. statusu';
+$string['bydifficulty'] = 'wg. trudności';
+$string['bydiscrimination'] = 'wg. różnicowania';
+$string['byperformance'] = 'wg. osiągnięć';
+$string['byobjective'] = 'wg. celów ksztacenia';
 $string['manageobjectives'] = 'Zarządzaj celami';
 $string['managekeywords'] = 'Zarządzaj słowami kluczowymi';
 $string['referencematerial'] = 'Materiał pomocniczy';
-$string['type'] = 'Typ';
-$string['author'] = 'Autor';
-$string['create'] = 'Utwórz';
-$string['nomodulesset'] = 'Brak modułów';
-$string['unspecifiedsession'] = 'Nieokrelona sesja';
+$string['nokeywords'] = 'Do tego modułu nie dodano żadnych słów kluczowych.';
+$string['questions'] = 'Pytania';
 ?>

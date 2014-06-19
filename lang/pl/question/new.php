@@ -16,23 +16,23 @@
 
 require $configObject->get('cfg_web_root') . 'lang/' . $language . '/include/question_types.inc';
 
-$string['newquestion'] = 'New Question';
-$string['area_desc'] = 'Allows student to specify an area as their answer';
-$string['enhancedcalc_desc'] = 'Numeric answer entry based on questions with random variables.';
-$string['dichotomous_desc'] = 'Presentation of multiple true/false questions.';
-$string['extmatch_desc'] = 'Presentation of multiple scenarios sharing a common set of answer options.';
-$string['blank_desc'] = 'A paragraph of text with blanks inserted which the student completes.';
-$string['info_desc'] = 'Not a question as such - this provides information to the student to assist them with the rest of the questions/paper.';
-$string['matrix_desc'] = 'Match questions to answers in a matrix presentation.';
-$string['hotspot_desc'] = 'Student has to click on the correct part of an image. Multiple parts can be presented in a single question.';
-$string['labelling_desc'] = 'Student has to drag labels to the correct placeholders on top of a background image.';
-$string['likert_desc'] = 'Psychometric scale for use on surveys.';
-$string['mcq_desc'] = 'Pick one correct option from many.';
-$string['mrq_desc'] = 'Pick several correct options from many.';
-$string['keyword_based_desc'] = "This question is a container for a set of 'source' questions based on a specified keyword, one of which will be choosen at random when sat by a student";
-$string['random_desc'] = "This question is a container for a set of 'source' questions, one of which will be choosen at random when sat by a student.";
-$string['rank_desc'] = 'Rank a set of options in order.';
-$string['sct_desc'] = 'Questions designed to assess clinical data interpretation skills.';
-$string['textbox_desc'] = 'Textboxes capture free-text student responses. Can be used in surveys and assessments. Textbox answers on assessments require manual marking by academics.';
-$string['true_false_desc'] = 'A single question which is answered True or False.';
+$string['newquestion'] = 'Nowe pytanie';
+$string['area_desc'] = 'Umożliwia studentowi zaznaczyć obszar jako swoją odpowiedź';
+$string['enhancedcalc_desc'] = 'Odpowiedź liczbowa do pytań z losowanymi zmiennymi.';
+$string['dichotomous_desc'] = 'Prezentacja zestawu pytań prawda-fałsz.';
+$string['extmatch_desc'] = 'Prezentacja zestawu scenariuszy współdzielących zestaw opcji odpowiedzi.';
+$string['blank_desc'] = 'Akapit tekstu z lukami, które student wypełnia.';
+$string['info_desc'] = 'Nie pytanie jako takie, a informacja dla studenta na temat pozostałych pytań lub arkusza.';
+$string['matrix_desc'] = 'Dopasowywanie odpowiedzi do pytań w układzie tabelarycznym.';
+$string['hotspot_desc'] = 'Student ma kliknąć w odpowiednią część obrazka. W jednym pytaniu dostępnych może być wiele fragmentów.';
+$string['labelling_desc'] = 'Student ma przeciągnąć etykiety w odpowiednie miejsca na obrazku.';
+$string['likert_desc'] = 'Skala psychometryczna do zastosowania w ankietach.';
+$string['mcq_desc'] = 'Wybieranie poprawnej opcji z wielu dostępnych.';
+$string['mrq_desc'] = 'Wybieranie kilku poprawnzch opcji z wielu dostępnych.';
+$string['keyword_based_desc'] = "Pytanie stanowiące pojemnik dla zbioru pytań źródłowych bazujących na określonym słowie kluczowym, z których losowo będzie wybierane jedno.";
+$string['random_desc'] = "Pytanie stanowiące pojemnik dla zbioru pytań źródłowych, z których losowo będzie wybierane jedno.";
+$string['rank_desc'] = 'Układanie zestawu opcji w prawidłowym porządku.';
+$string['sct_desc'] = 'Pytania zaprojektowane do oceny umiejętności interpretacji danych klinicznych.';
+$string['textbox_desc'] = 'Pola tekstowe przyjmujące szersze odpowiedzi studenta. Moga byc stosowane w ankietach i sprawdzianach. Odpowiedzi tekstowe muszą być oceniane ręcznie przez egzaminatora.';
+$string['true_false_desc'] = 'Pojedyncze pytanie z odpowiedzią typu prawda/fałsz.';
 ?>

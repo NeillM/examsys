@@ -48,5 +48,10 @@ $string['competent'] = 'Dostateczny';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['borderlinemethod'] = 'metoda wyznaczania niepewności';
 $string['noattempts'] = 'Ten arkusz OSCE nie był przez wybrany żadnego studenta w okresie <strong>%s &ndash; %s</strong>.';
+$string['marking3'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznacznie zdany');
+$string['marking4'] = array('Niezdany', 'Na granicy niezdania', 'Na granicy zdania', 'Zdany', 'Zdecydowanie zdany');
+$string['marking5'] = array('Niesatysfakcjonujący', 'Kompetentny');
+$string['marking6'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznacznie zdany', 'Wyróżniająco zdany');
+$string['marking7'] = array('Niezdany', 'Zdany');
 
 ?>

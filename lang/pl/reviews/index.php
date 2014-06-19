@@ -31,6 +31,6 @@ $string['onlinesupportsystem'] = 'System pomocy online dla studentów';
 $string['email'] = 'Email'; //cognate
 $string['deadline'] = 'Termin finalizacji:';
 $string['notset'] = '&lt;brak&gt;';
-$string['preexamreviewpapers'] = 'Pre-Exam Review Papers';
-$string['postexamreviews'] = 'Post-Exam Reviews';
+$string['preexamreviewpapers'] = 'Arkusze przeglądu przedegzaminacyjnego';
+$string['postexamreviews'] = 'Przeglądy poegzaminacyjne';
 ?>

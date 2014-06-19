@@ -59,7 +59,6 @@ $string['couldnotsend'] = 'Nie można było wysłać Emaila do';
 $string['emailclassmarks'] = 'wyślij Emaile z punktacją klasy';
 $string['title'] = 'Tytuł';
 $string['surname'] = 'Nazwisko';
-$string['firstnames'] = 'First Names';
 $string['studentid'] = 'Numer legitymacji';
 $string['username'] = 'Nazwa użytkownika';
 $string['course'] = 'Kurs';
@@ -107,4 +106,8 @@ $string['of'] = ' z ';
 $string['percentofcohort'] = '% grupy';
 $string['marking'] = 'Ocenianie...';
 $string['markingcalcquestions'] = 'Ocenianie pytania obliczeniowego';
+
+$string['viewstudentnote'] = 'Przejżyj notatkę studenta...';
+$string['viewaccessibility'] = 'Przejżyj ustawienie dostępu...';
+$string['resitcandidate'] = 'Przesadź kandydata';
 ?>

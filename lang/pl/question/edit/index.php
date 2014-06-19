@@ -164,7 +164,7 @@ $string['oeditsummary'] = 'Edytuj szczegóły opcji';
 $string['qmetasummary'] = 'Edytuj podstawowe metadane pytania';
 $string['qassessmentsummary'] = 'Edytuj dane oceny pytania';
 $string['addoptions'] = 'Dodaj więcej opcji...';
-$string['addreminders'] = 'Add More Reminders...';
+$string['addreminders'] = 'Dodaj więcej przypomnień...';
 $string['correctanswer'] = 'Poprawna odpowiedź';
 $string['correctanswers'] = 'Poprawne odpowiedzi';
 $string['correctanswersmsg'] = '(Zastosuj kliknięcie z &lt;CTRL&gt;<br />by zaznaczyć kilka elementów)';
@@ -276,6 +276,6 @@ $string['enforcedisplay'] = 'Wymuś precyzję w odpowiedziach studenckich';
 $string['includetrailing0'] = 'Uwzględniając zera wiodące';
 $string['notenforced'] = 'Nie wymuszone';
 // Textbox
-$string['reminders'] = 'Reminders';
-$string['reminder_no'] = 'Reminder #%d';
+$string['reminders'] = 'Przypomnienia';
+$string['reminder_no'] = 'Przypomnienie #%d';
 ?>

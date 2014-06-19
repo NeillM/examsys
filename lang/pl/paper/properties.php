@@ -67,7 +67,7 @@ $string['overallclass1'] = '&lt;Automatyczna&gt;';
 $string['overallclass2'] = 'Jednoznacznie niezdany | Na granicy | Jednoznacznie zdany';
 $string['overallclass3'] = 'Niezdany | Na granicy niezdania | Na granicy zdania | Zdany | Zdecydowanie zdany';
 $string['overallclass4'] = 'Jednoznacznie niezdany | Na granicy | Jednoznacznie zdany | Wyróżniająco zdany';
-$string['overallclass5'] = 'Pass | Fail';
+$string['overallclass5'] = 'Niezdany', 'Zdany';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['distinction'] = 'Wyróżnienie';
 $string['method'] = 'Metoda';
@@ -87,9 +87,9 @@ $string['allpeerspergroup'] = 'wszystkich członków grupy';
 $string['singlereview'] = 'recenzja indywidualna';
 $string['numberfrom'] = 'Numeruj od';
 $string['groupdetails'] = 'Szczegóły dot. grupy';
-$string['tooltip_random'] = 'Rogo will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
-$string['tooltip_calculator'] = 'A JavaScript software calculator is available to students within the assessment.';
-$string['tooltip_audio'] = 'A test audio clip will be placed on the exam information page so students can test sound levels before starting.';
+$string['tooltip_random'] = 'Rogo oszacuje jaką ocenę dostałby student odpowiadając na wszystkie pytania całkowicie losowo. Następnie odpowiednio skalowane są procenty.';
+$string['tooltip_calculator'] = 'Kalkulator JavaScript dostępny jest dla studentów podczas egzaminu.';
+$string['tooltip_audio'] = 'Na stronie informacyjnej egzaminu umieszczony będzie próbny klip audio, umożliwiający studentom sprawdzenie poziomu dźwięku.';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
@@ -106,7 +106,7 @@ $string['to'] = 'do';
 $string['restricttolabs'] = 'Ogranicz do pracowni';
 $string['restricttometadata'] = 'Ogranicz do metadanych';
 $string['na'] = 'Brak';//data
-$string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into Rogo with their own personal password. This password can be given out to students within the computer lab.';
+$string['tooltip_password'] = 'W wyniku tego dodane zostanie do arkusza uzupełniające hasło obok hasła stosowanego przez studenta do logowania się do Rogo. Hasło to można udostępnić studentom znajdującym sie w pracowni komputerowej.';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
@@ -133,15 +133,15 @@ $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostę
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 
 // Feedback tab
-$string['feedbackheading'] = 'Feedback available to students and external examiners';
+$string['feedbackheading'] = 'Odzew dostępny dla studentów i egzaminatorów zewnętrznych';
 $string['feedbackwarning'] = '<strong>Uwaga:</strong> To uwolni pytania włączając w to poprawne odpowiedzi i oceny dla studentów.';
 $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
-$string['objectivesreport'] = 'Objectives-based Feedback (Students)';
-$string['questionfeedback'] = 'Question-based Feedback (Students)';
-$string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
-$string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
-$string['cohortperformancefeedback'] = 'Cohort Performance Report (Students)';
+$string['objectivesreport'] = 'Odzew dot. celów (Studenci)';
+$string['questionfeedback'] = 'Odzew dot. pytań (Studenci)';
+$string['externalexaminerfeedback'] = 'Zestawienie klasy (Egzaminatoryz zewnętrzni)';
+$string['externalwarning'] = 'Od kiedy zewnętrzni będa mieli dostep do raportu zestawienia klasy dla arkusza.';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report (Studenci)';
 $string['textualfeedback'] = 'Odzew tekstowy';
 $string['above'] = 'Powyżej';
 $string['message'] = 'Wiadomość';

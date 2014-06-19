@@ -14,10 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['reviewcomplete'] = 'Recenzja zakończona';
-$string['deadline'] = 'Termin finalizacji';
-$string['generalcomments'] = 'Komentarze ogólne';
-$string['generalmsg'] = 'Użyj przestrzeni poniżej do zanotowania uwag ogólnych o ew. trudności, niepoprawności itp w odniesieniu do całego arkusza.';
-$string['saveclose'] = 'Zapisz &amp; Zamknij';
-$string['savefinish'] = 'Zaoisz &amp; Zakończ';
+require '../lang/' . $language . '/delete/delete.inc';
+
+$string['msg'] = 'Are you sure you wish to delete this event?';
 ?>

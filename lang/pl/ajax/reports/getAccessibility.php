@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['accessibility'] = 'Accessibility';
-$string['extratime'] = 'Extra time';
-$string['backgroundcolour'] = 'Background colour';
-$string['foregroundcolour'] = 'Foreground colour';
-$string['markscolour'] = 'Marks colour';
-$string['themecolour'] = 'Theme/Heading colour';
-$string['labelcolour'] = 'Label colour';
-$string['unansweredbackground'] = 'Unanswered background';
-$string['questiondismiss'] = 'Question dismiss';
-$string['fontsize'] = 'Font size';
-$string['typeface'] = 'Typeface';
+$string['accessibility'] = 'Dostępność';
+$string['extratime'] = 'Czas dodatkowy';
+$string['backgroundcolour'] = 'Kolor tła';
+$string['foregroundcolour'] = 'Kolor elementów';
+$string['markscolour'] = 'Kolor ocen';
+$string['themecolour'] = 'Kolor nagłówków/motywu';
+$string['labelcolour'] = 'Kolor etykiet';
+$string['unansweredbackground'] = 'Tło nieodpowiedzianych';
+$string['questiondismiss'] = 'Odrzucenie pytania';
+$string['fontsize'] = 'Rozmiar liter';
+$string['typeface'] = 'Czcionka';
 ?>

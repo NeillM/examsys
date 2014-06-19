@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['emailtemplate'] = 'Email Template';
-$string['to'] = 'To';
-$string['cc'] = 'Cc';
-$string['bcc'] = 'Bcc';
-$string['subject'] = 'Subject';
-$string['subject_msg0'] = '%s e-assessment review';
-$string['subject_msg1'] = 'REMINDER: %s e-assessment review';
-$string['message0'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Dear \$external_title \$external_surname,</p>\n<p>The online assessment <strong>\$paper_title</strong> is now available for you to log in and review. Please complete the review by the end of <strong>\$deadline</strong>. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>Kind regards</p>\n<p>\$users_name</p>\n";
-$string['message1'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Dear \$external_title \$external_surname,</p>\n<p>We have noticed that you have not yet reviewed the online assessment <strong>\$paper_title</strong>. We would be very grateful if you could review this assessment by the end of <span style=\"font-weight:bold; color:#C00000\">\$deadline</span>. To review the paper please log in at: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>Kind regards</p>\n<p>\$users_name</p>\n";
-$string['emailsent'] = 'Email have been sent.';
-$string['back'] = '&lt back';
+$string['emailtemplate'] = 'Szablon wiadomości Email';
+$string['to'] = 'To'; //cognate
+$string['cc'] = 'Cc'; //cognate
+$string['bcc'] = 'Bcc'; //cognate
+$string['subject'] = 'Temat'; 
+$string['subject_msg0'] = 'Przegląd e-egzaminu %s';
+$string['subject_msg1'] = 'PRZYPOMNIENIE: Przegląd e-egzaminu %s';
+$string['message0'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Szanowny/a \$external_title \$external_surname,</p>\n<p>E-egzamin <strong>\$paper_title</strong> jest obecnie dostępny do recenzji. Recenzje należy zakończyć przed <strong>\$deadline</strong>. Egzamin będzie poprowadzony przez nasz system e-egzaminacyjny Rog&#333;. By dokonać recenzji należy zalogować się na: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>W razie problemów z dostepem do arkusza prosimy skontaktować się z nami. Wsparcie techniczne do Rog&#333; jest dostępne również przez: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>z wyrazami szacunku</p>\n<p>\$users_name</p>\n";
+$string['message1'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Szanowny/a \$external_title \$external_surname,</p>\n<p>Nie uszło naszej uwadze, że nie został zrecenzowany e-egzamin <strong>\$paper_title</strong>. Bylibyśmy wdzięczni gdyby mógł Pan/Pani dokonać recenzji tego egzaminu do <span style=\"font-weight:bold; color:#C00000\">\$deadline</span>. By dokonać recenzji należy zalogować się na: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>W razie problemów z dostepem do arkusza prosimy skontaktować się z nami. Wsparcie techniczne do Rog&#333; jest dostępne również przez: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>z wyrazami szacunku</p>\n<p>\$users_name</p>\n";
+$string['emailsent'] = 'Email wysłano.';
+$string['back'] = '&lt wstecz';
 ?>

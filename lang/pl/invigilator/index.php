@@ -20,7 +20,9 @@ $string['unknownlab'] = ' - nieznana pracownia';
 $string['nopapersfound'] = 'Nie znaleziono arkuszy!';
 $string['nopapersfoundmsg'] = 'Dla danej pracowni w tym roku nie znaleziono żadnych egzaminów.';
 $string['emergencynumbers'] = 'Numery awaryjne';
-$string['name'] = 'Nazwa';
+$string['title'] = 'Tytuł';
+$string['surname'] = 'Nazwisko';
+$string['forenames'] = 'Imiona';
 $string['extension_mins']  = 'Przedłużenie (min)';
 $string['endtime'] = 'Czas końcowy';
 $string['extendtimeby']     = 'Przedłuż czas o';
@@ -37,22 +39,19 @@ $string['mins'] = 'min.';
 $string['papernote'] = 'Uwagi dot. arkusza';
 $string['extratime'] = 'Dodatkowy czas';
 $string['preexam'] = 'Przed egzaminem';
-$string['preexamlist'] = '<ol>
-    <li>Rozłóż instrukcje logowania przy każdym komputerze</li>
+$string['preexamlist'] = '<ol><li>Rozłóż instrukcje logowania przy każdym komputerze</li>
     <li>Umieść przy każdym komputerze czystą kartkę papieru</li>
     <li>Sprawdź czy każdy student zalogował się poprawnie</li>
     <li>Użyj konta \'gość\' dla każdego studenta, który nie mógł się zalogować</li>
     <li><strong>Uwaga:</strong> Nie rozpoczynaj przed zaplanowanym czasem startu</li>
     </ol>';
 $string['midexam'] = 'W czasie egzaminu';
-$string['midexamlist'] = '<ol>
-    <li>Rejestruj drobne problemy w plikach studentów (<a href="%shelp.html" target="_blank">przykładowe problemy</a>)</li>
+$string['midexamlist'] = '<ol><li>Rejestruj drobne problemy w plikach studentów (<a href="%shelp.html" target="_blank">przykładowe problemy</a>)</li>
     <li>Rejestruj problemy z treściami arkuszy/pytań</li>
     <li>Zadzwoń na poniższy numer w razie większych kłopotów</li>
     </ol>';
 $string['postexam'] = 'Po egzaminie';
-$string['postexamlist'] = '<ol>
-    <li>"To już koniec egzaminu. Proszę przejść do ostatniego ekranu i kliknąć na \'Zakończ\'."</li>
+$string['postexamlist'] = '<ol><li>"To już koniec egzaminu. Proszę przejść do ostatniego ekranu i kliknąć na \'Zakończ\'."</li>
     <li>"Proszę kliknąć \'Zamknij okno\' a następnie nacisnąć równocześnie CTRL, ALT i DELETE aby się wylogować."</li>
     <li>Zbierz instrukcje logowania</li>
     <li>Zbierz pozostałe czyste kartki</li>

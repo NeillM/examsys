@@ -16,6 +16,7 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
+$string['confirmdelete'] = 'Confirm Pointer Delete';
 $string['msg'] = 'Usunięcie wskaźnika do tego pytania usunie go tylko z arkusza pytań.<br /><br /><strong>Nie</strong> usunie to samego pytania z banku pytań.';
 $string['msg2'] = 'Próbujesz usunąć pytanie z zablokowanego arkusza - to nie jest dopuszczalne.';
 $string['delete'] = 'Usuń wskaźnik';

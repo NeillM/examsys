@@ -28,10 +28,10 @@ $string['finalisemarks'] = 'Ocena końcowa';
 $string['candidates'] = 'kandydatów';
 $string['screen'] = 'Ekran';//ąę
 $string['note'] = 'Notatka';
-$string['comments'] = 'Comments';
-$string['next'] = 'Next &gt;';
-$string['previous'] = '&lt; Previous';
-$string['finish'] = 'Finish';
-$string['mark_progress'] = 'Student %d of %d';
-$string['answer_saved'] = 'Marks saved';
+$string['comments'] = 'Komentarze';
+$string['next'] = 'Następny &gt;';
+$string['previous'] = '&lt; Poprzedni';
+$string['finish'] = 'Koniec';
+$string['mark_progress'] = 'Student %d z %d';
+$string['answer_saved'] = 'ocen zapisano';
 ?>

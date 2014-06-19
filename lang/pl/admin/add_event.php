@@ -16,12 +16,12 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['addevent'] = 'Add Event';
-$string['title'] = 'Title';
-$string['date'] = 'Date';
-$string['message'] = 'Message';
-$string['duration'] = 'Duration';
-$string['colour'] = 'Colour';
-$string['mins'] = 'mins';
-$string['hours'] = 'hours';
+$string['addevent'] = 'Dodaj zdarzenie';
+$string['title'] = 'Tytuł';
+$string['date'] = 'Data';
+$string['message'] = 'Komunikat';
+$string['duration'] = 'Czas trwania';
+$string['colour'] = 'Kolor';
+$string['mins'] = 'min.';
+$string['hours'] = 'godz.';
 ?>

@@ -16,11 +16,11 @@
 
 require '../lang/' . $language . '/admin/list_modules.php';
 
-$string['runningsmsimport'] = 'Running SMS Import';
-$string['academicyear'] = 'Academic Year';
-$string['modulecode'] = 'Module Code';
+$string['runningsmsimport'] = 'Bieżący import SMS';
+$string['academicyear'] = 'Rok akademicki';
+$string['modulecode'] = 'Kod modułu';
 $string['url'] = 'URL';
-$string['enrolements'] = 'Enrolements';
-$string['deletions'] = 'Deletions';
+$string['enrolements'] = 'Wpisy';
+$string['deletions'] = 'Usunięcia';
 ?>
 

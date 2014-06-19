@@ -28,6 +28,7 @@ $string['faculties'] = 'Wydziały';
 $string['modules'] = 'Moduły';
 $string['optimizetables'] = 'Optymalizuj tablice';
 $string['questionstatuses'] = 'Statusy pytania';
+$string['savefailattempts'] = 'Zachowaj nieudane próby';
 $string['schools'] = 'Katedry';
 $string['smsimports'] = 'Importy SMS';
 $string['statistics'] = 'Statystyka';

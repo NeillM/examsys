@@ -21,6 +21,7 @@ $string['papertasks'] = 'Działania dot. arkuszy';
 $string['testpreview'] = 'Test i podgląd';
 $string['addquestionspaper'] = 'Dodaj pytania do arkusza';
 $string['editproperties'] = 'Edytuj właściwości';
+$string['emailexternals'] = 'Wyślij Email do zewnętrznych';
 $string['reports'] = 'Raporty';
 $string['mappedobjectives'] = 'Cele odwzorowane';
 $string['importmarks'] = 'Importuj punkty';//??
@@ -129,6 +130,8 @@ $string['incabsentcandidates'] = 'uwzgl. kandydatów nieobecnych';
 $string['studentsonly'] = 'tylko próby studenckie'; 
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
 $string['anyyear'] = 'Każdy rok';
+$string['tooltip_studentattempts'] = 'Odhacz aby pokazać próby pracowników w zestawieniu klasy.';
+$string['tooltip_daterange'] = 'Użyj dat do kontroli okna raporów.';
 
 $string['copyname'] = 'Nazwa kopii';
 $string['paperonly'] = 'Tylko arkusze';
