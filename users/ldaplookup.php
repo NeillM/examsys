@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
 					}
 					?>
 					<tr>
-						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" style="width:100px" /></td>
+						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" class="cancel" /></td>
 					</tr>
 				</table>
 			</div>
@@ -260,7 +260,7 @@ if (isset($_POST['submit'])) {
 				<td><input type="text" name="surname" size="40"/></td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" style="width:100px" />
+				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" class="cancel" />
 				</td>
 			</tr>
 		</table>

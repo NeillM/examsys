@@ -40,6 +40,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style>
     body {font-size: 90%}
     input {width: 180px; margin: 1px;}
@@ -64,6 +65,12 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <?php
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu();
+  
+  if ($_GET['mode'] == 0) {
+    $type = $string['initialinvitation'];
+  } else {
+    $type = $string['reminder'];    
+  }
 ?>
   <div class="head_title" style="font-size:90%">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
@@ -79,8 +86,11 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . $module_url . '">' . $properties->get_paper_title() . '</a>';
     ?>
     </div>
-    <div class="page_title"><?php echo $string['externalexaminers'] ?></div>
+    <div class="page_title"><?php echo $string['externalexaminers'] ?>: <span style="font-weight:normal"><?php echo $type ?></span></div>
   </div>
+  
+  <br />
+  <div class="key"><?php echo $string['msg'] ?></div>
   
   <div style="margin: 15px">
 <?php

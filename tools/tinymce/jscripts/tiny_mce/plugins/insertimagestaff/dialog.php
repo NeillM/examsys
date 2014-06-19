@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -26,7 +26,7 @@ require  '../../../../../../include/staff_auth.inc';
 $path = $cfg_web_root . 'help/staff/images/';
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -69,7 +69,7 @@ $path = $cfg_web_root . 'help/staff/images/';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
-        <script type="text/javascript" language="javascript">
+        <script>
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
@@ -116,7 +116,7 @@ function showForm($error) {
 <tr><td class="field">alt</td><td><input type="text" name="alt" value="" size="40" /></td></tr>
 <tr><td class="field">border</td><td><input type="checkbox" name="border" value="1" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" style="width:110px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:110px" /></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" class="ok" /><input type="button" name="cancel" value="Cancel" onclick="window.close();" class="cancel" /></td></tr>
 </table>
 </form>
 

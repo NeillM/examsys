@@ -33,22 +33,39 @@ textarea, input[type=text], select, input[type=password] {
 }
 input[type=submit], input[type=button] {
   border: 1px solid #707070;
-  padding-left: 6px;
-  padding-right: 6px;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   background: -moz-linear-gradient(top, #EBEBEB, #D5D5D5);
   background: -webkit-linear-gradient(top, #EBEBEB, #D5D5D5);
   background-image: -ms-linear-gradient(top, #EBEBEB 0%, #D5D5D5 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EBEBEB', endColorstr='#D5D5D5');
 }
 input[type=submit]:hover {
-  border: 1px solid #26A0DA;
-  background: #A6F4FF;
+  border: 1px solid #707070;
+  background: #D5D5D5;
+}
+input[type=submit]:active {
+  border: 1px solid #707070;
+  background: #C0C0C0;
+}
+
+input[type=button]:active {
+  border: 1px solid #707070;
+  background: #C0C0C0;
 }
 input[type=button]:hover {
-  border: 1px solid #26A0DA;
-  background: #A6F4FF;
+  border: 1px solid #707070;
+  background: #D5D5D5;
+}
+input[type=submit].ok:hover {
+  border: 1px solid #538135;
+  background: #C5E0B3;
+}
+input[type=submit].ok:active {
+  border: 1px solid #538135;
+  background: #A8D08D;
 }
 table {
   font-size: 100%;
@@ -151,16 +168,18 @@ hr {
 	margin-bottom: 5px;
 }
 .ok {
-	width: 130px;
+	width: 140px;
 	margin: 4px 4px 4px 0;
 }
+
 .cancel {
-	width: 80px;
 	margin: 4px 0 4px 4px;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
 }
 .help_tip {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 title {
   display: inline-block;

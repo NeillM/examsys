@@ -60,22 +60,15 @@ $mysqli->close();
 </head>
 
 <body>
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg1']; ?></p>
+<p><strong><?php echo $string['msg2']; ?> '<?php echo $lab_name; ?>'?</strong></p>
 
-<td><p><?php echo $string['msg1']; ?></p>
-<p><strong><?php echo $string['msg2']; ?> '<?php echo $lab_name; ?>'?</strong><p>
-<br />
-
-<div style="text-align:right">
+<div class="button_bar">
 <form action="do_delete_lab.php" method="post">
 <input type="hidden" name="labID" value="<?php echo $_GET['labID']; ?>" />
-<input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

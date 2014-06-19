@@ -378,12 +378,12 @@ SQL;
       echo '<label for="comment_' . $answer_no . '"><strong>' . $string['comments'] . '</strong><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="6" class="comment-box">' . $comments . '</textarea>' . "\n";
 
       if ($answer_no != 1 and $answer_no <= $candidate_no) {
-        echo '<button type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '">' . $string['previous'] . '</button>';
+        echo '<input type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '" value="' . $string['previous'] . '" />';
       }
       if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) {
-        echo '<button type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '">' . $string['next'] . '</button>';
+        echo '<input type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['next'] . '" />';
       } else {
-        echo '<button type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '">' . $string['finish'] . '</button>';
+        echo '<input type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['finish'] . '" />';
       }
       echo '</div>' . "\n";
     }
@@ -394,7 +394,7 @@ SQL;
     $answer = trim($answer);
     $answer_display = '';
     if ($answer == '') {
-      $answer_display = '<img src="../artwork/small_yellow_warning_icon.gif" alt="Warning" class="warn_icon" />' .$string['noanswer'];
+      $answer_display = '<img src="../artwork/small_yellow_warning_icon.gif" alt="Warning" class="warn_icon" />' . $string['noanswer'];
     }
 
     return $answer_display . $answer;

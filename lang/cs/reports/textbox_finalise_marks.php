@@ -20,4 +20,5 @@ $string['first'] = '1.';
 $string['second'] = '2.';
 $string['override'] = 'Znovu oznámkovat';
 $string['unmarked'] = 'Neznámkováno';
+$string['question'] = 'Úloha';
 ?>

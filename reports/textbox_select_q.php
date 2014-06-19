@@ -50,6 +50,8 @@ $paper = $propertyObj->get_paper_title();
     table {font-size:100%}
     a {color:blue; text-decoration:none; cursor:pointer}
     p {margin-top:0; padding-top:0}
+    td {padding-bottom: 10px}
+    .warning {width: 12px; height: 11px; margin-right: 4px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -119,17 +121,13 @@ $paper = $propertyObj->get_paper_title();
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
   echo '<div class="page_title">' . $phase_description . '</div>';
   echo "</div>\n";
-  
-  
-  
-  
 
   echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
 
-  echo "<blockquote>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+  echo "<blockquote>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
 
   $question_no = 1;
-  $result = $mysqli->prepare("SELECT q_id, leadin, q_type FROM (papers, questions) WHERE papers.paper = ? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY display_pos");
+  $result = $mysqli->prepare("SELECT q_id, leadin_plain, q_type FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
@@ -144,24 +142,37 @@ $paper = $propertyObj->get_paper_title();
         $marked->bind_result($candidates_marked);
         $marked->fetch();
         $marked->close();
+      } elseif ($_GET['action'] == 'finalise') {
+        $candidates_marked = 0;
+        // Check how many candidates are marked for this question.
+        $marked = $mysqli->prepare("SELECT mark FROM log2, log_metadata, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND roles LIKE '%Student%' AND paperID = ? AND q_id = ?");
+        $marked->bind_param('ii', $paperID, $q_id);
+        $marked->execute();
+        $marked->bind_result($mark);
+        while ($marked->fetch()) {
+          if ($mark !== null) {
+            $candidates_marked++;
+          }
+        }
+        $marked->close();
       } else {
         $candidates_marked = $candidate_no;
       }
 
       echo '<tr><td style="text-align:right; vertical-align:top">';
-      if ($candidates_marked < $candidate_no) echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
+      if ($candidates_marked < $candidate_no) echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
       echo $question_no . '.</td>';
       if ($candidates_marked == $candidate_no) {
         echo '<td>';
       } else {
-        echo '<td style="background-color:#FFC0C0">';
+        echo '<td style="background-color:#FFDDDD">';
       }
       if ($_GET['action'] == 'finalise') {
         echo "<a href=\"textbox_finalise_marks.php";
       } else {
         echo "<a href=\"textbox_marking.php";
       }
-      echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">$leadin</a></td></tr>\n";
+      echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&folder=" . $_GET['folder'] . "&module=" . $_GET['module'] . "&repcourse=" . $_GET['repcourse'] . "$tmp_phase\">" . trim($leadin) . "</a></td></tr>\n";
     }
     $question_no++;
   }

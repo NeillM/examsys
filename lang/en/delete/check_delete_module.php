@@ -16,5 +16,5 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['msg'] = 'Are you sure you wish to delete this module?';
+$string['msg'] = 'Are you sure you wish to delete module \'%s\'?';
 ?>

@@ -128,6 +128,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
+  <link rel="stylesheet" type="text/css" href="../css/std_setting.css" />
   <style>
 		table {table-layout:auto}
 		#maincontent {height:auto}

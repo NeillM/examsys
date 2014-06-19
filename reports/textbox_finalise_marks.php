@@ -33,7 +33,33 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
 $paper_type = $propertyObj->get_paper_type();
 
-function displayMarks($id, $marks) {
+function load_marks($paperID, $q_id, $phase, $db) {
+  $marks = array();
+  
+  $result = $db->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = ?");
+  $result->bind_param('iii', $paperID, $q_id, $phase);
+  $result->execute();
+  $result->bind_result($answer_id, $mark);
+  while ($result->fetch()) {
+    $marks[$answer_id] = $mark;
+  }
+  $result->close();
+
+  return $marks;
+}
+
+function load_question_mark($q_id, $db) {
+  $result = $db->prepare("SELECT marks_correct FROM options WHERE o_id = ? LIMIT 1");
+  $result->bind_param('i', $q_id);
+  $result->execute();
+  $result->bind_result($marks_correct);
+  $result->fetch();
+  $result->close();
+  
+  return $marks_correct;
+}
+
+function displayMarks($id, $marks, $override, $user_mark) {
   $html = '<select name="override' . $id . '"><option value="NULL"></option>';
   $inc = 0.5;
   for ($i=0; $i<=$marks; $i+=$inc) {
@@ -43,7 +69,11 @@ function displayMarks($id, $marks) {
     } elseif ($i - floor($i) > 0) {
       $display_i = floor($i) . '&#189;';
     }
-    $html .= "<option value=\"$i\">$display_i</option>";
+    if ($override and $i === $user_mark) {
+      $html .= "<option value=\"$i\" selected>$display_i</option>";
+    } else {
+      $html .= "<option value=\"$i\">$display_i</option>";
+    }
   }
   $html .= '</select>';
   
@@ -67,7 +97,8 @@ if (isset($_POST['submit'])) {
     $result->execute();
     $result->close();
   }
-  header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder']);
+
+  header("location: ../reports/textbox_select_q.php?action=finalise&paperID=$paperID&startdate=" . $_POST['startdate'] . "&enddate=" . $_POST['enddate'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&repcourse=" . $_GET['repcourse']);
 	exit();
 } else {
   $q_id       = check_var('q_id', 'GET', true, false, true);
@@ -80,35 +111,12 @@ if (isset($_POST['submit'])) {
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
   
-  // Get primary marks
-  $primary_marks = array();
-  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = 1");
-  $result->bind_param('ii', $paperID, $q_id);
-  $result->execute();
-  $result->bind_result($answer_id, $mark);
-  while ($result->fetch()) {
-    $primary_marks[$answer_id] = $mark;
-  }
-  $result->close();
+  $primary_marks = load_marks($paperID, $q_id, 1, $mysqli);
+  
+  $secondary_marks = load_marks($paperID, $q_id, 2, $mysqli);
+  
+  $marks_correct = load_question_mark($q_id, $mysqli);
 
-  // Get secondary marks
-  $secondary_marks = array();
-  $result = $mysqli->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = 2");
-  $result->bind_param('ii', $paperID, $q_id);
-  $result->execute();
-  $result->bind_result($answer_id, $mark);
-  while ($result->fetch()) {
-    $secondary_marks[$answer_id] = $mark;
-  }
-  $result->close();
-
-  // Get some paper properties
-  $result = $mysqli->prepare("SELECT marks_correct FROM options WHERE o_id = ?");
-  $result->bind_param('i', $q_id);
-  $result->execute();
-  $result->bind_result($marks_correct);
-  $result->fetch();
-  $result->close();
 ?>
 <!DOCTYPE html>
 <html>
@@ -121,7 +129,14 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-  .l {font-size:110%}
+    body {margin-bottom: 10px}
+    .l {font-size: 110%}
+    .ans {padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0}
+    .primary {text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px}
+    .secondary {text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8}
+    .missing {background-color:#EEEEEE}
+    .noans {background-color: #FFDDDD}
+    .override {text-align:right; border-bottom:1px solid #CBC7B8}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -135,7 +150,7 @@ if (isset($_POST['submit'])) {
 
 	echo draw_toprightmenu();
 
-  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
+  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
   echo '<div class="head_title" style="font-size:90%">';
   echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
   echo '<div class="breadcrumb" style="height:20px"><a href="../index.php">' . $string['home'] . '</a>';
@@ -144,8 +159,8 @@ if (isset($_POST['submit'])) {
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $propertyObj->get_paper_title() . '</a></div></div>';
-  echo '<table class="header" style="font-size:80%"><tr><th><div class="page_title">' . $string['finalisemarks'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $propertyObj->get_paper_title() . '</a></div></div>';
+  echo '<table class="header" style="font-size:80%"><tr><th><div class="page_title">' . $string['finalisemarks'] . ': <span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
 
   $student_no = 1;
   $marked_no = 0;
@@ -153,7 +168,7 @@ if (isset($_POST['submit'])) {
   // Get student answers
   if ($paper_type == '0') {
     $sql = <<< SQL
-SELECT 0 AS logtype, l.id, lm.userID, l.user_answer
+SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log0 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
@@ -163,7 +178,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
   AND lm.started <= ?
 UNION ALL
-SELECT 1 AS logtype, l.id, lm.userID, l.user_answer
+SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log1 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
@@ -178,7 +193,7 @@ SQL;
     $result->bind_param('iissiiss', $paperID, $q_id, $startdate, $enddate, $paperID, $q_id, $startdate, $enddate);
   } else {
     $sql = <<< SQL
-SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer
+SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, l.mark
 FROM (log{$paper_type} l, log_metadata lm, users u)
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
@@ -193,29 +208,45 @@ SQL;
     $result->bind_param('iiss', $paperID, $q_id, $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer);
+  $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);
   while ($result->fetch()) {
     if (trim($user_answer) != '') {
+      if (isset($primary_marks[$log_id]) and $primary_marks[$log_id] === $user_mark) {
+        $primary_checked = ' checked';
+        $secondary_checked = '';
+        $override = false;
+      } elseif (isset($secondary_marks[$log_id]) and $secondary_marks[$log_id] === $user_mark) {
+        $primary_checked = '';
+        $secondary_checked = ' checked';
+        $override = false;
+      } else {
+        $primary_checked = '';
+        $secondary_checked = '';
+        $override = true;
+      }
+      
+      echo "<tr class=\"l\"><td class=\"ans\">" . nl2br($user_answer) . "<br />&nbsp;</td>";
+
       if (isset($secondary_marks[$log_id]) and isset($primary_marks[$log_id]) and abs($primary_marks[$log_id] - $secondary_marks[$log_id]) > 1) {
-        echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; border-right:1px solid #CBC7B8; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; background-color:#FFC0C0\">" . displayMarks($student_no, $marks_correct);
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
       } else {
         if (isset($primary_marks[$log_id])) {
-          echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td>";
+          echo "<td class=\"primary\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td>";
           $marked_no++;
         } else {
-          echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0\">" . nl2br($user_answer) . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #CBC7B8; width:50px; background-color:#EEEEEE; color:#800000\">&lt;".$string['unmarked']."&gt;</td>";
+          echo "<td class=\"primary missing\">&lt;" . $string['unmarked'] . "&gt;</td>";
         }
         if (isset($secondary_marks[$log_id])) {
-          echo "<td style=\"text-align:right; border-bottom:1px solid #CBC7B8; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /></td>";
+          echo "<td class=\"secondary\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /></td>";
         } else {
-          echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; width:50px; background-color:#EEEEEE\">&nbsp;</td>";
+          echo "<td class=\"secondary missing\">&nbsp;</td>";
         }
-        echo "<td style=\"text-align:right; border-bottom:1px solid #C0C0C0\">" . displayMarks($student_no, $marks_correct);
+        echo "<td class=\"override\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
       }
     } else {
       if (!isset($primary_marks[$log_id])) $primary_marks[$log_id] = '';
       if (!isset($secondary_marks[$log_id])) $secondary_marks[$log_id] = '';
-      echo "<tr class=\"l\"><td style=\"padding-left:10px; padding-right:10px; vertical-align:top; border-bottom:1px solid #C0C0C0; color:#C00000; font-weight:bold\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" checked /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; border-left:1px solid #C0C0C0; border-right:1px solid #C0C0C0; background-color:#FFC0C0; font-weight:bold\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td style=\"text-align:right; border-bottom:1px solid #C0C0C0; background-color:#FFC0C0\">" . displayMarks($student_no, $marks_correct);
+      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td class=\"primary noans\">" . $primary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td><td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "&nbsp;<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;
@@ -225,13 +256,15 @@ SQL;
 </table>
 <br />
 <div style="text-align:center">
-<input type="hidden" name="student_no" value="<?php echo $student_no; ?>" />
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
+<input type="hidden" name="student_no" value="<?php echo $student_no ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
+<input type="hidden" name="startdate" value="<?php echo $startdate ?>" />
+<input type="hidden" name="enddate" value="<?php echo $enddate ?>" />
 <?php
   if ($marked_no == 0) {
-    echo '<input type="submit" name="submit" value="' . $string['finalisemarks'] . '" disabled />';
+    echo '<input type="submit" name="submit" class="ok" value="' . $string['finalisemarks'] . '" disabled />';
   } else {
-    echo '<input type="submit" name="submit" value="' . $string['finalisemarks'] . '" />';
+    echo '<input type="submit" name="submit" class="ok" value="' . $string['finalisemarks'] . '" />';
   }
 ?>
 </div>

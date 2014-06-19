@@ -39,7 +39,7 @@
 	<div class="menuitem" onclick="deleteReference()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false"><?php echo $string['deletematerial']; ?></a></div>
 </div>
 
-<input type="hidden" id="divID" name="divID" value="" />
+<input type="hidden" id="lineID" name="lineID" value="" />
 <input type="hidden" id="oldID" name="oldID value="" />
 </form>
 </div>

@@ -49,20 +49,14 @@ if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli))
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg']; ?></p>
 
-<td><p><?php echo $string['msg']; ?></p>
-
-<div style="text-align: right">
+<div class="button_bar">
 <form action="do_delete_folder.php" method="post">
 <input type="hidden" name="folderID" value="<?php echo $folderID; ?>" />
-<input class="ok" type="submit" name="submit" value=" <?php echo $string['delete']; ?> " /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value=" <?php echo $string['delete']; ?> " /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

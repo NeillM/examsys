@@ -45,21 +45,14 @@ $mysqli->close();
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" class="recycleicon" alt="<?php echo $string['recyclebin']; ?>" /></td>
-
-<td><p><strong><?php echo $string['msg']; ?></strong><p>
+<p><strong><?php echo $string['msg']; ?></strong></p>
 <br />
-<br />
-<div style="text-align:right">
+<div class="button_bar">
 <form action="do_delete_event.php" method="post">
 <input type="hidden" name="eventID" value="<?php echo $eventID ?>" />
-<input class="ok" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

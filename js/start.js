@@ -1,8 +1,4 @@
 
-function refreshparent() {
-  window.opener.location.reload();
-}
-
 function onoff(questionID, itemID) {
   objID = questionID + '_' + itemID;
   if (document.getElementById(objID).className == "act") {

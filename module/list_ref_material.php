@@ -62,52 +62,14 @@ if (!$module_code) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/list.js"></script>
   <script>
-    function selRef(divID, evt) {
-      tmp_ID = $('#oldID').val();
-      if (tmp_ID != '') {
-        $('#' + tmp_ID).css('background-color', 'white');
-        $('#' + tmp_ID).css('color', 'black');
-      }
-
-      $('#menu1a').hide();
-      $('#menu1b').show();
-
-      $('#oldID').val(divID);
-      $('#divID').val(divID);
-
-      $('#' + divID).css('background-color', '#B3C8E8');
-      evt.cancelBubble = true;
-    }
-
-    function deselRef() {
-      tmp_ID = $('#oldID').val();
-      if (tmp_ID != '') {
-        $('#' + tmp_ID).css('background-color', 'white');
-      }
-      $('#oldID').val('');
-      $('#menu1b').hide();
-      $('#menu1a').show();
-    }
-
-    function lon(lineID) {
-      if (lineID != $('#oldID').val()) {
-        $('#' + lineID).css('background-color', '#EEEEEE');
-      }
-    }
-
-    function loff(lineID) {
-      if (lineID != $('#oldID').val()) {
-        $('#' + lineID).css('background-color', '');
-      }
-    }
-    
     function editReference() {
-      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/module/edit_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $modID; ?>";
+      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/module/edit_ref_material.php?refID=" + $('#lineID').val() + "&module=<?php echo $modID; ?>";
     }
     
     function deleteReference() {
-      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#divID').val() + "&module=<?php echo $modID; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#lineID').val() + "&module=<?php echo $modID; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       notice.moveTo(screen.width/2-210, screen.height/2-85);
       if (window.focus) {
         notice.focus();
@@ -123,7 +85,7 @@ if (!$module_code) {
   </script>
 </head>
 
-<body onclick="deselRef()">
+<body>
 <?php
   require '../include/toprightmenu.inc';
 	
@@ -175,7 +137,7 @@ if (!$module_code) {
 <tbody>
 <?php
 foreach ($reference_materials as $id => $details) {
-  echo "<tr id=\"$id\" onclick=\"selRef($id,event)\" ondblclick=\"editReference($id)\" onmouseover=\"lon($id)\" onmouseout=\"loff($id)\" class=\"l\"><td class=\"icon\">" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
+  echo "<tr id=\"$id\" onclick=\"selLine($id, event)\" ondblclick=\"editReference($id)\" class=\"l\"><td class=\"icon\">" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
 }
 
 $mysqli->close();
