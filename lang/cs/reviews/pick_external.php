@@ -15,4 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['externalexaminers'] = 'External Examiners';
+$string['initialinvitation'] = 'Initial Invitation';
+$string['reminder'] = 'Reminder';
+$string['msg'] = 'Please click on the external examiner you would like to email to bring up editor.';
 ?>

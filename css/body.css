@@ -67,6 +67,14 @@ input[type=submit].ok:active {
   border: 1px solid #538135;
   background: #A8D08D;
 }
+input[type=button].ok:hover {
+  border: 1px solid #538135;
+  background: #C5E0B3;
+}
+input[type=button].ok:active {
+  border: 1px solid #538135;
+  background: #A8D08D;
+}
 table {
   font-size: 100%;
 }

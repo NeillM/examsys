@@ -67,7 +67,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 $results = array();
-$stmt = $mysqli->prepare("SELECT paper_id, status, errors FROM class_totals_test_local WHERE user_id=? ORDER BY id");
+$stmt = $mysqli->prepare("SELECT paper_id, status, errors FROM class_totals_test_local WHERE user_id = ? ORDER BY id");
 $stmt->bind_param('i', $userObject->get_user_ID());
 $stmt->execute();
 $stmt->bind_result($paper_id, $status, $errors);
@@ -84,11 +84,11 @@ $stmt->close();
 
   <title>Testing: Class Totals</title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {
-      font-size:90%;
-      font-family:Arial,sans-serif;
+    #content {
+      margin: 15px;
     }
     .papers, .papers ul {
       list-style: none;
@@ -109,8 +109,9 @@ $stmt->close();
     }
   </style>
   <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    $(function () {
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(document).ready(function() {
       setTimeout(refreshPage, 15000); // milliseconds
     });
     function refreshPage() {
@@ -121,7 +122,19 @@ $stmt->close();
   </script>
 </head>
 <body>
-<h1>Class Totals Internal Analysis - Status</h1>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+?>
+<div style="font-size:80%">
+
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php">Administrative Tools</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../testing/index.php">Testing</a></div>
+  <div class="page_title">Summative Exam Check: <span style="font-weight:normal">Status</span></div>
+</div>
+  
 <div id="content">
 <?php
 if (count($results) == 0):
@@ -163,6 +176,7 @@ else:
   endif;
 endif;
 ?>
+</div>
 </div>
 </body>
 </html>

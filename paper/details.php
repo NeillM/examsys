@@ -171,11 +171,20 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
     }
     if ($q_type == 'mcq') {  // Check duplicate options
-      $option_text_copy = array_map('strtolower', $option_text);
-      $unique_options = array_unique($option_text_copy);
-      if (count($option_text_copy) > count($unique_options)) {
-        $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
+      $have_text = false;
+      foreach ($option_text as $option) {
+        if ($option != '') {
+          $have_text = true;
+        }
       }
+      if ($have_text) {
+        $option_text_copy = array_map('strtolower', $option_text);
+        $unique_options = array_unique($option_text_copy);
+        if (count($option_text_copy) > count($unique_options)) {
+          $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
+        }
+      }
+      
     }
   }
 }

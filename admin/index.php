@@ -34,7 +34,6 @@
 
 <title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/admin.css" />
@@ -62,7 +61,6 @@
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
@@ -98,8 +96,8 @@
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a></div>
-  <div class="page_title"><?php echo $string['administrativetools']; ?></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
+  <div class="page_title"><?php echo $string['administrativetools'] ?></div>
 </div>
   
 <?php

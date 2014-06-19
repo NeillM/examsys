@@ -1373,14 +1373,14 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         } else {
           $checked = '';
         }
-        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_calculator'] . "\" /></td>";
+        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_calculator'] . "\" /></td>";
 
         if ($properties->get_sound_demo() == 1) {
           $checked = ' checked="checked"';
         } else {
           $checked = '';
         }
-        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_audio'] . "\" /></td></tr>\n";
+        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_audio'] . "\" /></td></tr>\n";
       }
 
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1483,9 +1483,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo ' disabled';
        }
        if ($neg_marking) {
-         echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/information_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
+         echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
        } else {
-        echo '>' . $string['calculatrrandommark'] . '&nbsp;<img src="../artwork/information_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
+        echo '>' . $string['calculatrrandommark'] . '&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
        }
 
       // Look for any Standard Setting reviews for the paper.
@@ -1585,7 +1585,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($properties->get_paper_type() == '4') {
       echo "</select></td><td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\" /></td></tr>\n";
     } else {
-      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /> <img src=\"../artwork/information_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
+      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
     }
 
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";

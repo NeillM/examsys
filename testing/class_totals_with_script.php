@@ -51,9 +51,6 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <style type="text/css">
-    body {
-      font-size: 90%;
-    }
     dt {
       font-weight: bold;
     }
@@ -64,12 +61,16 @@ $result->close();
       color: red;
       font-weight: bold;
     }
+    #results {
+      margin: 15px;
+    }
   </style>
 
-  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
-  <script src="../js/jquery.validate.min.js" type="text/javascript"></script>
-  <script type="text/javascript">
-    $(function () {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(document).ready(function() {
       $('#results').hide();
       $('#start').click(function (e) {
         e.preventDefault();
@@ -93,16 +94,26 @@ $result->close();
       $('#status').click(function() {
         var period = $('#period').val();
         var paper = $('#paper').val();
-        window.location.href='class_totals_with_script_status.php?period=' + period + '&paper=' + paper;
+        window.location.href = 'class_totals_with_script_status.php?period=' + period + '&paper=' + paper;
       });
     })
   </script>
 </head>
 <body>
-<h1>Class Totals Internal Analysis</h1>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+?>
+<div style="font-size:80%">
 
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php">Administrative Tools</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../testing/index.php">Testing</a></div>
+  <div class="page_title">Summative Exam Check</div>
+</div>
 
-<div id="form">
+<div id="form" style="margin: 15px">
   <form id="the_form" action="./" method="post">
   <dl class="form">
     <dt><label for="period">Select time period:</label></dt>
@@ -136,12 +147,14 @@ endforeach;
     <dt>Password:</dt>
     <dd><input type="password" id="passwd" name="passwd" class="required" style="width:100px" /></dd>
   </dl>
-    <button id="start">Start Analysis</button>
+    <input type="button" id="start" value="Start Analysis" class="ok" />
   </form>
 </div>
 <div id="results">
-  <p>Analysis started.</p>
-  <button id="status">View the current status</button>
+  <p>Analysis started...</p>
+  <input type="button" id="status" value="View Status" class="ok" />
+</div>
+  
 </div>
 </body>
 </html>
