@@ -189,17 +189,17 @@ hr {
   width: 14px;
   height: 14px;
 }
-title {
+/*title {
   display: inline-block;
   width: 5em;
   background-color: red;
-}
+}*/
 .ui-tooltip {
-  padding: 8px;
+  padding: 6px;
   color: #4B3700;
   background-color: #FFF2CB;
   border: 1px solid #FFD965;
-  width: 400px;
+  max-width: 400px;
   font-size: 80%;
   text-align: justify;
   z-index: 100;

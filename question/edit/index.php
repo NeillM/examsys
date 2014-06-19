@@ -439,9 +439,18 @@ echo $cfg_editor_javascript;
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
-<script type="text/javascript" src="../../js/state.js"></script>
+<script type="text/javascript" src="../../js/system_tooltips.js"></script>
+<?php
+// Override this variable with a specific configuration file for the question editor.
+$cfg_editor_javascript = <<< SCRIPT
+{$configObject->get('cfg_js_root')}
+<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config_question_editor.js"></script>
+SCRIPT;
+
+echo $cfg_editor_javascript;
+?><script type="text/javascript" src="../../js/state.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
-<script type="text/javascript" src="../../js/jquery.touchstone.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
 <script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
@@ -468,7 +477,7 @@ if ($question != null and $question->requires_flash()):
 <?php
 endif;
 ?>
-<script type="text/javascript">
+<script>
 var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
 var lang = {
 <?php
@@ -492,9 +501,6 @@ $(function () {
 <?php
 endif;
 ?>
-  $(function () {
-    $(document).tooltip();
-  });
 </script>
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 </head>

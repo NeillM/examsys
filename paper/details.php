@@ -540,8 +540,6 @@ function check_latex_random($q_ids, $mysqli) {
   }
 
   $(document).ready(function() {
-    $(document).tooltip();
-
 		<?php
 		if (isset($_GET['scrOfY'])) {
 			echo "  window.scrollTo(0," . $_GET['scrOfY'] . ");\n";

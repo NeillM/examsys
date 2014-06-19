@@ -110,7 +110,8 @@ Class InstallUtils {
     global $string, $language, $timezone_array;
 
     ?>
-    <script type="text/javascript">
+    <script type="text/javascript" src="../js/system_tooltips.js"></script>
+    <script>
       $(document).ready(function(){
           $("#installForm").validate();
       });
@@ -127,7 +128,7 @@ Class InstallUtils {
           });
       });
     </script>
-    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
 
       <?php
         if (!defined('PHP_VERSION_ID')) {
@@ -264,7 +265,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
         <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
 
-      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" /> </div>
+      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" class="ok" /> </div>
     </form>
     <?php
   }
@@ -1306,7 +1307,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         .h {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
         .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
         td.line {width:98%}
-        input {width:200px}
+        input[type=text], input[type=password] {width:200px}
         form {padding:1em}
         form div {padding-left:2em}
       </style>

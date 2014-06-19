@@ -955,6 +955,8 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
+  <script type="text/javascript" src="../js/system_tooltips.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_properties.js"></script>
@@ -963,9 +965,8 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <?php
   if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
 ?>
-  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
-  <script type="text/javascript">
+  <script>
     $(document).ready(function() {
       $('.datecopy').change(dateCopy);
     })
@@ -973,11 +974,9 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <?php
 }
 ?>
-  <script type="text/javascript">
+  <script>
     $(document).ready(function() {
       getMeta();
-      
-      $(document).tooltip();
       
       $('#theform').validate({
         errorClass: 'errfield',
