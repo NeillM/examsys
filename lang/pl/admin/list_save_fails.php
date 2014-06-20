@@ -16,7 +16,7 @@
 
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['deniedlogwarnings'] = 'Ostrzeżenia logu odmowy';
-$string['student'] = 'Student';
+$string['student'] = 'Student'; //cognate
 $string['paper'] = 'Arkusz';
 $string['client'] = 'Użytkownik';
 $string['datetime'] = 'Data/Czas';

@@ -16,8 +16,8 @@
 
 $string['finalisemarks'] = 'Końcowa ocena pytań';
 $string['noanswer'] = 'Nie podano odpowiedzi';
-$string['first'] = 'Pierwotna';
-$string['second'] = 'Wtórna';
+$string['first'] = '1.';
+$string['second'] = '2.';
 $string['override'] = 'Nadrzędna';
 $string['unmarked'] = 'brak oceny';
 $string['question'] = 'Pytanie';

@@ -16,7 +16,7 @@
 
 $string['administrativetools'] = 'Narzędzia administracyjne';
 $string['modules'] = 'Moduły';
-$string['academicyear'] = 'Academic Year';
+$string['academicyear'] = 'Rok akademicki';
 $string['schools'] = 'Katedry';
 $string['smsimportsummary'] = 'Podsumowanie importu SMS';
 $string['smsimportson'] = 'Importowanie SMS włączone';

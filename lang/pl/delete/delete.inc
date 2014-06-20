@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmdelete'] = 'Confirm Pointer Delete';
+$string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
 $string['recyclebin'] = 'Kosz';
 $string['delete'] = 'Usuń';
 ?>

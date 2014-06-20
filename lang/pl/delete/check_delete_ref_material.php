@@ -16,6 +16,6 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['confirmdelete'] = 'Confirm Pointer Delete';
+$string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
 $string['msg'] = 'Czy na pewno usunąć materiał pomocniczy?';
 ?>

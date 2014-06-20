@@ -22,5 +22,5 @@ $string['file'] = 'Plik';
 $string['importfile'] = 'Importuj plik';
 $string['invalidzip'] = 'Ten plik ZIP jest nieczytelny.';
 $string['invalidraf'] = 'Ten plik RAF (Rogo Assessment File) jest nieczytelny.';
-$string['type'] = 'Type';
+$string['type'] = 'Typ';
 ?>

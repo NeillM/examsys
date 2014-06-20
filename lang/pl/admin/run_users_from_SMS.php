@@ -19,7 +19,7 @@ require '../lang/' . $language . '/admin/list_modules.php';
 $string['runningsmsimport'] = 'Bieżący import SMS';
 $string['academicyear'] = 'Rok akademicki';
 $string['modulecode'] = 'Kod modułu';
-$string['url'] = 'URL';
+$string['url'] = 'URL'; //cognate
 $string['enrolements'] = 'Wpisy';
 $string['deletions'] = 'Usunięcia';
 ?>

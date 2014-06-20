@@ -72,5 +72,5 @@ $string['errorrandomnotfound'] = 'Błąd: Nie wybrano pytań losowych. Być moż
 $string['overriddenby'] = 'Ocena skorygowana przez';
 $string['questionclarification'] = 'Wyjaśnienie pytania';
 $string['EnhancedCalcCorrectError'] = 'Błąd: Poprawna odpowiedź nie może być obliczona';
-$string['student'] = 'Student';
+$string['student'] = 'Student'; //cognate
 ?>

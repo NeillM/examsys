@@ -37,6 +37,6 @@ $string['starttime'] = 'Czas rozpoczęcia';
 $string['endtime'] = 'Czas zakończenia';
 $string['duration'] = 'Czas trwania';
 $string['labs'] = 'Pracownie';
-$string['metadata'] = 'Metadata';
+$string['metadata'] = 'Metadane';
 $string['extraevents'] = '<strong>SysAdmin:</strong> Kliknij podwójnie w kalendarzu aby dodać zdarzenie.';
 ?>
