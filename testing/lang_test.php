@@ -43,6 +43,14 @@
     table {
       padding-left: 20px;
     }
+		#trans {
+			border-radius:7px;
+			position:absolute;
+			background:#fff;
+			border:solid 2px #555;
+			padding-right:10px;
+			visibility:hidden;
+		}
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -52,6 +60,17 @@
       $(document).tooltip();
     })
 		
+		function show_transl(event,txt){
+			el = document.getElementById('trans');
+			//el.style.display = 'none';
+			el.innerHTML = txt;
+			//console.log(txt);
+			el.style.visibility = "visible";
+			el.style.top = event.pageY + "px";//pageY;
+			el.style.left = (event.pageX + 20)  + "px";
+			el.style.display = '';
+			if (txt == '') el.style.display = 'none';
+		}
 		function showhide(id) {
 			if (document.getElementById(id).style.display=='') {
 				document.getElementById(id).style.display = 'none';
@@ -160,13 +179,31 @@ function file_array_read($files, $lang) {
 
 $last_key = '';
 $last_value = '';
+$trans_list = Array();
  
 function display_this($data, $data_index) {
 	global $display_text;
   global $last_key,$last_value;
+	global $strings_pl;
+	global $global_for_translated_list;
   $data_part1= explode('|', $data[0]);
 	$data_part2= $data[1];
 	$data_part3= explode('|', $data[2]);
+	$transl = '';
+	if ($global_for_translated_list) {
+		unset($trans_list);
+		$transl = '&nbsp;<a href="#" onclick="show_transl(event,\'\');return false;" onmouseover="show_transl(event,\'<ul>';
+		foreach ($data_part3 as $dp) $trans_list[$dp] = $dp;
+		foreach ($trans_list as $tl) {
+			$tl = preg_replace('/\"/','\"',$tl);
+			$tl = preg_replace('/\'/',"\"",$tl);
+			$tl = preg_replace('/\'; \/\/cognate/','',$tl);
+			$tl = preg_replace('/\"; \/\/cognate/','',$tl);
+			$tl = htmlentities($tl,ENT_QUOTES,'UTF-8');
+			$transl .= '<li>'.$tl.'</li>';
+		}
+		$transl .= '</ul>\');return false;"><img border="0" src="../artwork/information_icon.gif" class="help_tip"></a>';
+	}
 	if ($data_part2!='') {
 		if ($data_index=='-1') {
       foreach ($data_part1 as $data_key => $data_element) {
@@ -182,7 +219,6 @@ function display_this($data, $data_index) {
           }
         }
         $display_text .= '</td><td>';
-        
         if (isset($data_part3[$data_key])) {
           if ($data_part3[$data_key] != $last_value) {
             if ($data_part2 != $last_key) {
@@ -203,7 +239,9 @@ function display_this($data, $data_index) {
 		} else {
 			$display_text .= '<tr>';
 			$display_text .= '<td><em>' . $data_part1[$data_index] . '</em></td>';
-			$display_text .= '<td><strong>' . $data_part2 . '</strong></td>';
+			$display_text .= '<td><strong>' . $data_part2 . '</strong>';
+			if ($global_for_translated_list) $display_text .= $transl;
+			$display_text .= '</td>';
 			//$display_text .= '<td>' . $data_part3[$data_index] . '</td>';
 			$display_text .= '<td>' . $data_part3[$data_index] . '</td>';
 			$display_text .= '</tr>';
@@ -237,6 +275,7 @@ if (isset($_GET['lang'])) $spec_lang = $_GET['lang'];
 
 //path for folders inside /en/
 $path=preg_replace('/testing/', '', getcwd()) . 'lang/en/';
+$global_for_translated_list = false;
 
 //searching for files
 $files = Array();
@@ -255,9 +294,10 @@ foreach ($lang_array as $lang) {
     $strings_pl = file_array_read($files, $lang);
     if (empty($strings_pl[0])) unset($strings_pl[0]);
 
-    echo '<h2 class="midblue_header">Analysis for: ' . $lang ;
-		echo ' <small>(<a id="bs_' . $lang . '" style="display:none" onClick=showhide("' . $lang . '");>show</a>';
-		echo '<a id="bh_' . $lang . '" onClick=showhide("' . $lang . '");>hide</a>)</small>';
+    echo '<h2 class="midblue_header">';
+		echo '<a id="bs_en" style="display:none" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/plus.png" class="help_tip"></a>';
+		echo '<a id="bh_en" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/minus.png" class="help_tip"></a> ';
+		echo 'Analysis for: ' . $lang ;
 		echo '</h2>';
     echo '<div id="' . $lang . '">';
     //Missing files
@@ -415,15 +455,18 @@ foreach ($lang_array as $lang) {
         $data_path3 = Array();
 				if (isset($strings_pl[$strings_key][2])) $data_path3 = explode("|", $strings_pl[$strings_key][2]);
         if (count($data_path3)==count($data_path1)) {
+					$global_for_translated_list = true;
           foreach ($data_path1 as $data_path1_key => $data_path1_elem) {
             if (($data_path1[$data_path1_key]==$data_path3[$data_path1_key]))	{
             display_this($strings_pl[$strings_key], $data_path1_key);
-            }
+            //var_dump($strings_key,$strings_pl[$strings_key],'xxxx');
+						}
           }
+					$global_for_translated_list = false;
         }
       }
     }
-    echo '<h3>Identical strings across files: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\')"></h3>';
+    echo '<h3>Identical strings: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\') - possibly being translated in some other file"></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 		echo '</div>';
@@ -433,9 +476,10 @@ foreach ($lang_array as $lang) {
 //---------------------------------------------------------------------------
 
 echo '<hr>';
-echo '<h2 class="midblue_header">Analysis for: en';
-echo ' <small>(<a id="bs_en" style="display:none" onClick=showhide("en");>show</a>';
-echo '<a id="bh_en" onClick=showhide("en");>hide</a>)</small>';
+echo '<h2 class="midblue_header">';
+echo '<a id="bs_en" style="display:none" onClick=showhide("en");><img border="0" src="../artwork/plus.png" class="help_tip"></a>';
+echo '<a id="bh_en" onClick=showhide("en");><img border="0" src="../artwork/minus.png" class="help_tip"></a> ';
+echo 'Analysis for: en';
 echo '</h2>';
 echo '<div id="en">';
 
@@ -490,5 +534,6 @@ echo '<table>'.$display_text.'</table>';
 echo '</div>';
 
 echo '<hr>';
+echo '<div id="trans"></div>';
 ?>
 </body>
