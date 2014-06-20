@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
   <style type="text/css">
     table {font-size:100%}
     input, textarea {line-height:140%}
-    input[type=checkbox] {margin-left:20px; margin-right:8px}
+    input[type=checkbox] {margin-left:20px}
     .r1 {text-indent:-23px; padding-left:23px; background-color:white}
     .r2 {text-indent:-23px; padding-left:23px; background-color:#FFBD69}
 		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/staff_help.js"></script>
 	<script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(function () {
+    $(document).ready(function() {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -138,9 +138,9 @@ for ($size=200; $size<850; $size+=50) {
     if ($_GET['module'] == $modID) $match = true;
     
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\">&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
     }
     $module_no++;  
     $old_school = $module['school'];        

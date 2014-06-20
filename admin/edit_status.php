@@ -94,6 +94,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
       width: auto;
       margin: 16px auto;
     }
+    th {text-align:right; font-weight:normal}
     td {text-align:left}
     .admin-form th {text-align:right; padding-right:10px}
     .form-error {

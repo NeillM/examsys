@@ -22,7 +22,6 @@ $string['username'] = 'Uživatelské jméno';
 $string['password'] = 'Heslo';
 $string['login'] = 'Uživatelské jméno';
 $string['guestaccountreg'] = 'Registrace dočasného účtu';
-$string['ok'] = 'OK'; //cognate
 $string['title'] = 'Titul';
 $string['firstname'] = 'Jméno';
 $string['surname'] = 'Příjmení';

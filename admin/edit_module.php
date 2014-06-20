@@ -130,7 +130,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    .field {text-align:right; padding-right:10px}
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -214,7 +214,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   <br />
   <div align="center">
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">
-    <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
+    <table cellpadding="0" cellspacing="1" border="0" style="text-align:left">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $module['moduleid'] ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $module['fullname'] ?>" required /></td></tr>
   <?php
@@ -277,14 +277,14 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
         $selected = ($module['vle_api'] == $vle_name and $module['map_level'] == $api_level) ? ' selected="selected"' : '';
 
   ?>
-        <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level']; ?></option>
+        <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level'] ?></option>
   <?php
       }
     }
   ?>
     </select>
     </td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"' ?> /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked'; ?> /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked'; ?> /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked'; ?> /> <?php echo $string['mapping']; ?></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer"<?php if ($peer == 1) echo ' checked="checked"' ?> /><?php echo $string['peerreview'] ?>, <input type="checkbox" name="external"<?php if ($external == 1) echo ' checked' ?> /><?php echo $string['externalexaminers'] ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset"<?php if ($stdset == 1) echo ' checked' ?> /><?php echo $string['standardssetting'] ?>, <input type="checkbox" name="mapping"<?php if ($mapping == 1) echo ' checked' ?> /><?php echo $string['mapping'] ?></td></tr>
     <tr><td class="field"><?php echo $string['active'] ?></td><td><input type="checkbox" name="active"<?php if ($module['active'] == 1) echo ' checked="checked"' ?> /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol'] ?></td><td><input type="checkbox" name="selfenroll"<?php if ($module['selfenroll'] == 1) echo ' checked="checked"' ?> /></td></tr>
     <tr><td class="field"><?php echo $string['negativemarking'] ?></td><td><input type="checkbox" name="neg_marking"<?php if ($module['neg_marking'] == 1) echo ' checked="checked"' ?> /></td></tr>

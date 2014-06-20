@@ -25,11 +25,11 @@
 * @package
 */
 
-require_once './include/load_config.php';
-require_once './classes/lang.class.php';
-require_once './include/auth.inc';
-require_once './classes/networkutils.class.php';
-require_once './classes/userutils.class.php';
+require_once '../include/load_config.php';
+require_once '../classes/lang.class.php';
+require_once '../include/auth.inc';
+require_once '../classes/networkutils.class.php';
+require_once '../classes/userutils.class.php';
 
 $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 
@@ -68,9 +68,9 @@ if ($paper_match == false) {
 
   <title><?php echo $string['guestaccount']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="./css/body.css" />
-  <link rel="stylesheet" type="text/css" href="./css/notice.css" />
-  <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/notice.css" />
+  <link rel="stylesheet" type="text/css" href="../css/guest_account.css" />
 </head>
 
 <body>
@@ -91,16 +91,16 @@ if (isset($_POST['submit'])) {
   $stmt->execute();
   $stmt->close();
 
-  echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/index.php">';
+  echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/paper/index.php">';
   echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
   echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
   echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #7F9DB9 solid; background-color:#EEF4FF">';
-  echo '<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px">' . $string['allocatedaccount'] . '</td></tr>';
+  echo '<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="../artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px">' . $string['allocatedaccount'] . '</td></tr>';
   echo '<tr><td colspan="2" style="padding:8px">' . $string['msg'] . '</td></tr>';
   echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' . $_POST['username'] . '</tt></td></tr>';
   echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><tt>' . $_POST['password'] . '</tt></td></tr>';
   echo '<tr><td colspan="2"><td>&nbsp;</td></tr>';
-  echo '<tr><td style="text-align:center"><td><input type="submit" name="rogo-login-form-std" value="' . $string['login'] . '" style="width:120px" /></td></tr>';
+  echo '<tr><td style="text-align:center"><td><input type="submit" name="rogo-login-form-std" value="' . $string['login'] . '" class="ok" /></td></tr>';
   echo '<tr><td><td>&nbsp;</td></tr>';
   echo '</table></td></tr></table></div></form>';
 } else {
@@ -151,12 +151,12 @@ if (isset($_POST['submit'])) {
 
   <title><?php echo $string['guestaccount']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="./css/body.css" />
-  <link rel="stylesheet" type="text/css" href="./css/guest_account.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/guest_account.css" />
 
-  <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -173,7 +173,7 @@ if (isset($_POST['submit'])) {
 <form name="theform" id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div style="text-align:center">
 <table cellpadding="0" cellspacing="0" style="text-align:left; margin-left:auto; margin-right:auto; width:450px; border:1px #7F9DB9 solid; background-color:#EEF4FF">
-<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="./artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px"><?php echo $string['guestaccountreg']; ?></td></tr>
+<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="../artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px"><?php echo $string['guestaccountreg']; ?></td></tr>
 
 <tr><td style="text-align:center; padding:6px" colspan="2">
 <table cellpadding="2" cellspacing="0" style="width:100%; border:0px; text-align:left">
@@ -182,7 +182,7 @@ if (isset($_POST['submit'])) {
 <tr><td><?php echo $string['surname']; ?></td><td><input type="text" name="surname" id="surname" value="" size="40" maxlength="50" required /></td></tr>
 <tr><td><?php echo $string['studentid']; ?></td><td><input type="text" name="student_id" value="" size="20" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" /></td></tr>
 </table>
 </td></tr>
 </table>

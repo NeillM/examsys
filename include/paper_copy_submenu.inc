@@ -133,9 +133,9 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td>&nbsp;</td>
-<td>&nbsp;<input type="radio" name="copytype" value="paperonly" />&nbsp;<?php echo $string['paperonly']; ?></td>
+<td>&nbsp;<input type="radio" name="copytype" value="paperonly" /><?php echo $string['paperonly'] ?></td>
 <td>&nbsp;</td>
-<td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked />&nbsp;<?php echo $string['paperandquestions']; ?></td>
+<td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked /><?php echo $string['paperandquestions'] ?></td>
 <td>&nbsp;</td>
 </tr>
 <tr>

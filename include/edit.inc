@@ -98,9 +98,7 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $che
   global $tmp_ownerID;
   $disabled = '';
 
-  if (check_MSCAA($q_id, $dblink)) {    // Check for MSC-AA question
-    $disabled = 'mscaa';
-  } elseif ($locked != '') {            // Check if locked
+  if ($locked != '') {            // Check if locked
     $disabled = 'locked';
     $checkout_author = check_out_paper($dblink, $q_id, $userObject->get_user_ID());
   } else {                              // Check out editing rights against current user
@@ -108,22 +106,6 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $che
   }
 
   return $disabled;
-}
-
-function check_MSCAA($q_id, $dblink) {
-  $mscaa = false;
-
-  $stmt = $dblink->prepare("SELECT id FROM questions_metadata WHERE questionID = ? AND type = 'QTI Ident' AND value LIKE 'MSC_AA%'");
-  $stmt->bind_param('i', $q_id);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($id);
-  if ($stmt->num_rows() > 0) {
-    $mscaa = true;
-  }
-  $stmt->close();
-
-  return $mscaa;
 }
 
 function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_time, &$disabled, $dblink, $questionID, $userObject) {
@@ -245,7 +227,7 @@ HTML;
 
     if ($allow_correct and $locked != '' and $paper_id != -1) {
       $html .= <<< HTML
-      <script type="text/javascript">
+      <script>
         var otherSummatives = $paper_count;
         var postExam = true;
         var postExamWarningShown = false;
@@ -256,12 +238,12 @@ HTML;
 
   } else {
     $html .= <<< HTML
-<input type="submit" id="addbank" name="addbank" value="{$string['addtobank']}" class="submit">
+<input type="submit" id="addbank" name="addbank" value="{$string['addtobank']}" class="ok">
 
 HTML;
     if ($paper_id != -1 and substr($paper_id, 0, 5) != 'list:') {
       $html .= <<< HTML
-  <input type="submit" id="addpaper" name="addpaper" value="{$string['addtobankandpaper']}" class="submit">
+  <input type="submit" id="addpaper" name="addpaper" value="{$string['addtobankandpaper']}" class="ok">
 
 HTML;
     }

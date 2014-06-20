@@ -65,7 +65,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     td {text-align:left}
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    .field {text-align:right; padding-right:10px}
     .form-error {
       width: 468px;
       margin: 18px auto;

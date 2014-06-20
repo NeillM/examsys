@@ -21,9 +21,12 @@ a:hover {
 img {
   border-width: 0px;
 }
-input[type='checkbox'] {
+input[type='checkbox'], input[type='radio'] {
   margin-left: 1px;
-	margin-right: 1px;
+	margin-right: 6px;
+}
+select {
+  margin: 1px;
 }
 textarea, input[type=text], select, input[type=password] {
   font-family: Arial,sans-serif;
@@ -196,12 +199,20 @@ hr {
 }*/
 .ui-tooltip {
   padding: 6px;
-  color: #4B3700;
-  background-color: #FFF2CB;
-  border: 1px solid #FFD965;
+  color: black;
+  background-color: white;
+  border: 1px solid #767676;
   max-width: 400px;
   font-size: 80%;
   text-align: justify;
   z-index: 100;
+  background: -moz-linear-gradient(top, #FFFFFF, #E4E5F0);
+  background: -webkit-linear-gradient(top, #FFFFFF, #E4E5F0);
+  background-image: -ms-linear-gradient(top, #FFFFFF 0%, #E4E5F0 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E4E5F0');
+  -moz-box-shadow:    3px 3px 5px 6px #ccc;
+  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+  box-shadow:         2px 2px 4px 0px #808080;
+  border-radius: 3px;
 }
 

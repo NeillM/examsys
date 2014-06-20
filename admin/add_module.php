@@ -128,7 +128,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    .field {text-align:right; padding-right:10px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -190,9 +190,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <br />
 
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-    <table cellpadding="0" cellspacing="2" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
+    <table cellpadding="0" cellspacing="1" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" required autofocus /></td></tr>
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname'] ?>" required /></td></tr>
 
 <?php
   $old_faculty = '';
@@ -229,7 +229,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $selected = ($vle_api == $vle_name and $map_level == $api_level) ? ' selected="selected"' : '';
 
     ?>
-      <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level']; ?></option>
+      <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level'] ?></option>
     <?php
     }
   }
@@ -237,14 +237,14 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     </select>
     <div id="map_level_holder"></div>
     </td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer" checked="checked" /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external" checked /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping" /> <?php echo $string['mapping']; ?></td></tr>
-    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active" checked /></td></tr>
-    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
-    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>
-    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams" /></td></tr>
-    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
-    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
-    <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
+    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer" checked="checked" /><?php echo $string['peerreview'] ?>, <input type="checkbox" name="external" checked /><?php echo $string['externalexaminers'] ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /><?php echo $string['standardssetting'] ?>, <input type="checkbox" name="mapping" /><?php echo $string['mapping'] ?></td></tr>
+    <tr><td class="field"><?php echo $string['active'] ?></td><td><input type="checkbox" name="active" checked /></td></tr>
+    <tr><td class="field"><?php echo $string['allowselfenrol'] ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking'] ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['timedexams'] ?></td><td><input type="checkbox" name="timed_exams" /></td></tr>
+    <tr><td class="field"><?php echo $string['questionbasedfeedback'] ?></td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['addteammembers'] ?></td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
+    <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid'] ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
     $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
     $result->execute();
     $result->bind_result($id, $name);
@@ -254,7 +254,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $result->close();
     ?></select></td></tr>
 
-    <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
+    <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></td></tr>
 		</table>
 	</form>
 

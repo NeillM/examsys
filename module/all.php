@@ -49,15 +49,6 @@
   <script src="../js/sidebar.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function displayCredits(){
-      notice=window.open("../credits/index.php","credits","width=696,height=500,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");
-      notice.moveTo(screen.width/2-350,screen.height/2-250)
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-	</script>
 </head>
 
 <body>

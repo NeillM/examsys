@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    input[type=checkbox] {margin-left:20px; margin-right:8px}
+    input[type=checkbox] {margin-left:20px}
     .r1 {background-color:white}
     .r2 {background-color:#FFBD69}
 		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
@@ -84,7 +84,7 @@ if (isset($_POST['submit'])) {
     }
 
     function resizeList() {
-      winH = $(window).height() - 125;
+      winH = $(window).height() - 135;
 
       $('#list').css('height', winH + 'px');
     }

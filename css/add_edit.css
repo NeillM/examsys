@@ -12,7 +12,7 @@ body {
 h1 {
   margin: 0;
   color: #000;
-  font: 32px/36px Arial, sans-serif;
+  font: 32px/36px;
   font-weight:bold;
 }
 
@@ -25,7 +25,7 @@ h2 {
 h3 {
   font-weight: bold;
   font-size: 90%;
-  margin-top:0px;
+  margin-top: 0;
   margin-bottom: 4px;
 }
 
@@ -44,6 +44,13 @@ ul {
 
 p {
 	font-size: 90%;
+}
+
+#team-select input[type="checkbox"] {
+  margin-left: 22px;
+}
+#q-keywords input[type="checkbox"] {
+  margin-left: 22px;
 }
 
 dt {

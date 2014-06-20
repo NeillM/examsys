@@ -59,14 +59,15 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid']; ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    function closeWindow() {
+		$(document).ready(function() {
       window.opener.location.href = '../module/index.php?module=<?php echo $moduleID; ?>';
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="closeWindow()">
+<body>
 </body>
 </html>
 <?php
@@ -103,7 +104,7 @@ if (isset($_POST['submit'])) {
     }
     
     function resizeList() {
-      winH = $(window).height() - 110;
+      winH = $(window).height() - 120;
 
       $('#list').css('height', winH + 'px');
     }
@@ -159,7 +160,7 @@ if (isset($_POST['submit'])) {
     } else {
       $display_text = $tmp_initials;
     }
-    echo " " . $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></label></div>\n";
+    echo $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></label></div>\n";
     $old_letter = strtoupper(substr($tmp_surname, 0, 1));
     $staff_no++;
   }

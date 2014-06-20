@@ -157,9 +157,6 @@ MESSAGE;
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <style type="text/css">
-    .field {font-weight:bold}
-  </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
@@ -227,18 +224,18 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['firstnames']; ?></span></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['lastname']; ?></span></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['email']; ?></span></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['username']; ?></span></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
-&nbsp;&nbsp;&nbsp;<span class="field"><?php echo $string['password']; ?></span> <input type="text" id="new_password" name="new_password" value="<?php
+<tr><td align="right"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
+<tr><td align="right"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
+<tr><td align="right"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
+<tr><td align="right"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
+&nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
   } else {
     echo gen_password();
   }
 ?>" size="12" required /></td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['yearofstudy']; ?></span></td><td>
+<tr><td align="right"><?php echo $string['yearofstudy'] ?></td><td>
 <select id="new_yos" name="new_year">
 <?php
   for ($tmp_year=1; $tmp_year<=6; $tmp_year++) {
@@ -251,23 +248,23 @@ foreach ($titles as $tmp_title) {
 ?>
 </select>
 </td></tr>
-<tr><td align="right"><span class="field"><?php echo $string['typecourse']; ?></span></td><td>
-<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"'; ?> required>
+<tr><td align="right"><?php echo $string['typecourse'] ?></td><td>
+<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"' ?> required>
 <option value=""></option>
 <optgroup label="<?php echo $string['universitystaff']; ?>">
-<option value="University Lecturer"><?php echo $string['academiclecturer']; ?></option>
-<option value="University Admin"><?php echo $string['administrator']; ?></option>
-<option value="Technical Staff"><?php echo $string['ittechnical']; ?></option>
+<option value="University Lecturer"><?php echo $string['academiclecturer'] ?></option>
+<option value="University Admin"><?php echo $string['administrator'] ?></option>
+<option value="Technical Staff"><?php echo $string['ittechnical'] ?></option>
 </optgroup>
-<optgroup label="<?php echo $string['externalstaff']; ?>">
+<optgroup label="<?php echo $string['externalstaff'] ?>">
 <?php
 if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   echo "<option value=\"NHS Lecturer\">" . $string['nhslecturer'] . "</option>\n";
   echo "<option value=\"NHS Admin\">" . $string['nhsadmin'] . "</option>\n";
 }
 ?>
-<option value="Staff External Examiner"><?php echo $string['externalexaminer']; ?></option>
-<option value="Invigilator"><?php echo $string['invigilator']; ?></option>
+<option value="Staff External Examiner"><?php echo $string['externalexaminer'] ?></option>
+<option value="Invigilator"><?php echo $string['invigilator'] ?></option>
 <?php
   $old_school = '';
   $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
@@ -287,20 +284,20 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 </td></tr>
 
 <tr>
-<td align="right"><span class="field"><?php echo $string['gender']; ?></span></td><td>
+<td align="right"><?php echo $string['gender'] ?></td><td>
 <select id="new_gender" name="new_gender" size="1">
 <option value=""></option>
-<option value="Male"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Male') echo ' selected'; ?>><?php echo $string['male']; ?></option>
-<option value="Female"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Female') echo ' selected'; ?>><?php echo $string['female']; ?></option>
+<option value="Male"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Male') echo ' selected' ?>><?php echo $string['male'] ?></option>
+<option value="Female"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Female') echo ' selected' ?>><?php echo $string['female'] ?></option>
 </select>
 </td>
 </tr>
-<tr><td align="right"><span class="field"><?php echo $string['studentid']; ?></span></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /></td></tr>
-<tr><td align="right">&nbsp;</td><td style="color:#808080"><?php echo $string['onlyifstudent']; ?></td></tr>
+<tr><td align="right"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /></td></tr>
+<tr><td align="right">&nbsp;</td><td style="color:#808080"><?php echo $string['onlyifstudent'] ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></td></tr>
+<tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
 <tr><td colspan="2" align="center">
-<input type="submit" name="submit" value="<?php echo $string['createaccount']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td></tr>
+<input type="submit" name="submit" value="<?php echo $string['createaccount'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td></tr>
 </table>
 </td></tr>
 </table>

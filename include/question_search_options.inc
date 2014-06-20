@@ -92,7 +92,6 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 
   function updateMenu(ID) {
-    current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
     $('#menu' + ID).toggle();
 
     <?php
@@ -102,7 +101,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     $('#icon' + ID).attr('src', icon);
     $('#icon' + ID).attr('alt', alttag);
 
-    updateState('menu' + ID, current);
+ 		updateState('menu' + ID, $('#menu' + ID).css('display'));
+
   }
 
   function updateDropdownState(mySel, NameOfState) {
@@ -128,7 +128,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
   $qTypes = array('area'=>$string['area'],'enhancedcalc'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox'],'true_false'=>$string['true_false']);
-  foreach ($qTypes as $tmp_type=>$tmp_title) {
+  foreach ($qTypes as $tmp_type => $tmp_title) {
     if (isset($_GET['searchtype']) and $_GET['searchtype'] == $tmp_type) {
       echo "<option value=\"$tmp_type\" selected>$tmp_title</option>\n";
     } else {
@@ -416,7 +416,7 @@ if (!isset($status_array)) {
 <br />
 
 
-<div style="text-align:center"><input style="width:100px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
+<div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['search'] ?>" /></div>
 </td></tr>
 </table>
 

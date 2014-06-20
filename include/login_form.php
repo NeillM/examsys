@@ -161,7 +161,7 @@ HTML;
           </table>
           <br/>
           </div>
-          <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" style="width:150px" />
+          <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" class="ok" />
         <?php
         if (isset($displaystdformobj->buttons)) {
           foreach ($displaystdformobj->buttons as $object) {

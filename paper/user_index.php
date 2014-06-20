@@ -110,12 +110,32 @@ function have_previously_started($attempts) {
   }
 }
 
-function display_duration($normal, $extra_time_mins, $special_needs_percentage) {
+function calculate_duration($normal, $extra_time_mins, $special_needs_percentage) {
   $mins = $normal;
   if ($extra_time_mins != NULL) $mins .= ' + ' . $extra_time_mins;
-  if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal/100)*$special_needs_percentage;
+  if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal / 100) * $special_needs_percentage;
 
   return $mins;
+}
+
+function display_duration($mins, $string) {
+  if ($mins < 60) {
+    $display_duration = $mins .  ' ' . $string['mins'];
+  } else {
+    $hours = round($mins / 60);
+    $remainder = $mins - ($hours * 60);
+    
+    if ($hours == 1) {
+      $display_duration = $hours . ' ' . $string['hour'];
+    } else {
+      $display_duration = $hours . ' ' . $string['hours'];      
+    }
+    if ($remainder > 0) {
+      $display_duration .= ' ' . $remainder . ' ' . $string['mins'];
+    }
+  }
+
+  return $display_duration;
 }
 
 function displayPrevTake($markTotal, $totalRandomMark, $marking_style, $disDate, $type, $metadataID) {
@@ -294,6 +314,7 @@ if ($exam_duration !== null) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/student_help.js"></script>
   <script>
@@ -327,6 +348,8 @@ if ($exam_duration !== null) {
     $(document).click(function() {
       $('#toprightmenu').fadeOut();
     });
+    
+    $(document).tooltip({ items: ".help_tip[title]", position: { my: "top+10", at: "center+125" }  });
   });
   </script>
 </head>
@@ -347,7 +370,7 @@ if ($textsize > 120) {
   $button_width = 115;
 }
 ?>
-<table cellpadding="0" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
+<table cellpadding="0" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; margin-top:40px; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
 <tr>
 <?php
   $icon_types = array('formative', 'progress', 'summative', 'survey');
@@ -357,7 +380,7 @@ if ($textsize > 120) {
     $timed_filename = '_timed';
   }
   echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="../artwork/' . $icon_types[$test_type] . $timed_filename . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
-  echo "</td><td><span class=\"title\">$paper_title</span>";
+  echo "</td><td><span class=\"paper_title\">$paper_title</span>";
   echo "<div class=\"logout\"><a href=\"../logout.php\"><img src=\"../artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"width:100px; padding-right:8px\"><a class=\"logout\" href=\"../logout.php\">" . $string['signout'] . "</a></div>";
   echo "</td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
@@ -416,20 +439,25 @@ if ($textsize > 120) {
   echo '<tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
   echo '<td class="f">' . $string['navigation'] . '</td><td>';
   if ($navigation == 1) {
-    echo $string['bidirectional'];
+    echo $string['bidirectional'] . ' <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_bidirectional'] . '" />';
   } else {
-    echo $string['unidirectional'];
+    echo $string['unidirectional'] . ' <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_unidirectional'] . '" />';
   }
   echo '</td></tr>';
   if ($test_type < 3) {
     echo '<tr><td class="f">' . $string['marks'] . '</td>';
     echo '<td colspan="3">' . $total_marks;
-    if ($marking == 1) echo ' (' . $string['adjusted'] . ' ' . number_format($total_random_mark, 2, '.', ',') . ')';
+    if ($marking == 1) {
+      echo ' (' . $string['adjusted'] . ' ' . number_format($total_random_mark, 2, '.', ',') . ')';
+      
+      echo ' <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_adjustmark'] . '" />';
+    }
     echo '</td></tr>';
   }
   echo "<tr><td class=\"f\"><nobr>&nbsp;" . $string['currentuser'] . "</nobr></td><td>$person</td>";
   if ($exam_duration) {
-    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration($exam_duration, $extra_time_mins, $special_needs_percentage) . ' ' . $string['minutes'] . '</td>';
+    $duration_mins = calculate_duration($exam_duration, $extra_time_mins, $special_needs_percentage);
+    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration($duration_mins, $string) . '</td>';
   } else {
     echo '<td></td><td></td>';
   }
@@ -458,7 +486,7 @@ if ($textsize > 120) {
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
     echo "<param name=\"movie\" value=\"./paper/player_mp3_maxi.swf\" />\n";
     echo "<param name=\"FlashVars\" value=\"mp3={$configObject->get('cfg_root_path')}/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
-    echo "</object></td></tr>\n";
+    echo "</object> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_testclip'] . "\" /></td></tr>\n";
   }
 
   $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
@@ -508,15 +536,15 @@ if ($textsize > 120) {
     $paper_utils = Paper_utils::get_instance();
     $paper_display = array();
     $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli, $property_id);
-    if ($paper_no > 0) echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
+    if ($paper_no > 0) echo "<input class=\"ok\" type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
   }
 
   $display_date = '';
 
     if ($start_available and $remaining_available and $metadata_security) {
-    echo "<input type=\"button\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
+    echo "<input type=\"button\" class=\"ok\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
   } else {
-    echo "<input type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
+    echo "<input type=\"button\" class=\"notok\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
   }
 
   echo '<br />&nbsp;';
@@ -559,15 +587,14 @@ if ($textsize > 120) {
     }
   }
   $mysqli->close();
-  ?><div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div></td></tr></table>
+  ?></td></tr></table>
 </form>
+<div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div>
 
 	<!-- Cache often used scripts and images -->
 	<script src="../js/start.js"></script>
-	<script src="../js/jquery-1.11.1.min.js" /></script>
 	<script src="../js/flash_include.js" /></script>
 	<script src="../js/jquery.flash_q.js" /></script>
-	<script src="../tools/mee/mee/js/mee_src.js" /></script>
 	<img class="noimg" src="../artwork/calc.png" />
 	<img class="noimg" src="../artwork/no_save.png" />
 	<img class="noimg" src="../artwork/fire_exit.png" />

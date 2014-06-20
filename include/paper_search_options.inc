@@ -44,7 +44,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     $('#icon' + ID).attr('src', icon);
     $('#icon' + ID).attr('alt', alttag);
 
-    updateState('menu' + ID, current);
+ 		updateState('menu' + ID, $('#menu' + ID).css('display'));
+
   }
 </script>
 
@@ -55,7 +56,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <table cellpadding="4" cellspacing="0" border="0" width="185">
 <tr><td>
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
-<table cellpadding="0" cellspacing="0" border="0">
+
 <?php
   if (isset($_POST['submit'])) {
     if (isset($_POST['formative']) and $_POST['formative'] == 1) {
@@ -104,14 +105,13 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 ?>
 
-<tr><td><input type="checkbox" name="formative" id="formative" value="1"<?php echo $radio[0]; ?> /></td><td>&nbsp;<label for="formative"><?php echo $string['formative']; ?></label></td></tr>
-<tr><td><input type="checkbox" name="progress" id="progress" value="1"<?php echo $radio[1]; ?> /></td><td>&nbsp;<label for="progress"><?php echo $string['progresstest']; ?></label></td></tr>
-<tr><td><input type="checkbox" name="summative" id="summative" value="1"<?php echo $radio[2]; ?> /></td><td>&nbsp;<label for="summative"><?php echo $string['summative']; ?></label></td></tr>
-<tr><td><input type="checkbox" name="survey" id="survey" value="1"<?php echo $radio[3]; ?> /></td><td>&nbsp;<label for="survey"><?php echo $string['survey']; ?></label></td></tr>
-<tr><td><input type="checkbox" name="osce" id="osce" value="1"<?php echo $radio[4]; ?> /></td><td>&nbsp;<label for="osce"><?php echo $string['oscestation']; ?></label></td></tr>
-<tr><td><input type="checkbox" name="offline" id="offline" value="1"<?php echo $radio[5]; ?> /></td><td>&nbsp;<label for="offline"><?php echo $string['offlinepaper']; ?></label></td></tr>
-<tr><td><input type="checkbox" name="peerreview" id="peerreview" value="1"<?php echo $radio[6]; ?> /></td><td>&nbsp;<label for="peerreview"><?php echo $string['peerreview']; ?></label></td></tr>
-</table>
+<div><label><input type="checkbox" name="formative" id="formative" value="1"<?php echo $radio[0]; ?> /><?php echo $string['formative'] ?></label></div>
+<div><label><input type="checkbox" name="progress" id="progress" value="1"<?php echo $radio[1]; ?> /><?php echo $string['progresstest'] ?></label></div>
+<div><label><input type="checkbox" name="summative" id="summative" value="1"<?php echo $radio[2]; ?> /><?php echo $string['summative'] ?></label></div>
+<div><label><input type="checkbox" name="survey" id="survey" value="1"<?php echo $radio[3]; ?> /><?php echo $string['survey'] ?></label></div>
+<div><label><input type="checkbox" name="osce" id="osce" value="1"<?php echo $radio[4]; ?> /><?php echo $string['oscestation'] ?></label></div>
+<div><label><input type="checkbox" name="offline" id="offline" value="1"<?php echo $radio[5]; ?> /><?php echo $string['offlinepaper'] ?></label></div>
+<div><label><input type="checkbox" name="peerreview" id="peerreview" value="1"<?php echo $radio[6]; ?> /><?php echo $string['peerreview'] ?></label></div>
 
 <br />
 
@@ -219,7 +219,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </table>
 
 <br />
-<div style="text-align:center"><input style="width:100px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
+<div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['search'] ?>" /></div>
 </td></tr>
 </table>
 

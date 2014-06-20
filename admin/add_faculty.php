@@ -77,9 +77,8 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   <title><?php echo $string['addfaculty']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {padding:4px; font-size:90%; background-color:#EEEEEE}
-    textarea, input[type=text], select {font-family:Arail,sans-serif; border: 1px solid #7F9DB9}
-    h1 {font-size:120%}
+    body {font-size:90%; margin:2px; background-color:#EAEAEA}
+    h1 {font-size:140%; font-weight:normal}
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -109,7 +108,7 @@ if ($duplicate) {
 }
 ?>
 </div>
-<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
+<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>

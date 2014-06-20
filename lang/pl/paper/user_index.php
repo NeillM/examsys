@@ -19,20 +19,20 @@ require_once './lang/' . $language . '/include/paper_security.inc';
 $string['startscreen'] = 'Ekran startowy';
 $string['availability'] = 'Dostępność';
 $string['to'] = 'do';
-$string['candidates'] = 'Kandydaci';
-$string['screens'] = 'Ekrany';
-$string['marks'] = 'Punktów';
+$string['candidates'] = 'Kandydaci:';
+$string['screens'] = 'Ekrany:';
+$string['marks'] = 'Punktów:';
 $string['adjusted'] = "Dostosowane z użyciem liczby punktów na 'chybił-trafił'";
 $string['currentuser'] = 'Aktualny użytkownik';
 $string['timeremaining'] = 'Pozostały czas'; 
-$string['navigation'] = 'Nawigacja';
+$string['navigation'] = 'Nawigacja:';
 $string['bidirectional'] = 'Dwukierunkowa';
 $string['unidirectional'] = 'Jednokierunkowa';
 $string['start'] = 'Start'; //cognate
 $string['restart'] = 'Re-Startuj';
 $string['previouscompletions'] = 'Poprzednie realizacje';//???
-$string['rubric'] = 'Rubryka';
-$string['duration'] = 'Czas trwania';
+$string['rubric'] = 'Rubryka:';
+$string['duration'] = 'Czas trwania:';
 $string['testclip'] = 'Klip testowy';//???
 $string['switchpapers'] = 'Zamień arkusze';
 $string['papernotavailable'] = 'Arkusz czasowo niedostępny.';
@@ -47,4 +47,9 @@ $string['requestedpaper'] = 'Wybrany arkusz nie jest dostępny.';
 $string['guestaccount'] = 'Konto gościa';
 $string['metadata_msg'] = "Twoje '%s' nie jest zgodne z '%s'.";
 $string['timeexpired'] = 'Pozostały czas się właśnie wyczerpał.';
+
+$string['tooltip_bidirectional'] = 'You are allowed to move both backwards and forwards between screens.';
+$string['tooltip_unidirectional'] = 'Once you have submitted a screen you will not be able to move back.';
+$string['tooltip_adjustmark'] = 'Your percentage will be automatically adjusted post-exam to account for the random mark someone could get by guessing at random. You are therefore advised to answer all questions on the paper.';
+$string['tooltip_testclip'] = 'This is a test audio clip for you to test your headphones and volume are set correctly.';
 ?>

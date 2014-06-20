@@ -67,11 +67,18 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<title><?php echo $string['editfaculty']; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['editfaculty'] ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      window.opener.location.href='list_faculties.php';
+      window.close();
+    });
+  </script>
 </head>
-<body onload="window.opener.location.href='list_faculties.php'; window.close();">
+<body>
 </body>
 </html>
   <?php
@@ -87,14 +94,14 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['editfaculty']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {padding:4px; font-size:90%; background-color:#EEEEEE}
-  h1 {font-size:120%}
+    body {font-size:90%; margin:2px; background-color:#EAEAEA}
+    h1 {font-size:140%; font-weight:normal}
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    $(function () {
+  <script>
+    $(document).ready(function() {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -118,9 +125,9 @@ if ($duplicate) {
   echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" maxlength="80" required autofocus />';
 }
 ?>
-<input type="hidden" name="facultyID" value="<?php echo $facultyID; ?>" />
+<input type="hidden" name="facultyID" value="<?php echo $facultyID ?>" />
 </div>
-<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
+<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
 </form>
 
 </body>

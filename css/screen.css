@@ -186,12 +186,6 @@ label.error {
 #content .warnicon {
   text-align: right;
 }
-select {
-  margin: 0;
-}
-input {
-  margin: 0;
-}
 .bullet {
 	line-height: 150%;
 	background-image: url('../artwork/bullet_outline.gif');

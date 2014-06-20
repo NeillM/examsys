@@ -89,21 +89,8 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
+  <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
   <style type="text/css">
-    .t {font-weight:bold; color:#316ac5}
-    .tablesorter td {padding-left:6px; padding-right:2px; padding-top:4px; padding-bottom:2px; vertical-align:top}
-    .o {color:#A5A5A5}
-    .q {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none; display:none}
-    .q:hover {background-color:#FFE7A2}
-    .q.highlight {background-color:#FFBD69}
-    .nobr {white-space:nowrap}
-    .plock {width:16px; height:16px; border:1px solid white}
-    input[type=checkbox] {margin-right:8px}
-    .licon {background-image: url('../artwork/small_padlock.png'); background-repeat:no-repeat; background-position:left center; padding-left:20px !important}
-    .unlicon {padding-left:20px !important}
-    input.check_type { float: left; clear: left; margin-right: 0;}
-    .check_label { display: block; float: left; margin-left: 10px; width: 80%; padding-bottom: 6px;}
-    .hidden, .filter { display: none; }
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
@@ -113,7 +100,6 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    
     $(document).ready(function() {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',

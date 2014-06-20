@@ -328,7 +328,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 ?>
 <div style="height:78%; font-size:90%; overflow:auto" id="list">
 <?php
-  echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">&nbsp;show Locked questions&nbsp;</label></div>\n";
+  echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
     if ($_GET['type'] == 'objective') {
       echo '<div style="margin-bottom:15px"><input type="text" name="filter" id="filter" style="font-size:110%" placeholder="' . $string['search'] . '" /> <button type="button" id="filter_clear">' . $string['clear'] . '</button></div>';

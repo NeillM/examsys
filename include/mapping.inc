@@ -42,7 +42,7 @@ require_once $cfg_web_root . 'classes/relationship.class.php';
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;
 
-  //get module and session from paper id
+  // Get module and session from paper ID.
   $modules_array = array();
   $query = <<<QUERY
 SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id = pm.property_id INNER JOIN modules m ON pm.idMod = m.id WHERE p.property_id = ?
@@ -114,7 +114,7 @@ HTML;
           }
           $obj_text = strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>');
           $html .= <<< HTML
-        				<li><input id="objective{$objcount}" name="{$idmod}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$obj_text}</label></li>
+        				<li><input id="objective{$objcount}" name="{$idmod}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /><label for="objective{$objcount}">{$obj_text}</label></li>
 
 HTML;
           $objcount++;

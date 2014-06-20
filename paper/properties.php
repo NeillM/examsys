@@ -313,9 +313,9 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
       if ($lab_id == $individual_lab) $match = true;
     }
     if ($match) {
-      $html .= "<div class=\"$r2class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked>&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+      $html .= "<div class=\"$r2class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked><label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
     } else {
-      $html .= "<div class=\"$r1class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\">&nbsp;<label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
+      $html .= "<div class=\"$r1class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled onclick=\"toggle('divlab$lab_no')\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\"><label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
     }
     $lab_no++;
     $old_campus = $lab_campus;
@@ -1365,21 +1365,21 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         } else {
           echo "<input type=\"checkbox\" name=\"display_photos\" value=\"1\" />";
         }
-        echo "&nbsp;" . $string['ifavailable'] . "</td></tr>\n";
+        echo $string['ifavailable'] . "</td></tr>\n";
       } else {
         if ($properties->get_calculator() == 1) {
           $checked = ' checked="checked"';
         } else {
           $checked = '';
         }
-        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /> <label for=\"calculator\">" . $string['displaycalculator'] . "</label> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_calculator'] . "\" /></td>";
+        echo "<tr><td align=\"right\">" . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /><label for=\"calculator\">" . $string['displaycalculator'] . "</label> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_calculator'] . "\" /></td>";
 
         if ($properties->get_sound_demo() == 1) {
           $checked = ' checked="checked"';
         } else {
           $checked = '';
         }
-        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /> <label for=\"sound_demo\">" . $string['demosoundclip'] . "</label> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_audio'] . "\" /></td></tr>\n";
+        echo "<td align=\"right\">" . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /><label for=\"sound_demo\">" . $string['demosoundclip'] . "</label> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_audio'] . "\" /></td></tr>\n";
       }
 
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1667,7 +1667,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       if ($i < 10) echo '0';
       echo "$i</option>\n";
     }
-    echo "</select>\n";
+    echo '</select>';
    // Available from Month
     $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
     echo "<select name=\"fmonth\" id=\"fmonth\" class=\"datecopy\"$sum_disabled>\n";
@@ -1690,7 +1690,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
       }
     }
-    echo "</select>\n";
+    echo '</select>';
     // Available from Year
     echo "<select name=\"fyear\" id=\"fyear\" class=\"datecopy\"$sum_disabled>\n";
     if ($start_date == '') {
@@ -1703,7 +1703,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>\n<select id=\"fhour\" name=\"fhour\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"fhour\" name=\"fhour\" class=\"datecopy\"$sum_disabled>\n";
     // Available from Hour
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -1720,9 +1720,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"" . $display_hour . "\">" . $display_hour . "</option>\n";
       }
     }
-    echo "</select>:";
+    echo '</select>';
 		
-    echo "</select>\n<select id=\"fminute\" name=\"fminute\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"fminute\" name=\"fminute\" class=\"datecopy\"$sum_disabled>\n";
     // Available from Minute
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -1776,7 +1776,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       if ($i < 10) echo '0';
       echo "$i</option>\n";
     }
-    echo "</select>\n";
+    echo '</select>';
 
     // Available to Month
     echo "<select name=\"tmonth\" id=\"tmonth\" class=\"datecopy\"$sum_disabled>\n";
@@ -1799,7 +1799,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
       }
     }
-    echo "</select>\n";
+    echo '</select>';
     // Available to Year
     echo "<select name=\"tyear\" id=\"tyear\" class=\"datecopy\"$sum_disabled>\n";
     if ($end_date == '') {
@@ -1812,7 +1812,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select>\n<select id=\"thour\" name=\"thour\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"thour\" name=\"thour\" class=\"datecopy\"$sum_disabled>\n";
     // Available from Hour
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -1829,9 +1829,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"" . $display_hour . "\">" . $display_hour . "</option>\n";
       }
     }
-    echo "</select>:";
+    echo '</select>';
 		
-    echo "</select>\n<select id=\"tminute\" name=\"tminute\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"tminute\" name=\"tminute\" class=\"datecopy\"$sum_disabled>\n";
     // Available from Minute
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -1880,12 +1880,12 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
         if ($match == true) {
           if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           } else {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           }
         } else {
-          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled>&nbsp;<label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+          echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no'); getMeta();\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];
@@ -1991,8 +1991,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     ?>
     <tr><td colspan="4" class="headbar">&nbsp;<?php echo $string['answerscreensettings']; ?></td></tr>
     <tr><td colspan="4">&nbsp;</td></tr>
-    <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($properties->get_display_students_response() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['ticks_crosses'];?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($properties->get_display_question_mark() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($properties->get_hide_if_unanswered() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['hideallfeedback'];?></td></tr>
-    <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($properties->get_display_correct_answer() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['correctanswerhighlight'];?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($properties->get_display_feedback() == '1') echo ' checked'; ?> />&nbsp;<?php echo $string['textfeedback'];?></td></tr>
+    <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($properties->get_display_students_response() == '1') echo ' checked'; ?> /><?php echo $string['ticks_crosses'] ?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($properties->get_display_question_mark() == '1') echo ' checked' ?> /><?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($properties->get_hide_if_unanswered() == '1') echo ' checked' ?> /><?php echo $string['hideallfeedback'] ?></td></tr>
+    <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($properties->get_display_correct_answer() == '1') echo ' checked' ?> /><?php echo $string['correctanswerhighlight'] ?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($properties->get_display_feedback() == '1') echo ' checked'; ?> /><?php echo $string['textfeedback'] ?></td></tr>
     <?php
     }
     echo "</table>\n";
@@ -2217,9 +2217,9 @@ SQL;
       if ($internal_id == $reviewerID) $match = true;
     }
     if ($match) {
-      echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked>&nbsp;<label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+      echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\">&nbsp;<label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+      echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
     }
     $internal_no++;
   }
@@ -2238,9 +2238,9 @@ SQL;
       if ($external_id == $reviewerID) $match = true;
     }
     if ($match) {
-      echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked>&nbsp;<label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+      echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\">&nbsp;<label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+      echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
     }
     $examiner_no++;
   }
@@ -2253,12 +2253,12 @@ SQL;
 </table>
 
 <table id="reference" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading']; ?></td></tr>
+<tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading'] ?></td></tr>
 <tr><td style="vertical-align:top"><div id="reference_list"></div></td></tr>
 </table>
 
 <table id="changes" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
-<tr><td class="tabtitle" colspan="2"><img src="../artwork/version_icon.png" alt="Icon" align="middle" /><?php echo $string['changesheading']; ?></td></tr>
+<tr><td class="tabtitle" colspan="2"><img src="../artwork/version_icon.png" alt="Icon" align="middle" /><?php echo $string['changesheading'] ?></td></tr>
 <tr><td style="vertical-align:top"><div id="change_list" style="height:550px; overflow-y:scroll">
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <?php

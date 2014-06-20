@@ -56,6 +56,8 @@ class guestlogin_auth extends outline_authentication {
 
   function loginbutton($displaystdformobj) {
     global $string;
+    
+    $config = Config::get_instance();
 
     $this->savetodebug('Button Check');
     $labs_list = '';
@@ -112,7 +114,7 @@ class guestlogin_auth extends outline_authentication {
       $newbutton->class = 'guestlogin';
       $displaystdformobj->buttons[] = $newbutton;
 
-			$newscript = "\$('.guestlogin').click(function() {\n  window.location.href = 'guest_account.php';\n});";
+			$newscript = "\$('.guestlogin').click(function() {\n  window.location.href = '" . $config->get('cfg_root_path') . "/users/guest_account.php';\n});";
       $displaystdformobj->scripts[] = $newscript;
     }
 
