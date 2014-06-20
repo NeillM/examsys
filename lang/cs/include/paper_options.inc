@@ -21,6 +21,7 @@ $string['papertasks'] = 'Papírové testy';
 $string['testpreview'] = 'Náhled &amp; Testu';
 $string['addquestionspaper'] = 'Přidat úlohy do dokumentu';
 $string['editproperties'] = 'Upravit vlastnosti';
+$string['emailexternals'] = 'Email Externals';
 $string['reports'] = 'Sestavy';
 $string['mappedobjectives'] = 'Mapované cíle';
 $string['importmarks'] = 'Nahrát známky';
@@ -126,6 +127,8 @@ $string['incabsentcandidates'] = 'vč. chybějících kandidátů';
 $string['studentsonly'] = 'pouze pokusy studentů';
 $string['completedatasets'] = 'Zobrazit pouze kompletní datové sady ';
 $string['anyyear'] = 'Libovolný rok';
+$string['tooltip_studentattempts'] = 'Uncheck to display staff attempts in Class Totals.';
+$string['tooltip_daterange'] = 'Use dates to control the reporting window.';
 
 $string['copyname'] = 'Kopírovat jméno:';
 $string['paperonly'] = 'Pouze dokumenty';

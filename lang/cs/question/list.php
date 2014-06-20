@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../lang/' . $language . '/include/status.inc';
+require_once '../lang/' . $language . '/include/blooms.inc';
 
 $string['question'] = 'Úloha';
 $string['questionbank'] = 'Banka úloh';
@@ -23,11 +24,6 @@ $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
 $string['status'] = 'Status'; //cognate
 $string['myquestionsonly'] = 'pouze moje úlohy';
-$string['questionbanktasks'] = 'Správa banky úloh';
-$string['currentquestiontasks'] = 'Aktuální úkoly banky úloh';
-$string['questionsbytype'] = 'Úlohy podle typu';
-$string['questionsbyteam'] = 'Úlohy podle týmů';
-$string['questionsbykeyword'] = 'Úlohy podle klíčových slov';
 $string['search'] = 'Hledat';
 $string['clear'] = 'Clear';
 $string['createnewquestion'] = 'Nová úloha';

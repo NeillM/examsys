@@ -16,6 +16,8 @@
 
 $string['administrativetools'] = 'Administrative Tools';
 $string['statisticsreports'] = 'Statistics Reports';
+$string['questionsbyschool'] = 'Questions by School';
 $string['papersbyschool'] = 'Papers by School';
-$string['summativeexamstats'] = 'Summative Exams';
+$string['summativeexamstats'] = 'Summative Exams by Month';
+$string['summativefeedback'] = 'Summative Exam Feedback';
 ?>

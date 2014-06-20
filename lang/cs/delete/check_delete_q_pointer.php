@@ -16,7 +16,9 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
+$string['confirmdelete'] = 'Confirm Pointer Delete';
 $string['msg'] = 'Odstranění odkazu zajistí vymazání v dokumentu.<br /><br /> <strong>Neodstraní</strong> aktuální úlohu z banku úloh.';
 $string['msg2'] = 'You are trying to delete a question from a locked paper, this is not possible.';
+$string['delete'] = 'Odstranit odkaz';
 $string['deletes'] = 'Odstranit odkazy';
 ?>

@@ -24,6 +24,7 @@ $string['marking3'] = array('Neuspěl', 'Na hraně', 'Uspěl');
 $string['marking4'] = array('Nedostatečně', 'Dostatečně', 'Dobře', 'Chvalitebně', 'Výborně');
 $string['marking5'] = array('Nepostačující', 'Postačující');
 $string['marking6'] = array('Neuspěl', 'Na hraně', 'Uspěl', 'Uspěl s vyznamenáním');
+$string['marking7'] = array('Fail', 'Pass');
 $string['from'] = 'Z';
 $string['to'] = 'Do';
 $string['savefailed'] = 'Save Failed!';

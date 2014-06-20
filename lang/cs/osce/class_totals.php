@@ -48,4 +48,10 @@ $string['firstnames'] = 'Jméno';
 $string['rating'] = 'Ohodnocení';
 $string['borderlinemethod'] = 'Hraniční metoda';
 $string['noattempts'] = 'This OSCE has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
+$string['marking3'] = array('Clear Fail', 'Borderline', 'Clear Pass');
+$string['marking4'] = array('Fail', 'Borderline Fail', 'Borderline pass', 'Pass', 'Good Pass');
+$string['marking5'] = array('Unsatisfactory', 'Competent');
+$string['marking6'] = array('Clear FAIL', 'BORDERLINE', 'Clear PASS', 'Honours PASS');
+$string['marking7'] = array('Fail', 'Pass');
+
 ?>

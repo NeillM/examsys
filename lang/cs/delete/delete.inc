@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['confirmdelete'] = 'Confirm Delete';
 $string['recyclebin'] = 'Koš';
 $string['delete'] = 'Odstranit';
 ?>

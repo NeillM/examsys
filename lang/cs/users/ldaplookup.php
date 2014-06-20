@@ -20,8 +20,6 @@ $string['lookup'] = 'Vyhledat';
 $string['nousersalert'] = 'V LDAP nebyl nikdo nalezen.';
 $string['title'] = 'Title';
 $string['first_names'] = 'First Names';
-$string['surname'] = 'Surname';
-$string['username'] = 'Username';
 $string['email'] = 'Email';
 $string['role'] = 'Role';
 ?>

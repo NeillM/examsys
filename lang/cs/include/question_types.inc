@@ -40,4 +40,15 @@ $string['textbox'] = 'Textové pole';
 $string['true_false'] = 'Pravda/Nepravda';
 $string['area'] = 'Pole';
 $string['enhancedcalc'] = 'Rozšířená početní úloha';
+
+$string['veryeasy'] = 'Velmi snadná';
+$string['easy'] = 'Snadná';
+$string['moderate'] = 'Průměrná';
+$string['hard'] = 'Těžká';
+$string['veryhard'] = 'Velmi těžká';
+$string['mean'] = 'Průměr';
+$string['highest'] = 'Nejvyšší';
+$string['high'] = 'Vysoká';
+$string['intermediate'] = 'Střední';
+$string['low'] = 'Nízká';
 ?>

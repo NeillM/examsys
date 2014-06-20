@@ -52,7 +52,6 @@ $string['emailssent'] = 'E-maily odeslány';
 $string['emailclassmarks'] = 'Zaslat známky';
 $string['title'] = 'Titul';
 $string['surname'] = 'Příjmení';
-$string['firstnames'] = 'Jména';
 $string['studentid'] = 'ID studenta';
 $string['username'] = 'Uživatelské jméno';
 $string['course'] = 'Kurz';
@@ -107,4 +106,8 @@ $string['deciles'] = 'Decily';
 $string['quartiles'] = "Kvartily";
 $string['marking'] = 'Marking...';
 $string['markingcalcquestions'] = 'Marking Calculation Questions';
+
+$string['viewstudentnote'] = 'View student note...';
+$string['viewaccessibility'] = 'View accessibility settings...';
+$string['resitcandidate'] = 'Resit candidate';
 ?>

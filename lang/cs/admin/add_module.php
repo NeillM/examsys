@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/admin/list_modules.php';
+
 $string['administrativetools'] = 'Nastavení';
 $string['entermoduleid'] = 'Zadejte, prosím, identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';

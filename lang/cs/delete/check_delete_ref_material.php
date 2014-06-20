@@ -16,5 +16,6 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
+$string['confirmdelete'] = 'Confirm Delete';
 $string['msg'] = 'Jste si skutečně jisti, že chcete tento referenční materiál odstranit?';
 ?>
