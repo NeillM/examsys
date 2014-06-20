@@ -295,8 +295,8 @@ foreach ($lang_array as $lang) {
     if (empty($strings_pl[0])) unset($strings_pl[0]);
 
     echo '<h2 class="midblue_header">';
-		echo '<a id="bs_en" style="display:none" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/plus.png" class="help_tip"></a>';
-		echo '<a id="bh_en" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/minus.png" class="help_tip"></a> ';
+		echo '<a id="bs_' . $lang . '" style="display:none" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/plus.png" class="help_tip"></a>';
+		echo '<a id="bh_' . $lang . '" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/minus.png" class="help_tip"></a> ';
 		echo 'Analysis for: ' . $lang ;
 		echo '</h2>';
     echo '<div id="' . $lang . '">';

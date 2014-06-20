@@ -40,6 +40,9 @@ require '../include/sysadmin_auth.inc';
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <style>
+    h2 {margin-left: 20px; font-size: 150%}
+  </style>
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -56,23 +59,27 @@ require '../include/sysadmin_auth.inc';
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a></div>
-    <div class="page_title">Test Suite</div>
+    <div class="page_title">Testing</div>
   </div>
 
-	<br />
-  
+  <h2>Development Tests</h2>
 	<ol>
-		<li><a href="./unittest.php">Unit tests</a></li>
-		<li><a href="./selenium/README.txt">Selenium tests</a></li>
-		<li><a href="./lang_test.php">Check for missing strings in language files</a></li>
-		<li><a href="./class_totals_form.php">Check Class Totals reports between 2 different servers</a></li>
-		<li><a href="./class_totals_with_script.php">Check Class Totals against Exam Script (internal constancy)</a></li>
-		<li><a href="./database_grants.php">Database grants</a></li>
-		<li><a href="./database_indexes.php">Database indexes</a></li>
-		<li><a href="./database_structure.php">Database structure</a></li>
-    <li><a href="./checkenhancedcalc.php">Check enhancedcalc setup</a></li>
-    <li><a href="./test_email.php">Check email sending</a></li>
+		<li><a href="unittest.php">Unit tests</a></li>
+		<li><a href="selenium/README.txt">Selenium tests</a></li>
+		<li><a href="lang_test.php">Language translations</a></li>
+		<li><a href="class_totals_form.php">Check Class Totals reports between 2 different servers</a></li>
+		<li><a href="database_grants.php">Database grants</a></li>
+		<li><a href="database_indexes.php">Database indexes</a></li>
+		<li><a href="database_structure.php">Database structure</a></li>
 	</ol>
+  
+  <h2>Post-Installation Tests</h2>
+	<ol>
+		<li><a href="class_totals_with_script.php">Summative Exam check</a></li>
+    <li><a href="checkenhancedcalc.php">Check enhancedcalc setup</a></li>
+    <li><a href="test_email.php">Check email sending</a></li>
+	</ol>
+  
 </div>
 </body>
 </html>

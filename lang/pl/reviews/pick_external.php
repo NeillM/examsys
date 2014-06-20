@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['externalexaminers'] = 'Zewnętrzni egzaminatorzy';
-$string['initialinvitation'] = 'Początkowe zaproszenie';
+$string['externalexaminers'] = 'Zewnetrzni egzaminatorzy';
+$string['initialinvitation'] = 'Poczatkowe zaproszenie';
 $string['reminder'] = 'Przypomnienie';
-$string['msg'] = 'Kliknij na nazwisko zewnętrznego egzaminatora, do którego ma być wysłany email aby przedstawić okno edytora.';
+$string['msg'] = 'Kliknij na nazwisko zewnetrznego egzaminatora, do kt�rego ma byc wyslany email aby przedstawic okno edytora.';
 ?>
