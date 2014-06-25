@@ -408,7 +408,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (!is_array(self::$warnings)) {
       echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
       echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
-      echo "<p style=\"margin-left:10px\"><input type=\"button\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../index.php'\" /></p>\n";
+      echo "<p style=\"margin-left:10px\"><input type=\"button\" class=\"ok\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../index.php'\" /></p>\n";
     } else {
       self::displayWarnings();
     }
@@ -1316,7 +1316,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
       <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
       <script type="text/javascript">
-        $(function(){
+        $(function() {
           $(document).tooltip();
         });
       </script>

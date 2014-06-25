@@ -336,11 +336,11 @@ if (isset($_POST) and count($_POST) > 0) {
     // For external examiners just close the window without saving.
     if ($userObject->has_role('External Examiner')) {
   ?>
-    <div style="text-align:center"><input type="submit" name="submitButton" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submitButton" value="<?php echo $string['save']; ?>" class="ok" style="font-size:120%; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
     } else {
   ?>
-    <div style="text-align:center"><input id="save" type="submit" name="submitButton" value="<?php echo $string['save']; ?>" style="font-size:120%; width:120px; height:35px; font-weight:bold" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input id="save" type="submit" name="submitButton" value="<?php echo $string['save']; ?>" class="ok" style="font-size:120%; height:35px; font-weight:bold" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
   }
   ?>

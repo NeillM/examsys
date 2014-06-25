@@ -431,9 +431,9 @@ if (isset($_POST['submit'] )) {
 
   echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"background-color:#5590CF; text-align:center\">";
   if ($userObject->has_role('Student')) {
-    echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:100px\" />";
+    echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" />";
   } else {
-    echo "<input type=\"button\" name=\"close\" value=\"" . $string['close'] . "\" style=\"width:100px\" onclick=\"window.close();\" />";
+    echo "<input type=\"button\" name=\"close\" value=\"" . $string['close'] . "\" style=\"width:140px\" onclick=\"window.close();\" />";
   }
   echo "</td></tr>\n";
   echo "</table>\n</form>\n";

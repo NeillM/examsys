@@ -132,7 +132,7 @@ if (!isset($_POST['update'])) {
       <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" value="" name="update_staff_help" checked="checked" /></div>
       <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" value="" name="update_student_help" checked="checked" /></div>
 
-      <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>"/></div>
+      <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" class="ok" /></div>
   </form>
     <?php
   }
@@ -151,7 +151,7 @@ if (!isset($_POST['update'])) {
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
   if ($mysqli->connect_error) {
-    echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
+    echo "<div>Failed to contect to MySQL using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
     echo "</body>";
     echo "</html>";
     exit;
@@ -192,7 +192,7 @@ if (!isset($_POST['update'])) {
     $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
-        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
@@ -854,6 +854,6 @@ QUERY;
   echo "<div>Ended at " . date("H:i:s") . "</div>";
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location('" . $configObject->get('cfg_root_path') . "/')\" /></div><blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['home'] . " \" onclick=\"window.location('" . $configObject->get('cfg_root_path') . "/')\" /></div><blockquote>\n";
 }
 ?>
