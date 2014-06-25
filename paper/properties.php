@@ -335,7 +335,7 @@ function getSchools($staff_modules, $db) {
 
   $staff_modules_list = implode("','", $staff_modules);
 
-  $result = $db->prepare("SELECT DISTINCT schools.id FROM schools, modules WHERE modules.schoolid=schools.id AND modules.moduleid IN ('$staff_modules_list')");
+  $result = $db->prepare("SELECT DISTINCT schools.id FROM schools, modules WHERE modules.schoolid = schools.id AND modules.moduleid IN ('$staff_modules_list')");
   $result->execute();
   $result->bind_result($schoolID);
   while ($result->fetch()) {
@@ -1863,7 +1863,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
 
 		$total_modules = array_merge($staff_modules, $modules_array);
-
+    
     $module_sql = implode("','", $total_modules);
     if ($module_sql != '') $module_sql = "'$module_sql'";
 

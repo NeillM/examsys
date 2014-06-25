@@ -371,7 +371,7 @@ class UserObject extends RogoStaticSingleton {
     $this->staffModules = array();
 
     if ($this->has_role('Admin')) {
-      $result = $this->db->prepare("(SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id and memberID = ? AND modules.moduleID IS NOT NULL and mod_deleted IS NULL) UNION (SELECT id, moduleID FROM modules, admin_access WHERE admin_access.schools_id=modules.schoolid AND userID = ? AND modules.moduleID IS NOT NULL and mod_deleted IS NULL)");
+      $result = $this->db->prepare("(SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id and memberID = ? AND modules.moduleID IS NOT NULL and mod_deleted IS NULL) UNION (SELECT id, moduleID FROM modules, admin_access WHERE admin_access.schools_id = modules.schoolid AND userID = ? AND modules.moduleID IS NOT NULL and mod_deleted IS NULL)");
       $result->bind_param('ii', $this->userID, $this->userID);
     } else {
       $result = $this->db->prepare("SELECT idMod, moduleID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID");
@@ -546,11 +546,7 @@ class UserObject extends RogoStaticSingleton {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleID";
       } elseif ($this->has_role('Admin')) {
         $schoolIDs = implode(',', SchoolUtils::get_admin_schools($this->userID, $this->db));
-        if ($schoolIDs != '') {
-          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND schoolid IN ($schoolIDs) AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleID";
-        } elseif ($staff_modules_sql != '') {
-          $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id IN ($staff_modules_sql) AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleID";
-        }
+        $sql = "(SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id IN ($staff_modules_sql) AND active = 1 AND mod_deleted IS NULL) UNION (SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND schoolid IN ($schoolIDs) AND active = 1 AND mod_deleted IS NULL) ORDER BY school, moduleID";
       } else {
         $sql = "SELECT DISTINCT modules.id, moduleid, fullname, school FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id IN ($staff_modules_sql) AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleID";
       }
