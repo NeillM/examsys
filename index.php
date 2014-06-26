@@ -68,12 +68,12 @@ require_once './include/staff_auth.inc';
 	.recent_icon {width:16px; height:16px; padding-right:8px}
 	</style>
 
-  <script src="./js/staff_help.js" type="text/javascript"></script>
+  <script type="text/javascript" src="./js/staff_help.js"></script>
   <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="./js/toprightmenu.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="./js/sidebar.js" type="text/javascript"></script>
+  <script type="text/javascript" src="./js/sidebar.js"></script>
   <script>
     $(function () {
       $('#theform').validate({
@@ -94,7 +94,7 @@ require_once './include/staff_auth.inc';
 ?>
 		});
 
-		function isCanvasSupported(){
+		function isCanvasSupported() {
 			var elem = document.createElement('canvas');
 			return !!(elem.getContext && elem.getContext('2d'));
 		}
@@ -254,9 +254,9 @@ require_once './include/staff_auth.inc';
   if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
     if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
       echo "<script language=\"JavaScript\">alert(\"" . $string['duplicatefoldername'] . "\")</script>";
-      echo "<div class=\"f\"><img class=\"f_icon\" src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><img class=\"f_icon\" src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:80px\" value=\"" . $string['create'] . "\" /></div>\n";
     } elseif (!isset($_POST['submit'])) {
-      echo "<div class=\"f\"><img class=\"f_icon\" src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><img class=\"f_icon\" src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:80px\" value=\"" . $string['create'] . "\" /></div>\n";
     }
   }
 

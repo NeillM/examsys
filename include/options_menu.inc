@@ -36,7 +36,7 @@
 		}
 	?>
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/users/search.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_user_icon.gif" alt="Users" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/users/search.php"><?php echo $string['usermanagement']; ?></a></div>
-	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/staff/index.php?newfolder=y"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/folder_16.png" alt="New Folder" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/staff/index.php?newfolder=y"><?php echo $string['makeafolder']; ?></a></div>
+	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/staff/index.php?newfolder=y"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/folder_16.png" alt="New Folder" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/index.php?newfolder=y"><?php echo $string['makeafolder']; ?></a></div>
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><?php echo $string['mypersonalkeywords']; ?></a></div>
 </div>
 

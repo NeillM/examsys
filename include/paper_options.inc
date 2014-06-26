@@ -242,7 +242,7 @@ if (count($moduleIDs) > 0) {
   function showAssStatsMenu(showMenu, e) {
     hideMenus();
     if (showMenu) {
-      $('#stats_menu').show();
+      $('#stats_menu').show("slow");
     } else {
       $('#copy_submenu').hide();
       $('#stats_menu').toggle();
