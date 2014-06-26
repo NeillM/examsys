@@ -27,6 +27,7 @@ require_once '../classes/usernotices.class.php';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 
+require_once '../classes/stringutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/lab_factory.class.php';
@@ -429,6 +430,10 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
       papernote.focus();
     }
   }
+  
+  function viewRubric(paperID) {
+    $('#rubric_' + paperID).show();
+  }
 
   function extendTime() {
 	  $('#menudiv').hide();
@@ -440,7 +445,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function resizeLists() {
-    var myHeight = $(window).height() - 220;
+    var myHeight = $(window).height() - 230;
     var mysheet = document.styleSheets[0];
     var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
     if (mysheet.deleteRule) { //if Firefox
@@ -490,7 +495,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   // Register the events we need
-  $(function () {
+  $(document).ready(function() {
     $('.menu-time').click(extendTime);
     $('.menu-note').click(newStudentNote);
     StartClock();
@@ -523,6 +528,8 @@ $popup_width = 180;
 if ($language != 'en') {
   $popup_width = 300;
 }
+
+if ($properties_list !== false and count($properties_list) > 0) {
 ?>
 
 <div id="menudiv" style="width:<?php echo $popup_width; ?>px; background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0; left:0; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
@@ -554,17 +561,15 @@ if ($language != 'en') {
   </div>
 </div>
 <?php
-
-if ($properties_list !== false and count($properties_list) > 0) {
-
-  $col_width = round(100 / (count($properties_list) + 1));
-  
   foreach ($properties_list as $property_object) {
     $title          = $property_object->get_paper_title();
     $property_id    = $property_object->get_property_id();
     $exam_duration  = $property_object->get_exam_duration();
     $start_date     = $property_object->get_display_start_time();
     $calendar_year  = $property_object->get_calendar_year();
+    $rubric         = $property_object->get_rubric();
+    
+    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">Exam Rubric<img onclick=\"$('#rubric_$property_id').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
 
     // Get modules for this paper and check if timing is allowed
     $timed_modules = $all_modules = 0;
@@ -712,7 +717,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
               </tr>
               <tr>
                 <td><?php echo $string['duration'] ?></td>
-                <td><?php echo $exam_duration . ' ' . $string['mins'] ?></td>
+                <td><?php echo StringUtils::nice_duration($exam_duration, $string) ?></td>
               </tr>
               <tr>
                 <?php
@@ -725,14 +730,14 @@ if ($properties_list !== false and count($properties_list) > 0) {
               </tr>
               
               <tr>
-                <td colspan="2"><input type="button" onclick="newPaperNote(<?php echo $property_id; ?>);" value="<?php echo $string['papernote']; ?>" /></td>
+                <td colspan="2"><input type="button" onclick="newPaperNote(<?php echo $property_id; ?>);" value="<?php echo $string['papernote'] ?>" class="ok" /><input type="button" onclick="viewRubric(<?php echo $property_id; ?>);" value="Show Rubric" class="ok" /></td>
               </tr>
 
             </table>            
           </div>
         <?php
         if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
-          echo "<div id=\"clarifymsgtbl\" class=\" cohortlist\" style=\"float:left; width:50%\"><table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%; line-height:150%\">\n<tr><th>Mid-Exam Clarrifications</th></tr>\n</table>\n";
+          echo "<div id=\"clarifymsgtbl\" class=\" cohortlist\" style=\"float:left; width:50%\"><table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%; line-height:150%\">\n<tr><th>" . $string['midexamclarrifications'] . "</th></tr>\n</table>\n";
           echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">" . $string['examquestionclarifications'] . "</span></div>\n</div>\n";
         }
         $modules = implode('\',\'', $modules);
@@ -767,8 +772,11 @@ if ($properties_list !== false and count($properties_list) > 0) {
     </div>
   <?php
 } else {
-  echo "<p><img src=\"../artwork/page_not_found.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
+  echo "<div style=\"background-color:white\">\n";
   emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
+  echo "<p><img src=\"../artwork/page_not_found.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
+
+  echo "</div>\n";
 }
 
 $mysqli->close();

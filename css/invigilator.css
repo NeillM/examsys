@@ -4,11 +4,14 @@ html {
 }
 body {
   color: #000040;
-  background-color: #EEF4FF;
+  background-color: white;
   font-size: 90%;
+  margin: 0;
+  padding: 0;
 }
 h1 {
   font-size: 150%;
+  margin: 0;
 }
 th {
   color: white;
@@ -101,12 +104,12 @@ fieldset {
 .tab-bar {
   height: 47px;
   background-color: #1e3c7b;
-	margin-top: 4px;
 }
 
 .tab-holder {
   height: 36px;
   background-color: #EEF4FF;
+  padding-top: 4px;
 }
 
 .tabs {
@@ -116,7 +119,7 @@ fieldset {
 
 .tabs li {
 	padding: 2px;
-  width: 240px;
+  width: 250px;
   height: 32px;
   float: left;
   list-style: none;
@@ -149,17 +152,26 @@ fieldset {
   background-color: white;
 }
 
+.preexam h1 {
+  color: #2F5496;
+}
 .preexam {
   background-color: #B1CBE9;
   border: 1px solid #5B9BD5;
   line-height: 150%;
   padding: 15px;
 }
+.midexam h1 {
+  color: #7F6000;
+}
 .midexam {
   background-color: #FFDD9C;
   border: 1px solid #FFC000;
   line-height: 150%;
   padding: 15px;
+}
+.postexam h1 {
+  color: #375623;
 }
 .postexam {
   background-color: #B5D5A7;
@@ -221,4 +233,37 @@ fieldset {
 .border-callout .border-notch {
 	border-bottom-color: #606060;
 	top: -11px;
+}
+.rubric {
+  display: none;
+  border: #909090;
+  top: 50px;
+  margin-left: 40px;
+  margin-right: 40px;
+  position: absolute;
+  border: 1px solid #909090;
+  background-color: white;
+}
+.rubric_txt {
+  line-height: 160%;
+  font-size: 110%;  
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 60px;
+  padding-right: 60px;  
+}
+.rubrictitle {
+  background-color: #414141;
+  color: white;
+  font-size: 150%;
+  height: 34px;
+  line-height: 34px;
+  padding-left: 20px;
+  font-weight: bold;
+}
+.rubricclose {
+  width: 46px;
+  height: 34px;
+  cursor: pointer;
+  float: right;
 }

@@ -28,6 +28,7 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
+require_once '../classes/stringutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/logmetadata.class.php';
@@ -116,26 +117,6 @@ function calculate_duration($normal, $extra_time_mins, $special_needs_percentage
   if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal / 100) * $special_needs_percentage;
 
   return $mins;
-}
-
-function display_duration($mins, $string) {
-  if ($mins < 60) {
-    $display_duration = $mins .  ' ' . $string['mins'];
-  } else {
-    $hours = round($mins / 60);
-    $remainder = $mins - ($hours * 60);
-    
-    if ($hours == 1) {
-      $display_duration = $hours . ' ' . $string['hour'];
-    } else {
-      $display_duration = $hours . ' ' . $string['hours'];      
-    }
-    if ($remainder > 0) {
-      $display_duration .= ' ' . $remainder . ' ' . $string['mins'];
-    }
-  }
-
-  return $display_duration;
 }
 
 function displayPrevTake($markTotal, $totalRandomMark, $marking_style, $disDate, $type, $metadataID) {
@@ -457,7 +438,7 @@ if ($textsize > 120) {
   echo "<tr><td class=\"f\"><nobr>&nbsp;" . $string['currentuser'] . "</nobr></td><td>$person</td>";
   if ($exam_duration) {
     $duration_mins = calculate_duration($exam_duration, $extra_time_mins, $special_needs_percentage);
-    echo '<td class="f">' . $string['duration'] . '</td><td>' . display_duration($duration_mins, $string) . '</td>';
+    echo '<td class="f">' . $string['duration'] . '</td><td>' . StringUtils::nice_duration($duration_mins, $string) . '</td>';
   } else {
     echo '<td></td><td></td>';
   }

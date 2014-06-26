@@ -162,7 +162,8 @@ class PaperProperties {
     			exam_duration,
     			calendar_year,
     			password,
-    			timezone
+    			timezone,
+          rubric
     		FROM
     			properties
     		WHERE
@@ -177,7 +178,7 @@ class PaperProperties {
     $paper_results->bind_param('s', $lab_like);
     $paper_results->execute();
     $paper_results->store_result();
-    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone);
+    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone, $rubric);
 
     if ($paper_results->num_rows <= 0) {
       $paper_results->close();
@@ -200,6 +201,7 @@ class PaperProperties {
       $property_object->set_display_start_time();
       $property_object->set_display_end_date();
       $property_object->set_display_end_time();
+      $property_object->set_rubric($rubric);
       $properties[] = $property_object;
     }
 

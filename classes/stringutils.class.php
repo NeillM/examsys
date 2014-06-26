@@ -148,5 +148,27 @@ class StringUtils {
 			$word = mb_substr_replace($word, $next, 2, 1, 'UTF-8');
 		}
 		return $word;
-	}	
+	}
+  
+  public static function nice_duration($mins, $string) {
+    if ($mins < 60) {
+      $display_duration = $mins .  ' ' . $string['mins'];
+    } else {
+      $hours = floor($mins / 60);
+      $remainder = $mins - ($hours * 60);
+      
+
+      if ($hours == 1) {
+        $display_duration = $hours . ' ' . $string['hour'];
+      } else {
+        $display_duration = $hours . ' ' . $string['hours'];      
+      }
+      if ($remainder > 0) {
+        $display_duration .= ' ' . $remainder . ' ' . $string['mins'];
+      }
+    }
+
+    return $display_duration;
+  }
+
 }

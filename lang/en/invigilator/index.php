@@ -36,7 +36,9 @@ $string['endat_but']  = 'End At';
 $string['session_end'] = 'Session End';
 $string['duration']  = 'Duration';
 $string['mins']      = 'mins';
-$string['papernote'] = 'Add Paper Note';
+$string['hour']      = 'hour';
+$string['hours']     = 'hours';
+$string['papernote'] = 'Add Paper Note...';
 $string['extratime'] = 'Extra Time';
 $string['preexam'] = 'Pre-Exam';
 $string['preexamlist'] = '<ol>
@@ -65,4 +67,5 @@ $string['timedexam'] = 'Timed Exam:';
 $string['timeerror'] = 'Time Error';
 $string['timeerrormsg'] = 'Exam must be at least %d minutes in length';
 $string['examquestionclarifications'] = 'Exam question clarifications';
+$string['midexamclarrifications'] = 'Mid-Exam Clarrifications';
 ?>
