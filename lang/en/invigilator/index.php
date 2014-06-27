@@ -68,4 +68,7 @@ $string['timeerror'] = 'Time Error';
 $string['timeerrormsg'] = 'Exam must be at least %d minutes in length';
 $string['examquestionclarifications'] = 'Exam question clarifications';
 $string['midexamclarrifications'] = 'Mid-Exam Clarrifications';
+$string['examchecklist'] = 'Exam Checklist';
+$string['viewrubric'] = 'View Rubric';
+$string['examrubric'] = 'Exam Rubric';
 ?>

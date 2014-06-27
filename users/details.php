@@ -457,7 +457,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
         echo '<option value="' . $individual_title . '">' . $individual_title . '</option>';
       }
     }
-    echo "</select>&nbsp;<input type=\"text\" name=\"first_names\" size=\"20\" value=\"$tmp_first_names\" />&nbsp;<input type=\"text\" size=\"15\" name=\"surname\" value=\"$tmp_surname\" /></td><td style=\"text-align:right\"><input type=\"submit\" name=\"update\" value=\"" . $string['update'] . "\" /></td></td></tr>\n";
+    echo "</select>&nbsp;<input type=\"text\" name=\"first_names\" size=\"20\" value=\"$tmp_first_names\" />&nbsp;<input type=\"text\" size=\"15\" name=\"surname\" value=\"$tmp_surname\" /></td><td style=\"text-align:right\"><input type=\"submit\" name=\"update\" value=\"" . $string['update'] . "\" class=\"ok\" /></td></td></tr>\n";
     echo "<tr><td>&nbsp;" . $string['email'] . "</td><td><input type=\"text\" size=\"35\" name=\"email\" value=\"$email\" /></td>\n";
     if (stripos($tmp_roles, 'Student') !== false or stripos($tmp_roles, 'Graduate') !== false) {
       if ($student_id == '') $student_id = $string['unknown'];
@@ -931,7 +931,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $results->close();
   echo "</table>\n</td></tr>\n";
   if ($userObject->has_role('SysAdmin')) {
-    echo '<tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="' . $string['save'] . '" style="width:100px" /><input type="hidden" name="admin_school_no" value="' . $admin_school_no . '" /></td></tr>';
+    echo '<tr><td colspan="2" align="center"><input type="submit" name="updateadmin" value="' . $string['save'] . '" class="ok" /><input type="hidden" name="admin_school_no" value="' . $admin_school_no . '" /></td></tr>';
   }
   ?>
   </form>
@@ -1163,7 +1163,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <tr><td colspan="5">&nbsp;</td></tr>
 <?php
 if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-  echo "<tr><td colspan=\"5\" align=\"center\"><input type=\"submit\" name=\"updateaccess\" value=\"" . $string['save'] . "\" style=\"width:100px\" /></td></tr>\n";
+  echo "<tr><td colspan=\"5\" align=\"center\"><input type=\"submit\" name=\"updateaccess\" value=\"" . $string['save'] . "\" class=\"ok\" /></td></tr>\n";
 }
 ?>
 </table>
@@ -1212,7 +1212,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
 
   echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    echo "<tr><td colspan=\"5\" style=\"text-align:center\"><input type=\"submit\" name=\"save_metadata\" value=\"" . $string['save'] . "\" style=\"width:100px\" /><input type=\"hidden\" name=\"metadata_no\" value=\"$metadata_no\" /></td></tr>\n";
+    echo "<tr><td colspan=\"5\" style=\"text-align:center\"><input type=\"submit\" name=\"save_metadata\" value=\"" . $string['save'] . "\" class=\"ok\" /><input type=\"hidden\" name=\"metadata_no\" value=\"$metadata_no\" /></td></tr>\n";
   }
 ?>
 </form>

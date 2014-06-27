@@ -320,7 +320,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-<script type="text/javascript">
+<script>
 
   var ns6 = document.getElementById && !document.all;
   var isMenu = false;
@@ -548,7 +548,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 <div class="tab-bar">
   <div class="tab-holder">
     <ol class="tabs">
-      <li class="on"><a href="#" rel="checklist">Exam Checklist</a></li>
+      <li class="on"><a href="#" rel="checklist"><?php echo $string['examchecklist'] ?></a></li>
       <?php
       foreach ($properties_list as $property_object) {
         $paper_title = $property_object->get_paper_title();
@@ -569,7 +569,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     $calendar_year  = $property_object->get_calendar_year();
     $rubric         = $property_object->get_rubric();
     
-    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">Exam Rubric<img onclick=\"$('#rubric_$property_id').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
+    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img onclick=\"$('#rubric_$property_id').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
 
     // Get modules for this paper and check if timing is allowed
     $timed_modules = $all_modules = 0;
@@ -730,7 +730,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
               </tr>
               
               <tr>
-                <td colspan="2"><input type="button" onclick="newPaperNote(<?php echo $property_id; ?>);" value="<?php echo $string['papernote'] ?>" class="ok" /><input type="button" onclick="viewRubric(<?php echo $property_id; ?>);" value="Show Rubric" class="ok" /></td>
+                <td colspan="4"><input type="button" onclick="newPaperNote(<?php echo $property_id; ?>);" value="<?php echo $string['papernote'] ?>" class="ok" /><input type="button" onclick="viewRubric(<?php echo $property_id; ?>);" value="<?php echo $string['viewrubric'] ?>" class="ok" /></td>
               </tr>
 
             </table>            
