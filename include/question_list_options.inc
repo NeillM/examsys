@@ -38,7 +38,7 @@ if (!isset($module_details) && $module != '0') {
 }
 ?>
 <?php echo $configObject->get('cfg_js_root') ?>
-<script src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js" type="text/javascript"></script>
+<script type="text/javascript" src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js"></script>
 <script>
   function getLastID(IDs) {
     var id_list = IDs.split(",");
@@ -356,7 +356,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
         $hidden = ' class="hidden"';
       }
       
-      echo "<div{$hidden}><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</lable></div>\n";
+      echo "<div{$hidden}><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</label></div>\n";
     }
   }
 ?>
