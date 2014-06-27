@@ -234,7 +234,7 @@ if ($css != '') {
     echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
   }
   
-  if (PaperUtils::need_interactiveQ($screen_data, $current_screen)) {
+  if (Paper_utils::need_interactiveQ($screen_data, $current_screen)) {
     if ($configObject->get('cfg_interactive_qs') == 'html5') {
       echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
       echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
