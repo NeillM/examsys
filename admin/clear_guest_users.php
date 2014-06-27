@@ -35,7 +35,6 @@ require '../include/sidebar_menu.inc';
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -49,13 +48,12 @@ require '../include/sidebar_menu.inc';
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(243);
 ?>
 
-<div id="content" class="content">
+<div id="content" class="content" style="font-size:80%">
   
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
@@ -148,7 +146,7 @@ require '../include/sidebar_menu.inc';
   
   $mysqli->close();
 ?>
-<tr><td colspan="9" style="text-align:center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['cleanup']; ?>" /></td></tr>
+<tr><td colspan="9" style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['cleanup'] ?>" /></td></tr>
 </table>
 </blockquote>
 </form>

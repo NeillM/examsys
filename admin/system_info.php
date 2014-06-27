@@ -37,7 +37,6 @@ require_once '../classes/dateutils.class.php';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .sechead {background-color:#EAEAEA}
     a {color:#215DC6}
@@ -54,13 +53,12 @@ require_once '../classes/dateutils.class.php';
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content">
+<div id="content" class="content" style="font-size:80%">
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>

@@ -35,13 +35,14 @@ require '../include/sysadmin_auth.inc';
 	<title>Rog&#333;: Test Suite</title>
 
 	<style>
-		.content {font-size:90%}
+		.content {font-size:80%}
 		li {margin-left:20px; line-height:150%}
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style>
     h2 {margin-left: 20px; font-size: 150%}
+    li {font-size: 110%}
   </style>
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
