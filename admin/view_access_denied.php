@@ -35,7 +35,6 @@ require '../include/sidebar_menu.inc';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style>
     .d {background-image: url('../artwork/access_denied_16.gif'); background-repeat:no-repeat; background-position: left center; padding-left:20px}
@@ -57,7 +56,6 @@ require '../include/sidebar_menu.inc';
 </head>
 <body>
 <?php
-require '../include/admin_options.inc';
 require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu();
@@ -83,7 +81,7 @@ echo draw_toprightmenu();
 <tbody>
 <?php
 $id = 1;
-$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried");
+$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried LIMIT 10000");
 $result->execute();
 $result->store_result();
 $result->bind_result($tried, $ipaddress, $page, $msg, $userID, $title, $initials, $surname);
@@ -91,7 +89,7 @@ while ($result->fetch()) {
   $tried_date = new DateTime();
   $tried_date->setTimestamp($tried);
 
-  echo "<tr class=\"l\" id=\"denied{$id}\"><td class=\"d\">" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td class=\"l\"><a href=\"../users/details.php?search_surname=$surname&search_username=&student_id=&moduleID=&calendar_year=&students=on&submit=Search&userID=$userID&email=&tmp_surname=&tmp_courseID=&tmp_yearID=\">$title $initials $surname</a></td><td class=\"l\">/$page</td><td class=\"l\">$msg</td></tr>\n";
+  echo "<tr class=\"l\" id=\"denied{$id}\"><td class=\"d\">" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td class=\"l\"><a href=\"../users/details.php?submit=Search&userID=$userID\">$title $initials $surname</a></td><td class=\"l\">/$page</td><td class=\"l\">$msg</td></tr>\n";
   $id++;
 }
 ?>
