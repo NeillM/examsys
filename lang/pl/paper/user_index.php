@@ -39,6 +39,8 @@ $string['papernotavailable'] = 'Arkusz czasowo niedostępny.';
 $string['papernotavailablestudents'] = 'Arkusz czasowo niedostępny dla studentów.';
 $string['nottakenpaper'] = '(Nie podjąłeś się jeszcze rozwiązania tego arkusza.)';
 $string['donotstart'] = "<strong>Nie</strong> wybieraj przycisku 'Start' do czasu decyzji osoby nadzorującej.";
+$string['hour'] = 'godzina';
+$string['hours'] = 'godziny';
 $string['minutes'] = 'minut(y)';
 $string['mins'] = 'min.';
 $string['secs'] = 'sec.';
@@ -48,8 +50,8 @@ $string['guestaccount'] = 'Konto gościa';
 $string['metadata_msg'] = "Twoje '%s' nie jest zgodne z '%s'.";
 $string['timeexpired'] = 'Pozostały czas się właśnie wyczerpał.';
 
-$string['tooltip_bidirectional'] = 'You are allowed to move both backwards and forwards between screens.';
-$string['tooltip_unidirectional'] = 'Once you have submitted a screen you will not be able to move back.';
-$string['tooltip_adjustmark'] = 'Your percentage will be automatically adjusted post-exam to account for the random mark someone could get by guessing at random. You are therefore advised to answer all questions on the paper.';
-$string['tooltip_testclip'] = 'This is a test audio clip for you to test your headphones and volume are set correctly.';
+$string['tooltip_bidirectional'] = 'Dozwolone jest przechodzenie do następnych i poprzednich ekranów.';
+$string['tooltip_unidirectional'] = 'Po przedłożeniu ekranu nie będzie możliwy do niego powrót.';
+$string['tooltip_adjustmark'] = 'Twoje procenty będą po egzaminie automatycznie poprawione z uwzględnieniem możliwości odpowiedzi "na chybił-trafił". Zalecane jest dlatego odpowiedzenie na wszystkie pytania w arkuszu.';
+$string['tooltip_testclip'] = 'To jest testowy klip dźwiękowy pozwalający sprawdzić ustawień głośności w słuchawkach użytkownika.';
 ?>
