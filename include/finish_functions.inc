@@ -529,7 +529,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
       }
     }
     if (trim($paper[$question]['notes']) != '') {
-      echo "<p class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"" . $string['note']  . "\" />&nbsp;<strong>" . $string['note']  . ":</strong>&nbsp;" . $paper[$question]['notes'] . "</p>\n";
+      echo "<p class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"" . $string['note']  . "\" />&nbsp;<strong>" . $string['note']  . ":</strong>&nbsp;" . $paper[$question]['notes'] . "</p>\n";
     }
     $no_options = count($paper[$question]['option_text']);
 

@@ -67,3 +67,30 @@ function viewAccessibility(userID, e) {
   });
   e.stopPropagation();
 }
+
+function viewToiletBreak(breakID, e) {
+  $('#menudiv').hide();
+  $('#noteDiv').hide();
+  $('#accessDiv').hide();
+  if (!e) var e = window.event;
+  var currentX = e.clientX;
+  var currentY = e.clientY;
+  var scrOfX = $(document).scrollLeft();
+  var scrOfY = $(document).scrollTop();
+
+  dataSource = "../ajax/reports/getToiletBreak.php?breakID=" + breakID;
+
+  $("#toiletMsg").load(dataSource, function(responseTxt, statusTxt, xhr) {
+    if (statusTxt == "success") {
+      $("#toiletDiv").show();
+      $("#toiletDiv").css('left', currentX + scrOfX + 16 + 'px');
+
+      top_pos = currentY+scrOfY-16;
+      if (top_pos > ($(window).height() + scrOfY - 130)) {
+        top_pos = $(window).height() + scrOfY - 130;
+      }
+      $("#toiletDiv").css('top', top_pos + 'px');
+    }
+  });
+  e.stopPropagation();
+}

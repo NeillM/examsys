@@ -887,7 +887,7 @@ class ClassTotals {
 	 * @param int $seconds - Number of seconds to be converted.
 	 * @return string  	 	 - Seconds formatted into hour, minutes and seconds.
 	 */
-	 public function formatsec($seconds) {
+	public function formatsec($seconds) {
     $diff_hour = ($seconds / 60) / 60;
     $tmp_position = strpos($diff_hour, '.');
     if ($tmp_position > 0) $diff_hour = substr($diff_hour, 0, $tmp_position);

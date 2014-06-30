@@ -1333,7 +1333,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   } else {
     if ($current_screen > $no_screens) {
       echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;';
       if (!isset($_GET['q_id'])) {
         echo $string['finishnote'];
         if ($propertyObj->get_bidirectional() == 1) echo "<br />" . $string['gobackpink'];
@@ -1341,7 +1341,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       echo "</div>\n<br />\n";
     } elseif ($propertyObj->get_bidirectional() == 0) {
       echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;';
+      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;';
       printf($string['pleasecomplete'], $current_screen);
       echo "</div>\n<br >\n";
     }

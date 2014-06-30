@@ -32,6 +32,7 @@ require_once '../classes/class_totals.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/exam_announcements.class.php';
 require_once '../classes/noteutils.class.php';
+require_once '../classes/toiletbreakutils.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -288,13 +289,18 @@ ob_start();
 
 <body>
 <div id="noteDiv" class="studentnote">
-<div style="text-align:right; margin-right:5px;"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
-<div id="noteMsg"></div>
+  <div class="popup_close"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div id="noteMsg"></div>
 </div>
 
 <div id="accessDiv" class="studentaccess">
-<div style="text-align:right; margin-right:5px;"><img onclick="$('#accessDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
-<div id="accessMsg"></div>
+  <div class="popup_close"><img onclick="$('#accessDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div id="accessMsg"></div>
+</div>
+
+<div id="toiletDiv" class="toiletbreak">
+  <div class="popup_close"><img onclick="$('#toiletDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div id="toiletMsg"></div>
 </div>
 
 <?php
@@ -329,7 +335,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   </div>
   
   <div class="popup_row" onclick="newStudentNote();">
-    <div class="popup_icon"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="" /></div>
+    <div class="popup_icon"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title" id="item4"><?php echo $string['newnote'] ?></div>
   </div>
   
@@ -365,6 +371,8 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   for ($i=-100; $i<=100; $i++) $distribution[$i] = 0;
 
   $notes = PaperNotes::get_all_notes_by_paper($paperID, $mysqli);
+  
+  $toilet_breaks = ToiletBreaks::get_all_breaks_by_paper($paperID, $mysqli);
 
   if ($marking == '0') {
     $marking_label = $string['%'];
@@ -540,6 +548,9 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
           echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['surname'] . "</td>";
           echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['first_names'];
         }
+        if ($report->has_special_need($user_results[$i]['userID']) or $user_results[$i]['attempt'] > 1 or isset($toilet_breaks[$user_results[$i]['userID']])) {
+          echo '&nbsp;&nbsp;';
+        }
         if ($report->has_special_need($user_results[$i]['userID'])) {
           echo '<img src="../artwork/accessibility_16.png" class="accessibility" alt="' . $string['alternativearrangements'] . '" onclick="viewAccessibility(' . $user_results[$i]['userID'] . ', event)" title="' . $string['viewaccessibility'] . '" />';
         }
@@ -549,6 +560,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         }
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
           echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" onclick="viewNote(' . $user_results[$i]['userID'] . ', event)" title="' . $string['viewstudentnote'] . '" />';
+        }
+        if (isset($toilet_breaks[$user_results[$i]['userID']])) {
+          foreach ($toilet_breaks[$user_results[$i]['userID']] as $toilet_break) {
+            echo '<img src="../artwork/wc.png" alt="Toilet" class="icon16_active" onclick="viewToiletBreak(' . $toilet_break . ', event)" />';          
+          }
         }
         echo "</td>";
         

@@ -25,256 +25,7 @@
 require_once '../include/invigilator_auth.inc';
 require_once '../classes/usernotices.class.php';
 require_once '../include/errors.inc';
-require_once '../include/sort.inc';
-
-require_once '../classes/stringutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/log_lab_end_time.class.php';
-require_once '../classes/lab_factory.class.php';
-require_once '../classes/lab.class.php';
-require_once '../classes/log_extra_time.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/noteutils.class.php';
-
-function get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $db) {
-  $paperID = $property_object->get_property_id();
-
-  $configObject = Config::get_instance();
-
-  //create a caching LogExtraTime gets all the results in one hit
-  $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $db, true);
-
-  // Get any student notes.
-  $notes_array = PaperNotes::get_all_notes_by_paper($paperID, $db);
-
-  ?>
-
-<div class="cohortlist">
-  <table style="font-size:100%; line-height:150%" cellpadding="2" cellspacing="0" border="0" width="100%">
-    <tr>
-      <th>
-      </th>
-
-      <th>
-        <?php echo $string['title'] ?>
-      </th>
-
-      <th>
-        <?php echo $string['surname'] ?>
-      </th>
-
-      <th>
-        <?php echo $string['forenames'] ?>
-      </th>
-
-      <th>
-        <?php echo $string['endtime'] ?>
-      </th>
-
-      <th>
-        <?php echo $string['extension_mins'] ?>
-      </th>
-
-      <th>
-      </th>
-    </tr>
-
-    <?php
-      // Get all students who should are able to access this paper
-      $sql = "SELECT DISTINCT extra_time, medical, breaks, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( " . $modules . ") AND calendar_year = ? AND modules_student.userID = users.id";
-      $results = $db->prepare($sql);
-      $session = $property_object->get_calendar_year();
-      $results->bind_param('s', $session);
-      $results->execute();
-      $results->store_result();
-      $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
-      $student_object = array();
-
-      while ($results->fetch()) {
-        $student_object[$userID]['user_ID'] = $userID;
-        $student_object[$userID]['surname'] = $surname;
-        $student_object[$userID]['first_names'] = $first_names;
-        $student_object[$userID]['title'] = $title;
-        $student_object[$userID]['extra_time_percentage'] = $extra_time_percentage;
-        $student_object[$userID]['medical'] = $medical;
-        $student_object[$userID]['breaks'] = $breaks;
-      }
-      $results->close();
-
-      // Merge in all students who have submitted records for this paper
-      $sql = 'SELECT DISTINCT sn.extra_time, sn.medical, sn.breaks, lm.userID, u.surname, u.first_names, u.title FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id LEFT JOIN special_needs sn ON u.id = sn.userID WHERE lm.paperID = ? AND u.username LIKE "user%"';
-      $results = $db->prepare($sql);
-      $results->bind_param('i', $paperID);
-      $results->execute();
-      $results->store_result();
-      $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
-      while ($results->fetch()) {
-        $student_object[$userID]['user_ID'] = $userID;
-        $student_object[$userID]['surname'] = $surname;
-        $student_object[$userID]['first_names'] = $first_names;
-        $student_object[$userID]['title'] = $title;
-        $student_object[$userID]['extra_time_percentage'] = $extra_time_percentage;
-        $student_object[$userID]['medical'] = $medical;
-        $student_object[$userID]['breaks'] = $breaks;
-      }
-      $results->close();
-      
-      $column = 'surname';
-      $sort_order = 'asc';
-      $student_object = array_csort($student_object, $column, $sort_order);
-
-      foreach( $student_object as $student_id => $student_obj) {
-        process_student_list($log_lab_end_time, $log_extra_time, $student_obj, $property_object, $configObject, $notes_array, $allow_timing, $string, $db);
-      }
-
-      ?>
-    </table>
-</div>
-<?php
-}
-
-/*
-* @param LogLabEndTime  $log_lab_end_time
-* @param UserObject     $student_object
-* @param PropertyObject $property_object
-* @param Config         $configObject
-* @param int            $extra_time_percentage
-* @param array          $notes_array
-* @param string         $string
-* @param mysqli         $mysqli
- */
-function process_student_list($log_lab_end_time, $log_extra_time, $student_object, $property_object, $configObject, $notes_array, $allow_timing, $string, $mysqli) {
-
-  // Determine when the current exam session will end
-
-  $lab_session_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
-
-  if ($lab_session_end_datetime == false) {
-    $lab_session_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
-  }
-
-  $exam_duration_mins = $property_object->get_exam_duration();
-
-  $class = '';
-
-  if ($exam_duration_mins == NULL) {
-    throw new ErrorException('Exam duration is mandatory in summative exams');
-  }
-
-  if (is_int($exam_duration_mins) === false) {
-    throw new ErrorException('$exam_duration_mins ' . $exam_duration_mins . ' must be an integer');
-  }
-
-  $exam_duration_interval = new DateInterval('PT' . $exam_duration_mins . 'M');
-  $lab_session_start_datetime = clone $lab_session_end_datetime;
-  $lab_session_start_datetime->sub($exam_duration_interval);
-
-  // Determine when the student's exam session will end
-
-  //set userID log_extra_time as we are in cached mode
-  $log_extra_time->set_student_object($student_object);
-
-  $student_end_datetime = $lab_session_end_datetime;
-
-  // Calculate whether student's extended 'end time' is before the current session's start time
-  // Currently unused but could be altered to exit if student's extra end time is before session's start time
-
-  $is_student_end_before_session_start = $student_end_datetime < $lab_session_start_datetime;
-
-  // Highlight student's who have gone over time
-
-  $current_datetime = new DateTime();
-
-  // Calculate extra time
-
-  $extra_time_secs = $log_extra_time->get_extra_time_secs();
-  $extra_time_mins = round($extra_time_secs / 60);
-
-  $special_needs_extra_time_mins = ($exam_duration_mins / 100) * $student_object['extra_time_percentage'];
-  $special_needs_extra_time_secs = (int)($special_needs_extra_time_mins * 60);
-  $total_extra_time = $extra_time_secs + $special_needs_extra_time_secs;
-
-  $total_extra_time_interval = new DateInterval('PT' . $total_extra_time . 'S');
-
-  $student_end_datetime = $student_end_datetime->add($total_extra_time_interval);
-
-  $paper_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
-
-  $ft = clone $student_end_datetime;
-  $ft->setTimezone(new DateTimeZone($property_object->get_timezone()));
-  $formatted_end_time = $ft->format($configObject->get('cfg_short_time_php'));
-
-  if ($extra_time_secs > 0 or $special_needs_extra_time_secs > 0) {
-    $formatted_end_time = '<strong>' . $formatted_end_time . '</strong>';
-  }
-
-  // Get student description
-  $tmp_userID = $student_object['user_ID'];
-  $surname = $student_object['surname'];
-  $first_names = $student_object['first_names'];
-  $title = $student_object['title'];
-
-  $paperID = $property_object->get_property_id();
-
-  $has_student_exceeded_end = ($student_end_datetime < $current_datetime);
-
-  if ($has_student_exceeded_end) {
-    $class = 'redwarn';
-  }
-
-  ?>
-<tr class="<?php echo $class; ?>">
-  <td>
-<?php
-  if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == 'y') {
-    echo '<img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />';
-  }
-?>
-  </td>
-  
-    <td style="cursor:hand" onclick="popMenu('<?php echo $tmp_userID ?>', '<?php echo $paperID ?>', <?php echo $allow_timing ? 'true' : 'false'; ?>, event);"/><?php echo $title ?></td>
-    <td style="cursor:hand" onclick="popMenu('<?php echo $tmp_userID ?>', '<?php echo $paperID ?>', <?php echo $allow_timing ? 'true' : 'false'; ?>, event);"/><?php echo $surname ?></td>
-    <td style="cursor:hand" onclick="popMenu('<?php echo $tmp_userID ?>', '<?php echo $paperID ?>', <?php echo $allow_timing ? 'true' : 'false'; ?>, event);"/><?php echo $first_names ?></td>
-
-    <td style="text-align:center">
-      <?php echo $formatted_end_time; ?>
-    </td>
-
-
-    <td style="text-align:center">
-      <?php
-      if ($special_needs_extra_time_mins != '') {
-        ?>
-          <span style=""><?php echo $special_needs_extra_time_mins ?></span>
-        <?php
-      }
-      if ($special_needs_extra_time_mins != '' and $extra_time_mins != '') {
-        echo ' + ';
-      }
-      if ($extra_time_mins != '') {
-        ?>
-          <img src="../artwork/clock_16.png" class="small_icon" alt="<?php echo $string['extratime'] . '\\'; ?>" />
-          <span style=""><?php echo $extra_time_mins; ?></span>
-        <?php
-      }
-      ?>
-    </td>
-    <td>
-    <?php
-      $cellID = $paperID . '_' . $tmp_userID;
-      echo "<div id=\"p$cellID\">";
-      if ($student_object['medical'] != '') {
-        echo '<img src="../artwork/medical_16.gif" class="small_icon" alt="Medical" onmouseover="showCallout(\'' . $cellID . '\', \'' . $student_object['medical'] . '\')" onmouseout="hideCallout()" />';
-      }
-      if ($student_object['breaks'] != '') {
-        echo '<img src="../artwork/moon_16.gif" class="small_icon" alt="Breaks" onmouseover="showCallout(\'' . $cellID . '\', \'' . $student_object['breaks'] . '\')" onmouseout="hideCallout()" />';
-      }
-      ?>
-    </div>
-    </td>
-</tr>
-<?php
-}
+require_once '../include/invigilator_common.inc';
 
 function emergencyNumbers($support_numbers, $string) {
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; float:right; line-height:100%; margin-right:20px\">\n";
@@ -317,6 +68,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 <link rel="stylesheet" type="text/css" href="../css/body.css"/>
 <link rel="stylesheet" type="text/css" href="../css/header.css"/>
 <link rel="stylesheet" type="text/css" href="../css/invigilator.css"/>
+<link rel="stylesheet" type="text/css" href="../css/popup_menu.css"/>
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
@@ -340,6 +92,15 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   }
 
   function popMenu(tmpUserID, paperID, showExtension, e) {
+    if ($('#old_highlightID').val() != '') {
+      $('#l' + $('#old_highlightID').val()).css('background-color', 'white');
+    }
+    
+    $('#old_highlightID').val(paperID + '_' + tmpUserID);
+    $('#old_highlightColor').val( $('#l' + paperID + '_' + tmpUserID).css('background-color') );
+    
+    $('#l' + paperID + '_' + tmpUserID).css('background-color', '#FFBD69');
+    
     if (!e) var e = window.event;
     var currentX = e.clientX;
     var currentY = e.clientY;
@@ -423,6 +184,24 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
       studentnote.focus();
     }
   }
+  
+  function newToiletBreak() {
+	  $('#menudiv').hide();
+    $.post("../ajax/invigilator/toilet_break.php",
+    {
+      userID:$('#userID').val(),
+      paperID:$('#paperID').val()
+    },
+    function(data, status) {
+      refreshCohortList( $('#paperID').val() );
+    });
+  }
+  
+  function refreshCohortList(paperID) {
+    dataSource = "../ajax/invigilator/refresh_cohort_list.php?paperID=" + paperID;
+
+    $("#cohortlist_" + paperID).load(dataSource);
+  }
 
   function newPaperNote(paperID) {
     papernote = window.open("new_paper_note.php?paperID=" + paperID + "","papernote","width=650,height=410,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
@@ -498,14 +277,19 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
   $(document).ready(function() {
     $('.menu-time').click(extendTime);
     $('.menu-note').click(newStudentNote);
+    $('.menu-toilet').click(newToiletBreak);
     StartClock();
     resizeLists();
     $(window).unload(KillClock);
     $(window).resize(resizeLists);
     
     $('.tabs li a').click(changeTab);
-
-<?php
+    
+  <?php
+  if (isset($_GET['tab'])) {
+    echo "$(\"a[rel='paper" . $_GET['tab'] . "']\").click();\n";
+  }
+  
   if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
     echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
   }
@@ -532,17 +316,12 @@ if ($language != 'en') {
 if ($properties_list !== false and count($properties_list) > 0) {
 ?>
 
-<div id="menudiv" style="width:<?php echo $popup_width; ?>px; background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0; left:0; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
-    <tr>
-      <td>
-        <ul>
-          <li class="menu-time"><?php echo $string['extendtime']; ?></li>
-          <li class="menu-note"><?php echo $string['addnote']; ?></li>
-        </ul>
-      </td>
-    </tr>
-  </table>
+<div id="menudiv" style="width:<?php echo $popup_width; ?>px" class="popupmenu" onmouseover="overpopupmenu=true;" onmouseout="overpopupmenu=false;">
+  <ul>
+    <li class="menu-time"><?php echo $string['extendtime'] ?></li>
+    <li class="menu-note"><?php echo $string['addnote'] ?></li>
+    <li class="menu-toilet"><?php echo $string['toiletbreak'] ?></li>
+  </ul>
 </div>
   
 <div class="tab-bar">
@@ -744,7 +523,9 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
         $modules = '\'' . $modules . '\'';
 
+        echo "<div class=\"cohortlist\" id=\"cohortlist_" . $paperID . "\">\n";
         get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $mysqli);
+        echo "</div>\n";
         ?>
       </div>
     <?php
@@ -752,7 +533,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
   ?>
 
-    <div id="checklist" class="tab-area" style="padding:50px;">
+    <div id="checklist" class="tab-area" style="padding: 30px 100px 0px 100px;">
       <div class="preexam">
         <h1><?php echo $string['preexam'] ?></h1>
         <?php echo $string['preexamlist'] ?>
@@ -782,6 +563,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 $mysqli->close();
 ?>
   <input type="hidden" id="userID" value="" />
+  <input type="hidden" id="old_highlightID" value="" />
   <input type="hidden" id="paperID" value="" />
 </body>
 </html>

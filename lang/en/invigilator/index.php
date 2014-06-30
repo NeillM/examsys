@@ -27,7 +27,8 @@ $string['extension_mins'] = 'Extra&nbsp;(mins)';
 $string['endtime'] = 'End';
 $string['extendtime'] = 'Extend Time';
 $string['extendtimeby'] = 'Extend Time By';
-$string['addnote']        = 'Add note';
+$string['addnote'] = 'Add note';
+$string['toiletbreak'] = 'Toilet Break';
 $string['currenttime']    = 'Current Time';
 $string['start']     = 'Start';
 $string['end']       = 'End';
@@ -50,14 +51,15 @@ $string['preexamlist'] = '<ol>
     </ol>';
 $string['midexam'] = 'Mid-Exam';
 $string['midexamlist'] = '<ol>
-    <li>Record minor problems in the students\' file (<a href="%shelp.html" target="_blank">example problems</a>)</li>
-    <li>Record problems with paper/question content</li>
-    <li>Call emergency numbers show on the paper tabs for any major problems</li>
+    <li>For emergency support call one of the numbers show on the paper tabs</li>
+    <li>Record IT/personal problems against relevant students (click their name)</li>
+    <li>Record toilet breaks against relevant students (click their name)</li>
+    <li>Record general paper/question problems using \'Add Paper Note...\' button.</li>
     </ol>';
 $string['postexam'] = 'Post-Exam';
 $string['postexamlist'] = '<ol>
-    <li>"That is the end of the exam. Please navigate to the last screen and click \'Finish\'."</li>
-    <li>"Click \'Close Window\' and then CTRL, ALT and DELETE and log out of your workstation."</li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "That is the end of the exam. Please navigate to the last screen and click \'Finish\'."</li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Click \'Close Window\' and then log out of Rog&#333."</li>
     <li>Collect up log in instructions for reuse</li>
     <li>Collect and dispose of blank paper</li>
     <li>Ensure <strong>all</strong> workstations are logged out</li>

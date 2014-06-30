@@ -31,17 +31,17 @@ a.user:hover {
   line-height: 150%;  
 }
 .ordered {
-  background-color:#F7F7F7;
+  background-color: #F7F7F7;
 }
 .grey {
   color:#808080;
 }
 .padl {
-  padding-left:6px;
+  padding-left: 6px;
 }
 .exclude {
   color:red;
-  text-decoration:line-through;
+  text-decoration: line-through;
 }
 .nonattend {
   color: #808080;
@@ -57,6 +57,10 @@ a.user:hover {
 }
 .tmpacc {
   background-color: #E0CC86;
+}
+.popup_close {
+  text-align: right;
+  margin-right: 5px;
 }
 .papernote {
   margin: 10px;
@@ -89,6 +93,17 @@ a.user:hover {
   font-size: 90%;
   background-color: #EEF4FF;
 	border: 1px solid #295AAD;
+}
+.toiletbreak {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 450px;
+  z-index: 10000;
+  font-size: 90%;
+  background-color: #D3F3FF;
+	border: 1px solid #019CD5;  
 }
 .staff {
   background-color: #FCD5B4;
@@ -128,15 +143,19 @@ a.user:hover {
 }
 .note {
   cursor: pointer;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   margin-left: 4px;
+}
+.16icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 1px;  
 }
 .accessibility {
   cursor: pointer;
   width: 16px;
   height: 16px;
-  margin-left: 4px;
 }
 .swatch {
   display: inline-block;

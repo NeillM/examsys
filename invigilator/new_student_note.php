@@ -41,15 +41,18 @@ if (isset($_POST['submit'])) {
   <html>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <head><title><?php echo $string['note']; ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+
   <script>
-    function closeWindow() {
-      window.opener.location.reload(true);
+    $(document).ready(function() {
+      window.opener.location.href='./index.php?tab=<?php echo $_POST['paperID'] ?>';
       window.close();
-    }
-  </script></head>
-  <body onload="closeWindow();">
+    });
+  </script>
+  </head>
+  <body>
   <form>
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="closeWindow();" /></div>
+    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="window.close();" /></div>
   </form>
   <?php
   } else {

@@ -51,17 +51,18 @@ fieldset {
 }
 #menudiv li {
   padding: 3px 0 3px 32px;
-  border: 1px solid #fff;
 }
 #menudiv li:hover {
   background-color: #FFE7A2;
-  border: 1px solid #FFBD69;
 }
 .menu-time {
   background: #fff url('../artwork/clock_16.png') no-repeat 6px 4px;
 }
 .menu-note {
   background: #fff url('../artwork/notes_icon.gif') no-repeat 6px 4px;
+}
+.menu-toilet {
+  background: #fff url('../artwork/toilet_16.png') no-repeat 6px 4px;  
 }
 .tight {
   margin: 4px 0 2px 0;
@@ -94,7 +95,7 @@ fieldset {
 .redwarn {
   background-color: #FFDDDD;
 }
-.small_icon {
+.16icon {
   width: 16px;
   height: 16px;
   padding-right: 1px;
@@ -265,4 +266,8 @@ fieldset {
   height: 34px;
   cursor: pointer;
   float: right;
+}
+.student:hover {
+  background-color: #FFE7A2;
+  pointer: hand;
 }

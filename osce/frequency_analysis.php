@@ -143,7 +143,7 @@ $themecolor = $propertyObj->get_themecolor();
       }
       echo "<tr id=\"row_" . $question_no . "\"><td class=\"question\">";
       if (trim($notes) != '') {
-        echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+        echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
       }
       echo "$leadin</td>";
 

@@ -954,7 +954,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $results->store_result();
   $results->bind_result($note, $note_date, $note_paper_id, $paper_title, $note_author);
   while ($results->fetch()) {
-    echo "<tr><td><nobr>&nbsp;<img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;$note_date</nobr></td><td style=\"padding-right:20px\"><nobr><a href=\"../paper/details.php?paperID=$note_paper_id\">$paper_title</a></nobr></td><td>$note</td><td>$note_author</td></tr>";
+    echo "<tr><td><nobr>&nbsp;<img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"Note\" />&nbsp;$note_date</nobr></td><td style=\"padding-right:20px\"><nobr><a href=\"../paper/details.php?paperID=$note_paper_id\">$paper_title</a></nobr></td><td>$note</td><td>$note_author</td></tr>";
   }
   $results->close();
 ?>
