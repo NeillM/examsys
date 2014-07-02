@@ -1174,29 +1174,15 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 
       $('#' + sectionID).show();
 
-      $('#tab1').css('background-color', 'white');
-      $('#tab2').css('background-color', 'white');
-      $('#tab3').css('background-color', 'white');
-      $('#tab4').css('background-color', 'white');
-      $('#tab5').css('background-color', 'white');
-      $('#tab6').css('background-color', 'white');
-      $('#tab7').css('background-color', 'white');
-      $('#tab8').css('background-color', 'white');
-      $('#tab9').css('background-color', 'white');
-
- 			$('#' + tabID).css('background-color', '#FFBD69');
-    }
-
-    function buttonover(tabID) {
-      if ($('#' + tabID).css('background-color') != "rgb(255, 189, 105)") {
- 				$('#' + tabID).css('background-color', '#FFE7A2');
-      }
-    }
-
-    function buttonout(tabID) {
-      if ($('#' + tabID).css('background-color') != "rgb(255, 189, 105)") {
- 				$('#' + tabID).css('background-color', 'white');
-      }
+      $('.tab').each(function() {
+        $(this).removeClass('tabon');
+      });
+      $('.tabon').each(function() {
+        $(this).removeClass('tabon');
+        $(this).addClass('tab');
+      });
+ 			$('#' + tabID).removeClass('tab');
+ 			$('#' + tabID).addClass('tabon');
     }
     </script>
 </head>
@@ -1211,38 +1197,38 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
 <?php
 if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
-  echo "<tr><td id=\"tab1\" style=\"height:25px; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
-  echo "<tr><td id=\"tab2\" style=\"background-color:#FFBD69; height:25px; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab1\" class=\"tab\" onclick=\"buttonclick('general','tab1')\">" . $string['generaltab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab2\" class=\"tabon\" onclick=\"buttonclick('security','tab2')\">" . $string['securitytab'] . "</td></tr>\n";
 } else {
-  echo "<tr><td id=\"tab1\" style=\"background-color:#FFBD69; height:25px; cursor:default\" onmouseover=\"buttonover('tab1')\" onmouseout=\"buttonout('tab1')\" onclick=\"buttonclick('general','tab1')\">&nbsp;" . $string['generaltab'] . "</td></tr>\n";
-  echo "<tr><td id=\"tab2\" style=\"height:25px; cursor:default\" onmouseover=\"buttonover('tab2')\" onmouseout=\"buttonout('tab2')\" onclick=\"buttonclick('security','tab2')\">&nbsp;" . $string['securitytab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab1\" class=\"tabon\" onclick=\"buttonclick('general','tab1')\">" . $string['generaltab'] . "</td></tr>\n";
+  echo "<tr><td id=\"tab2\" class=\"tab\" onclick=\"buttonclick('security','tab2')\">" . $string['securitytab'] . "</td></tr>\n";
 }
 if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '6') {
-  echo '<tr><td id="tab3" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover(\'tab3\')" onmouseout="buttonout(\'tab3\')" onclick="buttonclick(\'feedback\',\'tab3\')">&nbsp;' . $string['feedback'] . '</td></tr>';
-  echo '<tr><td id="tab4" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover(\'tab4\')" onmouseout="buttonout(\'tab4\')" onclick="buttonclick(\'reviewers\',\'tab4\')">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
+  echo '<tr><td id="tab3" class="tab" onclick="buttonclick(\'feedback\',\'tab3\')">' . $string['feedback'] . '</td></tr>';
+  echo '<tr><td id="tab4" class="tab" onclick="buttonclick(\'reviewers\',\'tab4\')">' . $string['reviewerstab'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab3" style="display:none">&nbsp;' . $string['feedback'] . '</td></tr>';
-  echo '<tr><td id="tab4" style="display:none">&nbsp;' . $string['reviewerstab'] . '</td></tr>';
+  echo '<tr><td id="tab3" style="display:none">' . $string['feedback'] . '</td></tr>';
+  echo '<tr><td id="tab4" style="display:none">' . $string['reviewerstab'] . '</td></tr>';
 }
 if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
-  echo '<tr><td id="tab5" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover(\'tab5\')" onmouseout="buttonout(\'tab5\')" onclick="buttonclick(\'rubric\',\'tab5\')">&nbsp;' . $string['rubrictab'] . '</td></tr>';
+  echo '<tr><td id="tab5" class="tab" onclick="buttonclick(\'rubric\',\'tab5\')">' . $string['rubrictab'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab5" style="display:none">&nbsp;' . $string['rubrictab'] . '</td></tr>';
+  echo '<tr><td id="tab5" style="display:none">' . $string['rubrictab'] . '</td></tr>';
 }
 if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5') {
-  echo '<tr><td id="tab6" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover(\'tab6\')" onmouseout="buttonout(\'tab6\')" onclick="buttonclick(\'prologue\',\'tab6\')">&nbsp;' . $string['prologuetab'] . '</td></tr>';
-  echo '<tr><td id="tab7" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover(\'tab7\')" onmouseout="buttonout(\'tab7\')" onclick="buttonclick(\'postscript\',\'tab7\')">&nbsp;' . $string['postscripttab'] . '</td></tr>';
+  echo '<tr><td id="tab6" class="tab" onclick="buttonclick(\'prologue\',\'tab6\')">' . $string['prologuetab'] . '</td></tr>';
+  echo '<tr><td id="tab7" class="tab" onclick="buttonclick(\'postscript\',\'tab7\')">' . $string['postscripttab'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab6" style="display:none">&nbsp;' . $string['prologuetab'] . '</td></tr>';
-  echo '<tr><td id="tab7" style="display:none">&nbsp;' . $string['postscripttab'] . '</td></tr>';
+  echo '<tr><td id="tab6" style="display:none">' . $string['prologuetab'] . '</td></tr>';
+  echo '<tr><td id="tab7" style="display:none">' . $string['postscripttab'] . '</td></tr>';
 }
 if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
-  echo '<tr><td id="tab8" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover(\'tab8\')" onmouseout="buttonout(\'tab8\')" onclick="buttonclick(\'reference\',\'tab8\')">&nbsp;' . $string['referencematerial'] . '</td></tr>';
+  echo '<tr><td id="tab8" class="tab" onclick="buttonclick(\'reference\',\'tab8\')">' . $string['referencematerial'] . '</td></tr>';
 } else {
-  echo '<tr><td id="tab8" style="display:none">&nbsp;' . $string['referencematerial'] . '</td></tr>';
+  echo '<tr><td id="tab8" style="display:none">' . $string['referencematerial'] . '</td></tr>';
 }
 ?>
-<tr><td id="tab9" style="height:25px; cursor:default" valign="middle" onmouseover="buttonover('tab9')" onmouseout="buttonout('tab9')" onclick="buttonclick('changes','tab9')">&nbsp;<?php echo $string['changes']; ?></td></tr>
+<tr><td id="tab9" class="tab" onclick="buttonclick('changes','tab9')"><?php echo $string['changes']; ?></td></tr>
 </table>
 
 </td>
@@ -1550,12 +1536,12 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="prologue" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
-<tr><td><textarea class="mceEditor" id="paper_prologue" name="paper_prologue" style="width:100%; height:542px"><?php echo htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES); ?></textarea></td></tr>
+<tr><td><textarea class="mceEditor" id="paper_prologue" name="paper_prologue" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
 <table id="postscript" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
-<tr><td><textarea class="mceEditor" id="paper_postscript" name="paper_postscript" style="width:100%; height:542px"><?php echo htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES); ?></textarea></td></tr>
+<tr><td><textarea class="mceEditor" id="paper_postscript" name="paper_postscript" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
 <table id="security" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
@@ -1856,7 +1842,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<tr><td class=\"headbar\" style=\"padding:2px; width:400px\">&nbsp;" . $string['modules'] . "</td><td class=\"headbar\" style=\"padding:2px\">&nbsp;" . $string['restricttolabs'] . "</td></tr>";
     echo "<tr><td rowspan=\"3\" style=\"vertical-align:top\">";
 
-    echo "<div id=\"modules_list\" style=\"display:block; width:400px; height:435px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+    echo "<div id=\"modules_list\" style=\"display:block; width:400px; height:420px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
 
 		$modules_array = $properties->get_modules();
 
@@ -1899,7 +1885,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
   ?>
   <tr><td class="headbar" style="padding:2px" colspan="2">&nbsp;<?php echo $string['restricttometadata']; ?></td></tr>
-  <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:126px; overflow-y:scroll;border:1px solid #828790; font-size:90%" id="metadata_security"></div></td></tr>
+  <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:111px; overflow-y:scroll;border:1px solid #828790; font-size:90%" id="metadata_security"></div></td></tr>
   </table>
 	
   </td></tr>
@@ -1907,7 +1893,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="rubric" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
   <tr><td class="tabtitle" colspan="2"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
-	<tr><td><textarea class="mceEditor" id="rubric_text" name="rubric_text" style="width:100%; height:542px"><?php echo htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES); ?></textarea></td></tr>
+	<tr><td><textarea class="mceEditor" id="rubric_text" name="rubric_text" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
 <table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
@@ -2182,7 +2168,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 ?>
 </td></tr>
   <?php
-  echo "<tr><td><div style=\"width:350px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+  echo "<tr><td><div style=\"width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
 
   // Get all users for teams within the schools of the current user
   // Also get all admin users for those schools
@@ -2227,7 +2213,7 @@ SQL;
   $internal_details->close();
   echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-  echo "<td><div style=\"width:350px; height:473px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+  echo "<td><div style=\"width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
   $current_externals = $properties->get_externals();
   $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = 'External Examiner' AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
   $external_details->execute();
@@ -2258,9 +2244,9 @@ SQL;
 <tr><td style="vertical-align:top"><div id="reference_list"></div></td></tr>
 </table>
 
-<table id="changes" style="width:100%; font-size:90%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="changes" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/version_icon.png" alt="Icon" align="middle" /><?php echo $string['changesheading'] ?></td></tr>
-<tr><td style="vertical-align:top"><div id="change_list" style="height:550px; overflow-y:scroll">
+<tr><td style="vertical-align:bottom"><div id="change_list" style="height:543px; overflow-y:scroll">
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <?php
 $modules = module_utils::get_module_list_by_id($mysqli);

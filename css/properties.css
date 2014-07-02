@@ -39,6 +39,20 @@ extarea, input[type=text], select, textarea, input[type=password] {
   background-color: #EEEEEE;
 	border-bottom: 1px solid #E2E4E7;
 }
+.tab {
+  height: 25px;
+  padding-left: 6px;
+  cursor: default;
+}
+.tab:hover {
+  background-color: #FFE7A2;
+}
+.tabon {
+  height: 25px;
+  padding-left: 6px;
+  cursor: default;
+  background-color: #FFBD69;
+}
 .tabtitle {
 	background-color: #C2D5F3;
 	height: 49px;
@@ -52,4 +66,11 @@ extarea, input[type=text], select, textarea, input[type=password] {
 }
 .cancel {
   margin-right: 0;
+}
+.greySkin table.mceLayout {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+.greySkin table.mceLayout tr.mceLast td {
+  border-bottom: 0 !important;  
 }
