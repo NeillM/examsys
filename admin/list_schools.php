@@ -43,7 +43,10 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-
+	<style>
+    td {padding-left: 5px;}
+	</style>
+  
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -69,21 +72,26 @@ $result->close();
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
+  
+  $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
+  $result->execute();
+  $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
+  $result->store_result();
 ?>
 <div id="content" class="content">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['schools'] ?></div>
+  <div class="page_title"><?php echo $string['schools'] ?> (<?php echo $result->num_rows ?>)</div>
 </div>
   
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
 <thead>
 <tr>
-  <th class="col10" style="width:50%"><?php echo $string['name']; ?></th>
-  <th class="col" style="width:40%"><?php echo $string['faculty']; ?></th>
-  <th class="col" style="width:10%"><?php echo $string['modules']; ?></th>
+  <th class="col10" style="width:50%"><?php echo $string['name'] ?></th>
+  <th class="col" style="width:40%"><?php echo $string['faculty'] ?></th>
+  <th class="col" style="width:10%"><?php echo $string['modules'] ?></th>
 </tr>
 </thead>
 
@@ -91,14 +99,11 @@ $result->close();
 <?php
 
 if ($faculties > 0) {
-  $id = 0;
-
   $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
   $result->execute();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
   while ($result->fetch()) {
-    echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit('$id')\" class=\"l\"><td><div class=\"col30\">$school</div></td><td class=\"col\">$faculty</td><td><div class=\"no\">" . number_format($module_no) . "</div></td></tr>\n";
-    $id++;
+    echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit('$id')\" class=\"l\"><td>$school</td><td>$faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
   }
   $result->close();
 } else {

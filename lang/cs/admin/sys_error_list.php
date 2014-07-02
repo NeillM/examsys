@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Nastavení';
-$string['systemerrrorreport'] = 'Přehled systémových chyb';
+$string['systemerrors'] = 'Systémové chyby';
 $string['date'] = 'Datum';
 $string['type'] = 'Typ';
 $string['message'] = 'Zpráva';

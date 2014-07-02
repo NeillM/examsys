@@ -39,6 +39,7 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 	<style>
 	  th a {color:black !important}
+    td {padding-left: 5px;}
 	</style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -66,13 +67,18 @@ require '../include/sysadmin_auth.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(233);
+  
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL");
+  $result->execute();
+  $result->bind_result($id, $moduleid, $fullname, $school, $active);
+  $result->store_result();
 ?>
 <div id="content" class="content">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
-  <div class="page_title"><?php echo $string['modules'] ?></div>
+  <div class="page_title"><?php echo $string['modules'] ?> (<?php echo $result->num_rows; ?>)</div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -87,27 +93,13 @@ require '../include/sysadmin_auth.inc';
 
 <tbody>
 <?php
-$id = 0;
-$module_no = 0;
-
-$modules = array();
 
 $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL");
 $result->execute();
 $result->bind_result($id, $moduleid, $fullname, $school, $active);
 while ($result->fetch()) {
-  $modules[$module_no]['id'] = $id;
-  $modules[$module_no]['moduleid'] = $moduleid;
-  $modules[$module_no]['name'] = $fullname;
-  $modules[$module_no]['school'] = $school;
-  $modules[$module_no]['active'] = $active;
-  
-  $module_no++;
-}
-
-for ($i=0; $i<$module_no; $i++) {
-  if ($modules[$i]['school'] == '') $modules[$i]['school'] = '<span style="color:#808080">unknown</span>';
-  if ($modules[$i]['active'] == 1) {
+  if ($school == '') $school = '<span style="color:#808080">unknown</span>';
+  if ($active == 1) {
     $tmp_active = $string['yes'];
 		$class = 'l';
   } else {
@@ -115,7 +107,7 @@ for ($i=0; $i<$module_no; $i++) {
 		$class = 'l grey';
   }
   
-	echo "<tr class=\"$class\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
+	echo "<tr class=\"$class\" id=\"$moduleid\" onclick=\"selLine('$id',event)\" ondblclick=\"edit('$id')\"><td>$moduleid</td><td>$fullname</td><td><nobr>$school</nobr></td><td>$tmp_active</td></tr>\n";
 }
 $result->close();
 $mysqli->close();

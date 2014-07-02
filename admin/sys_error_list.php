@@ -34,7 +34,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   
-  <title>Rog&#333;: <?php echo $string['systemerrrorreport'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['systemerrors'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -42,8 +42,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .errl {padding-right:6px; vertical-align:top; text-align:right}
-  </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    td {padding-left: 5px;}
+	</style>  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
@@ -57,6 +58,13 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
       selLine(lineID, evt);
       displayDetails();
     }
+    
+    $(document).ready(function() {
+      $("#maindata").tablesorter({ 
+        sortList: [[0,0]]
+      });
+
+    });
   </script>
 </head>
 <body>
@@ -65,20 +73,36 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
+  
+  if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id = sys_errors.userID ORDER BY sys_errors.id DESC LIMIT 1000";
+  } else {
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id = sys_errors.userID WHERE fixed IS NULL ORDER BY sys_errors.id DESC LIMIT 1000";
+  }
+
+  $result = $mysqli->prepare($sql);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
 ?>
 <div id="content" class="content">
 <table class="header">
 <tr>
-  <th colspan="4"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrrorreport'] ?></div></th>
+  <th colspan="4"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrors'] ?> (<?php echo $result->num_rows ?>)</div></th>
 <th colspan="3" style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" onclick="refreshPage();"<?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed']; ?>&nbsp;</div></th>
 </tr>
-<tr><th><div class="col10"><?php echo $string['date']; ?></div></th><th class="vert_div"><?php echo $string['type']; ?></th><th class="vert_div"><?php echo $string['message']; ?></th><th class="vert_div"><?php echo $string['file']; ?></th><th class="vert_div"><?php echo $string['lineno']; ?></th><th class="vert_div"><?php echo $string['user']; ?></th><th class="vert_div"><?php echo $string['userid']; ?></th></tr>
+</table>
+<table class="header" id="maindata">
+  <thead>
+    <tr><th><div class="col10"><?php echo $string['date'] ?></div></th><th class="vert_div"><?php echo $string['type'] ?></th><th class="vert_div"><?php echo $string['message'] ?></th><th class="vert_div"><?php echo $string['file'] ?></th><th class="vert_div"><?php echo $string['lineno'] ?></th><th class="vert_div"><?php echo $string['user'] ?></th></tr>
+</thead>
+<tbody>
 
 <?php
   if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
-    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID ORDER BY sys_errors.id DESC LIMIT 1000";
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID ORDER BY sys_errors.id DESC LIMIT 10000";
   } else {
-    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID WHERE fixed IS NULL ORDER BY sys_errors.id DESC LIMIT 1000";
+    $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id=sys_errors.userID WHERE fixed IS NULL ORDER BY sys_errors.id DESC LIMIT 10000";
   }
 
   $result = $mysqli->prepare($sql);
@@ -87,19 +111,19 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
   while ($result->fetch()) {
     if ($fixed == '') {
-      echo "<tr class=\"l\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred<nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">$title&nbsp;$initials&nbsp;$surname</div></td><td><div class=\"col\">$tmp_userID</div></td></tr>\n";
+      echo "<tr class=\"l\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><nobr>$occurred<nobr></td><td><div class=\"col\">$errtype</div></td><td>$errstr</td><td>$errfile</td><td><div class=\"errl\">$errline</div></td><td>$title&nbsp;$initials&nbsp;$surname</td></tr>\n";
     } else {
-      echo "<tr class=\"l deleted\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><div class=\"col\"><nobr>$occurred</nobr></div></td><td><div class=\"col\">$errtype</div></td><td><div class=\"col\">$errstr</div></td><td><div class=\"col\">$errfile</div></td><td><div class=\"errl\">$errline</div></td><td><div class=\"col\">";
+      echo "<tr class=\"l deleted\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><nobr>$occurred</nobr></td><td><div class=\"col\">$errtype</div></td><td>$errstr</td><td>$errfile</td><td><div class=\"errl\">$errline</div></td><td>";
       if ($surname == '') {
         echo '<span class="grey">unauthenticated</span>';
       } else {
         echo "$title&nbsp;$initials&nbsp;$surname";
       }
-      echo "</div></td><td><div class=\"col\">$tmp_userID</div>
-      </td></tr>\n";
+      echo "</td></tr>\n";
     }
   }
 ?>
+</tbody>
 </table>
 
 </div>
