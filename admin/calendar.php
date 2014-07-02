@@ -36,7 +36,7 @@ if (isset($_GET['calyear'])) {
   $current_year = date("Y");
 }
 
-function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone) {
+function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone, $userObject) {
   echo "<table id=\"month_grid\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">\n";
   foreach ($paper_details as $paper) {
     if ($paper['type'] == 'paper') {
@@ -76,7 +76,11 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
       }
     } else {
       if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
-        echo '<tr onclick="deleteEvent(' . $paper['eventID'] . ')" style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
+        echo '<tr';
+        if ($userObject->has_role('SysAdmin')) {
+          echo ' onclick="deleteEvent(' . $paper['eventID'] . ')"'; 
+        }
+        echo ' style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
         if ($paper['start_minute'] != 0) {
           echo ':' . $paper['start_minute'];
         }
@@ -225,20 +229,25 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $('#callout2').hide();
   }
 	
+<?php
+    if ($userObject->has_role('SysAdmin')) {    // Do not include add/delete functions if not SysAdmin.
+  ?>
   function newEvent() {
     notice = window.open("add_event.php","event","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
-  
+
   function deleteEvent(eventID) {
     notice = window.open("../delete/check_delete_event.php?eventID=" + eventID + "","event","width=420,height=170,left="+(screen.width/2-210)+",top="+(screen.height/2-85)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
   }
-    
+<?php
+    }
+?>
   $(document).ready(function() {
     
 	  $('#lab').change(function() {
@@ -600,7 +609,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
           }
           $papers = 0;
           
-					display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone);
+					display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject);
 
           if ($papers == 0) echo '&nbsp;';
           
@@ -622,7 +631,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 								echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
 							}
 							echo "</table>";              
-              display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone);
+              display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject);
             }
           }
           

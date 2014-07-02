@@ -22,8 +22,7 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/sidebar_menu.inc';
+require '../include/sysadmin_auth.inc';
 ?>
 
 <!DOCTYPE html>

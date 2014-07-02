@@ -718,7 +718,7 @@ class UserObject extends RogoStaticSingleton {
   }
 
   public function debug() {
-    if($this->impersonate === true) {
+    if ($this->impersonate === true) {
       echo $this->impersonatedfrom->title . ' ' . $this->impersonatedfrom->initials . ' ' . $this->impersonatedfrom->surname . ' (' . $this->impersonatedfrom->username . ') Impersonating: ';
     }
     echo $this->title . ' ' . $this->initials . ' ' . $this->surname . ' (' . $this->username . ') [' . implode(',', array_keys($this->roles)) . ']';

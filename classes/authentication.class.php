@@ -400,20 +400,19 @@ class Authentication {
               $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
             }
           } else {
-            //log not creating user and why
-            $username='UNKNOWN';
-            if(isset($this->form['std']->username)) {
-            $username=$this->form['std']->username;
+            // Log not creating user and why
+            $username = 'UNKNOWN';
+            if (isset($this->form['std']->username)) {
+              $username=$this->form['std']->username;
             }
-            $userid=0;
-            $errfile='Authentication';
-            $errline=0;
+            $userid = 0;
+            $errfile = 'Authentication';
+            $errline = 0;
             $errstr = 'Couldnt create user see variables for more info';
             $variables = array('lookup' => &$lookup, 'info' => &$info, 'authentication' => &$this);
             //log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null)
             log_error($userid, $username, 'Application Warning', $errstr, $errfile, $errline, '', null, $variables, null);
           }
-
 
         }
 

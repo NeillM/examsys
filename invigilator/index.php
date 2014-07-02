@@ -557,7 +557,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 } else {
   echo "<div style=\"background-color:white\">\n";
   emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
-  echo "<p><img src=\"../artwork/page_not_found.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
+  echo "<p><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
 
   echo "</div>\n";
 }

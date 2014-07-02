@@ -36,7 +36,7 @@ class guestlogin_auth extends outline_authentication {
   function register_callback_routines() {
 
     $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
-    $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+    //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
     return $callbackarray;
   }
@@ -47,7 +47,7 @@ class guestlogin_auth extends outline_authentication {
     $cfg_root_path = $configObject->get('cfg_root_path');
     if ($_SERVER['PHP_SELF'] == "$cfg_root_path/index.php") {
       $this->savetodebug('adding temp account notice to error screen');
-      $message2 = $string['ifstuckinvigilator'] . " <a href=\"guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a>";
+      $message2 = $string['ifstuckinvigilator'] . " <a href=\"$cfg_root_path/users/guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a>";
       $displayerrformobj->li[] = $message2;
     }
 

@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/sidebar_menu.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,7 +79,6 @@ echo draw_toprightmenu();
 </thead>
 <tbody>
 <?php
-$id = 1;
 $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried LIMIT 10000");
 $result->execute();
 $result->store_result();
@@ -89,8 +87,7 @@ while ($result->fetch()) {
   $tried_date = new DateTime();
   $tried_date->setTimestamp($tried);
 
-  echo "<tr class=\"l\" id=\"denied{$id}\"><td class=\"d\">" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td class=\"l\"><a href=\"../users/details.php?submit=Search&userID=$userID\">$title $initials $surname</a></td><td class=\"l\">/$page</td><td class=\"l\">$msg</td></tr>\n";
-  $id++;
+  echo "<tr class=\"l\"><td class=\"d\">" . $tried_date->format($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td><a href=\"../users/details.php?submit=Search&userID=$userID\">$title $initials $surname</a></td><td>$page</td><td>$msg</td></tr>\n";
 }
 ?>
 </tbody>

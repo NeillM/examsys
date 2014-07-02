@@ -22,7 +22,6 @@
 * @package
 */
 
-
 global $string;
 
 $notice = UserNotices::get_instance();
