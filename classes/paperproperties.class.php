@@ -153,7 +153,6 @@ class PaperProperties {
   *	@return array of PaperProperties
   */
   static function get_paper_properties_by_lab($lab_object, $db) {
-
     $sql = "SELECT
     			properties.property_id,
     			paper_title,

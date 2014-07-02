@@ -31,7 +31,7 @@ class LabFactory {
    */
   private $db;
 
-  public function __construct(mysqli $db) {
+  public function __construct($db) {
     $this->db = $db;
   }
 
@@ -40,14 +40,14 @@ class LabFactory {
    * @return Lab         - Lab object for specified IP address or false if not found
    */
   public function get_lab_based_on_client($address) {
-
     $sql = 'SELECT lab, name FROM client_identifiers, labs WHERE client_identifiers.lab = labs.id AND address = ?';
 
     $lab_results = $this->db->prepare($sql);
     $lab_results->bind_param('s', $address);
     $lab_results->execute();
+    $lab_results->store_result();
     $lab_results->bind_result($lab_id, $room_name);
-    if ($lab_results->num_rows < 0) {
+    if ($lab_results->num_rows < 1) {
       $lab_results->close();
 
       return false;

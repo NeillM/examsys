@@ -50,12 +50,14 @@ $current_address = NetworkUtils::get_client_address();
 $lab = new LabFactory($mysqli);
 
 $lab_object = $lab->get_lab_based_on_client($current_address);
-$lab_id = $lab_object->get_id();
-$room_name = $lab_object->get_name();
 
 $properties_list = array();
-
-$properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
+if ($lab_object !== false) {
+  $lab_id = $lab_object->get_id();
+  $room_name = $lab_object->get_name();
+  
+  $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
+}
 ?>
 <!DOCTYPE html>
 <html>

@@ -56,13 +56,13 @@ fieldset {
   background-color: #FFE7A2;
 }
 .menu-time {
-  background: #fff url('../artwork/clock_16.png') no-repeat 6px 4px;
+  background: url('../artwork/clock_16.png') no-repeat 6px 4px;
 }
 .menu-note {
-  background: #fff url('../artwork/notes_icon.gif') no-repeat 6px 4px;
+  background: url('../artwork/notes_icon.gif') no-repeat 6px 4px;
 }
 .menu-toilet {
-  background: #fff url('../artwork/toilet_16.png') no-repeat 6px 4px;  
+  background: url('../artwork/wc.png') no-repeat 6px 4px;  
 }
 .tight {
   margin: 4px 0 2px 0;
