@@ -160,7 +160,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     echo "<p style=\"margin-left:90px; color:#C00000\">" . $string['note1'] . " <img src=\"{$configObject->get('cfg_root_path')}/artwork/small_link.png\" width=\"11\" height=\"11\" /> <a href=\"../index.php\"><strong>" . $string['staffmangscreens'] . "</strong></a>?</p>\n";
   }
 
-  echo "<hr noshade=\"noshade\" style=\"margin-left:90px; border:0px; height:1px; color:#C0C0C0; background-color:#C0C0C0; width:500px\" align=\"left\" />\n<p style=\"margin-left:90px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
+  echo "<div class=\"hr_line\"></div>\n<p style=\"margin-left:90px\">" . $string['mostLikely'] . "</p>\n<ul style=\"margin-left:80px\">\n";
 
   $current_address = NetworkUtils::get_client_address();
   $ip_info = $mysqli->prepare("SELECT name, room_no FROM (labs, client_identifiers) WHERE labs.id = client_identifiers.lab AND address = ?");

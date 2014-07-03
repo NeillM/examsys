@@ -69,6 +69,13 @@ hr.head-line {
 	width: 100%
 }
 
+.hr_line {
+  border-bottom: 1px solid #C0C0C0;
+  margin-left: 90px;
+  width: 500px;
+  display: block;
+}
+
 .subtext {
 	color: #808080;
 	line-height: 18px;
