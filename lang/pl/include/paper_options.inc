@@ -130,7 +130,7 @@ $string['incabsentcandidates'] = 'uwzgl. kandydatów nieobecnych';
 $string['studentsonly'] = 'tylko próby studenckie'; 
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
 $string['anyyear'] = 'Każdy rok';
-$string['tooltip_studentattempts'] = 'Odhacz aby pokazać próby pracowników w zestawieniu klasy.';
+$string['tooltip_studentattempts'] = 'Odhacz aby pokazać próby pracowników i studentów w zestawieniu klasy.';
 $string['tooltip_daterange'] = 'Użyj dat do kontroli okna raporów.';
 
 $string['copyname'] = 'Nazwa kopii';

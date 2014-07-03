@@ -127,7 +127,7 @@ $string['incabsentcandidates'] = 'vč. chybějících kandidátů';
 $string['studentsonly'] = 'pouze pokusy studentů';
 $string['completedatasets'] = 'Zobrazit pouze kompletní datové sady ';
 $string['anyyear'] = 'Libovolný rok';
-$string['tooltip_studentattempts'] = 'Uncheck to display staff attempts in Class Totals.';
+$string['tooltip_studentattempts'] = 'Uncheck to display staff and student attempts in Class Totals.';
 $string['tooltip_daterange'] = 'Use dates to control the reporting window.';
 
 $string['copyname'] = 'Kopírovat jméno:';
