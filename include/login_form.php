@@ -79,14 +79,14 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
 <?php
 	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
 ?>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
 <?php
   }
 ?>
 <form method="post" id="theform">
     <div class="mainbox">
 
-        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
+        <img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
         <div class="logo_lrg_txt">Rog&#333;</div>
         <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
@@ -190,6 +190,8 @@ HTML;
         }
       }
       ?>
+        
+        <div class="versionno">Rog&#333; <?php echo $this->configObj->get('rogo_version') ?></div>
 
     </div>
 </form>
