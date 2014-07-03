@@ -55,8 +55,6 @@ if (isset($_GET['default'])) {
     body {background-color:#F1F5FB; font-size:80%}
     .swatch {display:inline-block; width:40px; height:40px; border: 6px solid #F1F5FB}
     .dialog_header {font-size:200%; border-bottom: 1px solid #CCD9EA; background-image: url('../artwork/calendar_icon.png'); background-repeat:no-repeat; background-position: 10px 3px; padding-left:66px; line-height:56px; height:56px}
-    select {margin: 0}
-    input {margin: 0}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
@@ -123,7 +121,7 @@ if (isset($_POST['submit'])) {
     </tr>
     <tr>
       <td><?php echo $string['date'] ?></td>
-      <td><?php echo date_utils::timedate_select('f', $default_date); ?></td>
+      <td><?php echo date_utils::timedate_select('f', $default_date, false, date('Y'), date('Y')+2, $string) ?></td>
     </tr>
     <tr>
       <td><?php echo $string['duration'] ?></td>

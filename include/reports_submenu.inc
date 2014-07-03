@@ -100,6 +100,11 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 <tr>
 
 <?php
+  $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+  $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
+
+  $date_array = getdate();
+  
   $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
   $now_time = date('U', strtotime($now_data));
   if ($properties->get_start_date() > $now_time) {
@@ -129,30 +134,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     $end_day = date('d');
     $end_month = date('m');
   }
-
-  $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-  $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
-
-  $date_array = getdate();
-
-  echo "<tr><td>" . $string['dates'] . "</td><td>";
-  // Start Day
-  echo "<select name=\"start_day\" id=\"start_day\">\n";
-  for ($i=1; $i<=31; $i++) {
-    echo "<option value=\"";
-    if ($i < 10) {
-      echo "0";
-    }
-    if ($i == intval($start_day)) {
-      echo "$i\" selected>";
-    } else {
-      echo "$i\">";
-    }   
-    if ($i < 10) echo '0';
-    echo "$i</option>\n";
-  }
-  echo "</select>";
-  // Start Month
+  
   if ($start_year > $date_array['year']) {
     $start_year = $date_array['year'];
     $start_month = $date_array['mon'];
@@ -170,61 +152,38 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     $start_min = $date_array['minutes'];
   }
   
-  echo "<select name=\"start_month\" id=\"start_month\">\n";
-
-  for ($i=0; $i<12; $i++) {
-    if ($i == (intval($start_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    }
-  }
-  echo "</select>";
-  // Start Year
-  echo "<select name=\"start_year\" id=\"start_year\">\n";
-  for ($i=2001; $i<=($date_array['year'] + 1); $i++) {
-    if ($i == intval($start_year)) {
-      echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-      echo "<option value=\"$i\">$i</option>\n";
-    }
-  }
-  echo "</select>";
-  // Start Hour
-  echo "<select name=\"start_hour\" id=\"start_hour\">\n";
-	for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
-		if ($tmp_hour < 10) {
-			$display_hour = '0' . $tmp_hour;
-		} else {
-			$display_hour = $tmp_hour;
-		}
-    if ($start_hour == $tmp_hour) {
-      echo "<option value=\"" . $display_hour . "\" selected>" . $display_hour . "</option>\n";
-    } else {
-      echo "<option value=\"" . $display_hour . "\">" . $display_hour . "</option>\n";
-    }
-  }
-  echo "</select>";
-  // Start Minute
-  echo "<select name=\"start_minute\" id=\"start_minute\">\n";
-	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
-		if ($tmp_minute < 10) {
-			$display_minute = '0' . $tmp_minute;
-		} else {
-			$display_minute = $tmp_minute;
-		}
-    if ($start_minute == $tmp_minute) {
-      echo "<option value=\"" . $display_minute . "\" selected>" . $display_minute . "</option>\n";
-    } else {
-      echo "<option value=\"" . $display_minute . "\">" . $display_minute . "</option>\n";
-    }
-  }
-  echo "</select>\n";
-
+  echo "<tr><td>" . $string['dates'] . "</td><td>";
+  
+  $default_start = $start_year . $start_month . $start_day . $start_hour . $start_minute . '00';
+  $start_year = 2001;
+  $end_year = ($date_array['year'] + 1);
+  echo date_utils::timedate_select('start_', date($default_start), true, $start_year, $end_year, $string);
+  
   // ---------------------------------------------------------------------------------
-  echo " ".$string['to']." ";
+  echo ' ' . $string['to'] . ' ';
   // End Day
+  if ($end_year > $date_array['year']) {
+    $end_year = $date_array['year'];
+    $end_month = $date_array['mon'];
+    $end_day = $date_array['mday'];
+  } elseif ($end_month > $date_array['mon'] and $end_year == $date_array['year']) {
+    $end_month = $date_array['mon'];
+    $end_day = $date_array['mday'];
+  } elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
+    $end_day = $date_array['mday'];
+  }
+  if ($end_month < 10) $end_month = '0' . $end_month;
+  if ($end_day < 10)   $end_day   = '0' . $end_day;
+  
+  $default_end = $end_year . $end_month . $end_day . $end_hour . $end_minute . '00';
+  $start_year = 2001;
+  $end_year = ($date_array['year'] + 1);
+  echo date_utils::timedate_select('end_', date($default_end), true, $start_year, $end_year, $string);
+  
+  
+  /*
   echo "<select name=\"end_day\" id=\"end_day\">\n";
+  
   for ($i=1; $i<=31; $i++) {
     echo "<option value=\"";
     if ($i < 10) {
@@ -299,7 +258,9 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
       echo "<option value=\"$display_minute\">$display_minute</option>\n";
     }
   }
-  echo "</select>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
+  echo "</select>";
+*/
+  echo "&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
   
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
   echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
@@ -312,6 +273,8 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
   $result->close();
   echo "</select></td></tr>\n";
+
+
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   

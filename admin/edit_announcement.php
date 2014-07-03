@@ -137,31 +137,37 @@ for ($i=1; $i<=7; $i++) {
     echo "<img class=\"icon\" id=\"icon$i\" src=\"../artwork/" . $icons[$i] . "\" />";
   }
 }
+
+if (substr($startdate, 0, 4) < date('Y')) {
+  $start_year = substr($startdate, 0, 4);
+} else {
+  $start_year = date('Y');
+}
 ?>
 </td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Title']; ?></td><td><input type="text" name="title" size="60" maxlength="255" value="<?php echo $news_title; ?>" required /></td>
+<td class="field"><?php echo $string['Title'] ?></td><td><input type="text" name="title" size="60" maxlength="255" value="<?php echo $news_title ?>" required /></td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Available from']; ?></td><td><?php echo date_utils::timedate_select('f', $startdate); ?></td>
+<td class="field"><?php echo $string['Available from'] ?></td><td><?php echo date_utils::timedate_select('f', $startdate, false, $start_year, date('Y')+2, $string) ?></td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Available to']; ?></td><td><?php echo date_utils::timedate_select('t', $enddate); ?></td>
+<td class="field"><?php echo $string['Available to'] ?></td><td><?php echo date_utils::timedate_select('t', $enddate, false, $start_year, date('Y')+2, $string) ?></td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Staff Message']; ?></td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $staff_msg; ?></textarea></td>
+<td class="field"><?php echo $string['Staff Message'] ?></td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $staff_msg ?></textarea></td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Student Message']; ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $student_msg; ?></textarea></td>
+<td class="field"><?php echo $string['Student Message'] ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $student_msg ?></textarea></td>
 </tr>
 <tr>
-<td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="save" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td>
+<td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="save" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td>
 </tr>
 </table>
 
 <input type="hidden" id="icon_type" name="icon_type" value="icon<?php echo $news_icon ?>" />
-<input type="hidden" name="announcementid" value="<?php echo $_GET['announcementid']; ?>" />
+<input type="hidden" name="announcementid" value="<?php echo $_GET['announcementid'] ?>" />
 </form>
 </div>
   

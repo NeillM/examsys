@@ -129,11 +129,11 @@ SCRIPT;
   </tr>
   <tr>
     <td class="field"><?php echo $string['Available from']; ?></td>
-    <td><?php echo date_utils::timedate_select('f', date('YmdH00')); ?></td>
+    <td><?php echo date_utils::timedate_select('f', date('YmdH00'), false, date('Y'), date('Y')+2, $string); ?></td>
   </tr>
   <tr>
     <td class="field"><?php echo $string['Available to']; ?></td>
-    <td><?php echo date_utils::timedate_select('t', date('YmdH00')); ?></td>
+    <td><?php echo date_utils::timedate_select('t', date('YmdH00'), false, date('Y'), date('Y')+2, $string); ?></td>
   </tr>
   <tr>
     <td class="field"><?php echo $string['Staff Message']; ?></td>

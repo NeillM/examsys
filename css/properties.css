@@ -59,11 +59,30 @@ extarea, input[type=text], select, textarea, input[type=password] {
 	height: 49px;
 	font-size: 110%;
 	padding-left: 16px;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-right: 0;
 }
 .tabtitle img {
 	width: 34px;
 	height: 34px;
+	padding-left: 10px;
 	padding-right: 10px;
+}
+.tabsection {
+  width: 100%;
+  font-size: 90%;
+  height: 590px;
+  border-spacing: 0;
+}
+.tabsection td {
+  padding: 0;
+}
+.cellpad2 td {
+  padding: 2px;
+}
+.cellpad6 td {
+  padding: 6px;
 }
 .cancel {
   margin-right: 0;

@@ -1235,11 +1235,11 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <td style="background-color:white; border:1px solid #828790; vertical-align:top">
 
-<table id="general" style="height:590px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>" cellpadding="0" cellspacing="0" border="0">
+<table id="general" class="tabsection" style="<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo 'display:none'; ?>">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/general_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['generalheading']; ?></td></tr>
 <td style="text-align:left; vertical-align:top" colspan="2">
    <?php
-     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+     echo "<table class=\"cellpad2\" width=\"100%\">\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" class=\"headbar\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1534,17 +1534,17 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 </tr>
 </table>
 
-<table id="prologue" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="prologue" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
 <tr><td><textarea class="mceEditor" id="paper_prologue" name="paper_prologue" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
-<table id="postscript" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="postscript" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
 <tr><td><textarea class="mceEditor" id="paper_postscript" name="paper_postscript" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
-<table id="security" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="security" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/security_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['securityheading']; ?></td></tr>
 <tr>
 <td style="text-align:center; vertical-align:top">
@@ -1891,18 +1891,18 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
   </td></tr>
 </table>
 
-<table id="rubric" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
-  <tr><td class="tabtitle" colspan="2"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
-	<tr><td><textarea class="mceEditor" id="rubric_text" name="rubric_text" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES); ?></textarea></td></tr>
+<table id="rubric" class="tabsection" style="display: none">
+  <tr><td class="tabtitle"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
+	<tr><td class="sectionmain"><textarea class="mceEditor" id="rubric_text" name="rubric_text" style="width:100%; height:537px"><?php echo htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES); ?></textarea></td></tr>
 </table>
 
-<table id="feedback" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="feedback" class="tabsection" style="display: none">
   <tr><td class="tabtitle" colspan="2"><img src="../artwork/feedback_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['feedbackheading']; ?></td></tr>
 
   <?php
     echo "<tr><td colspan=\"2\" valign=\"top\">";
 
-    echo "<table cellspacing=\"0\" cellpadding=\"6\" border=\"0\" style=\"margin:15px\">\n";
+    echo "<table class=\"cellpad6\" style=\"margin:15px\">\n";
 
     $feedback_reports = array('objectives'=>'', 'questions'=>'', 'cohort_performance'=>'', 'external_examiner'=>'');
 
@@ -2007,7 +2007,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     ?>
 </table>
 
-<table id="reviewers" style="font-size:90%; width:100%; height:460px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="reviewers" class="tabsection" style="display: none">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/reviewers_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['reviewersheading']; ?></td></tr>
 <tr>
 <td align="center" colspan="2">
@@ -2239,12 +2239,12 @@ SQL;
 </tr>
 </table>
 
-<table id="reference" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="reference" class="tabsection" style="display: none">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading'] ?></td></tr>
 <tr><td style="vertical-align:top"><div id="reference_list" style="padding: 5px"></div></td></tr>
 </table>
 
-<table id="changes" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
+<table id="changes" class="tabsection" style="display: none">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/version_icon.png" alt="Icon" align="middle" /><?php echo $string['changesheading'] ?></td></tr>
 <tr><td style="vertical-align:bottom"><div id="change_list" style="height:543px; overflow-y:scroll">
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
