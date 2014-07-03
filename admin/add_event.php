@@ -24,6 +24,22 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../classes/dateutils.class.php';
+
+if (isset($_GET['default'])) {
+  $parts = explode('_', substr($_GET['default'], 1));
+  $day = $parts[0];
+  if ($day < 10) {
+    $day = '0' . $day;
+  }
+  $month = $parts[1];
+  if ($month < 10) {
+    $month = '0' . $month;
+  }
+  $year = $parts[2];
+  $default_date = date($year . $month . $day . "H00");
+} else {
+  $default_date = date('YmdH00');
+}
 ?>
 <!DOCTYPE html>
   <html>
@@ -39,9 +55,14 @@ require_once '../classes/dateutils.class.php';
     body {background-color:#F1F5FB; font-size:80%}
     .swatch {display:inline-block; width:40px; height:40px; border: 6px solid #F1F5FB}
     .dialog_header {font-size:200%; border-bottom: 1px solid #CCD9EA; background-image: url('../artwork/calendar_icon.png'); background-repeat:no-repeat; background-position: 10px 3px; padding-left:66px; line-height:56px; height:56px}
+    select {margin: 0}
+    input {margin: 0}
   </style>
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
 <?php
 
 if (isset($_POST['submit'])) {
@@ -94,15 +115,15 @@ if (isset($_POST['submit'])) {
   <table style="width:99%">
     <tr>
       <td><?php echo $string['title'] ?></td>
-      <td><input type="text" style="width:100%" name="title" required /></td>
+      <td><input type="text" style="width:99.5%" name="title" required /></td>
     </tr>
     <tr>
       <td><?php echo $string['message'] ?></td>
-      <td><textarea name="message" rows="6" style="width:100%"></textarea></td>
+      <td><textarea class="mceEditor" id="message" name="message" rows="6" style="width:100%; height:200px"></textarea></td>
     </tr>
     <tr>
       <td><?php echo $string['date'] ?></td>
-      <td><?php echo date_utils::timedate_select('f', date('YmdH00')); ?></td>
+      <td><?php echo date_utils::timedate_select('f', $default_date); ?></td>
     </tr>
     <tr>
       <td><?php echo $string['duration'] ?></td>

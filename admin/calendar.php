@@ -232,8 +232,8 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <?php
     if ($userObject->has_role('SysAdmin')) {    // Do not include add/delete functions if not SysAdmin.
   ?>
-  function newEvent() {
-    notice = window.open("add_event.php","event","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+  function newEvent(id) {
+    notice = window.open("add_event.php?default=" + id + "","event","width=800,height=500,left="+(screen.width/2-400)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
@@ -261,8 +261,8 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   <?php
     if ($userObject->has_role('SysAdmin')) {
   ?>
-    $(document).dblclick(function() {
-      newEvent();
+    $('.day').dblclick(function() {
+      newEvent(this.id);
     });
   <?php
     }
@@ -600,12 +600,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
         if (($day_no - $subtract) < 1 or $day_no < $start_day) {    // Day on grid before start of month.
           echo '<td class="daynomonth">&nbsp</td>';
         } elseif (($day_no - $subtract) <= $days_in_month) {
+          $dayid = 'd' . ($day_no - $subtract) . '_' . $current_month . '_' .$current_year;
           if (($day_no - $subtract) == date("j") and $current_month == date("n") and $current_year == date("Y")) {  // Current day
-            echo '<td class="daycur"';
-            echo "\">";
+            echo '<td class="daycur" id=\"$dayid\">';
           } else {
-            echo '<td class="day"';
-            echo "\">";
+            echo "<td class=\"day\" id=\"$dayid\">";
           }
           $papers = 0;
           
