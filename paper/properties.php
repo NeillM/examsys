@@ -1233,7 +1233,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 </td>
 
-<td style="background-color:white; border:1px solid #828790" valign="top">
+<td style="background-color:white; border:1px solid #828790; vertical-align:top">
 
 <table id="general" style="height:590px; width:100%; font-size:90%<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') echo ';display:none'; ?>" cellpadding="0" cellspacing="0" border="0">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/general_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['generalheading']; ?></td></tr>
@@ -2241,7 +2241,7 @@ SQL;
 
 <table id="reference" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading'] ?></td></tr>
-<tr><td style="vertical-align:top"><div id="reference_list"></div></td></tr>
+<tr><td style="vertical-align:top"><div id="reference_list" style="padding: 5px"></div></td></tr>
 </table>
 
 <table id="changes" style="width:100%; font-size:90%; height:590px; display:none" border="0" cellpadding="0" cellspacing="0">
