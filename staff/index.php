@@ -57,57 +57,30 @@ require_once '../include/staff_auth.inc';
   <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   
   <style>
-    h1 {font-size:160%}
+    body {background-color: #F0F0F0; line-height: 150%}
+    h1 {font-size: 200%}
+    a {font-family: 'Courier New'; font-weight: bold}
   </style>
-
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="../js/sidebar.js" type="text/javascript"></script>
 </head>
 
 <body>
 
-<?php
-  require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
-?>
+<blockquote>
+  <h1>Old Page</h1>
 
-<div id="content" class="content">
+  <p>Please update your bookmarks accordingly:</p>
 
-<table cellpadding="0" cellspacing="0" border="0" class="header">
-  <tr>
-    <th style="padding-left:16px; padding-top:5px">
-
-    <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
-    <div class="logo_lrg_txt">Rog&#333;</div>
-    <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
-
-    </th>
-    <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-  </tr>
-</table>
-<br />
-  <blockquote>
-    <h1>Old Page</h1>
+  <ul>
+    <?php
+      $staff_homepage = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/';
+      $summative_homepage = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/paper/';
+    ?>
+    <li>New staff homepage: <a href="<?php echo $staff_homepage ?>"><?php echo $staff_homepage ?></a></li>
+    <li>Summative exam homepage (for students): <a href="<?php echo $summative_homepage ?>"><?php echo $summative_homepage ?></a></li>
+  </ul>
+</blockquote>
   
-    <p>Please update your bookmarks accordingly:</p>
-
-    <ul>
-      <?php
-        $staff_homepage = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/';
-        $summative_homepage = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $cfg_root_path  . '/paper/';
-      ?>
-      <li>New staff homepage: <a href="<?php echo $staff_homepage ?>"><?php echo $staff_homepage ?></a></li>
-      <li>Summative exam homepage: <a href="<?php echo $summative_homepage ?>"><?php echo $summative_homepage ?></a></li>
-    </ul>
-  </blockquote>
-</div>
 </body>
 </html>
