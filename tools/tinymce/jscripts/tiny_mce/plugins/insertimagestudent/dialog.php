@@ -69,7 +69,7 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
-        <script type="text/javascript" language="javascript">
+        <script>
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
@@ -98,7 +98,7 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
 
 function showForm($error) {
 ?>
-<script type="text/javascript" language="javascript">
+<script>
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
     window.resizeTo(500, 350);
@@ -106,7 +106,7 @@ function showForm($error) {
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td class="dialog_header" style="width:56px"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" border="0" alt="Image" /></td><td class="dialog_header">Add New Image</td></tr>
+<tr><td class="dialog_header" style="width:56px; border-bottom: 1px solid #CCD9EA"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" alt="Image" /></td><td class="dialog_header" style="border-bottom: 1px solid #CCD9EA">Add New Image</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td class="note">Browse for the image file you wish to add (GIF, PNG or JPEG).</td></tr>
 <tr><td class="field">File</td><td>

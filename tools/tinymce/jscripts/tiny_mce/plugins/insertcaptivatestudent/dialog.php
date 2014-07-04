@@ -26,7 +26,7 @@ require  '../../../../../../include/staff_auth.inc';
 $path = $cfg_web_root . 'help/staff/images/';
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -65,7 +65,7 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
-        <script type="text/javascript" language="javascript">
+        <script>
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
@@ -94,7 +94,7 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
 
 function showForm($error) {
 ?>
-<script type="text/javascript" language="javascript">
+<script>
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
     window.resizeTo(500,300);
@@ -102,7 +102,7 @@ function showForm($error) {
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td style="background-color:white; width:56px"><img src="../../../../../../artwork/folder_captivate.png" width="48" height="48" border="0" alt="Image" /></td><td style="color:#5582D2; width:90%; background-color:white; text-align:left; font-size:140%; font-weight:bold">Add Captivate Tutorial</td></tr>
+<tr><td class="dialog_header" style="width:56px; border-bottom: 1px solid #CCD9EA"><img src="../../../../../../artwork/folder_captivate.png" width="48" height="48" alt="Image" /></td><td class="dialog_header" style="border-bottom: 1px solid #CCD9EA">Add Captivate Tutorial</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td class="note">Browse for the flash file you wish to add (SWF).</td></tr>
 <tr><td class="field">Title</td><td><input name="title" type="text" value="" size="40" style="width:95%" /></td></tr>
@@ -111,7 +111,7 @@ function showForm($error) {
     <input type="file" name="FileName" size="50" /><br />
 </td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" style="width:110px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:110px" /></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" class="ok" /><input type="button" name="cancel" value="Cancel" onclick="window.close();" class="cancel" /></td></tr>
 </table>
 </form>
 

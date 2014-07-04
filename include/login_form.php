@@ -30,7 +30,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $this->configObj->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333; - <?php echo $string['signin']; ?></title>
+  <title>Rog&#333; - <?php echo $string['signin'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/rogo_logo.css" />
@@ -53,7 +53,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
 	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
 ?>
 			if (!isCanvasSupported()){
-			  $('#html5warn').show();
+			  $('.html5warn').fadeIn();
 			}
 <?php
 	}
@@ -79,7 +79,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
 <?php
 	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
 ?>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
+<div class="html5warn" style="background-image:url('<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/html5_32.png')"><?php echo $string['html5warn'] ?></div>
 <?php
   }
 ?>
