@@ -999,14 +999,14 @@ function check_latex_random($q_ids, $mysqli) {
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') echo '<span class="q_warning">' . $temp_array[$x]['warnings'] . '</span>';
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
 			if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
 				echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
 			}
       if (isset($exam_announcements[$temp_array[$x]['q_id']])) echo ' <img src="../artwork/comment_14_11.png" width="14" height="11" alt="Exam Clarification" />';
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') echo '<div class="q_warning">' . $temp_array[$x]['warnings'] . '</div>';
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {

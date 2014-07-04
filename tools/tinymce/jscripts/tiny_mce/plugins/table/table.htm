@@ -1,6 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<title>{#table_dlg.title}</title>
 	<script type="text/javascript" src="../../tiny_mce_popup.js"></script>
 	<script type="text/javascript" src="../../utils/mctabs.js"></script>
@@ -8,7 +9,11 @@
 	<script type="text/javascript" src="../../utils/validate.js"></script>
 	<script type="text/javascript" src="../../utils/editable_selects.js"></script>
 	<script type="text/javascript" src="js/table.js"></script>
-	<link href="css/table.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="../../../../../../css/body.css" />
+	<link rel="stylesheet" type="text/css" href="css/table.css" />
+  <style>
+    html, body {background-color: white}
+  </style>
 </head>
 <body id="table" style="display: none" role="application" aria-labelledby="app_title">
 	<span style="display:none;" id="app_title">{#table_dlg.title}</span>
@@ -180,8 +185,8 @@
 		</div>
 
 		<div class="mceActionPanel">
-			<input type="submit" id="insert" name="insert" value="{#insert}" />
-			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" />
+			<input type="submit" id="insert" name="insert" value="{#insert}" class="ok" />
+			<input type="button" id="cancel" name="cancel" value="{#cancel}" onclick="tinyMCEPopup.close();" class="cancel" />
 		</div>
 	</form>
 </body>

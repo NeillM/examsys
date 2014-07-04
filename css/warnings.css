@@ -38,3 +38,14 @@
   vertical-align: middle;
   display: block;
 }
+
+.q_warning {
+  color: #C00000;
+  background-image: url('../artwork/small_yellow_warning_icon.gif');
+  background-position: 4px 2px;
+  background-repeat: no-repeat;
+  margin-left: 6px !important;
+  padding: 2px 4px 2px 24px !important;
+  display: inline;
+  background-color: #FFE3E3;
+}
