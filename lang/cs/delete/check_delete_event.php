@@ -14,11 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['finalisemarks'] = 'Finalise Marks';
-$string['noanswer'] = 'No answer provided';
-$string['first'] = '1st';
-$string['second'] = '2nd';
-$string['override'] = 'Override';
-$string['unmarked'] = 'unmarked';
-$string['question'] = 'Question';
+require '../lang/' . $language . '/delete/delete.inc';
+
+$string['msg'] = 'Are you sure you wish to delete this event?';
 ?>

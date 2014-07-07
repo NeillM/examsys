@@ -1,19 +1,4 @@
-﻿<?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
+<?php          //cz
 require '../lang/' . $language . '/include/blooms.inc';
 require '../lang/' . $language . '/include/status.inc';
 require '../lang/' . $language . '/include/question_types.inc';
@@ -29,7 +14,7 @@ $string['alltypes'] = '(všechny typy)';
 $string['inclockedquestions'] = 'Zahrnout Uzamčené úlohy';
 $string['questionsections'] = 'Sekce úloh';
 $string['whenmodified'] = 'Datum změny';
-$string['metadata'] = 'Metadata'; //cognate
+$string['metadata'] = 'Metadata';
 $string['module'] = 'Modul:';
 $string['anymodule'] = '(libovolný modul)';
 $string['owner'] = 'Vlastník';
@@ -42,7 +27,7 @@ $string['search'] = 'Hledat';
 $string['editquestion'] = 'Upravit úlohu';
 $string['information'] = 'Informace';
 $string['copyontopaperx'] = 'Kopírovat do dokumentu X...';
-$string['linktopaper'] = 'Odkaz na dokument';
+$string['linktopaper'] = 'Odkaz do dokumentu';
 $string['deletequestion'] = 'Odstranit úlohu';
 $string['noquestionleadin'] = 'Varování: v hlavičce není text úlohy!';
 $string['currentquestiontasks'] = 'Aktuální úkoly banky úloh';
@@ -64,4 +49,5 @@ $string['notickedfields'] = 'Nezaškrtli jste žádné pole';
 $string['entersearchterm'] = 'Zadejte, prosím, hledaný výraz nebo frázi.';
 $string['notickedstatus'] = 'Nezaškrtli jste žádný status';
 $string['quickview'] = 'Náhled';
+
 ?>

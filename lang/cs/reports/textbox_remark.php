@@ -15,5 +15,5 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['secondmark'] = 'Druhotné hodnocení';
-$string['secondmarkselection'] = 'Výbìr druhotného hodnocení';
+$string['secondmarkselection'] = 'Výběr druhotného hodnocení';
 ?>

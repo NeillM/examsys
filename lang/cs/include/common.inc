@@ -18,9 +18,7 @@ $string['helpsupport'] = 'Nápověda a podpora';
 $string['aboutrogo'] = 'O programu Rog&#333; %s';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Stránka nebyla nalezena';
-$string['signinmsg'] = '<span style="color:#1f497d;font-weight:bold;">Vítejte v systému elektronického testování</span><br />
-	V případě zájmu o vytvoření účtu kontaktujte <a href="mailto:ovt@lf1.cuni.cz">ovt@lf1.cuni.cz</a>.<hr /><br />
-	Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
+$string['signinmsg'] = 'Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
 $string['username'] = 'Uživatelské jméno';
 $string['password'] = 'Heslo';
 $string['signin'] = 'Přihlásit';
@@ -98,6 +96,7 @@ $string['loggedinas'] = 'Logged in as';
 $configObject = Config::get_instance();
 $cfg_web_root = $configObject->get('cfg_web_root');
 $language = LangUtils::getLang($cfg_web_root);
+
 require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
 
 $string['register'] = 'Registrovat jako Zaměstnance';

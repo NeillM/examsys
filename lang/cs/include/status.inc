@@ -18,8 +18,8 @@ $string['status'] = 'Status'; //cognate
 $string['anystatus'] = '(libovolný status)';
 $string['anynonretiredstatus'] = '(libovolný platný status)';
 $string['normal'] = 'Normální';
-$string['retired'] = 'Neplatný';
-$string['incomplete'] = 'Nedokončeno';
-$string['experimental'] = 'Pokusný';
+$string['retired'] = 'Neplatná';
+$string['incomplete'] = 'Nedokončená';
+$string['experimental'] = 'Pokusná';
 $string['beta'] = 'Beta '; //cognate
 ?>

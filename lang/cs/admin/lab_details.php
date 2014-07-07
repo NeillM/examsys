@@ -30,7 +30,7 @@ $string['low'] = 'Pomalé';
 $string['high'] = 'Rychlé';
 $string['timetabling'] = 'Rozvrh';
 $string['itsupport'] = 'IT Podpora';
-$string['plagarism'] = 'Anti plagiátorská metoda';
+$string['plagarism'] = 'Anti plagiátorská nóta';
 $string['ipaddresses'] = 'IP Adresy';
 $string['edit'] = 'Upravit';
 ?>

@@ -104,8 +104,8 @@ $string['decile'] = 'Decil';
 $string['hostnames'] = 'Dočasné účty';
 $string['deciles'] = 'Decily';
 $string['quartiles'] = "Kvartily";
-$string['marking'] = 'Marking...';
-$string['markingcalcquestions'] = 'Marking Calculation Questions';
+$string['markingcalcquestions'] = 'Marking Calculation Questions';	// translate
+$string['marking'] = 'Marking...';	// translate
 
 $string['viewstudentnote'] = 'View student note...';
 $string['viewaccessibility'] = 'View accessibility settings...';

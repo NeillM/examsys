@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['frequencyanalysis'] = 'Frekvenční analýza';
+$string['frequencyanalysis'] = 'OSCE: Frekvenční analýza';
 $string['studentsonly'] = 'students only';
 ?>

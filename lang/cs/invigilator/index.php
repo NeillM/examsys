@@ -20,47 +20,49 @@ $string['unknownlab'] = ' - neznámá učebna';
 $string['nopapersfound'] = 'Nebyly nalezeny žádné dokumenty!';
 $string['nopapersfoundmsg'] = 'K této učebně nelze, v doučasnosti, dohledat žádné dokumenty.';
 $string['emergencynumbers'] = 'Čísla na pohotovost';
-$string['title'] = 'Titul';
-$string['surname'] = 'Příjmení';
-$string['forenames'] = 'Jména';
+$string['title'] = 'Title';
+$string['surname'] = 'Surname';
+$string['forenames'] = 'Forenames';
 $string['extension_mins'] = 'Prodloužení (minuty)';
 $string['endtime'] = 'Čas ukončení';
 $string['extendtime'] = 'Prodloužení';
 $string['extendtimeby'] = 'Prodloužení času o';
 $string['addnote']        = 'Přidat poznámku';
-$string['currenttime']    = 'Aktuální čas';
+$string['toiletbreak'] = 'Toilet Break';
+$string['currenttime']    = 'Aktuální čas:';
 $string['start'] = 'Start:';
 $string['end']       = 'Konec';
 $string['start_but'] = 'Start'; 
 $string['endat_but']  = 'Konec v';
 $string['session_end'] = 'Konec relace';
-$string['duration']  = 'Trvání:';
-$string['mins']      = 'minut';
+$string['duration'] = 'Trvání:';
+$string['mins'] = 'minut';
 $string['hour']      = 'hour';
 $string['hours']     = 'hours';
 $string['papernote'] = 'Poznámky dokumentu';
 $string['extratime'] = 'Prodloužení';
 $string['preexam'] = 'Před zkouškou';
 $string['preexamlist'] = '<ol>
-    <li>Umístěte přihlašovací pokyny ke každému počítači, který bude obsazen. </li>
-    <li>Ke každému počítači, který bude obsazen, položte prázdný papír. </li>
-    <li>Zkontrolujte, zda jsou všichni studenti správně přihlášeni.</li>
-    <li>Každému, kdo není schopen se přihlásit, doporučte využít \'Dočasný\' účet.  </li>
-    <li><strong>Poznámka:</strong> Nezačínejte před plánovaným časem zahájení!</li>
+    <li>Place log in instructions at each workstation</li>
+    <li>Place blank paper each workstation</li>
+    <li>Check all students have logged in correctly</li>
+    <li>Use \'Guest Login\' accounts for anyone not able to log in</li>
+    <li><strong>NOTE:</strong> Do not start before scheduled start time</li>
     </ol>';
 $string['midexam'] = 'V průběhu zkoušky';
 $string['midexamlist'] = '<ol>
-    <li>Zaznamenejte drobné problémy studentů\' do souboru (<a href="%shelp.html" target="_blank">příklady problémů</a>) . </li>
-    <li>Zaznamenejte problémy s obsahem dokumentů/úloh. </li>
-    <li>Při větších problémech volejte na níže uvedené číslo. </li>
+    <li>For emergency support call one of the numbers show on the paper tabs</li>
+    <li>Record IT/personal problems against relevant students (click their name)</li>
+    <li>Record toilet breaks against relevant students (click their name)</li>
+    <li>Record general paper/question problems using \'Add Paper Note...\' button.</li>
     </ol>';
 $string['postexam'] = 'Po zkoušce';
 $string['postexamlist'] = '<ol>
-    <li>"Tímto zkouška končí. Prosím, přejděte na poslední okno a klikněte na tlačítko \'Konec\'."</li>
-    <li>"Klikněte na \'Zavřít okno\', poté stiskněte CTRL, ALT, DELETE; tímto se odhlásíte z pracovního počítače."</li>
-    <li>Posbírejte všechny papíry s přihlašovacími pokyny k opětovnému použití.</li>
-    <li>Prázdné papíry posbírejte a odložte.</li>
-    <li>Ujistěte se, že <strong>všechny</strong> využité počítače jsou odhlášené. </li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "That is the end of the exam. Please navigate to the last screen and click \'Finish\'."</li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Click \'Close Window\' and then log out of Rog&#333."</li>
+    <li>Collect up log in instructions for reuse</li>
+    <li>Collect and dispose of blank paper</li>
+    <li>Ensure <strong>all</strong> workstations are logged out</li>
     </ol>';
 $string['time'] = 'Čas';
 $string['timedexam'] = 'Zkouška s časovým limitem:';

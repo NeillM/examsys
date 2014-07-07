@@ -1,33 +1,21 @@
-<?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+<?php          //cz Minor
+
 
 //HTML5 part
-require '../../lang/' . $language . '/question/edit/hotspot_correct.txt';
-require '../../lang/' . $language . '/question/edit/area.txt';
-require '../../lang/' . $language . '/question/add/hotspot_add.txt';
-require '../../lang/' . $language . '/question/add/label_add.txt';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/edit/hotspot_correct.txt';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/edit/area.txt';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/add/hotspot_add.txt';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/add/label_add.txt';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 
-require '../../lang/' . $language . '/include/status.inc';
-require '../../lang/' . $language . '/include/blooms.inc';
-require '../../lang/' . $language . '/include/question_types.inc';
-require '../../lang/' . $language . '/question/sct_shared.php';
-require '../../lang/' . $language . '/question/info.php';
-require '../../lang/' . $language . '/question/edit/likert_scales.php';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/include/status.inc';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/include/blooms.inc';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/include/question_types.inc';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/sct_shared.php';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/info.php';
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/edit/likert_scales.php';
+
 
 $string['edit'] = 'Upravit';
 $string['add'] = 'Přidat';
@@ -43,7 +31,7 @@ $string['notesmsg'] = '(viditelné pro studenty)';
 $string['scenario'] = 'Scénář';
 $string['scenariomsg'] = '(základní informace)';
 $string['current'] = 'Aktuální';
-$string['change'] = 'Změna';
+$string['change'] = 'Změnit';
 $string['media'] = 'Mediální soubory ';
 $string['questionswf'] = 'Úloha SWF';
 $string['answerswf'] = 'Odpověď SWF';
@@ -77,17 +65,17 @@ $string['formula'] = 'Vzorec';
 $string['suppfunctions'] = 'podporované funkce';
 $string['units'] = 'Jednotky';
 $string['tolerance'] = 'Tolerance';
-$string['tolerance_full'] = 'Odchylka pro plné ohodnocení';
-$string['tolerance_partial'] = 'Odchylka pro částečné ohodnocení';
+$string['tolerance_full'] = 'Odchylka pro úplné hodnocení';
+$string['tolerance_partial'] = 'Odchylka pro částečné hodnocení';
 $string['text'] = 'Text';
 $string['markingmethod'] = 'Metoda známkování';
 $string['markperoption'] = 'Známka za volbu';
 $string['markperquestion'] = 'Známka za úlohu';
 $string['allowpartial'] = 'Povolit částečné známkování';
 $string['bonusmark'] = 'Bonusová známka';
-$string['markscorrect'] = 'Známka za správnou';
-$string['marksincorrect'] = 'Známka za chybnou';
-$string['markspartial'] = 'Částečná známka';
+$string['markscorrect'] = 'Za správnou';
+$string['marksincorrect'] = 'Za chybnou';
+$string['markspartial'] = 'Za částečnou';
 $string['generalfeedback'] = 'Celkový Komentář';
 $string['fbcorrect'] = 'Reakce na správnou odpověď';
 $string['fbcorrectmsg'] = '(výchozí reakce)';
@@ -103,15 +91,15 @@ $string['true'] = 'Pravda';
 $string['false'] = 'Nepravda';
 $string['feedback'] = 'Komentář';
 $string['feedbackmsg'] = '(modelová odpověď pro vyhodnocení)';
-$string['metadata'] = 'Metadata'; //cognate
+$string['metadata'] = 'Metadata';
 $string['keywords'] = 'Klíčová slova';
 $string['teams'] = 'Týmy';
 $string['answer'] = 'Odpověď';
 $string['created'] = 'Vytvořeno:';
 $string['modified'] = 'Upraveno:';
-$string['editor'] = 'Editor'; //cognate
+$string['editor'] = 'Editor';
 $string['plaintext'] = 'Prostý text';
-$string['wysiwyg'] = 'WYSIWYG'; //cognate
+$string['wysiwyg'] = 'WYSIWYG';
 $string['changes'] = 'Změny';
 $string['comments'] = 'Poznámky';
 $string['mapping'] = 'Mapování';

@@ -1,23 +1,8 @@
-<?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
+﻿<?php     //cz
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['papertasks'] = 'Papírové testy';
+$string['papertasks'] = 'Možnosti dokumentu';
 $string['testpreview'] = 'Náhled &amp; Testu';
 $string['addquestionspaper'] = 'Přidat úlohy do dokumentu';
 $string['editproperties'] = 'Upravit vlastnosti';
@@ -31,11 +16,8 @@ $string['copypaper'] = 'Kopírovat dokument';
 $string['deletepaper'] = 'Odstranit dokument';
 $string['retirepaper'] = 'Zneplatnit dokument';
 $string['printhardcopy'] = 'Tištěná verze';
-$string['importexport'] = 'Import/Export'; //cognate
-$string['export12'] = 'Export 1.2'; //cognate
-$string['exportraf'] = 'Export as Rog&#333; Assessment format';
+$string['export12'] = 'Export 1.2';
 $string['import'] = 'Importovat';
-$string['importraf'] = 'Import Rog&#333; Assessment format';
 $string['Continuous'] = 'Jedna plynulá stránka';
 $string['Page-break per question'] = 'Zalomení stránky na konci každé úlohy';
 $string['currentquestiontasks'] = 'Aktuální úkoly banky úloh';
@@ -43,7 +25,7 @@ $string['editquestion'] = 'Upravit úlohu';
 $string['previewquestion'] = 'Náhled úlohy';
 $string['information'] = 'Informace';
 $string['copyontopaperx'] = 'Kopírovat do dokumentu X...';
-$string['linktopaper'] = 'Odkaz na dokument';
+$string['linktopaper'] = 'Odkaz do dokumentu';
 $string['moveup'] = 'Přesunout výše';
 $string['movedown'] = 'Přesunout níže';
 $string['changescreenno'] = 'Změnit obrazovku č.';
@@ -56,7 +38,7 @@ $string['session'] = 'Relace';
 $string['mismatch'] = 'Neshoda';
 $string['examtime'] = 'Doba zkoušky';
 $string['incorrect'] = 'Chybně';
-$string['incomplete'] = 'Nedokončeno';
+$string['incomplete'] = 'Nedokončená';
 $string['duration'] = 'Trvání';
 $string['unset'] = 'Odstranit nastavení';
 $string['computerlabs'] = 'Počítačová učebna';
@@ -67,15 +49,15 @@ $string['standardsset'] = 'Nastavení standardů';
 $string['mapping'] = 'Mapování';
 
 $string['questionbanktasks'] = 'Správa banky úloh';
-$string['questionsbytype'] = 'Úlohy podle typu';
-$string['questionsbyteam'] = 'Úlohy podle týmů';
-$string['questionsbykeyword'] = 'Úlohy podle klíčových slov';
+$string['questionsbytype'] = 'Úlohy dle typu';
+$string['questionsbyteam'] = 'Úlohy dle týmů';
+$string['questionsbykeyword'] = 'Úl. dle klíčových slov';
 $string['search'] = 'Hledat';
 $string['createnewquestion'] = 'Nová úloha';
 
 $string['questions'] = 'Úlohy';
 $string['papers'] = 'Dokumenty';
-$string['people'] = 'Lidé';
+$string['people'] = 'Uživatele';
 $string['studentcohort'] = 'Skupina studentů';
 
 $string['dates'] = 'Data';
@@ -109,12 +91,12 @@ $string['exportresponsescsvtext'] = 'Stáhnout odpovědi jako CSV soubor (text)'
 $string['exportbooleancsv'] = 'Stáhnout odpovědi v Booleově algebře jako soubor CSV';
 $string['exportmarkscsv'] = 'Stáhnout známky jako CSV soubor';
 $string['individualportfoliosheets'] = 'Jednotlivé listy portfolia';
-$string['exportratingscsv'] = 'Stáhnout Ohodnocení jako CSV soubor';
+$string['exportratingscsv'] = 'Stáhnout Hodnocení jako CSV soubor';
 $string['ReviewSummary1'] = 'Revidovat přehled - průměr (HTML)';
 $string['ReviewSummary2'] = 'Revidovat přehled - procenta (HTML)';
 $string['ReviewSummary3'] = 'Revidovat přehled';
 $string['ReviewSummary4'] = 'Revidovat přehled - průměr (CSV)';
-$string['xhtml'] = 'XHTML'; //cognate
+$string['xhtml'] = 'XHTML';
 $string['word2003format'] = 'Formát Word 2003';
 $string['rawdataxml'] = 'Surová data do XML souboru';
 $string['rawdatacsv'] = 'Surová data do CSV souboru';
@@ -135,10 +117,15 @@ $string['paperonly'] = 'Pouze dokumenty';
 $string['paperandquestions'] = 'Dokument a úlohy';
 $string['next'] = 'Další &gt;&gt;';
 $string['reorderinfo'] = 'Nyní můžete změnit pořadí úloh a zalomení obrazovky, jejich přetažním na novou pozici';
-$string['insertscreenbreak'] = '+ zalomení obrazovky';
-$string['deletescreenbreak'] = '- zalomení obrazovky';
+$string['insertscreenbreak'] = 'Vložit zalomení obrazovky';
+$string['deletescreenbreak'] = 'Odstranit zalomení obrazovky';
 $string['addscreenbreak'] = 'Přidat zalomení obrazovky';
 $string['midexamclarification'] = 'Ujasnění v průběhu zkoušky';
 $string['calculationquestions'] = 'Početní úlohy Questions';
-$string['markallquestions'] = 'Označit všechny otázky';
+$string['markallquestions'] = 'Označit všechny otázky';	// translate
+$string['exportraf'] = 'Export as Rog&#333; Assessment format';	// translate
+$string['importraf'] = 'Import Rog&#333; Assessment format';	// translate
+$string['importexport'] = 'Import/Export';
+
+
 ?>

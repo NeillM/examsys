@@ -25,7 +25,7 @@ $string['start'] = 'Start';
 $string['owner'] = 'Vlastník';
 $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
-$string['marks'] = 'Hodnocení';
+$string['marks'] = 'Známka';
 $string['modified'] = 'Upraveno';
 $string['passmark'] = 'Potřebná známka';
 $string['randommark'] = 'Náhodná známka';
@@ -42,7 +42,6 @@ $string['duplicateoptions'] = 'Duplicate options. MCQ options must be unique.';
 $string['nocorrect'] = 'Nelze najít správnou odpověď';
 $string['zeromarks'] = 'Varování: nastaveno nula bodů.';
 $string['toomanycorrect'] = 'Mnoho správných odpovědí';
-$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'K některým volbám chybí správné odpovědi.';
 $string['nolabels'] = 'K obrázku nebyly zadány popisky.';
 $string['mcqsurvey'] = "MCQ s volbou 'jiný' by měl být použit jen v průzkumu";
@@ -59,5 +58,7 @@ $string['next'] = 'Další >>';
 $string['na'] = 'N/A';
 $string['Duplicate questions'] = 'Duplikovat Úlohu';
 $string['following_questions'] = 'Následující úlohy jsou';
-$string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
+$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';	// translate
+$string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';	// translate
+
 ?>

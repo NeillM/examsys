@@ -14,8 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/delete/delete.inc';
+require '../lang/' . $language . '/include/months.inc';
 
-$string['confirmdelete'] = 'Potvrdit odstranění';
-$string['msg'] = 'Jste si skutečně jisti, že chcete tento referenční materiál odstranit?';
+$string['month'] = 'Měsíc';
+$string['papers'] = 'Dokumenty';
+$string['owner'] = 'Vlastník';
+$string['mean'] = 'Průměr';
+$string['min'] = 'Minimum';
+$string['max'] = 'Maximum';
+$string['studentpapers'] = 'Studenti/Dokumenty';
+$string['cohortsizes'] = 'Velikost skupin';
+$string['uniquestudents'] = 'Unikátních studentů = %s';
+$string['totals'] = 'Celkem';
 ?>

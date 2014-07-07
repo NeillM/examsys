@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/delete/delete.inc';
-
-$string['confirmdelete'] = 'Potvrdit odstranění';
-$string['msg'] = 'Jste si skutečně jisti, že chcete tento referenční materiál odstranit?';
+$string['referencematerial'] = 'Referenční materiál';
+$string['creatematerial'] = 'Nový referenční materiál';
+$string['editmaterial'] = 'Upravit referenční materiál';
+$string['deletematerial'] = 'Odstranit referenční materiál';
 ?>

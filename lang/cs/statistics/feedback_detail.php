@@ -14,13 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/paper_options.inc';
-require '../lang/' . $language . '/paper/new_paper2.php';
+require '../lang/' . $language . '/include/months.inc';
 
-$string['importraf'] = 'Import Rog&#333; Assessment Format';
-$string['file'] = 'File';
-$string['importfile'] = 'Import File';
-$string['invalidzip'] = 'This is an invalid ZIP file.';
-$string['invalidraf'] = 'This is an invalid Rogo Assessment File (RAF).';
-$string['type'] = 'Type';
+$string['summativeexamfeedback'] = 'Summative Exam Feedback';
+$string['feedbackstats'] = 'Feedback Statistics';
+$string['administrativetools'] = 'Administrative Tools';
+$string['statistics'] = 'Statistics';
+$string['paper'] = 'Paper';
+$string['feedbackreleased'] = 'Feedback Released';
+$string['students'] = 'Students';
+$string['feedbackviewed'] = 'Feedback Viewed';
+$string['objectivefeedback'] = 'Objective Feedback';
+$string['questionfeedback'] = 'Question Feedback';
+$string['cohortperformance'] = 'Cohort Performance';
 ?>

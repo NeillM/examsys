@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Nastavení';
-$string['removeorphanmedia'] = 'Ostranit osiřelé mediální soubory ';
+$string['removeorphanmedia'] = 'Odstranit osiřelé mediální soubory ';
 $string['notremoving'] = 'Neodstraňovat:';
 $string['inexamptionslist'] = 'V seznamu výjimek';
 $string['deletefailed'] = 'Odstranění se nezdařilo:';
@@ -23,7 +23,7 @@ $string['removed'] = 'Odstraněno:';
 $string['toonew'] = 'Příliš nový';
 $string['missingfiles'] = 'Chybějící soubory!';
 $string['cleanupsummary'] = 'Přehled čistky';
-$string['filedeleted'] = 'Soubory odstraněny ';
+$string['filedeleted'] = 'Odstraněno souborů ';
 $string['spacereclaimed'] = 'Uvolněný prostor';
 $string['deletingfiles'] = 'Odstraňování souborů!';
 ?>

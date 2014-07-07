@@ -1,31 +1,32 @@
 <?php
-// This file is part of Rogo
+// This file is part of Rogō
 //
-// Rogo is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version . 
+// (at your option) any later version.
 //
-// Rogo is distributed in the hope that it will be useful, 
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE .  See the
-// GNU General Public License for more details . 
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogo .  If not, see <http://www . gnu . org/licenses/> . 
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
 * 
-* Script reads all the language files in /lang folder and compares strings in search for strings that are empty, duplicate, identical etc . 
+* Script reads all the language files in /lang folder and compares strings in search for strings that are empty, duplicate, identical etc. 
 * 
 * @author Nikodem Miranowicz
 * @version 1 . 0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-?>
- 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1 . 0 Transitional//EN" "http://www . w3 . org/TR/xhtml1/DTD/xhtml1-transitional . dtd">
+
+require '../include/sysadmin_auth.inc';
+?> 
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -43,14 +44,30 @@
     table {
       padding-left: 20px;
     }
-		#trans {
-			border-radius:7px;
-			position:absolute;
-			background:#fff;
-			border:solid 2px #555;
-			padding-right:10px;
-			visibility:hidden;
-		}
+    #trans {
+			position: absolute;
+      padding: 6px 16px 6px 0px;
+      color: black;
+      background-color: white;
+      border: 1px solid #767676;
+      max-width: 400px;
+      font-size: 80%;
+      text-align: justify;
+      z-index: 100;
+      background: -moz-linear-gradient(top, #FFFFFF, #E4E5F0);
+      background: -webkit-linear-gradient(top, #FFFFFF, #E4E5F0);
+      background-image: -ms-linear-gradient(top, #FFFFFF 0%, #E4E5F0 100%);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E4E5F0');
+      -moz-box-shadow:    3px 3px 5px 6px #ccc;
+      -webkit-box-shadow: 3px 3px 5px 6px #ccc;
+      box-shadow:         2px 2px 4px 0px #808080;
+      border-radius: 3px;
+      display: none;
+    }
+    .plusminus {
+      width: 11px;
+      height: 11px;
+    }
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -60,27 +77,34 @@
       $(document).tooltip();
     })
 		
-		function show_transl(event,txt){
-			el = document.getElementById('trans');
-			//el.style.display = 'none';
-			el.innerHTML = txt;
+		function show_transl(e, txt) {
 			//console.log(txt);
-			el.style.visibility = "visible";
-			el.style.top = event.pageY + "px";//pageY;
-			el.style.left = (event.pageX + 20)  + "px";
-			el.style.display = '';
-			if (txt == '') el.style.display = 'none';
+      
+      if (!e) var e = window.event;
+      var currentX = e.clientX;
+      var currentY = e.clientY;
+      var scrOfX = $(document).scrollLeft();
+      var scrOfY = $(document).scrollTop();      
+      
+			$('#trans').show();
+			$('#trans').html(txt);
+      $('#trans').css('top', currentY + scrOfY + "px");
+      $('#trans').css('left', (currentX + scrOfX + 20)  + "px");
+      
+			if (txt == '') {
+        $('#trans').hide();
+      }
 		}
+    
 		function showhide(id) {
-			if (document.getElementById(id).style.display=='') {
-				document.getElementById(id).style.display = 'none';
-				document.getElementById('bh_'+id).style.display = 'none';
-				document.getElementById('bs_'+id).style.display = '';
-			}else{
-				document.getElementById(id).style.display = '';
-				document.getElementById('bh_'+id).style.display = '';
-				document.getElementById('bs_'+id).style.display = 'none';
-
+			if ($('#' + id).is(':visible')) {
+				$('#' + id).hide();
+				$('#bh_'+id).hide();
+				$('#bs_'+id).show();
+			} else {
+				$('#' + id).show();
+				$('#bh_'+id).show();
+				$('#bs_'+id).hide();
 			}
 		}
   </script>  
@@ -96,7 +120,7 @@ function file_array($path, $exclude) {
   $path = rtrim($path, "/") . "/";
   $result = array();
   $folder_handle = opendir($path);
-  while(false !== ($filename = readdir($folder_handle))) {
+  while (false !== ($filename = readdir($folder_handle))) {
     if (!in_array(strtolower($filename), $exclude)) {
       if (is_dir($path . $filename . "/")) {
         $result[] = file_array($path . $filename . "/", $exclude);
@@ -112,6 +136,7 @@ $required = array();
 //function for reading string into the array
 function file_array_read($files, $lang) {
   global $required;
+  
 	$strings = array(array());
 	foreach($files as $filepath) {
     $filepath_parts = preg_split('/\/en\//', $filepath);
@@ -186,9 +211,10 @@ function display_this($data, $data_index) {
   global $last_key,$last_value;
 	global $strings_pl;
 	global $global_for_translated_list;
-  $data_part1= explode('|', $data[0]);
-	$data_part2= $data[1];
-	$data_part3= explode('|', $data[2]);
+  
+  $data_part1 = explode('|', $data[0]);
+	$data_part2 = $data[1];
+	$data_part3 = explode('|', $data[2]);
 	$transl = '';
 	if ($global_for_translated_list) {
 		unset($trans_list);
@@ -202,7 +228,7 @@ function display_this($data, $data_index) {
 			$tl = htmlentities($tl,ENT_QUOTES,'UTF-8');
 			$transl .= '<li>'.$tl.'</li>';
 		}
-		$transl .= '</ul>\');return false;"><img border="0" src="../artwork/information_icon.gif" class="help_tip"></a>';
+		$transl .= '</ul>\');return false;"><img src="../artwork/information_icon.gif" class="help_tip" /></a>';
 	}
 	if ($data_part2!='') {
 		if ($data_index=='-1') {
@@ -255,13 +281,13 @@ function display_this($data, $data_index) {
 $excluded = explode("|",  ".|..|.ds_store|.svn|en");
 
 //path for lang list
-$path=preg_replace('/testing/', '', getcwd()) . 'lang/';
+$path = preg_replace('/testing/', '', getcwd()) . 'lang/';
 
 //list of lang folders
-$lang_array=Array();
+$lang_array = array();
 
 $folder_handle = opendir($path);
-while(false !== ($filename = readdir($folder_handle))) {
+while (false !== ($filename = readdir($folder_handle))) {
   if (!in_array(strtolower($filename), $excluded)) {
     if (is_dir($path . $filename . "/")) {
       array_push($lang_array, $filename);
@@ -274,7 +300,7 @@ $spec_lang = '';
 if (isset($_GET['lang'])) $spec_lang = $_GET['lang'];
 
 //path for folders inside /en/
-$path=preg_replace('/testing/', '', getcwd()) . 'lang/en/';
+$path = preg_replace('/testing/', '', getcwd()) . 'lang/en/';
 $global_for_translated_list = false;
 
 //searching for files
@@ -295,8 +321,8 @@ foreach ($lang_array as $lang) {
     if (empty($strings_pl[0])) unset($strings_pl[0]);
 
     echo '<h2 class="midblue_header">';
-		echo '<a id="bs_' . $lang . '" style="display:none" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/plus.png" class="help_tip"></a>';
-		echo '<a id="bh_' . $lang . '" onClick=showhide("' . $lang . '");><img border="0" src="../artwork/minus.png" class="help_tip"></a> ';
+		echo '<a id="bs_' . $lang . '" style="display:none" onclick=showhide("' . $lang . '");><img src="../artwork/blue_plus.png" class="plusminus" /></a>';
+		echo '<a id="bh_' . $lang . '" onclick=showhide("' . $lang . '");><img src="../artwork/blue_minus.png" class="plusminus" /></a> ';
 		echo 'Analysis for: ' . $lang ;
 		echo '</h2>';
     echo '<div id="' . $lang . '">';
@@ -304,9 +330,10 @@ foreach ($lang_array as $lang) {
     $last_key = '';
     $last_value = '';
     $display_text = '';
-    foreach ($strings_pl as $strings_key => $strings_data)
-      if ($strings_data[0]==$strings_key) $display_text .= '<em>' . $strings_data[0] . '</em><br />';
-    echo '<h3>Missing files: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="A list of files in \'en\' with no corresponding files in \''. $lang.'\'"></h3>';
+    foreach ($strings_pl as $strings_key => $strings_data) {
+      if ($strings_data[0] == $strings_key) $display_text .= '<em>' . $strings_data[0] . '</em><br />';
+    }
+    echo '<h3>Missing files: <img src="../artwork/information_icon.gif" class="help_tip" title="A list of files in \'en\' with no corresponding files in \''. $lang.'\'" /></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
     
@@ -320,7 +347,7 @@ foreach ($lang_array as $lang) {
         if (isset($strings_pl[$data_path_elem])) display_this($strings_data, $data_path_key);
       }
     }
-    echo '<h3>Missing "require" lines: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="Lines requiring other files in \'en\' that are missing in \''. $lang.'\' file"></h3>';
+    echo '<h3>Missing "require" lines: <img src="../artwork/information_icon.gif" class="help_tip" title="Lines requiring other files in \'en\' that are missing in \''. $lang.'\' file" /></h3>';
 		$display_text = '';
 		foreach ($required as $k => $v) {
 			if ($v==2) {
@@ -331,19 +358,23 @@ foreach ($lang_array as $lang) {
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
     
-		echo '<h3>Extensive "require" lines: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="Lines requiring other files in \''. $lang.'\' that are missing in \'en\' file"></h3>';
+		echo '<h3>Extensive "require" lines: <img src="../artwork/information_icon.gif" class="help_tip" title="Lines requiring other files in \''. $lang.'\' that are missing in \'en\' file" /></h3>';
 		$display_text = '';
 		foreach ($required as $k => $v) {
 			if ($v==1) {
-				$l = explode('|',$k);
-				$display_text.='<tr><td><strong>'.$l[0].'</strong></td><td>'.$l[1].'</td></tr>';
+				$l = explode('|', $k);
+				$display_text .= '<tr><td><strong>'.$l[0].'</strong></td><td>'.$l[1].'</td></tr>';
 			}
 		}
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
-    echo '<h3>Strings from missing files: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="A list of strings taken from files in \'en\' that have no corresponding files in \''. $lang.'\'"></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<h3>Strings from missing files: <img src="../artwork/information_icon.gif" class="help_tip" title="A list of strings taken from files in \'en\' that have no corresponding files in \''. $lang.'\'" /></h3>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
     //Missing strings
@@ -352,8 +383,10 @@ foreach ($lang_array as $lang) {
     $display_text = '';
     foreach ($strings_en as $strings_key => $strings_data)
       if (!isset($strings_pl[$strings_key]) and (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data, -1);
-    echo '<h3>Missing strings: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="A list of strings from files in \'en\' missing from corresponding files in \''. $lang.'\' "></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<h3>Missing strings: <img src="../artwork/information_icon.gif" class="help_tip" title="A list of strings from files in \'en\' missing from corresponding files in \''. $lang.'\'" /></h3>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
     //Excessive strings
@@ -362,8 +395,10 @@ foreach ($lang_array as $lang) {
     $display_text = '';
     foreach ($strings_pl as $strings_key => $strings_data)
       if (!isset($strings_en[$strings_key]) and (!isset($strings_pl[$strings_data[0]]))) display_this($strings_data, -1);
-    echo '<h3>Excessive strings: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="A list of strings from files in \''. $lang.'\' missing from from corresponding files in \'en\' "></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<h3>Excessive strings: <img src="../artwork/information_icon.gif" class="help_tip" title="A list of strings from files in \''. $lang.'\' missing from from corresponding files in \'en\'" /></h3>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
     //Strings missing from file
@@ -371,7 +406,7 @@ foreach ($lang_array as $lang) {
     $last_value = '';
     $display_text = '';
     foreach ($strings_en as $strings_key => $strings_data) {
-      if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key][0]!=$strings_data[0])) {
+      if (isset($strings_pl[$strings_key]) and ($strings_pl[$strings_key][0] != $strings_data[0])) {
         $data_path1 = explode("|", $strings_data[0]);
         $data_path2 = explode("|", $strings_pl[$strings_key][0]);
         $data_path3 = array_diff($data_path1, $data_path2);
@@ -379,8 +414,10 @@ foreach ($lang_array as $lang) {
         if (count($data_path3)>0) display_this(Array(implode(", ", $data_path3), $strings_data[1], $strings_data[2], $strings_data[3]), -1);
       }
     }   
-    echo '<h3>Strings missing from file: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of strings existing in multiple files where the list of it\'s files from \'en\' is not the same as the list it\'s files from \''. $lang.'\'"></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<h3>Strings missing from file: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of strings existing in multiple files where the list of it\'s files from \'en\' is not the same as the list it\'s files from \''. $lang.'\'" /></h3>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
 		//Strings extensive in file
@@ -395,8 +432,10 @@ foreach ($lang_array as $lang) {
 				if (count($data_path3)>0) display_this(Array(implode(", ", $data_path3), $strings_data[1], $strings_data[2], $strings_data[3]), -1);
       }
     }   
-    echo '<h3>Strings extensive in file: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of strings existing in multiple files where the list of it\'s files from \''. $lang.'\' is not the same as the list it\'s files from \'en\'"></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<h3>Strings extensive in file: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of strings existing in multiple files where the list of it\'s files from \''. $lang.'\' is not the same as the list it\'s files from \'en\'" /></h3>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 		
     //Files with empty keys for the \'string\' array
@@ -404,7 +443,7 @@ foreach ($lang_array as $lang) {
     $last_value = '';
     $display_text = '';
     foreach ($strings_pl as $strings_key => $strings_data) {
-      if ($strings_data[1]=='') {
+      if ($strings_data[1] == '') {
       $data_path1 = explode("|", $strings_data[0]);
       foreach ($data_path1 as $data_path1_key => $data_path1_elem) {
           $display_text .= '<em>' . $data_path1_elem . '</em><br />';
@@ -412,7 +451,9 @@ foreach ($lang_array as $lang) {
       }
     }
     echo '<h3>Files with empty keys for the \'string\' array: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="A list of strings from \''. $lang.'\' with empty keys for the \'string\' array"></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
     //Duplicate strings in files
@@ -420,19 +461,23 @@ foreach ($lang_array as $lang) {
     $last_value = '';
     $display_text = '';
     foreach ($strings_pl as $strings_key => $strings_data)	{
-      if ($strings_pl[$strings_key][3]>1)	{
+      if ($strings_pl[$strings_key][3] > 1)	{
         $data_path1 = explode("|", $strings_data[0]);
         $data_path3 = array_unique($data_path1);
         $data_path3 = array_count_values($data_path1);
         if (count($data_path3)!=count($data_path1)) {
           foreach ($data_path3 as $data_path3_key => $data_path3_elem) {
-            if ($data_path3_elem>1)  display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
+            if ($data_path3_elem>1) {
+              display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
+            }
           }
         }
       }
     }
     echo '<h3>Duplicate strings in files: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of strings with the same key as other within the same file in \''. $lang.'\' "></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 
     //Identical texts
@@ -441,7 +486,7 @@ foreach ($lang_array as $lang) {
     $display_text = '';
     foreach ($strings_en as $strings_key => $strings_data) 
       if (isset($strings_pl[$strings_key]) and $strings_pl[$strings_key]==$strings_en[$strings_key] and strpos($strings_data[2],'&lt;&lt;&lt;')===false) display_this($strings_data, -1);
-    echo '<h3>Identical texts: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of not translated strings (identical in \'en\' and \''. $lang.'\')"></h3>';
+    echo '<h3>Identical texts: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of not translated strings (identical in \'en\' and \''. $lang.'\')" /></h3>';
     if ($display_text=='') $display_text='<tr><td>none</td></tr>';
     echo '<table>'.$display_text.'</table>';
 
@@ -466,8 +511,10 @@ foreach ($lang_array as $lang) {
         }
       }
     }
-    echo '<h3>Identical strings: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\') - possibly being translated in some other file"></h3>';
-    if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+    echo '<h3>Identical strings: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of not translated strings across the whole folder (identical in any of files in \'en\' and \''. $lang.'\') - possibly being translated in some other file" /></h3>';
+    if ($display_text == '') {
+      $display_text = '<tr><td>none</td></tr>';
+    }
     echo '<table>'.$display_text.'</table>';
 		echo '</div>';
   }
@@ -477,13 +524,13 @@ foreach ($lang_array as $lang) {
 
 echo '<hr>';
 echo '<h2 class="midblue_header">';
-echo '<a id="bs_en" style="display:none" onClick=showhide("en");><img border="0" src="../artwork/plus.png" class="help_tip"></a>';
-echo '<a id="bh_en" onClick=showhide("en");><img border="0" src="../artwork/minus.png" class="help_tip"></a> ';
+echo '<a id="bs_en" style="display:none" onclick=showhide("en");><img src="../artwork/blue_plus.png" class="plusminus" /></a>';
+echo '<a id="bh_en" onclick=showhide("en");><img src="../artwork/blue_minus.png" class=plusminus" /></a> ';
 echo 'Analysis for: en';
 echo '</h2>';
 echo '<div id="en">';
 
-//Files with empty keys for the \'string\' array
+// Files with empty keys for the \'string\' array
 $last_key = '';
 $last_value = '';
 $display_text = '';
@@ -495,11 +542,13 @@ foreach ($strings_en as $strings_key => $strings_data)	{
     }
   }
 }
-echo '<h3>Files with empty keys for the \'string\' array: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of strings from \'en\' with empty keys for the \'string\' array"></h3>';
-	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+echo '<h3>Files with empty keys for the \'string\' array: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of strings from \'en\' with empty keys for the \'string\' array" /></h3>';
+if ($display_text == '') {
+  $display_text = '<tr><td>none</td></tr>';
+}
 echo '<table>'.$display_text.'</table>';
 
-//Duplicate strings in files
+// Duplicate strings in files
 $last_key = '';
 $last_value = '';
 $display_text = '';
@@ -508,18 +557,22 @@ foreach ($strings_en as $strings_key => $strings_data)	{
     $data_path1 = explode("|", $strings_data[0]);
     $data_path3 = array_unique($data_path1);
     $data_path3 = array_count_values($data_path1);
-    if (count($data_path3)!=count($data_path1)) {
+    if (count($data_path3) != count($data_path1)) {
       foreach ($data_path3 as $data_path3_key => $data_path3_elem) {
-        if ($data_path3_elem>1) display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
+        if ($data_path3_elem > 1) {
+          display_this(Array($data_path3_key, $strings_data[1], $strings_data[2], $strings_data[3]), -1);
+        }
       }
     }
   }
 }
-echo '<h3>Duplicate strings: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of strings with the same key within the same file in \'en\'"></h3>';
-	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+echo '<h3>Duplicate strings: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of strings with the same key within the same file in \'en\'" /></h3>';
+if ($display_text == '') {
+  $display_text='<tr><td>none</td></tr>';
+}
 echo '<table>'.$display_text.'</table>';
 
-//Duplicate strings
+// Duplicate strings
 $last_key = '';
 $last_value = '';
 $display_text = '';
@@ -528,12 +581,15 @@ foreach ($strings_en as $strings_key => $strings_data)	{
 		display_this($strings_data, -1);
 	}
 }
-echo '<h3>Duplicate strings across files: <img border="0" src="../artwork/information_icon.gif" class="help_tip" title="a list of strings with the same key across the files in \'en\'"></h3>';
-	if ($display_text=='') $display_text='<tr><td>none</td></tr>';
+echo '<h3>Duplicate strings across files: <img src="../artwork/information_icon.gif" class="help_tip" title="a list of strings with the same key across the files in \'en\'" /></h3>';
+if ($display_text == '') {
+  $display_text='<tr><td>none</td></tr>';
+}
 echo '<table>'.$display_text.'</table>';
 echo '</div>';
 
-echo '<hr>';
+echo '<hr />';
 echo '<div id="trans"></div>';
 ?>
 </body>
+</html>

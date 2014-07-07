@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['personalcohortperformance'] = 'Výsledky Jednotlivce/Skupiny';
-$string['availablemarks'] = 'Available Marks';
-$string['studentsmark'] = 'Student\'s Mark';
-$string['medianclassmark'] = 'Median Class Mark';
+$string['availablemarks'] = 'Dostupné známky';
+$string['studentsmark'] = 'Známka studenta/ů';
+$string['medianclassmark'] = 'Medián skupiny';
 ?>
