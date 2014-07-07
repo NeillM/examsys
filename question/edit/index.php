@@ -512,9 +512,7 @@ endif;
 ?>
   <div id="debug" class="debug"></div>
 	<div id="page-header">
-		<div id="page-help" style="text-align:right; vertical-align:top">
-			<img src="../../artwork/toprightmenu.gif" id="toprightmenu_icon">
-		</div>
+		<div><img src="../../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 		<div id="page-header-inner">
 			<h1><strong><?php
       if ($mode == 'Add') echo 'Add ';

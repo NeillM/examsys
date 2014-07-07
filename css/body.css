@@ -24,7 +24,7 @@ a:hover {
 }
 
 img {
-  border-width: 0px;
+  border-width: 0;
 }
 
 input[type='checkbox'], input[type='radio'] {
@@ -160,7 +160,7 @@ hr {
 	border: 1px solid #4F81BD;
 	background-color: white;
 	color: black;
-	padding: 0px;
+	padding: 0;
 	z-index: 1000;
 }
 
@@ -191,9 +191,9 @@ hr {
 
 .info_bar {
 	margin: 2px auto;
-	width:75%;
+	width: 75%;
 	border: 1px solid #C0C0C0;
-	text-align:left;
+	text-align: left;
 	padding: 1px;
 	height: 38px;
 }
@@ -229,11 +229,7 @@ hr {
   width: 14px;
   height: 14px;
 }
-/*title {
-  display: inline-block;
-  width: 5em;
-  background-color: red;
-}*/
+
 .ui-tooltip {
   padding: 6px;
   color: black;

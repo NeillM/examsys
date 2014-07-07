@@ -6,14 +6,14 @@ html, body {
 body {
 	background-color: #F1F5FB;
 	font-size: 100%;
-	margin: 0px
+	margin: 0;
 }
 
 h1 {
   margin: 0;
   color: #000;
   font: 32px/36px;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 h2 {
@@ -34,7 +34,7 @@ table {
 }
 
 th, td {
-  margin:0;
+  margin: 0;
   padding: 2px 3px;
 }
 
@@ -120,6 +120,7 @@ dd {
 
 .spaced-top {
   padding-top: 12px;
+  margin-top: -4px;
 }
 
 .spaced-bottom {
@@ -224,16 +225,12 @@ td.separated:last-child {
 
 #page-header-inner {
   padding: 0 0 12px 64px;
+  height: 39px;
 }
 
 #page-header-inner p {
   margin: 0;
   font-weight: bold;
-}
-
-#page-help {
-	float: right;
-	margin: 0px 6px 0 0;
 }
 
 .question-stats {
@@ -266,16 +263,16 @@ td.separated:last-child {
   float: left;
   list-style: none;
   text-align: center;
-  background-color:#517DBF;
+  background-color: #517DBF;
   border-right: 1px solid #DFECFF;
 }
 
 .tabs li.on {
-  background-color:#1E3C7B;
+  background-color: #1E3C7B;
 }
 
 .tabs li.disabled {
-  background-color:#808080;
+  background-color: #808080;
 }
 
 .tabs li a {
@@ -331,7 +328,7 @@ td.separated:last-child {
 	height: 32px;
   line-height: 32px;
   margin: 0;
-  padding-left: 28px
+  padding-left: 28px;
 }
 
 #question-holder {
@@ -434,7 +431,7 @@ label.error {
 }
 
 textarea, input[type=text], select {
-	font-size:100%;
+	font-size: 100%;
   border: 1px solid #909090;
   overflow: auto;
 }

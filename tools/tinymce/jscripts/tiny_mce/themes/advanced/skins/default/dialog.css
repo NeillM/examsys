@@ -27,11 +27,7 @@ input.checkbox {border:1px none #000000; background:transparent; vertical-align:
 
 /* Buttons */
 #insert, #cancel, input.button, .updateButton {
-  margin:0;
-  padding:0;
-  height:26px;
-  cursor:pointer;
-  padding-bottom:2px;
+  cursor: pointer;
 }
 
 #insert {}
