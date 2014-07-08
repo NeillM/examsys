@@ -72,6 +72,7 @@ require '../include/sysadmin_auth.inc';
 		<li><a href="database_grants.php">Database grants</a></li>
 		<li><a href="database_indexes.php">Database indexes</a></li>
 		<li><a href="database_structure.php">Database structure</a></li>
+		<li><a href="online_help_gaps.php">Online Help gaps</a></li>
 	</ol>
   
   <h2>Post-Installation Tests</h2>

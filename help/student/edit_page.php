@@ -33,8 +33,8 @@ $pageid = check_var('id', 'REQUEST', true, false, true);
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
 $rows = 0;
-$result = $mysqli->prepare("SELECT title, body, id, DATE_FORMAT(checkout_time,'%Y%m%d%H%i%S') AS checkout_time, checkout_authorID, type FROM student_help WHERE id = ? LIMIT 1");
-$result->bind_param('i', $pageid);
+$result = $mysqli->prepare("SELECT title, body, id, DATE_FORMAT(checkout_time,'%Y%m%d%H%i%S') AS checkout_time, checkout_authorID, type FROM student_help WHERE articleid = ? AND language = ? LIMIT 1");
+$result->bind_param('is', $pageid, $_SESSION['ROGO_language']);
 $result->execute();
 $result->store_result();
 $result->bind_result($page_title, $body, $id, $page_checkout_time, $page_checkout_authorID, $type);
@@ -58,19 +58,19 @@ if (isset($_POST['save_changes'])) {
   
   if ($_POST['edit_id'] == $pageid) {
     // Editing normal page.
-    $result = $mysqli->prepare("UPDATE student_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE id = ?");
-    $result->bind_param('sssi', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['edit_id']);
+    $result = $mysqli->prepare("UPDATE student_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
+    $result->bind_param('sssis', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['edit_id'], $_SESSION['ROGO_language']);
     $result->execute();  
     $result->close();
   } else {
     // Editing a page pointed to.
-    $result = $mysqli->prepare("UPDATE student_help SET title = ? WHERE id = ?");
-    $result->bind_param('si', $_POST['title'], $pageid);
+    $result = $mysqli->prepare("UPDATE student_help SET title = ? WHERE articleid = ? AND language = ?");
+    $result->bind_param('sis', $_POST['title'], $pageid, $_SESSION['ROGO_language']);
     $result->execute();  
     $result->close();
     
-    $result = $mysqli->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE id = ?");
-    $result->bind_param('ssi', $tmp_body, $tmp_body_plain, $_POST['edit_id']);
+    $result = $mysqli->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE id = ? AND language = ?");
+    $result->bind_param('ssis', $tmp_body, $tmp_body_plain, $_POST['edit_id'], $_SESSION['ROGO_language']);
     $result->execute();  
     $result->close();
   }
@@ -81,8 +81,8 @@ if (isset($_POST['save_changes'])) {
 } elseif (isset($_POST['cancel'])) {
   // Release authoring lock.
   if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
-    $result = $mysqli->prepare("UPDATE student_help SET checkout_time = NULL, checkout_authorID = NULL WHERE id = ?");
-    $result->bind_param('i', $_POST['edit_id']);
+    $result = $mysqli->prepare("UPDATE student_help SET checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
+    $result->bind_param('is', $_POST['edit_id'], $_SESSION['ROGO_language']);
     $result->execute();  
     $result->close();
   }
@@ -145,15 +145,15 @@ if (isset($_POST['save_changes'])) {
       $editor->bind_result($title, $initials, $surname);
       $editor->fetch();
       $editor->close();
-      echo "<script language=\"JavaScript\">\n";
+      echo "<script>\n";
       echo "  alert('" . $string['entertitle'] . " $title $initials $surname. " . $string['isinreadonly'] . "')";
       echo "</script>\n";
       $checkout_authorID = $page_checkout_authorID;
       $disabled = ' disabled';
     } else {
       // Set the lock to the current time/author.
-      $result = $mysqli->prepare("UPDATE student_help SET checkout_time = NOW(), checkout_authorID = ? WHERE id = ?");
-      $result->bind_param('ii', $userObject->get_user_ID(), $edit_id);
+      $result = $mysqli->prepare("UPDATE student_help SET checkout_time = NOW(), checkout_authorID = ? WHERE articleid = ? AND language = ?");
+      $result->bind_param('iis', $userObject->get_user_ID(), $edit_id, $_SESSION['ROGO_language']);
       $result->execute();  
       $result->close();
       $checkout_authorID = $userObject->get_user_ID();
@@ -163,8 +163,8 @@ if (isset($_POST['save_changes'])) {
   }
 ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
-  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
-  <input type="hidden" name="edit_id" value="<?php echo $edit_id; ?>" />
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>"<?php echo $disabled; ?> /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
+  <input type="hidden" name="edit_id" value="<?php echo $edit_id ?>" />
 </form>
 </body>
 </html>

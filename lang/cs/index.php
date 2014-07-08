@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/question_types.inc';
-require '../lang/' . $language . '/include/paper_types.inc';
+require './lang/' . $language . '/include/question_types.inc';
+require './lang/' . $language . '/include/paper_types.inc';
 
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';

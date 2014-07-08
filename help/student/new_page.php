@@ -35,12 +35,19 @@ if (isset($_POST['save_changes'])) {
 	$tmp_body = $_POST['edit1'];
 	$tmp_body_plain = strip_tags($tmp_body);
 
-	$result = $mysqli->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL)");
-	$result->bind_param('sss', $tmp_title, $tmp_body, $tmp_body_plain);
+  $articleid = 0;
+  $result = $mysqli->prepare("SELECT MAX(articleid) FROM student_help");
+  $result->execute();
+  $result->bind_result($articleid);
+  $result->fetch();
+  $result->close();
+  $articleid++;
+
+	$result = $mysqli->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL, ?, ?, '0000-00-00 00:00:00')");
+	$result->bind_param('ssssi', $tmp_title, $tmp_body, $tmp_body_plain, $_SESSION['ROGO_language'], $articleid);
 	$result->execute();  
 	$result->close();
 
-	$page_id = $mysqli->insert_id;
 	$mysqli->close();
 	?>
 	<html>
@@ -48,7 +55,7 @@ if (isset($_POST['save_changes'])) {
 	<title></title>
 	<script>
 		function reloadHelp() {
-			window.top.location='index.php?id=<?php echo $page_id; ?>';
+			window.top.location='index.php?id=<?php echo $articleid; ?>';
 		}
 	</script>
 	</head>
@@ -68,17 +75,8 @@ if (isset($_POST['save_changes'])) {
   <title>New Help Page</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <style type="text/css">
-    html {height:100%}
-    body {font-size:85%; line-height:150%; color:#484848}
-    p, div, td {text-align:justify}
-    li {text-align:justify; list-style:square inside; color:#FF9900}
-    td {font-size:85%}
-    h1 {font-size:150%; color:black; font-family:Verdana,sans-serif}
-    h2 {font-size:140%; color:#EEA752; font-family:Verdana,sans-serif}
-    .subheading {font-weight:bold; font-style:italic}
-  </style>
-
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
@@ -104,7 +102,7 @@ if (isset($_POST['save_changes'])) {
 
   <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
 
-  <div style="text-align:center; padding-top:8px""><input class="ok" type="submit" name="save_changes" value="Save" /><input class="cancel" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

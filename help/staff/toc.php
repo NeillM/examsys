@@ -33,16 +33,7 @@ require '../../include/staff_auth.inc';
   <title>Help and Support Center<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <style type="text/css">
-    html {margin:0px; padding:0px; width:100%; height:100%; overflow:hidden}
-    body {margin:0px; padding:0px; width:100%; height:100%; overflow:hidden; font-size:75%; background-color:#EAEAEA; color:black}
-    div {line-height:180%}
-    a:link.book {color:black}
-    a:visited.book {color:black}
-    a:link {color:black}
-    a:visited {color:black}
-    #main {height:100%; width:100%; overflow:scroll; margin:0px; padding:0px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../../css/help_toc.css" />
 
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help_toc.js"></script>
@@ -67,7 +58,8 @@ require '../../include/staff_auth.inc';
   $help_toc = array();
   $help_toc_titles = array();
 
-  $result = $mysqli->prepare("SELECT id, title FROM staff_help WHERE $roles_check AND deleted IS NULL ORDER BY title, id");
+  $result = $mysqli->prepare("SELECT articleid, title FROM staff_help WHERE $roles_check AND deleted IS NULL AND language = ? ORDER BY title, id");
+  $result->bind_param('s', $_SESSION['ROGO_language']);
   $result->execute();
   $result->bind_result($id, $title);
   while ($result->fetch()) {
@@ -109,11 +101,11 @@ require '../../include/staff_auth.inc';
       if ($parent != $old_parent) {
         if ($expand_id == $id) {
           $icon = 'open_book.png';
-          echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $parent . "</a></nobr></div>\n";
+          echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" class=\"icon16_active\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $parent . "</a></nobr></div>\n";
           echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$id\">";
         } else {
           $icon = 'closed_book.png';
-          echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" style=\"cursor:pointer\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $parent . "</a></nobr></div>\n";
+          echo "<div><nobr><img src=\"../$icon\" id=\"button$id\" class=\"icon16_active\" onclick=\"updateMenu('submenu$id','button$id'); return false;\" />&nbsp;<a href=\"\" class=\"book\" onclick=\"updateMenu('submenu$id','button$id'); return false;\">" . $parent . "</a></nobr></div>\n";
           echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$id\">";
         }
       }
@@ -129,7 +121,7 @@ require '../../include/staff_auth.inc';
       $old_parent = $parent;
     }
     
-    echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
+    echo "<div id=\"title$id\"><nobr><a href=\"display_page.php?id=$id\" target=\"content\"><img src=\"../$icon\" class=\"icon16_active\" /></a>&nbsp;<a href=\"display_page.php?id=$id\" target=\"content\">$tmp_title</a></nobr></div>\n";
   }
 
   if ($old_parent != '') echo "</div>\n";

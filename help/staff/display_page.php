@@ -53,16 +53,16 @@ if ($userObject->has_role('SysAdmin')) {
   $roles_check = 'AND roles="Staff"';
 }
 
-$search_results = $mysqli->prepare("SELECT title, body, type, deleted FROM staff_help WHERE id = ? $roles_check");
-$search_results->bind_param('i', $_GET['id']);
+$search_results = $mysqli->prepare("SELECT title, body, type, deleted FROM staff_help WHERE articleid = ? AND language = ? $roles_check");
+$search_results->bind_param('is', $_GET['id'], $_SESSION['ROGO_language']);
 $search_results->execute();
 $search_results->store_result();
 $search_results->bind_result($tmp_title, $tmp_body, $type, $deleted);
 while ($search_results->fetch()) {
   $edit_id = $_GET['id'];
   if ($type == 'pointer') {
-    $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM staff_help WHERE id = ?");
-    $pointer_results->bind_param('i', $tmp_body);
+    $pointer_results = $mysqli->prepare("SELECT title, body, deleted FROM staff_help WHERE articleid = ? AND language = ?");
+    $pointer_results->bind_param('is', $tmp_body, $_SESSION['ROGO_language']);
     $pointer_results->execute();
     $pointer_results->store_result();
     $pointer_results->bind_result($tmp_title, $tmp_body, $deleted);
@@ -76,7 +76,7 @@ $search_results->close();
 
 if ($tmp_body == '' and $tmp_title == '') {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000');
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/page_not_found.png', '#C00000');
 }
 
 if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
@@ -98,7 +98,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
   <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript">
+  <script>
     function updateToolbar(editID, deleteID) {
       var obj = parent.frames[0].document.getElementById('editid');
       if (obj != null) obj.value = editID;
@@ -187,7 +187,7 @@ echo $tmp_body;
 if ($_GET['id'] > 1) {
   echo "<br clear=\"all\" />\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px; margin-bottom:5px\" />\n</div>\n";
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\"><tr>";
-  echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" border=\"0\" alt=\"" . $string['top'] . "\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">" . $string['top'] . "</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2014, The University of Nottingham</td></tr>";
+  echo "<td style=\"padding-left:20px\"><a style=\"color:#003366\" href=\"#top\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" alt=\"" . $string['top'] . "\" /></a>&nbsp;<a style=\"color:#003366\" href=\"#top\">" . $string['top'] . "</a></td><td style=\"padding-right:20px; text-align:right\">&copy; 2014, The University of Nottingham</td></tr>";
   if ($userObject->has_role('SysAdmin')) {
     echo '<tr><td colspan="2" style="padding-right:20px; text-align:right; color:#316AC5">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/help/staff/index.php?id=' . $_GET['id'] . '</tr>';
   }

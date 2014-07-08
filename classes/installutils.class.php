@@ -1465,7 +1465,7 @@ require \$root . '/include/path_functions.inc.php';
 
 // Root path for JS
   \$cfg_js_root = <<< SCRIPT
-<script type="text/javascript">
+<script>
   if (typeof cfgRootPath == 'undefined') {
     var cfgRootPath = '\$cfg_root_path';
   }
@@ -2801,9 +2801,14 @@ QUERY;
           `checkout_authorID` int(10) unsigned default NULL,
           `roles` enum('SysAdmin','Admin','Staff') default NULL,
           `deleted` datetime default NULL,
+          `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
+          `articleid` smallint(6) unsigned NOT NULL,
+          `lastupdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY  (`id`),
+          KEY `language` (`language`),
+          KEY `articleid` (`articleid`),            
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 QUERY;
 
     $this->tableList['std_set'] = <<<QUERY
@@ -2850,9 +2855,14 @@ QUERY;
           `checkout_time` datetime default NULL,
           `checkout_authorID` int(10) unsigned default NULL,
           `deleted` datetime default NULL,
+          `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
+          `articleid` smallint(6) unsigned NOT NULL,
+          `lastupdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
+          KEY `language` (`language`),
+          KEY `articleid` (`articleid`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 QUERY;
 
     $this->tableList['student_notes'] = <<<QUERY

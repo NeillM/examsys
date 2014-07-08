@@ -25,13 +25,20 @@
 require '../../include/staff_auth.inc';    // Only let staff create links.
   
 if (isset($_POST['submit'])) {
-  $insertQuery = "INSERT INTO student_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, NULL)";
+  $articleid = 0;
+  $result = $mysqli->prepare("SELECT MAX(articleid) FROM student_help");
+  $result->execute();
+  $result->bind_result($articleid);
+  $result->fetch();
+  $result->close();
+  $articleid++;
+  
+  $insertQuery = "INSERT INTO student_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, NULL, '" . $_SESSION['ROGO_language'] . "', $articleid, '0000-00-00 00:00:00')";
   if (!$mysqli->query($insertQuery)) {
     echo "<p>" . $mysqli->error . "</p>\n";
     echo "<p>$insertQuery</p>\n";
     exit;
   }
-  $page_id = $mysqli->insert_id;
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,7 +52,7 @@ if (isset($_POST['submit'])) {
 
   <script type="text/javascript">
     function reloadHelp() {
-      window.top.location='index.php?id=<?php echo $page_id; ?>';
+      window.top.location='index.php?id=<?php echo $articleid; ?>';
     }
   </script>
 </head>
@@ -133,11 +140,11 @@ if (isset($_POST['submit'])) {
       }
     }
     if ($icon == 'closed_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$i\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><img src=\"../$icon\" id=\"button$i\" class=\"icon16_active\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
       echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$i\">";
       $sub_section = 1;
     } elseif ($icon == 'open_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$i\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><img src=\"../$icon\" id=\"button$i\" class=\"icon16_active\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
       echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$i\">";
       $sub_section = 1;
     } else {
@@ -145,7 +152,7 @@ if (isset($_POST['submit'])) {
         echo "</div>\n";
         $sub_section = 0;
       }
-      echo "<div><input type=\"radio\" name=\"pageid\" value=\"" . $help_toc[$i]['id'] . "\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" />&nbsp;<a style=\"color:#003DB2\" href=\"\" onclick=\"return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><input type=\"radio\" name=\"pageid\" value=\"" . $help_toc[$i]['id'] . "\"><img src=\"../$icon\" class=\"icon16_active\" alt=\"\" border=\"0\" />&nbsp;<a style=\"color:#003DB2\" href=\"\" onclick=\"return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
     }
   }
 
@@ -153,7 +160,7 @@ if (isset($_POST['submit'])) {
 ?>
 </div>
 <br />
-<div align="center"><input class="ok" type="submit" name="submit" value="Create Link" /><input class="cancel" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

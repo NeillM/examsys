@@ -25,13 +25,21 @@
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff create links.
 
 if (isset($_POST['submit'])) {
-  $insertQuery = "INSERT INTO staff_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, 'Staff', NULL)";
+  $articleid = 0;
+  $result = $mysqli->prepare("SELECT MAX(articleid) FROM staff_help");
+  $result->execute();
+  $result->bind_result($articleid);
+  $result->fetch();
+  $result->close();
+  $articleid++;
+  
+  
+  $insertQuery = "INSERT INTO staff_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, 'Staff', NULL, '" . $_SESSION['ROGO_language'] . "', $articleid, '0000-00-00 00:00:00')";
   if (!$mysqli->query($insertQuery)) {
     echo "<p>" . $mysqli->error . "</p>\n";
     echo "<p>$insertQuery</p>\n";
     exit;
   }
-  $page_id = $mysqli->insert_id;
   ?>
 <!DOCTYPE html>
 <html>
@@ -42,9 +50,9 @@ if (isset($_POST['submit'])) {
   <title>Help and Support Center</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <script type="text/javascript">
+  <script>
     function reloadHelp() {
-      window.top.location='index.php?id=<?php echo $page_id; ?>';
+      window.top.location='index.php?id=<?php echo $articleid; ?>';
     }
   </script>
 </head>
@@ -91,7 +99,8 @@ if (isset($_POST['submit'])) {
   $help_section = 0;
   $help_toc = array();
   
-  $result = $mysqli->prepare("SELECT id, title FROM staff_help WHERE id != 1 ORDER BY title, id");
+  $result = $mysqli->prepare("SELECT articleid, title FROM staff_help WHERE id != 1 AND language = ? ORDER BY title, id");
+	$result->bind_param('s', $_SESSION['ROGO_language']);
   $result->execute();
   $result->bind_result($page_id, $page_title);
   while ($result->fetch()) {
@@ -126,11 +135,11 @@ if (isset($_POST['submit'])) {
       }
     }
     if ($icon == 'closed_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$i\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><img src=\"../$icon\" id=\"button$i\" class=\"icon16_active\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
       echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$i\">";
       $sub_section = 1;
     } elseif ($icon == 'open_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$i\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><img src=\"../$icon\" id=\"button$i\" class=\"icon16_active\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
       echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$i\">";
       $sub_section = 1;
     } else {
@@ -138,7 +147,7 @@ if (isset($_POST['submit'])) {
         echo "</div>\n";
         $sub_section = 0;
       }
-      echo "<div><input type=\"radio\" name=\"pageid\" value=\"" . $help_toc[$i]['id'] . "\"><img src=\"../$icon\" width=\"16\" height=\"16\" alt=\"\" border=\"0\" />&nbsp;<a style=\"color:#003DB2\" href=\"\" onclick=\"return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
+      echo "<div><input type=\"radio\" name=\"pageid\" value=\"" . $help_toc[$i]['id'] . "\"><img src=\"../$icon\" class=\"icon16_active\" />&nbsp;<a style=\"color:#003DB2\" href=\"\" onclick=\"return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
     }
 
   }
@@ -147,7 +156,7 @@ if (isset($_POST['submit'])) {
 ?>
 </div>
 <br />
-<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink']; ?>" /><input class="cancel" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
 </body>
 </html>

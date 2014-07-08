@@ -400,7 +400,13 @@ function check_latex_random($q_ids, $mysqli) {
   </style>
   <![endif]-->
   <style type="text/css">
-<?php echo QuestionStatus::generate_status_css($status_array); ?>
+    <?php
+      if ($_SESSION['ROGO_language'] != 'en') {
+        echo "#content td.t, td.t {width: 180px !important}\n";
+        echo "#content td.d, td.d {width: 130px !important}\n";
+      }
+      echo QuestionStatus::generate_status_css($status_array);
+    ?>
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>

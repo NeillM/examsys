@@ -45,7 +45,7 @@ check_var('title', 'GET', true, false, false);
     .row {height:28px; border-bottom: 1px solid #A6CBEB}
   </style>
   
-  <script type="text/javascript">
+  <script>
     function updateToolbar(pageID) {
       parent.frames['toolbar'].document.myform.pageid.value=pageID;
     }
@@ -66,8 +66,8 @@ check_var('title', 'GET', true, false, false);
   echo "<body onload=\"updateToolbar(0)\">\n";
   
   $t = $_GET['title'] . '/%';
-  $search_results = $mysqli->prepare("SELECT id, title, type FROM student_help WHERE title LIKE ? ORDER BY title");
-  $search_results->bind_param('s', $t);
+  $search_results = $mysqli->prepare("SELECT articleid, title, type FROM student_help WHERE title LIKE ? AND language = ? ORDER BY title");
+  $search_results->bind_param('ss', $t, $_SESSION['ROGO_language']);
   $search_results->execute();
   $search_results->store_result();
   $search_results->bind_result($id, $title, $type);
@@ -84,7 +84,7 @@ check_var('title', 'GET', true, false, false);
   $row_no = 0;
   while ($search_results->fetch()) {
     $row_no++;
-    echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
+    echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
   }
   $search_results->close();
   $mysqli->close();

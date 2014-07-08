@@ -84,7 +84,7 @@ function drawHeader($tmp_page_no) {
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help_search.css" />
   
-  <script type="text/javascript">
+  <script>
     function displayPage(targetID, page_no) {
       for (page=1; page<=page_no; page++) {
         document.getElementById('page' + page).style.display='none';
@@ -100,8 +100,8 @@ function drawHeader($tmp_page_no) {
   echo "<div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
   
   if (isset($_GET['searchstring'])) {
-    $search_results = $mysqli->prepare("SELECT id, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) AND deleted IS NULL ORDER BY relevance DESC");
-    $search_results->bind_param('ss', $_GET['searchstring'], $_GET['searchstring']);
+    $search_results = $mysqli->prepare("SELECT articleid, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
+    $search_results->bind_param('sss', $_GET['searchstring'], $_GET['searchstring'], $_SESSION['ROGO_language']);
     $search_results->execute();
     $search_results->store_result();
     $search_results->bind_result($id, $title, $score);
@@ -125,7 +125,7 @@ function drawHeader($tmp_page_no) {
       $hit_stop = $page_size * $page_no;
       while ($search_results->fetch()) {
         if ($link_no > 0) {
-          echo "<tr><td class=\"row1\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td class=\"row2\">";
+          echo "<tr><td class=\"row1\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td class=\"row2\">";
         } else {
           // Start a new page.
           if ($hit_stop > $total_hits) $hit_stop = $total_hits;
@@ -142,7 +142,7 @@ function drawHeader($tmp_page_no) {
           }
           drawHeader($page_no);
           echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-          echo "<tr><td style=\"padding:2px; vertical-align:top; width:24px\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td style=\"padding-bottom:10px\">";
+          echo "<tr><td style=\"padding:2px; vertical-align:top; width:24px\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td style=\"padding-bottom:10px\">";
         }
         echo "<a class=\"title\" href=\"index.php?id=$id&highlight=" . $_GET['searchstring'] . "\" target=\"_top\">" . displayTitle($title) . "</a><br /><div class=\"path\">" . getPath($title, $id, $_GET['searchstring']) . "<div></td></tr>\n";
         $link_no++;
