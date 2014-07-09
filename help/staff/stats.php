@@ -36,7 +36,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=utf8" />
 
   <title>Rog&#333;: Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
@@ -183,7 +183,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   echo "<tr ><td>&nbsp;</td><td></td><td>&nbsp;</td></tr>\n";
 
   echo "<tr><td style=\"vertical-align:top\">";
-  $search_results = $mysqli->prepare("SELECT count(pageID) AS hits, title FROM help_log, staff_help WHERE help_log.pageID=staff_help.id AND help_log.type='staff' AND accessed > '$start_date' AND accessed < '$end_date' GROUP BY pageID ORDER BY hits DESC, title");
+  $search_results = $mysqli->prepare("SELECT count(pageID) AS hits, title FROM help_log, staff_help WHERE help_log.pageID = staff_help.id AND help_log.type = 'staff' AND accessed > '$start_date' AND accessed < '$end_date' GROUP BY pageID ORDER BY hits DESC, title");
   $search_results->execute();
   $search_results->store_result();
   $search_results->bind_result($hits, $title);

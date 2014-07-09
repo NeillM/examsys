@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/ebel_grid_options.inc';
 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['ebelgridtemplates'] = 'Szablon siatki metody Ebel';
 $string['createtemplate'] = 'Utwórz szablon siatki metody Ebel';
 $string['edittemplate'] = 'Edytuj szablon siatki metody Ebel';

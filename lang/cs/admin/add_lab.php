@@ -21,7 +21,6 @@ $string['computerlabs'] = 'Computer Labs';
 $string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
 $string['deletelab'] = 'Odstranit učebnu';
 $string['lowbandwidth'] = 'Pomalé připojení';
-$string['administrativetools'] = 'Nastavení';
 $string['name'] = 'Název';
 $string['campus'] = 'Kampus';
 $string['building'] = 'Budova';

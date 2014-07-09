@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/ebel_grid_options.inc';
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['ebelgridtemplates'] = 'Ebel Grid Templates';
 $string['createtemplate'] = 'Create Ebel Grid Template';
 $string['edittemplate'] = 'Edit Ebel Grid Template';

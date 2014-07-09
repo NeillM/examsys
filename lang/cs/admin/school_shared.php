@@ -17,7 +17,6 @@
 $string['createschool'] = 'Nová škola';
 $string['editschool'] = 'Upravit školu';
 $string['deleteschool'] = 'Odstranit školu';
-$string['administrativetools'] = 'Nastavení';
 $string['schools'] ='Školy';
 $string['school'] = 'Škola';
 $string['name'] = 'Název';

@@ -28,7 +28,7 @@
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=utf8" />
   <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 </head>
 <frameset rows="26,*" border="0" frameborder="0" framespacing="0">

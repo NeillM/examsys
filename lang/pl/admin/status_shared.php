@@ -20,7 +20,6 @@ $string['edit'] = 'Edytuj';
 $string['add'] = 'Dodaj';
 $string['status'] = 'Status'; //cognate
 $string['deletestatus'] = 'Usuń Status';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['statuses'] = 'Statusy';
 $string['name'] = 'Nazwa';
 $string['excludemarking'] = 'Wyklucz z oceny';

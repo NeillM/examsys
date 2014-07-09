@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['allschools'] = '&lt;All Schools&gt;';
 $string['alllabs'] = '&lt;All Labs&gt;';
 $string['default'] = 'Default';

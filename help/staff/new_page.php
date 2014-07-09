@@ -26,7 +26,7 @@ require '../../include/staff_auth.inc';    // Only let staff create pages.
 require '../../include/errors.inc';
 require '../../include/help.inc';
 
-header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
+header('Content-Type: text/html; charset=utf8');
 
 if (isset($_POST['save_changes'])) {
 	$tmp_title = $_POST['title'];

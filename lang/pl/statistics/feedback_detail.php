@@ -18,7 +18,6 @@ require '../lang/' . $language . '/include/months.inc';
 
 $string['summativeexamfeedback'] = 'Informacje zwrotne dot. egazminu końcowego';
 $string['feedbackstats'] = 'Statystyka informacji zwrotnych';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['statistics'] = 'Statystyka';
 $string['paper'] = 'Arkusz';
 $string['feedbackreleased'] = 'Informacje zwrotne uwolnione';

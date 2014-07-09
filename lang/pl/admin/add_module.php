@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/admin/list_modules.php';
 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['entermoduleid'] = 'Podaj identyfikator modułu.';
 $string['entermoduletitle'] = 'Podaj tytuł modułu.';
 $string['selectschool'] = 'Wybierz katedrę dla modułu.';

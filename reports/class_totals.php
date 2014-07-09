@@ -313,7 +313,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   $popup_width = 300;
 }
 ?>
-<div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width ?>px">
+<div id="menudiv" class="popupmenu">
   <div class="popup_row" onclick="viewScript();">
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title" id="item1"><?php echo $string['examscript'] ?></div>

@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['faculties'] = 'Faculties';
-$string['administrativetools'] = 'Administrative Tools';
 $string['name'] = 'Name';
 $string['createfaculty'] = 'Create new Faculty';
 $string['editfaculty'] = 'Edit Faculty';

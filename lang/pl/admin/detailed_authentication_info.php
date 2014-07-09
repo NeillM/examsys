@@ -23,7 +23,6 @@
  */
 
 $string['detailed_authentication_information']='Szczegółowe informacje dot. uwierzytelniania';
-$string['administrativetools'] = 'Narzedzia administracyjne';
 $string['System Information'] = 'Informacje Systemowe';
 $string['No'] = 'Nr';
 $string['Name'] = 'Nazwa';

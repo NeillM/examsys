@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['systeminformation'] = 'Systémové informace';
-$string['administrativetools'] = 'Nastavení';
 $string['table'] = 'Tabulka';
 $string['records'] = 'Záznamy';
 $string['updated'] = 'Aktualizováno';

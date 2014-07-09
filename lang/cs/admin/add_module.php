@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/admin/list_modules.php';
 
-$string['administrativetools'] = 'Nastavení';
 $string['entermoduleid'] = 'Zadejte, prosím, identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
 $string['selectschool'] = 'Přiřaďte, prosím, k modulu školu.';

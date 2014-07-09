@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['loglatedetails'] = 'Log Late Details';
 $string['papertitle'] = 'Paper Title';
 $string['studentslate'] = 'Students Late';

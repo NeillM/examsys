@@ -17,14 +17,12 @@
 require '../lang/' . $language . '/include/months.inc';
 
 $string['summativeexamdetails'] = 'Szczegóły egzaminu końcowego'; 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['summativescheduling'] = 'Planowanie egzaminu końcowego';
 $string['Paper'] = 'Arkusz';
 $string['jumptopaper'] = 'Przejdź do arkusza';
 $string['editproperties'] = 'Edytuj właściwości';
 $string['converttoformative'] = 'Przekształć na egzamin formatywny';
 $string['Email'] = 'Napisz Email do ';
-
 $string['papername'] = 'Nazwa arkusza';
 $string['paperowner'] = 'Właściwości arkusza';
 $string['session'] = 'Sesja';

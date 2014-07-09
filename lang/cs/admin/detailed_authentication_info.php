@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['detailed_authentication_information']='Podrobná autentizační zpráva';
-$string['administrativetools'] = 'Nastavení';
 $string['System Information'] = 'Systémová zpráva';
 $string['No'] = 'Číslo';
 $string['Name'] = 'Název';

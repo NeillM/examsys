@@ -22,7 +22,6 @@ $string['createLTIkeys'] = 'Nový LTI klíč ';
 $string['editLTIkeys'] = 'Upravit LTI klíč ';
 $string['deleteLTIkeys'] = 'Odstranit LTI klíč ';
 $string['ltikeys'] = 'LTI klíče ';
-$string['administrativetools'] = 'Nastavení';
 $string['addltikeys'] = 'Přidat LTI klíč';
 $string['editltikeys'] = 'Upravit LTI klíč';
 $string['mandatory'] = 'Označte <strong>povinná</strong> pole, která musí být vyplněna.';

@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Nastavení';
 $string['allschools'] = '&lt;Všechny školy&gt;';
 $string['alllabs'] = '&lt;Všechny učebny&gt;';
 $string['default'] = 'Výchozí';

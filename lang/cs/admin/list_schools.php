@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['schools'] ='Školy';
 $string['name'] = 'Název';
 $string['faculty'] = 'Fakulta';

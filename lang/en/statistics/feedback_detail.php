@@ -18,7 +18,6 @@ require '../lang/' . $language . '/include/months.inc';
 
 $string['summativeexamfeedback'] = 'Summative Exam Feedback';
 $string['feedbackstats'] = 'Feedback Statistics';
-$string['administrativetools'] = 'Administrative Tools';
 $string['statistics'] = 'Statistics';
 $string['paper'] = 'Paper';
 $string['feedbackreleased'] = 'Feedback Released';

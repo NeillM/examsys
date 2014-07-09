@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['loglatedetails'] = 'Detaily pozdě přihlášených';
 $string['papertitle'] = 'Nadpis dokumentu';
 $string['studentslate'] = 'Pozdě přihlášení studenti';

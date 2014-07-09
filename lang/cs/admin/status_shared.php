@@ -20,7 +20,6 @@ $string['edit'] = 'Upravit';
 $string['add'] = 'Přidat';
 $string['status'] = 'Status';
 $string['deletestatus'] = 'Smazat Status';
-$string['administrativetools'] = 'Nastavení';
 $string['statuses'] = 'Statusy';
 $string['name'] = 'Název';
 $string['excludemarking'] = 'Neznámkovat';

@@ -154,7 +154,6 @@ hr {
   font-size: 80%;
   display: none;
   position: absolute;
-	width: 160px;
 	top: 20px;
 	right: 6px;
 	border: 1px solid #4F81BD;
@@ -162,6 +161,7 @@ hr {
 	color: black;
 	padding: 0;
 	z-index: 1000;
+  min-width: 160px;
 }
 
 #toprightmenu a {
@@ -173,7 +173,7 @@ hr {
   padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 6px;
-  padding-right: 6px;
+  padding-right: 20px;
 	margin: 2px;
 }
 

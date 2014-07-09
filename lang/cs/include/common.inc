@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['administrativetools'] = 'Nastavení';
 $string['helpsupport'] = 'Nápověda a podpora';
 $string['aboutrogo'] = 'O programu Rog&#333; %s';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';

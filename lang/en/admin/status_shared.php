@@ -20,7 +20,6 @@ $string['edit'] = 'Edit';
 $string['add'] = 'Add';
 $string['status'] = 'Status';
 $string['deletestatus'] = 'Delete Status';
-$string['administrativetools'] = 'Administrative Tools';
 $string['statuses'] = 'Statuses';
 $string['name'] = 'Name';
 $string['excludemarking'] = 'Exclude from marking';

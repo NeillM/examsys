@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['administrativetools'] = 'Administrative Tools';
 $string['helpsupport'] = 'Help &amp; Support';
 $string['aboutrogo'] = 'About Rog&#333; %s';
 $string['html5warn'] = 'Rog&#333; needs HTML5 support, please upgrade your browser to a newer version.';

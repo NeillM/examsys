@@ -89,7 +89,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   
   <title>Help and Support Center</title>

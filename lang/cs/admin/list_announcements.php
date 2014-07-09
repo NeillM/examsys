@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['createannouncement'] = 'Nové oznámení';
 $string['editannouncement'] = 'Upravit oznámení';
 $string['deleteannouncement'] = 'Odstranit oznámení';

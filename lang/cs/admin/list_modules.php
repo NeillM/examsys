@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['modules'] = 'Moduly';
-$string['administrativetools'] = 'Nastavení';
 $string['moduleid'] = 'ID modulu';
 $string['name'] = 'Název';
 $string['school'] = 'Škola';

@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/ebel_grid_options.inc';
 
-$string['administrativetools'] = 'Nastavení';
 $string['ebelgridtemplates'] = 'Šablony Ebelovy mřížky';
 $string['createtemplate'] = 'Nová šablona Ebelovy mřížky';
 $string['edittemplate'] = 'Upravit šablonu Ebelovy mřížky';

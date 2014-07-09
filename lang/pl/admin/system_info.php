@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['systeminformation'] = 'Informacje systemowe';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['table'] = 'Tablica';
 $string['records'] = 'Rekordy';
 $string['updated'] = 'Zaktualizowane';

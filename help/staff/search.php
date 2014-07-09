@@ -77,7 +77,7 @@ function drawHeader($tmp_page_no) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=utf8" />
   
   <title>Rog&#333;</title>
   
@@ -107,9 +107,11 @@ function drawHeader($tmp_page_no) {
     } else {
       $roles_check = 'AND roles="Staff"';
     }
+    
+    $searchstring = $_GET['searchstring'];
   
     $search_results = $mysqli->prepare("SELECT articleid, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) $roles_check AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
-    $search_results->bind_param('sss', $_GET['searchstring'], $_GET['searchstring'], $_SESSION['ROGO_language']);
+    $search_results->bind_param('sss', $searchstring, $searchstring, $_SESSION['ROGO_language']);
     $search_results->execute();
     $search_results->store_result();
     $search_results->bind_result($id, $title, $score);

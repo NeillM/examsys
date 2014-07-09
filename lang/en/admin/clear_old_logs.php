@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['clearoldlogs'] = 'Clear Old Logs';
 $string['log0deleted'] = 'Log0 records deleted:';
 $string['log1deleted'] = 'Log1 records deleted:';

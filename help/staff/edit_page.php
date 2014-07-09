@@ -28,7 +28,7 @@ require '../../include/help.inc';
 
 $pageid = check_var('id', 'REQUEST', true, false, true);
 
-header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
+header('Content-Type: text/html; charset=utf8');
 
 $rows = 0;
 $result = $mysqli->prepare("SELECT title, body, id, DATE_FORMAT(checkout_time,'%Y%m%d%H%i%S') AS checkout_time, checkout_authorID, type, roles FROM staff_help WHERE articleid = ? AND language = ? LIMIT 1");
@@ -93,7 +93,7 @@ if (isset($_POST['save_changes'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=7,9,10" >
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf8">
 
   <title>Rog&#333;: Edit Help File</title>
 
