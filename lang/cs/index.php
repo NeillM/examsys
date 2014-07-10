@@ -57,4 +57,5 @@ $string['duplicatefoldername'] = 'Duplicitní název složky, použijte, prosím
 $string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, prosím, kontaktujte:';
 $string['papersforreview'] = 'Dokumenty k rezenci';
 $string['deadline'] = 'Uzávěrka:';
+$string['recent'] = 'Recent';
 ?>

@@ -63,9 +63,9 @@ require_once './include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="./css/warnings.css" />
   <link rel="stylesheet" type="text/css" href="./css/announcements.css" />
 	
-	
-	<style>
-	.recent_icon {width:16px; height:16px; padding-right:8px}
+	<style type="text/css">
+    .recent {margin-left:-25px; padding-bottom:9px}
+    .recent a {color:black}
 	</style>
 
   <script type="text/javascript" src="./js/staff_help.js"></script>

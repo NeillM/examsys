@@ -57,4 +57,5 @@ $string['duplicatefoldername'] = 'Duplicate folder name, please use an alternati
 $string['deadline'] = 'Deadline:';
 $string['nomodules'] = 'You are not a member of any teams. For help please contact:';
 $string['papersforreview'] = 'Papers for Review';
+$string['recent'] = 'Recent';
 ?>

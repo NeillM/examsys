@@ -40,7 +40,7 @@
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /></a></td><td class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><?php echo $string['mypersonalkeywords']; ?></a></div>
 </div>
 
-<div style="font-size:170%; padding-top:40px" id="papertasks">Recent</div>
+<div style="font-size:170%; padding-top:40px" id="papertasks"><?php echo $string['recent'] ?></div>
 
 <?php
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
@@ -53,7 +53,7 @@
   $result->bind_result($paperID, $paper_title, $accessed, $paper_type);
   $result->store_result();
   while ($result->fetch()) {
-    echo "<li style=\"margin-left:-25px; padding-bottom:9px\" class=\"menuitem\"><a ";
+    echo "<li class=\"recent\"><a ";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
     echo "href=\"./paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
   }

@@ -66,9 +66,9 @@ function displayReview($review, $userObj) {
 		$review['distinction_score'] = 'top 20%';
 	}
   if ($review['review_total'] == $review['total_marks']) {
-    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
   } else {
-    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
   }
   return $html;
 }
@@ -164,14 +164,13 @@ $reviews_html .= <<< TABLEHEADER
 <thead>
 <tr>
   <th style="width:18px">&nbsp;</td>
-  <th class="col" style="width:18%">{$string['standardsetter']}</th>
-  <th class="{sorter: 'datetime'} col" style="width:13%">{$string['date']}</th>
-  <th class="col" style="width:10%">{$string['passscore']}</th>
-  <th class="col" style="width:10%">{$string['distinction']}</th>
-  <th class="col" style="width:12%">{$string['reviewmarks']}</th>
-  <th class="col" style="width:10%">{$string['papertotal']}</th>
-  <th class="col" style="width:14%">{$string['method']}</th>
-  <th class="col" width="25%">&nbsp;</th>
+  <th class="col">{$string['standardsetter']}</th>
+  <th class="{sorter: 'datetime'} col">{$string['date']}</th>
+  <th class="col">{$string['passscore']}</th>
+  <th class="col">{$string['distinction']}</th>
+  <th class="col">{$string['reviewmarks']}</th>
+  <th class="col">{$string['papertotal']}</th>
+  <th class="col">{$string['method']}</th>
 </tr>
 </thead>
 <tbody>

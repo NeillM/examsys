@@ -161,8 +161,10 @@ a.greylink:hover {
   cursor: pointer;
 }
 .menuitem {
-  width: 175px;
+  width: 160px;
 	cursor: pointer;
+  padding-left: 38px;
+  text-indent: -36px;
 }
 .menuitem span {
   width: 100%;
