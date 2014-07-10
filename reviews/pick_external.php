@@ -63,41 +63,43 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 <body>
 <?php
-  require '../include/toprightmenu.inc';
-	echo draw_toprightmenu();
-  
-  if ($_GET['mode'] == 0) {
-    $type = $string['initialinvitation'];
-  } else {
-    $type = $string['reminder'];    
-  }
-?>
-  <div class="head_title" style="font-size:90%">
-    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
-    <?php
-    if (isset($_GET['module']) and $_GET['module'] != '') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-    
-      $module_url = '&module=' . $_GET['module'];
-    } else {
-      $module_url = '';
-    }
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . $module_url . '">' . $properties->get_paper_title() . '</a>';
-    ?>
-    </div>
-    <div class="page_title"><?php echo $string['externalexaminers'] ?>: <span style="font-weight:normal"><?php echo $type ?></span></div>
-  </div>
-  
-  <br />
-  <div class="key"><?php echo $string['msg'] ?></div>
-  
-  <div style="margin: 15px">
-<?php
+require '../include/toprightmenu.inc';
+echo draw_toprightmenu();
 
+if ($_GET['mode'] == 0) {
+  $type = $string['initialinvitation'];
+} else {
+  $type = $string['reminder'];    
+}
+
+?>
+<div class="head_title" style="font-size:90%">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
+  <?php
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+
+    $module_url = '&module=' . $_GET['module'];
+  } else {
+    $module_url = '';
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . $module_url . '">' . $properties->get_paper_title() . '</a>';
+  ?>
+  </div>
+  <div class="page_title"><?php echo $string['externalexaminers'] ?>: <span style="font-weight:normal"><?php echo $type ?></span></div>
+</div>
+  
+<?php
 $externals = $properties->get_externals();
-foreach ($externals as $externalID=>$external_name) {
-  echo "<input type=\"button\" name=\"$externalID\" id=\"$externalID\" value=\"$external_name\" class=\"external\" /><br />";
+
+if (count($externals) > 0) {
+  echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n<div style=\"margin: 15px\">\n";
+  foreach ($externals as $externalID=>$external_name) {
+    echo "<input type=\"button\" name=\"$externalID\" id=\"$externalID\" value=\"$external_name\" class=\"external\" /><br />";
+  }
+} else {
+  echo $notice->info_strip($string['noexternals'], 100) . "\n";
 }
 
 $mysqli->close();
