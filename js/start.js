@@ -31,7 +31,7 @@ function UpdateClock( hours, minutes, seconds) {
 
 
 //BP Performs countdown. Saves if counter has reached 0
-function UpdateTimerWithRemainingTime( remaining_time, close ) {
+function UpdateTimerWithRemainingTime(remaining_time, close) {
   
   minutes = Math.floor( remaining_time / 60 );
   minutes = Math.round( minutes );
@@ -39,7 +39,7 @@ function UpdateTimerWithRemainingTime( remaining_time, close ) {
   
   UpdateClock( 0, minutes, seconds);
   
-  if( remaining_time == 0 && close == true){
+  if (remaining_time == 0 && close == true) {
     KillClock();
     alert( 'Your time has expired and your answers have been saved' );
     forceSave();

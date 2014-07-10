@@ -142,12 +142,12 @@ hr {
 	height: 20px !important;
 	top: 0 !important;
 	margin-right: 6px !important;
-  background-color: #7BA5D6;
+  background-color: #477DCC;
   float: right;
 }
 
 #toprightmenu_icon:hover {
-  background-color: #4F81BD;
+  background-color: #254A83;
 }
 
 #toprightmenu {
@@ -156,7 +156,7 @@ hr {
   position: absolute;
 	top: 20px;
 	right: 6px;
-	border: 1px solid #4F81BD;
+	border: 1px solid #477DCC;
 	background-color: white;
 	color: black;
 	padding: 0;
@@ -172,7 +172,7 @@ hr {
 .trm_div {
   padding-top: 3px;
   padding-bottom: 3px;
-  padding-left: 6px;
+  padding-left: 22px;
   padding-right: 20px;
 	margin: 2px;
 }

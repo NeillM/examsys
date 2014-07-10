@@ -100,7 +100,7 @@ if($question->get_locked() == '') {
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th class="align-left auto"><?php echo $string['formula'] ?> <span class="note indent"><a href="#" class="help-link" rel="68"><img src="../../artwork/tooltip_icon.gif" class="help_tip" alt="i" title="Click link for more details in the onlin help."/></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span></th>
+              <th class="align-left auto"><?php echo $string['formula'] ?> <span class="note indent"><a href="#" class="help-link" rel="68"><img src="../../artwork/tooltip_icon.gif" class="help_tip" alt="i" title="<?php echo $string['tooltip_formula'] ?>"/></a>&nbsp;<a href="#" class="help-link" rel="68"><?php echo $string['suppfunctions'] ?></a></span></th>
               <th class="align-left auto"><?php echo $string['units'] ?></th>
             </tr>
           </thead>

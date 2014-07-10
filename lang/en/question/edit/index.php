@@ -275,7 +275,9 @@ $string['withzeros'] = 'incl. trailing zeros';
 $string['enforcedisplay'] = 'Enforce precision of student answer';
 $string['includetrailing0'] = 'Including trailing 0s';
 $string['notenforced'] = 'Not enforced';
+$string['tooltip_formula'] = 'Click link for more details in the online help.';
 // Textbox
 $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';
+
 

@@ -727,11 +727,11 @@ if ($css != '') {
     }
     var agree = confirm("<?php echo $string['javacheck1']; ?>");
     if (agree) {
-      document.body.style.cursor = 'wait';
+      $('body').css('cursor','wait');
       submitted = true;
       return true;
     } else {
-      document.body.style.cursor = '';
+      $('body').css('cursor','default');
       return false;
     }
   }
@@ -743,9 +743,9 @@ if ($css != '') {
       return false;
     }
     if ($('#button_pressed').val() == 'finish') {
-      var agree = confirm("<?php echo $string['javacheck2']; ?>");
+      var agree = confirm("<?php echo $string['javacheck2'] ?>");
       if (agree) {
-        document.body.style.cursor = 'wait';
+        $('body').css('cursor','wait');
         submitted = true;
         return true;
       } else {
@@ -754,14 +754,14 @@ if ($css != '') {
         return false;
       }
     } else {
-      document.body.style.cursor = 'wait';
+      $('body').css('cursor','wait');
       submitted = true;
       return true;
     }
   }
   var jumpScreen = function () {
 		$('#button_pressed').val('jump_screen');
-		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
+		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
 		return userSubmit(null);
   }
 <?php
@@ -809,15 +809,22 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   <?php // Normal user submit by clicking on next, prevous, finish or jump screen ?>
   var userSubmit = function (event) {
+    <?php // Save any data from wysiwyg  ?>
+    if (typeof(tinyMCE) != "undefined") {
+      tinyMCE.triggerSave();
+    }
+    
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     stopAutoSave();
     if (!!event) {
       $('#button_pressed').attr('value',event.target.id);
     }
+    
+
     if (confirmSubmit()) {
       $('#saveError').fadeOut('slow');
-      $('#savemsg').html("<img src=\"../artwork/busy.gif\" width=\"20\" height=\"20\" alt=\"Wait\" />")
+      $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />")
 
       <?php // Log which method the users submitted the page via ?>
       if (!!event) {
@@ -851,7 +858,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     stopAutoSave();
 
     <?php // Save any data from wysiwyg  ?>
-    if (typeof(tinyMCE) != "undefined"){
+    if (typeof(tinyMCE) != "undefined") {
       tinyMCE.triggerSave();
     }
     var formData = $('#qForm').serialize();
@@ -996,7 +1003,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
     $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
-    document.body.style.cursor = 'default';
+    $('body').css('cursor','default');
     submitted = false;
 
     return false;
@@ -1004,11 +1011,11 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   var fire = function (scrno) {
     submitType = 'userSubmit';
-    document.questions.button_pressed.value='fire_exit';
+    $('#button_pressed').val('fire_exit');
     if (usingAjax) {
-      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>&dont_record=true";
+      $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
     } else {
-      document.questions.action="fire_evacuation.php?id=<?php echo $_GET['id']; ?>";
+      $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $_GET['id'] ?>");
     }
     ajaxSave(1);
   }

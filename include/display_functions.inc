@@ -564,7 +564,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 					//<!-- ======================== HTML5 part include disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 27) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "',1,'#FFC0C0','area','answer');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
@@ -1009,14 +1009,14 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $settings = json_decode($question['settings'], true);
           if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              echo "<blockquote><textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea></blockquote>\n";
+              echo "<textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea>\n";
               $unanswered = true;
             } else {
               $ans = '';
               if (isset($user_answers[$current_screen][$q_id])) {
                 $ans = $user_answers[$current_screen][$q_id];
               }
-              echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea></blockquote>\n";
+              echo "<textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
             }
           } else {
             include_once('wysiwyg_editor.inc');
@@ -1054,11 +1054,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         ?>
         <div align="left">
 				<?php
-				if ($configObject->get('cfg_interactive_qs')=='html5') {
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part include disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . ($tmp_height-29) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
@@ -1142,7 +1142,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 				//<!-- ======================== HTML5 part include disp ================= -->
 				echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
 				echo "<br /><div id=\"canvasbox\"></div>\n";
-				echo "<script language='JavaScript' type='text/javascript'>\n";
+				echo "<script>\n";
 				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
 				if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 				echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";

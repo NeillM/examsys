@@ -262,6 +262,7 @@ $string['withzeros'] = 'incl. trailing zeros';	// translate
 $string['enforcedisplay'] = 'Vynutit přesnost studentovi odpovědi';
 $string['includetrailing0'] = 'Including trailing 0s';	// translate
 $string['notenforced'] = 'Nevynuceno';
+$string['tooltip_formula'] = 'Click link for more details in the online help.';
 // Textbox
 $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';

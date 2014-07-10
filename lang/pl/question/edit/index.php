@@ -275,6 +275,7 @@ $string['withzeros'] = 'z uwzględnieniem zer wiodących';
 $string['enforcedisplay'] = 'Wymuś precyzję w odpowiedziach studenckich';
 $string['includetrailing0'] = 'Uwzględniając zera wiodące';
 $string['notenforced'] = 'Nie wymuszone';
+$string['tooltip_formula'] = 'Click link for more details in the online help.';
 // Textbox
 $string['reminders'] = 'Przypomnienia';
 $string['reminder_no'] = 'Przypomnienie #%d';

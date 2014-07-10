@@ -44,7 +44,7 @@ function draw_toprightmenu($helpID = 1) {
     $html .= '<div class="trm_div" id="admintools">' . $string['administrativetools'] . '</div>';
   }
   $html .= "<div class=\"trm_div\" onclick=\"toprightmenu_launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
-  $html .= '<div class="trm_div" id="signout">' . $string['signout'] . '</div>';
+  $html .= '<div class="trm_div" id="signout" style="background-image: url(\'' . $configObject->get('cfg_root_path') . '/artwork/logout16.gif\'); background-repeat: no-repeat; background-position: 0 3px">' . $string['signout'] . '</div>';
   $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get('rogo_version')) . '</div>';
 
   $html .= '</div>';

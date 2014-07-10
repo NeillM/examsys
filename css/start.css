@@ -214,6 +214,7 @@ pre {
   height: 60px;
 	padding: 0;
   border: 2px solid #C42828;
+  background-color: #FFEBEB;
 }
 #saveError div { 
   font-size: 110%;
@@ -256,4 +257,12 @@ pre {
 }
 .labelling {
   margin-top: 8px;
+}
+.busyicon {
+  width: 23px;
+  height: 23px;
+  vertical-align: bottom;
+}
+.defaultSkin table.mceLayout {
+  margin-top: 6px;
 }
