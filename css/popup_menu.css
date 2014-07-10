@@ -11,6 +11,7 @@
   -moz-box-shadow: 0 0 3px #A0A0A0;
   -webkit-box-shadow: 0 0 3px #A0A0A0;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+	padding-right: 12px;
 }
 
 .popup_row {

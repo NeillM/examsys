@@ -104,11 +104,11 @@ table.fixed {
 }
 
 .breadcrumb a {
-  color:#316AC5 !important;
+  color: #316AC5 !important;
 }
 
 .dkblue_header {
-  color:#2B5BAB
+  color: #2B5BAB;
 }
 
 .midblue_header {
@@ -170,10 +170,7 @@ hr {
 }
 
 .trm_div {
-  padding-top: 3px;
-  padding-bottom: 3px;
-  padding-left: 22px;
-  padding-right: 20px;
+  padding: 3px 20px 3px 22px;
 	margin: 2px;
 }
 
