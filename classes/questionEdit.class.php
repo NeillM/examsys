@@ -351,9 +351,6 @@ WHERE q_id = ?
 QUERY;
       }
       $result = $this->_mysqli->prepare($query);
-      //var_dump($this->_data);
-      //array_walk($this->_data, array($this->_mysqli,'real_escape_string'));
-      //var_dump($this->_data);
       call_user_func_array (array($result,'bind_param'), $params);
       $result->execute();
       $success = ($result->affected_rows > -1);

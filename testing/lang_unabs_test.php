@@ -241,7 +241,6 @@ foreach($files as $filename) {
 				if ($pop) {
 					//calculate the line number
 					$line_number = substr_count(substr($file_content,0,$pos1),'~')+1;
-					//if ($line_number==563) var_dump($filename . $line_number . $pot0);
 					$diff_table[$diff_index++] = Array($part_index,$filename,$pos1,substr($pot0,$trs-1),$line_number,$part_element[0],$part_element[1]);
 				}
 			}

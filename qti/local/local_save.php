@@ -59,7 +59,6 @@ class IE_Local_Save extends IE_Main {
       return;
     }
 
-    //var_dump($params,$data);
     $paperid = $params->paper;
 
     $userObj = UserObject::get_instance();
@@ -67,11 +66,9 @@ class IE_Local_Save extends IE_Main {
     $db = new Database();
     $db->SetTable('properties');
     $db->AddField('*');
-    //echo "Getting paper $paperid<br>";
     $db->AddWhere('property_id', $paperid, 'i');
     $paper_row = $db->GetSingleRow();
 
-//    $q_group = $paper_row['moduleID'];
     $ownerid = $userID;
 
     $data->ownerID = $userID;
@@ -205,9 +202,8 @@ class IE_Local_Save extends IE_Main {
         $this->AddError("Question type " . $question->type . " not yet supported", $question->load_id);
         continue;
       }
-//var_dump($this->q_row['q_option_order']);
 
-      if(!(in_array($this->q_row['q_option_order'],array('display order','alphabetic','random')))) {
+      if (!(in_array($this->q_row['q_option_order'], array('display order','alphabetic','random')))) {
         $this->q_row['q_option_order']='display order';
         print "correcting q_option_order";
       }
@@ -795,9 +791,8 @@ class IE_Local_Save extends IE_Main {
    */
   function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = NULL) {
     $new_keywords = array();
-    echo "savekeywrds<br>";
-//var_dump($q_id, $q_keywords, $moduleID, $user_keywords, $user_keywords2);
-    //var_dump($user_keywords,$q_keywords);
+    echo "savekeywrds<br />";
+
     // Loop through the keywords, saving against the user and question
     for ($i = 0; $i < count($q_keywords); $i++) {
       $kw_id = -1;

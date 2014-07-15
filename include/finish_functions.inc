@@ -311,7 +311,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
       } else {
         $possible_array = array();
         foreach ($paper[$i]['option_text'] as $checkID) {
-          //var_dump($checkID);
           $used = false;
           for ($j = 1; $j <= $q_no; $j++) {
             if ($paper[$j]['q_id'] == $checkID) {

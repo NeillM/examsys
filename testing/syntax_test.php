@@ -178,8 +178,4 @@ foreach ($diff_table as $df) {
   }
 }
 echo '</ol>';
-
-//var_dump($paths);
-//var_dump($files);
-//var_dump($diff_table);
 ?>

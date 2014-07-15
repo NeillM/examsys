@@ -12,12 +12,12 @@ $mysqli->autocommit(false);
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
+if (!file_exists("./stopfile_convert_calc_ans_done.txt")) {
 
-  $configObj=Config::get_instance();
+  $configObj = Config::get_instance();
 
 
-  $root=$configObj->get('root');
+  $root = $configObj->get('root');
 
   $enhancedcalcType = $configObj->get('enhancedcalc_type');
   if (!is_null($enhancedcalcType)) {
@@ -64,7 +64,6 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                 unset($jsoned);
                 
                 $settings = json_decode($settings, true);
-                //$userans[$qid][$uid] = $user_answer;
 
                 $tmp_answer = explode('|', $user_answer);
 
@@ -122,7 +121,6 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                     $new_user_answer['uansnumb'] = '';
                     $new_user_answer['uans'] = '';
                     $new_user_answer['uansunit'] = '';
-                    //echo "<td>" . display_response($tmp_display_students_response, 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q' . $question . '\" size=\"10\" value=\"" . $string['unanswered'] . "\" />" . $settings['units'];
                 } else {
                     echo '<td>';
 
@@ -131,22 +129,18 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                         $difference = round(abs($saved_response_clean - $tmp_answer[1]), 12);
 
                         if ($saved_response_clean == $tmp_answer[1]) {
-                            //$paper[$question]['mark'] = $paper[$question]['marks_correct'];
                             $statusdata['overall'] = 1;
                             $statusdata['exact'] = true;
                         } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-                            //$paper[$question]['mark'] = $paper[$question]['marks_correct'];
                             $statusdata['overall'] = 2;
                             $statusdata['exact'] = false;
                             $statusdata['tolerance_full'] = true;
                         } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-                            //$paper[$question]['mark'] = $paper[$question]['marks_partial'];
                             $statusdata['overall'] = 3;
                             $statusdata['exact'] = false;
                             $statusdata['tolerance_full'] = false;
                             $statusdata['tolerance_partial'] = true;
                         } else {
-                            //$paper[$question]['mark'] = $paper[$question]['marks_incorrect'];
                             $statusdata['overall'] = 0;
                             $statusdata['exact'] = false;
                             $statusdata['tolerance_full'] = false;
@@ -168,7 +162,6 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                     $variable_array = array();
                 }
                 $varno = 0;
-                //   var_dump($variable_array);
                 foreach ($variable_array as $individual_variable) {
                     if ($individual_variable != '') {
                         $varsdata[$vars[$varno]] = $individual_variable;
@@ -181,7 +174,7 @@ if(!file_exists("./stopfile_convert_calc_ans_done.txt")) {
                 $new_user_answer['original'] = $user_answer;
 
 
-              //calculate distance from correct if needed
+              // Calculate distance from correct if needed
                 $new_user_answer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($new_user_answer['uansnumb'], $new_user_answer['cans']);
                 $jsoned = json_encode($new_user_answer);
 

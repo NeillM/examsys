@@ -83,7 +83,6 @@ foreach ($question->options as $o_id => $option) {
 for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
   $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
   include 'options/opt_textbox.php';
-  var_dump($option);
 }
 ?>
           <tbody class="add-option-holder">

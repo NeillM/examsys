@@ -203,7 +203,6 @@ class EnhancedCalc extends Question implements questionInterface {
 					$this->useranswer['status']['error'] = true;
 					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
-					//var_dump($e->getCode() . " - " . $e->getMessage());
 				}
 
 				$this->useranswer['status']['overall'] = $returnstatus;

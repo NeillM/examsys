@@ -185,71 +185,68 @@ foreach($log_answers as $id => $ans) {
   $dist=$ans['distance'];
   $log_answers2[$dist][]=$id;
 }
-krsort($log_answers2,SORT_NUMERIC);
+krsort($log_answers2, SORT_NUMERIC);
 
-//var_dump($log_answers2);
 foreach($log_answers2 as $innerans) {
-foreach ($innerans as $answerin2) {
-  $answer=$log_answers[$answerin2];
-if(!isset($answer['distance'])) {
-  $answer['distance'] =$string['na'];
-}
-
-  if($answer['distance'] == 9999999) {
-    $distance = $string['na'];
-  } else {
-    if($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf' ) {
-      $answer['distance'] = 0;
+  foreach ($innerans as $answerin2) {
+    $answer = $log_answers[$answerin2];
+    if (!isset($answer['distance'])) {
+      $answer['distance'] =$string['na'];
     }
-    $distance  = number_format($answer['distance'], 2) . '%';
-  }
 
-  $new_type = '';
-  $reason = '';
-  $or_class = '';
-  if (isset($overrides[$answer['id']])) {
-    $new_type = $overrides[$answer['id']]['type'];
-    $reason = $overrides[$answer['id']]['reason'];
-    $or_class = ' class="overridden"';
-  } else {
-    // Populate with existing mark type
-    if (isset($q_marks[$answer['mark']])) {
-      $new_type = $q_marks[$answer['mark']];
+    if ($answer['distance'] == 9999999) {
+      $distance = $string['na'];
+    } else {
+      if($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf' ) {
+        $answer['distance'] = 0;
+      }
+      $distance  = number_format($answer['distance'], 2) . '%';
     }
-  }
-  echo "<tr{$or_class}>";
-  $u_vars = $answer['answer_obj']->get_user_vars();
-  foreach ($u_vars as $label => $value) {
-    echo "<td class=\"shortcolumn\">$value</td>\n";
-  }
-  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_full();
- // if ($answer['answer_obj']->get_show_units()) {
- //   echo ' ' . $answer['answer_obj']->get_user_answer_units();
-  //}
-  echo "</td>\n";
-  echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_real_answer();
-  if ($answer['answer_obj']->get_show_units()) {
-    echo ' ' . $answer['answer_obj']->get_user_answer_units_used();
-  }
-  echo "</td>\n";
-  echo '<td class="longcolumn">' . $distance . "</td>\n";
 
-  foreach ($mark_types as $mt) {
-    $checked = ($mt == $new_type) ? ' checked="checked"' : '';
-?>
-  <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="<?php echo $mt ?>"<?php echo $checked ?> /></td>
-<?php
+    $new_type = '';
+    $reason = '';
+    $or_class = '';
+    if (isset($overrides[$answer['id']])) {
+      $new_type = $overrides[$answer['id']]['type'];
+      $reason = $overrides[$answer['id']]['reason'];
+      $or_class = ' class="overridden"';
+    } else {
+      // Populate with existing mark type
+      if (isset($q_marks[$answer['mark']])) {
+        $new_type = $q_marks[$answer['mark']];
+      }
+    }
+    echo "<tr{$or_class}>";
+    $u_vars = $answer['answer_obj']->get_user_vars();
+    foreach ($u_vars as $label => $value) {
+      echo "<td class=\"shortcolumn\">$value</td>\n";
+    }
+    echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_full();
+
+    echo "</td>\n";
+    echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_real_answer();
+    if ($answer['answer_obj']->get_show_units()) {
+      echo ' ' . $answer['answer_obj']->get_user_answer_units_used();
+    }
+    echo "</td>\n";
+    echo '<td class="longcolumn">' . $distance . "</td>\n";
+
+    foreach ($mark_types as $mt) {
+      $checked = ($mt == $new_type) ? ' checked="checked"' : '';
+  ?>
+    <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="<?php echo $mt ?>"<?php echo $checked ?> /></td>
+  <?php
+    }
+  ?>
+    <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" value="<?php echo $reason ?>" /></td>
+    <td>
+      <button id="save_<?php echo $answer['id'] ?>" type="button" data-logid="<?php echo $answer['id'] ?>" class="save-row"><?php echo $string['save'] ?></button>
+      <input type="hidden" id="log_type_<?php echo $answer['id'] ?>" name="log_type_<?php echo $answer['id'] ?>" value="<?php echo $answer['paper_type'] ?>" />
+      <input type="hidden" id="user_id_<?php echo $answer['id'] ?>" name="user_id_<?php echo $answer['id'] ?>" value="<?php echo $answer['user_id'] ?>" />
+    </td>
+    </tr>
+  <?php
   }
-?>
-  <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" value="<?php echo $reason ?>" /></td>
-  <td>
-    <button id="save_<?php echo $answer['id'] ?>" type="button" data-logid="<?php echo $answer['id'] ?>" class="save-row"><?php echo $string['save'] ?></button>
-    <input type="hidden" id="log_type_<?php echo $answer['id'] ?>" name="log_type_<?php echo $answer['id'] ?>" value="<?php echo $answer['paper_type'] ?>" />
-    <input type="hidden" id="user_id_<?php echo $answer['id'] ?>" name="user_id_<?php echo $answer['id'] ?>" value="<?php echo $answer['user_id'] ?>" />
-  </td>
-  </tr>
-<?php
-}
 }
 ?>
     </tbody>

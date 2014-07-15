@@ -410,7 +410,6 @@ foreach ($lang_array as $lang) {
         $data_path1 = explode("|", $strings_data[0]);
         $data_path2 = explode("|", $strings_pl[$strings_key][0]);
         $data_path3 = array_diff($data_path1, $data_path2);
-				//var_dump($data_path1,$data_path2,$data_path3);
         if (count($data_path3)>0) display_this(Array(implode(", ", $data_path3), $strings_data[1], $strings_data[2], $strings_data[3]), -1);
       }
     }   

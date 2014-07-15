@@ -197,18 +197,8 @@ Class GENERIC_SMS extends SmsUtils {
     }
     $student_data->close();
 
-    /*
-    // Look up SMS
-    $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
-    $xml = false;
-    if ($returned_data !== false) {
-      $xml = new SimpleXMLElement($returned_data);
-    }
-*/
-    // the replaced_module is handled internally to the new function
+    // The replaced_module is handled internally to the new function
     $lookupdata=$this->get_module($module);
-
-//    var_dump($lookupdata);
 
     if((isset($lookupdata->error) and $lookupdata->error != '')) {
       //log the issue

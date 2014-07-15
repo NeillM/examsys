@@ -626,7 +626,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         } else {
           // Dropdown lists.
           $no_blanks = count($blank_details);
-          //var_dump($blank_details[0]);
           echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
           echo '<tr><td>';
           if (($question['score_method'] == 'Mark per Question') && (isset($std_parts[$part_id-1]))) echo display_std($std_parts[$part_id-1]);

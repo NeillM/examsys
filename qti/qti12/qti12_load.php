@@ -1480,7 +1480,7 @@ $numb=0;
     $dest->presentation = 'vertical';
     $dest->type = 'mcq';
     reset($source->responses);
-    $key=key($source->responses);
+    $key = key($source->responses);
     if ($source->responses[$key]->shuffle == 1) {
       $dest->q_option_order = 'random';
     }
@@ -1488,9 +1488,7 @@ $numb=0;
     // should only be 1 response, so get it
     $response = reset($source->responses);
     $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
-//print '********';
-//var_dump($source);
-//print '^^^^^^^';
+
     list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
 
     $choiceno = 1;
@@ -1574,7 +1572,7 @@ $numb=0;
       $incorrectfb=array();
     }
 // fix so that if no common feedback you dont get an error message
-    if(is_null($generalfb)) {
+    if (is_null($generalfb)) {
       $generalfb = array();
     }
     print "888^^***";
