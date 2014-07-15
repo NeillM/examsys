@@ -239,11 +239,13 @@ fieldset {
   display: none;
   border: #909090;
   top: 50px;
-  margin-left: 40px;
-  margin-right: 40px;
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 96%;
   position: absolute;
-  border: 1px solid #909090;
+  border: 1px solid black;
   background-color: white;
+  z-index: 1001;
 }
 .rubric_txt {
   line-height: 160%;
@@ -270,4 +272,19 @@ fieldset {
 .student:hover {
   background-color: #FFE7A2;
   pointer: hand;
+}
+#opaque {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    background-color: black;
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+}
+* html #opaque {
+    position: absolute;
 }

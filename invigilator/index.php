@@ -213,6 +213,7 @@ if ($lab_object !== false) {
   }
   
   function viewRubric(paperID) {
+    $('#opaque').show();
     $('#rubric_' + paperID).show();
   }
 
@@ -350,7 +351,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     $calendar_year  = $property_object->get_calendar_year();
     $rubric         = $property_object->get_rubric();
     
-    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img onclick=\"$('#rubric_$property_id').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
+    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img onclick=\"$('#rubric_$property_id').hide(); $('#opaque').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
 
     // Get modules for this paper and check if timing is allowed
     $timed_modules = $all_modules = 0;
@@ -567,5 +568,7 @@ $mysqli->close();
   <input type="hidden" id="userID" value="" />
   <input type="hidden" id="old_highlightID" value="" />
   <input type="hidden" id="paperID" value="" />
+  <div id="opaque"></div>
+
 </body>
 </html>
