@@ -18,12 +18,11 @@
 * 
 * @author Rob Ingram
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
 $hidden = (($num_options == 0 and $index > 6) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
-//$correct = ($option->get_correct() == $index) ? ' checked="checked"' : '';
 $correct_vals = array('' => '', '0' => $string['na']);
 for ($i = 1; $i <= 20; $i++) {
   $postfix = '';
