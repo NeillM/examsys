@@ -395,7 +395,7 @@ $allow_timing = false;
 if (!$is_first_launch) {
   if ($_POST['button_pressed'] == 'next') {
     $current_screen = $_POST['current_screen'];
-  } elseif ($_POST['button_pressed'] == 'prevous') {
+  } elseif ($_POST['button_pressed'] == 'previous') {
     $current_screen = $_POST['current_screen'] - 2;
   } elseif ($_POST['button_pressed'] == 'jump_screen') {
     $current_screen = $_POST['jump_screen'];
@@ -670,30 +670,33 @@ if ($css != '') {
   ?>
   };
 
-  var changeRef = function(refID) {
-    $('#refpane').val(refID);
-		winH = $(window).height();
-    resizeReference();
-    var flag = 0;
-    <?php
-      if (count($reference_materials) > 0) {
-        echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-        echo "      if (i == refID) {\n";
-        echo "        $('#framecontent' + i).show();\n";
-        echo "        $('#refhead' + i).css('top', (31 * i) + 'px');\n";
-        echo "        flag = 1;\n";
-        echo "      } else {\n";
-        echo "        $('#framecontent' + i).hide();\n";
-        echo "        if (flag == 0) {\n";
-        echo "          $('#refhead' + i).css('top', (31 * i) + 'px');\n";
-        echo "        } else {\n";
-        echo "          $('#refhead' + i).css('top', (winH - (" . count($reference_materials) . " - i) * 31) + 'px');\n";
-        echo "        }\n";
-        echo "      }\n";
-        echo "    }\n";
-      }
-    ?>
-  }
+
+  <?php
+  if (count($reference_materials) > 0) {
+      echo "var changeRef = function(refID) {\n";
+      echo "\$('#refpane').val(refID);\n";
+      echo "winH = \$(window).height();\n";
+      echo "resizeReference();\n";
+      echo "var flag = 0;\n";
+
+      echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
+      echo "      if (i == refID) {\n";
+      echo "        $('#framecontent' + i).show();\n";
+      echo "        $('#refhead' + i).css('top', (31 * i) + 'px');\n";
+      echo "        flag = 1;\n";
+      echo "      } else {\n";
+      echo "        $('#framecontent' + i).hide();\n";
+      echo "        if (flag == 0) {\n";
+      echo "          $('#refhead' + i).css('top', (31 * i) + 'px');\n";
+      echo "        } else {\n";
+      echo "          $('#refhead' + i).css('top', (winH - (" . count($reference_materials) . " - i) * 31) + 'px');\n";
+      echo "        }\n";
+      echo "      }\n";
+      echo "    }\n";
+      echo "  }\n";
+    }
+  ?>
+  
 
   var resizeReference = function() {
 		winH = $(window).height();
@@ -750,7 +753,7 @@ if ($css != '') {
         return true;
       } else {
         $('#savemsg').html("");
-        document.body.style.cursor = 'default';
+        $('body').css('cursor','default');
         return false;
       }
     } else {
@@ -759,11 +762,14 @@ if ($css != '') {
       return true;
     }
   }
-  var jumpScreen = function () {
-		$('#button_pressed').val('jump_screen');
-		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
-		return userSubmit(null);
-  }
+  
+  $(document).ready(function () {
+    $('#jumpscreen').change(function () {
+      $('#button_pressed').val('jump_screen');
+      $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
+      return userSubmit(null);
+    });
+  });
 <?php
   }
 
@@ -779,13 +785,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
 		usingAjax = true;
     last_saved_user_answers = $('#qForm').serialize();
-		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />&nbsp;";?>');
+		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />";?>');
 		$('#next').click(userSubmit);
 
-		$('#prevous').replaceWith('<?php echo "<input id=\"prevous\" type=\"button\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 1) . "&nbsp;\" />&nbsp;";?>');
+		$('#prevous').replaceWith('<?php echo "<input id=\"prevous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 1) . "\" />";?>');
 		$('#prevous').click(userSubmit);
 
-		$('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />&nbsp;";?>');
+		$('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";?>');
 		$('#finish').click(userSubmit);
 
 		<?php // Attach UI events ?>
@@ -1009,16 +1015,18 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     return false;
   }
 
-  var fire = function (scrno) {
-    submitType = 'userSubmit';
-    $('#button_pressed').val('fire_exit');
-    if (usingAjax) {
-      $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
-    } else {
-      $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $_GET['id'] ?>");
-    }
-    ajaxSave(1);
-  }
+  $(document).ready(function () {
+    $('#fire_exit').click(function() {
+      submitType = 'userSubmit';
+      $('#button_pressed').val('fire_exit');
+      if (usingAjax) {
+        $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
+      } else {
+        $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $_GET['id'] ?>");
+      }
+      ajaxSave(1);
+    });
+  });
 <?php
 }
 ?>	
@@ -1291,7 +1299,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
         if ($i == $current_screen) {
           echo '<div class="scr_arrow"></div>';
         } else {
-          echo '<div class="scr_spacer">&nbsp;</div>';
+          echo '<div class="scr_spacer"></div>';
         }
       }
 
@@ -1358,7 +1366,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
-			echo "&nbsp;&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />\n";
+			echo "&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"$('#button_pressed').val('finish');\" value=\"" . $string['finish'] . "\" />\n";
     }
 		echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
   } else {
@@ -1378,9 +1386,11 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
     echo '<span id="savemsg"></span>';
     if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
-      if ($current_screen > 2) echo "<input input id=\"prevous\" type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous';\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
+      if ($current_screen > 2) {
+        echo "<input id=\"previous\" type=\"submit\" name=\"prev\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 2) . "\" />";
+      }
       if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
-        echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
+        echo '<select name="jump_screen" id="jumpscreen">';
         for ($i=1; $i<=$no_screens; $i++) {
           if ($i == ($current_screen - 1)) {
             echo "<option value=\"$i\" selected>$i</option>";
@@ -1388,16 +1398,16 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             echo "<option value=\"$i\">$i</option>";
           }
         }
-        echo "</select>&nbsp;";
+        echo '</select>';
       }
     }
-    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
     if ($current_screen > $no_screens) {
-			echo "<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;";
+			echo "<input id=\"finish\" type=\"submit\" name=\"next\" value=\"" . $string['finish'] . "\" />";
 		} else {
-      echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;";
+      echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />";
     }
     echo '</td></tr></table>';
+    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
   }
 ?>
 </td></tr></table>
@@ -1421,13 +1431,13 @@ if (count($reference_materials) > 0) {
 $mysqli->close();
 
 if (isset($_POST['refpane'])) {
-  echo "<script language=\"JavaScript\">\n";
+  echo "<script>\n";
   echo "  changeRef(" . $_POST['refpane'] . ");\n";
   echo "</script>\n";
 }
 
 if ($unanswered) {
-  echo "<script language=\"JavaScript\">\n";
+  echo "<script>\n";
   echo "  $('#unansweredkey').show();\n";
   echo "</script>\n";
 }

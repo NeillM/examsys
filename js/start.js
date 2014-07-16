@@ -142,16 +142,28 @@ function multimatchingCheck(questionid, options_total, selectable) {
   }
 }
 
-function openCalc2() {
-  if (typeof(calc) == 'object' && calc.closed != true) {
-    calc.focus();
-  } else {
-    calc = window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=360,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    if (window.focus) {
+$(document).ready(function(){
+
+  $('.calc').click(function() {
+    if (typeof(calc) == 'object' && calc.closed != true) {
       calc.focus();
+    } else {
+      calc = window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=364,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
+      if (window.focus) {
+        calc.focus();
+      }
     }
-  }
-}
+  });
+  
+  $('#previous').click(function() {
+    $('#button_pressed').val('previous');
+  });
+  
+  $('#finish').click(function() {
+    $('#button_pressed').val('finish');
+  });
+
+});
 
 function write_string(p_string) {
   document.write(p_string);

@@ -1,0 +1,22 @@
+.logo_img {
+  width: 47px;
+	height: 51px;
+	float:left;
+	padding-right:8px
+}
+
+.logo_lrg_txt {
+	color: #4A74B9;
+	font-size: 28pt;
+	font-weight: bold;
+	position: relative;
+	top: -6px;
+	line-height:110%;
+}
+
+.logo_small_txt {
+	color: #4A74B9;
+	font-size: 9pt;
+	position: relative;
+	top: -3px
+}

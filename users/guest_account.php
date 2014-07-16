@@ -69,7 +69,6 @@ if ($paper_match == false) {
   <title><?php echo $string['guestaccount']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/notice.css" />
   <link rel="stylesheet" type="text/css" href="../css/guest_account.css" />
 </head>
 

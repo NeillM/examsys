@@ -41,4 +41,5 @@ $string['createnewquestion'] = 'Create new Question';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';
 $string['people'] = 'People';
+$string['recent'] = 'Recent';
 ?>

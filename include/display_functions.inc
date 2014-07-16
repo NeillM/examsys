@@ -334,7 +334,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
       echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.png" width="24" height="24" alt="' . $string['calculator'] . '" />';
+      if ($calculator == 1) echo '<br /><img class="calc" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
       echo "</td><td>";
       if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
@@ -343,7 +343,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.png" width="24" height="24" alt="' . $string['calculator'] . '" />';
+        if ($calculator == 1) echo '<br /><img class="calc" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
       echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
@@ -352,7 +352,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     if ($question['q_type'] != 'likert') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.png" width="24" height="24" alt="' . $string['calculator'] . '" />';
+        if ($calculator == 1) echo '<br /><img class="calc" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
       $li_set = 1;
@@ -489,7 +489,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($question['scenario'] != '') {
         echo "<tr><td class=\"question_no\">" . $question['assigned_number'] . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right">';
-        if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.png" width="24" height="24" alt="' . $string['calculator'] . '" />';
+        if ($calculator == 1) echo '<br /><img class="calc" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
         echo "</td><td>";
         if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
         echo $question['scenario'] . "<br />\n<br />";
@@ -498,7 +498,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($question['q_media'] != '') {
         if ($li_set == 0) {
           echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-          if ($calculator == 1) echo '<br /><img onclick="openCalc2();" style="cursor:pointer" src="../artwork/calc.png" width="24" height="24" alt="' . $string['calculator'] . '" />';
+          if ($calculator == 1) echo '<br /><img class="calc" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
           echo '</td><td>';
         }
         echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height'], '') . "</p>\n";

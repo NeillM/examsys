@@ -35,7 +35,6 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/warnings.css" />
 
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
@@ -79,7 +78,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
 <?php
 	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
 ?>
-<div class="html5warn" style="background-image:url('<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/html5_32.png')"><?php echo $string['html5warn'] ?></div>
+<div class="html5warn"><?php echo $string['html5warn'] ?></div>
 <?php
   }
 ?>

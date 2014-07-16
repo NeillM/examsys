@@ -41,4 +41,5 @@ $string['createnewquestion'] = 'Nová úloha';
 $string['questions'] = 'Úlohy';
 $string['papers'] = 'Dokumenty';
 $string['people'] = 'Lidé';
+$string['recent'] = 'Recent';
 ?>

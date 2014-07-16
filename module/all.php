@@ -42,6 +42,8 @@
     .sch {padding-left:32px; text-indent:-20px}
     .greysch {padding-left:12px; color:#808080}
     .mod {padding-left:60px; text-indent:-20px}
+    .recent {margin-left:-25px; padding-bottom:9px}
+    .recent a {color:black}
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>

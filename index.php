@@ -48,6 +48,26 @@ if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 
 
 // If we're still here we should be staff
 require_once './include/staff_auth.inc';
+
+function get_announcements($db) {
+  $announcements = array();
+  $icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
+
+  $result = $db->prepare("SELECT id, title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
+  $result->execute();
+  $result->bind_result($announcementID, $news_title, $staff_msg, $icon);
+  while ($result->fetch()) {
+    $announcements[] = array('id'=>$announcementID, 'title'=>$news_title, 'msg'=>$staff_msg, 'icon'=>$icons[$icon]);
+  }
+  $result->close();
+
+  return $announcements;  
+}
+
+// Check for any news/announcements
+$announcements = get_announcements($mysqli);
+
+
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -60,9 +80,12 @@ require_once './include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="./css/header.css" />
   <link rel="stylesheet" type="text/css" href="./css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="./css/warnings.css" />
-  <link rel="stylesheet" type="text/css" href="./css/announcements.css" />
-	
+  <?php
+  if (count($announcements) > 0) {
+    echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"./css/announcements.css\" />\n";
+  }
+	?>
+  
 	<style type="text/css">
     .recent {margin-left:-25px; padding-bottom:9px}
     .recent a {color:black}
@@ -83,15 +106,6 @@ require_once './include/staff_auth.inc';
         }
       });
       $('form').removeAttr('novalidate');
-<?php
-	if ($configObject->get('cfg_interactive_qs') == 'html5') {
-?>
-			if (!isCanvasSupported()){
-			  $('#html5warn').show();
-			}
-<?php
-	}
-?>
 		});
 
 		function isCanvasSupported() {
@@ -181,26 +195,15 @@ require_once './include/staff_auth.inc';
   if ($as_pos !== false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"greywarn\"><img src=\"./artwork/agent.png\" width=\"32\" height=\"32\" alt=\"Impersonate\" /></div></td><td><div class=\"greywarn\">" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
   }
-	if ($configObject->get('cfg_interactive_qs') == 'html5') {
-?>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="./artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
-<?php
-  }
 ?>
 <div style="padding-left:6px; padding-right:14px">
 <?php
-
   // Check for any news/announcements
-  $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
-  $result = $mysqli->prepare("SELECT id, title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
-  $result->execute();
-  $result->bind_result($announcementID, $news_title, $staff_msg, $icon);
-  while ($result->fetch()) {
-    if (!isset($_SESSION['announcement' . $announcementID])) {
-      echo "<br /><div class=\"announcement\" id=\"announcement$announcementID\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement($announcementID)\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $news_icons[$icon] . "') no-repeat 5px 5px;\"><strong>$news_title</strong><br />\n<br />\n$staff_msg</div></div>\n";
-    }
+  foreach($announcements as $announcement) {
+    if (!isset($_SESSION['announcement' . $announcement['id']])) {
+      echo "<br /><div class=\"announcement\" id=\"announcement" . $announcement['id'] . "\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement(" . $announcement['id'] . ")\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
+    }  
   }
-  $result->close();
 
   // -- Display any papers for review ---------------------------------
   $result = $mysqli->prepare("SELECT paper_title, property_id, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
