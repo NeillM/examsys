@@ -816,11 +816,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     if (isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
       $file = fopen("../email_templates/" . $userObject->get_user_ID(), "w");
-      fwrite($file,$_POST['from'] . "\n");
-      fwrite($file,$_POST['ccaddress'] . "\n");
-      fwrite($file,$_POST['bccaddress'] . "\n");
-      fwrite($file,$_POST['subject'] . "\n");
-      fwrite($file,$_POST['emailtemplate'] . "\n");
+      fwrite($file, $userObject->get_email() . "\n");
+      fwrite($file, $_POST['ccaddress'] . "\n");
+      fwrite($file, $_POST['bccaddress'] . "\n");
+      fwrite($file, $_POST['subject'] . "\n");
+      fwrite($file, $_POST['emailtemplate'] . "\n");
       fclose($file);
 
       for ($i=0; $i<$user_no; $i++) {
@@ -888,8 +888,8 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         $subject = str_replace("{random-mark}", number_format($report->get_total_random_mark(), 1, '.', ','), $subject);
         $subject = str_replace("{paper-title}", $paper, $subject);
 
-        $headers = "From: " . $_POST['from'] . "\n";
-        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
+        $headers = "From: " . $userObject->get_email() . "\n";
+        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf8\n";
         if ($_POST['ccaddress'] != '') {
           $headers .= "cc: " . $_POST['ccaddress'] . "\n";
         }
@@ -906,7 +906,6 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         echo "<form name=\"theform\" method=\"post\">\n";
         echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
-        echo '<input type="hidden" name="from" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';
         echo '<input type="hidden" name="ccaddress" value="" />';
         echo '<input type="hidden" name="bccaddress" value="" />';
