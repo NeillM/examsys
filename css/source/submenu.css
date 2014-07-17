@@ -137,8 +137,10 @@ a.greylink:hover {
   font-weight: bold;
 }
 .greymenuitem {
-  width: 190px;
   color: #808080;
+  width: 160px;
+  padding-left: 38px;
+  text-indent: -36px;
 }
 .greymenuitem span {
   width: 100%;
@@ -198,24 +200,25 @@ a.greylink:hover {
   list-style: none;
 }
 .menu_list li {
-  padding-left: 24px;
-  width: 120px;
+  padding-left: 26px;
+  width: 160px;
   font-size: 90%;
   margin: 0;
   height: 16px;
   margin-bottom: 6px;
+  text-indent: 0 !important;
 }
 .menu_list .break {
-  background: transparent url('../artwork/screen_icon.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon.png') no-repeat 2px center;
 }
 .menu_list .break.greymenuitem {
-  background: transparent url('../artwork/screen_icon_grey.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon_grey.png') no-repeat 2px center;
 }
 #delete_break {
-  background: transparent url('../artwork/screen_icon_delete.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon_delete.png') no-repeat 2px center;
 }
 #delete_break.greymenuitem {
-  background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat left center;
+  background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat 2px center;
 }
 a.checklist {
   color: black;

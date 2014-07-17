@@ -71,7 +71,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
     a {color: black}
-    .red {background-color:#C00000; color:white; padding:2px}
+    .red {background-color:#C00000; color:white; padding-left: 2px; padding-right:2px}
     .subsect_table {margin-top: 22px; margin-left: 10px; margin-bottom: 12px}
   </style>
 

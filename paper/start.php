@@ -788,8 +788,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />";?>');
 		$('#next').click(userSubmit);
 
-		$('#prevous').replaceWith('<?php echo "<input id=\"prevous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 1) . "\" />";?>');
-		$('#prevous').click(userSubmit);
+		$('#previous').replaceWith('<?php echo "<input id=\"previous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 1) . "\" />";?>');
+		$('#previous').click(userSubmit);
 
 		$('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";?>');
 		$('#finish').click(userSubmit);
@@ -813,7 +813,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 		});
   });
 
-  <?php // Normal user submit by clicking on next, prevous, finish or jump screen ?>
+  <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
   var userSubmit = function (event) {
     <?php // Save any data from wysiwyg  ?>
     if (typeof(tinyMCE) != "undefined") {
