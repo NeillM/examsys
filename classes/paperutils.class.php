@@ -269,7 +269,6 @@ Class PaperUtils {
   public function update_reviewers($old_list, $new_list, $type, $paperID, $db) {
     $has_changed = false;
 
-    $old_list = array_flip($old_list);
     $new_list = array_flip($new_list);
 
     foreach ($old_list as $oldID => $value) {
