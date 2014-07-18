@@ -6,6 +6,7 @@ CREATE TABLE `save_fail_log` (
   `id` int(4) unsigned NOT NULL primary key auto_increment,
   `userID` int(10) unsigned NOT NULL,
   `paperID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `screen` tinyint(2) unsigned NOT NULL DEFAULT '0',
   `ipaddress` varchar(100) DEFAULT NULL,
   `failed` int(4) unsigned NOT NULL DEFAULT '0',
   INDEX `idx_paperID` (`paperID`));

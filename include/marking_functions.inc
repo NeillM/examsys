@@ -130,8 +130,8 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
     if (isset($_POST['save_failed']) and $_POST['save_failed'] != '') {
       $failures = explode('<br />', nl2br($_POST['save_failed']));
       foreach ($failures as $failure) {
-        $stmt = $db->prepare("INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?)");
-        $stmt->bind_param('iisi', $userObject->get_user_ID(), $paper_id, $ipaddress, $failure);
+        $stmt = $db->prepare("INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('iiisi', $userObject->get_user_ID(), $paper_id, $screen_no, $ipaddress, $failure);
         $stmt->execute();
         $stmt->close();
       }

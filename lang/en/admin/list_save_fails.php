@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deniedlogwarnings'] = 'Denied Log Warnings';
+$string['savefailattempts'] = 'Save Fail Attempts';
 $string['student'] = 'Student';
 $string['paper'] = 'Paper';
 $string['client'] = 'Client';
 $string['datetime'] = 'Date/Time';
+$string['screen'] = 'Screen';
 ?>
