@@ -92,6 +92,19 @@ class Exclusion {
       return $this->excluded[$q_id];
     }
   }
+  	/**
+	 * Get an exclusion for a specific question ID and part.
+	 * @param int $q_id	- Question ID to look up
+	 * @param int $part	- Which part (character) of the exclusion string to return.
+	 * @return string - a particular part of an excluded question.
+	 */
+  public function get_exclusion_part_by_qid($q_id, $part) {
+    if (!isset($this->excluded[$q_id])) {
+      return '0';		// No exclusions set, return blank zeros.
+    } else {
+      return substr($this->excluded[$q_id], $part, 1);
+    }
+  }
   
 	/**
 	 * Works out if a question is excluded or not.
@@ -100,6 +113,19 @@ class Exclusion {
 	 */
   public function is_question_excluded($q_id) {
     if (isset($this->excluded[$q_id]) and strpos($this->excluded[$q_id], '1') !== false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  	/**
+	 * Works out if aspecific part of a question is excluded or not.
+	 * @param int $q_id	- Question ID to look up
+	 * @param int $part	- The part we ant to test
+	 * @return bool - true or false if the question/part is excluded.
+	 */
+  public function is_question_part_excluded($q_id, $part) {
+    if (isset($this->excluded[$q_id]) and substr($this->excluded[$q_id], $part, 1) === '1') {
       return true;
     } else {
       return false;

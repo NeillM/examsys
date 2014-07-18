@@ -506,8 +506,8 @@ function count_labels($correct) {
   return $label_no;
 }
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
-  global $ex_no, $d_no, $d_total, $excluded, $user_total, $language, $string;
+function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
+  global $ex_no, $d_no, $d_total, $user_total, $language, $string;
 
 	$configObject = Config::get_instance();
 
@@ -527,8 +527,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div";
       if ((($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'hotspot') and $score_method == 'Mark per Question') or $q_type == 'flash') {
         echo ' id="q_' . ($ex_no+1) . '_1"';
-        if (isset($excluded[$q_id])) {
-           echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) {
+          echo ' class="excluded"';
         }
       }
       echo '>';
@@ -543,11 +543,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     switch ($q_type) {
       case 'area':
         echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
-        if (isset($excluded[$q_id])) {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo ' class="excluded"';
         }
         echo ">$leadin\n";
-        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo excludeButton($ex_no, $q_id, '1', 1, 1);
         } else {
           echo excludeButton($ex_no, $q_id, '0', 1, 1);
@@ -599,7 +599,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $array_size = count($blank_details);
 
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+          if ($exclusions->is_question_part_excluded($q_id, 0)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', ($array_size - 1)), 1, ($array_size - 1));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', ($array_size - 1)), 1, ($array_size - 1));
@@ -618,8 +618,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             $cut_length = $start_end_tag - $end_start_tag - 1;
             $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), $cut_length);
             $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
-            if (isset($excluded[$q_id])) {
-              $tmp_exclude = substr($excluded[$q_id], $blank_count - 1, 1);
+            if ($exclusions->is_question_excluded($q_id)) {
+              $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $blank_count - 1);
             } else {
               $tmp_exclude = '';
             }
@@ -701,8 +701,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
           echo "<tr><td>" . chr($i+64) . ".</td>";
           if ($score_method == 'Mark per Option') {
-            if (isset($excluded[$q_id])) {
-              echo '<td>' . excludeButton($ex_no, $q_id, substr($excluded[$q_id], $i-1,1), 1, 1) . '</td>';
+            if ($exclusions->is_question_excluded($q_id)) {
+              $tmp_part = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
+              echo '<td>' . excludeButton($ex_no, $q_id, $tmp_part, 1, 1) . '</td>';
             } else {
               echo '<td>' . excludeButton($ex_no, $q_id, 0, 1, 1) . '</td>';
             }
@@ -713,7 +714,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo '<td class="std">' . $tmp_std_array[$i-1] . '</td>';
           }
           echo "<td id=\"q_" . ($ex_no) . "_1\"";
-          if (isset($excluded[$q_id]) and substr($excluded[$q_id], $i-1, 1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
           echo ">";
           if ($display_method == 'dropdown') {
             $html = $blank_options[0];
@@ -737,7 +738,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         break;
       case 'dichotomous':
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', count($options)), 1, count($options));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', count($options)), 1, count($options));
@@ -757,8 +758,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if (!isset($top_log[$q_id][$i]['f'])) $top_log[$q_id][$i]['f'] = 0;
           if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
 
-          if (isset($excluded[$q_id])) {
-            $tmp_exclude = substr($excluded[$q_id],$i-1,1);
+          if ($exclusions->is_question_excluded($q_id)) {
+            $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
           } else {
             $tmp_exclude = '';
           }
@@ -774,7 +775,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
           $std_part++;
           echo "<td id=\"q_" . $ex_no . "_1\"";
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
         }
         break;
@@ -799,7 +800,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         } else {
           $l = 0;
         }
-        if (isset($excluded[$q_id])) {
+        if ($exclusions->is_question_excluded($q_id)) {
           $tmp_exclude = $excluded[$q_id];
         } else {
           $tmp_exclude = '';
@@ -807,7 +808,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
         echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
-        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo ">$leadin</td>";
         echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
         echo "</tr>\n";
@@ -824,14 +825,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($top_log[$q_id][1]['t'])) $top_log[$q_id][1]['t'] = 0;
         if (!isset($top_log[$q_id][1]['f'])) $top_log[$q_id][1]['f'] = 0;
 
-        if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '11', 2, 2) . "</td></tr>\n";
         } else {
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '00', 2, 2) . "</td></tr>\n";
         }
 
         echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_1\"";
-        if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo '>';
         if ($correct_buf[0] == 't') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
@@ -842,7 +843,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         echo "</td></tr>\n";
         echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_2\"";
-        if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo '>';
         if ($correct_buf[0] == 'f') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
@@ -857,7 +858,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         break;
       case 'labelling':
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id])) {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', count_labels($correct)), 1, count_labels($correct));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', count_labels($correct)), 1, count_labels($correct));
@@ -890,12 +891,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script language='JavaScript' type='text/javascript'>\n";
+		echo "<script>\n";
 		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
-		echo "<script language='JavaScript'>\n";
+		echo "<script>\n";
 		echo "function swfLoaded" . $q_no . "(message) {\n";
 		echo "var num = message.substring(5,message.length);\n";
 		echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '','#FFC0C0');}\n";
@@ -935,12 +936,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$text_only])) ? $top_log[$q_id][$individual_coord][$text_only] : 0;
               $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$text_only])) ? $bottom_log[$q_id][$individual_coord][$text_only] : 0;
               if ($score_method == 'Mark per Option') {
-                if (isset($excluded[$q_id])) {
-                  echo "<td>" . excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
+                if ($exclusions->is_question_excluded($q_id)) {
+                  $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
+                  echo "<td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
                 } else {
                   echo "<td>" . excludeButton($ex_no, $q_id, '', 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
                 }
-                if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+                if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
               } else {
                 echo "<td></td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
               }
@@ -960,7 +962,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         break;
       case 'flash':
-        if (isset($excluded[$q_id])) {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo excludeButton($ex_no, $q_id, 1, 1,1);
         } else {
           echo excludeButton($ex_no, $q_id, 0, 1, 1);
@@ -1009,7 +1011,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $std_parts = explode(',', $std);
 
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id])) {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', count($layers)), 1, count($layers));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', count($layers)), 1, count($layers));
@@ -1033,12 +1035,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 					//<!-- ======================== HTML5 part rep disc ================= -->
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-					echo "<script language='JavaScript'>\n";
+					echo "<script>\n";
 					echo "function swfLoaded" . $q_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 					echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "','0','#FFC0C0');}\n";
@@ -1063,9 +1065,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $tmp_correct_no = (isset($freq_log[$q_id][$i][1])) ? $freq_log[$q_id][$i][1] : 0;
           $tmp_top_no = (isset($top_log[$q_id][$i][1])) ? $top_log[$q_id][$i][1] : 0;
           $tmp_bottom_no = (isset($bottom_log[$q_id][$i][1])) ? $bottom_log[$q_id][$i][1] : 0;
-          if (isset($excluded[$q_id])) {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo "<td>";
-            if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1);
+            if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, $exclusions->get_exclusion_part_by_qid($q_id, $i-1), 1, 1);
             echo "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_1\"";
           } else {
@@ -1074,7 +1076,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_1\"";
           }
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
           echo "><strong>$label</strong></td></tr>\n";
         }
         break;
@@ -1097,8 +1099,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "</tr>\n";
         break;
       case 'mcq':
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude =  $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
@@ -1129,7 +1131,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td>";
           }
           echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
-          if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">";
           if ($individual_option != '') echo "$individual_option\n";
           if (is_array($o_media[$i - 1])) {
@@ -1160,8 +1162,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($tmp_correct_no/$user_total, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'mrq':
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
@@ -1194,11 +1196,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
 
             echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td><span class=\"std\">" . $tmp_std . "</span></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
-            if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
+            if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
             $std_part++;
           } else {
             echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
-            if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
+            if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           }
           echo ">$individual_option";
           if (is_array($o_media[$i - 1])) {
@@ -1241,7 +1243,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
         }
         $i = 0;
-        if (isset($excluded[$q_id])) {
+        if ($exclusions->is_question_excluded($q_id)) {
           $tmp_exclude = $excluded[$q_id];
         } else {
           $tmp_exclude = '';
@@ -1249,7 +1251,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), count($options) + 1) . "</td></tr>\n";
         foreach ($options as $individual_option) {
           echo "<tr><td id=\"q_" . $ex_no . "_" . ($i+1) . "\" colspan=\"6\"";
-          if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
           for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
             if (isset($top_log[$q_id][$i][$rank_position])) {
@@ -1312,7 +1314,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'sct':
-        $tmp_exclude = (isset($excluded[$q_id])) ? $excluded[$q_id] : '';
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude = get_exclusions_by_qid($q_id);
+        } else {
+          $tmp_exclude = '';
+        }
         echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), 1) . "</td></tr>\n";
         $i = 0;
         foreach ($options as $individual_option) {
@@ -1335,7 +1341,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $correct_class = ($correct_answer_no  == $i) ? ' correct' : '';
           echo "<tr class=\"grey{$correct_class}\"><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td></td>";
           echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
-          if ($tmp_exclude == '1') echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
         }
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
@@ -1352,9 +1358,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'flash') echo "</table></p>\n";
   } elseif ($q_type == 'textbox') {
     echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div ";
-    if (isset($excluded[$q_id]) and substr($excluded[$q_id], 0, 1) == '1') echo ' class="excluded"';
-    if (isset($excluded[$q_id])) {
-      $tmp_exclude = $excluded[$q_id];
+    if ($exclusions->is_question_excluded($q_id)) {
+      echo ' class="excluded"';
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
     } else {
       $tmp_exclude = '';
     }
@@ -1432,14 +1438,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><div";
     if ($score_method == 'Mark per Question') {
       echo ' id="q_' . ($ex_no + 1) . '_1"';
-      if (isset($excluded[$q_id])) {
+      if ($exclusions->is_question_excluded($q_id)) {
         echo ' class="excluded"';
       }
     }
     echo ">$leadin</div>";
 
     if ($score_method == 'Mark per Question') {
-      if (isset($excluded[$q_id])) {
+      if ($exclusions->is_question_excluded($q_id)) {
         echo excludeButton($ex_no, $q_id, str_repeat('1', count($options)), 1, count($options));
       } else {
         echo excludeButton($ex_no, $q_id, str_repeat('0', count($options)), 1, count($options));
@@ -1468,8 +1474,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($option_no == 1) {
             $correct_answer = $tmp_answers_array[$i-1];
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i, $correct_answer);
-            if (isset($excluded[$q_id])) {
-              $tmp_exclude = substr($excluded[$q_id],$i-1,1);
+            if ($exclusions->is_question_excluded($q_id)) {
+              $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
             } else {
               $tmp_exclude = '';
             }
@@ -1490,7 +1496,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
 
             echo "<td ";
-            if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1' and $score_method != 'Mark per Question') echo ' class="excluded"';
+            if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1' and $score_method != 'Mark per Question') echo ' class="excluded"';
             if ($score_method == 'Mark per Option') echo "id=\"q_" . ($ex_no) . "_1\"";
             echo ">" . $tmp_ext_scenarios[$i-1] . "</td>";
           }
@@ -1528,11 +1534,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><div";
     if ($score_method == 'Mark per Question') {
       echo " id=\"q_" . ($ex_no + 1) . "_1\"";
-      if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
+      if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
     }
     echo ">$leadin</div>\n";
     if ($score_method == 'Mark per Question') {
-      if (isset($excluded[$q_id])) {
+      if ($exclusions->is_question_excluded($q_id)) {
         echo excludeButton($ex_no, $q_id, str_repeat('1', $total_scenarios), 1, $total_scenarios);
       } else {
         echo excludeButton($ex_no, $q_id, str_repeat('0', $total_scenarios), 1, $total_scenarios);
@@ -1566,8 +1572,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $option_no++;
       }
 
-      if (isset($excluded[$q_id])) {
-        $tmp_exclude = substr($excluded[$q_id],$section,1);
+      if ($exclusions->is_question_excluded($q_id)) {
+        $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $section);
       } else {
         $tmp_exclude = '';
       }
@@ -1618,7 +1624,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             $tmp_std = '';
           }
           echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td><span class=\"std\">" . $tmp_std . "</span></td><td class=\"correct";
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' excluded';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $section) == '1') echo ' excluded';
           echo "\"";
           if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
           echo ">" . chr($option_no+64) . ". $individual_option</td></tr>\n";
@@ -1643,7 +1649,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
 
           echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td";
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' class="excluded"';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $section) == '1') echo ' class="excluded"';
           if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
           echo ">" . chr($option_no+64) . ". $individual_option</td></tr>\n";
         }
@@ -1698,18 +1704,26 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-	<!-- HTML5 part start -->
-	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-	<script type="text/javascript" src="../js/html5.images.js"></script>
-	<script type="text/javascript" src="../js/qsharedf.js"></script>
-	<script type="text/javascript" src="../js/qlabelling.js"></script>
-	<script type="text/javascript" src="../js/qhotspot.js"></script>
-	<script type="text/javascript" src="../js/qarea.js"></script>
-	<!-- HTML5 part end -->
+<?php
+  if ($propertyObj->get_latex_needed() == 1) {
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }
+  
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+  } else {
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+}
+
+?>
 
   <script>
     function toggle(qID, parts, marks) {
@@ -1761,8 +1775,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <?php
   // Get some paper properties
-  $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
-
   $paper_title = $propertyObj->get_paper_title();
   $paper_type = $propertyObj->get_paper_type();
   $labelcolor = $propertyObj->get_labelcolor();
@@ -1772,6 +1784,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
 
+  /*
   //TODO - refactor
   // Get any questions to exclude.
   $excluded = array();
@@ -1783,6 +1796,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     $excluded[$q_id] = $parts;
   }
   $result->close();
+   */
+  
+  $exclusions = new Exclusion($paperID, $mysqli);
+  $exclusions->load();
 
   // Get the standards setting
   if ($marking{0} == '2') {
@@ -1969,7 +1986,7 @@ SQL;
 
         if (isset($std_set_array[$old_q_id])) $old_std = $std_set_array[$old_q_id];
 
-        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
+        displayQuestion($exclusions, $question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
         $options_buffer = array();
         $correct_buffer = array();
         $o_media_buffer = array();
@@ -2045,7 +2062,7 @@ SQL;
 
     if (isset($std_set_array[$old_q_id])) $old_std = $std_set_array[$old_q_id];
 
-    displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
+    displayQuestion($exclusions, $question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
   ?>
   </table>
   <br />
