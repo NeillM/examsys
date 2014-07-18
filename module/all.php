@@ -31,7 +31,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rog&#333;: <?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -46,9 +46,7 @@
     .recent a {color:black}
   </style>
 
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="../js/sidebar.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -60,11 +58,12 @@
 	
 	echo draw_toprightmenu();
 ?>
-
-<div id="content" class="content">
-<table class="header">
-<tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px"><?php echo $string['allmodules']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-</table>
+<div style="font-size:80%" id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
+  <div class="page_title"><?php echo $string['allmodules'] ?></div>
+</div>
 
 <table style="width:100%">
 <tr><td style="vertical-align:top; width:50%; border-right:#95AEC8 1px solid">
@@ -77,7 +76,7 @@
     $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty) LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL AND active = 1 AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
   } else {
     $results = $mysqli->prepare("SELECT DISTINCT modules.id, faculty.name as faculty, schools.school, moduleid, fullname FROM (schools, faculty, admin_access, modules) WHERE schools.facultyID = faculty.id AND schools.id = modules.schoolid AND schools.id = admin_access.schools_id AND admin_access.userID = ? AND schools.deleted IS NULL AND active = 1 AND mod_deleted IS NULL ORDER BY faculty.name, school, moduleid");
-    $results->bind_param('i',$userObject->get_user_ID());
+    $results->bind_param('i', $userObject->get_user_ID());
   }
   $results->execute();
   $results->bind_result($modID, $faculty, $school, $moduleid, $fullname);
@@ -111,7 +110,7 @@
   }
   $results->close();
 
-  echo "</div>\n";      // -- End of 'content' div ------------------
+  echo "</div>\n";
 
 ?>
 </td><td style="vertical-align:top; width:50%">
@@ -153,11 +152,10 @@
   }
   $results->close();
 
-  echo "</div>\n";      // -- End of 'content' div ------------------
+  echo "</div>\n";
 ?>
 </td></tr>
 </table>
-</div>
 </div>
 <?php
 
