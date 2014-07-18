@@ -2,13 +2,13 @@ body {
   padding-top: 0;
   padding-bottom: 0;
   padding-right: 0;
-  padding-left: 223px;
+  padding-left: 243px;
 }
 div#left-sidebar {
   position: absolute;
   top: 0;
   left: 0;
-  width: 209px;
+  width: 229px;
   height: 100%;
   padding-right: 0;
   padding-left: 14px;
@@ -115,7 +115,7 @@ a.greylink:hover {
 .popup {
   display: none;
   top: 0;
-  left: 200px;
+  left: 220px;
   font-size: 75%;
   position: fixed;
   line-height: 160%;
@@ -125,6 +125,7 @@ a.greylink:hover {
   -moz-box-shadow: 0 0 3px #A0A0A0;
   -webkit-box-shadow: 0 0 3px #A0A0A0;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  z-index: 20;
 }
 .popupitem {
   padding-left: 14px;
@@ -138,7 +139,7 @@ a.greylink:hover {
 }
 .greymenuitem {
   color: #808080;
-  width: 160px;
+  width: 180px;
   padding-left: 38px;
   text-indent: -36px;
 }
@@ -163,7 +164,7 @@ a.greylink:hover {
   cursor: pointer;
 }
 .menuitem {
-  width: 160px;
+  width: 180px;
 	cursor: pointer;
   padding-left: 38px;
   text-indent: -36px;

@@ -31,5 +31,6 @@ $string['manageobjectives'] = 'Zarządzaj celami';
 $string['managekeywords'] = 'Zarządzaj słowami kluczowymi';
 $string['referencematerial'] = 'Materiał pomocniczy';
 $string['nokeywords'] = 'Do tego modułu nie dodano żadnych słów kluczowych.';
+$string['question'] = 'Pytanie';
 $string['questions'] = 'Pytania';
 ?>

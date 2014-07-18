@@ -2686,6 +2686,7 @@ QUERY;
           `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
           `userID` int(10) unsigned NOT NULL,
           `paperID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+          `screen` tinyint(2) unsigned NOT NULL DEFAULT '0',
           `ipaddress` varchar(100) DEFAULT NULL,
           `failed` int(4) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`id`),

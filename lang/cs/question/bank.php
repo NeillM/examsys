@@ -31,5 +31,6 @@ $string['manageobjectives'] = 'Manage Objectives';
 $string['managekeywords'] = 'Manage Keywords';
 $string['referencematerial'] = 'Reference Material';
 $string['nokeywords'] = 'No keywords have been added to this module.';
+$string['question'] = 'Question';
 $string['questions'] = 'Questions';
 ?>

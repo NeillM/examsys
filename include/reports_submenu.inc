@@ -91,7 +91,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   }
 </script>
 
-<div class="popup" style="z-index:20; display:none; position:fixed; left:200px; top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
+<div class="popup" style="top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
 <form name="stats_menu" style="width:600px; border:0px solid #C0C0C0; font-size:110%">
 
 <div style="background-color:#F2B100; height:5px"></div>

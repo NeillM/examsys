@@ -159,13 +159,25 @@ foreach ($bank_types as $id=>$type_name) {
   
   if (isset($stats[$id])) {
     if ($type != 'objective' or $stats[$id] > 0) {
-      $grey_text = '<br /><span class="grey">' . number_format($stats[$id]) . ' ' . $string['questions'] . '</span>';
+      $grey_text = number_of_questions($stats[$id], $string);
       echo display_folder($url, $type_name, $grey_text, $class);
     }
-  } elseif(isset($stats[$type_name])) {
-    $grey_text = '<br /><span class="grey">' . number_format($stats[$type_name]) . ' ' . $string['questions'] . '</span>';
+  } elseif (isset($stats[$type_name])) {
+    $grey_text = number_of_questions($stats[$type_name], $string);
     echo display_folder($url, $type_name, $grey_text, $class);
   }
+}
+
+function number_of_questions($question_no, $string) {
+  $html = '<br /><span class="grey">' . number_format($question_no) . ' ';
+  if ($question_no == 1) {
+    $html .= $string['question'];
+  } else {
+    $html .= $string['questions'];
+  }
+  $html .= '</span>';
+
+  return $html;
 }
 
 function display_folder($url, $type_name, $grey_text, $class) {
