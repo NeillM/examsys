@@ -79,6 +79,7 @@ $announcements = get_announcements($mysqli);
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="./css/header.css" />
+  <link rel="stylesheet" type="text/css" href="./css/warnings.css" />
   <link rel="stylesheet" type="text/css" href="./css/submenu.css" />
   <?php
   if (count($announcements) > 0) {
