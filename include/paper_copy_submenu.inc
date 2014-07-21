@@ -72,7 +72,7 @@ require_once '../classes/dateutils.class.php';
 	});
 </script>
 
-<div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:335px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:335px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
@@ -89,14 +89,14 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?>&nbsp;</td>
 <td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" required />
-<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
-<input type="hidden" name="module" value="<?php echo $module; ?>" />
-<input type="hidden" name="folder" value="<?php echo $folder; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
+<input type="hidden" name="module" value="<?php echo $module ?>" />
+<input type="hidden" name="folder" value="<?php echo $folder ?>" />
 </td>
 </tr>
 
 <tr>
-<td style="text-align:right"><?php echo $string['type']; ?>&nbsp;</td>
+<td style="text-align:right"><?php echo $string['type'] ?>&nbsp;</td>
 <td colspan="4"><select name="paper_type" id="paper_type" onchange="changeButton()">
 <?php
   switch ($properties->get_paper_type()) {

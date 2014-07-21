@@ -115,7 +115,7 @@ a.greylink:hover {
 .popup {
   display: none;
   top: 0;
-  left: 220px;
+  left: 230px;
   font-size: 75%;
   position: fixed;
   line-height: 160%;
@@ -139,7 +139,7 @@ a.greylink:hover {
 }
 .greymenuitem {
   color: #808080;
-  width: 180px;
+  width: 170px;
   padding-left: 38px;
   text-indent: -36px;
 }
@@ -164,7 +164,7 @@ a.greylink:hover {
   cursor: pointer;
 }
 .menuitem {
-  width: 180px;
+  width: 170px;
 	cursor: pointer;
   padding-left: 38px;
   text-indent: -36px;

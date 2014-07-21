@@ -34,22 +34,22 @@ $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] :
 if (isset($_POST['submit'])) {
   // Delete any previous remark records
   $result = $mysqli->prepare("DELETE FROM textbox_remark WHERE paperID = ?");
-  $result->bind_param('i', $_POST['paperID']);
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->close();
 
   for ($student=1; $student<$_POST['student_no']; $student++) {
     if (isset($_POST["student$student"]) and $_POST["student$student"] != '') {
       $result = $mysqli->prepare("INSERT INTO textbox_remark VALUES (NULL, ?, ?)");
-      $result->bind_param('ii', $_POST['paperID'], $_POST["student$student"]);
+      $result->bind_param('ii', $paperID, $_POST["student$student"]);
       $result->execute();
       $result->close();
     }
   }
-  header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder']);
+  header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $module . "&folder=" . $_GET['folder']);
 	exit();
 } elseif (isset($_POST['submit']) and $_POST['submit'] == 'Cancel') {
-  header("location: ../paper/details.php?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder']);
+  header("location: ../paper/details.php?paperID=" . $paperID . "&module=" . $module . "&folder=" . $_GET['folder']);
 	exit();
 } else {
 	$startdate  = check_var('startdate', 'GET', true, false, true);
@@ -61,12 +61,13 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rog&#333;: <?php echo $string['secondmark']; ?></title>
+  <title>Rog&#333;: <?php echo $string['secondmark'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     .pad {padding-left:40px; width:20px}
+    body {margin-bottom:10px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -90,7 +91,7 @@ if (isset($_POST['submit'])) {
   <div style="font-size:80%">
     
 <?php
-  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
+  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
   echo "<div class=\"head_title\">";
   echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
@@ -99,7 +100,7 @@ if (isset($_POST['submit'])) {
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a></div>';
   ?>
   <div class="page_title"><?php echo $string['secondmarkselection'] ?></div>
   </div>
@@ -158,7 +159,7 @@ if (isset($_POST['submit'])) {
 			GROUP BY metadataID
 SQL;
 		$result = $mysqli->prepare($sql);
-		$result->bind_param('ississ', $_GET['paperID'], $startdate, $enddate, $_GET['paperID'], $startdate, $enddate);
+		$result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
 	} else {
 		$sql = <<< SQL
 			SELECT SUM(adjmark) AS adjmark_total, userID, username
@@ -174,7 +175,7 @@ SQL;
 				GROUP BY metadataID
 SQL;
 		$result = $mysqli->prepare($sql);
-		$result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
+		$result->bind_param('iss', $paperID, $startdate, $enddate);
 	}
   $result->execute();
   $result->bind_result($adjmark_total, $userID, $username);
@@ -190,7 +191,7 @@ SQL;
 
 	// Add in total marks for the textbox questions (primary mark).
 	$result = $mysqli->prepare("SELECT SUM(mark) AS sum_mark, users.username, users.id, student_id FROM textbox_marking, users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = textbox_marking.student_userID AND paperID = ? AND phase = 1 GROUP BY student_userID ORDER BY student_id");
-  $result->bind_param('i', $_GET['paperID']);
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($sum_mark, $username, $userID, $student_id);
 	while ($result->fetch()) {
@@ -230,14 +231,10 @@ SQL;
   }
 ?>
 
-<tr><td colspan="5">&nbsp;</td></tr>
-<tr><td colspan="4" style="text-align:center">
-<input type="hidden" name="student_no" value="<?php echo $student_no; ?>" />
-<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="submit" name="submit" value="<?php echo $string['secondmark']; ?>" class="ok" /><input type="submit" name="submit" value="<?php echo $string['cancel']; ?>" class="cancel" />
-</td><td>&nbsp;</td></tr>
 </table>
 <br />
+<input type="hidden" name="student_no" value="<?php echo $student_no ?>" />
+<input type="submit" name="submit" value="<?php echo $string['secondmark'] ?>" class="ok" style="margin-left:40px" /><input type="submit" name="submit" value="<?php echo $string['cancel'] ?>" class="cancel" />
 
 </form>
 </div>
