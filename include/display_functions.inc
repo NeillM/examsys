@@ -1004,6 +1004,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
         break;
       case 'textbox':
+        if (stripos($question['leadin'], '<p>') === false and stripos($question['leadin'], '<div>') == false) {
+          echo '<br />';
+        }
         if (!in_array($question_no, $textboxes_seen)) {
           $textboxes_seen[] = $question_no;
           $settings = json_decode($question['settings'], true);

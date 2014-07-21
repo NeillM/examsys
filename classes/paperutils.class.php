@@ -533,10 +533,18 @@ Class PaperUtils {
     return $paper_no;
   }
   
+  /**
+   * Determins if there is an interactive question (e.g. image hotspot, labelling,
+   * area) on a particular screen of a paper. Speeds system up if not loading
+   * unnecessary HTML5/Flash include files.
+   * @param  array      $screen_data Array of screen/question information
+   * @param  array      $screen      The screen number to check
+   * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
+   */
   function need_interactiveQ($screen_data, $screen) {
     $interactive = false;
 
-    foreach($screen_data[$screen] as $question_part) {
+    foreach ($screen_data[$screen] as $question_part) {
       if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
         $interactive = true;
       }
