@@ -36,12 +36,12 @@
 
 <br />
 
-<div style="font-size:90%" id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails']; ?>" /><?php echo $string['displaydetails']; ?></div>
+<div id="menu1a">
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></div>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
-	<div class="menuitem" onclick="displayDetails()"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails']; ?>" /><a onclick="return false"><?php echo $string['displaydetails']; ?></a></div>
+<div style="display:none" id="menu1b">
+	<div class="menuitem"><a href="#" onclick="displayDetails(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
 </div>
 
 <form name="errorsMenu">

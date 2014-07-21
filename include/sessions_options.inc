@@ -129,7 +129,7 @@ if ($vle_api != '') {
 
 <div class="submenuheading" id="papertasks"><?php echo $string['sessions']; ?></div>
 
-<div style="font-size:90%" id="menu1a">
+<div id="menu1a">
 <div class="menuitem" onclick="hideSessCopyMenu(event); addSession()"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
@@ -149,7 +149,7 @@ if ($vle_api == '') {
 ?>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
+<div style="display:none" id="menu1b">
 <div class="menuitem" onclick="hideSessCopyMenu(event); addSession()"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
@@ -170,7 +170,7 @@ else {
 ?>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1c">
+<div style="display:none" id="menu1c">
 <div class="menuitem" onclick="hideSessCopyMenu(event); addSession();"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#" onclick="return false"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {

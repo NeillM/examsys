@@ -64,8 +64,7 @@ $mysqli->close();
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<input style="width:140px" type="submit" name="paper" value="<?php echo $string['paper']; ?>" onclick="" />&nbsp;
-<input style="width:140px" type="submit" name="questions" value="<?php echo $string['paperquestions']; ?>" onclick="" />
+<input class="ok" type="submit" name="paper" value="<?php echo $string['paper']; ?>" onclick="" /><input class="ok" type="submit" name="questions" value="<?php echo $string['paperquestions']; ?>" onclick="" />
 </form>
 </div>
 </td></tr>

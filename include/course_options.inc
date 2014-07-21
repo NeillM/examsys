@@ -41,14 +41,14 @@
 <form name="myform">
 <br />
 
-<div style="font-size:90%" id="menu1a">
+<div id="menu1a">
 	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse']; ?></a></div>
 	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['bulkcourseimport']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editcourse']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletecourse']; ?></div>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
+<div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse']; ?></a></div>
 	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['bulkcourseimport']; ?></a></div>
 	<div class="menuitem" onclick="editCourse()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['editcourse']; ?></a></div>

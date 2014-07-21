@@ -484,7 +484,6 @@ function check_latex_random($q_ids, $mysqli) {
 
     $('#stats_menu').hide();
     $('#copy_submenu').hide();
-    $('#change_screen_submenu').hide();
 
     if (evt != null) {
       evt.cancelBubble = true;
@@ -535,7 +534,6 @@ function check_latex_random($q_ids, $mysqli) {
 
     $('#stats_menu').hide();
     $('#copy_submenu').hide();
-    $('#change_screen_submenu').hide();
 
     hideMenus();
 

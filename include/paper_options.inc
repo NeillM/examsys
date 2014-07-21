@@ -165,7 +165,7 @@ if (count($moduleIDs) > 0) {
 	}
 
   function deletePaper() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_paper.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -173,7 +173,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function retirePaper() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/check_retire_paper.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/check_retire_paper.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-210,screen.height/2-85);
     if (window.focus) {
       notice.focus();
@@ -291,12 +291,12 @@ if (count($moduleIDs) > 0) {
 <div class="submenuheading" id="papertasks"><?php echo $string['papertasks']; ?></div>
 <?php
 // - Paper Tasks ----------------------------------------------------------
-echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
+echo "<div id=\"menu1\">\n";
   if ($properties->get_paper_type() == '5') {      // Offline
     echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_play_grey.png\" alt=\"" . $string['testpreview'] . "\" />" . $string['testpreview'] . "</div>\n";
   } else {
     if ($properties->get_item_no() > 0) {
-      echo "<div class=\"menuitem\" onclick=\"startPaper(" . $properties->get_fullscreen() .")\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_play.png\" alt=\"" . $string['testpreview'] . "\" /><a href=\"#\" onclick=\"return false;\">" . $string['testpreview'] . "</a></div>\n";
+      echo "<div class=\"menuitem\"><a href=\"#\" onclick=\"startPaper(" . $properties->get_fullscreen() ."); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_play.png\" alt=\"" . $string['testpreview'] . "\" />" . $string['testpreview'] . "</a></div>\n";
     } else {
       echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_play_grey.png\" alt=\"" . $string['testpreview'] . "\" />" . $string['testpreview'] . "</div>\n";
     }
@@ -304,23 +304,23 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 
   if ($properties->get_summative_lock() == 1) {
     if ($userObject->has_role('SysAdmin')) {
-      echo "<div class=\"grey menuitem\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "')\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['addquestionspaper'] . "</a></div>\n";
+      echo "<div class=\"grey menuitem\"><a href=\"#\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "')\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" />" . $string['addquestionspaper'] . "</a></div>\n";
     } else {
-      echo "<div class=\"grey menuitem\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "')\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['addquestionspaper'] . "</a></div>\n";
+      echo "<div class=\"grey menuitem\"><a href=\"#\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "')\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" />" . $string['addquestionspaper'] . "</a></div>\n";
     }
   } else {
     $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
     echo "<div class=\"menuitem\" onclick=\"addQuestions(" . ($properties->get_max_display_pos() + 1) . ", $max_screen)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_16.gif\" alt=\"" . $string['addquestionspaper'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['addquestionspaper'] . "</a></div>\n";
   }
-  echo "<div class=\"menuitem\" onclick=\"return paperProperties()\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" alt=\"" . $string['editproperties'] . "\" /><a href=\"\" onclick=\"return false\">" . $string['editproperties'] . "</a></div>\n";
+  echo "<div class=\"menuitem\"><a href=\"#\" onclick=\"return paperProperties(); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" alt=\"" . $string['editproperties'] . "\" />" . $string['editproperties'] . "</a></div>\n";
   if ($properties->get_paper_type() == '2') {
-    echo "<div class=\"menuitem cascade\" id=\"emailexternals\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','emailexternals',myOptions1,myURLs1,event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email.png\" alt=\"" . $string['emailexternals'] . "\" />" . $string['emailexternals'] . "</div>\n";
+    echo "<div class=\"menuitem cascade\" id=\"emailexternals\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','emailexternals',myOptions1,myURLs1,event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email.png\" alt=\"" . $string['emailexternals'] . "\" />" . $string['emailexternals'] . "</a></div>\n";
   }
   if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5' or $properties->get_paper_type() == '6') {
     if ($properties->get_item_no() == 0) {
       echo "<div class=\"grey menuitem greycascade\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon_grey.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</div>\n";
     } else {
-      echo "<div class=\"menuitem cascade\" onclick=\"showAssStatsMenu(false, event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" /><a onclick=\"return false\" href=\"#\">" . $string['reports'] . "</a></div>\n";
+      echo "<div class=\"menuitem cascade\"><a href=\"#\" onclick=\"showAssStatsMenu(false, event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</a></div>\n";
     }
     if (strpos($checklist, 'mapping') !== false and $properties->get_paper_type() != '6') {
 		  if ($properties->get_calendar_year() == '') {
@@ -337,9 +337,9 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
       }
     }
   } elseif ($properties->get_paper_type() == '3') {
-    echo "<div class=\"menuitem cascade\" id=\"reports\" onclick=\"showAssStatsMenu(false, event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" /><a onclick=\"return false\" href=\"#\">" . $string['reports'] . "</a></div>\n";
+    echo "<div class=\"menuitem cascade\" id=\"reports\"><a href=\"#\" onclick=\"showAssStatsMenu(false, event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</a></div>\n";
   } elseif ($properties->get_paper_type() == '4') {
-    echo "<div class=\"menuitem cascade\" id=\"reports\" onclick=\"showAssStatsMenu(false, event)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" /><a onclick=\"return false\" href=\"#\">" . $string['reports'] . "</a></div>\n";
+    echo "<div class=\"menuitem cascade\" id=\"reports\"><a href=\"#\" onclick=\"showAssStatsMenu(false, event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</a></div>\n";
     echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"" . $string['importoscemarks'] . "\" />" . $string['importoscemarks'] . "</a></div>\n";
     if (strpos($checklist, 'mapping') !== false) {
       echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/mapping/paper_mappings_by_session.php?paperID=$paperID&paper_title=" . $properties->get_paper_title() . "&sd=" . $properties->get_start_date() . "&ed=" . $properties->get_end_date() . "&module=" . $module . "&folder=" . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small.png\" alt=\"" . $string['mappedobjectives'] . "\" />" . $string['mappedobjectives'] . "</a></div>\n";
@@ -347,15 +347,15 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
   }
 
 	?>
-	<div class="menuitem cascade" id="copy" onclick="showCopyMenu(false, event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copypaper']; ?>" /><a onclick="return false" href="#"><?php echo $string['copypaper']; ?></a></div>
+	<div class="menuitem cascade" id="copy"><a href="#" onclick="showCopyMenu(false, event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copypaper'] ?>" /><?php echo $string['copypaper'] ?></a></div>
 	<?php
 		if ($properties->get_summative_lock() != 1) {
-			echo '<div class="menuitem" onclick="deletePaper()"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/delete_paper_16.gif" alt="' . $string['deletepaper'] . '" /><a href="#" onclick="return false">' . $string['deletepaper'] . '</a></div>';
+			echo '<div class="menuitem"><a href="#" onclick="deletePaper(); return false"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/delete_paper_16.gif" alt="' . $string['deletepaper'] . '" />' . $string['deletepaper'] . '</a></div>';
 		} else {
 			echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/delete_paper_grey_16.gif" alt="' . $string['deletepaper'] . '" />' . $string['deletepaper'] . '</div>';
 		}
 
-		echo '<div class="menuitem" onclick="retirePaper()"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/retire_16.png" alt="' . $string['retirepaper'] . '" /><a href="#" onclick="return false">' . $string['retirepaper'] . '</a></div>';
+		echo '<div class="menuitem"><a href="#" onclick="retirePaper(); return false;"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/retire_16.png" alt="' . $string['retirepaper'] . '" />' . $string['retirepaper'] . '</a></div>';
 
 		if ($properties->get_item_no() == 0) {
 			echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16_disabled.png\" alt=\"" . $string['printhardcopy'] . "\" />" . $string['printhardcopy'] . "</div>\n";
@@ -363,11 +363,11 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 			if ($properties->get_paper_type() == '4') {
 				echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/osce/print.php?paperID=$paperID\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" />" . $string['printhardcopy'] . "</a></div>\n";
 			} else {
-				echo "<div class=\"menuitem cascade\" id=\"hardcopy\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup3','papertasks','hardcopy',myOptions3,myURLs3,event);\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['printhardcopy'] . "</a></div>\n";
+				echo "<div class=\"menuitem cascade\" id=\"hardcopy\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup3','papertasks','hardcopy',myOptions3,myURLs3,event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"" . $string['printhardcopy'] . "\" />" . $string['printhardcopy'] . "</a></div>\n";
 			}
 		}
 	?>
-	<div class="menuitem cascade" id="qti" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','papertasks','qti',myOptions2,myURLs2,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport']; ?>" /><a href="#" onclick="return false"><?php echo $string['importexport']; ?></a></div>
+	<div class="menuitem cascade" id="qti"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup2','papertasks','qti',myOptions2,myURLs2,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport'] ?>" /><?php echo $string['importexport'] ?></a></div>
 </div>
 
 <br />
@@ -377,7 +377,7 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 ?>
 <div class="submenuheading" id="currentquestion"><?php echo $string['currentquestiontasks']; ?></div>
 
-<div style="font-size:90%" id="menu2a">
+<div id="menu2a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit_grey.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon_grey.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></div>
 	<?php
@@ -385,53 +385,53 @@ echo "<div style=\"font-size:90%\" id=\"menu1\">\n";
 			echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16_grey.png\" alt=\"\" />" . $string['midexamclarification'] . "</div>\n";
 		}
 	?>
-	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon_grey.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link_grey.png" alt="Link 2 Paper" /><?php echo $string['linktopaper']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper']; ?>" /><?php echo $string['removefrompaper']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon_grey.gif" alt="<?php echo $string['copyontopaperx'] ?>" /><?php echo $string['copyontopaperx'] ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link_grey.png" alt="<?php echo $string['linktopaper'] ?>" /><?php echo $string['linktopaper'] ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper'] ?>" /><?php echo $string['removefrompaper'] ?></div>
 <?php
 	if ($properties->get_paper_type() == '4') {
 		echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\">" . $string['unsetkillerquestion'] . "</span></div>\n";
 	}
 ?>
-	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play_grey.png" alt="<?php echo $string['previewquestion']; ?>" /><?php echo $string['previewquestion']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play_grey.png" alt="<?php echo $string['previewquestion'] ?>" /><?php echo $string['previewquestion'] ?></div>
 </div>
 
-<div style="font-size:90%" id="menu2b">
-	<div class="menuitem" id="edit" onclick="editQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['editquestion']; ?></a></div>
-	<div class="menuitem" id="information" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><a href="#" onclick="return false"><?php echo $string['information']; ?></a></div>
+<div id="menu2b">
+	<div class="menuitem" id="edit"><a href="#" onclick="editQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion'] ?>" /><?php echo $string['editquestion'] ?></a></div>
+	<div class="menuitem" id="information"><a href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
 	<?php
 		if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
-			echo "<div class=\"menuitem\" id=\"clarification\" onclick=\"examClarification()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['midexamclarification'] . "</a></div>\n";
+			echo "<div class=\"menuitem\" id=\"clarification\"><a href=\"#\" onclick=\"examClarification(); return false;\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" />" . $string['midexamclarification'] . "</a></div>\n";
 		}
 	?>
-	<div class="menuitem" id="copy" onclick="copyToPaper()"><img class="sidebar_icon" style="cursor:hand" onclick="copyToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><a href="#" onclick="return false"><?php echo $string['copyontopaperx']; ?></a></div>
-	<div class="menuitem" id="link" onclick="linkToPaper()"><img class="sidebar_icon" style="cursor:hand" onclick="linkToPaper(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="Link 2 Paper" /><a href="#" onclick="return false"><?php echo $string['linktopaper']; ?></a></div>
-	<div class="menuitem" id="delete" onclick="deleteQuestion()"><img class="sidebar_icon" style="cursor:hand" onclick="deleteQuestion(); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross.png" alt="<?php echo $string['removefrompaper']; ?>" /><a href="#" onclick="return false"><?php echo $string['removefrompaper']; ?></a></div>
+	<div class="menuitem" id="copy"><a href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
+	<div class="menuitem" id="link"><a href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="<?php echo $string['linktopaper'] ?>" /><?php echo $string['linktopaper'] ?></a></div>
+	<div class="menuitem" id="delete"><a href="#" onclick="deleteQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross.png" alt="<?php echo $string['removefrompaper'] ?>" /><?php echo $string['removefrompaper'] ?></a></div>
 <?php
 	if ($properties->get_paper_type() == '4') {
 		echo "<div class=\"menuitem\" id=\"killerq\" onclick=\"killerq()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\"><a href=\"#\" onclick=\"return false\">" . $string['unsetkillerquestion'] . "</a></span></div>\n";
 	}
 ?>
-	<div class="menuitem" id="preview" onclick="startPaper(0, true)"><img class="sidebar_icon" style="cursor:hand" onclick="startPaper(0, true); return false;" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['previewquestion']; ?></a></div>
+	<div class="menuitem" id="preview"><a href="#" onclick="startPaper(0, true); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion'] ?>" /><?php echo $string['previewquestion'] ?></a></div>
 </div>
 
-<div style="font-size:90%" id="menu2c">
-	<div class="menuitem" id="edit" onclick="editQuestion()"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><a onclick="return false" href="#"><?php echo $string['editquestion']; ?></a></div>
-	<div class="menuitem" id="information" onclick="questionInfo()"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><a href="#" onclick="return false"><?php echo $string['information']; ?></a></div>
+<div id="menu2c">
+	<div class="menuitem" id="edit"><a href="#" onclick="editQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion'] ?>" /><?php echo $string['editquestion'] ?></a></div>
+	<div class="menuitem" id="information"><a href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
 	<?php
 		if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
 			echo "<div class=\"menuitem\" id=\"clarification\" onclick=\"examClarification()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['midexamclarification'] . "</a></div>\n";
 		}
 	?>
-	<div class="menuitem" id="copy" onclick="copyToPaper()"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><a href="#" onclick="return false"><?php echo $string['copyontopaperx']; ?></a></div>
-	<div class="menuitem" id="link" onclick="linkToPaper()"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="Link 2 Paper" /><a href="#" onclick="return false"><?php echo $string['linktopaper']; ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper']; ?>" /><?php echo $string['removefrompaper']; ?></div>
+	<div class="menuitem" id="copy"><a href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx'] ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
+	<div class="menuitem" id="link"><a href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="Link 2 Paper" /><?php echo $string['linktopaper'] ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper'] ?>" /><?php echo $string['removefrompaper'] ?></div>
 <?php
 	if ($properties->get_paper_type() == '4') {
-		echo "<div class=\"menuitem\" id=\"killerq\" onclick=\"killerq()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\"><a href=\"#\" onclick=\"return false\">" . $string['unsetkillerquestion'] . "</a></span></div>\n";
+		echo "<div class=\"menuitem\" id=\"killerq\"><a href=\"#\" onclick=\"killerq(); return false;\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/skull_16.png\" alt=\"skull\" /><span class=\"killer\">" . $string['unsetkillerquestion'] . "</a></span></div>\n";
 	}
 ?>
-	<div class="menuitem" id="preview" onclick="startPaper(0, true)"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['previewquestion']; ?></a></div>
+	<div class="menuitem" id="preview"><a href="#" onclick="startPaper(0, true); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion'] ?>" /><?php echo $string['previewquestion'] ?></a></div>
 </div>
 
 <!--[if lt IE 9]>
@@ -456,14 +456,14 @@ if ($properties->get_summative_lock() == true) {
 <?php
   if ($properties->get_paper_type() != '4') {
 ?>
-  <li id="add_break" class="break greymenuitem"><a href="#"><?php echo $string['addscreenbreak']; ?></a></li>
-  <li id="delete_break" class="greymenuitem"><a href="#"><?php echo $string['deletescreenbreak']; ?></a></li>
+  <li id="add_break" class="break greymenuitem"><a href="#"><?php echo $string['addscreenbreak'] ?></a></li>
+  <li id="delete_break" class="greymenuitem"><a href="#"><?php echo $string['deletescreenbreak'] ?></a></li>
 <?php
   }
   echo '</ul>';
 }
 ?>
-<div style="font-size:90%" id="menu2a">
+<div id="menu2a">
 <?php
   $extra_url = '';
 	if (isset($_GET['module'])) {
@@ -472,7 +472,7 @@ if ($properties->get_summative_lock() == true) {
   if ($extra_url != '') $extra_url = '?' . $extra_url;
   echo '<div class="menuitem"><a href="../question/search.php' . $extra_url . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="' . $string['search'] . '" />' . $string['search'] . '</a></div>';
 ?>
-  <div class="menuitem cascade" id="newquestion" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event)"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion']; ?>" /><a href="#" onclick="return false"><?php echo $string['createnewquestion']; ?></a></div>
+  <div class="menuitem cascade" id="newquestion"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion'] ?>" /><?php echo $string['createnewquestion'] ?></a></div>
 </div>
 
 <?php
@@ -482,7 +482,7 @@ if ($properties->get_paper_type() == '2') {
 
 <div class="submenuheading"><?php echo $string['summativechecklist']; ?></div>
 
-<table style="font-size:90%; width:185px; margin-left:9px">
+<table style="width:195px; margin-left:9px">
 <?php
   // Session
   $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
@@ -697,17 +697,11 @@ if ($properties->get_paper_type() == '2') {
 		$importexport_menu[$string['export12']] = $configObject->get('cfg_root_path') . "/qti/export.php?dest=qti12&paperID=$paperID&module=$module";
 		$importexport_menu[$string['exportraf']] = $configObject->get('cfg_root_path') . "/export/rogo_assessment_format.php?paperID=$paperID";
 	}
-  
-  
-  
+
 	$external_menu['Initial Invitation'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=0";
 	$external_menu['Reminder'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=1";
   
-  makeMenu($external_menu);
-  
-  
-  
-  
+  makeMenu($external_menu);  
 
 	makeMenu($importexport_menu);
 	
@@ -717,5 +711,4 @@ if ($properties->get_paper_type() == '2') {
 
   require_once $cfg_web_root . 'include/reports_submenu.inc';
   require_once $cfg_web_root . 'include/paper_copy_submenu.inc';
-  require_once $cfg_web_root . 'include/change_screen_submenu.inc';
 ?>

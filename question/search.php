@@ -20,7 +20,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -193,11 +193,11 @@ if (isset($_GET['submit'])) {
     <thead>
     <tr>
       <th style="width:16px">&nbsp;</th>
-      <th class="vert_div" style="width:50%"><?php echo $string['question']; ?></th>
-      <th class="vert_div" style="width:12%"><?php echo $string['owner']; ?></th>
-      <th class="vert_div" style="width:10%"><?php echo $string['type']; ?></th>
-      <th class="vert_div" style="width:10%"><?php echo $string['modified']; ?></th>
-      <th class="vert_div" style="width:10%"><?php echo $string['status']; ?></th>
+      <th class="vert_div" style="width:50%"><?php echo $string['question'] ?></th>
+      <th class="vert_div" style="width:12%"><?php echo $string['owner'] ?></th>
+      <th class="vert_div" style="width:10%"><?php echo $string['type'] ?></th>
+      <th class="vert_div" style="width:10%"><?php echo $string['modified'] ?></th>
+      <th class="vert_div" style="width:10%"><?php echo $string['status'] ?></th>
     </tr>
     </thead>
     </table>
@@ -373,11 +373,11 @@ if (isset($_GET['submit'])) {
   <thead>
   <tr>
     <th style="width:16px">&nbsp;</th>
-    <th class="vert_div" style="width:50%"><?php echo $string['question']; ?></th>
-    <th class="vert_div" style="width:12%"><?php echo $string['owner']; ?></th>
-    <th class="vert_div" style="width:10%"><?php echo $string['type']; ?></th>
-    <th class="vert_div" style="width:10%"><?php echo $string['modified']; ?></th>
-    <th class="vert_div" style="width:10%"><?php echo $string['status']; ?></th>
+    <th class="vert_div" style="width:50%"><?php echo $string['question'] ?></th>
+    <th class="vert_div" style="width:12%"><?php echo $string['owner'] ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['type'] ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['modified'] ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['status'] ?></th>
   </tr>
   </thead>
   <tbody>
@@ -394,11 +394,11 @@ if (isset($_GET['submit'])) {
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
 
-    echo "<td class=\"l\">$tmp_leadin</td>";
-    echo "<td class=\"l\">$title $initials $surname</td>";
-    echo '<td class="l"><nobr>' . $string[$q_type] . '</nobr></td>';
-    echo '<td class="l">' . $last_edited . '</td>';
-    echo '<td class="l">' . $status_name . '</td></tr>';
+    echo "<td>$tmp_leadin</td>";
+    echo "<td>$title $initials $surname</td>";
+    echo '<td><nobr>' . $string[$q_type] . '</nobr></td>';
+    echo '<td>' . $last_edited . '</td>';
+    echo '<td>' . $status_name . '</td></tr>';
   }
   $result->close();
 ?>

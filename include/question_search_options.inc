@@ -121,10 +121,10 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <br />
 
-<table cellpadding="4" cellspacing="0" border="0" width="185">
+<table cellpadding="4" cellspacing="0" border="0" style="width:195px; font-size:110%">
 <tr><td style="margin:4px">
-<div style="font-size:110%"><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_GET['searchterm'])) echo $_GET['searchterm']; ?>" /></div>
-<div style="font-size:110%"><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype" style="max-width:175px">
+<div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_GET['searchterm'])) echo $_GET['searchterm']; ?>" /></div>
+<div><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype" style="max-width:185px">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
   $qTypes = array('area'=>$string['area'],'enhancedcalc'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox'],'true_false'=>$string['true_false']);
@@ -148,8 +148,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(8);"><?php echo $string['questionsections']; ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(8);"><?php
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(8);"><?php echo $string['questionsections'] ?></a></td>
+  <td align="right"><a href="#" onclick="updateMenu(8)"><?php
     if (isset($state['menu8']) and $state['menu8'] == 'block') {
       echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
@@ -197,7 +197,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </table>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'block') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
@@ -372,7 +372,7 @@ if (!isset($status_array)) {
   <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status_dropdown($status_array); ?></div>
   <div style="margin-left:4px"><?php echo $string['blooms'].': '; search_utils::display_blooms_dropdown(); ?></div>
 
-  <div style="margin-left:4px"><?php echo $string['keyword'].': '; ?> <select style="max-width:175px" name="keywordID"><br />
+  <div style="margin-left:4px"><?php echo $string['keyword'].': '; ?> <select style="max-width:185px" name="keywordID"><br />
   <option value=""></option>
 <?php
   $old_moduleID = '';
@@ -421,9 +421,9 @@ if (!isset($status_array)) {
 </table>
 
 <br />
-<div class="submenuheading" id="banktasks"><?php echo $string['currentquestiontasks']; ?></div>
+<div class="submenuheading" id="banktasks"><?php echo $string['currentquestiontasks'] ?></div>
 
-<div style="margin-left:12px; font-size:90%" id="menu2a">
+<div id="menu2a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/small_play_grey.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></div>
@@ -432,7 +432,7 @@ if (!isset($status_array)) {
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></div>
 </div>
 
-<div style="margin-left:12px; font-size:90%; display:none" id="menu2b">
+<div style="display:none" id="menu2b">
 	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
 	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
 	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
@@ -441,7 +441,7 @@ if (!isset($status_array)) {
 	<div class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></a></div>
 </div>
 
-<div style="margin-left:12px; font-size:90%; display:none" id="menu2c">
+<div style="display:none" id="menu2c">
 	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
 	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
 	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>

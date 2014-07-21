@@ -268,7 +268,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
 
 <br />
 
-<div id="menu2a" style="font-size:90%">
+<div id="menu2a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play_grey.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit_grey.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon_grey.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></div>
@@ -277,7 +277,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></div>
 </div>
 
-<div id="menu2b" style="font-size:90%">
+<div id="menu2b">
 	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
 	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
 	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
@@ -286,7 +286,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
 	<div class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></a></div>
 </div>
 
-<div id="menu2c" style="font-size:90%">
+<div id="menu2c">
 	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
 	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
 	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
@@ -295,7 +295,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
 	<div class="menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></div>
 </div>
 
-<div style="font-size:90%">
+<div>
 <div class="menuitem" id="search"><a href="search.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search']; ?></a></div>
 <div class="menuitem cascade" id="newquestion" onclick="showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event); return false;"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion']; ?></a></div>
 </div>
@@ -326,7 +326,7 @@ switch ($_GET['type']) {
 }
 echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
 ?>
-<div style="height:78%; font-size:90%; overflow:auto" id="list">
+<div style="height:78%; overflow:auto" id="list">
 <?php
   echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">show Locked questions&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {

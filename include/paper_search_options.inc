@@ -53,7 +53,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <form name="PapersMenu" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <br />
 
-<table cellpadding="4" cellspacing="0" border="0" width="185">
+<table cellpadding="4" cellspacing="0" border="0" style="width:195px; font-size:110%">
 <tr><td>
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
 
@@ -116,7 +116,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility'] ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'block') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
@@ -195,7 +195,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </table>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership'] ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
       echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
@@ -213,8 +213,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; ?> <?php search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers'); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module'] ?> <?php search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner'] ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers', 100); ?></div>
 </td></tr>
 </table>
 

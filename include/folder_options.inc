@@ -21,29 +21,17 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-include_once '../classes/dateutils.class.php';
-include_once '../classes/moduleutils.class.php';
-require_once '../include/sidebar_functions.inc';
-
-$modules_array = array();
-//$staff_modules is populated in staff_auth.inc
-$my_folders_array = get_folders($staff_modules, $userObject->get_user_ID(), $mysqli);
-$full_modules_array = get_modules($staff_modules, $my_folders_array, $modules_array, $mysqli);
-$staff_modules_array = get_staff_module_links($staff_modules, $mysqli);
-$keywords_array = get_keywords($staff_modules, $userObject->get_user_ID(), $mysqli);
-
 ?>
 <div id="left-sidebar" class="sidebar">
 <br />
 
-<div style="font-size:90%">
+<div>
 <?php
 
   if ($folder_ownerID == $userObject->get_user_ID() ) {
-    echo '<div class="menuitem" onclick="folderProperties()"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" alt="Properties" /><a href="#" onclick="return false">' . $string['folderproperties'] . '</a></div>';
+    echo '<div class="menuitem"><a href="#" onclick="folderProperties(); return false;"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" alt="Properties" />' . $string['folderproperties'] . '</a></div>';
     echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" alt="New Folder" />' . $string['makesubfolder'] . '</a></div>';
-    echo '<div class="menuitem" onclick="deleteFolder()"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross.png" alt="Delete Folder" /><a href="#" onclick="return false">' . $string['deletefolder'] . '</a></div>';
+    echo '<div class="menuitem"><a href="#" onclick="deleteFolder(); return false;"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross.png" alt="Delete Folder" />' . $string['deletefolder'] . '</a></div>';
   } else {
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon_grey.gif" alt="Properties" />' . $string['folderproperties'] . '</div>';
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16_grey.png" alt="New Folder" />' . $string['makesubfolder'] . '</div>';

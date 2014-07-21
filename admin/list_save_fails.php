@@ -35,7 +35,6 @@ require '../include/sidebar_menu.inc';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -54,7 +53,6 @@ require '../include/sidebar_menu.inc';
 </head>
 <body>
 <?php
-require '../include/admin_options.inc';
 require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu();

@@ -72,7 +72,7 @@ require_once '../classes/dateutils.class.php';
 	});
 </script>
 
-<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:335px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:340px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';

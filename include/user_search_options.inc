@@ -124,21 +124,21 @@ if (isset($username) and $search_surname == '' and $search_username == '' and $s
 <form name="PapersMenu" action="search.php" method="get">
 <br />
 
-<table cellpadding="0" cellspacing="0" border="0" width="190">
+<table cellpadding="0" cellspacing="0" border="0" style="width:210px; font-size:110%">
 <tr><td>
 <div><strong><?php echo $string['genmsg']; ?></strong></div>
 <div style="font-size:50%">&nbsp;</div>
-<div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname; ?>" /></div>
+<div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname ?>" /></div>
 
 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
-<tr><td><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid']; ?></td></tr>
-<tr><td><input type="text" name="search_username" size="9" value="<?php echo $search_username; ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php echo $search_student_id; ?>" /></td></tr>
+<tr><td><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid'] ?></td></tr>
+<tr><td><input type="text" name="search_username" size="9" value="<?php echo $search_username ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php echo $search_student_id ?>" /></td></tr>
 </table>
-<div><?php echo $string['module']; ?><br /><?php 
+<div><?php echo $string['module'] ?><br /><?php 
 search_utils::display_staff_modules_dropdown($userObject, $mysqli); 
 ?></div>
 
-<div><?php echo $string['academicyear']; ?><br /><select name="calendar_year">
+<div><?php echo $string['academicyear'] ?><br /><select name="calendar_year">
 <option value="%"><?php echo $string['anyyear']; ?></option>
 <?php
   $result = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
@@ -157,7 +157,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced'] ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(3);"><?php
     if (isset($state['advanced']) and $state['advanced'] == 'true') {
       echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
@@ -245,7 +245,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 
 <div class="submenuheading"><?php echo $string['usertasks']; ?></div>
 
-<div style="font-size:90%" id="menu2a">
+<div id="menu2a">
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><?php echo $string['viewuserfile']; ?></div>
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/report_grey_16.png" alt="<?php echo $string['performsummary']; ?>" /><?php echo $string['performsummary']; ?></div>
 <?php
@@ -260,7 +260,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 ?>
 </div>
 
-<div style="font-size:90%" id="menu2b">
+<div id="menu2b">
 <div class="menuitem" onclick="viewProfileSingle()"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><a onclick="return false" href="#"><?php echo $string['viewuserfile']; ?></a></div>
 <div class="menuitem" onclick="viewPerformanceSummary()"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary']; ?>" /><a onclick="return false" href="#"><?php echo $string['performsummary']; ?></a></div>
 <?php
@@ -272,7 +272,7 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 ?>
 </div>
 
-<div style="font-size:90%" id="menu2c">
+<div id="menu2c">
 <div class="menuitem" onclick="viewProfileSingle()"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><a onclick="return false" href="#"><?php echo $string['viewuserfile']; ?></a></div>
 <div class="menuitem" onclick="viewPerformanceSummary()"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary']; ?>" /><a onclick="return false" href="#"><?php echo $string['performsummary']; ?></a></div>
 <?php

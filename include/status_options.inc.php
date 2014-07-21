@@ -26,13 +26,13 @@
 <div id="left-sidebar" class="sidebar">
 <br />
 
-<div style="font-size:90%" id="menu1a">
+<div id="menu1a">
 	<div class="menuitem"><a href="edit_status.php"><img class="sidebar_icon" src="../artwork/status_icon_16.png" alt="" /><?php echo $string['createstatus']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['edit'] . ' ' . $string['status']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletestatus']; ?></div>
 </div>
 
-<div style="display:none; font-size:90%" id="menu1b">
+<div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="edit_status.php"><img class="sidebar_icon" src="../artwork/status_icon_16.png" alt="" /><?php echo $string['createstatus']; ?></a></div>
 	<div class="menuitem reactive default"><a href="edit_status.php"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['edit'] . ' ' . $string['status']; ?></a></div>
 	<div class="menuitem reactive"><a href="../delete/check_delete_status.php" class="launchwin"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletestatus']; ?></a></div>

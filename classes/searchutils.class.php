@@ -78,7 +78,7 @@ Class search_utils {
 
     $staff_modules = $userObj->get_staff_accessable_modules();
 
-    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
+    echo "<select style=\"width:195px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
 
     $old_school = '';
@@ -136,7 +136,7 @@ Class search_utils {
     global $string, $state;
     $owners = self::get_owners($userObj, $db);
 
-    echo "<select style=\"width:175px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
+    echo "<select style=\"width:195px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
     if ($type == 'questions') {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['myquestionsonly']. "</option>\n";
@@ -198,7 +198,7 @@ STATUS;
   static function display_blooms_dropdown() {
     global $string, $state;
 
-    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
+    echo "<select style=\"width:195px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
     echo "<option value=\"%\">" . $string['alllevels'] . "</option>\n";
 
     $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');

@@ -33,11 +33,11 @@
 <form name="myform">
 <br />
 
-<div style="font-size:90%" id="menu1a">
+<div id="menu1a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails']; ?></div>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
+<div style="display:none" id="menu1b">
 	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><a href="#" onclick="return false;"><?php echo $string['viewdetails']; ?></a></div>
 </div>
 
