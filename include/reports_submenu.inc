@@ -22,6 +22,17 @@
 * @package
 */
 require_once $cfg_web_root . 'classes/paperutils.class.php';
+
+function count_textbox_remark($paperID, $db) {
+  $result = $db->prepare("SELECT count(id) FROM textbox_remark WHERE paperID = ?");
+  $result->bind_param('i', $paperID);
+  $result->execute();
+  $result->bind_result($remarkNo);
+  $result->fetch();
+  $result->close();
+  
+  return $remarkNo;
+}
 ?>
 <script>
 <?php
@@ -274,8 +285,6 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   $result->close();
   echo "</select></td></tr>\n";
 
-
-
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   
   // Module drop down
@@ -370,7 +379,11 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
         echo "<div class=\"reports_header\">" . $string['textboxmarking'] . "</div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_remark.php?',event)\">" . $string['selectpapersforremarking'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
+        if (count_textbox_remark($paperID, $mysqli) > 0) {
+          echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
+        } else {
+          echo "<div class=\"greybullet\">" . $string['secondmarkbyquestion'] . "</div>\n";          
+        }
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=finalise&',event)\">" . $string['finalisemarks'] . "</a></div>\n";
       }
     }

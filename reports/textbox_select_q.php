@@ -30,7 +30,7 @@ $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 $paper_type = $propertyObj->get_paper_type();
 $paper = $propertyObj->get_paper_title();
 
@@ -41,13 +41,12 @@ $paper = $propertyObj->get_paper_title();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $string['textboxmarking'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['textboxmarking'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
-    table {font-size:100%}
     a {color:blue; text-decoration:none; cursor:pointer}
     p {margin-top:0; padding-top:0}
     td {padding-bottom: 10px}
@@ -160,12 +159,14 @@ $paper = $propertyObj->get_paper_title();
       }
 
       echo '<tr><td style="text-align:right; vertical-align:top">';
-      if ($candidates_marked < $candidate_no) echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
+      if ($candidates_marked < $out_of) {
+        echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
+      }
       echo $question_no . '.</td>';
-      if ($candidates_marked == $candidate_no) {
-        echo '<td>';
-      } else {
+      if ($candidates_marked < $out_of) {
         echo '<td style="background-color:#FFDDDD">';
+      } else {
+        echo '<td>';
       }
       if ($_GET['action'] == 'finalise') {
         echo "<a href=\"textbox_finalise_marks.php";

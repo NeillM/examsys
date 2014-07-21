@@ -201,8 +201,9 @@ label.error {
 	line-height: 150%;
 	background-image: url('../artwork/grey_bullet_outline.gif');
 	background-repeat: no-repeat;
-	padding-left: 20px;
-	color:#808080;
+  background-position: 15px center;
+	padding-left: 35px;
+	color: #808080;
 }
 .killer_icon {
 	width: 17px;
