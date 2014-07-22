@@ -35,7 +35,7 @@ require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 
-check_var('userID', 'GET', true, false, false);
+$userID = check_var('userID', 'GET', true, false, true);
 
 if ($userObject->has_role('Demo')) {
   $demo = true;
@@ -162,12 +162,12 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $result->close();
   }
 } elseif (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
-  UserUtils::clear_admin_access($_GET['userID'], $mysqli);
+  UserUtils::clear_admin_access($userID, $mysqli);
 
   for ($i=0; $i<$_POST['admin_school_no']; $i++) {
     if (isset($_POST["sch$i"])) {
       $result = $mysqli->prepare("INSERT INTO admin_access VALUES (NULL, ?, ?)");
-      $result->bind_param('ii', $_GET['userID'], $_POST["sch$i"]);
+      $result->bind_param('ii', $userID, $_POST["sch$i"]);
       $result->execute();
       $result->close();
     }
@@ -194,25 +194,25 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $breaks = trim($_POST['breaks']);
 
   $result = $mysqli->prepare("DELETE FROM special_needs WHERE userID = ?");
-  $result->bind_param('i', $_GET['userID']);
+  $result->bind_param('i', $userID);
   $result->execute();
   $result->close();
 
   if ($background != NULL or $foreground != NULL or $marks_color != NULL or $textsize != 0 or $extra_time != 0 or $font != NULL or $themecolor != NULL or $labelcolor != NULL or $unansweredcolor != NULL or $dismisscolor != NULL or $medical != '' or $breaks != '') {
     $result = $mysqli->prepare("INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('issiissssssss', $_GET['userID'], $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
+    $result->bind_param('issiissssssss', $userID, $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
     $result->execute();
     $result->close();
 
     $result = $mysqli->prepare("UPDATE users SET special_needs = 1 WHERE id = ?");
-    $result->bind_param('i', $_GET['userID']);
+    $result->bind_param('i', $userID);
     $result->execute();
     $result->close();
   }
 } elseif (isset($_POST['save_metadata']) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
   for ($i=0; $i<$_POST['metadata_no']; $i++) {
     $result = $mysqli->prepare("REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
-    $result->bind_param('iisss', $_GET['userID'], $_POST["meta_moduleID$i"], $_POST["meta_type$i"], $_POST["meta_value$i"], $_POST["meta_calendar_year$i"]);
+    $result->bind_param('iisss', $userID, $_POST["meta_moduleID$i"], $_POST["meta_type$i"], $_POST["meta_value$i"], $_POST["meta_calendar_year$i"]);
     $result->execute();
     $result->close();
   }
@@ -259,35 +259,35 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     }
 
     function newStudentNote() {
-      note = window.open("new_student_note.php?userID=<?php echo $_GET['userID']; ?>","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      note = window.open("new_student_note.php?userID=<?php echo $userID ?>","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         note.focus();
       }
     }
 
     function addModule() {
-      note = window.open("add_student_module.php?userID=<?php echo $_GET['userID']; ?>","module","width=600,height=" + (screen.height - 120) + ",left="+(screen.width/2-300)+",top=50,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      note = window.open("add_student_module.php?userID=<?php echo $userID ?>","module","width=600,height=" + (screen.height - 120) + ",left="+(screen.width/2-300)+",top=50,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         note.focus();
       }
     }
 
     function editModules(session, grade) {
-      editwin=window.open("edit_modules_popup.php?userID=<?php echo $_GET['userID']; ?>&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      editwin=window.open("edit_modules_popup.php?userID=<?php echo $userID ?>&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }
     }
 
     function editMultiTeams() {
-      editwin=window.open("../folder/edit_multi_teams_popup.php?userID=<?php echo $_GET['userID']; ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      editwin=window.open("../folder/edit_multi_teams_popup.php?userID=<?php echo $userID ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }
     }
 
     function forceResetPassword(username) {
-      editwin=window.open("reset_pwd.php?userID=<?php echo $_GET['userID']; ?>","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      editwin=window.open("reset_pwd.php?userID=<?php echo $userID ?>","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }
@@ -355,7 +355,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $(document).ready(function() {
       updateAccessDemo();
       
-      $('#userID').val(',<?php echo $_GET['userID']; ?>');
+      $('#userID').val(',<?php echo $userID ?>');
       
       $('#menu2a').hide();
       $('#menu2b').show();
@@ -374,7 +374,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $records_found = 0;
     
   $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = ?");
-  $user_result->bind_param('i', $_GET['userID']);
+  $user_result->bind_param('i', $userID);
   $user_result->execute();
   $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
   $user_result->store_result();
@@ -389,7 +389,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   }
 
   $needs_result = $mysqli->prepare("SELECT special_id FROM special_needs WHERE userID = ?");
-  $needs_result->bind_param('i', $_GET['userID']);
+  $needs_result->bind_param('i', $userID);
   $needs_result->execute();
   $needs_result->bind_result($special_id);
   if ($needs_result->num_rows > 0) $special_needs = true;
@@ -421,14 +421,14 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $user_query->close();
 
   if ($user_deleted == '') {
-    $bg_color = '#F1F5FB';
+    $bg_color = '#EEF4FF';
   } else {
     $bg_color = '#FFC0C0';
   }
 ?>
 <div id="content">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $_GET['userID']; ?>" method="post">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
 <?php
 
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
@@ -574,7 +574,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     } else {
       echo "<option value=\"\"></option>\n<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n";
     }
-    echo "</select></td><td>&nbsp;" . $string['userid'] . "</td><td colspan=\"2\">" . $_GET['userID'] . "</td></tr>\n";
+    echo "</select></td><td>&nbsp;" . $string['userid'] . "</td><td colspan=\"2\">" . $userID . "</td></tr>\n";
     echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
     if (stripos($tmp_roles, 'Student') !== false) {
@@ -651,11 +651,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 <?php
   $stmt = false;
 
-  if ($userObject->has_role(array('Admin', 'SysAdmin')) or $userObject->get_user_ID() == $_GET['userID']) {
+  if ($userObject->has_role(array('Admin', 'SysAdmin')) or $userObject->get_user_ID() == $userID) {
     $log_viewable = true;
   } else {
     $idMod = array_keys($userObject->get_staff_modules());
-    $log_viewable = UserUtils::is_user_on_module($_GET['userID'], $idMod, '', $mysqli);
+    $log_viewable = UserUtils::is_user_on_module($userID, $idMod, '', $mysqli);
   }
 
   $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
@@ -727,7 +727,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
       // Add in feedback
       $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ?");
-      $stmt->bind_param('i', $_GET['userID']);
+      $stmt->bind_param('i', $userID);
       $stmt->execute();
       $stmt->bind_result($page, $ipaddress, $accessed, $display_started, $crypt_name, $type, $paper_title);
       while ($stmt->fetch()) {
@@ -746,7 +746,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
       // Add in any access denied warnings
       $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(tried, '%Y%m%d%H%i%s') AS tried, DATE_FORMAT(tried,'{$configObject->get('cfg_long_date_time')}') AS display_started, title FROM denied_log WHERE userID = ?");
-      $stmt->bind_param('i', $_GET['userID']);
+      $stmt->bind_param('i', $userID);
       $stmt->execute();
       $stmt->bind_result($page, $ipaddress, $tried, $display_started, $title);
       while ($stmt->fetch()) {
@@ -772,16 +772,16 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
       switch ($paper[$i]['type']) {
         case '0':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '1':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '2':
           if (stripos($tmp_roles, 'External Examiner') !== false) {
             echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           } else {
-            echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $_GET['userID'] . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
+            echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           }
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
           echo ">" . $paper[$i]['q_paper'] . "</a></td><td";
@@ -899,7 +899,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
 
-  $current_schools = SchoolUtils::get_admin_schools($_GET['userID'], $mysqli);
+  $current_schools = SchoolUtils::get_admin_schools($userID, $mysqli);
 
   $old_faculty = '';
   $admin_school_no = 0;
@@ -1186,7 +1186,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
   echo drawTabs('Metadata', 5, '', $tmp_roles, $bg_color);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
   $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND userID = ?");
-  $stmt->bind_param('i', $_GET['userID']);
+  $stmt->bind_param('i', $userID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($mod_id, $moduleID, $fullname, $calendar_year, $type, $value);
@@ -1230,7 +1230,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo "<tr><td colspan=\"4\">&nbsp;<img onclick=\"editMultiTeams(); return false;\" src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editteams'] . "\" />&nbsp;<a href=\"\" onclick=\"editMultiTeams(); return false;\">" . $string['editteams'] . "</a></td></tr>\n";
   }
 
-  if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $_GET['userID']) {   // Only allow Admin/SysAdmin or current user to view this information
+  if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $userID) {   // Only allow Admin/SysAdmin or current user to view this information
     $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? ORDER BY moduleID");
     $result->bind_param('i', $tmp_id);
     $result->execute();
