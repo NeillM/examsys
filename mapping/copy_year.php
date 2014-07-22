@@ -65,7 +65,7 @@ if (count($errors) == 0) {
 } else {
 ?>
   <body onclick="hideMenus()">
-  <div id="content" class="content">
+  <div id="content">
     <table border="0" width="100%" height="100%">
     <tr><td valign="middle">
     <div align="center">

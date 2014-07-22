@@ -54,7 +54,7 @@ ini_set("auto_detect_line_endings", true);
 <?php
   require '../include/user_search_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 <br />
@@ -72,7 +72,7 @@ ini_set("auto_detect_line_endings", true);
         <br /><br /><br />
         <table class="dialog_border" style="width:600px">
         <tr>
-        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules']; ?></td>
+        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules'] ?></td>
         </tr>
         <tr>
         <td class="dialog_body">

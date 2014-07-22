@@ -65,7 +65,7 @@ require '../include/sysadmin_auth.inc';
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
@@ -76,10 +76,10 @@ require '../include/sysadmin_auth.inc';
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
   <thead>
     <tr>
-      <th class="col10" style="width:25%"><?php echo $string['name']; ?></th>
-      <th class="vert_div" style="width:25%"><?php echo $string['oauth_consume_key']; ?></th>
-      <th class="vert_div" style="width:25%"><?php echo $string['oauth_secret']; ?></th>
-      <th class="vert_div" style="width:25%"><?php echo $string['oauth_context_id']; ?></th>
+      <th class="col10" style="width:25%"><?php echo $string['name'] ?></th>
+      <th class="vert_div" style="width:25%"><?php echo $string['oauth_consume_key'] ?></th>
+      <th class="vert_div" style="width:25%"><?php echo $string['oauth_secret'] ?></th>
+      <th class="vert_div" style="width:25%"><?php echo $string['oauth_context_id'] ?></th>
     </tr>
   </thead>
   

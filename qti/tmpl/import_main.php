@@ -71,7 +71,7 @@ echo draw_toprightmenu();
 
 $result = $import_result;
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <table class="header">
 <?php

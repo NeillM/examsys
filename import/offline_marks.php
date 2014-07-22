@@ -257,7 +257,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
 <?php
   include '../include/paper_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 <?php
 if (isset($_POST['submit']) and $_POST['submit']) {
   if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {

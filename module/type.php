@@ -106,7 +106,7 @@ if ($_GET['module'] != '0') {
   
   $types_used = module_utils::paper_types($module, $mysqli);
 ?>
-<div id="content" class="content">
+<div id="content">
         
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>

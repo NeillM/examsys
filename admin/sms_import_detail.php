@@ -81,24 +81,24 @@ function get_list($list, $db) {
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
   
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
-  <div class="page_title"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4) ?></div>
+  <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4) ?></div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">
   <thead>
     <tr>
-      <th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th>
-      <th class="vert_div"><?php echo $string['academicyear']; ?></th>
-      <th class="vert_div"><?php echo $string['enrolements']; ?></th>
-      <th class="vert_div"><?php echo $string['enrolementdetails']; ?></th>
-      <th class="vert_div"><?php echo $string['deletions']; ?></th>
-      <th class="vert_div"><?php echo $string['deletiondetails']; ?></th>
-      <th class="vert_div"><?php echo $string['importtype']; ?></th>
+      <th class="vert_div col10"><?php echo $string['moduleid'] ?></div></th>
+      <th class="vert_div"><?php echo $string['academicyear'] ?></th>
+      <th class="vert_div"><?php echo $string['enrolements'] ?></th>
+      <th class="vert_div"><?php echo $string['enrolementdetails'] ?></th>
+      <th class="vert_div"><?php echo $string['deletions'] ?></th>
+      <th class="vert_div"><?php echo $string['deletiondetails'] ?></th>
+      <th class="vert_div"><?php echo $string['importtype'] ?></th>
     </tr>
 </thead>
 <tbody>
@@ -119,7 +119,7 @@ function get_list($list, $db) {
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $academic_year, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td class=\"col10\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td class=\"col\">" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
+    echo "<tr><td class=\"col10\"><a href=\"../module/index.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td class=\"col\">" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
   }
 
 ?>

@@ -198,11 +198,15 @@ if (isset($_POST['Save'])) {
   } else {
     $folder = '';
   }
-  echo '<div id="content" class="content" style="font-size:80%">';
-  echo "<table class=\"header\">\n";
-  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../module/index.php?module=$module\">" . module_utils::get_moduleid_from_id($module, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['newsession'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo '</table><br/>';
-
+?>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $moduleID ?>"><?php echo module_utils::get_moduleid_from_id($moduleID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $moduleID . '&folder=' . $folder ?>"><?php echo $string['manageobjectives'] ?></a></div>
+  <div class="page_title"><?php echo $string['newsession'] ?></div>
+</div>
+<br />
+<?php
   echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
   echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" required autofocus /></td></tr>\n";
 

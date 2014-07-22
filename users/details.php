@@ -426,7 +426,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     $bg_color = '#FFC0C0';
   }
 ?>
-<div id="content" class="content">
+<div id="content">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $_GET['userID']; ?>" method="post">
 <?php

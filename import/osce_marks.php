@@ -268,7 +268,7 @@ if (isset($_POST['submit'])) {
   require '../include/paper_options.inc';
 ?>
 
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 

@@ -86,7 +86,7 @@
 	
 	echo draw_toprightmenu(231);
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />

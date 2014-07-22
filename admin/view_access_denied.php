@@ -60,7 +60,7 @@ require '../include/toprightmenu.inc';
 echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
   
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />

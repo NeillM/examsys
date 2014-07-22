@@ -78,7 +78,7 @@
 <?php
 require '../include/paper_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <?php
 echo "<table class=\"header\">\n";
 echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";

@@ -42,7 +42,7 @@ ini_set("auto_detect_line_endings", true);
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    p {margin:0px; padding:0px}
+    p {margin:0; padding:0}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
     .existing {color:#808080}
@@ -60,7 +60,7 @@ ini_set("auto_detect_line_endings", true);
 <?php
   require '../include/course_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <br />
 <br />
 <?php

@@ -205,7 +205,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
 		
 		echo draw_toprightmenu();
   ?>
-  <div id="content" class="content">
+  <div id="content">
   <div class="head_title">
 		<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 		<div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>

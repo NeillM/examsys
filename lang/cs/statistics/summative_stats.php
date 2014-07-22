@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamstats'] = 'Summative Exam Stats';
+$string['summativeexamstats'] = 'Summative Exams';
 $string['statistics'] = 'Statistics';
 $string['month'] = 'Month';
 $string['papers'] = 'Papers';

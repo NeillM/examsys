@@ -52,17 +52,16 @@ require '../include/errors.inc';
 	
 	echo draw_toprightmenu();
 ?>
-<div style="font-size:80%">
+<div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
   <div class="page_title"><?php echo $string['questionsbyschool']; ?></div>
 </div>
 
-<blockquote>
-<table border="0" style="width:100%; border-right: 1px solid #C0C0C0;border-bottom: 1px solid #C0C0C0" class="stats">
+<table class="stats">
 <tr>
-<th>School</th>
+<th><?php echo $string['school'] ?></th>
 <?php
 	$types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
   foreach ($types as $type) {
@@ -143,7 +142,7 @@ foreach ($master_array as $school => $data) {
 }
 ?>
 </table>
-</blockquote>
+
 </div>
 </body>
 </html>

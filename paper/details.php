@@ -584,7 +584,8 @@ function check_latex_random($q_ids, $mysqli) {
   ?>
     <div id="left-sidebar" class="sidebar">
     </div>
-    <div id="content" class="content"><br />
+    <div id="content">
+      <br />
   <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"color:#C00000; margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
@@ -818,7 +819,7 @@ function check_latex_random($q_ids, $mysqli) {
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 
 <?php
   $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);

@@ -55,10 +55,10 @@
 <form name="myform">
 <br />
 
-<div style="font-size:90%; margin-left:2px" id="menu1a">
-	<div class="menuitem" onclick="newKeyword()"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><a href="#" onclick="return false"><?php echo $string['createnewkeyword']; ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editkeyword']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletekeyword']; ?></div>
+<div id="menu1a">
+	<div class="menuitem"><a href="#" onclick="newKeyword(); return false;"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editkeyword'] ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletekeyword'] ?></div>
 	<?php
 		if (isset($keyword_list) and count($keyword_list) > 0) {
 			echo "<div class=\"menuitem\"><a href=\"export_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"../artwork/export_16.gif\" alt=\"Export\" />" . $string['exportkeywords'] . "</a></div>\n";
@@ -66,15 +66,15 @@
 			echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"../artwork/export_grey_16.gif\" alt=\"Export\" />" . $string['exportkeywords'] . "</div>\n";
 		}
 	?>
-	<div class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="Import" /><?php echo $string['importkeywords']; ?></a></div>
+	<div class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="Import" /><?php echo $string['importkeywords'] ?></a></div>
 </div>
 
-<div style="font-size:90%; margin-left:2px; display:none" id="menu1b">
-	<div class="menuitem" onclick="newKeyword()"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><a href="#" onclick="return false"><?php echo $string['createnewkeyword']; ?></a></div>
-	<div class="menuitem" onclick="editKeyword(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editkeyword']; ?></a></div>
-	<div class="menuitem" onclick="deleteKeyword(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false"><?php echo $string['deletekeyword']; ?></a></div>
-	<div class="menuitem"><a href="export_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/export_16.gif" alt="Export" /><?php echo $string['exportkeywords']; ?></a></div>
-	<div class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="Import" /><?php echo $string['importkeywords']; ?></a></div>
+<div style="display:none" id="menu1b">
+	<div class="menuitem"><a href="#" onclick="newKeyword()"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
+	<div class="menuitem"><a href="#" onclick="editKeyword(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editkeyword'] ?></a></div>
+	<div class="menuitem"><a href="#" onclick="deleteKeyword(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletekeyword'] ?></a></div>
+	<div class="menuitem"><a href="export_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/export_16.gif" alt="Export" /><?php echo $string['exportkeywords'] ?></a></div>
+	<div class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="Import" /><?php echo $string['importkeywords'] ?></a></div>
 </div>
 
 <input type="hidden" name="id" id="keywordID" value="" />

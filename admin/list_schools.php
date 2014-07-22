@@ -78,7 +78,7 @@ $result->close();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
   $result->store_result();
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />

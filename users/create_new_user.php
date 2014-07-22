@@ -138,8 +138,8 @@ MESSAGE;
 <?php
   include '../include/user_search_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
-<p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
+<div id="content">
+<p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname'] ?>.</p>
 </div>
       <?php
     }
@@ -186,14 +186,14 @@ MESSAGE;
 <?php
   require '../include/user_search_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 <br />
 <form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <div align="center">
 <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
 <tr><td>
 <table border="0" cellspacing="6" cellpadding="0" width="100%" style="background-color:white">
-<tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="dialog_header"><?php echo $string['createnewuser']; ?></td></tr>
+<tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="dialog_header"><?php echo $string['createnewuser'] ?></td></tr>
 </table>
 </td></tr>
 <tr><td>
@@ -201,8 +201,8 @@ MESSAGE;
 <?php
   $authinfo = $authentication->version_info();
   $ldap_enabled = false;
-  foreach($authinfo->plugins as $p) {
-    if($p->name == 'LDAP') {
+  foreach ($authinfo->plugins as $p) {
+    if ($p->name == 'LDAP') {
       $ldap_enabled = true;
       break;
     }

@@ -64,20 +64,20 @@ if (isset($_POST['submit'])) {
 <?php
   require '../include/paper_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 <form name="myform" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" enctype="multipart/form-data">
 <table cellspacing="0" cellpadding="0" border="0" style="width:500px; text-align:left" class="dialog_border"> 
 	<tr> 
-		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/raf_file.png" width="48" height="48" /></td><td class="dialog_header" style="width:445px"><?php echo $string['importraf']; ?></td> 
+		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/raf_file.png" width="48" height="48" /></td><td class="dialog_header" style="width:445px"><?php echo $string['importraf'] ?></td> 
 	</tr> 
 	<tr> 
 		<td class="dialog_body" colspan="2">
 				<table width="100%" cellspacing="0" cellpadding="10">
 					<tr>
 						<td>
-							<strong><?php echo $string['file']; ?></strong>&nbsp;<input type="file" size="40" name="raffile" id="raffile" class="required" />
+							<strong><?php echo $string['file'] ?></strong>&nbsp;<input type="file" size="40" name="raffile" id="raffile" class="required" />
 						</td>
 					</tr>
           <tr>
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
           </tr>
 					<tr>
 						<td style="text-align:center">
-							<input type="submit" name="submit" value="<?php echo $string['importfile']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="javascript:history.back()" />
+							<input type="submit" name="submit" value="<?php echo $string['importfile'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="javascript:history.back()" />
 						</td>
 					</tr>
           <tr>

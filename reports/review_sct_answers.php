@@ -154,7 +154,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
     $result->close();
   }
 ?>
-<div style="font-size:80%" id="content">
+<div id="content">
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
@@ -192,7 +192,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
   }
   $stmt->close();
 
-  //build the questions_array
+  // Build the questions_array
   $old_q_id = '';
   $q_no = 0;
   $question_no = 0;
@@ -222,7 +222,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
   }
   $stmt->close();
 
-  //display the questions
+  // Display the questions
   foreach($questions_array as &$question) {
     if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     display_question($question, $question_no, $reviewer_data, $string, $mysqli);
@@ -230,7 +230,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
 ?>
 </table>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>">
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" class="ok" /></div>
 </form>
 </div>
     

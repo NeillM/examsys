@@ -164,7 +164,7 @@ $announcements = get_announcements($mysqli);
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content">
+<div id="content">
 <form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <?php
   // -- Create new folder ---------------------------------------------------

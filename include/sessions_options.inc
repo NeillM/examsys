@@ -91,28 +91,6 @@ if ($vle_api != '') {
 ?>
   }
 
-  function updateMenu(ID) {
-    current = (document.getElementById('menu' + ID).style.display == 'block') ? 'none' : 'block';
-    $('#menu' + ID).toggle();
-
-    <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src') == '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif') ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
-    ?>
-    alttag = (document.getElementById('icon' + ID).getAttribute('alt') == 'Hide') ? 'Show' : 'Hide';
-    $('#icon' + ID).attr('src', icon);
-    $('#icon' + ID).attr('alt', alttag);
-
-    var ExpireDate = new Date ();
-    expiredays = 100;
-    ExpireDate.setTime(ExpireDate.getTime() + (expiredays * 24 * 3600 * 1000));
-    NameOfCookie = "caaadmin[" + ID + "]";
-    document.cookie = NameOfCookie + "=" + current +  ((expiredays == null) ? "" : "; expires=" + ExpireDate.toGMTString());
-  }
-
-  function jumpTo() {
-    window.top.location = '<?php echo $configObject->get('cfg_root_path'); ?>/paper_frame.php?paperID=' + $('paperID').val();
-  }
-
   function showSessCopyMenu(e) {
     $('#session_copy_menu').show();
     if (!e) var e = window.event;
@@ -134,7 +112,7 @@ if ($vle_api != '') {
 <?php
 if ($vle_api == '') {
   echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
-  //This has not bee written yet see ticket #708
+  //This has not been written yet see ticket #708
   //echo '<div class="menuitem"><a href="export_session_to_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
@@ -175,7 +153,7 @@ else {
 <?php
 if ($vle_api == '') {
   echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
-  //This has not bee written yet see ticket #708
+  //This has not been written yet see ticket #708
   //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $_GET['module'] . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>

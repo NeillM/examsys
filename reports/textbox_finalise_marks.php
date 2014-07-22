@@ -136,13 +136,14 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
+  <div id="content">
 <?php
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
 
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
-  echo '<div class="head_title" style="font-size:90%">';
+  echo '<div class="head_title">';
   echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
   echo '<div class="breadcrumb" style="height:20px"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
@@ -151,7 +152,7 @@ if (isset($_POST['submit'])) {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $propertyObj->get_paper_title() . '</a></div></div>';
-  echo '<table class="header" style="font-size:80%"><tr><th><div class="page_title">' . $string['finalisemarks'] . ': <span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
+  echo '<table class="header"><tr><th><div class="page_title">' . $string['finalisemarks'] . ': <span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
 
   $student_no = 1;
 
@@ -233,9 +234,11 @@ SQL;
         echo "<td class=\"override\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
       }
     } else {
+      // User answer is blank.
+      $override = false;
       if (!isset($primary_marks[$log_id])) $primary_marks[$log_id] = '';
       if (!isset($secondary_marks[$log_id])) $secondary_marks[$log_id] = '';
-      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td><td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
+      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td><td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;
@@ -254,6 +257,7 @@ SQL;
 
 </div>
 </form>
+</div>
 </body>
 </html>
 

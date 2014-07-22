@@ -218,7 +218,7 @@ HTML;
 if($stfsel === '' and $stusel === '') $stfsel = ' checked';
 
         $content1 =<<<HTML
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <br/>
     <form method="post" name="newUser" onsubmit="return checkForm()" action="$_SERVER[PHP_SELF]">
         <div align="center">

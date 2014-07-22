@@ -251,3 +251,8 @@ hr {
   border: 0;
   cursor: pointer;
 }
+
+#content {
+  background-colour: #FFFFFF;
+  font-size: 80%;
+}

@@ -70,7 +70,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 	
 	echo draw_toprightmenu(98);
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 	<form action="group_set_angoff.php" method="post">	
 	
 <?php

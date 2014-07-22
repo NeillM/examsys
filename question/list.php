@@ -122,7 +122,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content">
+<div id="content">
 <?php
   $question_no = 0;
   $display_no = 0;

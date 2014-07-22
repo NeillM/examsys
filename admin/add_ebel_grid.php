@@ -89,10 +89,13 @@ if (isset($_POST['submit'])) {
 
 		echo draw_toprightmenu();
   ?>
-  <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_ebel_grids.php"><?php echo $string['ebelgridtemplates']; ?></a></div><div class="page_title"><?php echo $string['createtemplate']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-  </table>
+  <div id="content">
+    
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_ebel_grids.php"><?php echo $string['ebelgridtemplates'] ?></a></div>
+    <div class="page_title"><?php echo $string['createtemplate'] ?></div>
+  </div>
   
   <blockquote>
   <form id="theform" name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -102,18 +105,18 @@ if (isset($_POST['submit'])) {
     
     <tr><td colspan="4"><h1><?php echo $string['passmark']; ?></h1></td></tr>
     
-    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow']; ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['easy']; ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE', true); ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI', true); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN', true); ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['medium']; ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME', true); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI', true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN', true); ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', true); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', true); ?></td></tr>
+    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential'] ?></td><td style="width:170px; text-align:center"><?php echo $string['important'] ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow'] ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['easy'] ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE', true) ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI', true) ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN', true) ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['medium'] ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME', true) ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI', true) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN', true) ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['hard'] ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', true) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', true) ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', true) ?></td></tr>
     
     <tr><td colspan="4">&nbsp;</td></tr>
     <tr><td colspan="4"><h1><?php echo $string['distinctionlevel']; ?></h1></td></tr>
     
-    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow']; ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['easy']; ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE2'); ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI2'); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN2'); ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['medium']; ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME2'); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI2'); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN2'); ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE2'); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI2'); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN2'); ?></td></td></tr>
+    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential'] ?></td><td style="width:170px; text-align:center"><?php echo $string['important'] ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow'] ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['easy'] ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE2') ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI2') ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN2') ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['medium'] ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME2') ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI2') ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN2') ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['hard'] ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE2') ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI2') ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN2') ?></td></td></tr>
     
     
     <tr><td colspan="4">&nbsp;</td></tr>

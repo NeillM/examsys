@@ -54,7 +54,7 @@ require '../include/sidebar_menu.inc';
   $mysqli->close();
 ?>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
   
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>

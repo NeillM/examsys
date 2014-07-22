@@ -428,7 +428,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   } else {
 ?>
   <body onclick="hideMenus()">
-  <div id="content" class="content">
+  <div id="content">
   <br />
   <br />
   <br />

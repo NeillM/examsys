@@ -91,7 +91,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
 
     echo draw_toprightmenu();
   ?>
-  <div id="content" class="content">
+  <div id="content">
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png"class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
@@ -106,12 +106,12 @@ if (isset($_POST['submit']) and $unique_course == true) {
       echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" class=\"warn\" value=\"$tmp_course\" required /></td></tr>\n";
     } else {
     ?>
-      <tr><td class="field"><?php echo $string['code']; ?></td><td><input type="text" size="10" maxlength="255"  name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" required /></td></tr>
+      <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="10" maxlength="255"  name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" required /></td></tr>
     <?php
     }
     ?>
-    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" required /></td></tr>
-    <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['school'] ?></td><td><select name="school" required>
     <option value=""></option>
     <?php
       $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY name, school");
@@ -136,7 +136,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     ?>
     </select></td></tr>
     </table>
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></p>
   </form>
   </div>
 <?php

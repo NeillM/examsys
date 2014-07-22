@@ -68,7 +68,7 @@ $results->close();
 	
 	echo draw_toprightmenu(231);
 ?>
-<div id="content" class="content">
+<div id="content">
 <?php
   $ip_no = 0;
 

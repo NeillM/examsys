@@ -186,7 +186,7 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu();
 ?>
-<div id="maincontent" style="font-size:80%">
+<div id="content">
 <form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post">
 <?php
 	$results_cache = new ResultsCache($mysqli);
@@ -285,7 +285,7 @@ for ($i=0; $i<3; $i++) {
 ?>
 </div>
 <br />
-<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></div>
+<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></div>
 </form>
 </div>
 </body>

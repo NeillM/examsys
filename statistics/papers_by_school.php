@@ -53,7 +53,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 	
 	echo draw_toprightmenu();
 ?>
-<div style="font-size:80%">
+<div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
@@ -67,7 +67,6 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 
-<blockquote>
 <table class="stats">
 <tr>
 <th><?php echo $string['school']; ?></th>
@@ -159,7 +158,7 @@ foreach ($master_array as $school => $data) {
 }
 ?>
 </table>
-</blockquote>
+
 </div>
 </body>
 </html>

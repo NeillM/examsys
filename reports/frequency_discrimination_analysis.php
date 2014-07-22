@@ -1771,7 +1771,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 	
 	echo draw_toprightmenu(154);
 ?>
-<div style="font-size:80%">
+<div id="content">
 <form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <?php
   // Get some paper properties
@@ -1783,20 +1783,6 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
   $pass_mark = $propertyObj->get_pass_mark();
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-
-  /*
-  //TODO - refactor
-  // Get any questions to exclude.
-  $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($q_id, $parts);
-  while ($result->fetch()) {
-    $excluded[$q_id] = $parts;
-  }
-  $result->close();
-   */
   
   $exclusions = new Exclusion($paperID, $mysqli);
   $exclusions->load();

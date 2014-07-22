@@ -107,7 +107,7 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
@@ -117,7 +117,7 @@ if (isset($_POST['submit'])) {
 
   <br/>
   <div align="center">
-    <form id="theform" name="edit_LTIkeys" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?LTIkeysid=' . $_GET['LTIkeysid']; ?>">
+    <form id="theform" name="edit_LTIkeys" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?LTIkeysid=' . $_GET['LTIkeysid'] ?>">
       <table cellpadding="0" cellspacing="2" border="0">
         <tr>
           <td class="field"><?php echo $string['name']; ?></td>

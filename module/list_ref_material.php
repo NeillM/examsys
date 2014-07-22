@@ -119,7 +119,7 @@ if (!$module_code) {
 
   require '../include/reference_material_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
@@ -130,8 +130,8 @@ if (!$module_code) {
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
 <thead>
   <tr>
-    <th style="width:60%; padding-left: 20px">Reference Name</th>
-    <th style="width:40%" class="col">Modules</th>
+    <th style="width:60%; padding-left:20px"><?php echo $string['referencename'] ?></th>
+    <th style="width:40%" class="col"><?php echo $string['modules'] ?></th>
   </tr>
 </thead>
 <tbody>

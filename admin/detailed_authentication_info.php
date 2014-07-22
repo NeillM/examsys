@@ -38,7 +38,6 @@ require_once '../classes/dateutils.class.php';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .sechead {background-color:#EAEAEA}
   </style>
@@ -50,16 +49,15 @@ require_once '../classes/dateutils.class.php';
 
 <body>
 <?php
-	require '../include/admin_options.inc';
 	require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./system_info.php"><?php echo $string['System Information']; ?></a></div>
-  <div class="page_title"><nobr><?php echo $string['detailed_authentication_information']; ?></nobr></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./system_info.php"><?php echo $string['System Information'] ?></a></div>
+  <div class="page_title"><nobr><?php echo $string['detailed_authentication_information'] ?></nobr></div>
 </div>
 <?php
 $authinfo = $authentication->version_info();

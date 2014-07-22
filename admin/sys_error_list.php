@@ -85,7 +85,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $result->store_result();
   $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
 ?>
-<div id="content" class="content">
+<div id="content">
 <table class="header">
 <tr>
   <th colspan="4"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrors'] ?> (<?php echo $result->num_rows ?>)</div></th>

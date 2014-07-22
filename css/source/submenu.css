@@ -23,14 +23,9 @@ div#left-sidebar {
     position: fixed;
   }
 }
-* html body{
+* html body {
   overflow: hidden;
 }
-#content{
-  height: 100px;
-  background-colour: #FFFFFF;
-  font-size: 80%;
-} 
 .divider {
   padding-left: 10px;
   padding-bottom: 2px;

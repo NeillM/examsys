@@ -55,7 +55,7 @@ require '../include/sysadmin_auth.inc';
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
   
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>

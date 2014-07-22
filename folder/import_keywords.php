@@ -111,7 +111,7 @@ if (isset($_POST['submit'])) {
   require '../include/folder_keyword_options.inc';
 ?>
 
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 

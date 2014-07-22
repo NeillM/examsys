@@ -121,7 +121,7 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu(233);
 ?>
-<div id="content" class="content">
+<div id="content">
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
 <div class="head_title">

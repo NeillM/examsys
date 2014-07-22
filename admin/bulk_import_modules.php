@@ -67,7 +67,7 @@ function returnTrueFalse($value) {
 <?php
   require '../include/admin_module_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <br />
 <br />
 <?php

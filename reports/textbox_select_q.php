@@ -107,7 +107,7 @@ $paper = $propertyObj->get_paper_title();
   $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
   if ($candidate_no > 0) $phase_description .= ": " . number_format($out_of) . " " . $string['candidates'];
 
-  echo "<div style=\"font-size:80%\">\n";
+  echo "<div id=\"content\">\n";
   
   echo "<div class=\"head_title\">\n";
   echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\">\n";

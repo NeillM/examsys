@@ -56,7 +56,7 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 	
 	echo draw_toprightmenu();
 ?>
-<div style="font-size:80%">
+<div id="content">
 <div class="head_title">
 <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_feedback.php?calyear=<?php echo $_GET['calyear']; ?>"><?php echo $string['summativeexamfeedback'] ?></a></div>
@@ -85,13 +85,12 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 
-<blockquote>
 <table class="stats">
 <tr>
-<th><?php echo $string['paper']; ?></th>
-<th><?php echo $string['feedbackreleased']; ?></th>
-<th><?php echo $string['students']; ?></th>
-<th><?php echo $string['feedbackviewed']; ?></th>
+<th><?php echo $string['paper'] ?></th>
+<th><?php echo $string['feedbackreleased'] ?></th>
+<th><?php echo $string['students'] ?></th>
+<th><?php echo $string['feedbackviewed'] ?></th>
 </tr>
 <?php
 $moduleIDs = get_modules($schoolID, $mysqli);
@@ -203,7 +202,7 @@ function get_feedback_release_dates($date_range, $moduleIDs, &$papers, $db) {
 
 ?>
 </table>
-</blockquote>
+
 </div>
 </body>
 </html>

@@ -175,7 +175,7 @@ MESSAGE;
 </head>
 <body>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
   <p><?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
 
   <p><input type="button" name="home" value="Staff Homepage" onclick="window.location='<?php echo $configObject->get('cfg_web_root'); ?>staff/'" /></p>
@@ -224,7 +224,7 @@ MESSAGE;
 </head>
 
 <body>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <br />
 <form method="post" id="theform" name="newUser" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 	<div align="center">

@@ -190,7 +190,7 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu(97);
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <?php
 echo $reviews_html;
 $mysqli->close();

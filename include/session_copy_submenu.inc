@@ -43,7 +43,7 @@ function get_existing_years($db, $idMod) {
   return $years;
 }
 ?>
-<script type="text/javascript">
+<script>
   function checkCopyYearForm() {
     var formOK = true;
     
@@ -66,8 +66,8 @@ function get_existing_years($db, $idMod) {
     return formOK;
   }
 </script>
-<div class="popup" style="display:none; position:fixed; left:190px; top:135px" id="session_copy_menu" onclick="showSessCopyMenu(event);">
-<table border="0" cellpadding="2" cellspacing="0" style="width:300px; border:0px solid #C0C0C0; background-color:white">
+<div class="popup" style="display:none; top:115px; font-size:80%" id="session_copy_menu" onclick="showSessCopyMenu(event);">
+<table border="0" cellpadding="2" cellspacing="0" style="width:340px; border:0px solid #C0C0C0; background-color:white">
 <tr>
 <td style="background-color:#F2B100; height:3px"></td>
 </tr>
@@ -155,7 +155,7 @@ $sel_mod = '';
 				<td colspan="2" style="text-align: center">&nbsp;</td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align: center"><input type="submit" value="  <?php echo $string['copy']; ?>  " /></td>
+				<td colspan="2" style="text-align: center"><input type="submit" value="<?php echo $string['copy'] ?>" class="ok" /></td>
 			</tr>
 		</table>
 		<input type="hidden" name="moduleID" value="<?php echo $_GET['module'] ?>" />

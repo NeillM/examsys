@@ -72,7 +72,7 @@ echo draw_toprightmenu();
 
 $result = $export_result;
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <?php
 

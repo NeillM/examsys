@@ -123,12 +123,13 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
-<?php
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../module/index.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></td></tr>\n";
-  echo "</table>\n";
-?>
+<div id="content">
+
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $moduleID ?>"><?php echo module_utils::get_moduleid_from_id($moduleID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $moduleID ?>"><?php echo $string['manageobjectives'] ?></a></div>
+  <div class="page_title"><?php echo $string['importfromfile'] ?></div>
+</div>
 
 <br />
 <br />

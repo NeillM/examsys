@@ -55,7 +55,7 @@
   while ($result->fetch()) {
     echo "<li class=\"recent\"><a ";
     if (strpos($paper_title,'[deleted') !== false) echo ' style="color:#808080"';
-    echo "href=\"./paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
+    echo "href=\"" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
   }
   $result->close();
   echo '</ul>';

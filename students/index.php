@@ -248,7 +248,7 @@ $paper_utils = Paper_utils::get_instance();
 <?php
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 	<table cellpadding="0" cellspacing="0" border="0" class="header">
 		<tr>
       <th style="padding-left:16px; padding-top:5px">

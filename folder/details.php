@@ -194,7 +194,7 @@ $selfenrol = 0;
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>

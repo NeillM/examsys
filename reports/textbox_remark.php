@@ -88,7 +88,7 @@ if (isset($_POST['submit'])) {
 	$pass_mark = $properties->get_pass_mark();
 	$paper_type = $properties->get_paper_type();
 ?>
-  <div style="font-size:80%">
+  <div id="content">
     
 <?php
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";

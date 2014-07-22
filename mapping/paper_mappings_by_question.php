@@ -77,7 +77,7 @@ $paper_type = $propertyObj->get_paper_type();
 	
 	echo draw_toprightmenu(147);
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <?php
   if (!isset($_GET['ordering'])) {
     $ordering = 'screen';

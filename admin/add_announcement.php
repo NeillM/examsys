@@ -100,7 +100,7 @@ SCRIPT;
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
@@ -137,14 +137,14 @@ SCRIPT;
   </tr>
   <tr>
     <td class="field"><?php echo $string['Staff Message']; ?></td>
-    <td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"></textarea></td>
+    <td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:180px; margin:0" rows="5" cols="20"></textarea></td>
   </tr>
   <tr>
     <td class="field"><?php echo $string['Student Message']; ?></td>
-    <td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"></textarea></td>
+    <td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin:0" rows="5" cols="20"></textarea></td>
   </tr>
   <tr>
-    <td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" class="ok" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="history.back();" /></td>
+    <td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td>
   </tr>
 </table>
 

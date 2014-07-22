@@ -73,7 +73,7 @@ require '../include/sysadmin_auth.inc';
   $result->bind_result($id, $moduleid, $fullname, $school, $active);
   $result->store_result();
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />

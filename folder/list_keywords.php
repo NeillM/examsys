@@ -141,7 +141,7 @@ require_once '../classes/moduleutils.class.php';
 
   require '../include/folder_keyword_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>

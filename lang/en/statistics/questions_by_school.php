@@ -16,6 +16,7 @@
 
 $string['statistics'] = 'Statistics';
 $string['questionsbyschool'] = 'Questions by School';
+$string['school'] = 'School';
 $string['info'] = 'Information Block';
 $string['keyword_based'] = 'Keyword-based';
 $string['random'] = 'Random Block';
