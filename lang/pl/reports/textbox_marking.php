@@ -34,4 +34,5 @@ $string['previous'] = '&lt; Poprzedni';
 $string['finish'] = 'Koniec';
 $string['mark_progress'] = 'Student %d z %d';
 $string['answer_saved'] = 'ocen zapisano';
+$string['noattempts'] = 'Ten arkusz nie był przez wybrany żadnego studenta w okresie <strong>%s &ndash; %s</strong>.';
 ?>

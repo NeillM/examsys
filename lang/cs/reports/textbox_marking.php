@@ -34,4 +34,5 @@ $string['previous'] = '&lt; Previous';
 $string['finish'] = 'Finish';
 $string['mark_progress'] = 'Student %d of %d';
 $string['answer_saved'] = 'Marks saved';
+$string['noattempts'] = 'V daném období <strong>%s &ndash; %s</strong> zkoušku nesložil žádný student.';
 ?>

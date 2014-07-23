@@ -25,6 +25,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/textboxmarkingutils.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -80,16 +81,7 @@ $paper = $propertyObj->get_paper_title();
   $second_mark = array();
   if (isset($_GET['phase']) and $_GET['phase'] == 2) {
     // Get the usernames of papers to second mark.
-    $second_mark = array();
-
-    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($remark_userID);
-    while ($result->fetch()) {
-      $second_mark[] = $remark_userID;
-    }
-    $result->close();
+    $second_mark = textbox_marking_utils::get_remark_users($paperID, $mysqli);
   }
 
   $phase_description = '';
@@ -135,11 +127,16 @@ $paper = $propertyObj->get_paper_title();
     if ($q_type == 'textbox') {
       if (($paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
         // Check how many candidates are marked for this question.
-        $marked = $mysqli->prepare("SELECT COUNT(id) FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?");
+        $candidates_marked = 0;
+        $marked = $mysqli->prepare("SELECT mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?");
         $marked->bind_param('iiii', $paperID, $q_id, $paper_type, $_GET['phase']);
         $marked->execute();
-        $marked->bind_result($candidates_marked);
-        $marked->fetch();
+        $marked->bind_result($mark);
+        while ($marked->fetch()) {
+          if ($mark !== null) {
+            $candidates_marked++;
+          }
+        }
         $marked->close();
       } elseif ($_GET['action'] == 'finalise') {
         $candidates_marked = 0;
@@ -158,7 +155,7 @@ $paper = $propertyObj->get_paper_title();
         $candidates_marked = $candidate_no;
       }
 
-      echo '<tr><td style="text-align:right; vertical-align:top">';
+      echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
       if ($candidates_marked < $out_of) {
         echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
       }

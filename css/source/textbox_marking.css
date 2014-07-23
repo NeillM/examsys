@@ -4,12 +4,12 @@ body {
 	height: 100%;
 }
 td {
-	line-height:150%;
-	text-align:justify;
+	line-height: 150%;
+	text-align: justify;
 }
 .heading {
-	background-color:#EBEADB;
-	color:black;
+	background-color: #EBEADB;
+	color: black;
 }
 #question_pane {
 	width: 50%;
@@ -18,6 +18,7 @@ td {
 	top: 56px;
 	left: 0;
 	bottom: 0;
+  font-size: 100% !important;
 }
 #answer_pane {
 	overflow: auto;
@@ -29,15 +30,18 @@ td {
 	border-left: 1px solid #808080;
 	margin-left: -1px;
 }
-.header {
+.head_title {
 	overflow: auto;
 	position: absolute;
 	width: 100%;
 	height: 56px;
-	font-size: 90% !important;
+  font-size: 90%;
+}
+.info_bar {
+  top: 58px;
+  position: relative;
 }
 .student_ans {
-	/*border-bottom: 1px solid #CBC7B8;*/
 	padding-right: 10px;
 	margin-bottom: 12px;
 }
@@ -49,7 +53,6 @@ td {
 .student-answer-block {
 	margin: 0 18px 48px 18px;
 }
-
 .reminders {
 	list-style: none;
 	padding-left: 0;

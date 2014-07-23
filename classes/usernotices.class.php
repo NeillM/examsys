@@ -60,7 +60,7 @@ Class user_notices extends RogoStaticSingleton {
 
 		$html = '<div class="info_bar" style="font-size:' . $font_size . '%">';
 		$html .= '<div class="info_bar_yellow"></div>';
-		$html .= '<img src="' . $configObject->get('cfg_root_path') . '/artwork/information_icon.gif" alt="i" />' . $msg;
+		$html .= '<img src="' . $configObject->get('cfg_root_path') . '/artwork/info_icon.gif" alt="i" />' . $msg;
 		$html .= '</div>';
 		
 		return $html;

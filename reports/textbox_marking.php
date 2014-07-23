@@ -29,6 +29,7 @@ require '../include/media.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/textboxmarkingutils.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -104,7 +105,7 @@ HTML;
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
 		
 		$(document).ready(function() {
@@ -115,73 +116,71 @@ HTML;
 
 <body>
 <?php
-  require '../include/toprightmenu.inc';
+require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+echo draw_toprightmenu();
 
-  $candidate_no = 0;
-  if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-    // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
-    $result->bind_param('iss', $paperID, $startdate, $enddate);
-    $result->execute();
-    $result->bind_result($tmp_userID);
-    while ($result->fetch()) {
-      $candidate_no++;
-    }
-    $result->close();
+$candidate_no = 0;
+if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
+  // Get how many students took the paper.
+  $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
+  $result->bind_param('iss', $paperID, $startdate, $enddate);
+  $result->execute();
+  $result->bind_result($tmp_userID);
+  while ($result->fetch()) {
+    $candidate_no++;
   }
+  $result->close();
+}
 
-  if ($phase == 2) {
-    // Get the usernames of papers to second mark.
-    $second_mark = array();
+if ($phase == 2) {
+  // Get the usernames of papers to second mark.
+  $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
+}
 
-    $result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($remark_userID);
-    while ($result->fetch()) {
-      $second_mark[] = $remark_userID;
-    }
-    $result->close();
-  }
+$phase_description = '';
+if (!isset($_GET['phase'])) {
+  $phase_description .= $string['finalisemarks'];
+  $tmp_phase = '';
+} elseif ($_GET['phase'] == 1) {
+  $phase_description .= $string['primarymarking'];
+  $tmp_phase = '&phase=1';
+} elseif ($_GET['phase'] == 2) {
+  $phase_description .= $string['secondmarking'];
+  $tmp_phase = '&phase=2';
+}
+$phase_description .= ' Q' . $_GET['qNo'];
+$out_of = ($phase == 2) ? count($remark_array) : $candidate_no;
+$phase_description .= ': <span style="font-weight: normal">' . number_format($out_of) . ' ' . $string['candidates'] . '</span>';
 
-  $phase_description = '';
-  if (!isset($_GET['phase'])) {
-    $phase_description .= $string['finalisemarks'];
-    $tmp_phase = '';
-  } elseif ($_GET['phase'] == 1) {
-    $phase_description .= $string['primarymarking'];
-    $tmp_phase = '&phase=1';
-  } elseif ($_GET['phase'] == 2) {
-    $phase_description .= $string['secondmarking'];
-    $tmp_phase = '&phase=2';
-  }
-  $phase_description .= ' Q' . $_GET['qNo'];
-  $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
-  $phase_description .= ': <span style="font-weight: normal">' . number_format($out_of) . ' ' . $string['candidates'] . '</span>';
-
-?>
-<form id="content" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id']; ?>&amp;startdate=<?php echo $startdate; ?>&amp;enddate=<?php echo $enddate; ?>&amp;module=<?php echo $_GET['module']; ?>&amp;folder=<?php echo $_GET['folder']; ?>&amp;phase=<?php echo $phase; ?>&amp;action=mark" method="post">
-<input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID(); ?>" />
-<input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID; ?>" />
-<input type="hidden" id="q_id" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input type="hidden" id="phase" name="phase" value="<?php echo $phase; ?>" />
-<?php
-
-echo "<table class=\"header\" style=\"font-size:90%\">\n<tr><th style=\"height:52px\">";
+echo "<div class=\"head_title\">\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
 echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
 } elseif (isset($_GET['module']) and $_GET['module'] != '') {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div><div class="page_title">' . $phase_description . '</div></th>';
-echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-echo "</table>\n";
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
+echo '<div class="page_title">' . $phase_description . '</div>';
+echo "</div>\n";
+
+if ($candidate_no == 0) {
+  $msg = sprintf($string['noattempts'], textbox_marking_utils::nicedate($startdate), textbox_marking_utils::nicedate($enddate));
+  echo $notice->info_strip($msg, 100);
+  echo "</form>\n</body>\n</html>\n";
+  exit();
+}
 
 $half_marks = true;
-
+?>
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id'] ?>&amp;startdate=<?php echo $startdate ?>&amp;enddate=<?php echo $enddate ?>&amp;module=<?php echo $_GET['module'] ?>&amp;folder=<?php echo $_GET['folder'] ?>&amp;phase=<?php echo $phase ?>&amp;action=mark" method="post">
+<input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID() ?>" />
+<input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
+<input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
+<input type="hidden" id="phase" name="phase" value="<?php echo $phase ?>" />
+<?php
+// -- Question Pane ---------------------------------------------------------------------------------------------------
 ?>
 <div id="question_pane">
 <?php
@@ -286,7 +285,9 @@ $half_marks = true;
   echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
 ?>
 </div>
-
+<?php
+// -- Answer Pane ---------------------------------------------------------------------------------------------------
+?>
 <div id="answer_pane">
   <div style="height:30px">
     <div id="save_message"><?php echo $string['answer_saved'] ?></div>
@@ -348,13 +349,13 @@ SQL;
 
   $answer_shown = false;
   while ($result->fetch()) {
-    if ($phase == 1 or ($phase == 2 and in_array($tmp_userID, $second_mark))) {
+    if ($phase == 1 or ($phase == 2 and isset($remark_array[$tmp_userID]))) {
       $answer_no++;
 
       $style = '';
       if (is_numeric($student_mark)) {  // Marked previously so grey out.
         $style = ' marked';
-        $style .= (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no <= count($second_mark))) ? ' hide' : '';
+        $style .= ($answer_no != $out_of) ? ' hide' : '';
       } elseif ($answer_shown) {
         $style = ' hide';
       } else {
@@ -362,7 +363,7 @@ SQL;
       }
       echo '<div class="student-answer-block' . $style . '">';
 
-      $out_of = ($phase == 2) ? count($second_mark) : $candidate_no;
+      $out_of = ($phase == 2) ? count($remark_array) : $candidate_no;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
 
       echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
@@ -380,7 +381,7 @@ SQL;
       if ($answer_no != 1 and $answer_no <= $candidate_no) {
         echo '<input type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '" value="' . $string['previous'] . '" />';
       }
-      if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($second_mark))) {
+      if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($remark_array))) {
         echo '<input type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['next'] . '" />';
       } else {
         echo '<input type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['finish'] . '" />';
@@ -403,5 +404,6 @@ SQL;
 
 </div>
 </form>
+
 </body>
 </html>

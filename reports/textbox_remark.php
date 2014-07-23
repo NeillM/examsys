@@ -25,6 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/textboxmarkingutils.class.php';
 require_once '../classes/mathsutils.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
@@ -115,16 +116,8 @@ if (isset($_POST['submit'])) {
 	}
 	
 	// Get any previous remark settings.
-	$remark_array = array();
-	$result = $mysqli->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($userID);
-  while ($result->fetch()) {
-	  $remark_array[$userID] = true;
-  }
-	$result->close();
-	
+	$remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
+  
 	if (count($remark_array) > 0) {
 		$prev_remark = true;
 	} else {
@@ -208,8 +201,9 @@ SQL;
 
 	$percent_decimals = $configObject->get('percent_decimals');
 		
-  $student_no = 1;
+  $student_no = 0;
 	foreach ($marks_array as $userID=>$user_data) {
+    $student_no++;
     $student_id = ($user_data['student_id'] == '') ? '&lt;student ID unknown&gt;' : $user_data['student_id'];
 		$username = $user_data['username'];
 		$total_mark = $user_data['total'];
@@ -227,15 +221,22 @@ SQL;
     } else {
       echo "<tr><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
     }
-    $student_no++;
   }
 ?>
 
 </table>
+<?php
+if ($student_no == 0) {
+  $msg = sprintf($string['noattempts'], textbox_marking_utils::nicedate($startdate), textbox_marking_utils::nicedate($enddate));
+	echo $notice->info_strip($msg, 100);
+} else {
+?>
 <br />
 <input type="hidden" name="student_no" value="<?php echo $student_no ?>" />
 <input type="submit" name="submit" value="<?php echo $string['secondmark'] ?>" class="ok" style="margin-left:40px" /><input type="submit" name="submit" value="<?php echo $string['cancel'] ?>" class="cancel" />
-
+<?php
+}
+?>
 </form>
 </div>
 </body>

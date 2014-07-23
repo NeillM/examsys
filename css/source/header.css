@@ -23,7 +23,7 @@ table.header {
 .header th.vert_div a{
   color: black;
 }
-.head_title div {
+.head_title {
   background-color: #EEF4FF;  
 }
 .breadcrumb {

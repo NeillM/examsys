@@ -22,17 +22,8 @@
 * @package
 */
 require_once $cfg_web_root . 'classes/paperutils.class.php';
+require_once $cfg_web_root . 'classes/textboxmarkingutils.class.php';
 
-function count_textbox_remark($paperID, $db) {
-  $result = $db->prepare("SELECT count(id) FROM textbox_remark WHERE paperID = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($remarkNo);
-  $result->fetch();
-  $result->close();
-  
-  return $remarkNo;
-}
 ?>
 <script>
 <?php
@@ -103,7 +94,7 @@ function count_textbox_remark($paperID, $db) {
 </script>
 
 <div class="popup" style="top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
-<form name="stats_menu" style="width:600px; border:0px solid #C0C0C0; font-size:110%">
+<form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%">
 
 <div style="background-color:#F2B100; height:5px"></div>
 
@@ -191,86 +182,6 @@ function count_textbox_remark($paperID, $db) {
   $end_year = ($date_array['year'] + 1);
   echo date_utils::timedate_select('end_', date($default_end), true, $start_year, $end_year, $string);
   
-  
-  /*
-  echo "<select name=\"end_day\" id=\"end_day\">\n";
-  
-  for ($i=1; $i<=31; $i++) {
-    echo "<option value=\"";
-    if ($i < 10) {
-      echo "0";
-    }
-    if ($i == intval($end_day)) {
-      echo "$i\" selected>";
-    } else {
-      echo "$i\">";
-    }   
-    if ($i < 10) echo '0';
-    echo "$i</option>\n";
-  }
-  echo "</select>";
-  // End Month
-  if ($end_year > $date_array['year']) {
-    $end_year = $date_array['year'];
-    $end_month = $date_array['mon'];
-    $end_day = $date_array['mday'];
-  } elseif ($end_month > $date_array['mon'] and $end_year == $date_array['year']) {
-    $end_month = $date_array['mon'];
-    $end_day = $date_array['mday'];
-  } elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
-    $end_day = $date_array['mday'];
-  }
-  echo "<select name=\"end_month\" id=\"end_month\">\n";
-  for ($i=0; $i<12; $i++) {
-    if ($i == (intval($end_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    }
-  }
-  echo "</select>";
-  // End Year
-  echo "<select name=\"end_year\" id=\"end_year\">\n";
-  for ($i=2001; $i<=($date_array['year']); $i++) {
-    if ($i == intval($end_year)) {
-      echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-      echo "<option value=\"$i\">$i</option>\n";
-    }
-  }
-  echo "</select>";
-  // End Hour
-  echo "<select name=\"end_hour\" id=\"end_hour\">\n";
-	for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
-		if ($tmp_hour < 10) {
-			$display_hour = '0' . $tmp_hour;
-		} else {
-			$display_hour = $tmp_hour;
-		}
-    if ($end_hour == $tmp_hour) {
-      echo "<option value=\"$display_hour\" selected>$display_hour</option>\n";
-    } else {
-      echo "<option value=\"$display_hour\">$display_hour</option>\n";
-    }
-  }
-  echo "</select>";
-	
-  // End Minute
-  echo "<select name=\"end_minute\" id=\"end_minute\">\n";
-	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
-		if ($tmp_minute < 10) {
-			$display_minute = '0' . $tmp_minute;
-		} else {
-			$display_minute = $tmp_minute;
-		}
-    if ($end_minute == $tmp_minute) {
-      echo "<option value=\"$display_minute\" selected>$display_minute</option>\n";
-    } else {
-      echo "<option value=\"$display_minute\">$display_minute</option>\n";
-    }
-  }
-  echo "</select>";
-*/
   echo "&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
   
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
@@ -379,7 +290,8 @@ function count_textbox_remark($paperID, $db) {
         echo "<div class=\"reports_header\">" . $string['textboxmarking'] . "</div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_remark.php?',event)\">" . $string['selectpapersforremarking'] . "</a></div>\n";
-        if (count_textbox_remark($paperID, $mysqli) > 0) {
+        $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
+        if (count($remark_array) > 0) {
           echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
         } else {
           echo "<div class=\"greybullet\">" . $string['secondmarkbyquestion'] . "</div>\n";          

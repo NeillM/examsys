@@ -34,4 +34,5 @@ $string['previous'] = '&lt; Previous';
 $string['finish'] = 'Finish';
 $string['mark_progress'] = 'Student %d of %d';
 $string['answer_saved'] = 'Marks saved';
+$string['noattempts'] = 'This paper has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
 ?>
