@@ -33,6 +33,8 @@ require_once '../config/index.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/networkutils.class.php';
+require_once '../classes/announcementutils.class.php';
+
 
 // Redirect External Examiners if they are straying
 if ($userObject->has_role('External Examiner')) {
@@ -281,16 +283,19 @@ if (!$userObject->has_role('Student')) {
 <?php
 } else {
   // Check for any news/announcements
+  $announcements = announcement_utils::get_student_announcements($mysqli);
+  
+  /*
   $student_msg = '';
   $result = $mysqli->prepare("SELECT title, student_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
   $result->execute();
   $result->bind_result($news_title, $student_msg, $icon);
   $result->fetch();
   $result->close();
-
-  if ($student_msg != '') {
-    $news_icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
-    echo "<br /><div class=\"announcement\"><div style=\"padding-left:80px; background: transparent url('../artwork/" . $news_icons[$icon] . "') no-repeat top left;\"><strong>$news_title</strong><br />\n<br />\n$student_msg</div></div>\n<br />\n";
+  */
+  
+  foreach ($announcements as $announcement) {
+    echo "<div class=\"announcement\"><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('../artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
   }
 
   if ($papers > 0) {

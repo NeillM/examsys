@@ -58,4 +58,6 @@ $string['deadline'] = 'Termin finalizacji:';
 $string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';
 $string['papersforreview'] = 'Arkusze do recenzji';  
 $string['recent'] = 'Recent';
+$string['unassigned'] = 'Unassigned';
+$string['unassignedmsg'] = 'Questions/papers not on any module';
 ?>

@@ -85,14 +85,18 @@ if ($_GET['module'] != '0') {
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    function addQuestion(qType) {
-      top.location.href='../question/edit/?type=' + qType + '&module=<?php echo $module; ?>';
+    function updatePaperCount() {
+      var n = $(".file:visible").length;
+      $("#paper_count").text(n.toLocaleString());
     }
+    
     $(document).ready(function() {
       $('#showretired').click(function() {
         $('.retired').toggle();
+        updatePaperCount();
       });
       
+      updatePaperCount();      
     });
   </script>
 </head>
@@ -116,7 +120,7 @@ if ($_GET['module'] != '0') {
   echo " />" . $string['showretired'] . "</label></div>\n";
 ?>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
-  <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<?php echo $types_used[$type] ?>)</span></div>
+  <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<span id="paper_count"><?php echo $types_used[$type] ?></span>)</div>
 </div>
 
   
@@ -125,9 +129,9 @@ if ($_GET['type'] == 2) {
   echo '<table class="sum_cal"><tr><td><a href="../admin/calendar.php"><img src="../artwork/calendar_icon.png" width="48" height="48" /></a></td><td><strong><a href="../admin/calendar.php">Summative Exam Calendar<br />' . date('Y') . '</a></strong></td></tr></table>';
 }
 
-// UPDATED SQL query simplified removed the modules table as no data was coming from it.  also removed distinct as group by was doing it.  the user data is returned but for some reason the icons alt tags (that contain the user data don't display
+// UPDATED SQL query simplified removed the modules table as no data was coming from it. Also removed distinct as group by was doing it. The user data is returned but for some reason the icons alt tags (that contain the user data don't display
 if ($_GET['module'] != '0') {
-  $sql = "SELECT calendar_year, paper_ownerID, properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND paper_type = ? AND properties.paper_ownerID = users.id  AND deleted IS NULL GROUP BY paper_title ORDER BY calendar_year DESC, paper_title";
+  $sql = "SELECT calendar_year, paper_ownerID, properties.property_id, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, exam_duration, title, initials, surname, retired, properties.password FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id = papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND paper_type = ? AND properties.paper_ownerID = users.id  AND deleted IS NULL GROUP BY paper_title ORDER BY calendar_year DESC, paper_title";
   $results = $mysqli->prepare($sql);
   $results->bind_param('is', $module, $type);
 } else {
@@ -154,7 +158,6 @@ if ($results->num_rows > 0) {
         $display_calendar_year = $calendar_year;      
       }
 
-      //echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $display_calendar_year . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
       echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $display_calendar_year . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
     display_paper_icon($paper_ownerID, $property_id, $type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);

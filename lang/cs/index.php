@@ -58,4 +58,6 @@ $string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, 
 $string['papersforreview'] = 'Dokumenty k rezenci';
 $string['deadline'] = 'Uzávěrka:';
 $string['recent'] = 'Recent';
+$string['unassigned'] = 'Unassigned';
+$string['unassignedmsg'] = 'Questions/papers not on any module';
 ?>

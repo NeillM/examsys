@@ -33,8 +33,9 @@ div#left-sidebar {
 }
 .f {
   float: left;
-  width: 365px;
-  padding-left: 35px;
+  display: table;
+  width: 375px;
+  padding-left: 32px;
   font-size: 90%;
 	padding-bottom: 12px;
 }
@@ -51,18 +52,38 @@ div#left-sidebar {
 	padding-bottom: 12px;
 }
 .f_icon {
+  display: table-cell;
 	vertical-align: middle;
-	padding-left: 5px;
-	padding-right: 9px;
-	width: 48px;
-	text-align: center;
+	width: 60px;
+}
+.f_icon img {
+  width: 48px;
+  height: 48px;
+}
+.f_details {
+  display: table-cell;
+  vertical-align: middle; 
 }
 .file {
   float: left;
+  display: table;
   width: 375px;
   padding-left: 32px;
   font-size: 90%;
 	padding-bottom: 12px;
+}
+.file_icon {
+  display: table-cell;
+  vertical-align: middle;
+  width: 60px;
+}
+.file_icon img {
+  width: 48px;
+  height: 48px;
+}
+.file_details {
+  display: table-cell;
+  vertical-align: middle;
 }
 .mee {
   font-size: 120%;

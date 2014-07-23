@@ -30,21 +30,19 @@ table.header {
   padding-top: 2px !important;
   padding-left: 10px !important;
   font-size: 90%;
+  cursor: pointer;
 }
 .breadcrumb a:link {
   color: #295AAD;
   text-decoration: none;
-  cursor: pointer;
 }
 .breadcrumb a:visited {
   color: #295AAD;
   text-decoration: none;
-  cursor: pointer;
 }
 .breadcrumb a:hover {
   color: #295AAD;
   text-decoration: underline;
-  cursor: pointer;
 }
 .breadcrumb_arrow {
   width: 4px;
@@ -60,6 +58,7 @@ table.header {
 }
 .subsect_table {
 	margin-top: 6px;
+  margin-bottom: 12px;
 	display: table;
 	width: 98%;
   border-spacing: 0;

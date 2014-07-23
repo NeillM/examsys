@@ -31,6 +31,7 @@ require_once './classes/recyclebin.class.php';
 require_once './config/index.inc';
 require_once './classes/paperutils.class.php';
 require_once './classes/folderutils.class.php';
+require_once './classes/announcementutils.class.php';
 
 $userObject = UserObject::get_instance();
 
@@ -49,24 +50,8 @@ if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 
 // If we're still here we should be staff
 require_once './include/staff_auth.inc';
 
-function get_announcements($db) {
-  $announcements = array();
-  $icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
-
-  $result = $db->prepare("SELECT id, title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
-  $result->execute();
-  $result->bind_result($announcementID, $news_title, $staff_msg, $icon);
-  while ($result->fetch()) {
-    $announcements[] = array('id'=>$announcementID, 'title'=>$news_title, 'msg'=>$staff_msg, 'icon'=>$icons[$icon]);
-  }
-  $result->close();
-
-  return $announcements;  
-}
-
 // Check for any news/announcements
-$announcements = get_announcements($mysqli);
-
+$announcements = announcement_utils::get_staff_announcements($mysqli);
 
 ?><!DOCTYPE html>
 <html>
@@ -97,7 +82,6 @@ $announcements = get_announcements($mysqli);
   <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="./js/toprightmenu.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="./js/sidebar.js"></script>
   <script>
     $(function () {
       $('#theform').validate({
@@ -108,11 +92,6 @@ $announcements = get_announcements($mysqli);
       });
       $('form').removeAttr('novalidate');
 		});
-
-		function isCanvasSupported() {
-			var elem = document.createElement('canvas');
-			return !!(elem.getContext && elem.getContext('2d'));
-		}
 		
     function startPaper(paperID, fullsc) {
       var winwidth = screen.width-80;
@@ -148,9 +127,7 @@ $announcements = get_announcements($mysqli);
         timeout: 30000, // timeout after 30 seconds
         dataType: "html",
       });
-    
     }
-
   </script>
 </head>
 
@@ -179,18 +156,14 @@ $announcements = get_announcements($mysqli);
   }
 ?>
 
-<table cellpadding="0" cellspacing="0" border="0" class="header">
-  <tr>
-    <th style="padding-left:16px; padding-top:5px">
-
+<div class="head_title" style="margin-bottom:6px">
+  <div><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div style="padding:6px 6px 6px 16px">
     <img src="./artwork/r_logo.gif" alt="logo" class="logo_img" />
     <div class="logo_lrg_txt">Rog&#333;</div>
-    <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
-
-    </th>
-    <th style="text-align:right; vertical-align:top"><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-  </tr>
-</table>
+    <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem'] ?></div>
+  </div>
+</div>
 <?php
   $as_pos = strpos($configObject->get('cfg_install_type'),' as ');
   if ($as_pos !== false) {
@@ -200,9 +173,9 @@ $announcements = get_announcements($mysqli);
 <div style="padding-left:6px; padding-right:14px">
 <?php
   // Check for any news/announcements
-  foreach($announcements as $announcement) {
+  foreach ($announcements as $announcement) {
     if (!isset($_SESSION['announcement' . $announcement['id']])) {
-      echo "<br /><div class=\"announcement\" id=\"announcement" . $announcement['id'] . "\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement(" . $announcement['id'] . ")\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
+      echo "<div class=\"announcement\" id=\"announcement" . $announcement['id'] . "\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement(" . $announcement['id'] . ")\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
     }  
   }
 
@@ -214,8 +187,7 @@ $announcements = get_announcements($mysqli);
   $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name);
   $result->store_result();
   if ($result->num_rows() > 0) {
-    echo "<br />\n";
-    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['papersforreview'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['papersforreview'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   }
   while ($result->fetch()) {
     $reviewed = '';
@@ -243,59 +215,59 @@ $announcements = get_announcements($mysqli);
     $module_sql = " OR idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ")";
   }
 
-  $result = $mysqli->prepare("SELECT DISTINCT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE  (ownerID=? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
+  $result = $mysqli->prepare("SELECT DISTINCT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
   $result->bind_param('i', $userObject->get_user_ID());
   $result->execute();
   $result->bind_result($id, $name, $color);
   $result->store_result();
 
-  echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['myfolders'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['myfolders'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   while ($result->fetch()) {
-    echo "<div class=\"f\" ><a href=\"./folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"./artwork/" . $color . "_folder.png\"  alt=\"Folder\" />$name</a></div>\n";
+    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"./folder/details.php?folder=$id\"><img src=\"./artwork/" . $color . "_folder.png\"  alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./folder/details.php?folder=$id\" class=\"blacklink\">$name</a></div></div>\n";
   }
   $result->close();
 
   if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
     if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
-      echo "<script language=\"JavaScript\">alert(\"" . $string['duplicatefoldername'] . "\")</script>";
-      echo "<div class=\"f\"><img class=\"f_icon\" src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:80px\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<script>alert(\"" . $string['duplicatefoldername'] . "\")</script>";
+      echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:80px\" value=\"" . $string['create'] . "\" /></div></div>\n";
     } elseif (!isset($_POST['submit'])) {
-      echo "<div class=\"f\"><img class=\"f_icon\" src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:80px\" value=\"" . $string['create'] . "\" /></div>\n";
+      echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:80px\" value=\"" . $string['create'] . "\" /></div></div>\n";
     }
   }
 
-  echo "<div class=\"f\"><a href=\"./delete/recycle_list.php\" class=\"blacklink\"><img class=\"f_icon\" src=\"./artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" />" . $string['recyclebin'] . "</a></div>\n";
+  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./delete/recycle_list.php\"><img src=\"./artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" /></a></div><div class=\"f_details\"><a href=\"./delete/recycle_list.php\" class=\"blacklink\">" . $string['recyclebin'] . "</a></div></div>\n";
 ?>
 <br clear="left" />
 <?php
-  if (!isset($_GET['folder']) OR $_GET['folder'] == '') {
-    echo "<br />\n";
-    // -- Display module folders ------------------------------------
-    $staff_team_array = $userObject->get_staff_team_modules();
+  echo "<br />\n";
+  // -- Display modules ------------------------------------
+  $staff_team_array = $userObject->get_staff_team_modules();
 
-    echo "<table border=\"0\" class=\"subsect\"><tr><td><nobr>" . $string['mymodules'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    if ($userObject->has_role('SysAdmin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"./module/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></td></tr></table></div>\n";
-    } elseif ($userObject->has_role('Admin')) {
-      echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" width=\"48\" height=\"48\" alt=\"Folder\" /></a></td><td><a href=\"./module/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></td></tr></table></div>\n";
-    }
-    foreach ($staff_team_array as $idMod => $folder_title) {
-      $url = './module/index.php?module=' . $idMod;
-	    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . $folder_title['fullName'] . "</span></td></tr></table></div>\n";
-    }
-    $url = './module/index.php?module=0';
-    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">Unassigned</a><br /><span class=\"grey\">Questions/papers not on any module</span></td></tr></table></div>\n";
+  echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['mymodules'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-    $module_no = count($staff_team_array);
-    if ($module_no == 0) {
-      echo '<div style="color:#C00000; padding-left:15px"><img src="./artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
-    }
+  if ($userObject->has_role('SysAdmin')) {
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></div></div>\n";
+  } elseif ($userObject->has_role('Admin')) {
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></div></div>\n";
   }
+  foreach ($staff_team_array as $idMod => $folder_title) {
+    $url = './module/index.php?module=' . $idMod;
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . str_replace('&', '&amp;', $folder_title['fullName']) . "</span></div></div>\n";
+  }
+  $url = './module/index.php?module=0';
+  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $string['unassigned'] . "</a><br /><span class=\"grey\">" . $string['unassignedmsg'] . "</span></div></div>\n";
+
+  $module_no = count($staff_team_array);
+  if ($module_no == 0) {
+    echo '<div style="color:#C00000; padding-left:15px"><img src="./artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
+  }
+  
 
   $mysqli->close();
 ?>
-
 </div>
+</form>
 </div>
 </body>
 </html>

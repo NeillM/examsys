@@ -237,7 +237,7 @@ $folder_details->bind_result($id, $name, $color);
 while ($folder_details->fetch()) {
   $display_name = str_replace("$orig_folder_name;","",$name);
   if (substr_count($display_name,';') == 0) {
-    echo "<div class=\"f\" ><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" />$display_name</a></div>\n";
+    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"../folder/details.php?folder=$id\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\">$display_name</a></div></div>\n";
   }
 }
 $folder_details->close();
