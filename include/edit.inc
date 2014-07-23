@@ -220,10 +220,7 @@ function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $check
       }
     }
 
-    $html .= <<< HTML
-      <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="ok"{$save_disabled} />
-
-HTML;
+    $html .= '<input id="submit-save" name="' . $name . '" value="' . $value . '" type="submit" class="ok"' . $save_disabled . ' />';
 
     if ($allow_correct and $locked != '' and $paper_id != -1) {
       $html .= <<< HTML
@@ -237,27 +234,19 @@ HTML;
     }
 
   } else {
-    $html .= <<< HTML
-<input type="submit" id="addbank" name="addbank" value="{$string['addtobank']}" class="ok">
+    $html .= '<input type="submit" id="addbank" name="addbank" value="' . $string['addtobank'] . '" class="ok">';
 
-HTML;
     if ($paper_id != -1 and substr($paper_id, 0, 5) != 'list:') {
-      $html .= <<< HTML
-  <input type="submit" id="addpaper" name="addpaper" value="{$string['addtobankandpaper']}" class="ok">
-
-HTML;
+      $html .= '<input type="submit" id="addpaper" name="addpaper" value="' . $string['addtobankandpaper'] . '" class="ok">';
     }
   }
 
-  $html .= <<< HTML
-      <input id="submit-cancel" name="submit-cancel" value="{$string['cancel']}" type="submit" class="cancel" />
-
-HTML;
+  $html .= '<input id="submit-cancel" name="submit-cancel" value="' . $string['cancel'] . '" type="submit" class="cancel" />';
 
   return $html;
 }
 
-function insert_into_papers($p_id, $q_id, $branching_question=false) {
+function insert_into_papers($p_id, $q_id) {
   global $mysqli;
 	
   $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
@@ -269,26 +258,6 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
   $display_pos++;
 
   if ($screen == 0) $screen++;
-
-  if ($branching_question == true) {
-    //Get the Question ID of the source question
-    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id = ?");
-    $result->bind_param('i', $q_id);
-    $result->execute();
-    $result->bind_result($scenario);
-    $result->fetch();
-    $result->close();
-
-    //Get the screen number of the source question on the paper
-    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper = ? AND question = ?");
-    $result->bind_param('ii', $p_id, $scenario);
-    $result->execute();
-    $result->bind_result($source_screen);
-    $result->fetch();
-    $result->close();
-
-    if ($source_screen == $screen) $screen++;
-  }
 
   // Force random mark to recalculate.
   $result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
