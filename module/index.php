@@ -16,7 +16,7 @@
 
 /**
 *
-* Displays a list of papers.
+* Displays three main parts of a module: 1) Papers, 2) Question Bank and 3) Users.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -34,6 +34,7 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperutils.class.php';
+require_once '../classes/stateutils.class.php';
 
 $module = check_var('module', 'GET', true, false, true);
 
@@ -129,7 +130,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 <div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
   <div class="page_title"><?php echo $module_details['moduleid'] ?>: <span style="font-weight:normal"><?php echo $module_details['fullname'] ?></span></div>
 </div>
 <?php
@@ -144,7 +145,13 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Paper type folders
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['papers'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-$types_used = module_utils::paper_types($module, $mysqli);
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/module/type.php');
+
+if (isset($state['showretired']) and $state['showretired'] == 'true') {
+  $types_used = module_utils::paper_types($module, true, $mysqli);
+} else {
+  $types_used = module_utils::paper_types($module, false, $mysqli);
+}
 foreach ($types_used as $type=>$no_papers) {
   $url = '../module/type.php?module=' . $module . '&type=' . $type;
   echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></td></tr></table></div>\n";

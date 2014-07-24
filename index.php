@@ -73,8 +73,10 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 	?>
   
 	<style type="text/css">
-    .recent {margin-left:-25px; padding-bottom:9px}
-    .recent a {color:black}
+   a {color: black}
+   a:visited {color: black}
+   a:link {color: black}
+   .recent {margin-left:-25px; padding-bottom:9px}
 	</style>
 
   <script type="text/javascript" src="./js/staff_help.js"></script>
@@ -223,7 +225,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 
   echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['myfolders'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   while ($result->fetch()) {
-    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"./folder/details.php?folder=$id\"><img src=\"./artwork/" . $color . "_folder.png\"  alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./folder/details.php?folder=$id\" class=\"blacklink\">$name</a></div></div>\n";
+    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"./folder/details.php?folder=$id\"><img src=\"./artwork/" . $color . "_folder.png\"  alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./folder/details.php?folder=$id\">$name</a></div></div>\n";
   }
   $result->close();
 
@@ -236,7 +238,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
     }
   }
 
-  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./delete/recycle_list.php\"><img src=\"./artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" /></a></div><div class=\"f_details\"><a href=\"./delete/recycle_list.php\" class=\"blacklink\">" . $string['recyclebin'] . "</a></div></div>\n";
+  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./delete/recycle_list.php\"><img src=\"./artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" /></a></div><div class=\"f_details\"><a href=\"./delete/recycle_list.php\">" . $string['recyclebin'] . "</a></div></div>\n";
 ?>
 <br clear="left" />
 <?php
@@ -247,16 +249,16 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['mymodules'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
   if ($userObject->has_role('SysAdmin')) {
-    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\" class=\"blacklink\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></div></div>\n";
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></div></div>\n";
   } elseif ($userObject->has_role('Admin')) {
-    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\" class=\"blacklink\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></div></div>\n";
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></div></div>\n";
   }
   foreach ($staff_team_array as $idMod => $folder_title) {
     $url = './module/index.php?module=' . $idMod;
-    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . str_replace('&', '&amp;', $folder_title['fullName']) . "</span></div></div>\n";
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . str_replace('&', '&amp;', $folder_title['fullName']) . "</span></div></div>\n";
   }
   $url = './module/index.php?module=0';
-  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $string['unassigned'] . "</a><br /><span class=\"grey\">" . $string['unassignedmsg'] . "</span></div></div>\n";
+  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['unassigned'] . "</a><br /><span class=\"grey\">" . $string['unassignedmsg'] . "</span></div></div>\n";
 
   $module_no = count($staff_team_array);
   if ($module_no == 0) {

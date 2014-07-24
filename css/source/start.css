@@ -237,9 +237,8 @@ pre {
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 5px;
-  background-color: #FFF2CB;
-  border: 1px solid #F18103;
-  border-radius: 4px;
+  background-color: #FFFFEE;
+	border: 2px solid #FCE699;
 }
 .exam_announcement_box ul {
   margin: 0;

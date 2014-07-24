@@ -108,12 +108,16 @@ if ($_GET['module'] != '0') {
 
 	echo draw_toprightmenu();
   
-  $types_used = module_utils::paper_types($module, $mysqli);
+  if (isset($state['showretired']) and $state['showretired'] == 'true') {
+    $types_used = module_utils::paper_types($module, true, $mysqli);
+  } else {
+    $types_used = module_utils::paper_types($module, false, $mysqli);    
+  }
 ?>
 <div id="content">
         
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   echo "<div style=\"position:absolute; right: 6px; top: 24px\"><label><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\"\"";
   if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';

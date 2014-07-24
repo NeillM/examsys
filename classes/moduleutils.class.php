@@ -434,17 +434,21 @@ Class module {
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 
-    $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
-    $result->bind_param('i', $modID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($moduleid);
-    $result->fetch();
-    if ($result->num_rows == 0) {
+    if ($modID === 0) {
+      $moduleid = 'Unassigned';
+    } else {
+      $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
+      $result->bind_param('i', $modID);
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($moduleid);
+      $result->fetch();
+      if ($result->num_rows == 0) {
+        $result->close();
+        return false;
+      }
       $result->close();
-      return false;
     }
-    $result->close();
 
     return $moduleid;
   }
@@ -566,30 +570,53 @@ Class module {
     return $vle_apis;
   }
   
-  public static function paper_types($idMod, $db) {
+  public static function paper_types($idMod, $show_retired, $db) {
     $userObject = UserObject::get_instance();
 
     $paper_types = array();
     
     if ($idMod == '0') {    // Unused papers.
-      $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
-           FROM properties LEFT JOIN properties_modules
-           ON properties.property_id = properties_modules.property_id
-           WHERE idMod IS NULL
-           AND paper_ownerID = ?
-           AND deleted IS NULL
-           GROUP BY paper_type
-           ORDER BY paper_type';
+      if ($show_retired) {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties LEFT JOIN properties_modules
+             ON properties.property_id = properties_modules.property_id
+             WHERE idMod IS NULL
+             AND paper_ownerID = ?
+             AND deleted IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';
+      } else {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties LEFT JOIN properties_modules
+             ON properties.property_id = properties_modules.property_id
+             WHERE idMod IS NULL
+             AND paper_ownerID = ?
+             AND deleted IS NULL
+             AND retired IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';       
+      }
       $result = $db->prepare($sql);
       $result->bind_param('i', $userObject->get_user_ID());
     } else {
-      $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
-           FROM properties, properties_modules
-           WHERE properties.property_id = properties_modules.property_id
-           AND idMod = ?
-           AND deleted IS NULL
-           GROUP BY paper_type
-           ORDER BY paper_type';
+      if ($show_retired) {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties, properties_modules
+             WHERE properties.property_id = properties_modules.property_id
+             AND idMod = ?
+             AND deleted IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';
+      } else {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties, properties_modules
+             WHERE properties.property_id = properties_modules.property_id
+             AND idMod = ?
+             AND deleted IS NULL
+             AND retired IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';      
+      }
       $result = $db->prepare($sql);
       $result->bind_param('i', $idMod);
     }    

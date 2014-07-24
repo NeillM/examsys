@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
