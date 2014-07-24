@@ -61,9 +61,9 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
       $height = 260;
     }
     $html .= <<< OBJEMBED
-<object type="application/x-shockwave-flash" data="/paper/player_flv_maxi.swf" width="{$width}" height="{$height}">
-<param name="movie" value="/paper/player_flv_maxi.swf" />
-<param name="FlashVars" value="flv=/media/{$filename}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
+<object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_flv_maxi.swf" width="{$width}" height="{$height}">
+<param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_flv_maxi.swf" />
+<param name="FlashVars" value="flv={$configObject->get('cfg_root_path')}/media/{$filename}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
 </object>
 OBJEMBED;
 
@@ -74,7 +74,7 @@ OBJEMBED;
     }
 
     $html .= <<< OBJEMBED
-<object type="application/x-shockwave-flash" data="/paper/player_mp3_maxi.swf" width="200" height="20">
+<object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" width="200" height="20">
 <param name="wmode" value="transparent" />
 <param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" />
 <param name="FlashVars" value="mp3={$configObject->get('cfg_root_path')}/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
