@@ -67,18 +67,20 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
 </object>
 OBJEMBED;
 
-  } elseif ($fn_parts['extension'] == 'mp3') {     //Embed MP3 using a Flash plugin
+  } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag (fall back on Flash plugin).
 
     if (strpos($_SERVER['PHP_SELF'],'/edit/') !== false or strpos($_SERVER['PHP_SELF'],'/add/') !== false) {  // Display filename if add or edit script
       $html .= $filename . '&nbsp;';
     }
 
     $html .= <<< OBJEMBED
+<audio src="{$configObject->get('cfg_root_path')}/media/{$filename}" controls>
 <object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" width="200" height="20">
 <param name="wmode" value="transparent" />
 <param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" />
 <param name="FlashVars" value="mp3={$configObject->get('cfg_root_path')}/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
 </object>
+<audio>
 OBJEMBED;
   } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
     $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
@@ -281,15 +283,12 @@ function uploadFile($fileID) {
       break;
   }
 
-
-
   if ($bad_file) {
     deleteMedia($unique_name);    // Remove the file from the server.
     return array('filename'=>'', 'width'=>0, 'height'=>0, 'rejected_file'=>$unique_name);
   }
 
   return array('filename'=>$unique_name, 'width'=>$file_width, 'height'=>$file_height, 'rejected_file'=>false);
-
 }
 
 function deleteMedia( $filename ) {
@@ -301,7 +300,6 @@ function deleteMedia( $filename ) {
   if ( $filename == '' or !file_exists( $file ) ) {
      return false;
   }
-
 
   if ( @!unlink( $file ) ) {
     //display_error("Failed to delete " . $filename, '', false, true);

@@ -463,11 +463,15 @@ if ($textsize > 120) {
   }
 
   if ($sound_demo == '1') {
-    echo "<tr><td colspan=\"4\" style=\"text-align:center\"><span class=\"testclip\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"../paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
+    echo "<tr><td colspan=\"4\" style=\"text-align:center\">";
+    echo "<audio src=\"{$configObject->get('cfg_root_path')}/paper/sound_demo.mp3\" controls>\n";
+    echo "<span class=\"testclip\">" . $string['testclip'] . "</span>&nbsp;&nbsp;<object type=\"application/x-shockwave-flash\" data=\"{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf\" width=\"200\" height=\"20\">\n";
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
-    echo "<param name=\"movie\" value=\"./paper/player_mp3_maxi.swf\" />\n";
+    echo "<param name=\"movie\" value=\"{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf\" />\n";
     echo "<param name=\"FlashVars\" value=\"mp3={$configObject->get('cfg_root_path')}/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
-    echo "</object> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_testclip'] . "\" /></td></tr>\n";
+    echo "</object> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_testclip'] . "\" />";
+    echo "</audio>\n";
+    echo "</td></tr>\n";
   }
 
   $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);

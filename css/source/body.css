@@ -258,3 +258,8 @@ hr {
   background-colour: #FFFFFF;
   font-size: 80%;
 }
+
+audio {
+  width: 280px;
+  height: 40px;
+}
