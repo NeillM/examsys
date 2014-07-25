@@ -48,4 +48,5 @@ $string['studentcohortlist'] = 'Lista grupy studentów';
 $string['students'] = 'studentów';
 $string['addmetadata'] = 'Dodaj Metadane';
 $string['extradataaboutstudents'] = 'dodatkowe dane nt studentów';
+$string['noteammembers'] = 'No team members found.';
 ?>

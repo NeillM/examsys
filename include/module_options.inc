@@ -45,7 +45,11 @@
     if ($userObject->has_role('Demo')) {
       $i = 0;
     }
-    if (count($team_members) > 0) $tmp_html = '<ul type="square" style="line-height:155%; margin-top:4px; margin-bottom:4px; margin-left:26px; padding-left:0px">';
+    if (count($team_members) == 0) {
+      $tmp_html = '<br /><div>' . $string['noteammembers'] . '</div>';
+    } else {
+      $tmp_html = '<ul type="square" style="line-height:155%; margin-top:4px; margin-bottom:4px; margin-left:26px; padding-left:0">';
+    }
     foreach ($team_members as $team_member) {
       if ($userObject->has_role('Demo')) {
         $tmp_html .= "<li><span style=\"color:black\">" . demo_replace_name($i) . "</span></li>\n";
