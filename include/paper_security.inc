@@ -157,7 +157,7 @@ function render_password_form($string) {
   $html = "<form action=\"$url\" method=\"post\">";
   $html .= "<p style=\"margin-left:70px\">";
   $html .= "      <input type=\"password\" name=\"paperpwd\" id=\"paperpwd\" /><br />";
-  $html .= "      <input type=\"submit\" value=\"{$string['pwcontinue']}\" />";
+  $html .= "      <input type=\"submit\" value=\"{$string['ok']}\" class=\"ok\" style=\"width:100px\" />";
   $html .= "    </p>";
   $html .= "  </form>";
   $html .= "</body>";

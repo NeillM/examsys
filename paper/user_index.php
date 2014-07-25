@@ -345,10 +345,10 @@ if ($exam_duration !== null) {
 <?php
 if ($textsize > 120) {
   $table_width = 90;
-  $button_width = 150;
+  $button_width = 160;
 } else {
   $table_width = 80;
-  $button_width = 115;
+  $button_width = 125;
 }
 ?>
 <table cellpadding="0" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; margin-top:40px; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
@@ -469,8 +469,8 @@ if ($textsize > 120) {
     echo "<param name=\"wmode\" value=\"transparent\" />\n";
     echo "<param name=\"movie\" value=\"{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf\" />\n";
     echo "<param name=\"FlashVars\" value=\"mp3={$configObject->get('cfg_root_path')}/paper/sound_demo.mp3&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600\" />\n";
-    echo "</object> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_testclip'] . "\" />";
-    echo "</audio>\n";
+    echo "</object>";
+    echo "</audio> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_testclip'] . "\" />\n";
     echo "</td></tr>\n";
   }
 
