@@ -155,13 +155,20 @@ MESSAGE;
   <title>Rog&#333;: <?php echo "{$string['createnewuser']} {$configObject->get('cfg_install_type')}" ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+  <style>
+    .dialog_table {background-color:#F1F5FB; border: 1px solid #95AEC8; margin-top:40px; margin-left:auto; margin-right:auto}
+    .field {text-align:right; padding-right:6px; width:120px}
+  </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    $(function () {
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+		$(document).ready(function() {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -169,35 +176,37 @@ MESSAGE;
         }
       });
       $('form').removeAttr('novalidate');
+      
+      $('#ldaplookup').click(function() {
+        notice = window.open("ldaplookup.php","ldap","width=650,height=300,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        notice.moveTo(screen.width/2-325, screen.height/2-150);
+        if (window.focus) {
+          notice.focus();
+        }        
+      });
     });
-
-
-    function ldaplookup() {
-      notice = window.open("ldaplookup.php","ldap","width=650,height=250,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      notice.moveTo(screen.width/2-325, screen.height/2-125);
-      if (window.focus) {
-        notice.focus();
-      }
-    }
   </script>
 </head>
 
 <body>
 <?php
   require '../include/user_search_options.inc';
+  require '../include/toprightmenu.inc';
+
+	echo draw_toprightmenu();
 ?>
 <div id="content">
-<br />
+
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
+    <div class="page_title"><?php echo $string['createnewuser'] ?></div>
+  </div>
+
 <form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-<div align="center">
-<table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
-<tr><td>
-<table border="0" cellspacing="6" cellpadding="0" width="100%" style="background-color:white">
-<tr><td width="32"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" /></td><td class="dialog_header"><?php echo $string['createnewuser'] ?></td></tr>
-</table>
-</td></tr>
-<tr><td>
-<table border="0" cellspacing="6" cellpadding="0" style="background-color:#F1F5FB">
+
+<table border="0" cellspacing="0" cellpadding="3" class="dialog_table">
+<tr><td class="dialog_header" style="border-bottom: 1px solid #95AEC8; line-height:170%" colspan="2"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" style="float:left; padding-right:8px" /><?php echo $string['createnewuser'] ?></td></tr>
 <?php
   $authinfo = $authentication->version_info();
   $ldap_enabled = false;
@@ -208,10 +217,10 @@ MESSAGE;
     }
   }
   if ($ldap_enabled == true) {
-    echo '<tr><td colspan=\"4\"><input type="button" name="lookup" value="' . $string['getldapdetails'] . '" onclick="ldaplookup();" /><td></tr>';
+    echo '<tr><td colspan="2"><input type="button" name="lookup" id="ldaplookup" value="' . $string['getldapdetails'] . '" /></td></tr>';
   }
 ?>
-<tr><td align="right"><span class="field"><?php echo $string['title']; ?></span></td><td>
+<tr><td class="field"><?php echo $string['title'] ?></td><td>
 <select id="new_users_title" name="new_users_title" size="1">
 
 <?php
@@ -224,10 +233,10 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td align="right"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
-<tr><td align="right"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
-<tr><td align="right"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
-<tr><td align="right"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
+<tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
@@ -235,7 +244,7 @@ foreach ($titles as $tmp_title) {
     echo gen_password();
   }
 ?>" size="12" required /></td></tr>
-<tr><td align="right"><?php echo $string['yearofstudy'] ?></td><td>
+<tr><td class="field"><?php echo $string['yearofstudy'] ?></td><td>
 <select id="new_yos" name="new_year">
 <?php
   for ($tmp_year=1; $tmp_year<=6; $tmp_year++) {
@@ -248,7 +257,7 @@ foreach ($titles as $tmp_title) {
 ?>
 </select>
 </td></tr>
-<tr><td align="right"><?php echo $string['typecourse'] ?></td><td>
+<tr><td class="field"><?php echo $string['typecourse'] ?></td><td>
 <select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"' ?> required>
 <option value=""></option>
 <optgroup label="<?php echo $string['universitystaff']; ?>">
@@ -284,7 +293,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 </td></tr>
 
 <tr>
-<td align="right"><?php echo $string['gender'] ?></td><td>
+<td class="field"><?php echo $string['gender'] ?></td><td>
 <select id="new_gender" name="new_gender" size="1">
 <option value=""></option>
 <option value="Male"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Male') echo ' selected' ?>><?php echo $string['male'] ?></option>
@@ -292,16 +301,14 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 </select>
 </td>
 </tr>
-<tr><td align="right"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /></td></tr>
-<tr><td align="right">&nbsp;</td><td style="color:#808080"><?php echo $string['onlyifstudent'] ?></td></tr>
+<tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /></td></tr>
+<tr><td class="field"&nbsp;</td><td style="color:#808080"><?php echo $string['onlyifstudent'] ?></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
-<tr><td colspan="2" align="center">
+<tr><td colspan="2" style="text-align:center; padding-bottom:12px">
 <input type="submit" name="submit" value="<?php echo $string['createaccount'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td></tr>
 </table>
-</td></tr>
-</table>
-</div>
+
 </form>
 
 <?php

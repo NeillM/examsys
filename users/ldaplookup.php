@@ -50,6 +50,9 @@ if (isset($_REQUEST['LOOKUP'])) {
 			$output->lookupdata->gender = '';
 		}
     $output->lookupdata->title = StringUtils::my_ucwords($output->lookupdata->title); // Stop problems with uppercase titles.
+    if ($output->lookupdata->title == 'Prof') {
+      $output->lookupdata->title = 'Professor';
+    }
   ?>
 <!DOCTYPE html>
 <html>
@@ -57,7 +60,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>LDAP <?php echo $string['lookup']; ?></title>
+	<title>LDAP <?php echo $string['lookup'] ?></title>
 
 	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
 	<link rel="stylesheet" type="text/css" href="../css/header.css"/>
@@ -100,16 +103,22 @@ if (isset($_REQUEST['LOOKUP'])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>LDAP <?php echo $string['lookup']; ?></title>
+	<title>LDAP <?php echo $string['lookup'] ?></title>
 
 	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/header.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/screen.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/list.css"/>
 	<style type="text/css">
-		body {font-size: 90%}
-		th {background-color:#CFDBEB; font-weight:normal}
+		body {font-size:90%}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
 	</style>
 	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.l').click(function() {
+        window.location = 'ldaplookup.php?LOOKUP=' + $(this).attr('id');
+      })
+    });
+  </script>
 </head>
 <body>
 <?php
@@ -239,10 +248,11 @@ if (isset($_POST['submit'])) {
       $_SESSION['ldaplookup'][$i] = $key;
       $_SESSION['ldaplookupdata'][$key] = $object;
 			
-      echo "<tr style=\"cursor:pointer\"><td><a href='?LOOKUP=$key'>$title</a></td><td><a href='?LOOKUP=$key'>$first_names</a></td><td><a href='?LOOKUP=$key'>$surname</a></td><td><a href='?LOOKUP=$key'>$username</a></td><td><a href='?LOOKUP=$key'>$email</a></td><td><a href='?LOOKUP=$key'>$role</a></td></tr>\n";
+      echo "<tr class=\"l\" id=\"$key\"><td>$title</td><td>$first_names</td><td>$surname</td><td>$username</td><td>$email</td><td>$role</td></tr>\n";
     }
     echo "</table>\n";
   }
+  echo "</body>\n</html>\n";
   exit();
 }
 
