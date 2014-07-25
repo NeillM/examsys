@@ -47,6 +47,6 @@ $string['forusers'] = 'for users';
 $string['studentcohortlist'] = 'Student Cohort List';
 $string['students'] = 'students';
 $string['addmetadata'] = 'Add Metadata';
-$string['extradataaboutstudents'] = 'extra data about students';
+$string['extradataaboutstudents'] = 'Tag extra data to students';
 $string['noteammembers'] = 'No team members found.';
 ?>

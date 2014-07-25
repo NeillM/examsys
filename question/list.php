@@ -362,7 +362,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 </tbody>
 </table>
 <?php
-if (strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
   echo '<p><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> ' . $string['modulenomappings'] . '</p>';
 }  
 ?>

@@ -25,6 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
+require_once '../include/demo_replace.inc';
 
 $paperid = check_var('paperID', 'GET', true, false, true);
 
@@ -76,6 +77,7 @@ while ($results->fetch()) {
 $results->close();
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -139,8 +141,13 @@ $results->close();
     $cohort_size = $string['whole cohort'];
   }
 
-  echo "<tr><td class=\"f1\">" . $string['papername'] . "</td><td>$paper_title</td></tr>\n";  
-  echo "<tr><td class=\"f1\">" . $string['paperowner'] . "</td><td>$title $first_names $surname (<a href=\"mailto:$email\">$email</a>)</td></tr>\n";  
+  echo "<tr><td class=\"f1\">" . $string['papername'] . "</td><td>$paper_title</td></tr>\n";
+  $display_name = "$title $first_names $surname";
+  if ($userObject->has_role('Demo')) {
+    $display_name = demo_replace_name(0);
+    $email = 'joe.bloggs@uni.ac.uk';
+  }
+  echo "<tr><td class=\"f1\">" . $string['paperowner'] . "</td><td>$display_name (<a href=\"mailto:$email\">$email</a>)</td></tr>\n";  
   echo "<tr><td class=\"f1\">" . $string['session'] . "</td><td>$calendar_year</td></tr>\n";
   echo "<tr><td class=\"f1\">" . $string['modules'] . "</td><td>";
 

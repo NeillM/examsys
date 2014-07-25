@@ -47,6 +47,6 @@ $string['forusers'] = 'dla użytkowników';
 $string['studentcohortlist'] = 'Lista grupy studentów';
 $string['students'] = 'studentów';
 $string['addmetadata'] = 'Dodaj Metadane';
-$string['extradataaboutstudents'] = 'dodatkowe dane nt studentów';
+$string['extradataaboutstudents'] = 'Tag extra data to students';
 $string['noteammembers'] = 'No team members found.';
 ?>

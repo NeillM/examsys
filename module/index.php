@@ -71,9 +71,9 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
-    a {color: black}
-    .red {background-color:#C00000; color:white; padding-left: 2px; padding-right:2px}
-    .subsect_table {margin-top: 22px; margin-left: 10px; margin-bottom: 12px}
+    a {color:black}
+    .red {background-color:#C00000; color:white; padding-left:2px; padding-right:2px}
+    .subsect_table {margin-top:22px; margin-left:10px; margin-bottom:12px}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
@@ -138,7 +138,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   // Is it a self-enrol module.
   if (isset($module_details['selfenroll']) and $module_details['selfenroll'] == 1) {
     $selfenrol_url = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/self_enrol.php?moduleid=' . $module_details['moduleid'];
-    echo "<br /><div style=\"margin-left:auto; margin-right:auto; width:500px\"><img src=\"../artwork/self_enrol.png\" width=\"48\" height=\"48\" alt=\"modules\" style=\"float:left\" /> <div style=\"color:#F18103; font-weight:bold; line-height:200%\">" . $string['selfenrolmodule'] . "</div>" . $string['studenturl'] . ": <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n";
+    echo "<br /><div style=\"margin-left:auto; margin-right:auto; width:500px\"><img src=\"../artwork/self_enrol.png\" width=\"48\" height=\"48\" alt=\"modules\" style=\"float:left; margin-right:10px\" /> <div style=\"color:#F18103; font-weight:bold; line-height:200%\">" . $string['selfenrolmodule'] . "</div>" . $string['studenturl'] . ": <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n";
   }
 
 
@@ -158,8 +158,10 @@ foreach ($types_used as $type=>$no_papers) {
 }
 echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../paper/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../paper/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></td></tr></table></div>\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newPaper(); return false;\" class=\"blacklink\">" . $string['newpaper'] . "</a></td></tr></table></div>\n";
-
+if ($module != 0) {
+  // Don't want new papers created from the Unassigned folder.
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newPaper(); return false;\" class=\"blacklink\">" . $string['newpaper'] . "</a></td></tr></table></div>\n";
+}
 // Question bank section
 echo "<br clear=\"left\">\n";
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['questionbank'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
@@ -175,8 +177,10 @@ foreach ($bank_types as $type_name=>$url) {
 }
 echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"../question/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></td><td><a href=\"../question/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></td></tr></table></div>\n";
-echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newQuestion(); return false;\" class=\"blacklink\">" . $string['newquestion'] . "</a></td></tr></table></div>\n";
-
+if ($module != 0) {
+  // Don't want new questions created from the Unassigned folder.
+  echo "<div class=\"f2\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></td><td><a href=\"\" onclick=\"newQuestion(); return false;\" class=\"blacklink\">" . $string['newquestion'] . "</a></td></tr></table></div>\n";
+}
 
 // User section
 echo "<br clear=\"left\">\n";

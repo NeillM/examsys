@@ -24,12 +24,13 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require '../include/errors.inc';
-  require '../include/import_users.inc';
+require '../include/admin_auth.inc';
+require '../include/errors.inc';
+require '../include/import_users.inc';
+require_once '../include/demo_replace.inc';
 
-  set_time_limit(0);
-  ob_start();
+set_time_limit(0);
+ob_start();
 ?>
 <!DOCTYPE html>
 <html>

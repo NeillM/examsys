@@ -39,9 +39,9 @@
   <style type="text/css">
 	  #content img {width:16px; height:16px; padding-right:6px}
     .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
-    .sch {padding-left:32px; text-indent:-20px}
+    .sch {background-image: url('../artwork/folder_16.png'); background-repeat:no-repeat; background-position:30px center; padding-left:50px; color:#295AAD; cursor:pointer; padding-top:2px; padding-bottom:2px}
     .greysch {padding-left:12px; color:#808080}
-    .mod {padding-left:60px; text-indent:-20px}
+    .mod {background-image: url('../artwork/folder_16.png'); background-repeat:no-repeat; background-position:60px center; padding-left:80px; color:#295AAD; cursor:pointer; padding-top:2px; padding-bottom:2px}
     .recent {margin-left:-25px; padding-bottom:9px}
     .recent a {color:black}
   </style>
@@ -49,6 +49,18 @@
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.mod').click(function() {
+        window.location = 'index.php?module=' + $(this).attr('id');
+      });
+      
+      $('.sch').click(function() {
+        $('#block' + $(this).attr('id')).toggle();
+      });
+    });
+  </script>
+    
 </head>
 
 <body>
@@ -92,9 +104,9 @@
     }
     if ($old_school != $school) {
       if ($moduleid == '') {
-        echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" alt=\"folder\" />&nbsp;$school</div>\n";
+        echo "<div class=\"greysch\"><img src=\"../artwork/folder_16_grey.png\" alt=\"folder\" />$school</div>\n";
       } else {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" onclick=\"\$('#block$block_id').toggle(); return false;\">$school</a></div>\n";
+        echo "<div class=\"sch\" id=\"$block_id\">$school</div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -103,7 +115,7 @@
       }
     }
     if ($moduleid != '') {
-      echo "<div class=\"mod\"><a href=\"index.php?module=$modID\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" />$moduleid: $fullname</a></div>\n";
+      echo "<div class=\"mod\" id=\"$modID\">$moduleid: $fullname</div>\n";
     }
     $old_faculty = $faculty;
     $old_school = $school;
@@ -129,7 +141,7 @@
   $results->execute();
   $results->bind_result($modID, $moduleid, $fullname);
   while ($results->fetch()) {
-    if ($old_letter !== mb_substr($moduleid,0,1)) {
+    if ($old_letter !== mb_substr($moduleid, 0, 1)) {
       if ($module_block == true) {
         echo "</div>\n";
         $module_block = false;
@@ -137,7 +149,7 @@
     }
     if ($old_letter !== mb_substr($moduleid,0,1)) {
       if ($moduleid !== '') {
-        echo "<div class=\"sch\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" onclick=\"\$('#block$block_id').toggle()\" /><a href=\"\" onclick=\"\$('#block$block_id').toggle(); return false;\">" . mb_substr($moduleid,0,1) . "</a></div>\n";
+        echo "<div class=\"sch\" id=\"$block_id\">" . mb_substr($moduleid, 0, 1) . "</div>\n";
       }
       if ($module_block == false) {
         echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -146,7 +158,7 @@
       }
     }
     if ($moduleid !== '') {
-      echo "<div class=\"mod\"><a href=\"index.php?module=$modID\"><img src=\"../artwork/folder_16.png\" alt=\"folder\" />$moduleid: $fullname</a></div>\n";
+      echo "<div class=\"mod\" id=\"$modID\">$moduleid: $fullname</div>\n";
     }
     $old_letter = mb_substr($moduleid, 0, 1);
   }

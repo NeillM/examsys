@@ -30,6 +30,7 @@ require_once '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
+require_once '../include/demo_replace.inc';
 
 $module = check_var('module', 'GET', true, false, true);
 set_time_limit(0);

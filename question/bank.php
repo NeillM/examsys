@@ -47,12 +47,17 @@ $module = check_var('module', 'GET', true, false, true);
 
 $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 
+if (strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
 if (!$module_details) {
- $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
- $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 } elseif ($module_details['active'] == 0) {
- $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
- $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
 }
 
 $qbank = new QuestionBank($module, $module_details['moduleid'], $string, $notice, $mysqli);

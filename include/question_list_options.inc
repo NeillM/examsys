@@ -126,8 +126,8 @@ if (!isset($module_details) && $module != '0') {
   }
 
   function questionInfo() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","question_info","width=700,height=600,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250, screen.height/2-250);
+    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","question_info","width=700,height=620,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250, screen.height/2-260);
     if (window.focus) {
       notice.focus();
     }

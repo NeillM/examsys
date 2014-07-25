@@ -249,9 +249,9 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['mymodules'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
   if ($userObject->has_role('SysAdmin')) {
-    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\"><strong>" . $string['allmodules']  . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['sysadminonly'] . ")</span></div></div>\n";
+    echo "<div style=\"margin-left:38px; margin-bottom:20px\"><a href=\"./module/all.php\" style=\"color:#295AAD\">" . $string['allmodules']  . "</a></div>\n";
   } elseif ($userObject->has_role('Admin')) {
-    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./module/all.php\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./module/all.php\"><strong>" . $string['allmodulesinschool'] . "</strong></a><br /><span style=\"color:#C00000\">(" . $string['adminonly'] . ")</span></div></div>\n";
+    echo "<div style=\"margin-left:38px; margin-bottom:20px\"><a href=\"./module/all.php\" style=\"color:#295AAD\">" . $string['allmodulesinschool']  . "</a></div>\n";
   }
   foreach ($staff_team_array as $idMod => $folder_title) {
     $url = './module/index.php?module=' . $idMod;
