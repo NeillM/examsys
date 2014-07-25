@@ -27,6 +27,7 @@
 require '../include/admin_auth.inc';
 require '../include/sort.inc';
 require_once '../classes/lookup.class.php';
+require_once '../classes/stringutils.class.php';
 
 if (isset($_REQUEST['LOOKUP'])) {
   if (isset($_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']])) {
@@ -48,6 +49,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 		if (!isset($output->lookupdata->gender)) {
 			$output->lookupdata->gender = '';
 		}
+    $output->lookupdata->title = StringUtils::my_ucwords($output->lookupdata->title); // Stop problems with uppercase titles.
   ?>
 <!DOCTYPE html>
 <html>
@@ -65,17 +67,17 @@ if (isset($_REQUEST['LOOKUP'])) {
 	</style>
 	
 	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript">
+	<script>
 		$(document).ready(function() {
-		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title; ?>");
-			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname; ?>");
-			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname; ?>");
-			window.opener.$('#new_username').val("<?php echo $output->lookupdata->username; ?>");
-			window.opener.$('#new_email').val("<?php echo $output->lookupdata->email; ?>");
-			window.opener.$('#new_grade').val("<?php echo $output->lookupdata->coursecode; ?>");
-			window.opener.$('#new_gender').val("<?php echo $output->lookupdata->gender; ?>");
-			window.opener.$('#new_yos').val("<?php echo $output->lookupdata->yearofstudy; ?>");
-			window.opener.$('#new_studentid').val("<?php echo $output->lookupdata->studentID; ?>");
+		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title ?>");
+			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname ?>");
+			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname ?>");
+			window.opener.$('#new_username').val("<?php echo $output->lookupdata->username ?>");
+			window.opener.$('#new_email').val("<?php echo $output->lookupdata->email ?>");
+			window.opener.$('#new_grade').val("<?php echo $output->lookupdata->coursecode ?>");
+			window.opener.$('#new_gender').val("<?php echo $output->lookupdata->gender ?>");
+			window.opener.$('#new_yos').val("<?php echo $output->lookupdata->yearofstudy ?>");
+			window.opener.$('#new_studentid').val("<?php echo $output->lookupdata->studentID ?>");
 			
 			window.close();
 		});
@@ -156,7 +158,7 @@ if (isset($_POST['submit'])) {
 					}
 					?>
 					<tr>
-						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" class="cancel" /></td>
+						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" /></td>
 					</tr>
 				</table>
 			</div>
@@ -260,7 +262,7 @@ if (isset($_POST['submit'])) {
 				<td><input type="text" name="surname" size="40"/></td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" class="cancel" />
+				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" />
 				</td>
 			</tr>
 		</table>

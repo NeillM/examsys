@@ -137,7 +137,7 @@ class StringUtils {
 
 		if ($word == "de") return $word;
 
-		$word = mb_ucasefirst($word);
+		$word = ucfirst($word);
 
 		if (mb_substr($word, 1, 1, 'UTF-8') == "'") {
 			if (mb_substr($word, 0, 1, 'UTF-8') == "D") {
