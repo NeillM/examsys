@@ -33,6 +33,28 @@ Class UpdaterUtils {
     $this->mysqli  = $mysqli;
     $this->db_name = $db_name;
   }
+  
+  public function record_update($name) {
+    $result  = $this->mysqli->prepare('INSERT INTO sys_updates VALUES (?, NOW())');
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->close();
+  }
+
+  public function has_updated($name) {
+    $result  = $this->mysqli->prepare('SELECT name FROM sys_updates WHERE name = ?');
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->store_result();
+    $num_rows =  $result->num_rows;
+    $result->close();
+
+    if ($num_rows < 1){
+      return false;
+    }
+
+    return true;
+  }
 
   public function count_rows($sql) {
     $result  = $this->mysqli->prepare($sql);

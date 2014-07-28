@@ -2900,6 +2900,14 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['sys_updates'] = <<<QUERY
+        CREATE TABLE `sys_updates` (
+          `name` varchar(255) DEFAULT NULL,
+          `updated` datetime NOT NULL,
+          KEY `name` (`name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['temp_users'] = <<<QUERY
         CREATE TABLE `temp_users` (
           `id` int(11) NOT NULL auto_increment,
