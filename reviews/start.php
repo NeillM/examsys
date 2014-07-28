@@ -305,13 +305,15 @@ var lang = {
   function resizeReference() {
 		winH = $(window).height();
 <?php
-  if (count($reference_materials) > 0) {
-    $subtract = (31 * count($reference_materials)) + 11;
-    echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-    echo "      document.getElementById('framecontent' + i).style.height = (winH - $subtract) + 'px';\n";
-    echo "    }\n";
-  }
+    if (count($reference_materials) > 0) {
+      $subtract = (31 * count($reference_materials)) + 11;
+      echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
+      echo "      $('#framecontent' + i).css('height', (winH - $subtract) + 'px');\n";
+      echo "    }\n";
+    }
 ?>
+    var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
+    $('#maincontent').width(mainWidth);
   }
 <?php
   if ($propertyObj->get_bidirectional() == 0) {
@@ -319,7 +321,7 @@ var lang = {
   function confirmSubmit() {
     var agree = confirm("<?php echo $string['confirmsubmit'] ?>");
     if (agree) {
-      document.body.style.cursor = 'wait';
+      $('body').css('cursor','wait');
       return true;
     } else {
       return false;
@@ -327,16 +329,25 @@ var lang = {
   }
 <?php
   } else {
-?>
-  var jumpScreen = function () {
-		$('#button_pressed').val('jump_screen');
-		$('#qForm').attr('action',"start.php?id=<?php echo $_GET['id']; ?>&dont_record=true");
-		$('#qForm').submit();
-  }
-
-<?php
   }
 ?>
+  $(document).ready(function () {
+    $('#jumpscreen').change(function () {
+      $('#button_pressed').val('jump_screen');
+      $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
+      return userSubmit(null);
+    });
+    
+    $('#previous').click(function() {
+      $('body').css('cursor','wait');
+    });
+    $('#next').click(function() {
+      $('body').css('cursor','wait');
+    });
+    $('#finish').click(function() {
+      $('body').css('cursor','wait');
+    });
+  });
 </script>
 </head>
 <body onload="StartClock()" onunload="KillClock()">
@@ -403,9 +414,9 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo $logo_html;
 
   if (($start_of_day_ts > $review_deadline or time() > $start_date) and $start_date != '') {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; height:32px\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Clock\" />&nbsp;&nbsp;</td><td class=\"redwarn\" style=\"height:32px; vertical-align:middle\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
+    echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Clock\" /></td><td class=\"redwarn\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";  
   }
-
+  
   $previous_duration = 0;
   $screen_pre_submitted = 0;
 	
@@ -483,14 +494,16 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo "<input type=\"hidden\" name=\"page_start\" value=\"" . date("YmdHis", time()) . "\" />\n";
   echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
   echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
-  echo "<input type=\"hidden\" name=\"button_pressed\" value=\"\" />\n";
+  echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
 
   echo $bottom_html;
   echo '<input type="text" style="background-color:transparent; text-align:center; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
   if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
-    if ($current_screen > 2) echo "<input type=\"submit\" name=\"prev\" onclick=\"document.questions.button_pressed.value='previous'; document.questions.action='start.php?id=" . $_GET['id'] . "'\" style=\"width:120px\" value=\"&nbsp;&lt; " . $string['screen'] . " " . ($current_screen - 2) . "&nbsp;\" />&nbsp;";
+    if ($current_screen > 2) {
+      echo '<input id="previous" type="submit" name="prev" value="&lt; ' . $string['screen'] . ' ' . ($current_screen - 2) . '" />';
+    }
     if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
-      echo "<select name=\"jump_screen\" onchange=\"jumpScreen()\">";
+      echo '<select name="jump_screen" id="jumpscreen">';
       for ($i=1; $i<=$no_screens; $i++) {
         if ($i == ($current_screen - 1)) {
           echo "<option value=\"$i\" selected>$i</option>";
@@ -498,13 +511,13 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
           echo "<option value=\"$i\">$i</option>";
         }
       }
-      echo "</select>&nbsp;";
+      echo "</select>";
     }
   }
   if ($current_screen > $no_screens) {
-    echo "<input type=\"submit\" style=\"width:120px; font-weight:bold\" name=\"next\" onclick=\"document.questions.button_pressed.value='finish';\" value=\"" . $string['finish'] . "\" />&nbsp;\n";
+  	echo '<input id="finish" type="submit" name="next" value="' . $string['finish'] . '" />';
   } else {
-    echo "<input type=\"submit\" style=\"width:120px\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />&nbsp;\n";
+    echo '<input id="next" type="submit" name="next" value="' . $string['screen'] . ' ' . $current_screen . ' &gt;" />';
   }
   echo '</td></tr></table>';
 
@@ -527,7 +540,7 @@ if (count($reference_materials) > 0) {
 $mysqli->close();
 
 if (isset($_COOKIE['refpane'])) {
-  echo "<script language=\"JavaScript\">\n";
+  echo "<script>\n";
   echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
   echo "</script>\n";
 }

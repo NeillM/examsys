@@ -1334,7 +1334,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     }
   }
 
-  echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
+  echo "</table></td></tr>\n<tr><td>\n<br />\n";
 
   $current_screen++;
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"$current_screen\" />\n";
@@ -1358,7 +1358,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
       if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;';
       printf($string['pleasecomplete'], $current_screen);
-      echo "</div>\n<br >\n";
+      echo "</div>\n<br />\n";
     }
   }
 
@@ -1366,9 +1366,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
-			echo "&nbsp;<input id=\"finish\" type=\"submit\" name=\"next\" onclick=\"$('#button_pressed').val('finish');\" value=\"" . $string['finish'] . "\" />\n";
+			echo '<input id="finish" type="submit" name="next" value="' . $string['finish'] . '" />';
     }
-		echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
+		echo '<input type="hidden" name="refpane" id="refpane" value="' . (count($reference_materials) - 1) . '" />';
   } else {
     echo $bottom_html;
     ?>
@@ -1387,7 +1387,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     echo '<span id="savemsg"></span>';
     if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
       if ($current_screen > 2) {
-        echo "<input id=\"previous\" type=\"submit\" name=\"prev\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 2) . "\" />";
+        echo '<input id="previous" type="submit" name="prev" value="&lt; ' . $string['screen'] . ' ' . ($current_screen - 2) . '" />';
       }
       if ($original_paper_type == '0' or $original_paper_type == '1' or $original_paper_type == '2') {
         echo '<select name="jump_screen" id="jumpscreen">';
@@ -1402,12 +1402,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       }
     }
     if ($current_screen > $no_screens) {
-			echo "<input id=\"finish\" type=\"submit\" name=\"next\" value=\"" . $string['finish'] . "\" />";
+			echo '<input id="finish" type="submit" name="next" value="' . $string['finish'] . '" />';
 		} else {
-      echo "<input id=\"next\" type=\"submit\" name=\"next\" value=\"" . $string['screen'] . " $current_screen &gt;\" />";
+      echo '<input id="next" type="submit" name="next" value="' . $string['screen'] . ' ' . $current_screen . ' &gt;" />';
     }
     echo '</td></tr></table>';
-    echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"" . (count($reference_materials) - 1) . "\" />\n";
+    echo '<input type="hidden" name="refpane" id="refpane" value="' . (count($reference_materials) - 1) . '" />';
   }
 ?>
 </td></tr></table>
