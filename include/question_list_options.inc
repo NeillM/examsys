@@ -38,7 +38,6 @@ if (!isset($module_details) && $module != '0') {
 }
 ?>
 <?php echo $configObject->get('cfg_js_root') ?>
-<script type="text/javascript" src="<?php echo $configObject->get('cfg_root_path') ?>/js/sidebar.js"></script>
 <script>
   function getLastID(IDs) {
     var id_list = IDs.split(",");
@@ -100,7 +99,7 @@ if (!isset($module_details) && $module != '0') {
   }
   
   function previewQ() {
-    notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+    notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=1000,height=700,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 	}
 	
   function ed() {

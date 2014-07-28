@@ -470,7 +470,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   // Display the questions
   foreach ($questions_array as &$question) {
     if ($question['q_type'] == 'enhancedcalc') {
-      require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+      require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
       if (!isset($configObj)) {
         $configObj = Config::get_instance();
       }
@@ -482,7 +482,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     if ($question['q_type'] == 'random') randomQOverwrite2($question, $paper_type, $user_answers, $current_screen);
-    display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts);
+    display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts);
     $previous_q_type = $question['q_type'];
     $q_displayed++;
   }

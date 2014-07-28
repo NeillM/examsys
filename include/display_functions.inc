@@ -261,8 +261,9 @@ function calc_replace_error_safe($haystack, $needle, $replacement) {
   return str_replace($needle, '<span style="color:red; font-weight:bold">' . $replacement . '</span>', $haystack);
 }
 
-function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
-  global $cfg_editor_javascript, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $calculator, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject, $unanswered_color;
+function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
+  global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject, $unanswered_color;
+
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
 	

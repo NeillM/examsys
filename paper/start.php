@@ -1185,7 +1185,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       }
     }
     if ($question['q_type'] == 'enhancedcalc') {
-      require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+      require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
       if (!isset($configObj)) {
         $configObj = Config::get_instance();
       }
@@ -1217,10 +1217,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
       // Do not time the exam if the invigilator has not clicked on the 'Start' button
       if ($summative_exam_session_started !== false) {
-        $summative_timer    = new SummativeTimer($log_extra_time);
-        $remaining_time     = $summative_timer->calculate_remaining_time_secs();
-        $method             = 'StartTimer(' . $remaining_time . ', true)';
-        $timer_label        = $string['timeremaining'] . ':';
+        $summative_timer  = new SummativeTimer($log_extra_time);
+        $remaining_time   = $summative_timer->calculate_remaining_time_secs();
+        $method           = 'StartTimer(' . $remaining_time . ', true)';
+        $timer_label      = $string['timeremaining'] . ':';
       }
 
     } else {
@@ -1320,14 +1320,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   // Display the questions
-  $calculator = $propertyObj->get_calculator(); //GLABAL NEEDS FIXING
   foreach ($questions_array as &$question) {
     if ($question['screen'] == $current_screen) {
       if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
       if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $propertyObj->get_paper_prologue() . '</td></tr>';
       if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
       
-			display_question($question, $propertyObj->get_paper_type(), $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+			display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
       
 			$previous_q_type = $question['q_type'];
       $q_displayed++;
