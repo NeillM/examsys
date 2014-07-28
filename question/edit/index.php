@@ -93,6 +93,8 @@ function save_options($question, $userObject, $db) {
         $question->options[] = $option;
       }
     }
+    //var_dump($option);
+    //exit;
 
     if ($option != null and !in_array('media', $question->get_compound_fields())) {
       // Handle changes in media

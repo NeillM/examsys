@@ -46,14 +46,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
+  <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
   <style type="text/css">
-    .l {padding-left:6px; vertical-align:top}
-    .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#FFE7A2}
-    .qline.highlight {background-color:#FFBD69}
-    .retired {color:#808080}
-
 		<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
@@ -81,34 +76,42 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       $('.highlight').removeClass('highlight');
     }
 
-    function selQ(questionID, qType, menuID, evt) {
+    function selQ(questionID, qType, lineID, evt) {
       $('#menu2a').hide();
       $('#menu2b').hide();
+      $('#menu2c').show();
+
+      highlight_line(questionID, qType, lineID, evt);
+    }
+
+    function selL(questionID, qType, lineID, evt) {
+      $('#menu2a').hide();
       $('#menu2c').hide();
-      $('#menu' + menuID).show();
+      $('#menu2b').show();
 
-      lineID = questionID;
-
+      highlight_line(questionID, qType, lineID, evt);
+    }
+    
+    function highlight_line(questionID, qType, lineID, evt) {
       if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
-        $('#id' + lineID).addClass('highlight');
+        $('#l' + lineID).addClass('highlight');
         addQID(questionID, true);
       } else {
-        if ($('#id' + lineID).hasClass('highlight')) {
-          $('#id' + lineID).removeClass('highlight');
+        if ($('#l' + lineID).hasClass('highlight')) {
+          $('#l' + lineID).removeClass('highlight');
           subQID(questionID);
         } else {
-          $('#id' + lineID).addClass('highlight');
+          $('#l' + lineID).addClass('highlight');
           addQID(questionID, false);
         }
       }
       $('#qType').val(qType);
       $('#oldQuestionID').val(lineID);
-
+      
       if (evt != null) {
         evt.cancelBubble = true;
       }
-
     }
 
     function qOff() {
@@ -124,7 +127,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $(document).ready(function() {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
-        sortList: [[1,0]]
+        sortList: [[0,0]]
       });
 
     });
@@ -160,12 +163,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
   <thead>
   <tr>
-    <th style="width:16px">&nbsp;</th>
-    <th class="vert_div" style="width:50%"><?php echo $string['question']; ?></th>
-    <th class="vert_div" style="width:12%"><?php echo $string['owner']; ?></th>
-    <th class="vert_div" style="width:10%"><?php echo $string['type']; ?></th>
-    <th class="vert_div" style="width:10%"><?php echo $string['modified']; ?></th>
-    <th class="vert_div" style="width:10%"><?php echo $string['status']; ?></th>
+    <th class="vert_div" style="width:50%"><?php echo $string['question'] ?></th>
+    <th class="vert_div" style="width:12%"><?php echo $string['owner'] ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['type'] ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['modified'] ?></th>
+    <th class="vert_div" style="width:10%"><?php echo $string['status'] ?></th>
   </tr>
   </thead>
   </table>
@@ -192,7 +194,6 @@ if (isset($_GET['submit'])) {
     ?>
     <thead>
     <tr>
-      <th style="width:16px">&nbsp;</th>
       <th class="vert_div" style="width:50%"><?php echo $string['question'] ?></th>
       <th class="vert_div" style="width:12%"><?php echo $string['owner'] ?></th>
       <th class="vert_div" style="width:10%"><?php echo $string['type'] ?></th>
@@ -372,7 +373,6 @@ if (isset($_GET['submit'])) {
   <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
   <thead>
   <tr>
-    <th style="width:16px">&nbsp;</th>
     <th class="vert_div" style="width:50%"><?php echo $string['question'] ?></th>
     <th class="vert_div" style="width:12%"><?php echo $string['owner'] ?></th>
     <th class="vert_div" style="width:10%"><?php echo $string['type'] ?></th>
@@ -382,23 +382,31 @@ if (isset($_GET['submit'])) {
   </thead>
   <tbody>
 <?php
+  $display_no = 0;
   while ($result->fetch()) {
     $status_class = ' status' . $status_array[$status]->id;
-    echo '<tr class="qline' . $status_class;
+
+    echo '<tr class="q' . $status_class . '"';
     if ($locked != '') {
-      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2c',event)\" ondblclick=\"ed()\"><td><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['locked'] . "\" /></td>";
+      echo " id=\"l$display_no\" onclick=\"selQ($q_id,'$q_type',$display_no,event)\" ondblclick=\"ed()\">";
     } else {
-      echo "\" id=\"id$q_id\" onclick=\"selQ($q_id,'$q_type','2b',event)\" ondblclick=\"ed()\"><td></td>";
+      echo " id=\"l$display_no\" onclick=\"selL($q_id,'$q_type',$display_no,event)\" ondblclick=\"ed()\">";
     }
 
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
 
-    echo "<td>$tmp_leadin</td>";
+    if ($locked == '') {
+      echo "<td class=\"unlicon\">";
+    } else {
+      echo "<td class=\"licon\">";      
+    }
+    echo "$tmp_leadin</td>";
     echo "<td>$title $initials $surname</td>";
     echo '<td><nobr>' . $string[$q_type] . '</nobr></td>';
     echo '<td>' . $last_edited . '</td>';
     echo '<td>' . $status_name . '</td></tr>';
+    $display_no++;
   }
   $result->close();
 ?>

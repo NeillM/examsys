@@ -121,10 +121,10 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <br />
 
-<table cellpadding="4" cellspacing="0" border="0" style="width:195px; font-size:110%">
+<table cellpadding="4" cellspacing="0" border="0" style="width:210px; font-size:110%">
 <tr><td style="margin:4px">
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_GET['searchterm'])) echo $_GET['searchterm']; ?>" /></div>
-<div><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype" style="max-width:185px">
+<div><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype" style="max-width:195px">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
   $qTypes = array('area'=>$string['area'],'enhancedcalc'=>$string['calculation'],'dichotomous'=>$string['dichotomous'],'extmatch'=>$string['extmatch'],'blank'=>$string['blank'],'flash'=>$string['flash'],'hotspot'=>$string['hotspot'],'info'=>$string['info'],'labelling'=>$string['labelling'],'likert'=>$string['likert'],'matrix'=>$string['matrix'],'mcq'=>$string['mcq'],'mrq'=>$string['mrq'],'rank'=>$string['rank'],'sct'=>$string['sct'],'textbox'=>$string['textbox'],'true_false'=>$string['true_false']);

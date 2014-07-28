@@ -91,7 +91,10 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
   <style type="text/css">
-<?php echo QuestionStatus::generate_status_css($status_array); ?>
+    .q {
+      display: none;
+    }
+  <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>

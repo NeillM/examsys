@@ -19,7 +19,6 @@
   background-color: white;
   -webkit-user-select: none;
   -moz-user-select: none;
-  display: none;
 }
 .q:hover {
   background-color: #FFE7A2;
@@ -30,19 +29,14 @@
 .nobr {
   white-space: nowrap;
 }
-.plock {
-  width: 16px;
-  height: 16px;
-  border: 1px solid white;
-}
 .licon {
   background-image: url('../artwork/small_padlock.png');
   background-repeat: no-repeat;
   background-position: left center;
-  padding-left: 20px !important;
+  padding-left: 22px !important;
 }
 .unlicon {
-  padding-left: 20px !important;
+  padding-left: 22px !important;
 }
 input.check_type {
   float: left;
