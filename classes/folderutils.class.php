@@ -48,6 +48,11 @@ Class folder_utils {
   static function has_permission($folderID, $userObj, $db) {
     $permission = false;
     
+    $folder_owner = folder_utils::get_ownerID($folderID, $db);
+    if ($folder_owner == $userObj->get_user_ID()) {
+      return true;
+    }
+    
     $result = $db->prepare("SELECT idMod FROM folders_modules_staff WHERE folders_id = ?");
     $result->bind_param('i', $folderID);
     $result->execute();
@@ -55,6 +60,7 @@ Class folder_utils {
     while ($result->fetch()) {
       if ($userObj->is_staff_user_on_module($idMod)) {
         $permission = true;
+        break;
       }
     }
     $result->close(); 
