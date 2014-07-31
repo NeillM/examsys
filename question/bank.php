@@ -187,7 +187,7 @@ function number_of_questions($question_no, $string) {
 
 function display_folder($url, $type_name, $grey_text, $class) {
   $type_name = strip_tags($type_name);
-  return "<div class=\"$class\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></td><td><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</td></tr></table></div>\n";
+  return "<div class=\"$class\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</div></div>\n";
 }
 $mysqli->close();
 ?>

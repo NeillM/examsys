@@ -33,6 +33,37 @@ require_once './classes/paperutils.class.php';
 require_once './classes/folderutils.class.php';
 require_once './classes/announcementutils.class.php';
 
+/**
+  * Get a list of internal reviews for the current user.
+  * @param int $userID  - Question ID of the random question to be loaded.
+  * @param object $db   - MySQL connection.
+  * @return array				- Array of paper details the current user should review.
+  */
+function get_review_papers($userID, $db) {
+  $papers = array();
+
+  $result = $db->prepare("SELECT paper_title, property_id, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
+  $result->bind_param('i', $userID);
+  $result->execute();
+  $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name);
+  $result->store_result();    
+  while ($result->fetch()) {
+    $reviewed = '';
+    $result2 = $db->prepare("SELECT DATE_FORMAT(MAX(started),'%d/%m/%Y %T') AS started FROM review_metadata WHERE reviewerID = ? AND paperID = ?");
+    $result2->bind_param('ii', $userID, $property_id);
+    $result2->execute();
+    $result2->bind_result($reviewed);
+    $result2->fetch();
+    $result2->close();
+
+    $papers[] = array('paper_title'=>$paper_title, 'crypt_name'=>$crypt_name, 'fullscreen'=>$fullscreen, 'reviewed'=>$reviewed, 'internal_review_deadline'=>$internal_review_deadline);      
+  }
+
+  $result->close();
+
+  return $papers;
+}
+
 $userObject = UserObject::get_instance();
 
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
@@ -179,37 +210,25 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
     if (!isset($_SESSION['announcement' . $announcement['id']])) {
       echo "<div class=\"announcement\" id=\"announcement" . $announcement['id'] . "\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement(" . $announcement['id'] . ")\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
     }  
-  }
-
+  }  
+  
   // -- Display any papers for review ---------------------------------
-  $result = $mysqli->prepare("SELECT paper_title, property_id, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
-  $tmp = $userObject->get_user_ID();
-  $result->bind_param('i', $tmp);
-  $result->execute();
-  $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name);
-  $result->store_result();
-  if ($result->num_rows() > 0) {
+  $review_papers = get_review_papers($userObject->get_user_ID(), $mysqli);
+
+  if (count($review_papers) > 0) {
     echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['papersforreview'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   }
-  while ($result->fetch()) {
-    $reviewed = '';
-    $result2 = $mysqli->prepare("SELECT DATE_FORMAT(MAX(started),'%d/%m/%Y %T') AS started FROM review_metadata WHERE reviewerID = ? AND paperID = ?");
-    $result2->bind_param('ii', $userObject->get_user_ID(), $property_id);
-    $result2->execute();
-    $result2->bind_result($reviewed);
-    $result2->fetch();
-    $result2->close();
-    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\"><img src=\"./artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" /></a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('" . $crypt_name . "'," . $fullscreen . "); return false;\">" . $paper_title . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $internal_review_deadline . "</div>";
-    if ($reviewed == '') {
+  foreach($review_papers as $review_paper) {
+    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\"><img src=\"./artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" /></a></td>\n";
+    echo "  <td><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
+    if ($review_paper['reviewed'] == '') {
       echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
     } else {
-      echo "<span style=\"color:#808080\">" . $string['reviewed'] . ": $reviewed</span>";
+      echo "<span style=\"color:#808080\">" . $string['reviewed'] . ": {$review_paper['reviewed']}</span>";
     }
     echo "</td></tr></table></div>\n";
   }
-  if ($result->num_rows() > 0) echo '<br clear="left" />';
-  $result->close();
+  if (count($review_papers) > 0) echo '<br clear="left" />';
 
   // -- Display personal folders --------------------------------------
   $module_sql = '';

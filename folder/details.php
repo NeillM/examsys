@@ -57,17 +57,14 @@ $parent_list = array();
 $add_member = false;
 
 // Folder security checks
-$orig_folder_name = '';
-
-$result = $mysqli->prepare("SELECT ownerID, name FROM folders WHERE id = ?");
-$result->bind_param('i', $folder);
-$result->execute();
-$result->store_result();
-$result->bind_result($folder_ownerID, $orig_folder_name);
-$result->fetch();
-$result->close();
+$orig_folder_name = folder_utils::get_folder_name($folder, $mysqli);
 
 if ($orig_folder_name == '') {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+if (!folder_utils::has_permission($folder, $userObject, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -93,7 +90,6 @@ if (substr_count($orig_folder_name, ';') > 0) {
     $parent_list[$parent_id] = $parent_name;
   }
 }
-
 
 $module = '';
 
@@ -146,10 +142,6 @@ $selfenrol = 0;
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    function addQuestion(qType) {
-      top.location.href='../question/edit/?type=' + qType + 'folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>';
-    }
-
     function deleteFolder() {
       notice=window.open("../delete/check_delete_folder.php?folderID=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       notice.moveTo(screen.width/2-210,screen.height/2-85);
@@ -167,13 +159,6 @@ $selfenrol = 0;
 
     function newPaper(paperID) {
       notice = window.open("../paper/new_paper1.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-
-    function addTeamMember() {
-      notice = window.open("edit_team_popup.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }

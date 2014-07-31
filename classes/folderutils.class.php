@@ -30,12 +30,11 @@ Class folder_utils {
   /**
   * Returns the name of a folder from an ID
   *
-  * @param $folderID ID of the folder to be used
-  * @param $db database connection
+  * @param int $folderID  - ID of the folder to be used
+  * @param object $db     - MySQL object
   * @return string the name of the folder.
   */
   static function get_folder_name($folderID, $db) {
-    $folder = $_GET['folder'];
     $result = $db->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
     $result->bind_param('i', $folderID);
     $result->execute();
@@ -46,12 +45,29 @@ Class folder_utils {
     return $name;
   }
   
+  static function has_permission($folderID, $userObj, $db) {
+    $permission = false;
+    
+    $result = $db->prepare("SELECT idMod FROM folders_modules_staff WHERE folders_id = ?");
+    $result->bind_param('i', $folderID);
+    $result->execute();
+    $result->bind_result($idMod);
+    while ($result->fetch()) {
+      if ($userObj->is_staff_user_on_module($idMod)) {
+        $permission = true;
+      }
+    }
+    $result->close(); 
+    
+    return $permission;
+  }
+  
   /**
   * Creates a new personal folder for a user.
   *
-  * @param $folder_name The name of the folder
-  * @param $userObj The userObject of the currently logged in user
-  * @param $db - Mysqli object
+  * @param string $folder_name  - The name of the folder
+  * @param object $userObj      - The userObject of the currently logged in user
+  * @param object $db           - MySQL object
   * @return string the name of the folder.
   */
   static function create_folder($folder_name, $userObj, $db) {
@@ -91,7 +107,7 @@ Class folder_utils {
   /**
   * Returns a list of all folders.
   *
-  * @param $db		- Mysqli object
+  * @param object $db		- MySQL object
   * @return array	- Array of folders keyed by the ID of the folder in the database.
   */
   static function get_all_folders($db) {
