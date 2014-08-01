@@ -967,7 +967,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 ?>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $('.datecopy').change(dateCopy);
     })
   </script>
@@ -975,7 +975,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
 }
 ?>
   <script>
-    $(document).ready(function() {
+    $(function () {
       getMeta();
       
       $('#theform').validate({

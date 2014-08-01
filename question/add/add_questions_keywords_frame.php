@@ -34,7 +34,7 @@
 </head>
   <frameset cols="200,*" frameborder="0" framespacing="0" border="0">
     <frame scrolling="auto" src="add_questions_keyword_list.php" name="keywords">
-    <frame scrolling="auto" resizable="no" src="add_questions_by_keyword.php" name="keywordlist">
+    <frame scrolling="auto" resizable="no" src="add_questions_list.php?type=keyword" name="keywordlist">
   </frameset>
   <noframes>
     <?php echo $string['frameserr'];?>

@@ -53,7 +53,7 @@ $mysqli->close();
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function() {
+    $(function () {
       window.opener.location.href = window.opener.location.href;
       self.close();
     });

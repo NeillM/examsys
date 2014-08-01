@@ -72,7 +72,7 @@ foreach ($keyword_list as $individualID) {
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function(){
+    $(function () {
       window.opener.location.href = '<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?module=<?php echo $_POST['module']; ?>';
       self.close();
     });

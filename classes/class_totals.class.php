@@ -652,7 +652,7 @@ class ClassTotals {
               $exclude_on = true;
               $count_sub_paper_answers = count($sub_paper_answers);
               for ($c = 0; $c < $count_sub_paper_answers; $c++) {
-                if ($tmp_exclude{$section} == '0') {
+                if (isset($tmp_exclude{$section}) and $tmp_exclude{$section} == '0') {
                   if (!isset($sub_user_answers[$c]) or $sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                     // Do nothing
                   } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {

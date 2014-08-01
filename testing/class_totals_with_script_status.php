@@ -111,7 +111,7 @@ $stmt->close();
   <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       setTimeout(refreshPage, 15000); // milliseconds
     });
     function refreshPage() {

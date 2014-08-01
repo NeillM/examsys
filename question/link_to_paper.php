@@ -76,7 +76,7 @@ if (!isset($_POST['submit'])) {
       $('#paperlist').css('height', winH + 'px');
     }
 
-		$(document).ready(function() {
+    $(function () {
 		  resizeList();
 			
 			$(window).resize(function() {
@@ -114,7 +114,7 @@ if (!isset($_POST['submit'])) {
   $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
   while ($result->fetch()) {
     if (($paper_type == '2' or $paper_type == '4') and date("Y-m-d H:i:s") > $end_date) {
-      //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+      //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"18\" height=\"18\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } elseif ($start_date < date("Y-m-d H:i:s") and $end_date > date("Y-m-d H:i:s")) {
       echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } else {
@@ -143,7 +143,7 @@ if (!isset($_POST['submit'])) {
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $("#close").click(function() {
         window.close();
       });

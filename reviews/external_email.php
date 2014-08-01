@@ -60,7 +60,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_externals_email.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       
       $('#back').click(function (){
         window.location.href = 'pick_external.php?paperID=<?php echo $_GET['paperID'] ?>&mode=<?php echo $_GET['mode'] ?>';

@@ -70,7 +70,7 @@ $result->close();
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $('#results').hide();
       $('#start').click(function (e) {
         e.preventDefault();

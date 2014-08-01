@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['manageteams'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       window.opener.location.href = '../users/details.php?userID=<?php echo $_POST['userID']; ?>&tab=teams';
       self.close();
     });
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
       $('#list').css('height', winH + 'px');
     }
 		
-		$(document).ready(function() {
+    $(function () {
 			resizeList();
 			
 			$(window).resize(function(){

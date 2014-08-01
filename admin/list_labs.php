@@ -71,7 +71,7 @@
 
     }
 		
-		$(document).ready(function() {
+    $(function () {
 		  $('html').click(function() {
 			  deselLab();
       });

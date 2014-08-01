@@ -50,7 +50,7 @@ require '../include/sysadmin_auth.inc';
       document.location.href='./edit_announcement.php?announcementid=' + lineID;
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
         sortList: [[1,1]] 

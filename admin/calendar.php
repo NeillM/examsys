@@ -248,7 +248,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <?php
     }
 ?>
-  $(document).ready(function() {
+  $(function () {
     
 	  $('#lab').change(function() {
 		  $('#theform').submit();

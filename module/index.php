@@ -110,7 +110,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
       $('#list').css('height', winH + 'px');
     }
 
-    $(document).ready(function() {
+    $(function () {
       resizeList();
       
       $(window).resize(function(){

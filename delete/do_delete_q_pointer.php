@@ -100,7 +100,7 @@ $mysqli->close();
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function() {
+    $(function () {
       window.opener.location.href='../paper/details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>&scrOfY=<?php echo $_POST['scrOfY']; ?>';
       self.close();
     });

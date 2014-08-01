@@ -72,7 +72,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {

@@ -42,7 +42,7 @@ require '../include/sysadmin_auth.inc';
 <script type="text/javascript" src="../js/sidebar.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script>
-  $(document).ready(function() {
+  $(function () {
     $("#clear_training_module").click(function() {
 		  var msg = '<?php echo $string['msg1']; ?>';
 			return confirm(msg);

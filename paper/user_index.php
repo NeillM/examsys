@@ -325,7 +325,7 @@ if ($exam_duration !== null) {
     }
   }
   
-  $(document).ready(function() {
+  $(function () {
     $(document).click(function() {
       $('#toprightmenu').fadeOut();
     });

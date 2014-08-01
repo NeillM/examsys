@@ -180,7 +180,7 @@ if (isset($_POST['submit'])) {
       $('#list3').css('height', winH + 'px');
     }
 		
-		$(document).ready(function() {
+    $(function () {
 			resizeList();
 			
 			$(window).resize(function(){

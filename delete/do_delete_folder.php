@@ -89,7 +89,7 @@ $mysqli->close();
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function() {
+    $(function () {
       <?php
       if ($parent == '') {
         echo "window.opener.location.href = '../index.php'\n";

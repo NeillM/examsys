@@ -39,4 +39,9 @@ $string['linktopaperx'] = 'Odkaz do dokumentu X...';
 $string['deletequestion'] = 'Odstranit úlohu';
 $string['noquestionleadin'] = 'Varování: v hlavičce není text úlohy!';
 $string['modulenomappings'] = 'Module does not allow objectives mapping';
+$string['questiontype'] = 'Question Type';
+$string['bloomstaxonomy'] = 'Bloom\'s Taxonomy';
+$string['status'] = 'Status';
+$string['keyword'] = 'Keyword';
+$string['performance'] = 'Performance';
 ?>

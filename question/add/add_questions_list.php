@@ -47,13 +47,10 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script>
-    function Qpreview(qID) {
-      parent.top.qlist.previewurl.location = '../view_question.php?q_id=' + qID;
-    }
-
     function populateTicks() {
       var q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
       for (i=0; i<q_array.length; i++) {
@@ -66,16 +63,29 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       }
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         // sort on the second column, order asc 
+        dateFormat: 'uk',
         sortList: [[2,0]] 
+      });
+      
+      populateTicks();
+      
+      $('.prev').click(function() {
+        q_id = $(this).attr('id');
+        parent.top.qlist.previewurl.location = '../view_question.php?q_id=' + q_id.substring(4);
+      });
+      
+      
+      $(":checkbox").change(function() {
+        parent.top.controls.checkStatus(this);
       });
 
     });
   </script>
 </head>
-<body onload="populateTicks()">
+<body>
 <?php
   if (isset($_GET['display_pos'])) {
     $display_pos = $_GET['display_pos'];
@@ -128,9 +138,13 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
           exit;
         }
       } else {
-        $keyword_ids = $_GET['keyword_ids'];
+        if (isset($_GET['keyword_ids'])) {
+          $keyword_ids = $_GET['keyword_ids'];
+        } else {
+          $keyword_ids = 0;
+        }
       }
-      echo "<tr><th colspan=\"6\" style=\"font-size:160%; font-weight:bold\">&nbsp;By Keyword</th></tr>\n";
+      echo "<tr><th colspan=\"6\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $string['bykeyword'] . "</th></tr>\n";
       break;
   }
   echo "</table>\n";
@@ -142,6 +156,8 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   foreach ($table_order as $display => $col_width) {
     if ($display{0} == '#') {
       echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\"></th>\n";
+    } elseif ($display == $string['modified']) {
+      echo "<th style=\"width:" . $col_width . "px\" class=\"{sorter: 'datetime'} vert_div\">$display</th>\n";
     } else {
       echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
     }
@@ -160,22 +176,22 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
   switch($_REQUEST['type']) {
     case 'unused':
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM papers RIGHT JOIN (questions, question_statuses) ON papers.question = questions.q_id WHERE questions.status = question_statuses.id AND question IS NULL AND questions.ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
+      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM papers RIGHT JOIN (questions, question_statuses) ON papers.question = questions.q_id WHERE questions.status = question_statuses.id AND question IS NULL AND questions.ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
       $result->bind_param('i', $userObject->get_user_ID());
       break;
     case 'all':
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM questions, question_statuses WHERE questions.status = question_statuses.id AND ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
+      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM questions, question_statuses WHERE questions.status = question_statuses.id AND ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
       $result->bind_param('i', $userObject->get_user_ID());
       break;
     case 'team':
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND idMod = ? AND deleted IS NULL ORDER BY $sortby $ordering");
+      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND idMod = ? AND deleted IS NULL ORDER BY $sortby $ordering");
       $result->bind_param('i', $_GET['teamID']);
       break;
     case 'status':
       $teams = $userObject->get_staff_modules();
       $module_id_list = implode(',', array_keys($teams));
 
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules, modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? AND (ownerID = ? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $sortby $ordering");
+      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules, modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? AND (ownerID = ? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $sortby $ordering");
       $result->bind_param('si', $_GET['status'], $userObject->get_user_ID());
       break;
     case 'keyword':
@@ -184,7 +200,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
       if (count($teams) == 0) {
         $sql = "SELECT
-                  questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name
+                  questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name
                 FROM
                   (questions, question_statuses, keywords_question)
                 LEFT JOIN
@@ -207,7 +223,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
                   $sortby $ordering, questions.q_id";
       } else {
         $sql = "SELECT
-                  questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name
+                  questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name
                 FROM
                   (questions, question_statuses)
                 LEFT JOIN
@@ -215,8 +231,8 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
                 WHERE
                   questions.status = question_statuses.id
                 AND
-                  questions.q_id IN (SELECT q_id from keywords_question WHERE keywords_question.keywordID IN ($keyword_ids))  AND
-                  (ownerID=? OR questions.q_id IN (SELECT q_id from questions_modules where idMod IN (" . implode(',', array_keys($teams)) . "))) AND
+                  questions.q_id IN (SELECT q_id from keywords_question WHERE keywords_question.keywordID IN ($keyword_ids)) AND
+                  (ownerID = ? OR questions.q_id IN (SELECT q_id from questions_modules where idMod IN (" . implode(',', array_keys($teams)) . "))) AND
                   status NOT IN ($retired_in) AND deleted IS NULL
                 ORDER BY
                   $sortby $ordering, questions.q_id";
@@ -230,12 +246,12 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
   while ($result->fetch()) {
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
-    if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
+    if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:#C00000">' . $string['warningnoleadin'] . '</span>';
 
     $status_class = 'status' . $status;
     echo "<tr class=\"$status_class\"><td>";
-    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
-    echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td style=\"padding-left:8px\" onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;" . $display_date . "</td><td>&nbsp;" . $status_name . "</td></tr>\n";
+    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
+    echo "</td><td><input type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td class=\"prev\" id=\"prev$q_id\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>" . $display_date . "</td><td>" . $status_name . "</td></tr>\n";
   }
   $result->close();
   $mysqli->close();

@@ -89,7 +89,7 @@ require_once 'summary_report.inc';
       window.open("display_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     }
 
-    $(document).ready(function(){
+    $(function () {
       $('#maindata').click(function() {
         $('#menudiv').hide();
         $('#toprightmenu').hide();

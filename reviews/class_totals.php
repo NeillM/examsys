@@ -118,7 +118,7 @@ ob_start();
     var paperID = <?php echo $paperID ?>;
     var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         // sort on the first column and third column, order asc 
         sortList: [[4,0]] 

@@ -76,7 +76,7 @@ if (!$module_code) {
       }
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]]
       });

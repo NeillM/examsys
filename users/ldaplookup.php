@@ -71,7 +71,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 	
 	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 	<script>
-		$(document).ready(function() {
+    $(function () {
 		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title ?>");
 			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname ?>");
 			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname ?>");
@@ -113,7 +113,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 	</style>
 	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $('.l').click(function() {
         window.location = 'ldaplookup.php?LOOKUP=' + $(this).attr('id');
       })

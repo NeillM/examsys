@@ -352,7 +352,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
     }
 
-    $(document).ready(function() {
+    $(function () {
       updateAccessDemo();
       
       $('#userID').val(',<?php echo $userID ?>');

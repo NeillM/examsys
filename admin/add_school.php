@@ -80,7 +80,7 @@ $result->close();
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {

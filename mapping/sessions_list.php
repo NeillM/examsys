@@ -100,7 +100,7 @@ if (!$module) {
       }
     }
 
-		$(document).ready(function() {
+    $(function () {
 		  $('html').click(function() {
 			  hideSessCopyMenu(event);
       });

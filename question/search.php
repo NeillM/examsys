@@ -124,7 +124,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       }
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
         sortList: [[0,0]]

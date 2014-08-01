@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid']; ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function() {
+    $(function () {
       window.opener.location.href = '../module/index.php?module=<?php echo $moduleID; ?>';
       self.close();
     });
@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
       $('#list').css('height', winH + 'px');
     }
 		
-		$(document).ready(function() {
+    $(function () {
 			resizeList();
 			
 			$(window).resize(function(){

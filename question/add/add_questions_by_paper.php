@@ -113,7 +113,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $status_class = 'status' . $status;
     echo "<tr class=\"{$status_class}\"><td class=\"q_no\">$question_no.</td><td>";
     }
-    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
+    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="Locked" />';
     echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" id=\"$q_id\" value=\"$q_id\" /></td>";
     if ($parts == '') {
       echo '<td onclick="Qpreview(' . $q_id . ')">';

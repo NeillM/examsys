@@ -39,4 +39,9 @@ $string['linktopaperx'] = 'Powiąż z arkuszem X...';
 $string['deletequestion'] = 'Usuń pytanie';
 $string['noquestionleadin'] = 'Uwaga: brak sformułowania pytania!';
 $string['modulenomappings'] = 'Moduł nie umożliwia odwzorowanie celów';
+$string['questiontype'] = 'Question Type';
+$string['bloomstaxonomy'] = 'Bloom\'s Taxonomy';
+$string['status'] = 'Status';
+$string['keyword'] = 'Keyword';
+$string['performance'] = 'Performance';
 ?>

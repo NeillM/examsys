@@ -60,7 +60,7 @@ $mysqli->close();
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function() {
+    $(function () {
       <?php
         if ($_POST['module'] != '') {
           echo "self.opener.location.href = '../folder/details.php?module=" . $_POST['module'] . "';\n";

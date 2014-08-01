@@ -253,7 +253,7 @@ if ($css != '') {
   window.history.go(1);
 <?php
   if (count($reference_materials) > 0) {
-    echo "\$(document).ready(function() {\n";
+    echo "\$(function () {\n";
     if (isset($_COOKIE['refpane'])) {
       echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
     } else {

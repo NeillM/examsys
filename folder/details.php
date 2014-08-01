@@ -164,7 +164,7 @@ $selfenrol = 0;
       }
     }
 
-    $(document).ready(function() {
+    $(function () {
       $('#showretired').click(function() {
         $('.retired').toggle();
       });

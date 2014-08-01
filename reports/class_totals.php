@@ -91,7 +91,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script>
-	$(document).ready(function() {
+  $(function () {
 		// Fire off the request to mark_all_enhancedcalc.php
    var request = $.ajax({
       url: "../ajax/reports/mark_all_enhancedcalc.php",
@@ -273,7 +273,7 @@ ob_start();
   var paperID = <?php echo $paperID ?>;  
   var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
 
-  $(document).ready(function() {
+  $(function() {
     $("#maindata").tablesorter({ 
       // sort on the first column and third column, order asc 
       sortList: [[2,0],[3,0]] 
@@ -690,11 +690,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
 
     // Display summary -------------------------------------------------------------------------------------
-    echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"1\" style=\"font-size:110%; width:100%\">";
+    echo "<table border=\"0\" style=\"width:100%\">";
     echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['quartiles'] . "</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
 
-    echo "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
+    echo "<table border=\"0\" style=\"font-size:110%\">\n";
     echo "<tr><td class=\"field\" style=\"width:170px\">" . $string['paper'] . "</td><td colspan=\"3\">$paper</td></tr>\n";
     echo "<tr><td class=\"field\">" . $string['cohortsize'];
     if ($_GET['percent'] < 100) {
@@ -792,7 +792,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
 
     // Deciles
     $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
-    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
+    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table border=\"0\" style=\"font-size:110%\">\n";
     for ($i=1; $i<10; $i++) {
       echo "<tr><td style=\"width:40px\">" . $i;
 			echo ($language == 'en') ? $suffix[$i] : '.';
@@ -803,7 +803,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     echo "<td></td>";
 
     // Quartiles
-    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
+    echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table border=\"0\" style=\"font-size:110%\">\n";
     echo "<tr><td style=\"width:40px\">Q1</td><td>" . MathsUtils::formatNumber($stats['q1'], 1) . "%</td></tr>\n";
     echo "<tr><td style=\"width:40px\">Q2</td><td>" . MathsUtils::formatNumber($stats['q2'], 1) . "%</td></tr>\n";
     echo "<tr><td style=\"width:40px\">Q3</td><td>" . MathsUtils::formatNumber($stats['q3'], 1) . "%</td></tr>\n";
@@ -813,7 +813,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     echo "</tr></table>\n<br />";
 
     // Email Class -----------------------------------------------------------------------------------------
-    if (isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
+    if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
       $file = fopen("../email_templates/" . $userObject->get_user_ID(), "w");
       fwrite($file, $userObject->get_email() . "\n");

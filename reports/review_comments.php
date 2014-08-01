@@ -649,7 +649,7 @@ $result->close();
     <?php
     if (isset($_GET['scrOfY'])) {
     ?>
-    $(document).ready(function() {
+    $(function () {
       window.scrollTo(0,<?php echo $_GET['scrOfY'] ?>);
     });
     <?php

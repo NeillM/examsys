@@ -43,7 +43,7 @@
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]] 
       });

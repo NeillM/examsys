@@ -646,7 +646,7 @@ if ($css != '') {
   window.history.go(1);
 <?php
   if (count($reference_materials) > 0) {
-    echo "\$(document).ready(function() {\n";
+    echo "\$(function () {\n";
     if (isset($_POST['refpane'])) {
       echo "  changeRef(" . $_POST['refpane'] . ");\n";
     } else {

@@ -155,7 +155,7 @@ class demo_auth extends internaldb_auth {
         $postbuttonmessage->pretext = <<<HTML
 <script>
 
-$(document).ready(function(){
+    $(function () {
 
         $(".slidingDiv").hide();
         $(".show_hide").show();
@@ -375,7 +375,7 @@ $content=$content0.$content1.$content2.$content3;
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js" type="text/javascript"></script>
 <script>
 
-$(document).ready(function(){
+    $(function () {
 
         $(".slidingDiv").hide();
         $(".show_hide").show();

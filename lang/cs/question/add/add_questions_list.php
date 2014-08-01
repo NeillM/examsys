@@ -25,4 +25,5 @@ $string['modified'] = 'Upraveno';
 $string['status'] = 'Status'; //cognate
 $string['locked'] = 'Uzamčeno';
 $string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
+$string['bykeyword'] = 'By Keyword';
 ?>

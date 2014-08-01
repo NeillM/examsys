@@ -108,7 +108,7 @@ HTML;
   <script>
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
 		
-		$(document).ready(function() {
+    $(function () {
 			window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';			
 		});
   </script>

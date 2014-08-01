@@ -53,7 +53,7 @@ $lti->delete_lti_key($LTIkeysid);
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-		$(document).ready(function() {
+    $(function () {
       window.opener.location.reload();
       self.close();
     });

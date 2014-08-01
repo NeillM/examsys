@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function () {
   $(document).tooltip({ items: ".help_tip[title]", position: { my: "top+10", at: "center+125" }  });
 
   addHelpLinks();

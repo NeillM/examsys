@@ -112,20 +112,16 @@ Class InstallUtils {
     ?>
     <script type="text/javascript" src="../js/system_tooltips.js"></script>
     <script>
-      $(document).ready(function(){
-          $("#installForm").validate();
-      });
-
-      $(document).ready(function() {
+      $(function () {
+        $("#installForm").validate();
+      
         $('#useLdap').change(function() {
-            $('#ldapOptions').toggle();
-          });
-      });
-
-      $(document).ready(function() {
+          $('#ldapOptions').toggle();
+        });
+      
         $('#uselookupLdap').change(function() {
-            $('#ldaplookupOptions').toggle();
-          });
+          $('#ldaplookupOptions').toggle();
+        });
       });
     </script>
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">

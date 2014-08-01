@@ -39,4 +39,9 @@ $string['linktopaperx'] = 'Link to Paper X...';
 $string['deletequestion'] = 'Delete Question';
 $string['noquestionleadin'] = 'WARNING: no question lead-in!';
 $string['modulenomappings'] = 'Module does not allow objectives mapping';
+$string['questiontype'] = 'Question Type';
+$string['bloomstaxonomy'] = 'Bloom\'s Taxonomy';
+$string['status'] = 'Status';
+$string['keyword'] = 'Keyword';
+$string['performance'] = 'Performance';
 ?>

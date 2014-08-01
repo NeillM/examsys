@@ -52,7 +52,7 @@ require '../include/sysadmin_auth.inc';
       document.location.href = './edit_module.php?moduleid=' + moduleID;
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]] 
       });

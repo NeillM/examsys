@@ -193,7 +193,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
       $status_class = 'status' . $status;
       echo "<tr class=\"$status_class\"><td style=\"width:16px\">";
-      if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
+      if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
       echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td><td>$status_name</td></tr>\n";
     }
     $result->close();

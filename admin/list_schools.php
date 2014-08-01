@@ -57,7 +57,7 @@ $result->close();
       document.location.href='./edit_school.php?schoolid=' + schoolID;
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]]
       });

@@ -50,7 +50,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       
       $('.external').click(function() {
         var externalID = this.id;

@@ -119,7 +119,7 @@ if (isset($_GET['folder'])) {
       $('#itemID').val('');
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
         sortList: [[1,0]]

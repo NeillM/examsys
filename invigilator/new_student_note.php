@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
   <script>
-    $(document).ready(function() {
+    $(function () {
       window.opener.location.href='./index.php?tab=<?php echo $_POST['paperID'] ?>';
       window.close();
     });
@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
 	    var noteHeight = $(document).height() - 110;
 	    $("#note").css('height', noteHeight + 'px')
       $("#note").focus();

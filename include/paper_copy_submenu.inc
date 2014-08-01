@@ -64,7 +64,7 @@ require_once '../classes/dateutils.class.php';
     }
   }
 	
-	$(document).ready(function() {
+  $(function () {
 		$(".cancel").click(function(event) {
       $('#copy_submenu').hide();
 			event.stopPropagation();

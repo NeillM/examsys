@@ -36,6 +36,7 @@ require '../../include/staff_auth.inc';
     body {margin-right:4px; margin-bottom:2px; background-color:#F0F0F0; font-size:90%}
   </style>
   
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script>
     var selected_q = Array();
 
@@ -80,7 +81,7 @@ require '../../include/staff_auth.inc';
         selected_q.push(q_id);
       }
       
-      document.getElementById('questions_to_add').value = myToString(selected_q);
+      $('#questions_to_add').val(myToString(selected_q));
     }
   </script>
 </head>
@@ -100,7 +101,7 @@ require '../../include/staff_auth.inc';
   }
 ?>
 </select>&nbsp;
-<input type="hidden" name="questions_to_add" id="questions_to_add" size="100" value="" /><input type="submit" name="submit" value="<?php echo $string['addquestions']; ?>" /></div>
+<input type="hidden" name="questions_to_add" id="questions_to_add" value="" /><input type="submit" name="submit" value="<?php echo $string['addquestions'] ?>" /></div>
 
 </form>
 </body>

@@ -57,7 +57,7 @@ $session_parts = explode('/', $session);
     <script type="text/javascript" src="../js/staff_help.js"></script>
     <script type="text/javascript" src="../js/toprightmenu.js"></script>
     <script>
-      $(document).ready(function() {
+      $(function () {
         $("#maindata").tablesorter({ 
           sortList: [[1,0]] 
         });

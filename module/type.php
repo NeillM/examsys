@@ -90,7 +90,7 @@ if ($_GET['module'] != '0') {
       $("#paper_count").text(n.toLocaleString());
     }
     
-    $(document).ready(function() {
+    $(function () {
       $('#showretired').click(function() {
         $('.retired').toggle();
         updatePaperCount();

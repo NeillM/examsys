@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       opener.location.reload();
       window.close();
     });
@@ -108,7 +108,7 @@ exit();
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       var new_height = $(window).height() - 105;
       $('#msg').height(new_height);
       

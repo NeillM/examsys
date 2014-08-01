@@ -134,7 +134,7 @@ if ($_GET['id'] != '1' and !$userObject->has_role('SysAdmin')) {   // Don't reco
       }
    }
    
-   $(document).ready(function() {
+    $(function () {
      updateToolbar(<?php echo $_GET['id']; ?>,<?php echo $_GET['id']; ?>);
      updateTOC();
      });

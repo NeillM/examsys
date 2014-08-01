@@ -130,7 +130,7 @@ function displayReview($review, $userObj) {
       return result;
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
         sortList: [[1,0]] 

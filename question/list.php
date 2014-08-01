@@ -103,14 +103,18 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
-        sortList: [[0,0]] 
+        sortList: [[0,0]]
       });
       
       $('body').click(function() {
         hideMenus(event);
+      });
+      
+      $('.q').dblclick(function() {
+        ed();
       });
 
     });
@@ -246,15 +250,15 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
     
     if ($_GET['type'] == 'type') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">Question Type</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">' . $string['questiontype'] . '</a>'; 
     } elseif ($_GET['type'] == 'bloom') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">Bloom\'s Taxonomy</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">' . $string['bloomstaxonomy'] . '</a>'; 
     } elseif ($_GET['type'] == 'status') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">Status</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">' . $string['status'] . '</a>'; 
     } elseif ($_GET['type'] == 'keyword') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">Keyword</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">' . $string['keyword'] . '</a>'; 
     } elseif ($_GET['type'] == 'performance') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">Performance</a>'; 
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">' . $string['performance'] . '</a>'; 
     }
   }
   echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;(<span id=\"q_count\">" . number_format($search_results->num_rows) . "</span>)<span style=\"font-weight: normal\">$bank_type</span></div>";
@@ -321,9 +325,9 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     }
     echo '"';
     if ($locked != '') {
-      echo " id=\"l$display_no\" onclick=\"selQ($q_id,$display_no,event)\" ondblclick=\"ed()\">";
+      echo " id=\"l$display_no\" onclick=\"selQ($q_id,$display_no,event)\">";
     } else {
-      echo " id=\"l$display_no\" onclick=\"selL($q_id,$display_no,event)\" ondblclick=\"ed()\">";
+      echo " id=\"l$display_no\" onclick=\"selL($q_id,$display_no,event)\">";
     }
 
     if (trim($leadin) == '') $leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';

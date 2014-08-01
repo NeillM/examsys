@@ -49,7 +49,7 @@ require '../include/sort.inc';
       document.location.href='./edit_course.php?courseID=' + courseID;
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]] 
       });

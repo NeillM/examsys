@@ -59,7 +59,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
       displayDetails();
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,1]]
       });

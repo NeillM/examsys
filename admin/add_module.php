@@ -145,7 +145,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
 ?>
 
-    $(document).ready(function() {
+    $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {

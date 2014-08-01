@@ -49,7 +49,7 @@ require '../include/sysadmin_auth.inc';
       document.location.href = './edit_LTIkeys.php?LTIkeysid=' + lineID;
     }
     
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]] 
       });

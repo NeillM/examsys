@@ -163,7 +163,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
 	<?php
 		if (count($user_results) > 0) {
 	?>
-    $(document).ready(function() {
+    $(function () {
       $("#maindata").tablesorter({ 
         // sort on the first column and third column, order asc 
         sortList: [[2,0],[3,0]] 

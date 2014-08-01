@@ -218,7 +218,7 @@ if (!isset($module_details) && $module != '0') {
     });
   }
 
-  $(document).ready(function() {
+  $(function () {
     $(".check_type").click(function() {
       check_checkboxes();
     });

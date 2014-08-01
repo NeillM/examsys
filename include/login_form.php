@@ -39,7 +39,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
 	<script>
-    $(document).ready(function() {
+    $(function () {
       $('#username').focus();
 			
 <?php

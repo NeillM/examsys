@@ -277,7 +277,7 @@ if ($lab_object !== false) {
   }
 
   // Register the events we need
-  $(document).ready(function() {
+  $(function () {
     $('.menu-time').click(extendTime);
     $('.menu-note').click(newStudentNote);
     $('.menu-toilet').click(newToiletBreak);
