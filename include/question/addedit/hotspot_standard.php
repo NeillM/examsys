@@ -33,7 +33,7 @@ if (count($question->options) > 0) {
   $option_id = -1;
 }
 ?>
-<script type="text/javascript">
+<script>
 //<![CDATA[
 <?php // Bit of a hack to get the flash to stay centred ?>
 $(function () {

@@ -42,7 +42,7 @@ $sct_type_js = rtrim($sct_type_js, ',') . ']';
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
 
-<script type="text/javascript">
+<script>
 var sct_types = <?php echo $sct_type_js ?>;
 </script>
 

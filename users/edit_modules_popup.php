@@ -109,14 +109,15 @@ if (isset($_POST['submit'])) {
 
   <title>Rog&#333;: <?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
 
-  <script type="text/javascript">
-    function closeWindow() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function() {
       window.opener.location.href = 'details.php?userID=<?php echo $_POST['userID']; ?>&tab=modules';
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="closeWindow()">
+<body>
 </body>
 </html>
 <?php

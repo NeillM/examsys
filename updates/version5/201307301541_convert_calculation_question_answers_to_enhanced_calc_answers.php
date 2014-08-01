@@ -12,7 +12,9 @@ $mysqli->autocommit(false);
 //error_reporting(E_ALL);
 //ini_set('display_errors', 1);
 
-if (!file_exists("./stopfile_convert_calc_ans_done.txt")) {
+
+if (!$updater_utils->has_updated('convert_calc_ans_done')) {
+//if (!file_exists("./stopfile_convert_calc_ans_done.txt")) {
 
   $configObj = Config::get_instance();
 
@@ -196,6 +198,7 @@ if (!file_exists("./stopfile_convert_calc_ans_done.txt")) {
         $result->close();
     }
 
-    touch("./stopfile_convert_calc_ans_done.txt");
+    //touch("./stopfile_convert_calc_ans_done.txt");
+    $updater_utils->record_update('convert_calc_ans_done');
 }
 

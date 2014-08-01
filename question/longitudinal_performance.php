@@ -48,7 +48,7 @@ check_var('q_id', 'GET', true, false, false);
     .num {text-align:right}
   </style>
   
-  <script type="text/javascript">
+  <script>
     function loadPaper(paperID) {
       window.opener.close();
       window.opener.opener.location = "../paper/details.php?paperID=" + paperID;

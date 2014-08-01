@@ -133,7 +133,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script>
   $(function() {
     $('#forgotten_pw').validate({
       rules: {

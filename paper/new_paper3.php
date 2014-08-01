@@ -150,7 +150,7 @@ if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summat
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>New Paper</title>
-  <script type="text/javascript">
+  <script>
     function jumpToPaper() {
       <?php
         if ($_POST['folder'] != '') {

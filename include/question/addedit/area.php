@@ -52,7 +52,7 @@ $mark_range = range(100, 50);
 $error_range = range(0, 50);
 ?>
 <script type="text/javascript" src="../../js/jquery.flash_q.js"></script>
-<script type="text/javascript">
+<script>
 //<![CDATA[
 $(function () {
   sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'" . $media['filename'] . "', '" . $correct . "'" ?>);

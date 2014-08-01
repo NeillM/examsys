@@ -59,7 +59,7 @@ if (!isset($_POST['submit'])) {
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript">
+  <script>
     function checkForm() {
       var checkOption = $('input:radio[name=property_id]:checked').val();
 

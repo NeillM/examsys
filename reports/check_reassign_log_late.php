@@ -44,7 +44,7 @@ $log_type   = check_var('log_type', 'GET', true, false, true);
     body {font-size:90%; background-color:#F1F5FB; margin:4px}
   </style>
 
-  <script type="text/javascript">
+  <script>
     function confirmIntention() {
       if (document.myform.button_pressed.value == 'Accept') {
         var agree = confirm("<?php echo $string['msg3']; ?>");

@@ -230,7 +230,7 @@ $paper_utils = Paper_utils::get_instance();
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/student_help.js"></script>
-  <script type="text/javascript">
+  <script>
 		function switchYear(toShow) {
 			var years = ['<?php echo implode('\',\'', $sessions_with_papers) ?>'];
 			for(var i = 0; i < years.length; i++) {

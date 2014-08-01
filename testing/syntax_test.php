@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title>syntax test</title>
 	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript">
+	<script>
 		function chide(cl) {
 			if (cl.indexOf(';')>-1) {
 				cle = cl.split(';')

@@ -69,7 +69,7 @@ if (isset($_GET['folder'])) {
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     function addQID(qID, clearall) {
       if (clearall) {
 				$('#itemID').val(',' + qID);

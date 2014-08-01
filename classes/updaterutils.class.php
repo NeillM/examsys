@@ -34,6 +34,11 @@ Class UpdaterUtils {
     $this->db_name = $db_name;
   }
   
+  /**
+   * Records a fix in the sys_updates table. This is the new system
+   * instead of the old stop files.
+   * @param string $name - The name of update to be inserted.
+   */
   public function record_update($name) {
     $result  = $this->mysqli->prepare('INSERT INTO sys_updates VALUES (?, NOW())');
     $result->bind_param('s', $name);
@@ -41,6 +46,12 @@ Class UpdaterUtils {
     $result->close();
   }
 
+  /**
+   * Determines if an update has already been applied to the system.
+   *
+   * @param string $name - The name of update to be tested.
+   * @return bool - True = fix has been applied, False = it hasn't.
+   */
   public function has_updated($name) {
     $result  = $this->mysqli->prepare('SELECT name FROM sys_updates WHERE name = ?');
     $result->bind_param('s', $name);
@@ -49,7 +60,7 @@ Class UpdaterUtils {
     $num_rows =  $result->num_rows;
     $result->close();
 
-    if ($num_rows < 1){
+    if ($num_rows < 1) {
       return false;
     }
 
@@ -81,7 +92,7 @@ Class UpdaterUtils {
 
     $result->close();
 
-    if ($num_rows < 1){
+    if ($num_rows < 1) {
       return false;
     }
 

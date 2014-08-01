@@ -93,14 +93,14 @@ $time_range = range(0, 30, 5);
 <html>
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 <head>
-    <title><?php echo $string['extendtime'] ?></title>
-    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-    <script type="text/javascript">
-        function closeWindow() {
-            window.opener.location = window.opener.location.href;
-            window.close();
-        }
-    </script>
+  <title><?php echo $string['extendtime'] ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+  <script>
+    function closeWindow() {
+      window.opener.location = window.opener.location.href;
+      window.close();
+    }
+  </script>
 </head>
 <body onload="<?php echo $onload; ?>">
 <form id="extend_time_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">

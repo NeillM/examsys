@@ -153,7 +153,7 @@ class demo_auth extends internaldb_auth {
             $this->savetodebug('Adding New Demo Button');
             $postbuttonmessage = new displaystdformmessage();
         $postbuttonmessage->pretext = <<<HTML
-<script type="text/javascript">
+<script>
 
 $(document).ready(function(){
 
@@ -171,7 +171,7 @@ HTML;
         $postbuttonmessage->pretext = $postbuttonmessage->pretext . '<br><a href="#" class="show_hide">Create Demo Account</a><br/>';
             $content0 = <<<HTML
 
-    <script type="text/javascript">
+    <script>
         function checkForm() {
             if (document.newUser.new_first_names.value == "") {
                 alert("$string[reqfirstname]");
@@ -373,7 +373,7 @@ $content=$content0.$content1.$content2.$content3;
         $newbutton->value = ' Create Demo Account ';
         $newbutton->pretext= <<<HTML
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js" type="text/javascript"></script>
-<script type="text/javascript">
+<script>
 
 $(document).ready(function(){
 

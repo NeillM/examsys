@@ -103,7 +103,7 @@ $vle_apis = array();
 
 // Root path for JS
   $cfg_js_root = <<< SCRIPT
-<script type="text/javascript">
+<script>
   if (typeof cfgRootPath == 'undefined') {
     var cfgRootPath = '$cfg_root_path';
   }

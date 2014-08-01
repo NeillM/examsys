@@ -41,15 +41,16 @@ $log_type   = check_var('log_type', 'POST', true, false, true);
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
-  <script type="text/javascript">
-    function reloadClose() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function() {
       window.opener.location.href = window.opener.location.href;
       window.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="reloadClose()">
+<body>
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
   $row_no = 0;

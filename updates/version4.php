@@ -111,7 +111,7 @@ if (round($old_version,0) >= 5) {
 }
 if (!isset($_POST['update'])) {
   ?>
-<script type="text/javascript">
+<script>
   $(document).ready(function () {
    $("#installForm").validate();
   });

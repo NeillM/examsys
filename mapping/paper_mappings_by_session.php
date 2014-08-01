@@ -60,7 +60,7 @@ $paper_type  = $propertyObj->get_paper_type();
   <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('a[rel=external]').attr('target', '_blank');
     });

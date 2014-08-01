@@ -1,5 +1,6 @@
 <?php
-if (!file_exists("./stopfile_textbox_update.txt")) {
+if (!$updater_utils->has_updated('textbox_update')) {
+//if (!file_exists("./stopfile_textbox_update.txt")) {
   $select_sql = <<< SEL
   SELECT o.id_num, o.o_id, o.option_text, o.correct, q.settings
   FROM options o
@@ -38,5 +39,6 @@ SEL;
     echo "<li>Converted textbox questions to new format</li>\n";
   }
 
-  touch("./stopfile_textbox_update.txt");
+  //touch("./stopfile_textbox_update.txt");
+  $updater_utils->record_update('textbox_update');
 }

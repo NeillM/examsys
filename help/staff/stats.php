@@ -55,7 +55,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
     .stats td {vertical-align:top; border-bottom: 1px solid #295AAD; border-right: 1px solid #295AAD}
 		th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
-  <script type="text/javascript">
+  <script>
     function displayPage(targetID, page_no) {
       for (page=1; page<=page_no; page++) {
         document.getElementById('page' + page).style.display='none';

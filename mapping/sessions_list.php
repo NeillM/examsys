@@ -57,7 +57,7 @@ if (!$module) {
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     function selSession(divID, identifier, session, VLE, evt) {
       hideSessCopyMenu(evt);
       tmp_ID = $('#oldDivID').val();

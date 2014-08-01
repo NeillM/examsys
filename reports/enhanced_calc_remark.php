@@ -135,7 +135,7 @@ $q_marks = array_flip($marks_arr);
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
   <script type="text/javascript" src="../js/jquery.enhancedcalc_override.js"></script>
-  <script type="text/javascript">
+  <script>
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>', 'nomarkmsg' : '<?php echo $string['nomarkmsg'] ?>'};
   </script>
 </head>

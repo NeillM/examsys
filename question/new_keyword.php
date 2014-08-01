@@ -45,7 +45,7 @@ require '../include/errors.inc';
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   
-  <script type="text/javascript">
+  <script>
     function updateKeywords() {
       var keywordNo = parseInt(window.opener.document.getElementById('keywordno').value);
       var oldHTML = window.opener.document.getElementById('keywordarea').innerHTML;

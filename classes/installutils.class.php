@@ -682,7 +682,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 		$priv_SQL[] = "GRANT INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
         @ob_flush();
         @flush();
@@ -1316,7 +1316,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
       <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-      <script type="text/javascript">
+      <script>
         $(function() {
           $(document).tooltip();
         });

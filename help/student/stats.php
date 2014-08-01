@@ -58,7 +58,7 @@
 		th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
 
-  <script type="text/javascript">
+  <script>
     function displayPage(targetID, page_no) {
       for (page=1; page<=page_no; page++) {
         document.getElementById('page' + page).style.display='none';

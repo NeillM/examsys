@@ -50,7 +50,7 @@ if (isset($_POST['submit'])) {
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
 
-  <script type="text/javascript">
+  <script>
     function reloadHelp() {
       window.top.location='index.php?id=<?php echo $articleid; ?>';
     }

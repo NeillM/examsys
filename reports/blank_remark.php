@@ -182,16 +182,20 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
   <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  <script type="text/javascript">
-    function reload() {
+  
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function() {
       window.opener.location = window.opener.location;
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="reload()">
+<body>
 </body>
 </html>
 
@@ -252,7 +256,7 @@ if (isset($_POST['submit'])) {
       $('#list').css('height', winH + 'px');
     }
     
-		$(document).ready(function() {
+    $(function() {
 			resizeList();
 			
 			$(window).resize(function(){

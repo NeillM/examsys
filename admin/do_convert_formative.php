@@ -62,7 +62,7 @@ $mysqli->close();
     body {background-color:#F1F5FB; font-size:80%; text-align:justifed}
   </style>
   
-  <script type="text/javascript">
+  <script>
     function closeWindow() {
       window.opener.location.href = 'summative_scheduling.php';
       self.close();

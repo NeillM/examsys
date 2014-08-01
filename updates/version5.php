@@ -74,7 +74,7 @@ if (round($old_version,0) < 5) {
 }
 if (!isset($_POST['update'])) {
   ?>
-<script type="text/javascript">
+<script>
   $(document).ready(function () {
     $("#installForm").validate();
   });
@@ -172,11 +172,11 @@ if (!isset($_POST['update'])) {
   $cfg_use_ldap         = $configObject->get('cfg_use_ldap');
 
   $cfg_web_host         = $configObject->get('cfg_web_host');
-  if($cfg_web_host == '') {
-      $cfg_web_host = $cfg_db_host;
+  if ($cfg_web_host == '') {
+    $cfg_web_host = $cfg_db_host;
   }
 
-      error_reporting(-1);
+  error_reporting(-1);
   ob_start();
 
   echo "<div>Starting at " . date("H:i:s") . "</div>";
@@ -798,6 +798,27 @@ QUERY;
 
     $sql = 'ALTER TABLE questions MODIFY COLUMN status tinyint(3) NOT NULL';
     $updater_utils->execute_query($sql, true);
+  }
+  
+  if (!$updater_utils->does_table_exist('sys_updates')) {
+    $sql = <<< QUERY
+CREATE TABLE `sys_updates` (
+  `name` varchar(255),
+  `updated` datetime NOT NULL,
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=0;
+QUERY;
+    $updater_utils->execute_query($sql, true);
+    
+    $filenames = array('stopfile_convert_calc_ans_done.txt', 'stopfile_sct_fix.txt', 'stopfile_textbox_fix.txt', 'stopfile_textbox_update.txt');
+    foreach($filenames as $filename) {
+      if (file_exists($filename)) {
+        $update_name = str_replace('stopfile_', '', $filename);
+        $update_name = str_replace('.txt' ,'', $update_name);
+        $updater_utils->record_update($update_name);
+      }
+    }
+    $mysqli->commit();
   }
 
 

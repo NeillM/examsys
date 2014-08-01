@@ -46,7 +46,7 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.qualitative.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     var commentsStringMatches = '<?php echo $string['occurencesof'] ?>';
     var commentsString = '<?php echo $string['comments'] ?>';
   </script>

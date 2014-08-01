@@ -858,7 +858,7 @@ if (isset($_POST['Submit'])) {
     <title><?php echo $string['edittitle']; ?></title>
 
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript">
+    <script>
       $(function () {
         $('#home').click(function () {
           window.opener.parent.location = "details.php?paperID=<?php echo $paperID; ?>&module=<?php echo $first_module_id; ?>";
