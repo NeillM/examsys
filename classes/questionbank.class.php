@@ -89,24 +89,24 @@ class QuestionBank {
       case 'type':
         $this->load_stats($type);
         $this->bank_types = array(
-          'area' => $this->string['area'],
-          'enhancedcalc' => $this->string['enhancedcalc'],
-          'dichotomous' => $this->string['dichotomous'],
-          'extmatch' => $this->string['extmatch'],
-          'blank' => $this->string['blank'],
-          'hotspot' => $this->string['hotspot'],
-          'info' => $this->string['info'],
-          'keyword_based' => $this->string['keyword_based'],
-          'labelling' => $this->string['labelling'],
-          'likert' => $this->string['likert'],
-          'matrix' => $this->string['matrix'],
+          'are' => $this->string['area'],
+          'enh' => $this->string['enhancedcalc'],
+          'dic' => $this->string['dichotomous'],
+          'ext' => $this->string['extmatch'],
+          'bla' => $this->string['blank'],
+          'hot' => $this->string['hotspot'],
+          'inf' => $this->string['info'],
+          'key' => $this->string['keyword_based'],
+          'lab' => $this->string['labelling'],
+          'lik' => $this->string['likert'],
+          'mat' => $this->string['matrix'],
           'mcq'=> $this->string['mcq'],
           'mrq' => $this->string['mrq'],
-          'random' => $this->string['random'],
-          'rank' => $this->string['rank'],
+          'ran' => $this->string['random'],
+          'ran' => $this->string['rank'],
           'sct' => $this->string['sct'],
-          'textbox' => $this->string['textbox'],
-          'true_false' => $this->string['true_false']
+          'tex' => $this->string['textbox'],
+          'tru' => $this->string['true_false']
         );
         break;
       case 'status':

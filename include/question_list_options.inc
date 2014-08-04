@@ -65,39 +65,6 @@ if (!isset($module_details) && $module != '0') {
     $('.highlight').removeClass('highlight');
   }
   
-  function selQ(questionID, lineID, evt) {
-    $('#menu2a').hide();
-    $('#menu2b').hide();
-    $('#menu2c').show();
-
-    highlight_line(questionID, lineID, evt);
-  }
-  
-  function selL(questionID, lineID, evt) {
-    $('#menu2a').hide();
-    $('#menu2c').hide();
-    $('#menu2b').show();
-
-    highlight_line(questionID, lineID, evt);
-  }
-  
-  function highlight_line(questionID, lineID, evt) {
-    if (evt.ctrlKey == false && evt.metaKey == false) {
-      clearAll();
-      $('#l' + lineID).addClass('highlight');
-      addQID(questionID, true);
-    } else {
-      if ($('#l' + lineID).hasClass('highlight')) {
-        $('#l' + lineID).removeClass('highlight');
-        subQID(questionID);
-      } else {
-        $('#l' + lineID).addClass('highlight');
-        addQID(questionID, false);
-      }
-    }
-    
-  }
-  
   function previewQ() {
     notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=1000,height=700,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
 	}
@@ -108,7 +75,7 @@ if (!isset($module_details) && $module != '0') {
       if (isset($_GET['team']) and $_GET['team'] != '') {
           echo "url = url + '&team=" . $_GET['team'] . "';\n";
       }
-      if(isset($_GET['keyword']) and $_GET['keyword'] != '') {
+      if (isset($_GET['keyword']) and $_GET['keyword'] != '') {
           echo "url = url + '&keyword=" . $_GET['keyword'] . "';\n";
       }
     ?>
@@ -189,12 +156,16 @@ if (!isset($module_details) && $module != '0') {
       q_type = (typeof $(this).data('ids') == 'undefined') ? $(this).val() : $(this).data('ids').toString().replace(/,/g, ',.');
       $("." + q_type).show();
       if (!$('#check_locked').attr('checked')) {
-        $("." + q_type + '.locked').hide();
+        $("." + q_type + '.lock').hide();
       }
     });
-
+    
+    count_questions();
+  }
+  
+  function count_questions() {
     var n = $(".q:visible").length;
-    $("#q_count").text(n.toLocaleString());
+    $("#q_count").text('(' + n.toLocaleString() + ')');
   }
   
   function resizeList() {
@@ -226,6 +197,38 @@ if (!isset($module_details) && $module != '0') {
     $("#check_locked").click(function() {
       check_checkboxes();
     });
+    
+    $(".q").click(function(evt) {
+      var passed_id = $(this).attr('id');
+      var remainder = passed_id.substring(1);
+      var parts = remainder.split("_");
+      var questionID = parts[0];
+      var lineID = parts[1];
+      
+      $('#menu2a').hide();
+      if ($('#' + passed_id).hasClass('lock')) {
+        $('#menu2b').hide();
+        $('#menu2c').show();
+      } else {
+        $('#menu2c').hide();
+        $('#menu2b').show();
+      }
+      
+      if (evt.ctrlKey == false && evt.metaKey == false) {
+        clearAll();
+        $('#' + passed_id).addClass('highlight');
+        addQID(questionID, true);
+      } else {
+        if ($('#' + passed_id).hasClass('highlight')) {
+          $('#' + passed_id).removeClass('highlight');
+          subQID(questionID);
+        } else {
+          $('#' + passed_id).addClass('highlight');
+          addQID(questionID, false);
+        }
+      }
+      
+    });
 
 <?php
 if (isset($_GET['type']) and $_GET['type'] == 'objective') {
@@ -252,8 +255,12 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
     })
 <?php
 }
+if ($type == 'all') {
+  echo "count_questions();\n";
+} else {
+  echo "check_checkboxes();\n";
+}
 ?> 
-    check_checkboxes();
     resizeList();
       
     $(window).resize(function(){
@@ -335,7 +342,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
     
     $subtypes = $qbank->get_categories($type);
     
-    foreach($subtypes as $id=>$subtype) {
+    foreach ($subtypes as $id=>$subtype) {
       $data = '';
 
       if ($_GET['type'] == 'all') {

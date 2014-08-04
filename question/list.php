@@ -31,6 +31,9 @@ require_once '../classes/keywordutils.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
+require_once '../include/errors.inc';
+
+$type = check_var('type', 'GET', true, false, true);
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 
@@ -41,9 +44,6 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 $statusSQL  = '';
-$type       = $_GET['type'];
-
-
 if (isset($_GET['status'])) {
   $statusSQL = " AND status = " . $_GET['status'];
 }
@@ -91,9 +91,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
   <style type="text/css">
-    .q {
-      display: none;
-    }
+    
   <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
@@ -107,10 +105,6 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
         sortList: [[0,0]]
-      });
-      
-      $('body').click(function() {
-        hideMenus(event);
       });
       
       $('.q').dblclick(function() {
@@ -261,7 +255,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">' . $string['performance'] . '</a>'; 
     }
   }
-  echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;(<span id=\"q_count\">" . number_format($search_results->num_rows) . "</span>)<span style=\"font-weight: normal\">$bank_type</span></div>";
+  echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";
   echo "</div>\n";
 
 	$params = '';
@@ -286,9 +280,9 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <?php
   while ($search_results->fetch()) {
     echo '<tr class="q';
-    
+
     if ($_GET['type'] == 'type' or $_GET['type'] == 'all') {
-      echo ' ' . $q_type;
+      echo ' ' . substr($q_type,0,3);
     } elseif ($_GET['type'] == 'status') {
       echo ' ' . $status;
     } elseif ($_GET['type'] == 'keyword') {
@@ -321,37 +315,38 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       echo ' ' . $extra_field;
     } 
     if ($locked != '') {
-      echo ' locked';
+      echo ' lock';
     }
     echo '"';
-    if ($locked != '') {
-      echo " id=\"l$display_no\" onclick=\"selQ($q_id,$display_no,event)\">";
-    } else {
-      echo " id=\"l$display_no\" onclick=\"selL($q_id,$display_no,event)\">";
-    }
+    
+    echo " id=\"l" . $q_id . "_" . $display_no . "\">";
+    
 
+    $leadin = str_replace('&nbsp;', ' ', $leadin);
+    $leadin = str_replace("\n", '', $leadin);
+    $leadin = str_replace("\r", '', $leadin);
     if (trim($leadin) == '') $leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
     if (strlen($leadin) > 160) {
       $leadin = mb_substr($leadin, 0, 160) . '...';
     }
 
     if ($locked == '') {
-      echo "<td class=\"unlicon\">";
+      echo '<td class="u">';
     } else {
-      echo "<td class=\"licon\">";      
+      echo '<td class="l">';      
     }
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />';
     }
-    echo "$leadin</td>";
-    echo "<td class=\"nobr\">" . $string[$q_type] . "</td>";
+    echo $leadin . '</td>';
+    echo '<td class="nobr">' . $string[$q_type] . '</td>';
     if ($type == 'keyword' or $type == 'bloom') {
-      echo "<td>" . $extra_field . "</td>\n";    
+      echo '<td>' . $extra_field . '</td>';    
     } elseif ($type == 'performance') {
-      echo "<td>" . ($p / 100) . "</td>\n";    
-      echo "<td>" . ($d / 100) . "</td>\n";    
+      echo '<td>' . ($p / 100) . '</td>';    
+      echo '<td>' . ($d / 100) . '</td>';    
     }
-    echo "<td>" . $modified . "</td>\n";
+    echo '<td>' . $modified . '</td>';
     echo "<td>" . $status_array[$status]->get_name() . "</td></tr>\n";
     $display_no++;
   }

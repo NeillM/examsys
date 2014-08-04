@@ -29,13 +29,13 @@
 .nobr {
   white-space: nowrap;
 }
-.licon {
+.l {
   background-image: url('../artwork/small_padlock.png');
   background-repeat: no-repeat;
   background-position: left center;
   padding-left: 22px !important;
 }
-.unlicon {
+.u {
   padding-left: 22px !important;
 }
 input.check_type {
