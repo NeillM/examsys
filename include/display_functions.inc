@@ -632,20 +632,21 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         echo '<tr id="q' . $question_no . '_opt' . $part_id . '"' . $class_mod . '><td align="center">';
 
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
+        $optionID = 'q' . $question_no . '_' . $tmp_part_id;
         if ($tmp_user_answer == 't') {
-          echo '<input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="t" checked /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
+          echo '<input type="radio" name="' . $optionID . '" value="t" checked="checked" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
         } elseif ($tmp_user_answer == 'f') {
-          echo '<input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" checked /></td>';
+          echo '<input type="radio" name="' . $optionID . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" checked="checked" /></td>';
         } elseif ($tmp_user_answer == 'a') {
-          echo '<input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
+          echo '<input type="radio" name="' . $optionID . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
         } else {
-          echo '<input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
+          echo '<input type="radio" name="' . $optionID . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
         }
         if ($abstain == true) {
           if ($tmp_user_answer == 'a') {
-            echo "<td align=\"center\"><input type=\"radio\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"a\" checked /></td>";
+            echo "<td align=\"center\"><input type=\"radio\" name=\"$optionID\" value=\"a\" checked=\"checked\" /></td>";
           } else {
-            echo "<td align=\"center\"><input type=\"radio\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"a\" /></td>";
+            echo "<td align=\"center\"><input type=\"radio\" name=\"$optionID\" value=\"a\" /></td>";
           }
         }
         echo '<td>';
@@ -679,14 +680,15 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $scale_size = substr_count($question['display_method'],'|');
         if ($likert_display[$scale_size] == 'true') {
           echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked';
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked="checked"';
           echo "/></td>";
         }
         for ($i=1; $i<=$scale_size; $i++) {
+          $optionID = 'q' . $question_no . '_' . $part_id;
           if (isset($user_answers[$current_screen][$q_id]) and $i == $user_answers[$current_screen][$q_id]) {
-            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" checked /></td>";
+            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"$optionID\" value=\"$i\" checked=\"checked\" /></td>";
           } else {
-            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"$i\" /></td>";
+            echo "<td class=\"likert_button\"><input type=\"radio\" name=\"$optionID\" value=\"$i\" /></td>";
           }
         }
         echo "</tr>\n";
@@ -695,7 +697,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked /></td><td>";
+            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked=\"checked\" /></td><td>";
           } else {
             echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
           }
@@ -712,7 +714,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           echo "</td></tr>\n";
         } elseif ($question['display_method'] == 'horizontal') {
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" checked />";
+            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" checked=\"checked\" />";
           } else {
             echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" />";
           }
@@ -730,17 +732,18 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         break;
       case 'mrq':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
+        $optionID = 'q' . $question_no . '_' . $tmp_part_id;
         if ($paper_type == 3) {
           if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
-            echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" checked /></td><td>";
+            echo "<tr><td><input type=\"checkbox\" name=\"$optionID\" id=\"$optionID\" value=\"y\" checked=\"checked\" /></td><td>";
           } else {
-            echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" /></td><td>";
+            echo "<tr><td><input type=\"checkbox\" name=\"$optionID\" id=\"$optionID\" value=\"y\" /></td><td>";
           }
         } else {
           if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" checked /></td><td>";
+            echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"$optionID\" id=\"$optionID\" value=\"y\" checked=\"checked\" /></td><td>";
           } else {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" value=\"y\" /></td><td>";
+            echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"$optionID\" id=\"$optionID\" value=\"y\" /></td><td>";
           }
         }
 
@@ -849,7 +852,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       case 'sct':
         $tmp_part_id = $question['option_order'][$part_id-1] + 1;
         if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked /></td><td>";
+          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked=\"checked\" /></td><td>";
         } else {
           echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
         }
@@ -1225,7 +1228,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
       if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
         if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
-          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],6) . "\" /></td></tr>\n";
+          echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked=\"checked\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],6) . "\" /></td></tr>\n";
         } else {
           echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
         }
@@ -1255,7 +1258,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     if ($question['display_method'] == 'other') {
       $part_id++;
       if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {
-        echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked /></td>";
+        echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /></td>";
       } else {
         echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
       }
@@ -1263,7 +1266,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     } elseif ($question['q_type'] == 'mrq' and $display_option['marks_incorrect'] < 0) {
 		  // Include an abstain option if negative marking is used.
       if ($answer != '' and $answer == 'a') {
-				echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" checked /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+				echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" checked=\"checked\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
 			} else {
 				echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
 			}
