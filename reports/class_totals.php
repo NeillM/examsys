@@ -182,26 +182,38 @@ ob_start();
     $('#percent').val(tmpPercent);
 
     if (tmpMetadataID == '') {
-      $('#item1').css('color', '#C0C0C0');
-      $('#item2').css('color', '#C0C0C0');
+      $('#item1').removeClass('popup_row');
+      $('#item1').addClass('popup_row_disabled'); 
+      $('#item2').removeClass('popup_row');
+      $('#item2').addClass('popup_row_disabled'); 
     } else {
-      $('#item1').css('color', '#000000');
-      $('#item2').css('color', '#000000');
+      $('#item1').addClass('popup_row');
+      $('#item1').removeClass('popup_row_disabled');
+      $('#item2').addClass('popup_row');
+      $('#item2').removeClass('popup_row_disabled');
     }
 
     if (tmpReassign == 'y') {
-      $('#item3').css('color', '#C0C0C0');
-      $('#item5').css('color', '#000000');
+      $('#item5').addClass('popup_row');
+      $('#item5').removeClass('popup_row_disabled');
+
+      $('#item3').removeClass('popup_row');
+      $('#item3').addClass('popup_row_disabled');      
     } else {
-      $('#item3').css('color', '#000000');
-      $('#item5').css('color', '#C0C0C0');
+      $('#item3').addClass('popup_row');
+      $('#item3').removeClass('popup_row_disabled');
+
+      $('#item5').removeClass('popup_row');
+      $('#item5').addClass('popup_row_disabled');
     }
 
     if (tmpLogLate == 'y') {
-      $('#item7').css('color', '#000000');
+      $('#item7').addClass('popup_row');
+      $('#item7').removeClass('popup_row_disabled');
       $('#log_late_icon').show();
     } else {
-      $('#item7').css('color', '#C0C0C0');
+      $('#item7').removeClass('popup_row');
+      $('#item7').addClass('popup_row_disabled'); 
       $('#log_late_icon').hide();
     }
   }
@@ -307,21 +319,16 @@ ob_start();
 require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu(30);
-
-$popup_width = 180;
-if ($language != 'en') {		// Make wider for non-English languages which have longer words
-  $popup_width = 300;
-}
 ?>
 <div id="menudiv" class="popupmenu">
-  <div class="popup_row" onclick="viewScript();">
+  <div class="popup_row" onclick="viewScript();" id="item1">
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item1"><?php echo $string['examscript'] ?></div>
+    <div class="popup_title"><?php echo $string['examscript'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="viewFeedback();">
+  <div class="popup_row" onclick="viewFeedback();" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item2"><?php echo $string['feedback']; ?></div>
+    <div class="popup_title"><?php echo $string['feedback']; ?></div>
   </div>
   
   <div class="popup_divider_row">
@@ -329,14 +336,14 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
   
-  <div class="popup_row" onclick="viewProfile();">
+  <div class="popup_row" onclick="viewProfile();" id="item3">
     <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item3"><?php echo $string['studentprofile'] ?></div>
+    <div class="popup_title"><?php echo $string['studentprofile'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="newStudentNote();">
+  <div class="popup_row" onclick="newStudentNote();" id="item4">
     <div class="popup_icon"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item4"><?php echo $string['newnote'] ?></div>
+    <div class="popup_title"><?php echo $string['newnote'] ?></div>
   </div>
   
   <div class="popup_divider_row">
@@ -344,27 +351,27 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
 
-  <div class="popup_row" onclick="reassignScript();">
+  <div class="popup_row" onclick="reassignScript();" id="item5">
     <div class="popup_icon"><img src="../artwork/guest_account_16.png" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item5"><?php echo $string['reassigntouser']; ?></div>
+    <div class="popup_title"><?php echo $string['reassigntouser']; ?></div>
   </div>
 <?php
   if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
     $action = 'resetTimer();';
-    $text_color = 'black';
+    $class = 'popup_row';
   } else {
     $action = '$(\'#menudiv\').hide()';
-    $text_color = '#C0C0C0';
+    $class = 'popup_row_disabled';
   }
 ?>
-  <div class="popup_row" onclick="<?php echo $action ?>">
+  <div class="<?php echo $class ?>" onclick="<?php echo $action ?>">
     <div class="popup_icon"></div>
-    <div class="popup_title" id="item6" style="color:<?php echo $text_color ?>"><?php echo $string['resettimer']; ?></div>  
+    <div class="popup_title" id="item6"><?php echo $string['resettimer']; ?></div>  
   </div>
       
-  <div class="popup_row" onclick="reassignLogLate();">
+  <div class="popup_row" onclick="reassignLogLate();" id="item7">
     <div class="popup_icon"><img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item7"><?php echo $string['latesubmissions']; ?></div>
+    <div class="popup_title"><?php echo $string['latesubmissions']; ?></div>
   </div>
 </div>
 <?php
