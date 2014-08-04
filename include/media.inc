@@ -47,9 +47,9 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
   // Is the file an image or something else (e.g. RasMol)?
   if (in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
     if ($border_color == '') {
-      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top\" />";
+      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" alt=\"Image\" />";
     } else {
-      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"0\" alt=\"Image\" style=\"vertical-align:text-top; border: 1px solid $border_color\" />";
+      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" alt=\"Image\" style=\"border: 1px solid $border_color\" />";
     }
   } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
     $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"{$configObject->get('cfg_root_path')}/media/$filename\">Audio Clip</a>";

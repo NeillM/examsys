@@ -1,26 +1,10 @@
-
-function onoff(questionID, itemID) {
-  objID = questionID + '_' + itemID;
-  if (document.getElementById(objID).className == "act") {
-    document.getElementById(objID).className = "inact";
-    setting = '1';
-  } else {
-    document.getElementById(objID).className = "act";
-    setting = '0';
-  }
-  objID = 'dismiss' + questionID;
-  current_value = document.getElementById(objID).value;
-  new_value = current_value.slice(0,itemID-1) + setting + current_value.slice(itemID,current_value.length);
-  document.getElementById(objID).value = new_value;
-}
-
 function UpdateClock( hours, minutes, seconds) {
   KillClock();
   
-  if( hours == 0 ){
+  if ( hours == 0 ){
     hours   = '';
     minutes = ( ( minutes  < 10 ) ? "0" : "" ) + minutes;
-  }else{
+  } else {
     hours   = ( ( hours < 10 ) ? "0" : "" ) + hours;
     minutes = ( ( minutes  < 10 ) ? ":0" : ":" ) + minutes;
   }
@@ -148,7 +132,7 @@ $(document).ready(function(){
     if (typeof(calc) == 'object' && calc.closed != true) {
       calc.focus();
     } else {
-      calc = window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=364,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
+      calc = window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=364,top=10,left="+($(window).width() - 280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
       if (window.focus) {
         calc.focus();
       }
@@ -162,8 +146,36 @@ $(document).ready(function(){
   $('#finish').click(function() {
     $('#button_pressed').val('finish');
   });
+  
+  $('.act').click(function() {
+    onoff($(this).attr('id'));
+  });
+
+  $('.inact').click(function() {
+    onoff($(this).attr('id'));
+  });
 
 });
+
+function onoff(objID) {
+  var parts = objID.split("_");
+  var questionID = parts[0];
+  var itemID = parts[1];
+
+  if ($('#' + objID).hasClass("act")) {
+    $('#' + objID).addClass("inact")
+    $('#' + objID).removeClass("act")
+    setting = '1';
+  } else {
+    $('#' + objID).addClass("act")
+    $('#' + objID).removeClass("inact")
+    setting = '0';
+  }
+  objID = 'dismiss' + questionID;
+  current_value = $('#' + objID).val();
+  new_value = current_value.slice(0,itemID-1) + setting + current_value.slice(itemID,current_value.length);
+  $('#' + objID).val(new_value);      
+}
 
 function write_string(p_string) {
   document.write(p_string);

@@ -704,7 +704,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           } else {
             $class_type = 'act';
           }
-          if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" onclick=\"onoff($question_no,$tmp_part_id)\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
+          if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
           if ($display_option['o_media'] != '') {
             if ($display_option['option_text'] != '') echo '<br />';
             echo display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'], '');
@@ -750,7 +750,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           $class_type = 'act';
         }
 
-        if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" onclick=\"onoff($question_no,$part_id)\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
+        if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
         if ($display_option['o_media'] != '') {
           if ($display_option['option_text'] != '') echo '<br />';
           echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
@@ -839,7 +839,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         } else {
           $class_type = 'act';
         }
-        echo "<td><span class=\"$class_type\" onclick=\"onoff($question_no,$tmp_part_id)\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
+        echo "<td><span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
         if ($display_option['correct'] != 0) {
           $marks += $display_option['marks_correct'];
         } elseif ($question['score_method'] == 'Mark per Option') {
@@ -858,7 +858,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         } else {
           $class_type = 'act';
         }
-        if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" onclick=\"onoff($question_no,$tmp_part_id)\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
+        if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
         echo "</td></tr>\n";
         break;
       case 'true_false':
