@@ -44,4 +44,5 @@ $string['bloomstaxonomy'] = 'Bloom\'s Taxonomy';
 $string['status'] = 'Status';
 $string['keyword'] = 'Keyword';
 $string['performance'] = 'Performance';
+$string['learningoutcome'] = 'Learning Outcome';
 ?>

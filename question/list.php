@@ -135,7 +135,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
  } elseif (isset($_GET['bloom'])) {
     $bank_type = ': ' . $_GET['type'];
   } elseif ($_GET['type'] == 'performance') {
-    $types = array('veryeasy' => 'Very Easy', 'easy' => 'Easy', 'moderate' => 'Moderate', 'hard' => 'Hard', 'veryhard' => 'Very Hard', 'highest' => 'Highest', 'high' => 'High', 'intermediate'  => 'Intermediate', 'low'  => 'Low');
+    $types = array('ve' => 'Very Easy', 'e' => 'Easy', 'm' => 'Moderate', 'h' => 'Hard', 'vh' => 'Very Hard', 'highest' => 'Highest', 'high' => 'High', 'intermediate'  => 'Intermediate', 'low'  => 'Low');
     $bank_type = ': ' . $types[$_GET['subtype']];
   } elseif ($module != '') {
     $bank_type = ": $module_code";
@@ -288,18 +288,18 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     } elseif ($_GET['type'] == 'keyword') {
       echo ' ' . $p;
     } elseif ($_GET['type'] == 'bloom' and $bloom != '') {
-      echo ' ' . strtolower($bloom);
+      echo ' ' . substr(strtolower($bloom),0,3);
     } elseif ($_GET['type'] == 'performance') {
         if ($p >= 80 and $p <= 100) {
-          echo ' veryeasy';
+          echo ' ve';     // Very Easy
         } elseif ($p >= 60 and $p < 80) {
-          echo ' easy';
+          echo ' e';      // Easy
         } elseif ($p >= 40 and $p < 60) {
-          echo ' moderate';
+          echo ' m';      // Moderate
         } elseif ($p >= 20 and $p < 40) {
-          echo ' hard';
+          echo ' h';      // Hard
         } elseif ($p >= 0 and $p < 20) {
-          echo ' veryhard';
+          echo ' vh';     // Very Hard
         }
 
         if ($d >= 35) {

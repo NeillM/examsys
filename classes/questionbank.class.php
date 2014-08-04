@@ -121,22 +121,22 @@ class QuestionBank {
       case 'bloom':
         $this->load_stats($type);
         $this->bank_types = array(
-          'knowledge' => $this->string['knowledge'],
-          'comprehension' => $this->string['comprehension'],
-          'application' => $this->string['application'],
-          'analysis' => $this->string['analysis'],
-          'synthesis' => $this->string['synthesis'],
-          'evaluation' => $this->string['evaluation']
+          'kno' => $this->string['knowledge'],
+          'com' => $this->string['comprehension'],
+          'app' => $this->string['application'],
+          'ana' => $this->string['analysis'],
+          'syn' => $this->string['synthesis'],
+          'eva' => $this->string['evaluation']
         );
         break;
       case 'performance':
         $this->load_performance_stats();
         $this->bank_types = array(
-            'veryeasy' => $this->string['veryeasy'],
-            'easy' => $this->string['easy'],
-            'moderate' => $this->string['moderate'],
-            'hard' => $this->string['hard'],
-            'veryhard' => $this->string['veryhard'],
+            've' => $this->string['veryeasy'],
+            'e' => $this->string['easy'],
+            'm' => $this->string['moderate'],
+            'h' => $this->string['hard'],
+            'vh' => $this->string['veryhard'],
             'highest' => $this->string['highest'],
             'high' => $this->string['high'],
             'intermediate' => $this->string['intermediate'],
@@ -151,7 +151,7 @@ class QuestionBank {
   }
   
   private function load_performance_stats() {
-    $this->stats = array('veryeasy'=>0, 'easy'=>0, 'moderate'=>0, 'hard'=>0, 'veryhard'=>0, 'highest'=>0, 'high'=>0, 'intermediate'=>0, 'low'=>0);
+    $this->stats = array('ve'=>0, 'e'=>0, 'm'=>0, 'h'=>0, 'vh'=>0, 'highest'=>0, 'high'=>0, 'intermediate'=>0, 'low'=>0);
     
     $status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
     $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
@@ -163,15 +163,15 @@ class QuestionBank {
     $result->bind_result($p, $d, $q_id);
     while ($result->fetch()) {
       if ($p >= 80 and $p <= 100) {
-        $this->stats['veryeasy']++;
+        $this->stats['ve']++;
       } elseif ($p >= 60 and $p < 80) {
-        $this->stats['easy']++;
+        $this->stats['e']++;
       } elseif ($p >= 40 and $p < 60) {
-        $this->stats['moderate']++;
+        $this->stats['m']++;
       } elseif ($p >= 20 and $p < 40) {
-        $this->stats['hard']++;
+        $this->stats['h']++;
       } elseif ($p >= 0 and $p < 20) {
-        $this->stats['veryhard']++;
+        $this->stats['vh']++;
       }
 
       if ($d >= 35 and $d <=100) {

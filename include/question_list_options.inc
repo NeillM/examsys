@@ -308,26 +308,24 @@ if ($type == 'all') {
 
 <?php
 switch ($_GET['type']) {
-  case 'all':
-    $display_type = 'All Questions';
-    break;    
+  case 'all':    
   case 'type':
-    $display_type = 'Types';
+    $display_type = $string['type'];
     break;
   case 'status':
-    $display_type = 'Status';
+    $display_type = $string['status'];
     break;
   case 'bloom':
-    $display_type = 'Bloom\'s Taxonomy';
+    $display_type = $string['bloomstaxonomy'];
     break;
   case 'keyword':
-    $display_type = 'Keywords';
+    $display_type = $string['keyword'];
     break;
   case 'performance':
-    $display_type = 'Performance';
+    $display_type = $string['performance'];
     break;
   case 'objective':
-    $display_type = 'Learning Outcome';
+    $display_type = $string['learningoutcome'];
     break;
 }
 echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
