@@ -41,5 +41,5 @@ $string['createnewquestion'] = 'Utwórz nowe pytanie';
 $string['questions'] = 'Pytania';
 $string['papers'] = 'Arkusze';
 $string['people'] = 'Osoby';
-$string['recent'] = 'Recent';
+$string['recent'] = 'Niedawny';
 ?>

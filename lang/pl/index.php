@@ -57,7 +57,7 @@ $string['duplicatefoldername'] = 'Ta nazwa folderu jest już wykorzystywana, uż
 $string['deadline'] = 'Termin finalizacji:';
 $string['nomodules'] = 'Nie jesteś członkiem żadnego zespołu. Skontaktuj się z nami, aby uzyskać pomoc:';
 $string['papersforreview'] = 'Arkusze do recenzji';  
-$string['recent'] = 'Recent';
-$string['unassigned'] = 'Unassigned';
-$string['unassignedmsg'] = 'Questions/papers not on any module';
+$string['recent'] = 'niedawny';
+$string['unassigned'] = 'Nieprzypisane';
+$string['unassignedmsg'] = 'Pytania/arkusze nie są przypisane do żadnego modułu';
 ?>

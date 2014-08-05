@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['savefailattempts'] = 'Save Fail Attempts';
+$string['savefailattempts'] = 'Zachowaj nieudane próby';
 $string['student'] = 'Student'; //cognate
 $string['paper'] = 'Arkusz';
 $string['client'] = 'Użytkownik';
 $string['datetime'] = 'Data/Czas';
-$string['screen'] = 'Screen';
+$string['screen'] = 'Ekran';
 ?>

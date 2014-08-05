@@ -16,7 +16,7 @@
 
 $string['statistics'] = 'Statystyka';
 $string['questionsbyschool'] = 'Pytania wg. katedry';
-$string['school'] = 'School';
+$string['school'] = 'Katedra';
 $string['info'] = 'Blok Informacyjny';
 $string['keyword_based'] = 'Pytanie ze słowem kluczowym';
 $string['random'] = 'Blok pytań losowanych';

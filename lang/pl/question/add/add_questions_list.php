@@ -25,5 +25,5 @@ $string['modified'] = 'Zmienione';
 $string['status'] = 'Status'; //cognate
 $string['locked'] = 'Zablokowane';
 $string['warningnoleadin'] = 'Uwaga: brak wprowadzenia do pytania!';
-$string['bykeyword'] = 'By Keyword';
+$string['bykeyword'] = 'wg. słowa klucz.';
 ?>

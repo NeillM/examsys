@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['err'] = '<strong>ERROR:</strong> Requested toilet break cannot be found.';
-$string['toiletbreak'] = '<strong>Toilet Break</strong>';
+$string['err'] = '<strong>Błąd:</strong> Poszukiwana przerwa na wyjście do toalety nie może być znaleziona.';
+$string['toiletbreak'] = '<strong>Przerwa na wyjście do toalety</strong>';
 ?>
