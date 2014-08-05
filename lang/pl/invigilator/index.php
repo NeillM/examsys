@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -23,21 +24,22 @@ $string['emergencynumbers'] = 'Numery awaryjne';
 $string['title'] = 'Tytuł';
 $string['surname'] = 'Nazwisko';
 $string['forenames'] = 'Imiona';
-$string['extension_mins']  = 'Przedłużenie (min)';
+$string['extension_mins'] = 'Przedłużenie (min)';
 $string['endtime'] = 'Czas końcowy';
-$string['extendtimeby']     = 'Przedłuż czas o';
-$string['extendtime']       = 'Przedłuż czas';
-$string['addnote']          = 'Dodaj notatkę';
-$string['currenttime']      = 'Aktualny czas';
-$string['start']     		= 'Start'; //cognate
-$string['end']      		= 'Koniec';
+$string['extendtimeby'] = 'Przedłuż czas o';
+$string['extendtime'] = 'Przedłuż czas';
+$string['addnote'] = 'Dodaj notatkę';
+$string['toiletbreak'] = 'Przerwa na wyjście do toalety';
+$string['currenttime'] = 'Aktualny czas';
+$string['start'] = 'Start'; //cognate
+$string['end'] = 'Koniec';
 $string['start_but'] = 'Rozpocznij'; //cognate
-$string['endat_but']  = 'Zakończ o';
-$string['session_end'] 		= 'Koniec sesji';
+$string['endat_but'] = 'Zakończ o';
+$string['session_end'] = 'Koniec sesji';
 $string['duration'] = 'Czas trwania';
-$string['mins']      = 'min.';
-$string['hour']      = 'godzina';
-$string['hours']     = 'godziny';
+$string['mins'] = 'min.';
+$string['hour'] = 'godzina';
+$string['hours'] = 'godziny';
 $string['papernote'] = 'Uwagi dot. arkusza';
 $string['extratime'] = 'Dodatkowy czas';
 $string['preexam'] = 'Przed egzaminem';
@@ -61,8 +63,8 @@ $string['postexamlist'] = '<ol><li>"To już koniec egzaminu. Proszę przejść d
     </ol>';
 $string['time'] = 'Czas';
 $string['timedexam'] = 'Egzamin odmierzany czasowo:';
-$string['timeerror'] = 'Błąd czasu'; 
-$string['timeerrormsg'] = 'Egzamin musi trwać co najmniej %d minut'; 
+$string['timeerror'] = 'Błąd czasu';
+$string['timeerrormsg'] = 'Egzamin musi trwać co najmniej %d minut';
 $string['examquestionclarifications'] = 'Wyjaśnienie pytania egzaminacyjnego';
 $string['midexamclarrifications'] = 'Wyjaśnienia śródegzaminacyjne';
 $string['examchecklist'] = 'Zestawienie dla egzaminu';

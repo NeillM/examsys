@@ -18,5 +18,5 @@ $string['externalexaminers'] = 'Zewnetrzni egzaminatorzy';
 $string['initialinvitation'] = 'Poczatkowe zaproszenie';
 $string['reminder'] = 'Przypomnienie';
 $string['msg'] = 'Kliknij na nazwisko zewnetrznego egzaminatora, do którego ma byc wyslany email aby przedstawic okno edytora.';
-$string['noexternals'] = "There are currently no externals assigned to the paper. Please use 'Edit Properties' to add some.";
+$string['noexternals'] = "Obecnie żaden egzaminator zewnętrzny nie jest przypisany do arkusza. Użyj 'Edytuj Właściwości' aby któregoś dodać.";
 ?>
