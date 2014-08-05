@@ -90,7 +90,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
@@ -114,6 +114,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="./js/toprightmenu.js"></script>
+  <script type="text/javascript" src="./js/sidebar.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
   <script>
     $(function () {
@@ -124,6 +125,11 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
         }
       });
       $('form').removeAttr('novalidate');
+      
+      $('body').click(function() {
+        hideMenus();
+      });
+      
 		});
 		
     function startPaper(paperID, fullsc) {
@@ -189,7 +195,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   }
 ?>
 
-<div class="head_title" style="margin-bottom:6px">
+<div class="head_title">
   <div><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div style="padding:6px 6px 6px 16px">
     <img src="./artwork/r_logo.gif" alt="logo" class="logo_img" />
@@ -202,8 +208,17 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   if ($as_pos !== false) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"greywarn\"><img src=\"./artwork/agent.png\" width=\"32\" height=\"32\" alt=\"Impersonate\" /></div></td><td><div class=\"greywarn\">" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
   }
+  
+  $staff_team_array = $userObject->get_staff_team_modules();
+  $module_no = count($staff_team_array);
+  if ($module_no == 0) {
+    //echo '<div style="color:#C00000; padding-left:15px"><img src="./artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"redwarn\"><img src=\"./artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></div></td><td><div class=\"redwarn\"><strong>" . $string['warning'] . "</strong> " . $string['nomodules'] . " <a href=\"mailto:" . $configObject->get('support_email') . "\" style=\"color:#316AC5\">" . $configObject->get('support_email') . "</div></td></tr></table>\n";
+  }
+  
+  
 ?>
-<div style="padding-left:6px; padding-right:14px">
+<div style="padding-top:6px; padding-left:6px; padding-right:14px">
 <?php
   // Check for any news/announcements
   foreach ($announcements as $announcement) {
@@ -263,8 +278,6 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 <?php
   echo "<br />\n";
   // -- Display modules ------------------------------------
-  $staff_team_array = $userObject->get_staff_team_modules();
-
   echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['mymodules'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
   if ($userObject->has_role('SysAdmin')) {
@@ -279,10 +292,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   $url = './module/index.php?module=0';
   echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['unassigned'] . "</a><br /><span class=\"grey\">" . $string['unassignedmsg'] . "</span></div></div>\n";
 
-  $module_no = count($staff_team_array);
-  if ($module_no == 0) {
-    echo '<div style="color:#C00000; padding-left:15px"><img src="./artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
-  }
+
   
 
   $mysqli->close();

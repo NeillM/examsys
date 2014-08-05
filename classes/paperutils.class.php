@@ -551,4 +551,26 @@ Class PaperUtils {
     return $interactive;
   }
 
+  /**
+   * Creates a list of the last 10 papers accessed by a member of staff.
+   * @param int $userID - ID of the user we want last 10 papers for.
+   * @param object $db  - Database connection.
+   * @return array      - List of 10 last papers keyed by paperID.
+   */
+  public function get_recent($userID, $db) {
+    $recent = array();
+    
+    $result = $db->prepare("SELECT paperID, paper_title FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->bind_result($paperID, $paper_title);
+    $result->store_result();
+    while ($result->fetch()) {
+      $recent[$paperID] = $paper_title;
+    }
+    $result->close();    
+    
+    return $recent;
+  }
+  
 }

@@ -303,7 +303,7 @@ if ($type == 'all') {
 
 <div>
 <div class="menuitem" id="search"><a href="search.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search']; ?></a></div>
-<div class="menuitem cascade" id="newquestion" onclick="showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event); return false;"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion']; ?></a></div>
+<div class="menuitem cascade" id="newquestion" onclick="showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event)"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
 <?php

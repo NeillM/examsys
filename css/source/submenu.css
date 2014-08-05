@@ -8,10 +8,10 @@ div#left-sidebar {
   position: absolute;
   top: 0;
   left: 0;
-  width: 233px;
+  width: 227px;
   height: 100%;
   padding-right: 0;
-  padding-left: 10px;
+  padding-left: 16px;
   padding-top: 4px;
   padding-bottom: 4px;
   background-color: #D3E5FF;
@@ -217,7 +217,7 @@ a.greylink:hover {
 }
 .menu_list {
   margin: 4px 0 0 0;
-  padding-left: 13px;
+  padding-left: 0;
   list-style: none;
 }
 .menu_list li {
@@ -241,7 +241,7 @@ a.greylink:hover {
   background: transparent url('../artwork/screen_icon_delete_off.png') no-repeat 2px center;
 }
 a.checklist {
-  color: black;
+  color: white;
   text-decoration: none;
 }
 .ico {
@@ -250,8 +250,10 @@ a.checklist {
 }
 .submenuheading {
   font-weight: bold;
-  padding-top: 15px;
+  padding-top: 14px;
+  padding-bottom: 3px;
   margin-left: 2px;
+  font-size: 120%;
 }
 #menu2b, #menu2c {
   display: none;
@@ -262,7 +264,7 @@ div.iefixdiv {
 .sidebar_icon {
 	width: 16px;
 	height: 16px;
-	padding-left: 13px;
+	padding-left: 0;
 	padding-right: 8px;
 	padding-top: 3px;
 	padding-bottom: 6px;

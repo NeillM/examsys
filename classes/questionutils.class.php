@@ -210,7 +210,7 @@ SQL;
     }
     $update->close();
 
-    //questions may be on modules the current users is not in - should we exclude these from the delete
+    // Questions may be on modules the current users is not in - should we exclude these from the delete
     $update = $db->prepare("DELETE FROM questions_modules WHERE q_id = ?");
     $update->bind_param('i', $q_id);
     $update->execute();
@@ -221,7 +221,7 @@ SQL;
   }
 
   /**
-  * updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
+  * Updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
 	* @param resource $db the database connection.
@@ -229,11 +229,12 @@ SQL;
   * @return void
   */
   static function update_modules($modules, $q_id, $db, $userObj) {
-    if ($userObj->has_role('SysAdmin')) {
-      //sysadmin
-      $user_can_delete = ''; //no restrictions
-    } else {
-      $user_can_delete = "AND idMod IN (" . implode(',', array_keys($userObj->get_staff_modules())) . ")"; //users can only remove modules if they are on the team
+    $user_can_delete = '';
+    if (!$userObj->has_role('SysAdmin')) {    // If SysAdmin no restrictions in deleting.
+      $staff_modules = $userObj->get_staff_modules();
+      if (count($staff_modules) > 0) {
+        $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
+      }
     }
 
     $editProperties = $db->prepare("DELETE FROM questions_modules WHERE q_id = ? $user_can_delete");
@@ -245,7 +246,7 @@ SQL;
   }
 
   /**
-  * add modules to a question ignoring any duplicates
+  * Add modules to a question ignoring any duplicates
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
 	* @param resource $db the database connection.
