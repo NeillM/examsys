@@ -42,7 +42,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .errl {padding-right:6px; vertical-align:top; text-align:right}
-    td {padding-left: 5px;}
+    td {padding-left: 5px}
 	</style>  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
@@ -62,6 +62,14 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
     $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,1]]
+      });
+
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        openBug($(this).attr('id'),event);
       });
 
     });
@@ -111,9 +119,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   $result->bind_result($fixed, $errorID, $title, $initials, $surname, $occurred, $errtype, $errstr, $errfile, $errline, $tmp_userID);
   while ($result->fetch()) {
     if ($fixed == '') {
-      echo "<tr class=\"l\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><nobr>$occurred<nobr></td><td><div class=\"col\">$errtype</div></td><td>$errstr</td><td>$errfile</td><td><div class=\"errl\">$errline</div></td><td>$title&nbsp;$initials&nbsp;$surname</td></tr>\n";
+      echo "<tr class=\"l\" id=\"$errorID\"><td><nobr>$occurred<nobr></td><td>$errtype</td><td>$errstr</td><td>$errfile</td><td><div class=\"errl\">$errline</div></td><td>$title&nbsp;$initials&nbsp;$surname</td></tr>\n";
     } else {
-      echo "<tr class=\"l deleted\" onclick=\"selLine($errorID,event)\" ondblclick=\"openBug($errorID,event)\" id=\"$errorID\"><td><nobr>$occurred</nobr></td><td><div class=\"col\">$errtype</div></td><td>$errstr</td><td>$errfile</td><td><div class=\"errl\">$errline</div></td><td>";
+      echo "<tr class=\"l deleted\" id=\"$errorID\"><td><nobr>$occurred</nobr></td><td>$errtype</td><td>$errstr</td><td>$errfile</td><td><div class=\"errl\">$errline</div></td><td>";
       if ($surname == '') {
         echo '<span class="grey">unauthenticated</span>';
       } else {

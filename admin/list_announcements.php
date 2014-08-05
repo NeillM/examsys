@@ -38,6 +38,7 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style>
     .l {padding-bottom: 4px}
+    td {padding-left: 5px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -54,6 +55,14 @@ require '../include/sysadmin_auth.inc';
       $("#maindata").tablesorter({ 
         dateFormat: 'uk',
         sortList: [[1,1]] 
+      });
+
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
       });
 
     });
@@ -103,7 +112,7 @@ while ($result->fetch()) {
 $result->close();
 
 for ($i=0; $i<$announce_no; $i++) {
-  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" onclick=\"selLine('" . $announcements[$i]['announcementid'] . "',event)\" ondblclick=\"edit('" . $announcements[$i]['announcementid'] . "')\" class=\"l\"><td class=\"col\">" . $announcements[$i]['title'] . "</td><td class=\"col\">" . $announcements[$i]['startdate_display']  . "</td><td class=\"col\">" . $announcements[$i]['enddate_display']  . "</td></tr>\n";
+  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" class=\"l\"><td>" . $announcements[$i]['title'] . "</td><td>" . $announcements[$i]['startdate_display']  . "</td><td>" . $announcements[$i]['enddate_display']  . "</td></tr>\n";
 }
 
 $mysqli->close();

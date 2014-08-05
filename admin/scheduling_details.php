@@ -110,8 +110,8 @@ $results->close();
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_scheduling.php"><?php echo $string['summativescheduling']; ?></a></div>
-  <div class="page_title"><?php echo $string['Paper']; ?>: <span style="font-weight: normal"><?php echo $paper_title; ?></span></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_scheduling.php"><?php echo $string['summativescheduling'] ?></a></div>
+  <div class="page_title"><?php echo $string['Paper'] ?>: <span style="font-weight: normal"><?php echo $paper_title ?></span></div>
 </div>
 
 <table cellspacing="0" cellpadding="4" style="font-size:100%" class="data">
@@ -122,7 +122,11 @@ $results->close();
     $barriers_needed = $string['No'];
   }
   $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-  $display_period = $string[$months[$period]];
+  if ($period == '') {
+    $display_period = 'unknown';
+  } else {
+    $display_period = $string[$months[$period]];
+  }
   
   if ($cohort_size == '<whole cohort>') {
     $cohort_size = 0;

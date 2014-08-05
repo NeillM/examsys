@@ -48,6 +48,14 @@
         sortList: [[0,0]] 
       });
 
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        editFaculty();
+      });
+
     });
   </script>
 </head>
@@ -82,7 +90,7 @@ $result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty 
 $result->execute();
 $result->bind_result($id, $name, $school_no);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" onclick=\"selLine($id, event)\" ondblclick=\"editFaculty()\" class=\"l\"><td><div class=\"col10\">$name</div></td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
+  echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">$name</td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
   $id++;
 }
 $result->close();

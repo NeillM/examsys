@@ -37,12 +37,7 @@ class lti_integration_extended extends lti_integration {
 
   //REMOVED as no longer used by lti as this is done at the authentication layer
   static function user_add($username, $password) {
-
-
   }
-
-
-
 
   static function user_time_check($time, $user = '') {
     $time1 = strtotime($time);

@@ -340,7 +340,7 @@ class Authentication {
         if ($authobj->returned === ROGO_AUTH_OBJ_SUCCESS) {
           $this->success = true;
           $this->userid = $authobj->rogoid;
-          if (isset($authobj->username) and $authobj->username!='') {
+          if (isset($authobj->username) and $authobj->username != '') {
             $this->username = $authobj->username;
           }
           $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
@@ -353,7 +353,7 @@ class Authentication {
           $lookup = Lookup::get_instance($this->configObj, $this->db);
 
           //$authobj->data contains lookup info;
-          $data=new stdClass();
+          $data = new stdClass();
           $data->lookupdata = clone $authobj->data;
           $info = $lookup->userlookup($data);
 

@@ -38,6 +38,9 @@ require '../include/sort.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
+	<style>
+    td {padding-left: 5px}
+	</style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
@@ -54,6 +57,14 @@ require '../include/sort.inc';
         sortList: [[0,0]] 
       });
 
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
+      });
+      
     });
   </script>
 </head>
@@ -104,7 +115,7 @@ $mysqli->close();
 for ($i=0; $i<$course_no; $i++) {
   $id = $courses[$i]['id'];
 
-  echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit($id)\" class=\"l\"><td class=\"col\">" . $courses[$i]['code'] . "</td><td class=\"col\">" . $courses[$i]['name'] . "</td><td class=\"col\"><nobr>" . $courses[$i]['school'] . "</nobr></td></tr>\n";
+  echo "<tr id=\"$id\" class=\"l\"><td class=\"col\">" . $courses[$i]['code'] . "</td><td>" . $courses[$i]['name'] . "</td><td>" . $courses[$i]['school'] . "</td></tr>\n";
 }
 
 ?>

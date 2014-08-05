@@ -39,7 +39,7 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 	<style>
 	  th a {color:black !important}
-    td {padding-left: 5px;}
+    td {padding-left: 5px}
 	</style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -57,6 +57,14 @@ require '../include/sysadmin_auth.inc';
         sortList: [[0,0]] 
       });
 
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
+      });
+    
     });
   </script>
 </head>
@@ -77,7 +85,7 @@ require '../include/sysadmin_auth.inc';
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['modules'] ?> (<?php echo $result->num_rows; ?>)</div>
 </div>
 
@@ -107,7 +115,7 @@ while ($result->fetch()) {
 		$class = 'l grey';
   }
   
-	echo "<tr class=\"$class\" id=\"$moduleid\" onclick=\"selLine('$id',event)\" ondblclick=\"edit('$id')\"><td>$moduleid</td><td>$fullname</td><td><nobr>$school</nobr></td><td>$tmp_active</td></tr>\n";
+	echo "<tr class=\"$class\" id=\"$id\"><td>$moduleid</td><td>$fullname</td><td>$school</td><td>$tmp_active</td></tr>\n";
 }
 $result->close();
 $mysqli->close();

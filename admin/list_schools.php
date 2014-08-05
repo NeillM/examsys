@@ -44,7 +44,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 	<style>
-    td {padding-left: 5px;}
+    td {padding-left: 5px}
 	</style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -62,6 +62,14 @@ $result->close();
         sortList: [[0,0]]
       });
 
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
+      });
+
     });
   </script>
 </head>
@@ -73,7 +81,7 @@ $result->close();
 	
 	echo draw_toprightmenu();
   
-  $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
+  $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
   $result->execute();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
   $result->store_result();
@@ -103,7 +111,7 @@ if ($faculties > 0) {
   $result->execute();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
   while ($result->fetch()) {
-    echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"edit('$id')\" class=\"l\"><td>$school</td><td>$faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
+    echo "<tr id=\"$id\" class=\"l\"><td>$school</td><td>$faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
   }
   $result->close();
 } else {

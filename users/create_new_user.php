@@ -57,13 +57,6 @@ if (isset($_POST['submit'])) {
       break;
   }
 
-  $initials = '';
-  $first_names_array = explode(' ', $_POST['new_first_names']);
-  foreach ($first_names_array as $individual_name) {
-    $initials .= trim(substr($individual_name,0,1));
-  }
-  $initials = strtoupper($initials);
-
   $new_password = trim($_POST['new_password']);
   $new_surname = UserUtils::my_ucwords(trim($_POST['new_surname']));
   $new_username = trim($_POST['new_username']);

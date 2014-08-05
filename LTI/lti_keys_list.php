@@ -32,12 +32,15 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
   
-  <title>Rog&#333;: <?php echo $string['ltikeys'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['ltikeys'] . ' ' . $configObject->get('cfg_install_type') ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/submenu.css"/>
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/list.css"/>
+	<style>
+    td {padding-left: 5px}
+	</style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
@@ -52,6 +55,15 @@ require '../include/sysadmin_auth.inc';
     $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]] 
+      });
+      
+      
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
       });
 
     });
@@ -69,29 +81,29 @@ require '../include/sysadmin_auth.inc';
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div>
-  <div class="page_title"><?php echo $string['ltikeys'] ?></th>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div>
+  <div class="page_title"><?php echo $string['ltikeys'] ?></div>
 </div>
   
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
   <thead>
     <tr>
       <th class="col10" style="width:25%"><?php echo $string['name'] ?></th>
-      <th class="vert_div" style="width:25%"><?php echo $string['oauth_consume_key'] ?></th>
-      <th class="vert_div" style="width:25%"><?php echo $string['oauth_secret'] ?></th>
-      <th class="vert_div" style="width:25%"><?php echo $string['oauth_context_id'] ?></th>
+      <th class="col" style="width:25%"><?php echo $string['oauth_consume_key'] ?></th>
+      <th class="col" style="width:25%"><?php echo $string['oauth_secret'] ?></th>
+      <th class="col" style="width:25%"><?php echo $string['oauth_context_id'] ?></th>
     </tr>
   </thead>
   
   <tbody>
     <?php
     $id = 0;
-    $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE deleted IS NULL ORDER BY name");
+    $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE deleted IS NULL");
     $result->execute();
     $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
     while ($result->fetch()) {
       $id = $ltis['id'];
-      echo "<tr id=\"$id\" onclick=\"selLine('$id',event)\" ondblclick=\"edit('$id')\" class=\"l\"><td class=\"col10\">" . $ltis['name'] . "</td><td class=\"col\">" . $ltis['oauth_consumer_key'] . "</td><td class=\"col\">" . $ltis['secret'] . "</td><td class=\"col\">" . $ltis['context_id'] . "</div></td></tr>\n";
+      echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">" . $ltis['name'] . "</td><td>" . $ltis['oauth_consumer_key'] . "</td><td>" . $ltis['secret'] . "</td><td>" . $ltis['context_id'] . "</div></td></tr>\n";
     }
     $result->close();
     $mysqli->close();

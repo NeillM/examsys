@@ -41,6 +41,18 @@
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function () {      
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        editTemplate();
+      });
+
+    });
+  </script>
 </head>
 
 <body>
@@ -69,7 +81,7 @@ $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY na
 $result->execute();
 $result->bind_result($id, $name);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"editTemplate()\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
+  echo "<tr id=\"$id\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
   $id++;
 }
 $result->close();

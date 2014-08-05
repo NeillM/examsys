@@ -318,7 +318,7 @@ class UoN_LTI extends BLTI {
           echo nl2br($e->getTraceAsString());
         }
       }
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name`=? WHERE id=?");
+      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name` = ? WHERE id = ?");
       $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
       $stmt->execute();
       $stmt->close();
@@ -363,7 +363,7 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -390,7 +390,7 @@ class UoN_LTI extends BLTI {
         try {
           $a = $this->db->error;
           $b = $this->db->errno;
-          throw new Exception("0MySQL error $a <br /> Query:<br /> $query", $b);
+          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
