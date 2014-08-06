@@ -2658,7 +2658,6 @@ QUERY;
           `screen` tinyint(4) default NULL,
           `metadataID` int(11) unsigned NOT NULL,
           PRIMARY KEY (`id`),
-          KEY `idx_q_paper` (`q_paper`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
