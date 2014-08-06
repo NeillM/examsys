@@ -145,6 +145,7 @@
 # /media/
 /media/*
 /media/*.*
+!/media/index.html
 
 # /qti/exports/
 /qti/exports/*
