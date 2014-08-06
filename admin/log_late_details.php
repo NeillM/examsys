@@ -36,19 +36,26 @@
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .icon {padding-left:10px}
   </style>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function () {
+      $("#maindata").tablesorter({ 
+        sortList: [[1,0]] 
+      });
+    });
+  </script>
 </head>
 
 <body>
 <?php
-  include '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
@@ -61,13 +68,16 @@
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['loglatedetails'] ?></div>
 </div>
-<table class="header">
+  
+<table class="header" id="maindata">
+<thead>
 <tr>
 <th></th>
-<th><?php echo $string['papertitle']; ?></th>
-<th style="width:50%"><?php echo $string['studentslate']; ?></th>
+<th class="col"><?php echo $string['papertitle'] ?></th>
+<th class="col" style="width:50%"><?php echo $string['studentslate'] ?></th>
 </tr>
-
+</thead>
+<tbody>
 <?php
   $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');
   $data = array();
@@ -87,6 +97,7 @@
     echo "<tr><td class=\"icon\"><a href=\"../paper/details.php?paperID=$paperID\"><img src=\"../artwork/" . $icons[$row['paper_type']] . "\" width=\"16\" height=\"16\" alt=\"\" /></a></td><td><a href=\"../paper/details.php?paperID=$paperID\">" . $row['paper_title'] . "</a></td><td>" . count($row['students']) . "</td></tr>";
   }
 ?>
+</tbody>
 </table>
 
 </div>

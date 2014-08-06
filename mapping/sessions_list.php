@@ -152,9 +152,9 @@ if (!$module) {
         $identifier = '';
       }
       if ($session['VLE'] != '') {
-        echo "<tr style=\"cursor:pointer\" id=\"$id\" onmouseover=\"highlight($id)\" onmouseout=\"unhighlight($id)\" onclick=\"selSession('$id','$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
+        echo "<tr class=\"l\" id=\"$id\" onclick=\"selSession($id,'$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
       } else {
-        echo "<tr style=\"cursor:pointer\" id=\"$id\" onmouseover=\"highlight($id)\" onmouseout=\"unhighlight($id)\" onclick=\"selSession('$id','$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editSession('" . $session['identifier'] . "','" . $session['calendar_year'] . "');\">";
+        echo "<tr class=\"l\" id=\"$id\" onclick=\"selSession($id,'$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editSession('" . $session['identifier'] . "','" . $session['calendar_year'] . "');\">";
       }
       echo "<td class=\"indent\">" . $session['occurrance'] . "</td><td class=\"title\">" . $session['title'] . "</td>";
       if ($objectives_no == 0) {

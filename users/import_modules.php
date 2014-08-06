@@ -41,11 +41,10 @@ ini_set("auto_detect_line_endings", true);
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
-    p {margin:0px; padding:0px}
-    h1 {font-size:120%; font-weight:bold}
+    p {margin:0; padding:0}
     label.error {display:block; color:#f00}
-		td {vertical-align:top}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 </head>
@@ -207,12 +206,12 @@ ini_set("auto_detect_line_endings", true);
     }
   }
 ?>
-<table class="dialog_border" style="width:730px">
+<table style="width:730px" class="dialog_border">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importmodules']; ?></td>
+  <td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importmodules']; ?></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB" colspan="2">
+<td class="dialog_body" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <br />

@@ -258,7 +258,6 @@ if (isset($_POST['submit'])) {
 
 ?>
 <body>
-<br/>
 
 <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 	<div style="text-align:center">

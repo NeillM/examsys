@@ -46,4 +46,7 @@ th.header {
   border-bottom: 3px solid white;
   cursor: pointer;
   padding-right: 15px;
-} 
+}
+td {
+  padding-left: 5px;
+}

@@ -328,7 +328,7 @@ if (isset($_GET['paperID'])) {
 
     echo "<div id=\"content\" class=\"content\">\n";
   } else {
-    echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
+    echo "<body>\n";
 
     include '../include/user_search_options.inc';
 
@@ -437,7 +437,7 @@ foreach ($table_order as $display) {
   if ($display{0} == '#') {
     echo "<th>&nbsp;</th>";
   } else {
-    echo "<th class=\"vert_div\">$display</th>\n";
+    echo "<th class=\"col\">$display</th>\n";
   }    
 }
 ?>
@@ -459,9 +459,9 @@ if ($user_data->num_rows == 0) {
 $x = 0;
 while ($user_data->fetch()) {
   if ($userObject->has_role('SysAdmin')) {
-    echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
+    echo "<tr class=\"l\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
   } else {
-    echo "<tr class=\"uline\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
+    echo "<tr class=\"l\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
   }
   if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
     echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';

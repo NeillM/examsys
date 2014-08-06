@@ -53,10 +53,8 @@ function get_list($list, $db) {
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
-  tr {vertical-align:top}
   .no {text-align:right}
   </style>
 	
@@ -75,7 +73,6 @@ function get_list($list, $db) {
   </script></head>
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
@@ -85,7 +82,7 @@ function get_list($list, $db) {
   
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
   <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4) ?></div>
 </div>
 
@@ -119,7 +116,7 @@ function get_list($list, $db) {
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $academic_year, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td class=\"col10\"><a href=\"../module/index.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td class=\"col\">" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
+    echo "<tr><td class=\"col10\"><a href=\"../module/index.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>" . $import_type . "</td></tr>\n";
   }
 
 ?>

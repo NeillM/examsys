@@ -64,7 +64,7 @@ if (!$module_code) {
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script>
-    function editReference() {
+    function edit() {
       window.location = "<?php echo $configObject->get('cfg_root_path') ?>/module/edit_ref_material.php?refID=" + $('#lineID').val() + "&module=<?php echo $modID; ?>";
     }
     
@@ -79,6 +79,14 @@ if (!$module_code) {
     $(function () {
       $("#maindata").tablesorter({ 
         sortList: [[0,0]]
+      });
+
+      $(".l").click(function() {
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
       });
 
     });
@@ -137,7 +145,7 @@ if (!$module_code) {
 <tbody>
 <?php
 foreach ($reference_materials as $id => $details) {
-  echo "<tr id=\"$id\" onclick=\"selLine($id, event)\" ondblclick=\"editReference($id)\" class=\"l\"><td class=\"icon\">" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
+  echo "<tr id=\"$id\" class=\"l\"><td class=\"icon\">" . $details['title'] . "</td><td>" . $details['modules'] . "</td></tr>\n";
 }
 
 $mysqli->close();

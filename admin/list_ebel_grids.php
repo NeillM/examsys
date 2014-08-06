@@ -77,7 +77,7 @@
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
+$result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates");
 $result->execute();
 $result->bind_result($id, $name);
 while ($result->fetch()) {

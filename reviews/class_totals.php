@@ -218,7 +218,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   if (isset($user_results[0])) {
     echo "<tr>\n";
     foreach ($table_order as $col_title) {
-      echo "<th class=\"vert_div\">$col_title</th>\n";
+      echo "<th class=\"col\">$col_title</th>\n";
     }
     echo "</tr>\n";
   }
@@ -251,11 +251,11 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         <tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
         <?php
         if ($user_results[$i]['student_id'] == '') {
-          echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";
+          echo "<td class=\"grey\">" . $string['unknown'] . "</td>";
         } else {
-          echo "<td class=\"padl\">" . $user_results[$i]['student_id'] . "</td>";
+          echo "<td>" . $user_results[$i]['student_id'] . "</td>";
         }
-        echo "<td class=\"padl\">" . $user_results[$i]['student_grade'] . "</td><td colspan=\"" . (9 + count($metadata_cols)) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
+        echo "<td>" . $user_results[$i]['student_grade'] . "</td><td colspan=\"" . (9 + count($metadata_cols)) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
         $absent_no++;
       } else {
         if (isset($log_late[$user_results[$i]['metadataID']])) {
@@ -310,12 +310,12 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         
         if ($user_results[$i]['student_id'] == '') {
           if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
-            echo "<td class=\"grey $class padl $role_css\">&nbsp;";
+            echo "<td class=\"grey $class $role_css\">&nbsp;";
           } else {
-            echo "<td class=\"grey $class padl $role_css\">" . $string['unknown'];
+            echo "<td class=\"grey $class $role_css\">" . $string['unknown'];
           }
         } else {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_id'];
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['student_id'];
         }
         
         // Add icons
@@ -327,7 +327,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         }        
         echo '</td>';
         
-        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
+        echo "<td class=\"$class $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
        			
         if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
           echo "<td class=\"mk $class fail r $role_css\">";
@@ -352,17 +352,17 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
         // Decile column
         echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . "</td>";
         // Start Time column
-        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['display_started'] . "</td>";
+        echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . "</td>";
         // Duration column
-        echo "<td class=\"$class padl $role_css\">" . $report->formatsec($user_results[$i]['duration']);
+        echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
         if ($late_submissions == 'y') {
           echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" />';
         }
         echo "</td>";
 
-        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['ipaddress'] . "</td>";
+        echo "<td class=\"$class $role_css\">" . $user_results[$i]['ipaddress'] . "</td>";
         if ($paper_type == 2) {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['room'] . "</td>";
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['room'] . "</td>";
         }
 
         // Display any associated metadata

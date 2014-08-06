@@ -35,7 +35,6 @@
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -49,12 +48,15 @@
         sortList: [[0,1]] 
       });
 
+      $(".l").click(function() {
+        window.location='sms_import_detail.php?day=' + $(this).attr('id');
+      });
+    
     });
   </script>
 </head>
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
@@ -64,17 +66,17 @@
   
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a></div>
-  <div class="page_title"><?php echo $string['smsimportsummary']; ?></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a></div>
+  <div class="page_title"><?php echo $string['smsimportsummary'] ?></div>
 </div>
   
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">
 <thead>
   <tr>
-    <th><div style="padding-left:10px"><?php echo $string['date']; ?></div></th>
-    <th class="vert_div"><?php echo $string['modules']; ?></th>
-    <th class="vert_div"><?php echo $string['enroled']; ?></th>
-    <th class="vert_div"><?php echo $string['deleted']; ?></th>
+    <th><div style="padding-left:10px"><?php echo $string['date'] ?></div></th>
+    <th class="vert_div"><?php echo $string['modules'] ?></th>
+    <th class="vert_div"><?php echo $string['enroled'] ?></th>
+    <th class="vert_div"><?php echo $string['deleted'] ?></th>
     <th style="width:50%">&nbsp;</th>
   </tr>
 </thead>
@@ -87,7 +89,7 @@
   $result->store_result();
   $result->bind_result($updated, $display_updated, $module_no, $enrolement_no, $deletion_no);
   while ($result->fetch()) {
-    echo "<tr id=\"$id\" onclick=\"window.location='sms_import_detail.php?day=$updated';\" class=\"l\"><td style=\"padding-left:10px\">$display_updated</td><td class=\"no\">$module_no</td><td class=\"no\">$enrolement_no</td><td class=\"no\">$deletion_no</td><td>&nbsp;</td></tr>\n";
+    echo "<tr id=\"$updated\" class=\"l\"><td style=\"padding-left:10px\">$display_updated</td><td class=\"no\">$module_no</td><td class=\"no\">$enrolement_no</td><td class=\"no\">$deletion_no</td><td></td></tr>\n";
     $id++;
   }
 ?>

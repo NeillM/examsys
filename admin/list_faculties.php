@@ -71,14 +71,14 @@
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon">
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['faculties'] ?></div>
 </div>
   
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
 <thead>
 <tr>
-<th class="col10" style="width:25%"><?php echo $string['name']; ?></th><th style="width:25%"><?php echo $string['schoolno']; ?></th><th style="width:50%" class="vert_div"></th>
+<th class="col10"><?php echo $string['name'] ?></th><th><?php echo $string['schoolno'] ?></th><th style="width:50%" class="vert_div"></th>
 </tr>
 </thead>
 <tbody>
@@ -86,12 +86,11 @@
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty LEFT JOIN schools ON schools.facultyID=faculty.id WHERE faculty.deleted IS NULL GROUP BY name ORDER BY name");
+$result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty LEFT JOIN schools ON schools.facultyID = faculty.id WHERE faculty.deleted IS NULL GROUP BY name");
 $result->execute();
 $result->bind_result($id, $name, $school_no);
 while ($result->fetch()) {
   echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">$name</td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
-  $id++;
 }
 $result->close();
 

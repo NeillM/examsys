@@ -99,10 +99,10 @@ function getLabs($labs, $mysqlidb) {
 <table class="header">
 <tr>
 <th><div class="col10 s"><?php echo $string['title'] ?></div></th>
-<th class="vert_div"><?php echo $string['month'] ?></th>
-<th class="vert_div"><?php echo $string['campus'] ?></th>
-<th class="vert_div"><?php echo $string['modules'] ?></th>
-<th class="vert_div"><?php echo $string['cohortsize'] ?></th>
+<th class="col"><?php echo $string['month'] ?></th>
+<th class="col"><?php echo $string['campus'] ?></th>
+<th class="col"><?php echo $string['modules'] ?></th>
+<th class="col"><?php echo $string['cohortsize'] ?></th>
 
 </tr>
   <tr><td colspan="5"><table border="0" class="subsect" style="width:98%"><tr><td><nobr><?php echo $string['unscheduled']; ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
@@ -144,7 +144,7 @@ function getLabs($labs, $mysqlidb) {
         $html .= ', ' . $individual_module;
       }
     }
-    echo "$html</td><td class=\"col\">$cohort_size</td></tr>\n";
+    echo "$html</td><td>$cohort_size</td></tr>\n";
   }
 ?>
   <tr><td colspan="5">&nbsp;</td></tr>
@@ -178,7 +178,7 @@ function getLabs($labs, $mysqlidb) {
         $html .= ', ' . $individual_module;
       }
     }
-    echo "$html</td><td class=\"col\">$cohort_size</td></tr>\n";
+    echo "$html</td><td>$cohort_size</td></tr>\n";
   }
 ?>
 </table>

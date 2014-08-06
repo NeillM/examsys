@@ -480,17 +480,17 @@ echo draw_toprightmenu(30);
         ?>
         <tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
         <?php
-        echo "<td class=\"padl\">$title</td>";
-        echo "<td class=\"padl\">$surname</td>";
-        echo "<td class=\"padl\">$first_names</td>";
+        echo "<td>$title</td>";
+        echo "<td>$surname</td>";
+        echo "<td>$first_names</td>";
         
         
         if ($user_results[$i]['student_id'] == '') {
-          echo "<td class=\"padl grey\">" . $string['unknown'] . "</td>";
+          echo "<td class=\"grey\">" . $string['unknown'] . "</td>";
         } else {
-          echo "<td class=\"padl\">" . $user_results[$i]['student_id'] . "</td>";
+          echo "<td>" . $user_results[$i]['student_id'] . "</td>";
         }
-        echo "<td class=\"padl\">" . $user_results[$i]['student_grade'] . "</td><td colspan=\"" . (9 + count($metadata_cols)) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
+        echo "<td>" . $user_results[$i]['student_grade'] . "</td><td colspan=\"" . (9 + count($metadata_cols)) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
         $absent_no++;
       } else {
         if (isset($log_late[$user_results[$i]['metadataID']])) {
@@ -547,13 +547,13 @@ echo draw_toprightmenu(30);
         echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" class=\"picon\" /></td>";
         
         if (strpos($user_results[$i]['username'], 'user') === 0) {
-          echo "<td class=\"$class padl tmpacc $role_css\">Mr</td>";
-          echo "<td class=\"$class padl tmpacc $role_css\">Guest</td>";
-          echo "<td class=\"$class padl tmpacc $role_css\">" . str_replace('User','Account #',$user_results[$i]['surname']);
+          echo "<td class=\"$class tmpacc $role_css\">Mr</td>";
+          echo "<td class=\"$class tmpacc $role_css\">Guest</td>";
+          echo "<td class=\"$class tmpacc $role_css\">" . str_replace('User','Account #',$user_results[$i]['surname']);
         } else {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['title'] . "</td>";
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['surname'] . "</td>";
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['first_names'];
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['title'] . "</td>";
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['surname'] . "</td>";
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['first_names'];
         }
         if ($report->has_special_need($user_results[$i]['userID']) or $user_results[$i]['attempt'] > 1 or isset($toilet_breaks[$user_results[$i]['userID']])) {
           echo '&nbsp;&nbsp;';
@@ -577,14 +577,14 @@ echo draw_toprightmenu(30);
         
         if ($user_results[$i]['student_id'] == '') {
           if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
-            echo "<td class=\"grey $class padl $role_css\">&nbsp;</td>";
+            echo "<td class=\"grey $class $role_css\">&nbsp;</td>";
           } else {
-            echo "<td class=\"grey $class padl $role_css\">" . $string['unknown'] . "</td>";
+            echo "<td class=\"grey $class $role_css\">" . $string['unknown'] . "</td>";
           }
         } else {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_id'] . "</td>";
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['student_id'] . "</td>";
         }
-        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
+        echo "<td class=\"$class $role_css\">" . $user_results[$i]['student_grade'] . "</td>";
        			
 				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
 				
@@ -611,17 +611,17 @@ echo draw_toprightmenu(30);
         // Decile column
         echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . "</td>";
         // Start Time column
-        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['display_started'] . "</td>";
+        echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . "</td>";
         // Duration column
-        echo "<td class=\"$class padl $role_css\">" . $report->formatsec($user_results[$i]['duration']);
+        echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
         if ($late_submissions == 'y') {
           echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" />';
         }
         echo "</td>";
 
-        echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['ipaddress'] . "</td>";
+        echo "<td class=\"$class $role_css\">" . $user_results[$i]['ipaddress'] . "</td>";
         if ($paper_type == 2) {
-          echo "<td class=\"$class padl $role_css\">" . $user_results[$i]['room'] . "</td>";
+          echo "<td class=\"$class $role_css\">" . $user_results[$i]['room'] . "</td>";
         }
 
         // Display any associated metadata

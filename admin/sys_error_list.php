@@ -42,8 +42,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .errl {padding-right:6px; vertical-align:top; text-align:right}
-    td {padding-left: 5px}
-	</style>  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+	</style>
+
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>

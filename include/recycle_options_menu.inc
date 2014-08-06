@@ -35,14 +35,12 @@
 <form name="PapersMenu" action="">
 <br />
 
-<div style="font-weight:bold"><?php echo $string['recyclebintasks'] ?></div>
-
 <div id="menu1a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div clss="menuitem" id="restore" onclick="restoreItem()"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><a onclick="return false" href="#"><?php echo $string['restorethisitem'] ?></a></div>
+	<div class="menuitem" id="restore" onclick="restoreItem()"><a onclick="return false" href="#"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></a></div>
 </div>
 
 <input type="hidden" id="itemID" name="itemID" value="" />

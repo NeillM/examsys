@@ -39,7 +39,6 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 	<style>
 	  th a {color:black !important}
-    td {padding-left: 5px}
 	</style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>

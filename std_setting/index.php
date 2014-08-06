@@ -52,9 +52,9 @@ function displayReview($review, $userObj) {
   
   $html = '';
   if ($setter_id == $userObj->get_user_ID() or $userObj->has_role('SysAdmin')) {
-    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" style=\"cursor:hand\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   } else {
-    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" style=\"cursor:hand\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   }
   if ($review['distinction_score'] != 'n/a') $review['distinction_score'] .= '%';
   if ($review['group_review'] != 'No') {
@@ -66,9 +66,9 @@ function displayReview($review, $userObj) {
 		$review['distinction_score'] = 'top 20%';
 	}
   if ($review['review_total'] == $review['total_marks']) {
-    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
+    $html .= "</td><td>{$review['display_date']}</td><td class=\"no\">{$review['pass_score']}%&nbsp;</td><td class=\"no\">{$review['distinction_score']}&nbsp;</td><td class=\"no\">{$review['review_total']}&nbsp;</td><td class=\"no\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
   } else {
-    $html .= "</td><td class=\"col\">{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
+    $html .= "</td><td>{$review['display_date']}</td><td class=\"no\">{$review['pass_score']}%&nbsp;</td><td class=\"no\">{$review['distinction_score']}&nbsp;</td><td class=\"no\" style=\"color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td class=\"no\" style=\"color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
   }
   return $html;
 }
@@ -135,12 +135,16 @@ function displayReview($review, $userObj) {
         dateFormat: 'uk',
         sortList: [[1,0]] 
       });
+      
+      $(document).click(function() {
+        reviewOff();
+      });
 
     });
   </script>
 </head>
 
-<body onclick="reviewOff()">
+<body>
 
 <?php
 	
@@ -155,7 +159,7 @@ $reviews_html .= '<div class="breadcrumb"><a href="../index.php">' . $string['ho
 if (isset($_GET['module']) and $_GET['module'] != '') {
   $reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-$reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div>';
+$reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div>';
 $reviews_html .= '<div class="page_title">' . $string['standardssetting'] . '</div>';
 $reviews_html .= '</div>';
 
