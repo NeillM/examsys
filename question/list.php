@@ -283,7 +283,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     echo '<tr class="q';
 
     if ($_GET['type'] == 'type' or $_GET['type'] == 'all') {
-      echo ' ' . substr($q_type,0,3);
+      echo ' ' . $q_type;
     } elseif ($_GET['type'] == 'status') {
       echo ' ' . $status;
     } elseif ($_GET['type'] == 'keyword') {
@@ -292,15 +292,15 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       echo ' ' . substr(strtolower($bloom),0,3);
     } elseif ($_GET['type'] == 'performance') {
         if ($p >= 80 and $p <= 100) {
-          echo ' ve';     // Very Easy
+          echo ' veryeasy';     // Very Easy
         } elseif ($p >= 60 and $p < 80) {
-          echo ' e';      // Easy
+          echo ' easy';      // Easy
         } elseif ($p >= 40 and $p < 60) {
-          echo ' m';      // Moderate
+          echo ' moderate';      // Moderate
         } elseif ($p >= 20 and $p < 40) {
-          echo ' h';      // Hard
+          echo ' hard';      // Hard
         } elseif ($p >= 0 and $p < 20) {
-          echo ' vh';     // Very Hard
+          echo ' veryhard';     // Very Hard
         }
 
         if ($d >= 35) {

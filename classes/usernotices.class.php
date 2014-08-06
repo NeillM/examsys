@@ -77,8 +77,15 @@ Class user_notices extends RogoStaticSingleton {
    */
   public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
     $configObject = Config::get_instance();
-    $rp = $configObject->get('cfg_root_path');
-    $cs = $configObject->get('cfg_page_charset');
+    $root = str_replace('/classes', '/', str_replace('\\', '/', dirname(__FILE__)));
+    
+    if (file_exists($root . 'config/config.inc.php')) {
+      $rp = $configObject->get('cfg_root_path');
+      $cs = $configObject->get('cfg_page_charset');
+    } else {          // If we have not installed there is no config.inc.php file.
+      $rp = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
+      $cs = 'utf-8';
+    }
     
     if ($output_header == true) {
       echo "<html>\n";
@@ -145,8 +152,8 @@ Class user_notices extends RogoStaticSingleton {
    * @param string $output_header - if true output 401 headers
    *
    */
-  public function access_denied($db, $string, $message, $output_header = false, $output_footer = true) {
-    $this->display_notice_and_exit($db, $string['accessdenied'], $message, $string['accessdenied'], '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);
+  public function access_denied($db, $string, $message, $output_header = false, $output_footer = true) {    
+    $this->display_notice_and_exit($db, $string['accessdenied'], $message, $string['accessdenied'], $rp . '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);
   }
 
 }

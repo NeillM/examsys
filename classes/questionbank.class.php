@@ -81,7 +81,6 @@ class QuestionBank {
           exit;
         }
         foreach ($keywords as $keywordID=>$keyword) {
-          //$this->bank_types[$keyword] = 'list.php?keyword=' . $keywordID;
           $this->bank_types[$keywordID] = $keyword;
         }
         break;
@@ -89,24 +88,24 @@ class QuestionBank {
       case 'type':
         $this->load_stats($type);
         $this->bank_types = array(
-          'are' => $this->string['area'],
-          'enh' => $this->string['enhancedcalc'],
-          'dic' => $this->string['dichotomous'],
-          'ext' => $this->string['extmatch'],
-          'bla' => $this->string['blank'],
-          'hot' => $this->string['hotspot'],
-          'inf' => $this->string['info'],
-          'key' => $this->string['keyword_based'],
-          'lab' => $this->string['labelling'],
-          'lik' => $this->string['likert'],
-          'mat' => $this->string['matrix'],
+          'area' => $this->string['area'],
+          'enhancedcalc' => $this->string['enhancedcalc'],
+          'dichotomous' => $this->string['dichotomous'],
+          'extmatch' => $this->string['extmatch'],
+          'blank' => $this->string['blank'],
+          'hotspot' => $this->string['hotspot'],
+          'info' => $this->string['info'],
+          'keyword_based' => $this->string['keyword_based'],
+          'labelling' => $this->string['labelling'],
+          'likert' => $this->string['likert'],
+          'matrix' => $this->string['matrix'],
           'mcq'=> $this->string['mcq'],
           'mrq' => $this->string['mrq'],
-          'ran' => $this->string['random'],
-          'ran' => $this->string['rank'],
+          'random' => $this->string['random'],
+          'rank' => $this->string['rank'],
           'sct' => $this->string['sct'],
-          'tex' => $this->string['textbox'],
-          'tru' => $this->string['true_false']
+          'textbox' => $this->string['textbox'],
+          'true_false' => $this->string['true_false']
         );
         break;
       case 'status':
@@ -121,22 +120,22 @@ class QuestionBank {
       case 'bloom':
         $this->load_stats($type);
         $this->bank_types = array(
-          'kno' => $this->string['knowledge'],
-          'com' => $this->string['comprehension'],
-          'app' => $this->string['application'],
-          'ana' => $this->string['analysis'],
-          'syn' => $this->string['synthesis'],
-          'eva' => $this->string['evaluation']
+          'knowledge' => $this->string['knowledge'],
+          'comprehension' => $this->string['comprehension'],
+          'application' => $this->string['application'],
+          'analysis' => $this->string['analysis'],
+          'synthesis' => $this->string['synthesis'],
+          'evaluation' => $this->string['evaluation']
         );
         break;
       case 'performance':
         $this->load_performance_stats();
         $this->bank_types = array(
-            've' => $this->string['veryeasy'],
-            'e' => $this->string['easy'],
-            'm' => $this->string['moderate'],
-            'h' => $this->string['hard'],
-            'vh' => $this->string['veryhard'],
+            'veryeasy' => $this->string['veryeasy'],
+            'easy' => $this->string['easy'],
+            'moderate' => $this->string['moderate'],
+            'hard' => $this->string['hard'],
+            'veryhard' => $this->string['veryhard'],
             'highest' => $this->string['highest'],
             'high' => $this->string['high'],
             'intermediate' => $this->string['intermediate'],
@@ -163,15 +162,15 @@ class QuestionBank {
     $result->bind_result($p, $d, $q_id);
     while ($result->fetch()) {
       if ($p >= 80 and $p <= 100) {
-        $this->stats['ve']++;
+        $this->stats['veryeasy']++;
       } elseif ($p >= 60 and $p < 80) {
-        $this->stats['e']++;
+        $this->stats['easy']++;
       } elseif ($p >= 40 and $p < 60) {
-        $this->stats['m']++;
+        $this->stats['moderate']++;
       } elseif ($p >= 20 and $p < 40) {
-        $this->stats['h']++;
+        $this->stats['hard']++;
       } elseif ($p >= 0 and $p < 20) {
-        $this->stats['vh']++;
+        $this->stats['veryhard']++;
       }
 
       if ($d >= 35 and $d <=100) {
@@ -232,43 +231,39 @@ class QuestionBank {
       $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
     }
 
-    // if ($vle_api_data['api'] != '') {
-    //   $vle = CMFactory::GetCMAPI($vle_api_data['api']);
+    // Get years for which there are mappings for the current mapping source
+    if ($ac_year == 'all') {
+      $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+    } else {
+      $all_years = array($ac_year);
+    }
 
-      // Get years for which there are mappings for the current mapping source
-      if ($ac_year == 'all') {
-        $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
-      } else {
-        $all_years = array($ac_year);
-      }
+    foreach ($all_years as $ac_year) {
+      $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
 
-      foreach ($all_years as $ac_year) {
-        $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+      if (is_array($obs) and isset($obs[$this->module_id])) {
+        foreach ($obs[$this->module_id] as $session) {
+          if (isset($session['objectives'])) {
+            foreach ($session['objectives'] as $objective) {
+              if (isset($objective['guid'])) {
+                $uid = $objective['guid'];
+              } elseif (isset($objective['id'])) {
+                $uid = $objective['id'];
+              } else {
+                $uid = '';
+              }
 
-        if (is_array($obs) and isset($obs[$this->module_id])) {
-          foreach ($obs[$this->module_id] as $session) {
-            if (isset($session['objectives'])) {
-              foreach ($session['objectives'] as $objective) {
-                if (isset($objective['guid'])) {
-                  $uid = $objective['guid'];
-                } elseif (isset($objective['id'])) {
-                  $uid = $objective['id'];
-                } else {
-                  $uid = '';
-                }
-
-                if ($uid != '') {
-                  // Build list of IDs but use the latest text
-                  $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : array();
-                  $ids[] = $objective['id'];
-                  $outcomes[$uid] = array('ids' => $ids, 'label' => $objective['content']);
-                }
+              if ($uid != '') {
+                // Build list of IDs but use the latest text
+                $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : array();
+                $ids[] = $objective['id'];
+                $outcomes[$uid] = array('ids' => $ids, 'label' => $objective['content']);
               }
             }
           }
         }
       }
-    // }
+    }
 
     if (count($outcomes) > 0) {
       uasort($outcomes, function($a, $b)
