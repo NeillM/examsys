@@ -93,6 +93,7 @@ if (isset($_POST['submit'])) {
     h1 {font-size:120%; color:#1E3287; margin-bottom:0px}
   </style>
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/staff_help.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>

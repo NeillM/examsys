@@ -42,6 +42,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
   <link rel="stylesheet" type="text/css" href="../css/submenu_qstatus.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
   <script src="../js/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
   <script src="../js/jquery.q_status.js" type="text/javascript"></script>
@@ -61,7 +62,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
     
   <div class="head_title">
     <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
-    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
     <div class="page_title"><?php echo $string['questionstatuses'] ?></div>
   </div>
 

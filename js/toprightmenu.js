@@ -1,4 +1,4 @@
-$(document).ready(function(event) {
+$(function () {
 	$('#toprightmenu_icon').click(function() {
 		if ($('#toprightmenu').is(':visible')) {
 			$('#toprightmenu').fadeOut();

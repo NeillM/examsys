@@ -95,6 +95,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>

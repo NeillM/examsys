@@ -68,6 +68,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000}
   </style>
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
