@@ -331,11 +331,11 @@ var lang = {
   } else {
   }
 ?>
-  $(document).ready(function () {
+  $(function () {
     $('#jumpscreen').change(function () {
       $('#button_pressed').val('jump_screen');
       $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
-      return userSubmit(null);
+      $('#qForm').submit();
     });
     
     $('#previous').click(function() {
@@ -497,7 +497,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
 
   echo $bottom_html;
-  echo '<input type="text" style="background-color:transparent; text-align:center; color:white; border:0px" id="theTime" size="8" /></td><td align="right">';
+  echo '<input type="text" style="background-color:transparent; text-align:center; color:white; border:0" id="theTime" size="8" /></td><td align="right">';
   if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
     if ($current_screen > 2) {
       echo '<input id="previous" type="submit" name="prev" value="&lt; ' . $string['screen'] . ' ' . ($current_screen - 2) . '" />';
