@@ -2662,14 +2662,14 @@ QUERY;
 QUERY;
 
     $this->tableList['review_metadata'] = <<<QUERY
-        CREATE TABLE `review_comments` (
-          `id` int(11)unsigned NOT NULL auto_increment,
+        CREATE TABLE `review_metadata` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
           `reviewerID` int(10) unsigned NOT NULL,
           `paperID` mediumint(8) unsigned NOT NULL,
-          `started` datetime default NULL,
-          `complete` datetime default NULL,
-          `review_type` enum('External','Internal') default NULL,
-          `ipaddress` varchar(100) default NULL,
+          `started` datetime DEFAULT NULL,
+          `complete` datetime DEFAULT NULL,
+          `review_type` enum('External','Internal') DEFAULT NULL,
+          `ipaddress` varchar(100) DEFAULT NULL,
           `paper_comment` text,
           PRIMARY KEY (`id`),
           KEY `idx_paperID` (`paperID`)
