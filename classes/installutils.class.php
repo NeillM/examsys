@@ -1365,7 +1365,7 @@ require \$root . '/include/path_functions.inc.php';
 
 \$rogo_version = '{rogo_version}';
 \$cfg_web_root = get_root_path() . '/';
-\$cfg_root_path = rtrim('/' . trim(normalise_path(str_replace(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
+\$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
