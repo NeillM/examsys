@@ -1088,15 +1088,15 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     $rogo_path = '';
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/install/index.php')  !== false) {
       $rogo_path = str_ireplace('/install/index.php','',  normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version4.php') !== false) {
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version4.php') !== false) {
       $rogo_path = str_ireplace('/updates/version4.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version5.php') !== false) {
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version5.php') !== false) {
       $rogo_path = str_ireplace('/updates/version5.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
@@ -1115,15 +1115,15 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     $rogo_path = '';
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/install/index.php')  !== false) {
       $rogo_path = str_ireplace('/install/index.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version4.php') !== false) {
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version4.php') !== false) {
       $rogo_path = str_ireplace('/updates/version4.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version5.php') !== false) {
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version5.php') !== false) {
       $rogo_path = str_ireplace('/updates/version5.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
