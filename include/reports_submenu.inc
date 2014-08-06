@@ -96,7 +96,7 @@ require_once $cfg_web_root . 'classes/textboxmarkingutils.class.php';
 <div class="popup" style="top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
 <form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%">
 
-<div style="background-color:#F2B100; height:5px"></div>
+<div style="background-color:#F2B100; height:6px"></div>
 
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin:10px">
 <tr>

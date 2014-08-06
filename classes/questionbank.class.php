@@ -150,7 +150,7 @@ class QuestionBank {
   }
   
   private function load_performance_stats() {
-    $this->stats = array('ve'=>0, 'e'=>0, 'm'=>0, 'h'=>0, 'vh'=>0, 'highest'=>0, 'high'=>0, 'intermediate'=>0, 'low'=>0);
+    $this->stats = array('veryeasy'=>0, 'easy'=>0, 'moderate'=>0, 'hard'=>0, 'veryhard'=>0, 'highest'=>0, 'high'=>0, 'intermediate'=>0, 'low'=>0);
     
     $status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
     $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
@@ -266,13 +266,12 @@ class QuestionBank {
     }
 
     if (count($outcomes) > 0) {
-      uasort($outcomes, function($a, $b)
-        {
-            if ($a['label'] == $b['label']) {
-                return 0;
-            }
-            return ($a['label'] < $b['label']) ? -1 : 1;
-        });
+      uasort($outcomes, function($a, $b) {
+        if ($a['label'] == $b['label']) {
+          return 0;
+        }
+        return ($a['label'] < $b['label']) ? -1 : 1;
+      });
     }
 
     // Filter local mappings to remove duplicates

@@ -136,7 +136,7 @@ a.greylink:hover {
   position: fixed;
   line-height: 160%;
   border: 1px solid #C0C0C0;
-  padding: 2px;
+  padding: 1px;
   background-color: white;
   -moz-box-shadow: 0 0 3px #A0A0A0;
   -webkit-box-shadow: 0 0 3px #A0A0A0;

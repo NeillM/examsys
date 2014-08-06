@@ -191,7 +191,7 @@ hr {
 	border: 1px solid #C0C0C0;
 	text-align: left;
 	padding: 1px;
-	height: 38px;
+	height: 40px;
   line-height: 30px;
 }
 
@@ -206,7 +206,7 @@ hr {
 }
 
 .info_bar_yellow {
-	height: 4px;
+	height: 6px;
 	width: 100%;
 	background-color: #F2B100;
 	margin-bottom: 5px;
