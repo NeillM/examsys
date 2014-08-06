@@ -45,4 +45,5 @@ $string['status'] = 'Status';
 $string['keyword'] = 'Keyword';
 $string['performance'] = 'Performance';
 $string['learningoutcome'] = 'Learning Outcome';
+$string['showlockedquestions'] = 'show Locked questions';
 ?>

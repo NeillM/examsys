@@ -91,7 +91,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
   <style type="text/css">
-    
+    label {padding-top:2px}
   <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 

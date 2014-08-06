@@ -44,4 +44,5 @@ $string['bloomstaxonomy'] = 'Taksonomia Blooma';
 $string['keyword'] = 'Słowo kluczowe';
 $string['performance'] = 'Osiągnięcia';
 $string['learningoutcome'] = 'Cele kształcenia';
+$string['showlockedquestions'] = 'show Locked questions';
 ?>
