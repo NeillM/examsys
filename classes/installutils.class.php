@@ -2657,7 +2657,7 @@ QUERY;
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
           `metadataID` int(11) unsigned NOT NULL,
-          PRIMARY KEY (`id`),
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
