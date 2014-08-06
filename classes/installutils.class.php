@@ -2930,7 +2930,7 @@ QUERY;
 					`phase` tinyint(4) default NULL,
 					`logtype` tinyint(4) default NULL,
 					`student_userID` int(10) unsigned default NULL,
-          `reminders` VARCHAR(255) NULL
+          `reminders` VARCHAR(255) NULL,
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `idx_unique` (`phase`,`answer_id`,`logtype`),
 					KEY `paperID` (`paperID`),
