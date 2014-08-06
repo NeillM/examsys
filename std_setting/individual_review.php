@@ -119,21 +119,26 @@ function check_ebel_distinction_type($reviewID, $db) {
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-	<!-- HTML5 part start -->
-	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-	<script type="text/javascript" src="../js/html5.images.js"></script>
-	<script type="text/javascript" src="../js/qsharedf.js"></script>
-	<script type="text/javascript" src="../js/qlabelling.js"></script>
-	<script type="text/javascript" src="../js/qhotspot.js"></script>
-	<script type="text/javascript" src="../js/qarea.js"></script>
-	<!-- HTML5 part end -->
-
+<?php
+  if ($propertyObj->get_latex_needed() == 1) {
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script>var lang_string = " .  json_encode($jstring) . ";\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+	} else {
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+  }
+?>
   <script>
   <?php
     if ($_GET['method'] == 'ebel') {
@@ -236,7 +241,7 @@ function check_ebel_distinction_type($reviewID, $db) {
             break;
         }
       }
-      $('#ee').val(EE + ' <?php echo $string['marks']; ?>');
+      $('#ee').val(EE + ' <?php echo $string['marks'] ?>');
       if (origEE != EE) {
         $('#origee').val(origEE);
         $('#origee2').val(origEE);
@@ -245,7 +250,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#origee2').val('');
       }
 
-      $('#ei').val(EI + ' <?php echo $string['marks']; ?>');
+      $('#ei').val(EI + ' <?php echo $string['marks'] ?>');
       if (origEI != EI) {
         $('#origei').val(origEI);
         $('#origei2').val(origEI);
@@ -254,7 +259,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#origei2').val('');
       }
 
-      $('#en').val(EN + ' <?php echo $string['marks']; ?>');
+      $('#en').val(EN + ' <?php echo $string['marks'] ?>');
       if (origEN != EN) {
         $('#origen').val(origEN);
         $('#origen2').val(origEN);
@@ -263,7 +268,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#origen2').val('');
       }
 
-      $('#me').val(ME + ' <?php echo $string['marks']; ?>');
+      $('#me').val(ME + ' <?php echo $string['marks'] ?>');
       if (origME != ME) {
         $('#origme').val(origME);
         $('#origme2').val(origME);
@@ -272,7 +277,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#origme2').val('');
       }
 
-      $('#mi').val(MI + ' <?php echo $string['marks']; ?>');
+      $('#mi').val(MI + ' <?php echo $string['marks'] ?>');
       if (origMI != MI) {
         $('#origmi').val(origMI);
         $('#origmi2').val(origMI);
@@ -281,7 +286,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#origmi2').val('');
       }
 
-      $('#mn').val(MN + ' <?php echo $string['marks']; ?>');
+      $('#mn').val(MN + ' <?php echo $string['marks'] ?>');
       if (origMN != MN) {
         $('#origmn').val(origMN);
         $('#origmn2').val(origMN);
@@ -290,7 +295,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#origmn2').val('');
       }
 
-      $('#he').val(HE + ' <?php echo $string['marks']; ?>');
+      $('#he').val(HE + ' <?php echo $string['marks'] ?>');
       if (origHE != HE) {
         $('#orighe').val(origHE);
         $('#orighe2').val(origHE);
@@ -299,7 +304,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#orighe2').val('');
       }
 
-      $('#hi').val(HI + ' <?php echo $string['marks']; ?>');
+      $('#hi').val(HI + ' <?php echo $string['marks'] ?>');
       if (origHI != HI) {
         $('#orighi').val(origHI);
         $('#orighi2').val(origHI);
@@ -308,7 +313,7 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#orighi2').val('');
       }
 
-      $('#hn').val(HN + ' <?php echo $string['marks']; ?>');
+      $('#hn').val(HN + ' <?php echo $string['marks'] ?>');
       if (origHN != HN) {
         $('#orighn').val(origHN);
         $('#orighn2').val(origHN);
@@ -317,29 +322,29 @@ function check_ebel_distinction_type($reviewID, $db) {
         $('#orighn2').val('');
       }
 
-      $('#easy_total').val((EE + EI + EN) + ' <?php echo $string['marks']; ?>');
-      $('#medium_total').val((ME + MI + MN) + ' <?php echo $string['marks']; ?>');
-      $('#hard_total').val((HE + HI + HN) + ' <?php echo $string['marks']; ?>');
-      $('#essential_total').val((EE + ME + HE) + ' <?php echo $string['marks']; ?>');
-      $('#important_total').val((EI + MI + HI) + ' <?php echo $string['marks']; ?>');
-      $('#nice_total').val((EN + MN + HN) + ' <?php echo $string['marks']; ?>');
+      $('#easy_total').val((EE + EI + EN) + ' <?php echo $string['marks'] ?>');
+      $('#medium_total').val((ME + MI + MN) + ' <?php echo $string['marks'] ?>');
+      $('#hard_total').val((HE + HI + HN) + ' <?php echo $string['marks'] ?>');
+      $('#essential_total').val((EE + ME + HE) + ' <?php echo $string['marks'] ?>');
+      $('#important_total').val((EI + MI + HI) + ' <?php echo $string['marks'] ?>');
+      $('#nice_total').val((EN + MN + HN) + ' <?php echo $string['marks'] ?>');
 
-      $('#easy2_total').val((EE + EI + EN) + ' <?php echo $string['marks']; ?>');
-      $('#medium2_total').val((ME + MI + MN) + ' <?php echo $string['marks']; ?>');
-      $('#hard2_total').val((HE + HI + HN) + ' <?php echo $string['marks']; ?>');
-      $('#essential2_total').val((EE + ME + HE) + ' <?php echo $string['marks']; ?>');
-      $('#important2_total').val((EI + MI + HI) + ' <?php echo $string['marks']; ?>');
-      $('#nice2_total').val((EN + MN + HN) + ' <?php echo $string['marks']; ?>');
+      $('#easy2_total').val((EE + EI + EN) + ' <?php echo $string['marks'] ?>');
+      $('#medium2_total').val((ME + MI + MN) + ' <?php echo $string['marks'] ?>');
+      $('#hard2_total').val((HE + HI + HN) + ' <?php echo $string['marks'] ?>');
+      $('#essential2_total').val((EE + ME + HE) + ' <?php echo $string['marks'] ?>');
+      $('#important2_total').val((EI + MI + HI) + ' <?php echo $string['marks'] ?>');
+      $('#nice2_total').val((EN + MN + HN) + ' <?php echo $string['marks'] ?>');
 
-      $('#ee2').val(EE + ' <?php echo $string['marks']; ?>');
-      $('#ei2').val(EI + ' <?php echo $string['marks']; ?>');
-      $('#en2').val(EN + ' <?php echo $string['marks']; ?>');
-      $('#me2').val(ME + ' <?php echo $string['marks']; ?>');
-      $('#mi2').val(MI + ' <?php echo $string['marks']; ?>');
-      $('#mn2').val(MN + ' <?php echo $string['marks']; ?>');
-      $('#he2').val(HE + ' <?php echo $string['marks']; ?>');
-      $('#hi2').val(HI + ' <?php echo $string['marks']; ?>');
-      $('#hn2').val(HN + ' <?php echo $string['marks']; ?>');
+      $('#ee2').val(EE + ' <?php echo $string['marks'] ?>');
+      $('#ei2').val(EI + ' <?php echo $string['marks'] ?>');
+      $('#en2').val(EN + ' <?php echo $string['marks'] ?>');
+      $('#me2').val(ME + ' <?php echo $string['marks'] ?>');
+      $('#mi2').val(MI + ' <?php echo $string['marks'] ?>');
+      $('#mn2').val(MN + ' <?php echo $string['marks'] ?>');
+      $('#he2').val(HE + ' <?php echo $string['marks'] ?>');
+      $('#hi2').val(HI + ' <?php echo $string['marks'] ?>');
+      $('#hn2').val(HN + ' <?php echo $string['marks'] ?>');
 
       var paper_marks = $('#total_marks').val();
       var cut_marks = 0;
@@ -354,7 +359,7 @@ function check_ebel_distinction_type($reviewID, $db) {
       cut_marks += HN * $('#HN').val() * 100;
       var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
       var cut_score = (cut_marks / paper_marks) * 100;
-      $('#cut_score').val('<?php echo $string['papermarks']; ?>=' + paper_marks + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%');
+      $('#cut_score').val('<?php echo $string['papermarks'] ?>=' + paper_marks + ',  <?php echo $string['reviewmarks'] ?>=' + total_marks + ',  <?php echo $string['cutscore'] ?>=' + roundNumber(cut_score/100,1) + '%');
 
       cut_marks = 0;
       cut_marks += EE * $('#EE2').val() * 100;
@@ -368,7 +373,7 @@ function check_ebel_distinction_type($reviewID, $db) {
       cut_marks += HN * $('#HN2').val() * 100;
       var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
       var cut_score = (cut_marks / paper_marks) * 100;
-      $('#cut_score2').val('<?php echo $string['papermarks']; ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks']; ?>=' + total_marks + ',  <?php echo $string['cutscore']; ?>=' + roundNumber(cut_score/100,1) + '%');
+      $('#cut_score2').val('<?php echo $string['papermarks'] ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks'] ?>=' + total_marks + ',  <?php echo $string['cutscore'] ?>=' + roundNumber(cut_score/100,1) + '%');
     }
   <?php
     }

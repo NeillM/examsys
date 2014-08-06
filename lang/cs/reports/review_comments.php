@@ -38,4 +38,5 @@ $string['reviewers'] = 'Reviewers';
 $string['started'] = 'Started';
 $string['completed'] = 'Completed';
 $string['generalpapercomments'] = 'General Paper Comments';
+$string['cannotcomment'] = 'Cannot Comment';
 ?>
