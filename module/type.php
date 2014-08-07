@@ -74,8 +74,9 @@ if ($_GET['module'] != '0') {
       echo ".retired {display:none}\n";
     }
     ?>
-    .sum_cal {margin-left: 36px; margin-top: 10px; margin-bottom: 12px}
-    .subsect_table {margin-left: 12px; margin-bottom: 8px}
+    a {color: black !important}
+    .sum_cal {margin-left: 28px; margin-top: 10px; margin-bottom: 12px}
+    .subsect_table {margin-left: 10px; margin-bottom: 8px}
 	</style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
@@ -96,7 +97,7 @@ if ($_GET['module'] != '0') {
         updatePaperCount();
       });
       
-      updatePaperCount();      
+      updatePaperCount();
     });
   </script>
 </head>
@@ -130,7 +131,8 @@ if ($_GET['module'] != '0') {
   
 <?php
 if ($_GET['type'] == 2) {
-  echo '<table class="sum_cal"><tr><td><a href="../admin/calendar.php"><img src="../artwork/calendar_icon.png" width="48" height="48" /></a></td><td><strong><a href="../admin/calendar.php">Summative Exam Calendar<br />' . date('Y') . '</a></strong></td></tr></table>';
+  echo "<br /><div class=\"f\"><div class=\"f_icon\"><a href=\"../admin/calendar.php\"><img src=\"../artwork/calendar_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../admin/calendar.php\">Summative Exam Calendar<br />" . date('Y') . "</a></div></div>\n";
+  //echo '<table class="sum_cal"><tr><td><a href="../admin/calendar.php"><img src="../artwork/calendar_icon.png" width="48" height="48" /></a></td><td><strong><a href="../admin/calendar.php">Summative Exam Calendar<br />' . date('Y') . '</a></strong></td></tr></table>';
 }
 
 // UPDATED SQL query simplified removed the modules table as no data was coming from it. Also removed distinct as group by was doing it. The user data is returned but for some reason the icons alt tags (that contain the user data don't display
