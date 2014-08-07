@@ -96,7 +96,7 @@ ob_start();
 <br />
 <br />
 
-<table style="width:730px" class="dialog_border">
+<table style="width:755px" class="dialog_border">
 <tr>
 <td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importusers']; ?></span></td>
 </tr>
@@ -107,7 +107,7 @@ ob_start();
 <blockquote>Type, ID, First Names, Family Name, Title, Course, Year of Study, Email</blockquote>
 <p><?php echo $string['msg2']; ?></p>
 
-<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="749" height="59" alt="Headings" style="border:1px solid black" /></div>
+<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="743" height="59" alt="Headings" style="border:1px solid #808080" /></div>
 <br />
 <br />
 <div style="text-align:center">

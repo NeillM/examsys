@@ -215,7 +215,7 @@ ini_set("auto_detect_line_endings", true);
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <br />
-<div style="text-align:center"><img src="../artwork/module_import_headings.png" width="290" height="60" alt="Headings" style="border:1px solid black" /></div>
+<div style="text-align:center"><img src="../artwork/module_import_headings.png" width="281" height="59" alt="Headings" style="border:1px solid #808080" /></div>
 <br />
 <div><?php echo $string['msg2']; ?></div>
 <br />
