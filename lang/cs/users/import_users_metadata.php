@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/folder/details.php';
+require_once '../lang/' . $language . '/module/index.php';
 
 $string['importmetadata'] = 'Nahrát metadata studenta';
 $string['msg'] = 'CSV soubor by měl obsahovat hlavičku zahrnující názvy polí. V prvním sloupci by mělo být uživatelské jméno následované daty. Příklad nám ukazuje dvě položky metadat (\'Site\' and \'Project Group\').';

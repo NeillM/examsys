@@ -71,7 +71,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style>
-    a {color:black}
+    a {color:black !important}
     .red {background-color:#C00000; color:white; padding-left:2px; padding-right:2px}
     .subsect_table {margin-top:22px; margin-left:10px; margin-bottom:12px}
   </style>
@@ -131,7 +131,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
-  <div class="page_title"><?php echo $module_details['moduleid'] ?>: <span style="font-weight:normal"><?php echo $module_details['fullname'] ?></span></div>
+  <div class="page_title">Module: <span style="font-weight:normal"><?php echo $module_details['moduleid'] ?></span></div>
 </div>
 <?php
 
@@ -154,38 +154,38 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
 }
 foreach ($types_used as $type=>$no_papers) {
   $url = '../module/type.php?module=' . $module . '&type=' . $type;
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></div></div>\n";
 }
 echo "<br clear=\"left\">\n";
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
 if ($module != 0) {
   // Don't want new papers created from the Unassigned folder.
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\" class=\"blacklink\">" . $string['newpaper'] . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
 }
 // Question bank section
 echo "<br clear=\"left\">\n";
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['questionbank'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\" class=\"blacklink\">" . $string['allquestions'] . "</a></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . "</a></div></div>\n";
 
 $bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
 if (strpos($module_details['checklist'], 'mapping') !== false) {
   $bank_types[$string['byobjective']] = '../question/bank.php?type=objective&module=' . $module;
 }
 foreach ($bank_types as $type_name=>$url) {
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $type_name . "</a></div></div>\n";
 }
 echo "<br clear=\"left\">\n";
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/search.php\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></div></div>\n";
 if ($module != 0) {   // Don't want new questions created from the Unassigned folder.
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion(); return false;\" class=\"blacklink\">" . $string['newquestion'] . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion(); return false;\">" . $string['newquestion'] . "</a></div></div>\n";
 }
 
 // User section
 echo "<br clear=\"left\">\n";
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['users'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../users/search.php\" class=\"blacklink\">Search</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../users/search.php\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></div></div>\n";
 
 if ($_GET['module'] != '0') {
   $current_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
@@ -198,10 +198,10 @@ if ($_GET['module'] != '0') {
   } else {
     $student_class = 'grey';
   }
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $string['studentcohortlist'] . "</a><br /><span class=\"$student_class\">" . $current_year . " - $student_no " . $string['students'] . "</span></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . sprintf($string['studentlist'], $current_year) . "</a><br /><span class=\"$student_class\">$student_no " . $string['students'] . "</span></div></div>\n";
 
   $url = '../users/import_users_metadata.php?module=' . $module;
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $string['addmetadata'] . "</a><br /><span class=\"grey\">" . $string['extradataaboutstudents'] . "</span></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['addmetadata'] . "</a><br /><span class=\"grey\">" . sprintf($string['extradataaboutstudents'], $module_details['moduleid']) . "</span></div></div>\n";
 }
 
 $mysqli->close();

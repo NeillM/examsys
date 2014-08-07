@@ -173,7 +173,7 @@ foreach ($bank_types as $id=>$type_name) {
   }
   
   if (isset($stats[$id])) {
-    if ($type != 'objective' or $stats[$id] > 0) {
+    if (($type != 'objective' and $type != 'performance') or $stats[$id] > 0) {
       $grey_text = number_of_questions($stats[$id], $string);
       echo display_folder($url, $type_name, $grey_text, $class);
     }

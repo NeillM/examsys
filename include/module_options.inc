@@ -23,7 +23,7 @@
 */
 
 ?>
-<div id="left-sidebar" style="font-size:70%; overflow:visible" class="sidebar">
+<div id="left-sidebar" style="overflow:visible" class="sidebar">
 <br />
 
 <?php

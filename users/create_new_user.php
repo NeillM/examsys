@@ -70,7 +70,7 @@ if (isset($_POST['submit']) and $unique_username == true) {
   if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_grade == '') {
     $problem = true;
   } else {
-    UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], $new_year, $tmp_roles, $_POST['new_sid'], $mysqli);
+    $new_userID = UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], $new_year, $tmp_roles, $_POST['new_sid'], $mysqli);
 
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
@@ -122,17 +122,35 @@ MESSAGE;
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo "{$string['createnewuser']} {$configObject->get('cfg_install_type')}"; ?></title>
+  <title>Rog&#333;: <?php echo $string['createnewuser'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
+  
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
 <?php
+  require '../include/toprightmenu.inc';
   include '../include/user_search_options.inc';
+  
+	echo draw_toprightmenu();
 ?>
 <div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
+  <div class="page_title"><?php echo $string['createnewuser'] ?></div>
+</div>
+
 <p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname'] ?>.</p>
+<div>&nbsp;<input type="button" name="gotouser" value="View Account" class="ok" onclick="window.location='details.php?userID=<?php echo $new_userID ?>'" /></div>
+
 </div>
       <?php
     }

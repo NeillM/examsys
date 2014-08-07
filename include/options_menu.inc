@@ -35,9 +35,9 @@
 			echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/admin/calendar.php?calyear=' . date("Y") . '#' . date("n") . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/shortcut_calendar_icon.png" alt="Admin" />' . $string['calendar'] . '</a></div>';
 		}
 	?>
-	<div class="menuitem cascade" onclick="showMenu('popup0','general','search',myOptions0,myURLs0,event)" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" />Search</div>
-	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/index.php?newfolder=y"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/folder_16.png" alt="New Folder" /><?php echo $string['makeafolder'] ?></a></div>
+	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/index.php?newfolder=y"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/folder_16.png" alt="New Folder" /><?php echo $string['createfolder'] ?></a></div>
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /><?php echo $string['mypersonalkeywords'] ?></a></div>
+	<div class="menuitem cascade" onclick="showMenu('popup0','general','search',myOptions0,myURLs0,event)" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></div>
 </div>
 
 

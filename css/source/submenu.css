@@ -16,7 +16,7 @@ div#left-sidebar {
   padding-bottom: 4px;
   background-color: #D3E5FF;
   overflow: auto;
-  font-size: 70%;
+  font-size: 75%;
 }
 @media screen {
   body>div#left-sidebar{
@@ -221,7 +221,7 @@ a.greylink:hover {
   list-style: none;
 }
 .menu_list li {
-  padding-left: 26px;
+  padding-left: 27px;
   width: 160px;
   margin: 0;
   height: 16px;
@@ -265,7 +265,7 @@ div.iefixdiv {
 	width: 16px;
 	height: 16px;
 	padding-left: 0;
-	padding-right: 8px;
+	padding-right: 9px;
 	padding-top: 3px;
 	padding-bottom: 6px;
 	vertical-align: middle;

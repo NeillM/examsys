@@ -44,9 +44,9 @@ $string['newquestion'] = 'Nowe pytanie';
 $string['forpapers'] = 'dla arkuszy';
 $string['forquestions'] = 'dla pytań';
 $string['forusers'] = 'dla użytkowników';
-$string['studentcohortlist'] = 'Lista grupy studentów';
+$string['studentlist'] = 'Student List (%s)';
 $string['students'] = 'studentów';
 $string['addmetadata'] = 'Dodaj Metadane';
-$string['extradataaboutstudents'] = 'Załącz dodatkowe informacje o studentach';
+$string['extradataaboutstudents'] = 'Tag extra data to students on %s';
 $string['noteammembers'] = 'Nie znaleziono członków zespołu.';
 ?>

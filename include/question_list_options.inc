@@ -302,7 +302,6 @@ if ($type == 'all') {
 </div>
 
 <div>
-<div class="menuitem" id="search"><a href="search.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search']; ?></a></div>
 <div class="menuitem cascade" id="newquestion" onclick="showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event)"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion']; ?></a></div>
 </div>
 
@@ -335,7 +334,7 @@ echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
   echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">" . $string['showlockedquestions'] . "&nbsp;</label></div>\n";
   if (isset($_GET['type'])) {
     if ($_GET['type'] == 'objective') {
-      echo '<div style="margin-bottom:15px"><input type="text" name="filter" id="filter" style="font-size:110%" placeholder="' . $string['search'] . '" /> <button type="button" id="filter_clear">' . $string['clear'] . '</button></div>';
+      echo '<div style="margin-bottom:15px"><input type="text" name="filter" id="filter" style="font-size:110%" placeholder="' . $string['search'] . '" /> <button type="button" style="padding:2px 6px 2px 6px" id="filter_clear">' . $string['clear'] . '</button></div>';
     }
     
     $subtypes = $qbank->get_categories($type);
