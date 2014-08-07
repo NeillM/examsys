@@ -227,7 +227,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   $search_results->execute();
   $search_results->bind_result($extra_field, $p, $d, $q_id, $theme, $leadin, $q_type, $last_edited, $modified, $locked, $status, $bloom);
   $search_results->store_result();
-  
+
   if ($type == 'keyword') {
     $table_order = array($string['question']=>800, $string['type']=>100, 'Keyword'=>100, $string['modified']=>70, $string['status']=>70);
   } elseif ($type == 'bloom') {
@@ -260,7 +260,12 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";
   echo "</div>\n";
 
-	$params = '';
+  if (isset($_GET['type']) and $_GET['type'] == 'all' and $search_results->num_rows == 0) {
+    echo $notice->info_strip($string['noquestions'], 100) . "\n</div>\n</body>\n</html>";
+    exit;
+  }
+  
+  $params = '';
 	if (isset($_GET['type'])) $params .= '&type=' . $_GET['type'];
 	if (isset($_GET['module'])) $params .= '&module=' . $_GET['module'];
 	if (isset($_GET['keyword'])) $params .= '&keyword=' . $_GET['keyword'];

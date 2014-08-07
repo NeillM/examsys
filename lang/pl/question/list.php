@@ -45,4 +45,5 @@ $string['keyword'] = 'Słowo kluczowe';
 $string['performance'] = 'Osiągnięcia';
 $string['learningoutcome'] = 'Cele kształcenia';
 $string['showlockedquestions'] = 'show Locked questions';
+$string['noquestions'] = 'No questions found in Question Bank.';
 ?>

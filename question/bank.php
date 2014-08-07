@@ -98,16 +98,21 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   
   if ($type == 'type') {
     $display_type = $string['bytype']; 
+    $zero_warning = $string['noquestions'];
   } elseif ($type == 'bloom') {
     $display_type = $string['byblooms']; 
+    $zero_warning = $string['noquestionsbloom'];
   } elseif ($type == 'keyword') {
     $display_type = $string['bykeyword']; 
   } elseif ($type == 'status') {
     $display_type = $string['bystatus'];
+    $zero_warning = $string['noquestionsstatus'];
   } elseif ($type == 'performance') {
     $display_type = $string['byperformance'];
+    $zero_warning = $string['noquestionsperformance'];
   } elseif ($type == 'objective') {
     $display_type = $string['byobjective'];
+    $zero_warning = $string['noquestionsobjective'];
   }
 ?>
 <div id="content">
@@ -120,6 +125,11 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 <?php
 $bank_types = $qbank->get_categories($type);
 $stats      = $qbank->get_stats($type);
+
+if (count($stats) == 0) {
+	echo $notice->info_strip($zero_warning, 100) . "\n</div>\n</body>\n</html>";
+  exit;
+}
 
 if ($type != 'keyword') {
   echo "<br />\n";

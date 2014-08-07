@@ -33,4 +33,9 @@ $string['referencematerial'] = 'Materiał pomocniczy';
 $string['nokeywords'] = 'Do tego modułu nie dodano żadnych słów kluczowych.';
 $string['question'] = 'Pytanie';
 $string['questions'] = 'Pytania';
+$string['noquestions'] = 'No questions found in bank.';
+$string['noquestionsbloom']  = 'No questions found in bank by Bloom\'s Taxonomy.';
+$string['noquestionsstatus'] = 'No questions found in bank by status.';
+$string['noquestionsperformance'] = 'No questions found in bank by performance.';
+$string['noquestionsobjective'] = 'No questions found link bank linked to learning objectives.';
 ?>

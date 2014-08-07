@@ -31,7 +31,7 @@
   
   if ($folder_ownerID == $userObject->get_user_ID() ) {
     echo '<div class="menuitem"><a href="#" onclick="folderProperties(); return false;"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" alt="Properties" />' . $string['folderproperties'] . '</a></div>';
-    echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" alt="New Folder" />' . $string['makesubfolder'] . '</a></div>';
+    echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/index.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" alt="New Folder" />' . $string['makesubfolder'] . '</a></div>';
     echo '<div class="menuitem"><a href="#" onclick="deleteFolder(); return false;"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross.png" alt="Delete Folder" />' . $string['deletefolder'] . '</a></div>';
   } else {
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon_grey.gif" alt="Properties" />' . $string['folderproperties'] . '</div>';

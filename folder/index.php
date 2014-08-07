@@ -53,8 +53,6 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 $folder_name = '';
 $folder_type = '';
 $file_no = 0;
-$parent_list = array();
-$add_member = false;
 
 // Folder security checks
 $orig_folder_name = folder_utils::get_folder_name($folder, $mysqli);
@@ -69,38 +67,13 @@ if (!folder_utils::has_permission($folder, $userObject, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$parent_list = array();
-if (substr_count($orig_folder_name, ';') > 0) {
-  $last_semicolon = strrpos($orig_folder_name, ';');
-  $path = substr($orig_folder_name, 0, $last_semicolon);
-  $parts = explode(';', $path);
-  $part_sql = '';
-  foreach ($parts as $part) {
-    if ($part_sql == '') {
-      $part_sql = $part;
-    } else {
-      $part_sql .= ';' . $part;
-    }
-    $parent_results = $mysqli->prepare("SELECT id, name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
-    $parent_results->bind_param('si', $part_sql, $userObject->get_user_ID());
-    $parent_results->execute();
-    $parent_results->bind_result($parent_id, $parent_name);
-    $parent_results->fetch();
-    $parent_results->close();
-    $parent_list[$parent_id] = $parent_name;
-  }
-}
+$parent_list = folder_utils::get_parent_list($orig_folder_name, $userObject, $mysqli);
 
 $module = '';
 
 if (isset($_POST['submit'])) {
-  $folder_results = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
-  $folder_results->bind_param('i', $folder);
-  $folder_results->execute();
-  $folder_results->bind_result($folder_parent);
-  $folder_results->fetch();
-  $folder_results->close();
-
+  $folder_parent = folder_utils::get_folder_name($folder, $mysqli);
+  
   $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
 
   $duplicate_folder = folder_utils::folder_exists($new_folder_name, $userObject, $mysqli);
@@ -111,8 +84,6 @@ if (isset($_POST['submit'])) {
 
 $folders_array = explode(';', $orig_folder_name);
 $parts = count($folders_array) - 1;
-$selfenrol = 0;
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -143,7 +114,7 @@ $selfenrol = 0;
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     function deleteFolder() {
-      notice=window.open("../delete/check_delete_folder.php?folderID=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("../delete/check_delete_folder.php?folderID=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       notice.moveTo(screen.width/2-210,screen.height/2-85);
       if (window.focus) {
         notice.focus();
@@ -151,14 +122,7 @@ $selfenrol = 0;
     }
 
     function folderProperties() {
-      notice=window.open("properties.php?folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=600,height=600,left="+(screen.width/2-300)+",top="+(screen.height/2-300)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-
-    function newPaper(paperID) {
-      notice = window.open("../paper/new_paper1.php?module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice=window.open("properties.php?folder=<?php echo $folder; ?>","properties","width=600,height=600,left="+(screen.width/2-300)+",top="+(screen.height/2-300)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         notice.focus();
       }
@@ -192,7 +156,7 @@ $selfenrol = 0;
 <?php
 if (count($parent_list) > 0) {
   foreach ($parent_list as $parent_id=>$parent_name) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="details.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
   }
 }
 echo "</div>\n";
@@ -215,22 +179,21 @@ if (count($staff_modules) > 0) {
 }
 
 $tmp_folder_name = $orig_folder_name . ';%';
-$folder_details = $mysqli->prepare("SELECT folders.id, name, color FROM folders WHERE (ownerID=?) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
+$folder_details = $mysqli->prepare("SELECT folders.id, name, color FROM folders WHERE (ownerID = ?) AND name LIKE ? AND deleted IS NULL ORDER BY name, folders.id");
 $folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
 $folder_details->execute();
 $folder_details->bind_result($id, $name, $color);
 while ($folder_details->fetch()) {
   $display_name = str_replace("$orig_folder_name;","",$name);
   if (substr_count($display_name,';') == 0) {
-    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"../folder/details.php?folder=$id\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../folder/details.php?folder=$id\" class=\"blacklink\">$display_name</a></div></div>\n";
+    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"../folder/index.php?folder=$id\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../folder/index.php?folder=$id\" class=\"blacklink\">$display_name</a></div></div>\n";
   }
 }
 $folder_details->close();
 
-
 // New folder.
 if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['submit'])) {
-  echo "<div class=\"f\"><img class=\"f_icon\" src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"" . $string['newfolder'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"submit\" name=\"submit\" value=\"" . $string['create'] . "\" /></div>\n<br clear=\"all\" />\n<br />";
+  echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"\" placeholder=\"" . $string['foldername'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
 }
 
 // Get current owner papers.

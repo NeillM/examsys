@@ -40,4 +40,6 @@ $string['newfolder'] = 'Nová složka';
 $string['sudentson'] = 'Studenti skládající zkoušku ';
 $string['nomodulesset'] = 'Není nastaven žádný modul';
 
+$string['foldername'] = 'Folder Name';
+
 ?>

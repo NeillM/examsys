@@ -46,4 +46,5 @@ $string['keyword'] = 'Keyword';
 $string['performance'] = 'Performance';
 $string['learningoutcome'] = 'Learning Outcome';
 $string['showlockedquestions'] = 'show Locked questions';
+$string['noquestions'] = 'No questions found in Question Bank.';
 ?>

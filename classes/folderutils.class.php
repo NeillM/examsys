@@ -130,6 +130,13 @@ Class folder_utils {
     return $folders;
   }
   
+  /**
+  * Returns a the userID of a folder.
+  *
+  * @param string $folderID - ID of the folder.
+  * @param object $db       - MySQL object
+  * @return int	- ID of the paper owner (false if folder does not exist).
+  */
   static function get_ownerID($folderID, $db) {
     $result = $db->prepare("SELECT ownerID FROM folders WHERE id = ? LIMIT 1");
     $result->bind_param('i', $folderID);
@@ -145,6 +152,40 @@ Class folder_utils {
     return $ownerID;
   }
   
-  
+  /**
+  * Returns a list of all parents for the current folder. Used to make
+  * a breadcrumb trail at the top of the screen.
+  *
+  * @param string $orig_folder_name - Name of the current folder.
+  * @param object $userObj          - Currently logged in user.
+  * @param object $db               - MySQL object
+  * @return array	- Array of parents of the current folder.
+  */
+  static function get_parent_list($orig_folder_name, $userObj, $db) {
+    $parent_list = array();
+    if (substr_count($orig_folder_name, ';') > 0) {
+      $last_semicolon = strrpos($orig_folder_name, ';');
+      $path = substr($orig_folder_name, 0, $last_semicolon);
+      $parts = explode(';', $path);
+      $part_sql = '';
+      foreach ($parts as $part) {
+        if ($part_sql == '') {
+          $part_sql = $part;
+        } else {
+          $part_sql .= ';' . $part;
+        }
+        $parent_results = $db->prepare("SELECT id, name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
+        $parent_results->bind_param('si', $part_sql, $userObj->get_user_ID());
+        $parent_results->execute();
+        $parent_results->bind_result($parent_id, $parent_name);
+        $parent_results->fetch();
+        $parent_results->close();
+        
+        $parent_list[$parent_id] = $parent_name;
+      }
+    }
+    
+    return $parent_list;
+  }
 
 }

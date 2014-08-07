@@ -470,7 +470,6 @@ if ($properties->get_summative_lock() == true) {
     $extra_url .= '&module=' . $_GET['module'];
   }
   if ($extra_url != '') $extra_url = '?' . $extra_url;
-  echo '<div class="menuitem"><a href="../question/search.php' . $extra_url . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="' . $string['search'] . '" />' . $string['search'] . '</a></div>';
 ?>
   <div class="menuitem cascade" id="newquestion"><a href="#" onclick="hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup0','banktasks','newquestion',myOptions0,myURLs0,event); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion'] ?>" /><?php echo $string['createnewquestion'] ?></a></div>
 </div>
