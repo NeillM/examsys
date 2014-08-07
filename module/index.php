@@ -153,7 +153,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
   $types_used = module_utils::paper_types($module, false, $mysqli);
 }
 foreach ($types_used as $type=>$no_papers) {
-  $url = '../module/type.php?module=' . $module . '&type=' . $type;
+  $url = '../paper/type.php?module=' . $module . '&type=' . $type;
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></div></div>\n";
 }
 echo "<br clear=\"left\">\n";

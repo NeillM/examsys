@@ -16,18 +16,19 @@
 
 require_once '../lang/' . $language . '/include/paper_options.inc';
 
-$string['showretired'] = 'Pokaż wycofane';
-$string['screen'] = 'Ekran';
-$string['screens'] = 'Ekrany';
-$string['mins'] = 'min.';
-$string['SelfenrolURL'] = "URL do samodzielnego zapisywania się";
-$string['createnewpaper'] = 'Utwórz nowy arkusz';
-$string['manageobjectives'] = 'Zarządzaj celami';
-$string['managekeywords'] = 'Zarządzaj słowami kluczowymi';
-$string['referencematerial'] = 'Materiał pomocniczy';
-$string['type'] = 'Typ';
-$string['author'] = 'Autor';
-$string['create'] = 'Utwórz';
-$string['nomodulesset'] = 'Brak modułów';
-$string['unspecifiedsession'] = 'Nieokrelona sesja';
+$string['showretired'] = 'Show retired';
+$string['screen'] = 'Screen';
+$string['screens'] = 'Screens';
+$string['mins'] = 'mins';
+$string['SelfenrolURL'] = "Self-enrol URL";
+$string['createnewpaper'] = 'Create new Paper';
+$string['manageobjectives'] = 'Manage Objectives';
+$string['managekeywords'] = 'Manage Keywords';
+$string['referencematerial'] = 'Reference Material';
+$string['type'] = 'Type';
+$string['author'] = 'Author';
+$string['create'] = 'Create';
+$string['nomodulesset'] = 'No modules set';
+$string['unspecifiedsession'] = 'Unspecified Session';
+$string['examcalendar'] = 'Summative Exam Calendar';
 ?>

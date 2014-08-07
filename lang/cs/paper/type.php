@@ -16,7 +16,7 @@
 
 require_once '../lang/' . $language . '/include/paper_options.inc';
 
-$string['showretired'] = 'Show retired';
+$string['showretired'] = 'Zobrazit neplatné';
 $string['screen'] = 'Screen';
 $string['screens'] = 'Screens';
 $string['mins'] = 'mins';
@@ -30,4 +30,5 @@ $string['author'] = 'Author';
 $string['create'] = 'Create';
 $string['nomodulesset'] = 'No modules set';
 $string['unspecifiedsession'] = 'Unspecified Session';
+$string['examcalendar'] = 'Summative Exam Calendar';
 ?>
