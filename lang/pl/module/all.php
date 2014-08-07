@@ -22,24 +22,10 @@ $string['bymodulecode'] = 'wg. kodu modułu';
 $string['admintools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
-$string['makeafolder'] = 'Utwórz nowy folder';
+$string['createfolder'] = 'Create folder';
 $string['mypersonalkeywords'] = 'Moje własne słowa kluczowe';
-$string['papertasks'] = 'Działania dot. arkuszy';
-$string['createnewpaper'] = 'Utwórz nowy arkusz'; 
-$string['listpapers'] = 'Wyświetl listę arkuszy';
-$string['mymodules'] = 'Moje moduły';
-$string['sysadminonly'] = 'Tylko dla superadministratora';
-$string['adminonly'] = 'Tylko dla administratora';
-$string['create'] = 'Utwórz';
-$string['newfolder'] = 'Nowy folder';
-$string['questionbanktasks'] = 'Działania dot. banku pytań';
-$string['questionsbytype'] = 'Pytania wg. typu';
-$string['questionsbyteam'] = 'Pytania wg. zespołu';
-$string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
 $string['search'] = 'Szukaj';
-$string['createnewquestion'] = 'Utwórz nowe pytanie';
-$string['questions'] = 'Pytania';
-$string['papers'] = 'Arkusze';
-$string['people'] = 'Osoby';
 $string['recent'] = 'Niedawny';
+
+
 ?>
