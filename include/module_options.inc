@@ -24,8 +24,6 @@
 
 ?>
 <div id="left-sidebar" style="overflow:visible" class="sidebar">
-<br />
-
 <?php
   $add_member = false;
   

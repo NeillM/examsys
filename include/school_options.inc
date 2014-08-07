@@ -39,9 +39,6 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform">
-<br />
-
-
 <div id="menu1a">
 	<?php
 	if ($faculties > 0) {

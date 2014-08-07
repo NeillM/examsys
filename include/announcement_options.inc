@@ -39,8 +39,6 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform">
-<br />
-
 <div id="menu1a">
 	<div class="menuitem"><a href="add_announcement.php"><img class="sidebar_icon" src="../artwork/megaphone_16.png" alt="<?php echo $string['createannouncement'] ?>" /><?php echo $string['createannouncement'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editannouncement'] ?>" /><?php echo $string['editannouncement'] ?></div>

@@ -23,9 +23,6 @@
 */
 ?>
 <div id="left-sidebar" class="sidebar">
-<br />
-
-<div>
 <?php
   $folder_ownerID = folder_utils::get_ownerID($folder, $mysqli);
   
@@ -39,6 +36,4 @@
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/red_cross_grey.png" alt="Delete Folder" />' . $string['deletefolder'] . '</div>';
   }
 ?>
-</div>
-
 </div>

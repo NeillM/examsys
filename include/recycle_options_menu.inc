@@ -33,8 +33,6 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="PapersMenu" action="">
-<br />
-
 <div id="menu1a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></div>
 </div>

@@ -295,7 +295,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     } elseif ($_GET['type'] == 'keyword') {
       echo ' ' . $p;
     } elseif ($_GET['type'] == 'bloom' and $bloom != '') {
-      echo ' ' . substr(strtolower($bloom),0,3);
+      echo ' ' . strtolower($bloom);
     } elseif ($_GET['type'] == 'performance') {
         if ($p >= 80 and $p <= 100) {
           echo ' veryeasy';     // Very Easy

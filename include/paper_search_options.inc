@@ -50,11 +50,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </script>
 
 <div id="left-sidebar" class="sidebar">
+<div style="padding-right:16px">
 <form name="PapersMenu" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<br />
 
-<table cellpadding="4" cellspacing="0" border="0" style="width:195px; font-size:110%">
-<tr><td>
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
 
 <?php
@@ -220,8 +218,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <br />
 <div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['search'] ?>" /></div>
-</td></tr>
-</table>
+</div>
 
 </form>
 </div>

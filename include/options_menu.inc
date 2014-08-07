@@ -25,8 +25,6 @@
 */
 
 ?><div id="left-sidebar" class="sidebar" style="overflow:hidden">
-<br />
-
 <div id="general">
 	<?php
 		if ($userObject->has_role('SysAdmin')) {

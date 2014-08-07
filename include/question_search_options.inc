@@ -119,10 +119,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 <div id="left-sidebar" class="sidebar">
 <form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get" onsubmit="return checkForm()">
 
-<br />
-
-<table cellpadding="4" cellspacing="0" border="0" style="width:210px; font-size:110%">
-<tr><td style="margin:4px">
+<table cellpadding="4" cellspacing="0" border="0" style="width:210px">
+<tr><td>
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_GET['searchterm'])) echo $_GET['searchterm']; ?>" /></div>
 <div><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype" style="max-width:195px">
 <option value="%"><?php echo $string['alltypes']; ?></option>

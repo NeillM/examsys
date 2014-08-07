@@ -53,8 +53,6 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform">
-<br />
-
 <div id="menu1a">
 	<div class="menuitem"><a href="#" onclick="newKeyword(); return false;"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editkeyword'] ?></div>

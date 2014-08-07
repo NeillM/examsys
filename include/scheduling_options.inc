@@ -31,14 +31,12 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform">
-<br />
-
 <div id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails']; ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><a href="#" onclick="return false;"><?php echo $string['viewdetails']; ?></a></div>
+	<div class="menuitem"<a href="#" onclick="viewDetails(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><?php echo $string['viewdetails'] ?></a></div>
 </div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />

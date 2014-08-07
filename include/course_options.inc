@@ -39,8 +39,6 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform">
-<br />
-
 <div id="menu1a">
 	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse'] ?></a></div>
 	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkcourseimport'] ?></a></div>

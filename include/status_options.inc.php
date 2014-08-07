@@ -24,8 +24,6 @@
 
 ?>
 <div id="left-sidebar" class="sidebar">
-<br />
-
 <div id="menu1a">
 	<div class="menuitem"><a href="edit_status.php"><img class="sidebar_icon" src="../artwork/status_icon_16.png" alt="" /><?php echo $string['createstatus']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['edit'] . ' ' . $string['status']; ?></div>
