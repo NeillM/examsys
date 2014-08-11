@@ -179,9 +179,10 @@ if (!isset($_POST['update'])) {
   error_reporting(-1);
   ob_start();
 
-  echo "<div>Starting at " . date("H:i:s") . "</div>";
-
-  echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
+  echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>";
+  echo "<div>Starting at " . date("H:i:s") . "</div>\n<ol>";
+  ob_flush();
+  flush();
 
   $mysqli->autocommit(false);
   // 01/05/2013 - Update the online help files.
@@ -654,7 +655,6 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    /*
 		// Call the standard_setting list page to populate the results in std_set table.
     $result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
     $result->execute();
@@ -671,7 +671,6 @@ if (!isset($_POST['update'])) {
 
     }
     $result->close();
-		*/
   }
 
   // 04/07/2013 (cczsa1) - enhanced question type config
@@ -838,23 +837,6 @@ QUERY;
   }
 
   $mysqli->commit();
-
-	// Call the standard_setting list page to populate the results in std_set table.
-	$result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
-	$result->execute();
-	$result->store_result();
-	$result->bind_result($property_id, $total_mark);
-	while ($result->fetch()) {
-		$no_reviews = 0;
-		$reviews = get_reviews($mysqli, 'index', $property_id, $total_mark, $no_reviews);
-		foreach ($reviews as $review) {
-			if ($review['method'] != 'Hofstee') {
-				updateDB($review, $mysqli);
-			}
-		}
-
-	}
-	$result->close();
 
 	/*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
