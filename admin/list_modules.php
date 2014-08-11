@@ -76,7 +76,7 @@ require '../include/sysadmin_auth.inc';
 	
 	echo draw_toprightmenu(233);
   
-  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL");
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules LEFT JOIN schools ON modules.schoolid = schools.id WHERE mod_deleted IS NULL");
   $result->execute();
   $result->bind_result($id, $moduleid, $fullname, $school, $active);
   $result->store_result();
@@ -101,10 +101,6 @@ require '../include/sysadmin_auth.inc';
 
 <tbody>
 <?php
-
-$result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL");
-$result->execute();
-$result->bind_result($id, $moduleid, $fullname, $school, $active);
 while ($result->fetch()) {
   if ($school == '') $school = '<span style="color:#808080">unknown</span>';
   if ($active == 1) {

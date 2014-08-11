@@ -177,9 +177,9 @@ function add_users_from_file($fileName) {
 
     $users['html'] .= '<tr>';
     if ($tmp_userID === false) {
-      $users['html'] .= '<td><img src="../artwork/green_plus_16.png" wodth="16" height="16" alt="Add" /></td>';
+      $users['html'] .= '<td><img src="../artwork/green_plus_16.png" width="16" height="16" alt="Add" /></td>';
     } else {
-      $users['html'] .= '<td><img src="../artwork/arrow_circle_double.png" wodth="16" height="16" alt="Update" /></td>';
+      $users['html'] .= '<td><img src="../artwork/arrow_circle_double.png" width="16" height="16" alt="Update" /></td>';
     }
     $i = 0;
     foreach ($fields as $field) {

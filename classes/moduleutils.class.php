@@ -45,7 +45,7 @@ Class module_utils extends RogoStaticSingleton {
  *
  * @author Anthony Brown
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 Class module {
@@ -137,14 +137,14 @@ Class module {
   public function update_module_by_code($orig_moduleid, $updateData, $db) {
     global $string;
     
-    if($orig_moduleid == '') {
+    if ($orig_moduleid == '') {
       return false;
     }
     
     $orig_modinfo = $modinfo = module_utils::get_full_details_by_name($orig_moduleid, $db);
     
     if ($modinfo === false) {
-      //the module must exist to update it !
+      // The module must exist to update it!
       return false;
     }
     
@@ -158,31 +158,31 @@ Class module {
         //never change the id :-)
         continue;
       }
-      if($modinfo[$key] != $val) {
+      if ($modinfo[$key] != $val) {
         $modinfo[$key] = $val;
         $changed = true;
       }
     }
     
     if (!$changed) {
-      // nothing has changed return
+      // Nothing has changed return
       return true;
     }
     
-    //check mandatory fields
+    // Check mandatory fields
     if ($modinfo['moduleid'] == '' and $modinfo['fullname'] == '') {
       return false;
     }
     
     if ($orig_school_name != $modinfo['school']) {
-      //we have updated the school so we need to get the new id from the schools table
-      if($orig_school_id != $modinfo['schoolid']) {
-        //do nothing as the id has already been updated
+      // We have updated the school so we need to get the new id from the schools table
+      if ($orig_school_id != $modinfo['schoolid']) {
+        // Do nothing as the id has already been updated
       } else {
-        //lookup the schoolID 
+        // Lookup the schoolID 
         $modinfo['schoolid'] = SchoolUtils::get_school_id_by_name($modinfo['school'], $db);
-        if($modinfo['schoolid'] === false) {
-          //school not found ERROR
+        if ($modinfo['schoolid'] === false) {
+          // School not found ERROR
           return false;
         }
       }
@@ -239,12 +239,12 @@ Class module {
       // Log any changes
       $logger = new Logger($db);
       $userObject = UserObject::get_instance();
-      foreach($modinfo as $key => $val) {
+      foreach ($modinfo as $key => $val) {
         $key = strtolower($key);
         if ($key == 'idmod') {
           continue;
         }
-        if($orig_modinfo[$key] != $val) {
+        if ($orig_modinfo[$key] != $val) {
            
           $logger->track_change( 'Module', 
                                   $modinfo['idMod'], 
@@ -346,9 +346,12 @@ Class module {
                               map_level,
                               academic_year_start
                             FROM 
-                              modules, schools 
-                            WHERE 
-                               modules.schoolid = schools.id AND 
+                              modules
+                            LEFT JOIN
+                              schools 
+                            ON 
+                               modules.schoolid = schools.id
+                            WHERE
                                modules.id = ? AND 
                                mod_deleted IS NULL
                             ");

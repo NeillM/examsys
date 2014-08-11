@@ -34,7 +34,7 @@ $next_session = date_utils::get_next_academic_year();
   }
 
   function jumpToModule() {
-    window.location = '<?php echo $configObject->get('cfg_root_path'); ?>/module/index.php?module=' + $('#lineID').val();
+    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/module/index.php?module=' + $('#lineID').val();
   }
 
   function studentCohort() {
@@ -56,7 +56,6 @@ $next_session = date_utils::get_next_academic_year();
 <div class="submenuheading" id="currentmodule"><?php echo $string['currentmodule']; ?></div>
 <div id="menu1a">
 	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule']; ?>" /><?php echo $string['createmodule'] ?></a></div>
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editmodule'] ?>" /><?php echo $string['editmodule'] ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletemodule'] ?>" /><?php echo $string['deletemodule'] ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['modulefolder'] ?>" /><?php echo $string['modulefolder'] ?></div>
@@ -65,7 +64,6 @@ $next_session = date_utils::get_next_academic_year();
 
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule'] ?>" /><?php echo $string['createmodule'] ?></a></div>
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport'] ?></a></div>
 	<div class="menuitem"><a href="#" onclick="editModule(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editmodule'] ?>" /><?php echo $string['editmodule'] ?></a></div>
 	<div class="menuitem"><a href="#" onclick="deleteModule(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletemodule'] ?>" /><?php echo $string['deletemodule'] ?></a></div>
 	<div class="menuitem"><a href="#" onclick="jumpToModule(); return false;"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['modulefolder'] ?>" /><?php echo $string['modulefolder'] ?></a></div>
@@ -76,6 +74,7 @@ $next_session = date_utils::get_next_academic_year();
 
 <div class="submenuheading" id="currentmodule"><?php echo $string['moduleimports']; ?></div>
 <div id="menu2">
+	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport'] ?></a></div>
 	<div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary'] ?></a></div>
 	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary'] ?>" />Run Imports (<?php echo $current_session ?>)</a></div>
 	<div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary'] ?>" />Run Imports (<?php echo $next_session ?>)</a></div>

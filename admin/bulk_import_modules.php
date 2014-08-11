@@ -44,7 +44,7 @@ function returnTrueFalse($value) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['bulkmoduleimport'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['bulkmoduleimport'] . ' ' . $configObject->get('cfg_install_type') ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -52,9 +52,10 @@ function returnTrueFalse($value) {
     p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
-    .existing {color:#808080}
-    .added {color:black}
-    .failed {color:#C00000}
+    li {list-style-type: none}
+    .existing {color:#808080; background-image: url('../artwork/arrow_circle_double.png'); background-repeat:no-repeat; line-height:20px; text-indent:20px}
+    .added {color:black; background-image: url('../artwork/green_plus_16.png'); background-repeat:no-repeat; line-height:20px; text-indent:20px}
+    .failed {color:#C00000; background-image: url('../artwork/red_cross_16.png'); background-repeat:no-repeat; line-height:20px; text-indent:20px}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
@@ -65,13 +66,14 @@ function returnTrueFalse($value) {
 
   <body>
 <?php
-  require '../include/admin_module_options.inc';
+  require '../include/admin_module_options.inc';  
 ?>
 <div id="content">
 <br />
 <br />
 <?php
   if (isset($_POST['submit'])) {
+    $default_academic_year_start = $configObject->get('cfg_academic_year_start');
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);
@@ -80,25 +82,15 @@ function returnTrueFalse($value) {
         ?>
         <br /><br /><br />
         <div align="center">
-        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%">
+        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:600px">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold; color:#5582D2"><?php echo $string['bulkmoduleimport']; ?></span></td>
+        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold" class="dialog_header"><?php echo $string['bulkmoduleimport']; ?></span></td>
         </tr>
         <tr>
-        <td align="left" style="background-color:#F1F5FB">
+        <td align="left" class="dialog_body">
         <ul>
 
         <?php
-        // Get a list of modules held by Rogo.
-        $module_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT moduleid FROM modules");
-        $result->execute();
-        $result->bind_result($moduleid);
-        while ($result->fetch()) {
-          $module_list[] = $moduleid;
-        }
-        $result->close();
-        
         // Get a list of schools held by Rogo.
         $unknown_schoolID = 0;
         $school_list = array();
@@ -128,7 +120,7 @@ function returnTrueFalse($value) {
                 $schoolID = $school_list[trim($fields[2])];
               } else {
                 if ($unknown_schoolID == 0) {
-                  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name='Administrative and Support Units' LIMIT 1");
+                  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name = 'Administrative and Support Units' LIMIT 1");
                   $result->execute();
                   $result->bind_result($facultyID);
                   $result->fetch();
@@ -138,22 +130,65 @@ function returnTrueFalse($value) {
                 }
                 $schoolID = $unknown_schoolID;
               }              
-              $sms_api = trim($fields[3]);
-              $vle_api = trim($fields[4]);
+              $sms_api          = trim($fields[3]);
+              $vle_api          = trim($fields[4]);
               
-              $peer = returnTrueFalse($fields[5]);
-              $external = returnTrueFalse($fields[6]);
-              $stdset = returnTrueFalse($fields[7]);
-              $mapping = returnTrueFalse($fields[8]);
-              $active = returnTrueFalse($fields[9]);
-              $selfEnroll = returnTrueFalse($fields[10]);
-              $neg_marking = returnTrueFalse($fields[11]);
+              $peer             = returnTrueFalse($fields[5]);
+              $external         = returnTrueFalse($fields[6]);
+              $stdset           = returnTrueFalse($fields[7]);
+              $mapping          = returnTrueFalse($fields[8]);
+              $active           = returnTrueFalse($fields[9]);
+              $selfEnrol        = returnTrueFalse($fields[10]);
+              $neg_marking      = returnTrueFalse($fields[11]);
+              if (isset($fields[12])) {
+                $timed_exams = returnTrueFalse($fields[12]);
+              } else {
+                $timed_exams = 0;
+              }
+              if (isset($fields[13])) {
+                $exam_q_feedback = returnTrueFalse($fields[13]);
+              } else {
+                $exam_q_feedback = 0;
+              }
+              if (isset($fields[14])) {
+                $add_team_members = returnTrueFalse($fields[14]);
+              } else {
+                $add_team_members = 0;
+              }
+              
               $ebel_grid_template = '';
-                                 
-              if (in_array($moduleid, $module_list)) {
+              
+              if (isset($fields[15]) and preg_match ('([0-1][0-9]/[0-3][0-9])', $fields[15]) ) {
+                $academic_year_start = trim($fields[15]);
+              } else {
+                $academic_year_start = $default_academic_year_start;
+              }
+              
+              if (module_utils::module_exists($moduleid, $mysqli)) {
+                $updateData = array();
+                 
+                $checklist = '';
+                if ($peer == true) $checklist .= ',peer';
+                if ($external == true) $checklist .= ',external';
+                if ($stdset == true) $checklist .= ',stdset';
+                if ($mapping == true) $checklist .= ',mapping';
+                $updateData['checklist'] = substr($checklist, 1);
+                $updateData['fullname'] = $fullname;
+                $updateData['vle_api'] = $vle_api;
+                $updateData['sms'] = $sms_api;
+                $updateData['schoolid'] = $schoolID;
+                $updateData['active'] = $active;
+                $updateData['selfenroll'] = $selfEnrol;
+                $updateData['neg_marking'] = $neg_marking;
+                $updateData['timed_exams'] = $timed_exams;
+                $updateData['exam_q_feedback'] = $exam_q_feedback;
+                $updateData['add_team_members'] = $add_team_members;
+                $updateData['academic_year_start'] = $academic_year_start;
+    
+                module_utils::update_module_by_code($moduleid, $updateData, $mysqli);
                 echo "<li class=\"existing\">$moduleid - " . $string['alreadyexists'] . "</li>\n";
               } else {
-                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, 0, 1, 1, '07/01');
+                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnrol, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, $timed_exams, $exam_q_feedback, 1, $academic_year_start);
                 if ($success) {
                   echo "<li class=\"added\">$moduleid - " . $string['added'] . "</li>\n";
                   $modulesAdded++;
@@ -169,7 +204,7 @@ function returnTrueFalse($value) {
     unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
 
     echo "</ul>";
-    echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" style=\"width:100px\" /></div>\n";
+    echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" class=\"ok\" /></div>\n";
 
     $mysqli->close();
     ?>
@@ -185,10 +220,10 @@ function returnTrueFalse($value) {
 ?>
 <table border="0" cellpadding="4" cellspacing="0" style="width:650px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:95%"><?php echo $string['bulkmoduleimport']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['bulkmoduleimport'] ?></span></td>
 </tr>
 <tr>
-<td align="left" style="padding:10px; background-color:#F1F5FB" colspan="2">
+<td align="left" style="padding:10px" class="dialog_body" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <blockquote>Module ID, Name, School, SMS API, Objectives API, Peer Review, External Examiners, Standards Setting, Mapping, Active, Allow Self-enrol, Negative Marking</blockquote>
@@ -200,7 +235,7 @@ function returnTrueFalse($value) {
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
-<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>
