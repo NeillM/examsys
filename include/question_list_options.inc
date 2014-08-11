@@ -304,63 +304,68 @@ if ($type == 'all') {
 </div>
 
 <?php
-switch ($_GET['type']) {
-  case 'all':    
-  case 'type':
-    $display_type = $string['type'];
-    break;
-  case 'status':
-    $display_type = $string['status'];
-    break;
-  case 'bloom':
-    $display_type = $string['bloomstaxonomy'];
-    break;
-  case 'keyword':
-    $display_type = $string['keyword'];
-    break;
-  case 'performance':
-    $display_type = $string['performance'];
-    break;
-  case 'objective':
-    $display_type = $string['learningoutcome'];
-    break;
-}
-echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
-?>
-<div style="height:78%; overflow:auto" id="list">
-<?php
-  echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">" . $string['showlockedquestions'] . "&nbsp;</label></div>\n";
-  if (isset($_GET['type'])) {
-    if ($_GET['type'] == 'objective') {
-      echo '<div style="margin-bottom:15px"><input type="text" name="filter" id="filter" style="font-size:110%" placeholder="' . $string['search'] . '" /> <button type="button" style="padding:2px 6px 2px 6px" id="filter_clear">' . $string['clear'] . '</button></div>';
-    }
-    
-    $subtypes = $qbank->get_categories($type);
-    if ($type != 'bloom') {    // Do not sort Bloom's Taxonomy categories.
-    asort($subtypes);     // Sort the options alphabetically. Different languages need different orders.
-    }
-  
-    foreach ($subtypes as $id=>$subtype) {
-      $data = '';
 
-      if ($_GET['type'] == 'all') {
-        $checked = ' checked';
-      } elseif (isset($_GET['subtype']) and $_GET['subtype'] == $id) {
-        $checked = ' checked';
-      } else {
-        $checked = '';
-      }
-
-      $hidden = '';
+if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+  // Trying to access learning objectives when not selected at the module level.
+} else {
+  switch ($_GET['type']) {
+    case 'all':    
+    case 'type':
+      $display_type = $string['type'];
+      break;
+    case 'status':
+      $display_type = $string['status'];
+      break;
+    case 'bloom':
+      $display_type = $string['bloomstaxonomy'];
+      break;
+    case 'keyword':
+      $display_type = $string['keyword'];
+      break;
+    case 'performance':
+      $display_type = $string['performance'];
+      break;
+    case 'objective':
+      $display_type = $string['learningoutcome'];
+      break;
+  }
+  echo "<div style=\"padding-top:30px; font-size:170%\">$display_type</div>\n";
+  ?>
+  <div style="height:78%; overflow:auto" id="list">
+  <?php
+    echo "<div style=\"margin-bottom:15px\"><input type=\"checkbox\" id=\"check_locked\" value=\"locked\" checked=\"checked\" /><label style=\"background-color:#F0C01E\">" . $string['showlockedquestions'] . "&nbsp;</label></div>\n";
+    if (isset($_GET['type'])) {
       if ($_GET['type'] == 'objective') {
-        $ids = $subtype['ids'];
-        $data = ' data-ids="' . implode(',', $ids) . '"';
-
-        $subtype = $subtype['label'];
-        $hidden = ' class="hidden"';
+        echo '<div style="margin-bottom:15px"><input type="text" name="filter" id="filter" style="font-size:110%" placeholder="' . $string['search'] . '" /> <button type="button" style="padding:2px 6px 2px 6px" id="filter_clear">' . $string['clear'] . '</button></div>';
       }
-      
-      echo "<div{$hidden}><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</label></div>\n";
+
+      $subtypes = $qbank->get_categories($type);
+      if ($type != 'bloom') {    // Do not sort Bloom's Taxonomy categories.
+        asort($subtypes);     // Sort the options alphabetically. Different languages need different orders.
+      }
+
+      foreach ($subtypes as $id=>$subtype) {
+        $data = '';
+
+        if ($_GET['type'] == 'all') {
+          $checked = ' checked';
+        } elseif (isset($_GET['subtype']) and $_GET['subtype'] == $id) {
+          $checked = ' checked';
+        } else {
+          $checked = '';
+        }
+
+        $hidden = '';
+        if ($_GET['type'] == 'objective') {
+          $ids = $subtype['ids'];
+          $data = ' data-ids="' . implode(',', $ids) . '"';
+
+          $subtype = $subtype['label'];
+          $hidden = ' class="hidden"';
+        }
+
+        echo "<div{$hidden}><input type=\"checkbox\" class=\"check_type\" id=\"check_$id\" value=\"$id\" $checked $data/><label for=\"check_$id\" class=\"check_label\">$subtype</label></div>\n";
+      }
     }
   }
 ?>

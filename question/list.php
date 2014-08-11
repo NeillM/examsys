@@ -83,7 +83,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -143,6 +143,32 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     $bank_type = ": $module_code";
   } elseif ($_GET['type'] != '%') {
     $bank_type = ': ' . $string[$_GET['type']];
+  }
+  
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+  if (isset($_GET['module'])) {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
+    
+    if ($_GET['type'] == 'type') {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">' . $string['questiontype'] . '</a>'; 
+    } elseif ($_GET['type'] == 'bloom') {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">' . $string['bloomstaxonomy'] . '</a>'; 
+    } elseif ($_GET['type'] == 'status') {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">' . $string['status'] . '</a>'; 
+    } elseif ($_GET['type'] == 'keyword') {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">' . $string['keyword'] . '</a>'; 
+    } elseif ($_GET['type'] == 'performance') {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">' . $string['performance'] . '</a>'; 
+    }
+  }
+  echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";
+  echo "</div>\n";
+  if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+    echo $notice->info_strip($string['modulenomappings'], 100) . "\n</div>\n</body>\n</html>";
+    exit;
   }
  
   $staff_modules_sql = '';
@@ -237,28 +263,6 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   } else {
     $table_order = array($string['question']=>800, $string['type']=>100, $string['modified']=>70, $string['status']=>70);
   }
-  
-  echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
-  
-  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
-  if (isset($_GET['module'])) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
-    
-    if ($_GET['type'] == 'type') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">' . $string['questiontype'] . '</a>'; 
-    } elseif ($_GET['type'] == 'bloom') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">' . $string['bloomstaxonomy'] . '</a>'; 
-    } elseif ($_GET['type'] == 'status') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">' . $string['status'] . '</a>'; 
-    } elseif ($_GET['type'] == 'keyword') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">' . $string['keyword'] . '</a>'; 
-    } elseif ($_GET['type'] == 'performance') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">' . $string['performance'] . '</a>'; 
-    }
-  }
-  echo "</div><div class=\"page_title\">" . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";
-  echo "</div>\n";
 
   if (isset($_GET['type']) and $_GET['type'] == 'all' and $search_results->num_rows == 0) {
     echo $notice->info_strip($string['noquestions'], 100) . "\n</div>\n</body>\n</html>";
@@ -370,11 +374,6 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 ?>
 </tbody>
 </table>
-<?php
-if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
-  echo '<p><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> ' . $string['modulenomappings'] . '</p>';
-}  
-?>
 </div>
 
 </body>
