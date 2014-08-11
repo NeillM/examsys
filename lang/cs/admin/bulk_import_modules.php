@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/admin/list_modules.php';
+require '../lang/' . $language . '/admin/add_module.php';
 
 $string['entermoduleid'] = 'Zadejte, prosím,  identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
