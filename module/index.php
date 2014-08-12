@@ -35,6 +35,7 @@ require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/stateutils.class.php';
+require_once '../classes/questionbank.class.php';
 
 $module = check_var('module', 'GET', true, false, true);
 
@@ -166,7 +167,16 @@ if ($module != 0) {
 echo "<br clear=\"left\">\n";
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['questionbank'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . "</a></div></div>\n";
+
+$qbank = new QuestionBank($module, $module_details['moduleid'], $string, $notice, $mysqli);
+$qbank->get_categories('all');
+$stats = $qbank->get_stats('all');
+$question_no = 0;
+foreach ($stats as $stat_name=>$stat_no) {
+  $question_no += $stat_no;
+}
+
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . "</a><br /><span class=\"grey\">" . $question_no . " " . strtolower($string['questions']) . "</span></div></div>\n";
 
 $bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
 if (strpos($module_details['checklist'], 'mapping') !== false) {
