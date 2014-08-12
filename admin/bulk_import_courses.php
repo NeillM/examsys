@@ -174,7 +174,7 @@ ini_set("auto_detect_line_endings", true);
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <blockquote>Course ID, Name, School</blockquote>
-<div style="text-align:center"><img src="../artwork/bulk_course_import_headings.png" width="361" height="60" alt="screenshot" style="border:1px solid black" /></div>
+<div style="text-align:center"><img src="../artwork/bulk_course_import_headings.png" width="334" height="59" alt="screenshot" style="border:1px solid #909090" /></div>
 <br />
 
 <div align="center">

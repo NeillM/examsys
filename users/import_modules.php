@@ -208,7 +208,7 @@ ini_set("auto_detect_line_endings", true);
 ?>
 <table style="width:730px" class="dialog_border">
 <tr>
-  <td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importmodules']; ?></td>
+  <td style="width:56px; background-color:white"><img src="../artwork/modules_import.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importmodules']; ?></td>
 </tr>
 <tr>
 <td class="dialog_body" colspan="2">

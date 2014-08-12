@@ -31,10 +31,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rog&#333;: <?php echo $string['optimizetables']; ?></title>
+  <title>Rog&#333;: <?php echo $string['optimizetables'] ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -43,7 +42,6 @@
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(235);
@@ -53,7 +51,7 @@
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['optimizetables']; ?></div>
+  <div class="page_title"><?php echo $string['optimizetables'] ?></div>
 </div>
   
 <br />
@@ -86,11 +84,11 @@
 <?php
   $getTables = $mysqli->query("SHOW TABLES");
   while ($table = $getTables->fetch_array(MYSQLI_NUM)) {
-    echo "<input type=\"checkbox\" name=\"" . $table[0] . "\" value=\"1\" checked />&nbsp;" . $table[0] . "<br />\n";
+    echo "<input type=\"checkbox\" name=\"" . $table[0] . "\" value=\"1\" checked />" . $table[0] . "<br />\n";
   }
 ?>
 <br />
-<input style="width:120px" type="submit" name="submit" value="<?php echo $string['optimize']; ?>" />
+<input class="ok" type="submit" name="submit" value="<?php echo $string['optimize'] ?>" />
 </blockquote>
 </form>
 </div>

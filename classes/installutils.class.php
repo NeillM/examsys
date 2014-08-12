@@ -159,9 +159,6 @@ Class InstallUtils {
 
         <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
 
-
-
-
       <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
 <?php
 $mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format';
@@ -266,6 +263,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     <?php
   }
 
+  /**
+   * Determines if a database user already exists.
+   *
+   * @param string $username - The name of the user to be tested.
+   *
+   * @return bool - True = user exists, False = user does not exist.
+   */
+  static function does_user_exist($username) {
+    $result  = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
+    $result->bind_param('s', $username);
+    $result->execute();
+    $result->store_result();
+    $num_rows =  $result->num_rows;
+
+    $result->close();
+
+    if ($num_rows < 1) {
+      return false;
+    }
+
+    return true;    
+  }
+  
   static function processForm() {
     global $string, $cfg_encrypt_salt;
 
@@ -391,6 +411,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       array('internaldb', array('table' => '', 'username_col' => '', 'passwd_col' => '', 'id_col' => '', 'sql_extra' => '', 'encrypt' => 'SHA-512', 'encrypt_salt' => $cfg_encrypt_salt), 'Internal Database')
     );
     $configObj->set('authentication', $authentication);
+    
+    InstallUtils::checkDBUsers();
+
 
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
@@ -1184,6 +1207,24 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::displayError($errors);
     }
   }
+  
+  static function checkDBUsers() {
+    $errors = array();
+
+    $usernames = array('auth'=>300, 'stu'=>301, 'staff'=>302, 'ext'=>303, 'sys'=>304, 'sct'=>305, 'inv'=>306);
+    foreach ($usernames as $username=>$err_code){
+      $test_username = self::$cfg_db_basename . '_' . $username;
+      if (self::does_user_exist($test_username)) {
+        $errors[$err_code] = "User '" . $test_username . "' already exists.";
+
+      }
+    }
+    
+    if (count($errors) > 0) {
+      self::displayError($errors);
+    }
+
+  }
 
   /**
   * Check for installed software versions PHP, Apache
@@ -1202,7 +1243,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $errors['202'] = $string['errors10'];
     }
     $phpModules = get_loaded_extensions();
-    if ( !in_array('mysqli',$phpModules) ) {
+    if ( !in_array('mysqli', $phpModules) ) {
       $errors['203'] = $string['errors11'];
     }
 

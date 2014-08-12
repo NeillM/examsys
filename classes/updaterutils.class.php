@@ -75,7 +75,7 @@ Class UpdaterUtils {
 
     return $num_rows;
   }
-
+  
   /**
    * Determines if a table exists in the database.
    *
