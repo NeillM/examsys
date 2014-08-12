@@ -26,4 +26,6 @@ $string['recyclebin'] = 'Koš';
 $string['info'] = 'Info';
 $string['search'] = 'Hledat';
 $string['confirmdelete'] = 'Jste si skutečně jisti, že chcete aktuální stránku odstranit?';
+$string['top'] = 'Hlavička stránky';
+$string['msg'] = '<strong>Varování:</strong> Tato stránka byla odstraněna.';
 ?>

@@ -22,35 +22,45 @@
 * @package
 */
 
-  require '../../include/staff_student_auth.inc';
+require '../../include/staff_student_auth.inc';
+require_once '../../classes/helputils.class.php';
+
+if (isset($_GET['id'])) {
+  $id = $_GET['id'];
+} else {
+  $id = null;
+}
+
+$help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-</head>
-<frameset rows="26,*" border="0" frameborder="0" framespacing="0">
-  <frame name="toolbar" noresize src="toolbar.php<?php if (isset($_GET['highlight'])) echo '?highlight=' . $_GET['highlight']; ?>" scrolling="no" border="0" frameborder="0" marginheight="0" marginwidth="0">
-  <frameset cols="26%,*" border="0">
-    <frame src="toc.php<?php if (isset($_GET['id'])) echo '?id=' . $_GET['id']; ?>" name="navigation" id="navigation" scrolling="no" title="Navigation"/>
-      <?php
-        if (isset($_GET['id'])) {
-          $tmp_highlight = '';
-          if (isset($_GET['highlight'])) $tmp_highlight = '&highlight=' . $_GET['highlight']; 
-          if (isset($_GET['section'])) {
-            echo "<frame src=\"display_page.php?id=" . $_GET['id'] . $tmp_highlight . "&section=" . $_GET['section'] . "\" name=\"content\" id=\"content\" scrolling=\"yes\" />\n";
-          } else {
-            echo "<frame src=\"display_page.php?id=" . $_GET['id'] . $tmp_highlight . "\" name=\"content\" id=\"content\" scrolling=\"yes\" />\n";
-          }
-        } else {
-          echo "<frame src=\"display_page.php?id=1$tmp_highlight\" name=\"content\" id=\"content\" scrolling=\"yes\" />\n";
-        }
-      ?>
-    <noframes>
-      <body></body>
-    </noframes>
-  </frameset>
-</frameset>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=utf8" />
+    
+    <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    
+    <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+    
+    <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../js/help.js"></script>
+  </head>
+  
+  <body>
+    <div id="wrapper">
+      <div id="toolbar">
+        <?php $help_system->display_toolbar($id); ?>
+      </div>
+      
+      <div id="toc">
+        <?php $help_system->display_toc($id); ?>
+      </div>
+      <div id="contents">
+        <?php $help_system->display_page($id); ?>
+      </div>
+    </div>
+  </body>  
+  
 </html>

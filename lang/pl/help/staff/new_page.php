@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-//require '../../lang/' . $language . '/help/staff/index.php';
+require '../../lang/' . $language . '/help/staff/index.php';
+
 $string['pagetitle'] = 'Tytul strony...';
 
 ?>

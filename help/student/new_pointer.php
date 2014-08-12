@@ -22,7 +22,8 @@
 * @package
 */
 
-require '../../include/staff_auth.inc';    // Only let staff create links.
+require '../../include/sysadmin_auth.inc';    // Only let staff create links.
+require_once '../../classes/helputils.class.php';
   
 if (isset($_POST['submit'])) {
   $articleid = 0;
@@ -39,29 +40,13 @@ if (isset($_POST['submit'])) {
     echo "<p>$insertQuery</p>\n";
     exit;
   }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Help and Support Center</title>
-  
-  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-
-  <script>
-    function reloadHelp() {
-      window.top.location='index.php?id=<?php echo $articleid; ?>';
-    }
-  </script>
-</head>
-<body onload="reloadHelp()">
-</body>
-</html>
-
-<?php
+  $mysqli->close();
+  header("location: index.php?id=$articleid");
+  exit;  
 } else {
+  $id = null;
+  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <html>
 <head>
@@ -71,39 +56,32 @@ if (isset($_POST['submit'])) {
   <title>Rog&#333;: Help and Support Center</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <style type="text/css">
-    body {font-size:85%}
-    div {line-height:180%}
-    a:link {color:black}
-    a:visited {color:black}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
 
-  <script>
-    function updateMenu(sectionID,imageID) {
-      current = (document.getElementById(sectionID).style.display == 'block') ? 'none' : 'block';
-      document.getElementById(sectionID).style.display = current;
-
-      icon = (document.getElementById(imageID).getAttribute('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
-      document.getElementById(imageID).setAttribute('src',icon);
-    }
-    function resizeTOC() {
-      var frHeight = parent.document.getElementById("content").height;
-      frHeight = frHeight - 120;
-      document.getElementById("toc").style.height = frHeight + 'px';
-    }
-  </script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
 </head>
-<body onload="resizeTOC()">
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
+
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." /></p>
 
-<div id="toc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">
+<div id="pointertoc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">
 <?php
   $sub_section = 0;
   $help_section = 0;
   $help_toc = array();
     
-  $result = $mysqli->prepare("SELECT id, title FROM student_help WHERE id != 1 ORDER BY title, id");
+  $result = $mysqli->prepare("SELECT id, title FROM student_help WHERE id != 1 AND language = ? ORDER BY title, id");
+	$result->bind_param('s', $_SESSION['ROGO_language']);
   $result->execute();
   $result->bind_result($page_id, $page_title);
   while ($result->fetch()) {
@@ -162,6 +140,8 @@ if (isset($_POST['submit'])) {
 <br />
 <div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
+  </div>
+</div>
 </body>
 </html>
 <?php

@@ -1,26 +1,22 @@
-body {
-  margin:6px;
-  font-size:80%
-}
 ul {
   list-style-type:square;
   color:#FF9900
 }
-a:link.title {
+#contents a:link.title {
   color:#0560A6;
   font-weight:bold
 }
-a:visited.title {
+#contents a:visited.searchtitle {
   color:#0560A6;
   font-weight:bold
 }
-a:link.page {
+#contents a:link.page {
   color:white
 }
-a:visited.page {
+#contents a:visited.page {
   color:white
 }
-a.path {
+#contents a.searchpath {
   color:#808080 !important
 }
 .row1 {

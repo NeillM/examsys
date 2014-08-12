@@ -1,48 +1,121 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 body {
-  font-size:85%;
-  line-height:150%;
+  font-size: 85%;
+  line-height: 150%;
 }
+
 a {
-  color:#316AC5;
+  color: #316AC5;
 }
+
 p, div, td, ol {
-  color:#484848;
+  color: #484848;
 }
+
 ul {
-  list-style:square outside;
-  color:#f27000;
+  list-style: square outside;
+  color: #f27000;
 }
+
 h1 {
-  font-size:150%;
-  color:black;
+  font-size: 150%;
+  color: black;
 }
+
 h2 {
-  font-size:140%;
-  color:#f27000;
+  font-size: 140%;
+  color: #f27000;
 }
+
 hr {
-  margin-left:0px;
-  text-align:left;
+  margin-left: 0;
+  text-align: left;
 }
+
 .path {
-  background-color:#F2F2F2;
-  color:#666666;
-  font-size:80%;
-  padding-left:10px;
-  border-bottom:1px solid #B6B6B6;
+  background-color: #F2F2F2;
+  color: #666666;
+  font-size: 80%;
+  padding-left: 10px;
+  border-bottom: 1px solid #B6B6B6;
 }
+
 .subheading {
-  font-weight:bold;
-  font-style:italic;
+  font-weight: bold;
+  font-style: italic;
 }
+
 .tutorial {
-  background-color:#FCF6CF;
-  width:95%;
-  cursor:pointer;
+  background-color: #FCF6CF;
+  width: 95%;
+  cursor: pointer;
 }
+
 .image_brd {
-  border:1px solid black;
+  border: 1px solid black;
 }
+
 .image_no_brd {
-  border:0px;
+  border: 0;
+}
+
+#toc {
+  line-height: 180%;
+}
+
+#toc a:link.book {
+  color: black;
+}
+
+#toc a:visited.book {
+  color: black;
+}
+
+#toc a:link {
+  color: black;
+}
+
+#toc a:visited {
+  color: black;
+}
+
+.icon16_active {
+  padding-right: 6px;
+}
+
+
+#wrapper {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  position: relative;
+}
+
+#toolbar {
+  height: 26px;
+  background-color: #D3E5FF;
+}
+
+#toc {
+  position: absolute;
+  top: 26px;
+  bottom: 0;
+  width: 20%;
+  float: left;
+  overflow: auto;
+  background-color: #EAEAEA;
+}
+
+#contents {
+  position: absolute;
+  top: 26px;
+  bottom: 0;
+  width: 80%;
+  left: 20%;
+  float: right;
+  overflow: auto;
 }

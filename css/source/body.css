@@ -47,8 +47,8 @@ input[type=submit], input[type=button] {
   border: 1px solid #707070;
   padding-left: 8px;
   padding-right: 8px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   background: -moz-linear-gradient(top, #EBEBEB, #D5D5D5);
   background: -webkit-linear-gradient(top, #EBEBEB, #D5D5D5);
   background-image: -ms-linear-gradient(top, #EBEBEB 0%, #D5D5D5 100%);

@@ -22,9 +22,10 @@
 * @package
 */
 
-require '../../include/staff_auth.inc';    // Only let staff create pages.
+require '../../include/sysadmin_auth.inc';
 require '../../include/errors.inc';
 require '../../include/help.inc';
+require_once '../../classes/helputils.class.php';
 
 header('Content-Type: text/html; charset=utf8');
 
@@ -48,23 +49,12 @@ if (isset($_POST['save_changes'])) {
 	$result->execute();  
 	$result->close();
 
-	$mysqli->close();
-	?>
-	<html>
-	<head>
-	<title>Rog&#333;</title>
-	<script>
-		function reloadHelp() {
-			window.top.location='index.php?id=<?php echo $articleid; ?>';
-		}
-	</script>
-	</head>
-	<body onload="reloadHelp()">
-	</body>
-	</html>
-	
-	<?php
+  $mysqli->close();
+  header("location: index.php?id=$articleid");
+  exit;
 } else {
+  $id = null;
+  $help_system = new StaffHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,14 +74,22 @@ if (isset($_POST['save_changes'])) {
   <script>
     $(function () {
 		  var docHeight = $(document).height();
-			docHeight = docHeight - 100;
+			docHeight = docHeight - 135;
 		  $('#edit1').css('height', docHeight + 'px');
 		});
   </script>
 </head>
 
 <body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
@@ -103,8 +101,10 @@ if (isset($_POST['save_changes'])) {
 
   <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
 
-  <div style="text-align:center; padding-top:8px""><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
+  </div>
+</div>
 </body>
 </html>
 <?php

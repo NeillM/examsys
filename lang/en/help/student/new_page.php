@@ -14,16 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['back'] = 'Wstecz';
-$string['forwards'] = 'Naprzód';
-$string['refresh'] = 'Odśwież';
-$string['print'] = 'Drukuj';
-$string['delete'] = 'Usuń stronę';
-$string['new'] = 'Nowa strona';
-$string['pointer'] = 'Wskaźnik';
-$string['edit'] = 'Edytuj stronę';
-$string['recyclebin'] = 'Kosz';
-$string['info'] = 'Info'; //cognate
-$string['search'] = 'Szukaj';
-$string['confirmdelete'] = 'Czy na pewno usunąć aktualną stronę?';
+require '../../lang/' . $language . '/help/staff/new_page.php';
 ?>

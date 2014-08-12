@@ -23,15 +23,16 @@
 */
 
 require '../../include/staff_auth.inc';
+require_once '../../classes/helputils.class.php';
 
 function getPath($path, $pageID, $tmp_highlight) {
   $parts = explode('/',$path);
-  $path = '<a class="path" href="display_page.php?id=1">Help</a>';
+  $path = '<a class="searchpath" href="index.php?id=1">Help</a>';
   for ($i=0; $i<count($parts); $i++) {
     if ($i == (count($parts)-1)) {
-      $path .= " > <a class=\"path\" href=\"display_page.php?id=$pageID&highlight=$tmp_highlight\">" . $parts[$i] . "</a>";
+      $path .= " > <a class=\"searchpath\" href=\"index.php?id=$pageID&highlight=$tmp_highlight\">" . $parts[$i] . "</a>";
     } else {
-      $path .= " > <a class=\"path\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
+      $path .= " > <a class=\"searchpath\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
     }
   }
   
@@ -72,6 +73,8 @@ function drawHeader($tmp_page_no) {
   }
   echo "</td></tr></table>\n";
 }
+  $id = null;
+  $help_system = new StaffHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -82,22 +85,33 @@ function drawHeader($tmp_page_no) {
   <title>Rog&#333;</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help_search.css" />
   
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
   <script>
     function displayPage(targetID, page_no) {
       for (page=1; page<=page_no; page++) {
         $('#page' + page).hide();
       }
       $('#page' + targetID).show();
-      window.scrollTo(0,0)
+      $('#contents').scrollTo(0,0);
     }
   </script>
 </head>
 <body>
-
+  <div id="wrapper">
+      <div id="toolbar">
+        <?php $help_system->display_toolbar($id); ?>
+      </div>
+      
+      <div id="toc">
+        <?php $help_system->display_toc($id); ?>
+      </div>
+      <div id="contents">
 <?php
-  echo "<div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
+  echo "<div style=\"font-size:130%; font-weight:bold; color:#295AAD\">" . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
   
   if (isset($_GET['searchstring'])) {
     if ($userObject->has_role('SysAdmin')) {
@@ -151,10 +165,10 @@ function drawHeader($tmp_page_no) {
             echo "<div id=\"page$page_no\" style=\"display:none\">\n";
           }
           drawHeader($page_no);
-          echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
+          echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
           echo "<tr><td style=\"padding:2px; vertical-align:top; width:24px\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td style=\"padding-bottom:10px\">";
         }
-        echo "<a class=\"title\" href=\"index.php?id=$id&highlight=" . $_GET['searchstring'] . "\" target=\"_top\">" . displayTitle($title) . "</a><br /><div class=\"path\">" . getPath($title, $id, $_GET['searchstring']) . "<div></td></tr>\n";
+        echo "<a class=\"searchtitle\" href=\"index.php?id=$id&highlight=" . $_GET['searchstring'] . "\">" . displayTitle($title) . "</a><br /><div class=\"searchpath\">" . getPath($title, $id, $_GET['searchstring']) . "<div></td></tr>\n";
         $link_no++;
         if ($link_no >= $page_size) {
           $link_no = 0;
@@ -169,5 +183,7 @@ function drawHeader($tmp_page_no) {
   }
   $mysqli->close();
 ?>
+    </div>
+  </div>
 </body>
 </html>

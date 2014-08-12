@@ -25,6 +25,7 @@
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff create pages.
 require '../../include/errors.inc';
 require '../../include/help.inc';
+require_once '../../classes/helputils.class.php';
 
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
@@ -48,23 +49,12 @@ if (isset($_POST['save_changes'])) {
 	$result->execute();  
 	$result->close();
 
-	$mysqli->close();
-	?>
-	<html>
-	<head>
-	<title></title>
-	<script>
-		function reloadHelp() {
-			window.top.location='index.php?id=<?php echo $articleid; ?>';
-		}
-	</script>
-	</head>
-	<body onload="reloadHelp()">
-	</body>
-	</html>
-	
-	<?php
+  $mysqli->close();
+  header("location: index.php?id=$articleid");
+  exit;
 } else {
+  $id = null;
+  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,18 +74,27 @@ if (isset($_POST['save_changes'])) {
   <script>
     $(function () {
 		  var docHeight = $(document).height();
-			docHeight = docHeight - 100;
+			docHeight = docHeight - 135;
 		  $('#edit1').css('height', docHeight + 'px');
 		});
   </script>
 </head>
 
 <body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
   <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#295AAD; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" required /></td>
+  <td style="text-align:right"><select name="page_roles"><option value="Staff">Staff</option><option value="Admin">Admin</option><option value="SysAdmin">SysAdmin</option></select></td>
   </tr>
   </table>
   <br />
@@ -104,6 +103,8 @@ if (isset($_POST['save_changes'])) {
 
   <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
+  </div>
+</div>
 </body>
 </html>
 <?php

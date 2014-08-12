@@ -24,9 +24,12 @@
  
 require '../../include/staff_student_auth.inc';
 require '../../include/errors.inc';
+require_once '../../classes/helputils.class.php';
 
 check_var('title', 'GET', true, false, false);
 
+$id = null;
+$help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,21 +40,28 @@ check_var('title', 'GET', true, false, false);
   <title>Rog&#333;: Help and Support Center</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   <style type="text/css">
-    body {font-size:85%; line-height:150%}
+    body {line-height:150%}
     table {font-size:100%}
     a:link {color:#0560A6}
     a:visited {color:#0560A6}
     .row {height:28px; border-bottom: 1px solid #A6CBEB}
   </style>
   
-  <script>
-    function updateToolbar(pageID) {
-      parent.frames['toolbar'].document.myform.pageid.value=pageID;
-    }
-  </script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
 </head>
+<body>
+  <div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <?php
   if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
     $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'student', ?, NOW(), ?)");
@@ -62,8 +72,6 @@ check_var('title', 'GET', true, false, false);
       echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
     }
   }
-  
-  echo "<body onload=\"updateToolbar(0)\">\n";
   
   $t = $_GET['title'] . '/%';
   $search_results = $mysqli->prepare("SELECT articleid, title, type FROM student_help WHERE title LIKE ? AND language = ? ORDER BY title");
@@ -90,6 +98,8 @@ check_var('title', 'GET', true, false, false);
   $mysqli->close();
   echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";
 ?>
+</div>
+</div>
 </div>
 </body>
 </html>

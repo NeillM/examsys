@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../../lang/' . $language . '/help/staff/index.php';
+
 $string['entertitle'] = 'Please enter a title for this help page.';
 $string['pagelocked'] = 'This page is currently locked for editing by';
 $string['isinreadonly'] = 'It is now in read only mode.';

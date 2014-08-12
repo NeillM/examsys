@@ -57,5 +57,5 @@ $deleteQuery->execute();
 $deleteQuery->close();
 
 $mysqli->close();
-header("location: index.php");
+header("location: index.php?id=1");
 ?>

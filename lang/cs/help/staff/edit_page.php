@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../../lang/' . $language . '/help/staff/index.php';
+
 $string['entertitle'] = 'Zadejte, prosím, Nadpis této pomocné stránky.';
 $string['pagelocked'] = 'Tato stránka je v současnosti uzamčena a nelze ji upravovat';
 $string['isinreadonly'] = 'Tato stránka je aktuálně pouze ke čtení.';

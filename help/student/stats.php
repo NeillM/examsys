@@ -22,16 +22,19 @@
 * @package
 */
 
-  require '../../include/staff_student_auth.inc';
+require '../../include/staff_student_auth.inc';
+require_once '../../classes/helputils.class.php';
 
-  if(isset($_POST['startday'])) {
-	$start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';
-	$end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000';
-  } else {
-    $start_date = date('Ymd',time() - 31536000) . '000000';
-    $end_date = date('Ymd') . '000000';
-  }
+$id = null;
+$help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 
+if (isset($_POST['startday'])) {
+$start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';
+$end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000';
+} else {
+  $start_date = date('Ymd',time() - 31536000) . '000000';
+  $end_date = date('Ymd') . '000000';
+}
 
 ?>
 <!DOCTYPE html>
@@ -43,8 +46,8 @@
   <title>Rog&#333;: Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
   <style type="text/css">
-    body {font-size:80%; margin:4px}
     ul {list-style-type:square; color:#FF9900}
     a:link.title {color:#0560A6; font-weight:bold}
     a:visited.title {color:#0560A6; font-weight:bold}
@@ -57,19 +60,17 @@
     .stats td {vertical-align:top; border-bottom: 1px solid #295AAD; border-right: 1px solid #295AAD}
 		th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
-
-  <script>
-    function displayPage(targetID, page_no) {
-      for (page=1; page<=page_no; page++) {
-        document.getElementById('page' + page).style.display='none';
-      }
-      document.getElementById('page' + targetID).style.display='block';
-      window.scrollTo(0,0)
-    }
-  </script>
 </head>
 <body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
 
@@ -233,5 +234,7 @@
 
   $mysqli->close();
 ?>
+  </div>
+</div>
 </body>
 </html>

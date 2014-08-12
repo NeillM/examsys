@@ -27,6 +27,7 @@
 require '../../include/sysadmin_auth.inc';
 require '../../include/errors.inc';
 require '../../include/help.inc';
+require_once '../../classes/helputils.class.php';
 
 $pageid = check_var('id', 'REQUEST', true, false, true);
   
@@ -76,7 +77,7 @@ if (isset($_POST['save_changes'])) {
   }
       
   $mysqli->close();
-  header("location: ../student/display_page.php?id=$pageid");
+  header("location: ../student/index.php?id=$pageid");
   exit();
 } elseif (isset($_POST['cancel'])) {
   // Release authoring lock.
@@ -87,11 +88,12 @@ if (isset($_POST['save_changes'])) {
     $result->close();
   }
   $mysqli->close();
-  header("location: ../student/display_page.php?id=$pageid");
+  header("location: ../student/index.php?id=$pageid");
   exit();
 } else {
+  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -108,14 +110,22 @@ if (isset($_POST['save_changes'])) {
   <script>
     $(function () {
 		  var docHeight = $(document).height();
-			docHeight = docHeight - 100;
+			docHeight = docHeight - 135;
 		  $('#edit1').css('height', docHeight + 'px');
 		});
   </script>
 </head>
 
 <body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>">
 <?php
   if ($type == 'pointer') {
@@ -166,6 +176,8 @@ if (isset($_POST['save_changes'])) {
   <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>"<?php echo $disabled; ?> /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
   <input type="hidden" name="edit_id" value="<?php echo $edit_id ?>" />
 </form>
+  </div>
+</div>
 </body>
 </html>
 <?php
