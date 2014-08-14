@@ -44,7 +44,7 @@ if (isset($_POST['save_changes'])) {
   $tmp_title = $_POST['page_title'];
   $tmp_roles = $_POST['page_roles'];
   
-  $page_details = $help_system->save_page_details($tmp_title, $tmp_body, $tmp_roles, $pageid, $_POST['edit_id']);
+  $help_system->save_page($tmp_title, $tmp_body, $tmp_roles, $pageid, $_POST['edit_id']);
   
   $mysqli->close();
   header("location: index.php?id=$pageid");

@@ -208,11 +208,13 @@ Class OnlineHelp {
     return array('id'=>$id, 'title'=>$title, 'body'=>$body, 'page_type'=>$page_type, 'checkout_time'=>$checkout_time, 'checkout_authorID'=>$checkout_authorID, 'roles'=>$roles);
   }
   
-  public function save_page_details($title, $body, $roles, $articleid, $pointerid) {
+  private function save_staff_page($title, $body, $roles, $articleid, $pointerid) {
+    $body_plain = strip_tags($body);
+    
     if ($articleid == $pointerid) {
       // Editing normal page.
       $result = $this->db->prepare("UPDATE staff_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE articleid = ? AND language = ?");
-      $result->bind_param('ssssis', $title, $body, $tmp_body_plain, $_POST['page_roles'], $_POST['edit_id'], $_SESSION['ROGO_language']);
+      $result->bind_param('ssssis', $title, $body, $body_plain, $roles, $articleid, $_SESSION['ROGO_language']);
       $result->execute();
       $result->close();
     } else {
@@ -222,11 +224,43 @@ Class OnlineHelp {
       $result->execute();
       $result->close();
 
-      $body_plain = strip_tags($body);
       $result = $this->db->prepare("UPDATE staff_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE articleid = ? AND language = ?");
       $result->bind_param('sssis', $body, $body_plain, $roles, $pointerid, $_SESSION['ROGO_language']);
       $result->execute();
       $result->close();
+    }    
+  }
+  
+  private function save_student_page($title, $body, $articleid, $pointerid) {
+    $body_plain = strip_tags($body);
+    if ($articleid == $pointerid) {
+      // Editing normal page.
+      $result = $this->db->prepare("UPDATE student_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
+      $result->bind_param('sssis', $title, $body, $body_plain, $articleid, $_SESSION['ROGO_language']);
+      $result->execute();
+      $result->close();
+    } else {
+      // Editing a page pointed to.
+      $result = $this->db->prepare("UPDATE student_help SET title = ? WHERE articleid = ? AND language = ?");
+      $result->bind_param('sis', $title, $articleid, $_SESSION['ROGO_language']);
+      $result->execute();
+      $result->close();
+
+      $result = $this->db->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULLWHERE articleid = ? AND language = ?");
+      $result->bind_param('ssis', $body, $body_plain, $pointerid, $_SESSION['ROGO_language']);
+      $result->execute();
+      $result->close();
+    }
+  }
+  
+  public function save_page($title, $body, $roles, $articleid, $pointerid) {
+    $articleid = (int)$articleid;
+    $pointerid = (int)$pointerid;
+    
+    if ($this->type == 'student') {
+      $this->save_student_page($title, $body, $articleid, $pointerid);
+    } else {
+      $this->save_staff_page($title, $body, $roles, $articleid, $pointerid);
     }
   }
 
