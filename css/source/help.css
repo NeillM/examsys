@@ -21,6 +21,15 @@ ul {
   color: #f27000;
 }
 
+.help_title {
+  padding: 20px;
+  font-size: 190%;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #295AAD;
+  border-bottom: #B6B6B6 1px solid;
+}
+
 h1 {
   font-size: 150%;
   color: black;
@@ -37,11 +46,8 @@ hr {
 }
 
 .path {
-  background-color: #F2F2F2;
-  color: #666666;
   font-size: 80%;
-  padding-left: 10px;
-  border-bottom: 1px solid #B6B6B6;
+  padding-left: 8px;
 }
 
 .subheading {
@@ -108,6 +114,20 @@ hr {
   float: left;
   padding-top: 2px;
   padding-left: 6px;
+}
+
+.toolbar_icon {
+  width: 23px
+  height: 22px;
+}
+
+.toolbar_icon:hover {
+  background-color: #FFDB75;
+}
+
+.divider {
+  width: 6px !important;
+  height: 22px !important;
 }
 
 .toolbar_search {

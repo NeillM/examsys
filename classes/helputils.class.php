@@ -49,12 +49,17 @@ Class OnlineHelp {
   
   public function display_toolbar($id) {
     echo "<script>\nvar id = $id;\n</script>\n";
-    echo '<form name="myform" action="post" method="post" onsubmit="search(); return false;">';
-    echo '<div class="toolbar_buttons"><img src="../back_off.png" width="23" height="22" title="' . $this->string['back'] . '" alt="' . $this->string['back'] . '" name="back" id="back" onmouseover="roll(\'back\',\'../back_on.png\')" onmouseout="roll(\'back\',\'../back_off.png\')" /><img src="../forwards_off.png" width="23" height="22" title="' . $this->string['forwards'] . '" alt="' . $this->string['forwards'] . '" name="forwards" id="forwards" onmouseover="roll(\'forwards\',\'../forwards_on.png\')" onmouseout="roll(\'forwards\',\'../forwards_off.png\')" /><img src="../home_off.png" width="23" height="22" title="' . $this->string['home'] . '" alt="' . $this->string['home'] . '" name="home" id="home" onmouseover="roll(\'home\',\'../home_on.png\')" onmouseout="roll(\'home\',\'../home_off.png\')" />';
+    echo '<form name="myform" action="search.php" method="get">';
+    echo '<div class="toolbar_buttons"><img src="../back_off.png" title="' . $this->string['back'] . '" alt="' . $this->string['back'] . '" name="back" id="back" class="toolbar_icon" /><img src="../forwards_off.png" title="' . $this->string['forwards'] . '" alt="' . $this->string['forwards'] . '" name="forwards" id="forwards" class="toolbar_icon" /><img src="../home_off.png" title="' . $this->string['home'] . '" alt="' . $this->string['home'] . '" name="home" id="home" class="toolbar_icon" />';
     if ($this->userObject->has_role('SysAdmin')) {
-      echo '<img src="../divider.png" width="6" height="22" alt="|" /><img src="../delete_off.png" width="23" height="22" title="' . $this->string['delete'] . '" alt="' . $this->string['delete'] . '" name="delete" id="delete" onmouseover="roll(\'delete\',\'../delete_on.png\')" onmouseout="roll(\'delete\',\'../delete_off.png\')" /><img src="../divider.png" width="6" height="22" alt="|" /><img src="../new_off.png" width="23" height="22" title="' . $this->string['new'] . '" alt="' . $this->string['new'] . '" name="new" id="new" onmouseover="roll(\'new\',\'../new_on.png\')" onmouseout="roll(\'new\',\'../new_off.png\')" /><img src="../pointer_off.png" width="23" height="22" title="' . $this->string['pointer'] . '" alt="' . $this->string['pointer'] . '" name="pointer" id="pointer" onmouseover="roll(\'pointer\',\'../pointer_on.png\')" onmouseout="roll(\'pointer\',\'../pointer_off.png\')" /><img src="../edit_off.png" width="23" height="22" title="' . $this->string['edit'] . '" alt="' . $this->string['edit'] . '" name="edit" id="edit" onmouseover="roll(\'edit\',\'../edit_on.png\')" onmouseout="roll(\'edit\',\'../edit_off.png\')" /><img src="../divider.png" width="6" height="22" alt="|" /><img src="../recycle_bin_off.png" width="23" height="22" title="' . $this->string['recyclebin'] . '" alt="' . $this->string['recyclebin'] . '" name="recycle_bin" id="recycle_bin" onmouseover="roll(\'recycle_bin\',\'../recycle_bin_on.png\')" onmouseout="roll(\'recycle_bin\',\'../recycle_bin_off.png\')" /><img src="../info_off.png" width="23" height="22" title="' . $this->string['info'] . '" alt="' . $this->string['info'] . '" name="info" id="info" onmouseover="roll(\'info\',\'../info_on.png\')" onmouseout="roll(\'info\',\'../info_off.png\')" />';
+      echo '<img src="../divider.png" class="divider" alt="|" /><img src="../delete_off.png" title="' . $this->string['delete'] . '" alt="' . $this->string['delete'] . '" name="delete" id="delete" class="toolbar_icon" /><img src="../divider.png" class="divider" alt="|" /><img src="../new_off.png" title="' . $this->string['new'] . '" alt="' . $this->string['new'] . '" name="new" id="new" class="toolbar_icon" /><img src="../pointer_off.png" title="' . $this->string['pointer'] . '" alt="' . $this->string['pointer'] . '" name="pointer" id="pointer" class="toolbar_icon" /><img src="../edit_off.png" title="' . $this->string['edit'] . '" alt="' . $this->string['edit'] . '" name="edit" id="edit" class="toolbar_icon" /><img src="../divider.png" class="divider" alt="|" /><img src="../recycle_bin_off.png" title="' . $this->string['recyclebin'] . '" alt="' . $this->string['recyclebin'] . '" name="recycle_bin" id="recycle_bin" class="toolbar_icon" /><img src="../info_off.png" title="' . $this->string['info'] . '" alt="' . $this->string['info'] . '" name="info" id="info" class="toolbar_icon" />';
     }
-    echo '</div><div class="toolbar_search"><input type="text" id="searchbox" name="searchstring" value="" placeholder="' . $this->string['search'] . '" /></td><td style="padding-left:4px; width:20px"><img onclick="search()" src="../search.png" width="16" height="16" title="' . $this->string['search'] . '" alt="' . $this->string['search'] . '" /></div></form>';
+    if (isset($_GET['searchstring'])) {
+      $searchstring = $_GET['searchstring'];
+    } else {
+      $searchstring = '';
+    }
+    echo '</div><div class="toolbar_search"><input type="text" id="searchbox" name="searchstring" value="' . $searchstring . '" placeholder="' . $this->string['search'] . '" /><img id="search" src="../search.png" width="16" height="16" title="' . $this->string['search'] . '" alt="' . $this->string['search'] . '" /></div></form>';
   }
 
   public function display_toc($pageid) {
@@ -158,10 +163,10 @@ Class OnlineHelp {
 
   private function getPath($path) {
     $parts = explode('/',$path);
-    $path = '<a style="color:#666666" href="index.php?id=1">' . $this->string['home'] . '</a>';
+    $path = '<a href="index.php?id=1">' . $this->string['home'] . '</a>';
     if (count($parts) > 1) {
       for ($i=0; $i<count($parts)-1; $i++) {
-        $path .= " > <a style=\"color:#666666\" href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
+        $path .= " > <a href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
       }
     }
 
@@ -244,7 +249,7 @@ Class OnlineHelp {
       echo "<div>\n";
     } else {
       echo "<div class=\"path\">" . $this->getPath($page_details['title']) . "</div>";
-      echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . $this->getTitle($page_details['title']) . "</div>\n<hr style=\"width:100%; background-color:#B6B6B6; color:#B6B6B6; height:1px; border:0px\" />\n";
+      echo "<div class=\"help_title\">" . $this->getTitle($page_details['title']) . "</div>\n";
       echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
     }
 

@@ -1,22 +1,3 @@
-function roll(img_name,img_src)  {
-  document[img_name].src = img_src;
-}
-
-function infoPage()  {
-  window.location = 'stats.php';
-}
-
-function search() {
-  window.location = 'search.php?searchstring=' + document.getElementById('searchbox').value;
-}
-
-function updateMenu(sectionID, imageID) {
-  $('#' + sectionID).toggle();
-
-  icon = ($('#' + imageID).attr('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
-  $('#' + imageID).attr('src', icon);
-}
-
 $(function() {
   $('#toc').scrollTop(scrOfY);
   
@@ -54,8 +35,11 @@ $(function() {
   
   $('#info').click(function() {
     window.location = 'stats.php';
-  });
-  
+  });  
+    
+  $('#search').click(function() {
+    window.location = 'search.php?searchstring=' + $('#searchbox').val();
+  });  
     
   $('.gototop').click(function() {
     $("#contents").animate({ scrollTop: 0 }, "slow");

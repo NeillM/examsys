@@ -29,7 +29,7 @@ require_once '../../classes/helputils.class.php';
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
 } else {
-  $id = null;
+  $id = 1;
 }
 
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
