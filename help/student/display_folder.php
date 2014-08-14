@@ -29,7 +29,7 @@ require_once '../../classes/helputils.class.php';
 check_var('title', 'GET', true, false, false);
 
 $id = null;
-$help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,7 +40,7 @@ $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $my
   <title>Rog&#333;: Help and Support Center</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <style type="text/css">
     body {line-height:150%}
     table {font-size:100%}

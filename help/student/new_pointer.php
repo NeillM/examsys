@@ -24,29 +24,20 @@
 
 require '../../include/sysadmin_auth.inc';    // Only let staff create links.
 require_once '../../classes/helputils.class.php';
-  
+
+$id = null;
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+
 if (isset($_POST['submit'])) {
-  $articleid = 0;
-  $result = $mysqli->prepare("SELECT MAX(articleid) FROM student_help");
-  $result->execute();
-  $result->bind_result($articleid);
-  $result->fetch();
-  $result->close();
-  $articleid++;
+  $title = $_POST['title'];
+  $pageID = $_POST['pageid'];
   
-  $insertQuery = "INSERT INTO student_help VALUES (NULL, \"" . $_POST['title'] . "\", '" . $_POST['pageid'] . "', NULL, 'pointer', NULL, NULL, NULL, '" . $_SESSION['ROGO_language'] . "', $articleid, '0000-00-00 00:00:00')";
-  if (!$mysqli->query($insertQuery)) {
-    echo "<p>" . $mysqli->error . "</p>\n";
-    echo "<p>$insertQuery</p>\n";
-    exit;
-  }
+  $articleid = $this->create_pointer($title, $pageID);
   
   $mysqli->close();
   header("location: index.php?id=$articleid");
   exit;  
 } else {
-  $id = null;
-  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <html>
 <head>
@@ -56,7 +47,7 @@ if (isset($_POST['submit'])) {
   <title>Rog&#333;: Help and Support Center</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
 
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help.js"></script>

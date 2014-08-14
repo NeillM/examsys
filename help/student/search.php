@@ -25,6 +25,9 @@
 require '../../include/staff_student_auth.inc';
 require_once '../../classes/helputils.class.php';
 
+$id = null;
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+
 function getPath($path, $pageID, $tmp_highlight) {
 	$parts = explode('/',$path);
 	$path = '<a class="searchpath" href="index.php?id=1">Help</a>';
@@ -73,8 +76,6 @@ function drawHeader($tmp_page_no) {
 	}
 	echo "</td></tr></table>\n";
 }
-  $id = null;
-  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -85,7 +86,7 @@ function drawHeader($tmp_page_no) {
   <title>Rog&#333;</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help_search.css" />
   
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>

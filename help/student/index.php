@@ -31,7 +31,7 @@ if (isset($_GET['id'])) {
   $id = null;
 }
 
-$help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,7 +42,7 @@ $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $my
     <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
     
     <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-    <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/help.css" />
     
     <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../../js/help.js"></script>

@@ -29,32 +29,21 @@ require_once '../../classes/helputils.class.php';
 
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
+$id = null;
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+
 if (isset($_POST['save_changes'])) {
-	$tmp_title = $_POST['title'];
 		
 	// Update help file record
 	$tmp_body = $_POST['edit1'];
-	$tmp_body_plain = strip_tags($tmp_body);
+	$tmp_title = $_POST['title'];
 
-  $articleid = 0;
-  $result = $mysqli->prepare("SELECT MAX(articleid) FROM student_help");
-  $result->execute();
-  $result->bind_result($articleid);
-  $result->fetch();
-  $result->close();
-  $articleid++;
-
-	$result = $mysqli->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL, ?, ?, '0000-00-00 00:00:00')");
-	$result->bind_param('ssssi', $tmp_title, $tmp_body, $tmp_body_plain, $_SESSION['ROGO_language'], $articleid);
-	$result->execute();  
-	$result->close();
+  $articleid = $help_system->create_page($tmp_title, $tmp_body);
 
   $mysqli->close();
   header("location: index.php?id=$articleid");
   exit;
 } else {
-  $id = null;
-  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,12 +54,13 @@ if (isset($_POST['save_changes'])) {
   <title>New Help Page</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
   <script>
     $(function () {
 		  var docHeight = $(document).height();

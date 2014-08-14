@@ -22,28 +22,19 @@
 * @package
 */
 
-
-//TODO this seems nearly idendical to the staff help pages consider consolidating
 require '../../include/sysadmin_auth.inc';
 require '../../include/errors.inc';
 require '../../include/help.inc';
 require_once '../../classes/helputils.class.php';
 
 $pageid = check_var('id', 'REQUEST', true, false, true);
-  
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
-$rows = 0;
-$result = $mysqli->prepare("SELECT title, body, id, DATE_FORMAT(checkout_time,'%Y%m%d%H%i%S') AS checkout_time, checkout_authorID, type FROM student_help WHERE articleid = ? AND language = ? LIMIT 1");
-$result->bind_param('is', $pageid, $_SESSION['ROGO_language']);
-$result->execute();
-$result->store_result();
-$result->bind_result($page_title, $body, $id, $page_checkout_time, $page_checkout_authorID, $type);
-$rows = $result->num_rows;
-$result->fetch();
-$result->close();
+$page_details = $help_system->get_page_details($pageid);
 
-if ($rows == 0) {
+if ($page_details === false) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -51,47 +42,23 @@ if ($rows == 0) {
 if (isset($_POST['save_changes'])) {
   // Update help file record
   $tmp_body = $_POST['edit1'];
-  $tmp_body_plain = strip_tags($tmp_body);
-  $order = array("\r\n", "\n", "\r", "\t");
-  $tmp_body_plain = str_replace($order,' ',$tmp_body_plain);
-  $tmp_body_plain = str_replace('  ',' ',$tmp_body_plain);
   $tmp_title = $_POST['page_title'];
+  $tmp_roles = $_POST['page_roles'];
   
-  if ($_POST['edit_id'] == $pageid) {
-    // Editing normal page.
-    $result = $mysqli->prepare("UPDATE student_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
-    $result->bind_param('sssis', $tmp_title, $tmp_body, $tmp_body_plain, $_POST['edit_id'], $_SESSION['ROGO_language']);
-    $result->execute();  
-    $result->close();
-  } else {
-    // Editing a page pointed to.
-    $result = $mysqli->prepare("UPDATE student_help SET title = ? WHERE articleid = ? AND language = ?");
-    $result->bind_param('sis', $_POST['title'], $pageid, $_SESSION['ROGO_language']);
-    $result->execute();  
-    $result->close();
-    
-    $result = $mysqli->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE id = ? AND language = ?");
-    $result->bind_param('ssis', $tmp_body, $tmp_body_plain, $_POST['edit_id'], $_SESSION['ROGO_language']);
-    $result->execute();  
-    $result->close();
-  }
-      
+  $page_details = $help_system->save_page_details($tmp_title, $tmp_body, $tmp_roles, $pageid, $_POST['edit_id']);
+  
   $mysqli->close();
-  header("location: ../student/index.php?id=$pageid");
-  exit();
+  header("location: index.php?id=$pageid");
+  exit;
 } elseif (isset($_POST['cancel'])) {
   // Release authoring lock.
   if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
-    $result = $mysqli->prepare("UPDATE student_help SET checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
-    $result->bind_param('is', $_POST['edit_id'], $_SESSION['ROGO_language']);
-    $result->execute();  
-    $result->close();
+    $help_system->release_edit_lock($_POST['edit_id']);
   }
   $mysqli->close();
   header("location: ../student/index.php?id=$pageid");
   exit();
 } else {
-  $help_system = new StudentHelp($userObject, $configObject, $string, $notice, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -102,11 +69,12 @@ if (isset($_POST['save_changes'])) {
   <title>Rog&#333;: Edit Help File</title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_student.js"></script>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
   <script>
     $(function () {
 		  var docHeight = $(document).height();
@@ -129,20 +97,15 @@ if (isset($_POST['save_changes'])) {
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>">
 <?php
   if ($type == 'pointer') {
-    $edit_id = $body;
-    
-    $result = $mysqli->prepare("SELECT body FROM student_help WHERE id = ?");
-    $result->bind_param('i', $body);
-    $result->execute();
-    $result->bind_result($body);
-    $result->fetch();
-    $result->close();
+    $edit_id = $page_details['body'];
+    $ogiginal_details = $help_system->get_page_details($edit_id);
+    $page_details['body'] = $ogiginal_details['body'];
   } else {
     $edit_id = $pageid;
   }
 
-  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"$page_title\" required /></p>\n";
-  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" .  htmlspecialchars($body, ENT_NOQUOTES) . "</textarea>\n";
+  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"" . $page_details['title'] . "\" required /></p>\n";
+  echo "<textarea class=\"mceEditor\" id=\"edit1\" name=\"edit1\" style=\"width:100%; height:500px\">" .  htmlspecialchars($page_details['body'], ENT_NOQUOTES) . "</textarea>\n";
 
   // Check for lockout.
   $current_time = date('YmdHis');
@@ -162,10 +125,8 @@ if (isset($_POST['save_changes'])) {
       $disabled = ' disabled';
     } else {
       // Set the lock to the current time/author.
-      $result = $mysqli->prepare("UPDATE student_help SET checkout_time = NOW(), checkout_authorID = ? WHERE articleid = ? AND language = ?");
-      $result->bind_param('iis', $userObject->get_user_ID(), $edit_id, $_SESSION['ROGO_language']);
-      $result->execute();  
-      $result->close();
+      $help_system->set_edit_lock($edit_id);
+
       $checkout_authorID = $userObject->get_user_ID();
     }
   } elseif ($disabled == '' and $userObject->get_user_ID() == $page_checkout_authorID) {

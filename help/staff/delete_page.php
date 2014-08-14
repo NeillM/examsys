@@ -24,37 +24,12 @@
 
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
 require '../../include/errors.inc';
+require_once '../../classes/helputils.class.php';
 
-check_var('id', 'GET', true, false, false);
+$originalID = check_var('id', 'GET', true, false, true);
 
-// Is the current page real or a pointer.
-$result = $mysqli->prepare("SELECT type, body FROM staff_help WHERE articleid = ? AND language = ?");
-$result->bind_param('is', $_GET['id'], $_SESSION['ROGO_language']);
-$result->execute();
-$result->bind_result($type, $body);
-$result->fetch();
-$result->close();
-
-if ($type == 'page') {
-  // Search for any pointers to the current page.
-  $result = $mysqli->prepare("SELECT articleid, body FROM staff_help WHERE type = 'pointer' AND articleid != ? AND body = ? AND language = ?");
-  $result->bind_param('iis', $_GET['id'], $_GET['id'], $_SESSION['ROGO_language']);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($page_id, $body);
-  while ($result->fetch()) {
-    $deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted = NOW() WHERE articleid = ? AND language = ?");
-    $deleteQuery->bind_param('is', $page_id, $_SESSION['ROGO_language']);
-    $deleteQuery->execute();
-    $deleteQuery->close();
-  }
-  $result->close();
-}
-
-$deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted = NOW() WHERE articleid = ? AND language = ?");
-$deleteQuery->bind_param('is',  $_GET['id'], $_SESSION['ROGO_language']);
-$deleteQuery->execute();
-$deleteQuery->close();
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system->delete_page($originalID);
 
 $mysqli->close();
 header("location: index.php?id=1");

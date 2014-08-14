@@ -26,7 +26,7 @@ require '../../include/staff_auth.inc';
 require_once '../../classes/helputils.class.php';
 
 $id = null;
-$help_system = new StaffHelp($userObject, $configObject, $string, $notice, $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
 
 if (isset($_POST['startday'])) {
 $start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';
@@ -45,7 +45,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   <title>Rog&#333;: Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../css/staff_help.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <style type="text/css">
     ul {list-style-type:square; color:#FF9900}
     a:link.title {color:#0560A6; font-weight:bold}
