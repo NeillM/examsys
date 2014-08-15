@@ -30,7 +30,7 @@ require_once '../../classes/helputils.class.php';
 header('Content-Type: text/html; charset=utf8');
 
 $id = null;
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 
 if (isset($_POST['save_changes'])) {
 	$tmp_body = $_POST['edit1'];

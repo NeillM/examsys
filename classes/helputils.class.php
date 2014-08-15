@@ -31,14 +31,16 @@ Class OnlineHelp {
   private $configObject;
   private $string;
   private $notice;
+  private $language;
   private $db;
 
-  public function __construct($userObject, $configObject, $string, $notice, $type, $db) {
+  public function __construct($userObject, $configObject, $string, $notice, $type, $language, $db) {
     $this->userObject   = $userObject;
     $this->configObject = $configObject;
     $this->string       = $string;
     $this->notice       = $notice;
     $this->type         = $type;
+    $this->language     = $language;
     $this->db           = $db;
     $this->highlight    = null;
   }
@@ -90,7 +92,7 @@ Class OnlineHelp {
     
     $help_section = 0;
     $result = $this->db->prepare($sql);
-    $result->bind_param('s', $_SESSION['ROGO_language']);
+    $result->bind_param('s', $this->language);
     $result->execute();
     $result->bind_result($id, $title);
     while ($result->fetch()) {
@@ -192,7 +194,7 @@ Class OnlineHelp {
       }
     }    
     $results = $this->db->prepare($sql);
-    $results->bind_param('is', $articleid, $_SESSION['ROGO_language']);
+    $results->bind_param('is', $articleid, $this->language);
     $results->execute();
     $results->store_result();
 
@@ -214,18 +216,18 @@ Class OnlineHelp {
     if ($articleid == $pointerid) {
       // Editing normal page.
       $result = $this->db->prepare("UPDATE staff_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE articleid = ? AND language = ?");
-      $result->bind_param('ssssis', $title, $body, $body_plain, $roles, $articleid, $_SESSION['ROGO_language']);
+      $result->bind_param('ssssis', $title, $body, $body_plain, $roles, $articleid, $this->language);
       $result->execute();
       $result->close();
     } else {
       // Editing a page pointed to.
       $result = $this->db->prepare("UPDATE staff_help SET title = ? WHERE articleid = ? AND language = ?");
-      $result->bind_param('sis', $title, $articleid, $_SESSION['ROGO_language']);
+      $result->bind_param('sis', $title, $articleid, $this->language);
       $result->execute();
       $result->close();
 
       $result = $this->db->prepare("UPDATE staff_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE articleid = ? AND language = ?");
-      $result->bind_param('sssis', $body, $body_plain, $roles, $pointerid, $_SESSION['ROGO_language']);
+      $result->bind_param('sssis', $body, $body_plain, $roles, $pointerid, $this->language);
       $result->execute();
       $result->close();
     }    
@@ -236,18 +238,18 @@ Class OnlineHelp {
     if ($articleid == $pointerid) {
       // Editing normal page.
       $result = $this->db->prepare("UPDATE student_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
-      $result->bind_param('sssis', $title, $body, $body_plain, $articleid, $_SESSION['ROGO_language']);
+      $result->bind_param('sssis', $title, $body, $body_plain, $articleid, $this->language);
       $result->execute();
       $result->close();
     } else {
       // Editing a page pointed to.
       $result = $this->db->prepare("UPDATE student_help SET title = ? WHERE articleid = ? AND language = ?");
-      $result->bind_param('sis', $title, $articleid, $_SESSION['ROGO_language']);
+      $result->bind_param('sis', $title, $articleid, $this->language);
       $result->execute();
       $result->close();
 
       $result = $this->db->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULLWHERE articleid = ? AND language = ?");
-      $result->bind_param('ssis', $body, $body_plain, $pointerid, $_SESSION['ROGO_language']);
+      $result->bind_param('ssis', $body, $body_plain, $pointerid, $this->language);
       $result->execute();
       $result->close();
     }
@@ -358,10 +360,10 @@ Class OnlineHelp {
 
     if ($this->type == 'student') {
       $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL, ?, ?, '0000-00-00 00:00:00')");
-      $result->bind_param('ssssi', title, $body, $body_plain, $_SESSION['ROGO_language'], $articleid);
+      $result->bind_param('ssssi', title, $body, $body_plain, $this->language, $articleid);
     } else {
       $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL, ?, ?, '0000-00-00 00:00:00')");
-      $result->bind_param('sssssi', $title, $body, $body_plain, $_POST['page_roles'], $_SESSION['ROGO_language'], $articleid);
+      $result->bind_param('sssssi', $title, $body, $body_plain, $_POST['page_roles'], $this->language, $articleid);
     }
     $result->execute();  
     $result->close();
@@ -373,11 +375,11 @@ Class OnlineHelp {
     $articleid = $this->get_max_id() + 1;
     
     if ($this->type == 'student') {
-      $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, NULL, '" . $_SESSION['ROGO_language'] . "', ?, '0000-00-00 00:00:00')");
+      $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, NULL, '" . $this->language . "', ?, '0000-00-00 00:00:00')");
       $result->bind_param('ssi', $title, $pageID, $articleid);
       
     } else {
-      $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, 'Staff', NULL, '" . $_SESSION['ROGO_language'] . "', ?, '0000-00-00 00:00:00')");
+      $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, 'Staff', NULL, '" . $this->language . "', ?, '0000-00-00 00:00:00')");
       $result->bind_param('ssi', $title, $pageID, $articleid);
       
     }
@@ -394,7 +396,7 @@ Class OnlineHelp {
       $sql = 'UPDATE staff_help SET checkout_time = NOW(), checkout_authorID = ? WHERE articleid = ? AND language = ?';
     }
     $result = $this->db->prepare($sql);
-    $result->bind_param('iis', $this->userObject->get_user_ID(), $articleid, $_SESSION['ROGO_language']);
+    $result->bind_param('iis', $this->userObject->get_user_ID(), $articleid, $this->language);
     $result->execute();
     $result->close();
   }
@@ -406,7 +408,7 @@ Class OnlineHelp {
       $sql = 'UPDATE staff_help SET checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?';
     }
     $result = $this->db->prepare($sql);
-    $result->bind_param('is', $articleid, $_SESSION['ROGO_language']);
+    $result->bind_param('is', $articleid, $this->language);
     $result->execute();
     $result->close();
   }
@@ -418,7 +420,7 @@ Class OnlineHelp {
       $table = 'staff_help';
     }
     $deleteQuery = $this->db->prepare("UPDATE $table SET deleted = NOW() WHERE articleid = ? AND language = ?");
-    $deleteQuery->bind_param('is', $pageID, $_SESSION['ROGO_language']);
+    $deleteQuery->bind_param('is', $pageID, $this->language);
     $deleteQuery->execute();
     $deleteQuery->close();  
   }
@@ -435,7 +437,7 @@ Class OnlineHelp {
     if ($page_details['page_type'] == 'page') {
       // Search for any pointers to the current page.
       $result = $this->db->prepare("SELECT articleid, body FROM $table WHERE type = 'pointer' AND articleid != ? AND body = ? AND language = ?");
-      $result->bind_param('iis', $originalID, $originalID, $_SESSION['ROGO_language']);
+      $result->bind_param('iis', $originalID, $originalID, $this->language);
       $result->execute();
       $result->store_result();
       $result->bind_result($page_id, $body);

@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
   $id = 1;
 }
 
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 
 if (isset($_GET['highlight'])) {
   $help_system->set_highlight($_GET['highlight']);

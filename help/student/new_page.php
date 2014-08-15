@@ -30,7 +30,7 @@ require_once '../../classes/helputils.class.php';
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
 $id = null;
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 
 if (isset($_POST['save_changes'])) {
 		

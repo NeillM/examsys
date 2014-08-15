@@ -28,7 +28,7 @@ require_once '../../classes/helputils.class.php';
 
 $originalID = check_var('id', 'GET', true, false, true);
 
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 $help_system->delete_page($originalID);
 
 $mysqli->close();

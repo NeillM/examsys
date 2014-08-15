@@ -31,7 +31,7 @@ if (isset($_GET['id'])) {
   $id = 1;
 }
 
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>

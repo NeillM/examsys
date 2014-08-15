@@ -26,7 +26,7 @@ require '../../include/staff_student_auth.inc';
 require_once '../../classes/helputils.class.php';
 
 $id = null;
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 
 if (isset($_POST['startday'])) {
 $start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';

@@ -27,7 +27,7 @@ require '../../include/errors.inc';
 
 $originalid = check_var('id', 'GET', true, false, true);
 
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 $help_system->delete_page($originalID);
 
 $mysqli->close();

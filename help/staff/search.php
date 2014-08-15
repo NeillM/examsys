@@ -25,7 +25,7 @@
 require '../../include/staff_auth.inc';
 require_once '../../classes/helputils.class.php';
 
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 
 function getPath($path, $pageID, $tmp_highlight) {
   $parts = explode('/',$path);
@@ -126,7 +126,7 @@ function drawHeader($tmp_page_no) {
     $searchstring = $_GET['searchstring'];
   
     $search_results = $mysqli->prepare("SELECT articleid, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) $roles_check AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
-    $search_results->bind_param('sss', $searchstring, $searchstring, $_SESSION['ROGO_language']);
+    $search_results->bind_param('sss', $searchstring, $searchstring, $language);
     $search_results->execute();
     $search_results->store_result();
     $search_results->bind_result($id, $title, $score);

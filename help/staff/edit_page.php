@@ -27,7 +27,7 @@ require '../../include/errors.inc';
 require_once '../../classes/helputils.class.php';
 
 $pageid = check_var('id', 'REQUEST', true, false, true);
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 
 header('Content-Type: text/html; charset=utf8');
 

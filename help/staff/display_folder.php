@@ -29,7 +29,7 @@ require_once '../../classes/helputils.class.php';
 check_var('title', 'GET', true, false, false);
 
 $id = null;
-$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $mysqli);
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
