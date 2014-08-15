@@ -881,7 +881,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../folder/details.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
+    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
     $old_year = $user_modules[$i]['calendar_year'];
   }
 
