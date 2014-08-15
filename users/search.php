@@ -289,6 +289,8 @@ if (isset($_GET['paperID'])) {
       }
       $('#roles').val(roles);
       checkRoles();
+      
+      evt.stopPropagation();
     }
 
     function userOff() {
@@ -311,6 +313,7 @@ if (isset($_GET['paperID'])) {
 
       $(document).click(function() {
         $('#menudiv').hide();
+        userOff();
       });
     });
   </script>
@@ -335,7 +338,11 @@ if (isset($_GET['paperID'])) {
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<div class=\"head_title\">\n";
     echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
-    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; padding-left:10px\"><strong>" . $string['usersearch'] . "</div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+    if (isset($_REQUEST['module'])) {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+    }
+    echo "</div><div class=\"page_title\"><strong>" . $string['usersearch'] . "</div>";
     echo "</div>\n</div>\n</body></html>\n";
     exit;
   }
@@ -347,14 +354,14 @@ if (isset($_GET['paperID'])) {
 <div style="float:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
 <?php
 echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
-if (isset($_GET['team'])) {
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['team'] . '">' . module_utils::get_moduleid_from_id($_GET['team'], $mysqli) . '</a>';
+if (isset($_GET['module'])) {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-echo "</div><div onclick=\"qOff()\" style=\"padding-left:10px; font-size:200%\"><strong>Users ($user_no):&nbsp;</strong>";
+echo "</div><div class=\"page_title\">" . $string['usersearch'] . " ($user_no):&nbsp;<span style=\"font-weight: normal\">";
 if (isset($_GET['paperID'])) {
   echo implode(', ', array_values($paper_modules)) . ' (' . $paper_calendar_year . ')';
 } elseif (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
-  echo $_GET['search_surname'];
+  echo "'" . $_GET['search_surname'] . "'";
 } elseif (isset($_GET['module']) and $_GET['module'] != '%') {
   echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   if (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '' and isset($_GET['students']) and $_GET['students'] != '') {
@@ -367,7 +374,7 @@ if (isset($_GET['paperID'])) {
 } elseif (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '%') {
   echo $_GET['calendar_year'];
 }
-echo "</div>\n";
+echo "</span></div>\n";
 echo "</div>\n";
 
 

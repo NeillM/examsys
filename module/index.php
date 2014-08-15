@@ -158,7 +158,7 @@ foreach ($types_used as $type=>$no_papers) {
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></div></div>\n";
 }
 echo "<br clear=\"left\">\n";
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
 if ($module != 0) {
   // Don't want new papers created from the Unassigned folder.
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
@@ -186,7 +186,7 @@ foreach ($bank_types as $type_name=>$url) {
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $type_name . "</a></div></div>\n";
 }
 echo "<br clear=\"left\">\n";
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/search.php\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></div></div>\n";
 if ($module != 0) {   // Don't want new questions created from the Unassigned folder.
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion(); return false;\">" . $string['newquestion'] . "</a></div></div>\n";
 }
@@ -195,7 +195,7 @@ if ($module != 0) {   // Don't want new questions created from the Unassigned fo
 echo "<br clear=\"left\">\n";
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['users'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../users/search.php\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../users/search.php\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../users/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../users/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></div></div>\n";
 
 if ($_GET['module'] != '0') {
   $current_year = date_utils::get_current_academic_year($module_details['academic_year_start']);

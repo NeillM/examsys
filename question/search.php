@@ -129,6 +129,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
         dateFormat: 'uk',
         sortList: [[0,0]]
       });
+      
+      
+      $('.q').dblclick(function() {
+        ed();
+      });
 
     });
   </script>
@@ -360,7 +365,7 @@ if (isset($_GET['submit'])) {
   if ($_GET['module']) {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo "</div><div class=\"page_title\">" . $string['questions'] . " (" . number_format($hits) . "):&nbsp;";
+  echo "</div><div class=\"page_title\">" . $string['questionsearch'] . " (" . number_format($hits) . "):&nbsp;<span style=\"font-weight: normal\">";
   if (isset($_GET['searchterm']) and $_GET['searchterm'] != '') {
     echo "'" . $_GET['searchterm'] . "'";
   } elseif (isset($_GET['searchtype']) and $_GET['searchtype'] != '%') {
@@ -368,7 +373,7 @@ if (isset($_GET['submit'])) {
   } else {
     echo $_GET['module'];
   }
-  echo "</div>\n</div>\n";
+  echo "</span></div>\n</div>\n";
 ?>
   <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
   <thead>
@@ -388,9 +393,9 @@ if (isset($_GET['submit'])) {
 
     echo '<tr class="q' . $status_class . '"';
     if ($locked != '') {
-      echo " id=\"l$display_no\" onclick=\"selQ($q_id,'$q_type',$display_no,event)\" ondblclick=\"ed()\">";
+      echo " id=\"l$display_no\" onclick=\"selQ($q_id,'$q_type',$display_no,event)\">";
     } else {
-      echo " id=\"l$display_no\" onclick=\"selL($q_id,'$q_type',$display_no,event)\" ondblclick=\"ed()\">";
+      echo " id=\"l$display_no\" onclick=\"selL($q_id,'$q_type',$display_no,event)\">";
     }
 
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);

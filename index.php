@@ -108,6 +108,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
    a:visited {color: black}
    a:link {color: black}
    .recent {margin-left:-25px; padding-bottom:9px}
+   #displaycredits {position:absolute; bottom:22px; text-align:center; width:90%; cursor:pointer; color:#295AAD; font-weight:bold}
 	</style>
 
   <?php echo $configObject->get('cfg_js_root') ?>

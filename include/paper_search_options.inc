@@ -204,6 +204,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   </table>
 
 <?php
+  if (isset($_GET['module'])) {
+    $state['menu9'] = 'block';
+  }
   if (isset($state['menu9'])) {
     echo "<table id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
   } else {

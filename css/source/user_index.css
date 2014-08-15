@@ -82,3 +82,12 @@ input[type=button].notok:hover {
   border: 1px solid #C00000;
   background: #FF8080;
 }
+.photoid {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  width: 95px;
+  font-size: 90%;
+  text-align: center;
+  margin-bottom: 4px;
+}

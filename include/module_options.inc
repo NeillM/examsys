@@ -34,6 +34,7 @@
     }
     echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . "</a></div>";
     echo "<div class=\"menuitem\"><a href=\"../module/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . "</a></div>";
+	  echo "<div class=\"menuitem cascade\" onclick=\"showMenu('popup0','general','search',myOptions0,myURLs0,event)\" id=\"search\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/xmag.png\" alt=\"Search\" />" . $string['search'] . "</div>";
 
   // Get members of current team.
   if (!isset($_GET['type']) and $_GET['module'] != '0') {
@@ -75,3 +76,9 @@
 
 </div>
 
+
+<?php
+  makeMenu(array('Questions'=>"{$configObject->get('cfg_root_path')}/question/search.php",'Papers'=>"{$configObject->get('cfg_root_path')}/paper/search.php",'People'=>"{$configObject->get('cfg_root_path')}/users/search.php"));
+
+  hideMenuScript($menuNo);
+?>

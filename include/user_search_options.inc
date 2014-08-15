@@ -131,8 +131,8 @@ if (isset($username) and $search_surname == '' and $search_username == '' and $s
 <div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname ?>" /></div>
 
 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
-<tr><td><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid'] ?></td></tr>
-<tr><td><input type="text" name="search_username" size="9" value="<?php echo $search_username ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php echo $search_student_id ?>" /></td></tr>
+<tr><td style="padding-left:0"><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid'] ?></td></tr>
+<tr><td style="padding-left:0"><input type="text" name="search_username" size="10" value="<?php echo $search_username ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="10" value="<?php echo $search_student_id ?>" /></td></tr>
 </table>
 <div><?php echo $string['module'] ?><br /><?php 
 search_utils::display_staff_modules_dropdown($userObject, $mysqli); 

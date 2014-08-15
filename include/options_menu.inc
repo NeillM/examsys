@@ -55,7 +55,7 @@
   echo '</ul>';
 
 ?>
-<div style="position:absolute; bottom:15px; text-align:center; width:90%; cursor:pointer; color:#295AAD; font-weight:bold" id="displaycredits">Rog&#333; <?php echo $configObject->get('rogo_version') ?> - &copy; 2014</div>
+<div id="displaycredits">Rog&#333; <?php echo $configObject->get('rogo_version') ?> - &copy; 2014</div>
 
 </div>
 

@@ -49,9 +49,9 @@ $string['requestedpaper'] = 'The requested paper cannot be found.';
 $string['guestaccount'] = 'Guest Account';
 $string['metadata_msg'] = "Your '%s' does not match '%s'.";
 $string['timeexpired'] = 'Remaining time has now expired.';
-
 $string['tooltip_bidirectional'] = 'You are allowed to move both backwards and forwards between screens.';
 $string['tooltip_unidirectional'] = 'Once you have submitted a screen you will not be able to move back.';
 $string['tooltip_adjustmark'] = 'Your percentage will be automatically adjusted post-exam to account for the random mark someone could get by guessing at random. You are therefore advised to answer all questions on the paper.';
 $string['tooltip_testclip'] = 'This is a test audio clip for you to test your headphones and volume are set correctly.';
+$string['photoid'] = 'Photo ID';
 ?>

@@ -368,13 +368,14 @@ if ($textsize > 120) {
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
     if (file_exists($cfg_web_root . 'users/photos/' . $userObject->get_username() . '.jpg')) {
+      $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $userObject->get_username() . '.jpg');
       echo '<td rowspan="';
       if ($sound_demo == '1') {
         echo '8';
       } else {
         echo '7';
       }
-      echo '" style="border-left:1px solid #95AEC8;background-color:white;width:180px;text-align:center;vertical-align:bottom"><img src="../users/photos/' . $userObject->get_username() . '.jpg" width="180" height="270" border="0" alt="Photo" /></td>';
+      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] . '</div><img src="../users/photos/' . $userObject->get_username() . '.jpg" ' . $photo_size[3] . ' alt="Photo" style="border: 10px solid white" /></td>';
     }
   }
   echo '</tr>';
