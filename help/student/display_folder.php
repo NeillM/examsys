@@ -64,13 +64,7 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
   <div id="contents">
 <?php
   if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-    $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'student', ?, NOW(), ?)");
-    $result->bind_param('ii', $userObject->get_user_ID(), $_GET['id']);
-    $result->execute();
-    $result->close();
-    if ($mysqli->error) {
-      echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
-    }
+    $help_system->record_in_log($_GET['id']);
   }
   
   $t = $_GET['title'] . '/%';

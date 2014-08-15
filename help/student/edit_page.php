@@ -24,8 +24,8 @@
 
 require '../../include/sysadmin_auth.inc';
 require '../../include/errors.inc';
-require '../../include/help.inc';
 require_once '../../classes/helputils.class.php';
+require_once '../../classes/userutils.class.php';
 
 $pageid = check_var('id', 'REQUEST', true, false, true);
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
@@ -112,14 +112,10 @@ if (isset($_POST['save_changes'])) {
   $disabled = '';
   if ($userObject->get_user_ID() != $page_checkout_authorID) {
     if ($page_checkout_time != '' and $current_time - $page_checkout_time < 10000) {
-      $editor = $mysqli->prepare("SELECT title, initials, surname FROM users WHERE id = ?");
-      $editor->bind_param('i', $page_checkout_authorID);
-      $editor->execute();
-      $editor->bind_result($title, $initials, $surname);
-      $editor->fetch();
-      $editor->close();
+      $editor = UserUtils::get_user_details($page_details['checkout_authorID'], $mysqli);
+      $editor_name = $editor['title'] . ' ' . $editor['initials'] . ' ' . $editor['surname'];
       echo "<script>\n";
-      echo "  alert('" . $string['entertitle'] . " $title $initials $surname. " . $string['isinreadonly'] . "')";
+      echo "  alert('" . $string['entertitle'] . " $editor_name. " . $string['isinreadonly'] . "')";
       echo "</script>\n";
       $checkout_authorID = $page_checkout_authorID;
       $disabled = ' disabled';

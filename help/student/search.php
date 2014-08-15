@@ -115,20 +115,13 @@ function drawHeader($tmp_page_no) {
   echo "<div style=\"font-size:130%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
   
   if (isset($_GET['searchstring'])) {
-    $search_results = $mysqli->prepare("SELECT articleid, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
-    $search_results->bind_param('sss', $_GET['searchstring'], $_GET['searchstring'], $_SESSION['ROGO_language']);
-    $search_results->execute();
-    $search_results->store_result();
-    $search_results->bind_result($id, $title, $score);
-    $total_hits = $search_results->num_rows;
+    $searchstring = $_GET['searchstring'];
+    $search_results = $help_system->find($searchstring);
+    
+    $total_hits = count($search_results);
     $page_size = 25;
-    if (!$userObject->has_role(array('SysAdmin', 'External'))) {   // Don't record SysAdmin searches.
-      $result = $mysqli->prepare("INSERT INTO help_searches VALUES (NULL, 'student', ?, NOW(), ?, ?)");
-      $result->bind_param('isi', $userObject->get_user_ID(), $_GET['searchstring'], $total_hits);
-      $result->execute();  
-      $result->close();
-    }
-    if ($search_results->num_rows == 0) {
+
+    if ($total_hits == 0) {
       echo "<p>" . sprintf($string['noresults'], $_GET['searchstring']) . "</p>\n";
       echo "<div><strong>" . $string['tips'] . "</strong></div>\n";
       echo "<ul style=\"\">\n<li>" . $string['tipsli'] . "</li>\n</ul>\n";
@@ -138,7 +131,7 @@ function drawHeader($tmp_page_no) {
       $page_total = ceil($total_hits / $page_size);
       $hit_start = (($page_size * $page_no) - $page_size) + 1;
       $hit_stop = $page_size * $page_no;
-      while ($search_results->fetch()) {
+      foreach ($search_results as $search_result) {
         if ($link_no > 0) {
           echo "<tr><td class=\"row1\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td class=\"row2\">";
         } else {
@@ -159,7 +152,7 @@ function drawHeader($tmp_page_no) {
           echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
           echo "<tr><td style=\"padding:2px; vertical-align:top; width:24px\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td style=\"padding-bottom:10px\">";
         }
-        echo "<a class=\"title\" href=\"index.php?id=$id&highlight=" . $_GET['searchstring'] . "\">" . displayTitle($title) . "</a><br /><div class=\"searchpath\">" . getPath($title, $id, $_GET['searchstring']) . "<div></td></tr>\n";
+        echo "<a class=\"title\" href=\"index.php?id=" . $search_result['id'] . "&highlight=" . $searchstring . "\">" . displayTitle($search_result['title']) . "</a><br /><div class=\"searchpath\">" . getPath($search_result['title'], $search_result['id'], $searchstring) . "<div></td></tr>\n";
         $link_no++;
         if ($link_no >= $page_size) {
           $link_no = 0;
@@ -169,8 +162,7 @@ function drawHeader($tmp_page_no) {
       drawHeader($page_no);
       echo "</div>\n";
     }
-    $search_results->free_result();
-    $search_results->close();
+
   }
   $mysqli->close();
 ?>

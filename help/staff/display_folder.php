@@ -65,21 +65,15 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'sta
 <?php
   
   if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-    $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'staff', ?, NOW(), ?)");
-    $result->bind_param('ii', $userObject->get_user_ID(), $_GET['id']);
-    $result->execute();
-    $result->close();
-    if ($mysqli->error) {
-      echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
-    }
+    $help_system->record_in_log($_GET['id']);
   }
   
   $t = $_GET['title'] . '/%';
-  $search_results = $mysqli->prepare("SELECT articleid, title, type FROM staff_help WHERE title LIKE ? AND language = ? ORDER BY title");
+  $search_results = $mysqli->prepare("SELECT articleid, title FROM staff_help WHERE title LIKE ? AND language = ? ORDER BY title");
   $search_results->bind_param('ss', $t, $_SESSION['ROGO_language']);
   $search_results->execute();
   $search_results->store_result();
-  $search_results->bind_result($id, $title, $type);
+  $search_results->bind_result($id, $title);
   
   echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . $_GET['title'] . "</div>\n";
   

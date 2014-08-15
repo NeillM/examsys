@@ -2182,7 +2182,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $admin_school_sql = <<< SQL
 UNION SELECT DISTINCT users.id, title, initials, surname, first_names
 FROM users, admin_access
-WHERE users.id=admin_access.userID AND admin_access.schools_id IN ($schools_list)
+WHERE users.id = admin_access.userID AND admin_access.schools_id IN ($schools_list)
 SQL;
   }
 

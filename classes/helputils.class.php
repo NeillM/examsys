@@ -337,6 +337,17 @@ Class OnlineHelp {
     }
   }
   
+  private function record_in_search_log($searchstring, $total_hits) {
+    if ($this->type == 'student') {
+      $result = $mysqli->prepare("INSERT INTO help_searches VALUES (NULL, 'student', ?, NOW(), ?, ?)");
+    } else {
+      $result = $mysqli->prepare("INSERT INTO help_searches VALUES (NULL, 'staff', ?, NOW(), ?, ?)");
+    }
+    $result->bind_param('isi', $this->userObject->get_user_ID(), $searchstring, $total_hits);
+    $result->execute();  
+    $result->close();
+  }
+  
   private function get_max_id() {
     $articleid = 0;
     if ($this->type == 'student') {
@@ -448,6 +459,45 @@ Class OnlineHelp {
     }
 
     $this->delete_id($originalID);      // Delete the original page.
+  }
+  
+  public function restore_page($pageID) {
+    $restore = $mysqli->prepare("UPDATE staff_help SET deleted = NULL WHERE articleid = ? AND language = ?");
+    $restore->bind_param('is', pageID, $this->language);
+    $restore->execute();
+    $restore->close();
+  }
+  
+  public function find($searchstring) {
+    $search_results = array();
+    
+    if ($this->type == 'student') {
+      $result = $this->db->prepare("SELECT articleid, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
+    } else {
+      if ($this->userObject->has_role('SysAdmin')) {
+        $roles_check = 'AND roles IN ("SysAdmin","Admin","Staff")';
+      } elseif ($this->userObject->has_role('Admin')) {
+        $roles_check = 'AND roles IN ("Admin","Staff")';
+      } else {
+        $roles_check = 'AND roles="Staff"';
+      }      
+      $result = $this->db->prepare("SELECT articleid, title, MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE) $roles_check AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
+    }
+    $result->bind_param('sss', $searchstring, $searchstring, $this->language);
+    $result->execute();
+    $result->bind_result($id, $title, $score);
+    while ($result->fetch()) {
+      $search_results[] = array('id'=>$id, 'title'=>$title, 'score'=>$score);
+    }
+    $result->close();
+    
+    // Log the search in the database.
+    if (!$this->userObject->has_role('SysAdmin')) {   // Don't record SysAdmin searches.
+      $total_hits = count($search_results);
+      $this->record_in_search_log($searchstring, $total_hits);
+    }
+    
+    return $search_results;
   }
   
   
