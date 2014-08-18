@@ -71,7 +71,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -87,6 +87,13 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function() {
+      $(document).click(function() {
+        hideMenus();
+      });
+    });
+  </script>
 </head>
 
 <body>

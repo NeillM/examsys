@@ -342,7 +342,7 @@ if (isset($_GET['paperID'])) {
     if (isset($_REQUEST['module'])) {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
     }
-    echo "</div><div class=\"page_title\"><strong>" . $string['usersearch'] . "</div>";
+    echo "</div><div class=\"page_title\">" . $string['usersearch'] . "</div>";
     echo "</div>\n</div>\n</body></html>\n";
     exit;
   }

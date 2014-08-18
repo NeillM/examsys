@@ -1132,9 +1132,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     if ($start_of_day_ts > $external_review_deadline and ($review->get_action($q_id) != 'Not actioned' and $review->get_action($q_id) !== null)) {
       echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company');
       if ($review->get_action($q_id) == 'Read - actioned') {
-        echo '<span style="color:#008000">';
+        echo '&nbsp;&nbsp;<span style="color:#008000">';
       } else {
-        echo '<span style="color:#C00000">';
+        echo '&nbsp;&nbsp;<span style="color:#C00000">';
       }
       echo $review->get_action($q_id) . "</span></strong><br /><textarea cols=\"80\" rows=\"3\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extreponse$question_no\">" . $review->get_response($q_id) . "</textarea></td></tr>";
     }

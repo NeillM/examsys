@@ -557,9 +557,11 @@ Class PaperUtils {
   function need_interactiveQ($screen_data, $screen) {
     $interactive = false;
 
-    foreach ($screen_data[$screen] as $question_part) {
-      if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
-        $interactive = true;
+    if (isset($screen_data[$screen])) {
+      foreach ($screen_data[$screen] as $question_part) {
+        if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
+          $interactive = true;
+        }
       }
     }
 

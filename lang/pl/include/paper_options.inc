@@ -74,11 +74,6 @@ $string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
 $string['search'] = 'Szukaj';
 $string['createnewquestion'] = 'Utwórz nowe pytanie';
 
-$string['questions'] = 'Pytania';
-$string['papers'] = 'Arkusze';
-$string['people'] = 'Osoby';
-$string['studentcohort'] = 'Grupa studentów';  // Student Cohort of Paper
-
 $string['dates'] = 'Daty'; 
 $string['to'] = 'do';
 $string['course'] = 'Kurs';
@@ -141,4 +136,5 @@ $string['reorderinfo'] = 'Możesz teraz zmienić porządek pytań i przemieści�
 $string['insertscreenbreak'] = 'Wstaw podzielnik ekranu';//Insert screen break';
 $string['addscreenbreak'] = 'Wstaw podzielnik ekranu';  
 $string['deletescreenbreak'] = 'Usuń podzielnik ekranu';  
+$string['papers'] = 'Arkusze';
 ?>

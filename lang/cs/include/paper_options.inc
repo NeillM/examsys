@@ -55,11 +55,6 @@ $string['questionsbykeyword'] = 'Úl. dle klíčových slov';
 $string['search'] = 'Hledat';
 $string['createnewquestion'] = 'Nová úloha';
 
-$string['questions'] = 'Úlohy';
-$string['papers'] = 'Dokumenty';
-$string['people'] = 'Uživatele';
-$string['studentcohort'] = 'Skupina studentů';
-
 $string['dates'] = 'Data';
 $string['to'] = 'k/do';
 $string['course'] = 'Kurz';
@@ -126,6 +121,6 @@ $string['markallquestions'] = 'Označit všechny otázky';	// translate
 $string['exportraf'] = 'Export as Rog&#333; Assessment format';	// translate
 $string['importraf'] = 'Import Rog&#333; Assessment format';	// translate
 $string['importexport'] = 'Import/Export';
-
+$string['papers'] = 'Papers';
 
 ?>

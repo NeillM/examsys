@@ -75,6 +75,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
     a {color:black !important}
     .red {background-color:#C00000; color:white; padding-left:2px; padding-right:2px}
     .subsect_table {margin-top:22px; margin-left:10px; margin-bottom:12px}
+    #addteammember {cursor:pointer}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
@@ -96,13 +97,6 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
         notice.focus();
       }
     }
-
-    function addTeamMember() {
-      notice = window.open("edit_team_popup.php?module=<?php echo $module ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
     
     function resizeList() {
       var offset = $('#list').offset();
@@ -117,6 +111,18 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
       $(window).resize(function(){
 				resizeList();
 			});
+
+      $(document).click(function() {
+        hideMenus();
+      });
+      
+      $('#addteammember').click(function() {
+        notice = window.open("edit_team_popup.php?module=<?php echo $module ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        if (window.focus) {
+          notice.focus();
+        }        
+      });
+
     });
   </script>
 </head>
@@ -155,7 +161,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
 }
 foreach ($types_used as $type=>$no_papers) {
   $url = '../paper/type.php?module=' . $module . '&type=' . $type;
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . $no_papers . " " . strtolower($string['papers']) . "</span></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . "</a><br /><span class=\"grey\">" . number_format($no_papers) . " " . strtolower($string['papers']) . "</span></div></div>\n";
 }
 echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
@@ -176,7 +182,7 @@ foreach ($stats as $stat_name=>$stat_no) {
   $question_no += $stat_no;
 }
 
-echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . "</a><br /><span class=\"grey\">" . $question_no . " " . strtolower($string['questions']) . "</span></div></div>\n";
+echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . "</a><br /><span class=\"grey\">" . number_format($question_no) . " " . strtolower($string['questions']) . "</span></div></div>\n";
 
 $bank_types = array($string['bykeyword']=>'../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype']=>'../question/bank.php?type=type&module=' . $module, $string['bystatus']=>'../question/bank.php?type=status&module=' . $module, $string['bybloom']=>'../question/bank.php?type=bloom&module=' . $module, $string['byperformance']=>'../question/bank.php?type=performance&module=' . $module);
 if (strpos($module_details['checklist'], 'mapping') !== false) {
@@ -208,7 +214,7 @@ if ($_GET['module'] != '0') {
   } else {
     $student_class = 'grey';
   }
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . sprintf($string['studentlist'], $current_year) . "</a><br /><span class=\"$student_class\">$student_no " . $string['students'] . "</span></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . sprintf($string['studentlist'], $current_year) . "</a><br /><span class=\"$student_class\">" . number_format($student_no) . " " . $string['students'] . "</span></div></div>\n";
 
   $url = '../users/import_users_metadata.php?module=' . $module;
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['addmetadata'] . "</a><br /><span class=\"grey\">" . sprintf($string['extradataaboutstudents'], $module_details['moduleid']) . "</span></div></div>\n";

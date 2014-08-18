@@ -74,11 +74,6 @@ $string['questionsbykeyword'] = 'Questions by Keyword';
 $string['search'] = 'Search';
 $string['createnewquestion'] = 'Create new Question';
 
-$string['questions'] = 'Questions';
-$string['papers'] = 'Papers';
-$string['people'] = 'People';
-$string['studentcohort'] = 'Student Cohort of Paper';
-
 $string['dates'] = 'Dates';
 $string['to'] = 'to';
 $string['course'] = 'Course';
@@ -141,4 +136,5 @@ $string['reorderinfo'] = 'You can now reorder questions and screen breaks by dra
 $string['insertscreenbreak'] = 'Insert screen break';
 $string['deletescreenbreak'] = 'Delete screen break';
 $string['addscreenbreak'] = 'Add screen break';
+$string['papers'] = 'Papers';
 ?>

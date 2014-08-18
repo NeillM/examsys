@@ -38,4 +38,5 @@ $string['noquestionsbloom']  = 'No questions found in bank by Bloom\'s Taxonomy.
 $string['noquestionsstatus'] = 'No questions found in bank by status.';
 $string['noquestionsperformance'] = 'No questions found in bank by performance.';
 $string['noquestionsobjective'] = 'No questions found link bank linked to learning objectives.';
+$string['search'] = 'Search';
 ?>

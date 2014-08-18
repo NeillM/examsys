@@ -64,9 +64,9 @@
 
     echo '<br /><br />';
     if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
-      echo '<div style="float:left; width:225px; font-size:170%"><div style="float:left">' . $string['teammembers'] . '</div><div style="float:right"><a href="" style="color:black" onclick="addTeamMember(); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" /></a></div></div>';
+      echo '<div style="float:left; width:225px; font-size:170%"><div style="float:left">' . $string['teammembers'] . '</div><div style="float:right"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" id="addteammember" /></div></div>';
     } else {
-      echo '<div>' . $string['teammembers'] . '</div>';
+      echo '<div style="float:left; width:225px; font-size:170%">' . $string['teammembers'] . '</div>';
     }
     echo '<div style="height:78%; overflow:auto; clear:left" id="list">';
     echo "$tmp_html</div>\n";
