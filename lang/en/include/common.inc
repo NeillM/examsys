@@ -96,12 +96,6 @@ $string['note'] = 'Note';
 $string['studentname'] = 'Student Name';
 $string['loggedinas'] = 'Logged in as';
 
-$configObject = Config::get_instance();
-$cfg_web_root = $configObject->get('cfg_web_root');
-$language = LangUtils::getLang($cfg_web_root);
-
-require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
-
 $string['register'] = 'Register as Staff User';
 $string['register1'] = 'Register as ';
 $string['demomodule'] = 'Demo Module';

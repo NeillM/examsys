@@ -37,6 +37,21 @@ Class Paper_utils extends RogoStaticSingleton {
 }
 
 Class PaperUtils {
+  
+  /**
+  * Records an access to a paper in recent_papers table.
+  *
+  * @param int $userID  - ID of the user accessing the paper.
+  * @param int $paperID - ID of the paper.
+  * @param object $db   - Database object.
+  */
+  public function log_hit($userID, $paperID, $db) {
+    // Log the hit in recent_papers.
+    $result = $db->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW()");
+    $result->bind_param('ii', $userID, $paperID);
+    $result->execute();
+    $result->close();    
+  }
 
   /**
   * Parses a paper title and returns the academic year if it exists within the title

@@ -76,8 +76,6 @@ class demo_auth extends internaldb_auth {
         $unique_username = true;
         $unique_module = true;
 
-        var_dump(get_defined_vars($this));
-
         $new_moduleid = '';
 
         for ($a = 0; $a < strlen($this->request['new_grade2']); $a++) {
@@ -91,8 +89,6 @@ class demo_auth extends internaldb_auth {
         }
         if($new_moduleid=='') $new_moduleid=$this->request['new_grade2'];
 
-
-//        public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0) {
 
         module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $this->settings['school']);
 

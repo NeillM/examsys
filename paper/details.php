@@ -605,10 +605,7 @@ function check_latex_random($q_ids, $mysqli) {
   }
 
   // Log the hit in recent_papers.
-  $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW();");
-  $result->bind_param('ii', $userObject->get_user_ID(), $paperID);
-  $result->execute();
-  $result->close();
+  Paper_utils::log_hit($userObject->get_user_ID(), $paperID, $mysqli);
 
   $old_p_id           = 0;
   $row_no             = 0;
@@ -830,7 +827,7 @@ function check_latex_random($q_ids, $mysqli) {
   echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
   } elseif (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } else {
@@ -840,7 +837,7 @@ function check_latex_random($q_ids, $mysqli) {
     if ($moduleID != '') {
       $module_code = $paper_modules[$moduleID];
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' . $module_code . '</a>';
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
     }
   }
   echo '</div><div onclick="qOff()" class="page_title"';

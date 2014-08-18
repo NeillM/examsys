@@ -14,7 +14,7 @@ tinyMCE.init({
   theme_advanced_path : false,
   theme_advanced_statusbar_location : "none",
   // Example content CSS (should be your site CSS) 
-	content_css : cfgRootPath + "/css/staff_help.css",
+	content_css : cfgRootPath + "/css/help.css",
 
 
 	setup : function(ed) {
