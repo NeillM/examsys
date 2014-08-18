@@ -25,6 +25,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../config/external_email_msg.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $externalID = check_var('externalID', 'GET', true, false, true);
@@ -73,10 +74,6 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
 <body>
 <?php
   $external_details = UserUtils::get_user_details($externalID, $mysqli);
-        
-  $url = 'https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
-  $logo_path = 'http://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/config/black_uon_logo.png';
-  $support_email = $configObject->get('support_email');
   
   $to = $external_details['email'];
 

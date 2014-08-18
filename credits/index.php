@@ -43,10 +43,8 @@
 <div style="position:absolute; top:12px; left:25px; width:300px">
   <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
   <div class="logo_lrg_txt">Rog&#333;</div>
-  <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
+  <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem'] ?></div>
 </div>
-
-<div style="position:absolute; top:10px; left:510px"><img src="../artwork/black_uon_logo.png" width="167" height="70" alt="University of Nottingham" /></div>
 
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:10px">
 <br />
@@ -72,7 +70,7 @@ Adam Clarke<br />
 </td>
 
 <td>
-<strong><?php echo $string['3rdparty']; ?></strong><br />
+<strong><?php echo $string['3rdparty'] ?></strong><br />
 <table cellpaddding="0" cellspacing="0" border="0">
 <tr><td style="width:120px"><?php echo $string['editor']; ?></td><td>TinyMCE 3.5.11 - <a href="http://tinymce.moxiecode.com/" target="_blank">tinymce.moxiecode.com</a></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
