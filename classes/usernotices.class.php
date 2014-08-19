@@ -16,9 +16,9 @@
 
 /**
 * A Class to hold functions designed to display notices to users. Including  
-* access denied messages
+* access denied messages.
 *
-* @author Anthony Brown
+* @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -73,7 +73,8 @@ Class user_notices extends RogoStaticSingleton {
    * @param string $msg         - string the message
    * @param string $icon        - name of the icon image file
    * @param string $title_color - color of the tile text
-   *
+   * @param bool $output_header - if true output opening HTML tags
+   * @param bool $output_footer - if true output closing HTML tags
    */
   public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
     $configObject = Config::get_instance();
@@ -115,6 +116,8 @@ Class user_notices extends RogoStaticSingleton {
    * @param string $reason      - string the message displayed in the database
    * @param string $icon        - name of the icon image file
    * @param string $title_color - color of the tile text
+   * @param bool $output_header - if true output opening HTML tags
+   * @param bool $output_footer - if true output closing HTML tags
    *
    */
   public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
@@ -133,13 +136,7 @@ Class user_notices extends RogoStaticSingleton {
   }
   
   /**
-   * This function will exit php without notice; 
-   *
-   * @param string $title       - string title to display
-   * @param string $msg         - string the message
-   * @param string $icon        - name of the icon image file
-   * @param string $title_color - color of the tile text
-   *
+   * This function will exit php without notice.
    */
   public function exit_php() {
     exit;
@@ -152,8 +149,8 @@ Class user_notices extends RogoStaticSingleton {
    * @param string $output_header - if true output 401 headers
    *
    */
-  public function access_denied($db, $string, $message, $output_header = false, $output_footer = true) {    
-    $this->display_notice_and_exit($db, $string['accessdenied'], $message, $string['accessdenied'], $rp . '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);
+  public function access_denied($db, $string, $message, $output_header = false, $output_footer = true) {
+    $this->display_notice_and_exit($db, $string['accessdenied'], $message, $string['accessdenied'], '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);
   }
 
 }

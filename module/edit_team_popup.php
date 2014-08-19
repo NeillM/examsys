@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
   <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td style="width:66px; background-color:white; border-bottom:1px solid #CCD9EA; text-align:center"><img src="../artwork/user_accounts_icon.png" width="48" height="48 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
+  <tr><td style="width:66px; height:55px; background-color:white; border-bottom:1px solid #CCD9EA; text-align:center"><img src="../artwork/user_accounts_icon.png" width="48" height="48 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
   </table>
 
 <?php

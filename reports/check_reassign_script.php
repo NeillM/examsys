@@ -25,11 +25,15 @@
 */
 
 require_once '../include/staff_auth.inc';
-require_once '../classes/dateutils.class.php';
 require_once '../include/errors.inc';
+
+require_once '../classes/dateutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $userID  = check_var('userID', 'GET', true, false, true);
+
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 function getModules($userID, $mysqlidb) {
   $modules = array();
@@ -83,7 +87,11 @@ if (isset($_POST['submit'])) {
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-size:90%}
+    body {font-size:90%; margin:4px}
+    h1 {color: #C00000}
+    .uline {height:54px; cursor:pointer; background-repeat:no-repeat; background-position: 2px center; vertical-align:middle}
+    .uline:hover {background-color:#FFE7A2}
+    .name {margin-left:60px; position:relative; top:50%; transform: translateY(-50%)}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -92,14 +100,6 @@ if (isset($_POST['submit'])) {
       window.location = "do_reassign_script.php?temp_userID=<?php echo $userID; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
     }
 
-    function lon(lineID) {
-      $('#' + lineID).css('background-color', '#FFE7A2');
-    }
-
-    function loff(lineID) {
-      $('#' + lineID).css('background-color', 'white');
-    }
-    
     function do_resize() {
       var tmp_height = $(document).height() - 185;
       $("#userlist").height(tmp_height);
@@ -110,6 +110,10 @@ if (isset($_POST['submit'])) {
       $(window).resize(function() {
         do_resize();
       });
+      
+      $('#cancel').click(function() {
+        window.close();
+      });
     });
     
   </script>
@@ -117,27 +121,11 @@ if (isset($_POST['submit'])) {
 
 <body>
 <?php
-// Check if the exam is still running. Re-assignment mid-exam would upset the data.
-$row_no = 0;
-$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($end_date);
-$result->store_result();
-$row_no = $result->num_rows;
-$result->fetch();
-$result->close();
-
-if ($row_no == 0) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
-
-if (time() < $end_date) {
-  echo "<p><strong>" . $string['warning'] . "</strong><p><p>" . $string['msg2'] . "</p>\n";
+// Check first if the exam is in progress.
+if ($properties->is_live()) {
+  echo "<blockquote><h1>" . $string['warning'] . "</h1><p>" . $string['msg2'] . "</p><br /><p style=\"text-align:center\"><input type=\"button\" value=\"" . $string['ok'] . "\" id=\"cancel\" class=\"ok\" /></p></blockquote>\n</body>\n</html>\n";
   exit;
 }
-
 $target_userID = '';
 
 $target_student = array();
@@ -202,15 +190,15 @@ if (count($target_student) == 0) {
     } else {
       $user_icon = 'user_female_48.png';
     }
-    echo "<div style=\"border:1px solid white; cursor:hand\" onclick=\"doReassign($individualID)\" onmouseover=\"lon($individualID)\" onmouseout=\"loff($individualID)\" id=\"$individualID\"><table border=\"0\"><tr><td><img src=\"../artwork/$user_icon\" width=\"48\" height=\"48\" alt=\"user\" /></td><td>" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    echo "<div class=\"uline\" style=\"background-image:url('../artwork/$user_icon')\" onclick=\"doReassign($individualID)\" id=\"$individualID\"><div class=\"name\">" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
     echo implode(', ',$individual['modules']);
-    echo "</td></tr></table></div>";
+    echo "</div></div>";
   }
   echo "</div>\n";
 }
 ?>
 <br />
-<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" style="width:100px" /></div>
+<div style="text-align:center"><input type="button" id="cancel" name="cancel" value="<?php echo $string['cancel']; ?>" class="ok" /></div>
 
 </body>
 </html>

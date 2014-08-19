@@ -59,6 +59,7 @@ $string['couldnotsend'] = 'Could not send mail to';
 $string['emailclassmarks'] = 'Email Class Marks';
 $string['title'] = 'Title';
 $string['surname'] = 'Surname';
+$string['firstnames'] = 'First Names';
 $string['studentid'] = 'Student ID';
 $string['username'] = 'Username';
 $string['course'] = 'Course';

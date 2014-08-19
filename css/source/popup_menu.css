@@ -2,7 +2,7 @@
   display: none;
   color: black;
   background-color: white;
-  padding: 3px;
+  padding: 1px;
   position: absolute;
   top: 0;
   left: 0;
@@ -19,6 +19,7 @@
   line-height: 20px;
 	display: table;
   width: 100%;
+  margin-right: 20px;
 }
 .popup_row_disabled {
   font-size: 90%;

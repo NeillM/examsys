@@ -62,38 +62,9 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
     <?php $help_system->display_toc($id); ?>
   </div>
   <div id="contents">
-<?php
-  if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-    $help_system->record_in_log($_GET['id']);
-  }
-  
-  $t = $_GET['title'] . '/%';
-  $search_results = $mysqli->prepare("SELECT articleid, title, type FROM student_help WHERE title LIKE ? AND language = ? ORDER BY title");
-  $search_results->bind_param('ss', $t, $_SESSION['ROGO_language']);
-  $search_results->execute();
-  $search_results->store_result();
-  $search_results->bind_result($id, $title, $type);
+    <?php $help_system->display_folder($title); ?>
+  </div>
+</div>
 
-  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . $_GET['title'] . "</div>\n";
-  
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n<tr><td style=\"width:20px\">&nbsp;</td><td>";
-  
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  echo "<tr><td style=\"background-color: #295AAD; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "</td><td style=\"background-color: #295AAD; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
-  echo "</table>\n";
-
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  $row_no = 0;
-  while ($search_results->fetch()) {
-    $row_no++;
-    echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
-  }
-  $search_results->close();
-  $mysqli->close();
-  echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";
-?>
-</div>
-</div>
-</div>
 </body>
 </html>

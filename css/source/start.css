@@ -282,8 +282,9 @@ pre {
   height: 24px;
 }
 #fire_exit {
-  width: 30px;
+  width: 40px;
   height: 30px;
   cursor: pointer;
-  line-height: -3px;
+  background-image: url('../artwork/fire_exit.png');
+  background-repeat: no-repeat;
 }

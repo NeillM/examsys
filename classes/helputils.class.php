@@ -163,22 +163,8 @@ Class OnlineHelp {
     if ($old_parent != '') echo "</div>\n";
   }  
 
-  private function getPath($path) {
-    $parts = explode('/',$path);
-    $path = '<a href="index.php?id=1">' . $this->string['home'] . '</a>';
-    if (count($parts) > 1) {
-      for ($i=0; $i<count($parts)-1; $i++) {
-        $path .= " > <a href=\"display_folder.php?title=" . $parts[$i] . "\">" . $parts[$i] . "</a>";
-      }
-    }
-
-    return $path;
-  }
-
   private function getTitle($path) {
-    $parts = explode('/', $path);
-
-    return $parts[count($parts) - 1];
+    return str_replace('/', ': ', $path);
   }
   
   public function get_page_details($articleid) {
@@ -265,8 +251,34 @@ Class OnlineHelp {
       $this->save_staff_page($title, $body, $roles, $articleid, $pointerid);
     }
   }
+  
+  public function display_folder($folder) {
+    $t = $folder . '/%';
+    $result = $this->db->prepare("SELECT articleid, title FROM staff_help WHERE title LIKE ? AND language = ? ORDER BY title");
+    $result->bind_param('ss', $t, $this->language);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $title);
 
-  function display_page($id) {
+    echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">$folder</div>\n";
+
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n<tr><td style=\"width:20px\">&nbsp;</td><td>";
+
+    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
+    echo "<tr><td style=\"background-color: #295AAD; color:white; font-weight:bold\">&nbsp;&nbsp;" . $this->string['topics'] . "</td><td style=\"background-color: #295AAD; color:white; text-align:right\">" . $result->num_rows . "&nbsp;" . $this->string['items'] . "&nbsp;</td></tr>";
+    echo "</table>\n";
+
+    echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
+    $row_no = 0;
+    while ($result->fetch()) {
+      $row_no++;
+      echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" class=\"icon16_active\" /></td><td class=\"row\"><a href=\"index.php?id=$id\">" . str_replace($folder . '/', '', $title) . "</a></td></tr>\n";
+    }
+    $result->close();
+    echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";    
+  }
+
+  public function display_page($id) {
     $page_details = $this->get_page_details($id);
     
     if ($page_details['page_type'] == 'pointer') {    // If pointer look up source page.
@@ -284,7 +296,6 @@ Class OnlineHelp {
       // ID 1 is for the homepage.
       echo "<div>\n";
     } else {
-      echo "<div class=\"path\">" . $this->getPath($page_details['title']) . "</div>";
       echo "<div class=\"help_title\">" . $this->getTitle($page_details['title']) . "</div>\n";
       echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
     }
@@ -315,11 +326,9 @@ Class OnlineHelp {
     if ($id > 1) {    // Display footer
       echo "<div class=\"footer_line\"></div>\n";
       echo "<div class=\"footer_left gototop\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" />&nbsp;" . $this->string['top'] . "</div>\n";
-      echo "<div class=\"footer_right\">&copy; 2014, The University of Nottingham";
       if ($this->userObject->has_role('SysAdmin')) {
-        echo '<br /><span style="color:#316AC5">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $this->configObject->get('cfg_root_path') . '/help/staff/index.php?id=' . $id . '</span>';
+        echo '<div class="footer_right">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $this->configObject->get('cfg_root_path') . '/help/staff/index.php?id=' . $id . '</div>';
       }
-      echo "</div>\n";
     }    
   }
   

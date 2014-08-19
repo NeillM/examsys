@@ -206,7 +206,6 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
 
 <?php
   $css = '';
@@ -238,12 +237,14 @@ require '../config/finish.inc';
     echo "<style type=\"text/css\">\n$css</style>\n";
   }
 
-  if ($latex_needed == 1) {
-   echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
-  }
   if (($userObject->has_role('Student', 1) and $paper_type < 2) or $userObject->has_role('Staff')) {
     echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
   }
+  if (($userObject->has_role('Student', 1) and $paper_type != '2')) {
+    if ($latex_needed == 1) {
+      echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+    }
 ?>
 <script type="text/javascript" src="../js/flash_include.js"></script>
 <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
@@ -259,6 +260,7 @@ require '../config/finish.inc';
 <!-- HTML5 part end -->
 	
 <?php
+  }
   echo $configObject->get('cfg_js_root');
 ?>
 <script>
@@ -377,9 +379,9 @@ require '../config/finish.inc';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';
     if ($paper_type == '2') {
-      echo '<br /><div style="text-align:center;border:1px #C0C0C0 solid;background-color:#E6E6DF;padding:10px;margin-left:100px;margin-right:100px" align="center">' . $leaving_rules . '<br /><br /><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
+      echo '<br /><div class="key" style="text-align:center">' . $leaving_rules . '<br /><br /><input type="button" name="close" value="' . $string['closewindow'] . '" class="ok" onclick="window.close();" /></div>';
     } else {
-      echo '<br /><div align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
+      echo '<br /><div align="center"><input type="button" name="close" value="' . $string['closewindow'] . '" class="ok" onclick="window.close();" /></div>';
     }
   }
   echo "</body>\n</html>";

@@ -176,6 +176,7 @@ hr {
   font-size: 90%;
   float: right;
   text-align: right;
+  color: #316AC5;
 }
 #searchbox:focus {
   border-color: #ED7D31;

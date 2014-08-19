@@ -24,7 +24,6 @@
 
 require '../../include/sysadmin_auth.inc';
 require '../../include/errors.inc';
-require '../../include/help.inc';
 require_once '../../classes/helputils.class.php';
 
 header('Content-Type: text/html; charset=utf8');
