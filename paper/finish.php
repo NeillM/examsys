@@ -240,7 +240,7 @@ require '../config/finish.inc';
   if (($userObject->has_role('Student', 1) and $paper_type < 2) or $userObject->has_role('Staff')) {
     echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
   }
-  if (($userObject->has_role('Student', 1) and $paper_type != '2')) {
+  if (($userObject->has_role('Staff', 0) or $paper_type < 2)) {
     if ($latex_needed == 1) {
       echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
       echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
