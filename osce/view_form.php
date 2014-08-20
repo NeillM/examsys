@@ -40,11 +40,8 @@ if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
   $paperID = $_GET['paperID'];
 } elseif ($userObject->has_role('Student')) {
   $userID = $userObject->get_user_ID();
-  $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-  if ($propertyObj == false) {  // No properties found, this crypt_name
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
-  
+  $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+    
   if (!$propertyObj->is_question_fb_released()) {
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }

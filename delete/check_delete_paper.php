@@ -26,11 +26,12 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
-$paperid = check_var('paperID', 'GET', true, false, true);
+$paperID = check_var('paperID', 'GET', true, false, true);
 
-if (!Paper_utils::paper_exists($paperid, $mysqli)) {
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string, true);
+if ($properties->get_summative_lock() == 1) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -55,10 +56,10 @@ $mysqli->close();
 
 <div class="button_bar">
 <form action="do_delete_paper.php" method="post">
-<input type="hidden" name="paperID" value="<?php echo $paperid; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ; ?>" /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ; ?>" /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="window.close();" />
 </form>
 </div>
 

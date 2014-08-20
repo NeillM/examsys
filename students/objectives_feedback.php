@@ -63,13 +63,7 @@ if (isset($_GET['userID'])) {
 }
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-
-if (!$propertyObj) {
-  header("HTTP/1.0 404 Not Found");
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 // Check the feedback has been released !!!
 if ($userObject->has_role('Student')) {

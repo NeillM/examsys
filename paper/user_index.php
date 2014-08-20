@@ -162,11 +162,7 @@ $total_random_mark = 0;
 $total_marks = 0;
 
 // Create paper object.
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 // Get lab information.
 $current_address = NetworkUtils::get_client_address();
@@ -335,7 +331,7 @@ if ($exam_duration !== null) {
   </script>
 </head>
 <body>
-<div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu(31);
@@ -579,17 +575,23 @@ if ($textsize > 120) {
 
 	<!-- Cache often used scripts and images -->
 	<script src="../js/start.js"></script>
-	<script src="../js/flash_include.js" /></script>
-	<script src="../js/jquery.flash_q.js" /></script>
 	<img class="noimg" src="../artwork/calc.png" />
 	<img class="noimg" src="../artwork/no_save.png" />
 	<img class="noimg" src="../artwork/fire_exit.png" />
-	
-	<script src="../js/html5.images.js"></script> 
-	<script src="../js/qsharedf.js"></script> 
-	<script src="../js/qarea.js"></script> 
-	<script src="../js/qhotspot.js"></script> 
-	<script src="../js/qlabelling.js"></script> 
+
+  <?php
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+  } else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+  }
+  ?>
 	<img class="noimg" src="../js/images/combined.png" />
 </body>
 </html>

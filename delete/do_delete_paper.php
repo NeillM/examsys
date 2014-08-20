@@ -32,6 +32,10 @@ require_once '../classes/logger.class.php';
 $paperID = check_var('paperID', 'POST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+if ($properties->get_summative_lock() == 1) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $new_title = $properties->get_paper_title() . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
 $properties->set_paper_title($new_title);
@@ -81,7 +85,7 @@ $mysqli->close();
 
 <div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:self.opener.location.href='../folder/details.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>';window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='../folder/details.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>'; window.close();" />
 </form>
 </div>
 

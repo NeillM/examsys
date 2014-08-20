@@ -199,14 +199,6 @@ if (count($moduleIDs) > 0) {
     }
   }
 
-  function noAdd(start, end) {
-    winH = screen.height - 40
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/noadd.php?paperID=<?php echo $paperID; ?>&start_date=" + start + "&end_date=" + end + "","notice","width=770,height=550,left="+(screen.width/2-385)+",top="+(screen.height/2-275)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
   function copyToPaper() {
     notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-300,10);
@@ -303,11 +295,7 @@ echo "<div id=\"menu1\">\n";
   }
 
   if ($properties->get_summative_lock() == 1) {
-    if ($userObject->has_role('SysAdmin')) {
-      echo "<div class=\"grey menuitem\"><a href=\"#\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "')\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" />" . $string['addquestionspaper'] . "</a></div>\n";
-    } else {
-      echo "<div class=\"grey menuitem\"><a href=\"#\" onclick=\"noAdd('" . $properties->get_display_start_date() . "','" . $properties->get_display_end_date() . "')\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" />" . $string['addquestionspaper'] . "</a></div>\n";
-    }
+    echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"" . $string['addquestionspaper'] . "\" />" . $string['addquestionspaper'] . "</div>\n";
   } else {
     $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
     echo "<div class=\"menuitem\" onclick=\"addQuestions(" . ($properties->get_max_display_pos() + 1) . ", $max_screen)\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_16.gif\" alt=\"" . $string['addquestionspaper'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['addquestionspaper'] . "</a></div>\n";

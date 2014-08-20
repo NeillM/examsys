@@ -58,11 +58,7 @@ $demo		= is_demo($userObject);
 $userID = $userObject->get_user_ID();
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -89,6 +85,8 @@ $pass_mark                  = $propertyObj->get_pass_mark();
 $latex_needed               = $propertyObj->get_latex_needed();
 $password                   = $propertyObj->get_password();
 $moduleID                   = $propertyObj->get_modules();
+
+$show_feedback              = can_display_feedback($paper_type, $userObject);
 
 $attempt = 1; // Default attempt to 1 overwritten if the student is resit candidate
 
@@ -237,29 +235,24 @@ require '../config/finish.inc';
     echo "<style type=\"text/css\">\n$css</style>\n";
   }
 
-  if (($userObject->has_role('Student', 1) and $paper_type < 2) or $userObject->has_role('Staff')) {
-    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
-  }
-  if (($userObject->has_role('Staff', 0) or $paper_type < 2)) {
+  echo "<script type=\"text/javascript\" src=\"../js/student_help.js\"></script>\n";
+  if ($show_feedback) {     // Do not JavaScript files if feedback is not displayed.
     if ($latex_needed == 1) {
       echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
       echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
     }
-?>
-<script type="text/javascript" src="../js/flash_include.js"></script>
-<script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-<script type="text/javascript" src="../js/student_help.js"></script>
-	
-<!-- HTML5 part start -->
-<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-<script type="text/javascript" src="../js/html5.images.js"></script>
-<script type="text/javascript" src="../js/qsharedf.js"></script>
-<script type="text/javascript" src="../js/qlabelling.js"></script>
-<script type="text/javascript" src="../js/qhotspot.js"></script>
-<script type="text/javascript" src="../js/qarea.js"></script>
-<!-- HTML5 part end -->
-	
-<?php
+    if ($configObject->get('cfg_interactive_qs') == 'html5') {
+      echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+    } else {
+      echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+    }
   }
   echo $configObject->get('cfg_js_root');
 ?>
@@ -276,6 +269,10 @@ require '../config/finish.inc';
       
       $('#' + targetID).width(boxWidth);
       $('#' + targetID).height(boxHeight);
+    });
+    
+    $('#close').click(function() {
+      window.close();
     });
     
 	});
@@ -349,18 +346,7 @@ require '../config/finish.inc';
     $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
   }
   $result->close();
-
-  $show_feedback = false;
-  if ($paper_type == '0') {
-    $show_feedback = true;
-  } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
-    if ($userObject->has_role('Student')) {
-      $show_feedback = false;
-    } elseif ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
-      $show_feedback = true;
-    }
-  }
-
+  
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   if ($show_feedback) {
     display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $metadataid, $mysqli, $status_array, $overrides, $preview_q_id);
@@ -379,9 +365,9 @@ require '../config/finish.inc';
     if ($paper_postscript != '') echo "<p>$paper_postscript</p>\n";
     echo '</blockquote>';
     if ($paper_type == '2') {
-      echo '<br /><div class="key" style="text-align:center">' . $leaving_rules . '<br /><br /><input type="button" name="close" value="' . $string['closewindow'] . '" class="ok" onclick="window.close();" /></div>';
+      echo '<br /><div class="key" style="text-align:center">' . $leaving_rules . '<br /><br /><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" /></div>';
     } else {
-      echo '<br /><div align="center"><input type="button" name="close" value="' . $string['closewindow'] . '" class="ok" onclick="window.close();" /></div>';
+      echo '<br /><div align="center"><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" /></div>';
     }
   }
   echo "</body>\n</html>";

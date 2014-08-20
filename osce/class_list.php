@@ -32,7 +32,7 @@ require_once '../classes/paperproperties.class.php';
 
 $id = check_var('id', 'GET', true, false, true);
 
-$properties = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli);
+$properties = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 $paperID 				= $properties->get_property_id();
 $paper_title 		= $properties->get_paper_title();

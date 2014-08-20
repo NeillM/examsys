@@ -134,9 +134,9 @@ function check_ebel_distinction_type($reviewID, $db) {
     echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
 	} else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
   }
 ?>
   <script>

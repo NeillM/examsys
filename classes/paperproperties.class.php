@@ -132,15 +132,25 @@ class PaperProperties {
   * Load the paper properties by its crypt_name.
 	* @param string $crypt_name	- The crypt_name of the paper.
 	* @param object $db					- Link to MySQL db.
+	* @param array $string				- Language translations
+	* @param bool $exit_on_false	- If true then exist if the paper does not exist.
   *	@return PaperProperties object
   */
-  static function get_paper_properties_by_crypt_name($crypt_name, $db) {
+  static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true) {
+    $configObj = Config::get_instance();
+    $notice = UserNotices::get_instance();
+
   	$paper_property = new PaperProperties($db);
   	$paper_property->set_crypt_name($crypt_name);
   	if ($paper_property->load() !== false) {
   		return $paper_property;
   	} else {
-  		return false;
+      if ($exit_on_false) {
+        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+      } else {
+        return false;
+      }
   	}
   }
 

@@ -56,10 +56,7 @@ if ( isset($_GET['retry']) and is_numeric($_GET['retry']) and $_GET['retry'] > 0
 // Kill this request if it is taking to long the javascript will retry if it can.
 set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
 
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], false);   // This will exit PHP.
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 $original_paper_type = $propertyObj->get_paper_type(); // Store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 

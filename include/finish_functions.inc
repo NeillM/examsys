@@ -28,6 +28,20 @@ require_once $cfg_web_root . 'classes/exclusion.class.php';
 
 $configObject = Config::get_instance();
 
+function can_display_feedback($paper_type, $userObject) {
+  $show_feedback = false;
+  if ($paper_type == '0') {
+    $show_feedback = true;
+  } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
+    if ($userObject->has_role('Student')) {
+      $show_feedback = false;
+    } elseif ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
+      $show_feedback = true;
+    }
+  }
+  return $show_feedback;
+}
+  
 function echo_content($html) {
   echo $html;
   /*
@@ -2365,7 +2379,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
   $configObject = Config::get_instance();
   $cfg_root_path = $configObject->get('cfg_root_path');
   if ($_SERVER['PHP_SELF'] == "$cfg_root_path/paper/finish.php") {
-    echo '<tr><td align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></td></tr>';
+    echo '<tr><td align="center"><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" /></td></tr>';
   } else {
     echo '<tr><td>&nbsp;</td></tr>';
   }

@@ -1717,10 +1717,11 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
   } else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
 }
 
 ?>

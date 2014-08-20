@@ -257,11 +257,7 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
 }
 
 // Get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 $paperID = $propertyObj->get_property_id();
 
@@ -634,7 +630,9 @@ if ($css != '') {
       echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
       echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
       echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
     } else {
+      echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
       echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
       echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
     }

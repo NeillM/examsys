@@ -42,10 +42,7 @@ require_once '../classes/exam_announcements.class.php';
 check_var('id', 'GET', true, false, false);
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);     //this will exit php
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 $paperID    = $propertyObj->get_property_id();
 $paper_type = $propertyObj->get_paper_type();
@@ -156,25 +153,25 @@ require '../config/finish.inc';
   ?>
   
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/student_help.js"></script>
   <?php
   if ($propertyObj->get_latex_needed() == 1) {
     echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
-  }
-  
+  }  
   if ($configObject->get('cfg_interactive_qs') == 'html5') {
     echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
   } else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
   }
 ?>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/student_help.js"></script>
 </head>
 <body>
 <?php

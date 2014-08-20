@@ -37,7 +37,7 @@ require_once '../classes/reviews.class.php';
 $id = check_var('id', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 $paperID = $propertyObj->get_property_id();
 if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
