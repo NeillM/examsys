@@ -60,7 +60,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <div class="button_bar">
 <form action="do_delete_q_original.php" method="post">
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" />
 </form>
 </div>
     <?php
@@ -75,7 +75,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <div style="text-align:right">
 <form action="do_delete_q_original.php" method="post">
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" />
 </form>
 </div>
     <?php
