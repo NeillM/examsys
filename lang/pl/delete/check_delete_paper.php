@@ -17,4 +17,5 @@
 require '../lang/' . $language . '/delete/delete.inc';
 
 $string['msg'] = 'Usunięcie tego arkusza <em>nie</em> usuwa samych pytań z banku pytań.<br /><br /><strong>Czy na pewno usunąć ten arkusz?</strong>';
+$string['paperlocked'] = 'Paper Locked';
 ?>
