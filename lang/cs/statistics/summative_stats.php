@@ -28,4 +28,7 @@ $string['studentpapers'] = 'Student/Papers';
 $string['cohortsizes'] = 'Cohort Sizes';
 $string['uniquestudents'] = 'Unique students = %s';
 $string['totals'] = 'Totals';
+$string['students'] = 'Students';
+$string['taken'] = 'Taken';
+$string['unused'] = 'Unused';
 ?>

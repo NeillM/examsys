@@ -28,4 +28,7 @@ $string['studentpapers'] = 'Studenci/Arkusze';
 $string['cohortsizes'] = 'Rozmiary grup';
 $string['uniquestudents'] = 'Studentów niepowtarzalnie = %s';//??
 $string['totals'] = 'Wszystkich';
+$string['students'] = 'Students';
+$string['taken'] = 'Taken';
+$string['unused'] = 'Unused';
 ?>

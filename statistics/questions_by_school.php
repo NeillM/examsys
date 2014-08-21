@@ -37,7 +37,7 @@ require '../include/errors.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-	<style>
+	<style type="text/css">
 		.qtype {width:4%}
 	</style>
 	
