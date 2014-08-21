@@ -216,12 +216,12 @@ $previously_submitted = 0;
 $low_bandwidth = 0;
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($password, $string, true);
+  check_paper_password($password, $string, $mysqli, true);
 
   //Check this PC is registered for this exam
   $low_bandwidth = check_labs($test_type, $labs, $current_address, $password, $string, $mysqli);
 
-  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
 }
 
 $display_remaining_time = false;
@@ -351,15 +351,8 @@ if ($textsize > 120) {
 <tr>
 <?php
   $icon_types = array('formative', 'progress', 'summative', 'survey');
-  if ($propertyObj->get_exam_duration() === null) {
-    $timed_filename = '';
-  } else {
-    $timed_filename = '_timed';
-  }
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="../artwork/' . $icon_types[$test_type] . $timed_filename . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
-  echo "</td><td><span class=\"paper_title\">$paper_title</span>";
-  echo "<div class=\"logout\"><a href=\"../logout.php\"><img src=\"../artwork/student_logout.png\" width=\"24\" height=\"24\" alt=\"" . $string['signout'] . "\" /></a></div><div class=\"logout\" style=\"width:100px; padding-right:8px\"><a class=\"logout\" href=\"../logout.php\">" . $string['signout'] . "</a></div>";
-  echo "</td>\n</tr></table></td></tr>";
+  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="../artwork/' . $icon_types[$test_type] . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
+  echo "</td><td><span class=\"paper_title\">$paper_title</span></td>\n</tr></table></td></tr>";
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
@@ -518,7 +511,7 @@ if ($textsize > 120) {
     $paper_utils = Paper_utils::get_instance();
     $paper_display = array();
     $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli, $property_id);
-    if ($paper_no > 0) echo "<input class=\"ok\" type=\"button\" style=\"width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='index.php'\" />&nbsp;&nbsp;&nbsp;&nbsp;\n";
+    if ($paper_no > 0) echo "<input class=\"ok\" type=\"button\" style=\"margin-right:20px; width:" . $button_width . "px\" value=\"" . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='index.php'\" />";
   }
 
   $display_date = '';

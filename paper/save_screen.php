@@ -79,10 +79,10 @@ if ($userObject->has_role('Student')) {     // Student user, do a lot more secur
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string);
+  check_paper_password($propertyObj->get_password(), $string, $mysqli);
 
   // Check time security
-  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
+  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);
 
   // Check room security
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
@@ -94,7 +94,7 @@ if ($userObject->has_role('Student')) {     // Student user, do a lot more secur
                               );
 
   // Check modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
 
   // Check for any metadata security restrictions
   check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);

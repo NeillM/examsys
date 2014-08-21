@@ -57,9 +57,7 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
   return $low_bandwidth;
 }
 
-function check_paper_password($password, $string, $show_form = false) {
-  global $mysqli;
-
+function check_paper_password($password, $string, $db, $show_form = false) {
   if ($password != '') {
     if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
       if ($show_form) {
@@ -73,26 +71,23 @@ function check_paper_password($password, $string, $show_form = false) {
         }
       } else {
         $notice = UserNotices::get_instance();
-        $notice->access_denied($mysqli, $string, $string['specificpassword'], true, true);
+        $notice->access_denied($db, $string, $string['specificpassword'], true, true);
       }
     }
   }
 }
 
-function check_datetime($start_date, $end_date) {
-  global $string, $mysqli;
-
+function check_datetime($start_date, $end_date, $string, $db) {
   $notice = UserNotices::get_instance();
 
-  if ((time()+120) < $start_date or (time()-3600) > $end_date) {
-    $tmp_string = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-    $notice->access_denied($mysqli, $string, $tmp_string, true, true);
+  if ((time()+60) < $start_date or (time()-3600) > $end_date) {
+    $msg = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
+    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="window.close()" class="OK" />';
+    $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/summative_scheduling.png', '#C00000', true, true);
   }
 }
 
-function check_modules($userObj, $moduleIDs, $calendar_year, $db) {
-  global $string;
-
+function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $notice = UserNotices::get_instance();
 
   $attempt = 1;

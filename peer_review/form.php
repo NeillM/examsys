@@ -107,7 +107,7 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
 
 if ($userObject->has_role('Student')) {
   // Check time security
-  check_datetime($start_date, $end_date);
+  check_datetime($start_date, $end_date, $string, $mysqli);
 
   // Check room security
   $paper_type = '6';
@@ -120,7 +120,7 @@ if ($userObject->has_role('Student')) {
                               );
 
   // Check for additional password on the paper
-  check_paper_password($password, $string, true);
+  check_paper_password($password, $string, $mysqli, true);
 }
 
 // Get questions on the paper

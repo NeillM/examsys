@@ -94,7 +94,7 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string, true);
+  check_paper_password($propertyObj->get_password(), $string, $mysqli, true);
   
   $display_correct_answer     = 1;
   $display_question_mark      = 1;

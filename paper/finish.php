@@ -120,16 +120,16 @@ if ($userObject->has_role('Student')) {
   if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
   // Check for additional password on the paper
-  check_paper_password($password, $string);
+  check_paper_password($password, $string, $mysqli);
 
   // Check time security
-  check_datetime($start_date, $end_date);
+  check_datetime($start_date, $end_date, $string, $mysqli);
 
   // Check room security
   $low_bandwidth = check_labs($paper_type, $labs, $current_address, $password, $string, $mysqli);
 
   // Get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
 
   // Check for any metadata security restrictions
   check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
