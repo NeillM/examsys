@@ -22,7 +22,7 @@ fieldset {
   padding: 0;
 }
 .exam-button {
-  width: 100%;
+  width: 160px;
   height: 34px;
   font-size: 120%;
   font-weight: bold;
@@ -33,13 +33,15 @@ fieldset {
   cursor: pointer;
 }
 #start_exam_button {
-  background-color: #26A61E;
+  background-color: #26A61E !important;
+  background-image: none;
   color: #fff;
 }
 #end_exam_button {
   background-color: #ff8901;
   color: #fff;
   margin-bottom: 6px;
+  background-image: none;
 }
 .cohortlist {
   border: 1px solid #909090;

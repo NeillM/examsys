@@ -89,23 +89,18 @@ if (isset($_POST['submit'])) {
 <body>
 
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
+
 <?php
-  if (file_exists($cfg_web_root . 'users/photos/' . $student_details['username'] . '.jpg')) {
-    echo "<td style=\"width:180px; text-align:left; vertical-align:bottom\">&nbsp;<strong>" . $student_details['title'] . " " . $student_details['surname'] . "</strong><br />&nbsp;" . $student_details['first_names'] . "<br />&nbsp;" . $student_details['student_id'] . "<br /><img src=\"../users/photos/" . $student_details['username'] . ".jpg\" width=\"180\" height=\"270\" alt=\"Photo\" /></td><td>";
-  } else {
-    echo '<td><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];
-    if ($student_details['student_id'] != '') echo ' (' . $student_details['student_id'] . ')';
-    echo '<br />';
-  }
+  echo '<div><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];
+  if ($student_details['student_id'] != '') echo ' (' . $student_details['student_id'] . ')';
+  echo '</div>';
+  
 
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required>" . $note_details['note'] . "</textarea><br />\n";
 ?>
-</td>
-</table>
+
 <br />
 <div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
 <input type="hidden" name="student_userID" value="<?php echo $_GET['userID']; ?>" />

@@ -73,4 +73,6 @@ $string['midexamclarrifications'] = 'Mid-Exam Clarrifications';
 $string['examchecklist'] = 'Exam Checklist';
 $string['viewrubric'] = 'View Rubric';
 $string['examrubric'] = 'Exam Rubric';
+$string['unknowncomputer'] = 'Unknown Computer';
+$string['unknowncomputermsg'] = 'The computer you are attempting to access Rog&#333; from is not recognised.<br />Please call one of the emergency numbers for help.';
 ?>

@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['extendtime']   = 'Extend Time';
-$string['extendtimeby'] = 'Extend Time By';
+$string['extendtimeby'] = 'Extend time by';
 $string['minutes']      = 'minutes';
-$string['submit']       = 'Submit';
-$string['close']        = 'Close';
+?>

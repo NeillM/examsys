@@ -303,6 +303,17 @@ if ($lab_object !== false) {
 </head>
 
 <body>
+<?php
+if (!$lab_object) {
+  echo "<div style=\"background-color:white\">\n";
+  emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
+  echo "<p><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px; padding-bottom:40px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['unknowncomputer'] . "</span><br /><br />" . $string['unknowncomputermsg'] . "</p><br clear=\"all\" />";
+
+  echo "</div>\n</body></html>";
+  exit;
+}
+?>
+  
   
 <div id="callout" class="callout border-callout">
 <b class="border-notch notch"></b>
@@ -448,22 +459,20 @@ if ($properties_list !== false and count($properties_list) > 0) {
                 </td>
                 <td style="font-weight:bold; width:150px"><?php echo $string['currenttime'] ?></td>
                 <td style="font-weight:bold" class="theTime"></td>
-                <td rowspan="5" style="vertical-align: top">
+                <td rowspan="5" style="vertical-align:top">
                   <?php
                   if ($allow_timing) {
                   ?>
                   <form id="start_exam_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
-                    <input name="paper_id" type="hidden" value="<?php echo $property_id; ?>"/>
+                    <input name="paper_id" type="hidden" value="<?php echo $property_id; ?>" />
                     <?php
                       if ($exam_started) {
                     ?>
                       <fieldset id="set_end">
                         <input id="end_exam_button" name="end_exam_form" type="submit" value="<?php echo $string['endat_but'] ?>" class="exam-button" /><br />
-                        <?php echo $string['time'] ?>:<select id="hour" name="hour">
+                        <?php echo $string['time'] ?>: <select id="hour" name="hour">
                             <?php for($hr=0; $hr<24; $hr++) { $selected = ''; if($hr == $end_time_h) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
-                        </select>
-                        :
-                        <select id="minute" name="minute">
+                        </select>:<select id="minute" name="minute">
                           <?php for($hr=0; $hr<60; $hr++) { $selected = ''; if($hr == $end_time_m) { $selected = 'selected'; } echo '<option value="' . $hr . '"' . $selected . '>' . str_pad($hr, 2, '0', STR_PAD_LEFT) . '</option>'; } ?>
                         </select>
                       </fieldset>
