@@ -9,7 +9,7 @@
 
 /* Mapping */
 .objectives li {
-	margin: 0;
+	margin: 10px;
 	list-style: none;
   font-size: 90%;
   margin-bottom: 8px;
@@ -29,17 +29,23 @@
 }
 
 .objectives .top ul {
-	padding-left: 18px;
+	padding-left: 25px;
 }
 
 .objectives .top ul li {
 	margin: 0px;
 }
 
-/* Mapping page styles */
-#obj_form {
-	margin-left:10px
+.objheading {
+  padding-left:10px;
+  font-size: 150%;
+  font-weight: bold;
+  color: #316AC5;
+  padding-top: 10px;
+  border-top: 1px solid #C0C0C0;
 }
+
+/* Mapping page styles */
 
 #obj_form h2, #obj_form ul {
 	margin-left: 0;

@@ -80,7 +80,7 @@ QUERY;
     $idmod = $tmp[$moduleid];
 
     $html .= <<< HTML
-        <h2>{$moduleid} {$string['objectives']}</h2>
+        <div class="objheading">{$moduleid} {$string['objectives']}</div>
 
         <ul class="objectives">
 
@@ -151,7 +151,7 @@ HTML;
   $modules_keys_string = implode(',',array_keys($modules_array));
   $nota_message = sprintf($string['noneabovemsg'], $modules_string);
   $html .= <<< HTML
-        <p class="warning"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
+        <p class="warning" style="margin-left:10px"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
         <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules_keys_string}" />
 
 HTML;
