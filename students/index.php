@@ -283,17 +283,7 @@ if (!$userObject->has_role('Student')) {
 <?php
 } else {
   // Check for any news/announcements
-  $announcements = announcement_utils::get_student_announcements($mysqli);
-  
-  /*
-  $student_msg = '';
-  $result = $mysqli->prepare("SELECT title, student_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND deleted IS NULL");
-  $result->execute();
-  $result->bind_result($news_title, $student_msg, $icon);
-  $result->fetch();
-  $result->close();
-  */
-  
+  $announcements = announcement_utils::get_student_announcements($mysqli);  
   foreach ($announcements as $announcement) {
     echo "<div class=\"announcement\"><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('../artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
   }

@@ -30,5 +30,5 @@ $string['myfolders'] = 'Moje složky';
 $string['papersoncurrentmodule'] = 'Dokumenty v tomto modulu';
 $string['describemodulechoice'] = 'Vyberte, prosím, dokument k prolinkování';
 $string['missingfields'] ='Chybějící pole';
-
+$string['module'] = 'Module: %s';
 ?>

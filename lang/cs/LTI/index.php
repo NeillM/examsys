@@ -26,6 +26,4 @@ $string['NotAddedToModule'] = 'Přidávání do týmu modulu není v LTI konfigu
 
 $string['NoModCreateTitle2'] = 'Vytváření modulu neběží';
 $string['NoModCreate2'] = 'Tvorba modulu z LTI neběží, jelikož uživatel nevlastní oprávnění, a proto nelze vytvořit modul s kódem kurzu: ';
-
-$string['SELECT']='Vybrat';
 ?>

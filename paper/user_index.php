@@ -287,7 +287,13 @@ if ($exam_duration !== null) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/user_index.css" />
   <style type="text/css">
-    body { font-size:<?php echo $textsize; ?>%; font-family: <?php echo $font ?>}
+    <?php
+    if (isset($_SESSION['_lti_context'])) {
+      echo "  body {background-color:transparent !important;font-size:$textsize%; font-family:$font}\n";
+    } else {
+      echo "  body {font-size:$textsize%; font-family:$font}\n";
+    }
+    ?>
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>

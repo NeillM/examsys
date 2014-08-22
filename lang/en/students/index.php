@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/folder/details.php';
+require_once '../lang/' . $language . '/module/index.php';
 
 $string['staffmsg'] = 'This is the Rog&#333; student landing page. Were you looking for the <a href="../staff/">staff management screens</a>?';
 $string['nopapers'] = 'You have no papers available at this time.';

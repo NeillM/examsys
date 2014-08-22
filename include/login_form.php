@@ -35,7 +35,11 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
-
+  <?php
+    if (isset($_SESSION['_lti_context'])) {
+      echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n";
+    }
+  ?>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
 	<script>

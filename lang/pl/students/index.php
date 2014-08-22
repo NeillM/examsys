@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/folder/details.php';
+require_once '../lang/' . $language . '/module/index.php';
 
 $string['staffmsg'] = 'To jest strona systemu Rog&#333; przeznaczona dla studentów. Czy poszukiwałeś/łaś <a href="../staff/">stron zarządzania dla kadry</a>?'; 
 $string['nopapers'] = 'Obecnie brak dostępnych arkuszy.';
