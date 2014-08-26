@@ -101,7 +101,8 @@ input.exclude, select.exclude {
   display: none;
 }
 .textbox_answer {
-  margin: 30px;
+  margin-top: 26px;
+  margin-right: 26px;
   border: 1px solid #909090;
   padding:2px;
   text-align: justify;

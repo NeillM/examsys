@@ -1866,7 +1866,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
         }
 
         if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
-          echo '<p class="fback" style="margin-left:17px">&nbsp;' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
+          echo '<p class="fback">' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
         }
 
         if ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
