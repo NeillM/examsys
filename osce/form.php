@@ -179,8 +179,12 @@ if (isset($_POST) and count($_POST) > 0) {
      }
    ?>
         document.osceform.submitButton.disabled = false;
+        $('#submitButton').prop('disabled', false);
+
       } else {
         document.osceform.submitButton.disabled = true;
+        $('#submitButton').prop('disabled', true);
+
       }
     }
 
@@ -235,7 +239,8 @@ if (isset($_POST) and count($_POST) > 0) {
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
   if (file_exists('../users/photos/' . $username . '.jpg')) {
-    echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" width="90" height="135" alt="Photo" /></td>';
+    $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $username . '.jpg');
+    echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" ' . $photo_size[3] . ' alt="Photo" /></td>';
   } else {
     echo '<td></td>';
   }
@@ -332,11 +337,11 @@ if (isset($_POST) and count($_POST) > 0) {
     // For external examiners just close the window without saving.
     if ($userObject->has_role('External Examiner')) {
   ?>
-    <div style="text-align:center"><input type="submit" name="submitButton" value="<?php echo $string['save']; ?>" class="ok" style="font-size:120%; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input type="submit" name="submitButton" id="submitButton" value="<?php echo $string['save']; ?>" class="ok" style="font-size:120%; height:35px; font-weight:bold" onclick="window.close(); return false;" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
     } else {
   ?>
-    <div style="text-align:center"><input id="save" type="submit" name="submitButton" value="<?php echo $string['save']; ?>" class="ok" style="font-size:120%; height:35px; font-weight:bold" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
+    <div style="text-align:center"><input id="save" type="submit" name="submitButton" id="submitButton" value="<?php echo $string['save']; ?>" class="ok" style="font-size:120%; height:35px; font-weight:bold" disabled /><input type="hidden" name="q_no" id="q_no" value="<?php echo ($question_no - 1); ?>" /><input type="hidden" name="userID" value="<?php if (isset($userID)) echo $userID; ?>" /><input type="hidden" name="grade" value="<?php echo $grade; ?>" /><input type="hidden" name="year" value="<?php echo $year; ?>" /></div>
   <?php
   }
   ?>

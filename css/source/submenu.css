@@ -64,6 +64,9 @@ div#left-sidebar {
   display: table-cell;
   vertical-align: middle; 
 }
+.f_details a {
+  color:black !important;
+}
 .file {
   float: left;
   display: table;
@@ -202,11 +205,6 @@ a.greylink:hover {
 .menuitem a:visited {
   color: black;
   text-decoration: none;
-  cursor: pointer;
-}
-.menuitem:hover {
-  color: #316AC5;
-  text-decoration: underline;
   cursor: pointer;
 }
 .menuitem a:hover {

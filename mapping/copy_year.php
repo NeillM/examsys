@@ -54,14 +54,14 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title>Rogō: Copy Objectives<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: Copy Objectives<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <?php
 if (count($errors) == 0) {
-	echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
+	echo "<body onload=\"window.location='" . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
 } else {
 ?>
   <body onclick="hideMenus()">
@@ -86,7 +86,7 @@ if (count($errors) == 0) {
 	}
 ?>
 			</ul>
-    <div align="center"><input style="width:120px" type="button" value="&lt; Back" name="back" onclick="javascript: window.history.go(-1);"></div>
+    <div align="center"><input style="width:120px" type="button" value="&lt; Back" name="back" onclick="window.history.go(-1);"></div>
     </td>
     </tr>
     </table>

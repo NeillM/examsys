@@ -95,11 +95,13 @@ $marking      = $propertyObj->get_marking();
 <body>
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
+$demo = true;
   if (file_exists('../users/photos/' . $original_username . '.jpg')) {
+    $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $username . '.jpg');
     if (isset($demo) and $demo == true) {
-      echo '<td style="width:180px"><img style="filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)" src="../users/photos/' . $original_username . '.jpg" width="180" height="270" style="border:1px solid #7F9DB9" alt="Photo" /></td>';
+      echo '<td class="photo"><img src="pixel_photo.php?username=' . $username . '" ' . $photo_size[3] . ' alt="Photo" /></td>';
     } else {
-      echo '<td style="width:180px"><img src="../users/photos/' . $original_username . '.jpg" width="180" height="270" alt="Photo" /></td>';
+      echo '<td style="width:180px"><img src="../users/photos/' . $original_username . '.jpg" ' . $photo_size[3] . ' alt="Photo" /></td>';
     }
   } else {
     echo '<td></td>';

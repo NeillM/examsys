@@ -85,7 +85,7 @@ if (!$module) {
     }
 
     function editSession(identifier, calendar_year) {
-      window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $_GET['module']; ?>&calendar_year=" + calendar_year;
+      window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $modID ?>&calendar_year=" + calendar_year;
     }
 
     function highlight(lineID) {
@@ -158,7 +158,7 @@ if (!$module) {
       }
       echo "<td class=\"indent\">" . $session['occurrance'] . "</td><td class=\"title\">" . $session['title'] . "</td>";
       if ($objectives_no == 0) {
-        echo "<td class=\"zero_obj_no\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" />&nbsp;$objectives_no</td>";
+        echo "<td class=\"zero_obj_no\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;$objectives_no</td>";
       } else {
         echo "<td class=\"obj_no\">$objectives_no</td>";
       }

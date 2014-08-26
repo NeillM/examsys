@@ -149,11 +149,10 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
     body {font-size:90%}
-    h1 {margin-left:5px;}
+    h1 {margin-left:5px; color:#295AAD}
+    #objectives_list th{background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     td {font-size:100%}
     .q_no {text-align:right; vertical-align:top; cursor:pointer}
-    .divider {font-size:90%; font-weight:bold}
-    .mapping {font-size:90%;color:#FF6300;font-weight:normal}
     a {text-decoration:none}
     li {list-style:none; padding-bottom:5px}
     p {padding:5px}
@@ -161,6 +160,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
     .r {text-align:right}
     .c {text-align:center}
     .symbol {width:24px; text-align:center}
+    .ico {width:16px; height:16px}
   </style>
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -178,18 +178,18 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 	echo draw_toprightmenu();
 ?>
     <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFFFEE; padding-left:6px; padding-right:6px">
-    <tr><td><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon']; ?></td></tr>
-    <tr><td><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon']; ?></td></tr>
-    <tr><td><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon']; ?></td></tr>
+    <tr><td><img src="../artwork/ok_comment.png" class="ico" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon'] ?></td></tr>
+    <tr><td><img src="../artwork/minor_comment.png" class="ico" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon'] ?></td></tr>
+    <tr><td><img src="../artwork/major_comment.png" class="ico" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon'] ?></td></tr>
     <tr><td colspan="2"><?php echo $string['relativekey']; ?></td></tr>
     <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
     </table>
   <?php
-  echo "<div style=\"position:absolute; top:0px; left:0px; width:100%\">\n";
+  echo "<div style=\"position:absolute; top:0; left:0; width:100%\">\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
   echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th>";
-	echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+	echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
     echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";
@@ -326,8 +326,8 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   <p><?php echo $string['explanation']; ?></p>
   <?php
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; line-height:150%\">\n";
-  echo "<tr><td style=\"border-top: 1px solid #D6E5F5\">&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td colspan=\"3\" style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;<nobr>" . $string['yourmark'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;" . $string['relative'] . "&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\"><nobr>&nbsp;" . $string['qno'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287; text-align:center\">" . $string['objective'] . "</td></tr>";
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; line-height:150%\" id=\"objectives_list\">\n";
+  echo "<tr><th></th><th colspan=\"3\">&nbsp;<nobr>" . $string['yourmark'] . "&nbsp;</nobr></th><th>&nbsp;" . $string['relative'] . "&nbsp;</th><th><nobr>&nbsp;" . $string['qno'] . "&nbsp;</nobr></th><th style=\"text-align:center\">" . $string['objective'] . "</th></tr>";
   foreach ($objectives as $id => $obj_data) {
     $session_string = '';
     if ($obj_data['ratio'] >= 0.8) {
@@ -354,7 +354,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
       $comparison = $comparison;
     }
 
-    echo "<tr><td class=\"symbol\"><img src=\"$img_src\" width=\"16\" height=\"16\" /></td><td></td><td class=\"r\">" . $obj_data['mark_sum'] . "</td><td>&nbsp;" . $string['outof'] . "&nbsp;</td><td>" . $obj_data['totalpos_sum'] . "</td><td></td><td class=\"r\">$comparison</td><td></td><td class=\"c\">" . $obj_data['questions'] . "</td><td></td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
+    echo "<tr><td class=\"symbol\"><img src=\"$img_src\" class=\"ico\" /></td><td class=\"r\">" . $obj_data['mark_sum'] . "</td><td>&nbsp;" . $string['outof'] . "&nbsp;</td><td>" . $obj_data['totalpos_sum'] . "</td><td class=\"r\">$comparison</td><td class=\"c\">" . $obj_data['questions'] . "</td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
   }
   echo "</table>\n";
 

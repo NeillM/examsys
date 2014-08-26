@@ -27,7 +27,7 @@ require '../include/errors.inc';
 
 ini_set("auto_detect_line_endings", true);
 
-$moduleID = check_var('module', 'REQUEST', true, false, true);
+$modID = check_var('module', 'REQUEST', true, false, true);
 if (isset($_POST['submit'])) {
   $session = $_POST['session'];
   $session_flag = false;
@@ -65,21 +65,21 @@ if (isset($_POST['submit'])) {
           $identifier++;
      
           $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
-          $stmt->bind_param('siss', $identifier, $moduleID, $title, $session);
+          $stmt->bind_param('siss', $identifier, $modID, $title, $session);
           $stmt->execute();
           $stmt->close();
           $session_flag = true;
         } else {                                   // Objective
           if ($session_flag == false) {
             $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, 'Temp Session Title', '', ?, NOW())");
-            $stmt->bind_param('sis', $identifier, $moduleID, $session);
+            $stmt->bind_param('sis', $identifier, $modID, $session);
             $stmt->execute();
             $stmt->close();
             $session_flag = true;
           }
         
           $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param('isissi', $obj_id, $separate_line, $moduleID, $identifier, $session, $obj_id);
+          $stmt->bind_param('isissi', $obj_id, $separate_line, $modID, $identifier, $session, $obj_id);
           $stmt->execute();
           $stmt->close();
           $obj_id++;
@@ -89,7 +89,7 @@ if (isset($_POST['submit'])) {
   }
   
   unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
-  header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $moduleID);
+  header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $modID);
 	exit();
 } else {
   // Display the form
@@ -127,7 +127,7 @@ if (isset($_POST['submit'])) {
 
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $moduleID ?>"><?php echo module_utils::get_moduleid_from_id($moduleID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $moduleID ?>"><?php echo $string['manageobjectives'] ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo module_utils::get_moduleid_from_id($modID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $modID ?>"><?php echo $string['manageobjectives'] ?></a></div>
   <div class="page_title"><?php echo $string['importfromfile'] ?></div>
 </div>
 
@@ -151,7 +151,7 @@ if (isset($_POST['submit'])) {
 <table cellpadding="3" cellspacing="0" border="0" style="text-align:left">
 <tr>
 <td style="text-align:right"><?php echo $string['objectivesfile']; ?></td><td><input type="file" size="50" name="txtfile" />
-<input type="hidden" name="module" value="<?php echo $moduleID; ?>" /></td>
+<input type="hidden" name="module" value="<?php echo $modID ?>" /></td>
 </tr>
 
 <tr>
