@@ -16,8 +16,8 @@
 
 /**
 *
-* This pixelates a student photo to protect the student's identify. Useful
-* when in demo mode.
+* This pixelates a student photo to protect the student's identity. Useful
+* when Rogo is in demo mode.
 *
 * @author Simon Wilkinson
 * @version 1.0

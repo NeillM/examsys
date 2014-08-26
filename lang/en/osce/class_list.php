@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['classlist'] = 'OSCE: Class List';
 $string['error1'] = 'No module selected so no students could be found.';
 $string['error2'] = 'No academic year set so no students could be found.';
 $string['error3'] = 'No students have been found on the module.';

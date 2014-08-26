@@ -63,7 +63,7 @@ function quick_links() {
   ?>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>OSCE: Class List</title>
+  <title><?php echo $string['classlist'] ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/osce_list.css" />
@@ -77,10 +77,23 @@ function quick_links() {
   ?>
   </style>
   
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
     function load(userID) {
-      window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID;
+      window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID.substr(4);
     }
+    
+    $(function() {
+      $('.bl').click(function() {
+        load($(this).attr('id'));
+      });
+      
+      $('.l').click(function() {
+        load($(this).attr('id'));
+      });
+      
+      
+    });
   </script>
   </head>
 
@@ -117,9 +130,9 @@ function quick_links() {
 					echo "<tr><td colspan=\"3\" class=\"letter\"><a name=\"$current_letter\"></a>$current_letter</td></tr>";
 				}
 				if ($started == '') {
-					echo "<tr class=\"bl\" onclick=\"load('$tmp_userID')\"><td class=\"indent\">$title</td><td>$surname, <span class=\"n\">$first_names</span</td><td>$student_id</td></tr>\n";
+					echo "<tr class=\"bl\" id=\"user$tmp_userID\"><td class=\"indent\">$title</td><td>$surname, <span class=\"n\">$first_names</span</td><td>$student_id</td></tr>\n";
 				} else {
-					echo "<tr class=\"l\" onclick=\"load('$tmp_userID')\"><td class=\"indent\">$title</td><td>$surname, $first_names</td><td>$student_id</td></tr>\n";
+					echo "<tr class=\"l\" id=\"user$tmp_userID\"><td class=\"indent\">$title</td><td>$surname, $first_names</td><td>$student_id</td></tr>\n";
 				}
 				$student_no++;
 				$old_letter = $current_letter;
