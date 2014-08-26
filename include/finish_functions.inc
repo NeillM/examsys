@@ -44,14 +44,12 @@ function can_display_feedback($paper_type, $userObject) {
   
 function echo_content($html) {
   echo $html;
-  /*
-  if (strpos($html,'<div>') === false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
+  
+  if (stripos($html,'<div>') === false and stripos($html,'<p>') === false and stripos($html,'<br') === false) {
     echo "<br />\n<br />\n";
-  } elseif (strpos($html,'<div>') !== false and strpos($html,'<p>') === false and strpos($html,'<br') === false) {
+  } elseif (stripos($html,'<div>') !== false and stripos($html,'<p>') === false and stripos($html,'<br') === false) {
     echo "<br />\n";
 	}
-   * 
-   */
 }
 
 function reset_feedback($hide) {

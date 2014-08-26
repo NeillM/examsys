@@ -881,7 +881,7 @@ function check_latex_random($q_ids, $mysqli) {
   <?php
 
   if ($properties->get_summative_lock()) {
-    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\"></div></td></tr>\n";
+    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
