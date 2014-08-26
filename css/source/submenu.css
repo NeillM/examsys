@@ -204,6 +204,11 @@ a.greylink:hover {
   text-decoration: none;
   cursor: pointer;
 }
+.menuitem:hover {
+  color: #316AC5;
+  text-decoration: underline;
+  cursor: pointer;
+}
 .menuitem a:hover {
   color: #316AC5;
   text-decoration: underline;
