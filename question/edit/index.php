@@ -556,7 +556,7 @@ if ($critical_error == '') {
 <?php
     } elseif ($q_disabled == ' disabled') {
 ?>
-      <div class="yellowwarn" style="font-size:90%"><img src="../../artwork/paper_locked_padlock.png" width="32" height="32" alt="Locked" />&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div>
+    <div class="yellowwarn" style="vertical-align:middle; font-size:90%"><img src="../../artwork/paper_locked_padlock.png" width="32" height="32" alt="Locked" style="float:left" /><div style="float:left">&nbsp;&nbsp;<?php echo $string['questionlocked'] . " $editor. " . $string['isinreadonly'] ?></div></div>
 <?php
     }
   }

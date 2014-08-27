@@ -87,7 +87,7 @@ $result->close();
 		input, textarea {line-height:140%}
     input[type=checkbox] {margin-left:20px}
 		.r1 {text-indent:-23px; padding-left:23px; background-color:white}
-		.r2 {text-indent:-23px; padding-left:23px; background-color:#B3C8E8}
+		.r2 {text-indent:-23px; padding-left:23px; background-color:#FFBD69}
 		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
   </style>
   <?php echo $configObject->get('cfg_js_root') ?>
