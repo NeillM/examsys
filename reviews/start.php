@@ -171,21 +171,8 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+<link rel="stylesheet" type="text/css" href="../css/review.css" />
 <style type="text/css">
-pre {
-	white-space: pre-wrap; /* css-3 */
-	white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-	white-space: -pre-wrap; /* Opera 4-6 */
-	white-space: -o-pre-wrap; /* Opera 7 */
-	word-wrap: break-word; /* Internet Explorer 5.5+ */
-}
-.std {
-  display: block;
-  background-color: #f27000;
-  color: white;
-  width: 35px;
-  text-align: center;
-}
 <?php
 $css = '';
 
@@ -339,11 +326,29 @@ var lang = {
     $('#previous').click(function() {
       $('body').css('cursor','wait');
     });
+    
     $('#next').click(function() {
       $('body').css('cursor','wait');
     });
+    
     $('#finish').click(function() {
       $('body').css('cursor','wait');
+    });
+    
+    $('#qForm').submit(function() {
+      $('.commentsbox').each(function() {
+        if ($(this).val() != '') {
+          var commentID = $(this).attr('id');
+          var commentNo = commentID.substr(11);
+          if ( $('input[name=exttype' + commentNo + ']:checked', '#qForm').val() == undefined) {
+            alert("Please select one of the radio buttons for question " + commentNo);
+            $('body').css('cursor','default');
+            event.preventDefault();
+          }
+        }
+      });      
+      
+      
     });
   });
 </script>
@@ -439,7 +444,7 @@ echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
   $q_no = 0;
-  //build the questions_array
+  // Build the questions_array
   while ($question_data->fetch()) {
     if ($q_no == 0 or $questions_array[$q_no]['q_id'] != $q_id or $questions_array[$q_no]['display_pos'] != $display_pos) {
       $q_no++;

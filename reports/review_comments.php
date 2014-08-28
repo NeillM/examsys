@@ -96,9 +96,12 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
     $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
     $comment = '';
     
-    if ($comments_data[$reviewerID]->get_category($questionID) !== null) {
-      $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
-
+    $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
+    
+    if ($comments_data[$reviewerID]->get_category($questionID) === null) {
+      $image = '';
+      $status = '';
+    } else {
       switch($comments_data[$reviewerID]->get_category($questionID)) {
         case 1:
           $image = 'ok_comment.png';
@@ -117,31 +120,26 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
           $status = 'Cannot Comment';
           break;
       }
-
-      if (trim($comment) == '') {
-        if ($comments_data[$reviewerID]->get_category($questionID) == 4) {
-          $comment = '<span style="color:#808080">' . $string['cannotcomment'] . '</span>';
-        } else {
-          $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-        }
-        $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-        $response = '<span style="color:#808080">' . $string['na'] . '</span>';
-      } else {
-        $action = $comments_data[$reviewerID]->get_action($questionID);
-        $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
-      }
-      $extra = '';
-      if ($image != '') {
-        $image = "<img src=\"../artwork/$image\" class=\"status\" alt=\"$status\" />";
-      } else {
-        $image = '';
-      }
-    } else {
-      $comment = '';
-      $action = '';
-      $response = '';
-      $extra = ' notreviewed';
     }
+    
+    if (trim($comment) == '') {
+      if ($comments_data[$reviewerID]->get_category($questionID) == 4) {
+        $comment = '<span style="color:#808080">' . $string['cannotcomment'] . '</span>';
+      } else {
+        $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+      }
+      $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+      $response = '<span style="color:#808080">' . $string['na'] . '</span>';
+    } else {
+      $action = $comments_data[$reviewerID]->get_action($questionID);
+      $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
+    }
+    $extra = '';
+    if ($image != '') {
+      $image = "<img src=\"../artwork/$image\" class=\"status\" alt=\"$status\" />";
+    } else {
+      $image = '';
+    }    
     
     $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
   }

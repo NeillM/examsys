@@ -77,7 +77,7 @@ if (isset($_POST['submit'])) {
 				<table width="100%" cellspacing="0" cellpadding="10">
 					<tr>
 						<td>
-							<strong><?php echo $string['file'] ?></strong>&nbsp;<input type="file" size="40" name="raffile" id="raffile" class="required" />
+							<?php echo $string['file'] ?>&nbsp;<input type="file" size="40" name="raffile" id="raffile" class="required" />
 						</td>
 					</tr>
           <tr>
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
           </tr>
 					<tr>
 						<td style="text-align:center">
-							<input type="submit" name="submit" value="<?php echo $string['importfile'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="javascript:history.back()" />
+							<input type="submit" name="submit" value="<?php echo $string['importfile'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back()" />
 						</td>
 					</tr>
           <tr>

@@ -341,12 +341,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 					//<!-- ======================== HTML5 part rev disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 1) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $display_option['correct'] . "',1,'#FFC0C0','area','review');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-					echo "<script language='javascript'>\n";
+					echo "<script>\n";
 					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" width=\"" . ($question['q_media_width'] + 2) . "\" height=\"" . ($question['q_media_height'] + 1) . "\" id=\"externalinterfaceq" . $question_no . "_1\" align=\"top\">');\n";
 					echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/question/edit/area.swf\" />');\n";
 					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
@@ -706,12 +706,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 					//<!-- ======================== HTML5 part rev disp ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-					echo "<script language='JavaScript'>\n";
+					echo "<script>\n";
 					echo "function swfLoaded" . $question_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 					echo "setUpFlash(num, message, '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0');}\n";
@@ -804,17 +804,15 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 ?>
 				<?php
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
-					//<!-- ======================== HTML5 part rev disp ================= -->
           echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
 					echo "<br /><div id=\"canvasbox\"></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
 					if (isset($question['std'])) echo $question['std'];
 					echo "','#FFC0C0','labelling','review');\n";
 					echo "</script>\n";
-					//<!-- ==================================================== -->
 				} else {
-					echo "<script language='JavaScript'>\n";
+					echo "<script>\n";
 					echo "function swfLoaded" . $question_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 					echo "setUpFlash(num, message, '" . $language . "', '" . $question['q_media'] . "', '" . trim($question['options'][0]['correct']) . "', '" . $tmp_answer . "','";
@@ -1115,19 +1113,19 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     echo "<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:700px; font-size:100%\">";
     echo "<tr><td style=\"width:300px; font-weight:bold\">" . sprintf($string['qcomments'], ($question_no + $question_offset)) . "</td>";
     
-    $categories = array('#C5E0B3'=>$string['questionok'], '#FFE599'=>$string['minorproblems'], '#FF9090'=>$string['majorproblems'], '#C0C0C0'=>$string['cannotcomment']);
+    $categories = array('ok_comment'=>$string['questionok'], 'minor_comment'=>$string['minorproblems'], 'major_comment'=>$string['majorproblems'], 'cannot_comment'=>$string['cannotcomment']);
 
     $value_no = 0;
-    foreach ($categories as $bgcolor => $text) {
+    foreach ($categories as $class => $text) {
       $value_no++;
       if ($review->get_category($q_id) == $value_no) {
-        echo "<td style=\"background-color:$bgcolor; text-align:center; width:170px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"$value_no\" checked=\"checked\" />&nbsp;" . $text . "</td>";
+        echo "<td class=\"$class\"><input type=\"radio\" name=\"exttype$question_no\" value=\"$value_no\" checked=\"checked\" />" . $text . "</td>";
       } else {
-        echo "<td style=\"background-color:$bgcolor; text-align:center; width:170px\"><input type=\"radio\" name=\"exttype$question_no\" value=\"$value_no\" />&nbsp;" . $text . "</td>";
+        echo "<td class=\"$class\"><input type=\"radio\" name=\"exttype$question_no\" value=\"$value_no\" />" . $text . "</td>";
       }
     }
 
-    echo "<tr><td colspan=\"5\"><textarea cols=\"80\" rows=\"4\" style=\"font-family:Arial,sans-serif; width:100%\" name=\"extcomments$question_no\">" . $review->get_comment($q_id) . "</textarea></td></tr>";
+    echo "<tr><td colspan=\"5\"><textarea cols=\"80\" rows=\"4\" name=\"extcomments$question_no\" id=\"extcomments$question_no\" class=\"commentsbox\">" . $review->get_comment($q_id) . "</textarea></td></tr>";
 
     if ($start_of_day_ts > $external_review_deadline and ($review->get_action($q_id) != 'Not actioned' and $review->get_action($q_id) !== null)) {
       echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company');
