@@ -16,7 +16,7 @@
 
 /**
 *
-* @author Anthony Brown
+* @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -135,6 +135,17 @@ $result->bind_result($tmp_username, $title, $initials, $surname);
 $result->fetch();
 $result->close();
 $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_replace($surname, $demo);
+
+$textsize = 100;
+$font = 'Arial';
+if ($userObject->is_special_needs()) {
+  // Look up special_needs data
+  $special_needs_percentage = $userObject->get_special_needs_percentage();
+  $textsize = $userObject->get_textsize($textsize);
+  $font = $userObject->get_font($font);
+}
+$textsize -= 10;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -148,7 +159,7 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-    body {font-size:90%}
+    body {font-size:<?php echo $textsize ?>%; font-family:<?php echo $font ?>}
     h1 {margin-left:5px; color:#295AAD}
     #objectives_list th{background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     td {font-size:100%}
