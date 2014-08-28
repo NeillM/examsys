@@ -213,7 +213,6 @@ $textsize = 100;
 $font = 'Arial';
 if ($userObject->is_special_needs()) {
   // Look up special_needs data
-  $special_needs_percentage = $userObject->get_special_needs_percentage();
   $textsize = $userObject->get_textsize($textsize);
   $font = $userObject->get_font($font);
 }

@@ -207,8 +207,9 @@ require '../config/finish.inc';
 
 <?php
   $css = '';
-  if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
+  if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
+    $css .= ".key{background-color:$bgcolor}\n";
   }
   if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
     $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";

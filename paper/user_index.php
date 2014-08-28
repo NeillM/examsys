@@ -150,9 +150,6 @@ if ($userObject->is_special_needs()) {
   $font = $userObject->get_font($font);
 }
 
-// Adjust text size
-$textsize -= 5;
-
 if ($userObject->is_temporary_account()) {
   $person = '<img src="../artwork/guest_account_16.png" width="16" height="16" alt="Guest User" /> ' . $string['guestaccount'] . ' (' . $userObject->get_temp_title() . ' ' . $userObject->get_temp_surname() . ')';
 } else {
@@ -359,7 +356,7 @@ if ($textsize > 120) {
   $icon_types = array('formative', 'progress', 'summative', 'survey');
   echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="../artwork/' . $icon_types[$test_type] . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
   echo "</td><td><span class=\"paper_title\">$paper_title</span></td>\n</tr></table></td></tr>";
-  echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
+  echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%; margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
     if (file_exists($cfg_web_root . 'users/photos/' . $userObject->get_username() . '.jpg')) {
@@ -540,7 +537,7 @@ if ($textsize > 120) {
 
 			echo '<hr />';
 			echo '<table cellpadding="0" cellspacing="0" border="0" align="center">';
-			echo '<tr><td colspan="4" style="text-align:center"><strong>' . $string['previouscompletions'] . '</strong></td></tr>';
+			echo '<tr><td colspan="4" style="text-align:center; padding-bottom:0.5em"><strong>' . $string['previouscompletions'] . '</strong></td></tr>';
 			
       foreach ($prev_attempts as $log_started=>$prev_details) {
         $log_max_screen = $prev_details['max_screen'];

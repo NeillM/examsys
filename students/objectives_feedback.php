@@ -140,7 +140,6 @@ $textsize = 100;
 $font = 'Arial';
 if ($userObject->is_special_needs()) {
   // Look up special_needs data
-  $special_needs_percentage = $userObject->get_special_needs_percentage();
   $textsize = $userObject->get_textsize($textsize);
   $font = $userObject->get_font($font);
 }
@@ -158,20 +157,21 @@ $textsize -= 10;
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
     body {font-size:<?php echo $textsize ?>%; font-family:<?php echo $font ?>}
-    h1 {margin-left:5px; color:#295AAD}
+    h1 {margin-left:1px; color:#295AAD; font-size:150%; margin-left:10px}
     #objectives_list th{background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     td {font-size:100%}
     .q_no {text-align:right; vertical-align:top; cursor:pointer}
     a {text-decoration:none}
     li {list-style:none; padding-bottom:5px}
     p {padding:5px}
-    h1 {font-size:120%; font-weight:bold; color:#1E3287}
     .r {text-align:right}
     .c {text-align:center}
     .symbol {width:24px; text-align:center}
     .ico {width:16px; height:16px}
+    .sum_field {width:8em}
   </style>
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -188,7 +188,7 @@ $textsize -= 10;
 <?php
 	echo draw_toprightmenu();
 ?>
-    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFFFEE; padding-left:6px; padding-right:6px">
+    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFE; padding-left:6px; padding-right:6px">
     <tr><td><img src="../artwork/ok_comment.png" class="ico" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon'] ?></td></tr>
     <tr><td><img src="../artwork/minor_comment.png" class="ico" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon'] ?></td></tr>
     <tr><td><img src="../artwork/major_comment.png" class="ico" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon'] ?></td></tr>
@@ -334,7 +334,7 @@ $textsize -= 10;
   ?>
 	<br />
   <h1><?php echo $string['learningobjectives']; ?></h1>
-  <p><?php echo $string['explanation']; ?></p>
+  <p style="line-height:150%; text-align:justify; margin-left:5%; margin-right:5%"><?php echo $string['explanation']; ?></p>
   <?php
 
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; line-height:150%\" id=\"objectives_list\">\n";
@@ -369,17 +369,17 @@ $textsize -= 10;
   }
   echo "</table>\n";
 
-  echo "<h1>" . $string['summaryinformation'] . "</h1>";
-  echo "<table style=\"font-size:100%; margin-left:4px\">\n";
-  echo "<tr><td>" . $string['papertitle'] . "</td><td>$paper_title</td></tr>\n";
-  echo "<tr><td>" . $string['startedat'] . "</td><td>$started</td></tr>\n";
+  echo "<br /><div class=\"key\"><h1>" . $string['summaryinformation'] . "</h1>";
+  echo "<table style=\"font-size:100%; margin-left:8px\">\n";
+  echo "<tr><td class=\"sum_field\">" . $string['papertitle'] . "</td><td>$paper_title</td></tr>\n";
+  echo "<tr><td class=\"sum_field\">" . $string['startedat'] . "</td><td>$started</td></tr>\n";
 
   // Display student marks
   if ($paper_type < '3') {
-    echo "<tr><td>" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
-    echo "<tr><td>" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";
+    echo "<tr><td class=\"sum_field\">" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
+    echo "<tr><td class=\"sum_field\">" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";
   }
-  echo "</table>\n</div>\n";
+  echo "</table></div>\n<br />\n</div>\n";
 
   $mysqli->close();
 ?>

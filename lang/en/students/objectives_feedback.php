@@ -18,7 +18,7 @@ $string['norights'] = 'You do not have rights to view this feedback.';
 $string['examfeedback'] = 'Exam Feedback';
 $string['feedback'] = 'Feedback';
 $string['learningobjectives'] = 'Learning Objectives';
-$string['explanation'] = 'Below is a list of all the unique learning objectives tested by this paper. Because multiple questions may test the same objective it is possible to have partial acquisition of an objective. Use the results below to concentrate on red <img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /> and amber <img src="../artwork/minor_comment.png" width="16" height="16" alt="Mostly not acquired" /> objectives you have not fully mastered.';
+$string['explanation'] = 'Below is a list of all the unique learning objectives tested by this paper. Because multiple questions may test the same objective it is possible to have partial acquisition of an objective. Use the results below to concentrate on red <img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /> and amber <img src="../artwork/minor_comment.png" width="16" height="16" alt="Mostly not acquired" /> objectives you have not fully mastered. Please note that because a question can be linked to more than one objective it is not possible to use the marks to reverse-engineer your total paper mark.';
 $string['notmapped'] = 'This paper has not been mapped to any learning objectives.';
 $string['yourmark'] = 'Your Mark';
 $string['relative'] = 'Relative';

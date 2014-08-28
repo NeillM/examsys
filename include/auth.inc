@@ -42,8 +42,6 @@ function db_change_user($db, $userObj) {
     ${$k} = $v;
   }
 
-  $userroles = $userObj->old_getuserroles();
-
   //select the aproprate database user
   if ($userObj->has_role('SysAdmin')) {
     $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);

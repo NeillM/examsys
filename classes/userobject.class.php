@@ -90,20 +90,8 @@ class UserObject extends RogoStaticSingleton {
     self::$inst = $this;
   }
 
-
   public function error_handling($context = null) {
     return error_handling($this);
-  }
-
-  /**
-   * TEMP Function exports user roles in old style
-   *
-   * @param $array array of data in old format
-   *
-   * @return list of roles
-   */
-  public function old_getuserroles() {
-    return $this->userroles;
   }
 
   public function get_bgcolor($default = '') {

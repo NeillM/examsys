@@ -17,7 +17,7 @@
 require_once '../lang/' . $language . '/include/paper_security.inc';
 
 $string['startscreen'] = 'Start Screen';
-$string['availability'] = 'Availability';
+$string['availability'] = 'Availability:';
 $string['to'] = 'to';
 $string['candidates'] = 'Candidates:';
 $string['screens'] = 'Screens:';
@@ -30,7 +30,7 @@ $string['bidirectional'] = 'Bidirectional';
 $string['unidirectional'] = 'Unidirectional';
 $string['start'] = 'Start';
 $string['restart'] = 'Re-Start';
-$string['previouscompletions'] = 'Previous Completions:';
+$string['previouscompletions'] = 'Previous Completions';
 $string['rubric'] = 'Rubric:';
 $string['duration'] = 'Duration:';
 $string['testclip'] = 'Test Clip';

@@ -5,6 +5,11 @@ html {
 blockquote {
   font-size:100%
 }
+.ok {
+  font-size: 100%;
+  color: black !important;
+  width: 10em;
+}
 .objH {
   font-weight:bold;
   color:#316AC5
