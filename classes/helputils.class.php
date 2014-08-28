@@ -280,9 +280,11 @@ Class OnlineHelp {
 
   public function display_page($id) {
     $page_details = $this->get_page_details($id);
+    $original_title = $page_details['title'];
     
     if ($page_details['page_type'] == 'pointer') {    // If pointer look up source page.
       $page_details = $this->get_page_details($page_details['body']);
+      $page_details['title'] = $original_title;   // Set the title back to the pointer title.
     }    
 
     if ($page_details['body'] == '' and $page_details['title'] == '') {

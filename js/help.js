@@ -55,6 +55,16 @@ $(function() {
     $('#button' + sectionID).attr('src', icon);
   });
 
+  $('.pointer_book').click(function() {
+    var str = $(this).attr('id');
+    var sectionID = str.substr(12);
+
+    $('#pointer_submenu' + sectionID).toggle();
+
+    icon = ($('#pointer_button' + sectionID).attr('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
+    $('#pointer_button' + sectionID).attr('src', icon);
+  });
+
   $('.page').click(function() {
     var str = $(this).attr('id');
     window.location = 'index.php?id=' + str.substr(5) + '&scrOfY=' + $('#toc').scrollTop();

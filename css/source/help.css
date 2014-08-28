@@ -85,6 +85,18 @@ hr {
   white-space: nowrap;
 }
 
+.pointer_open_submenu {
+  display: block;
+  margin-left: 18px;
+  white-space: nowrap;
+}
+
+.pointer_closed_submenu {
+  display: none;
+  margin-left: 18px;
+  white-space: nowrap;
+}
+
 .book {
   white-space: nowrap;
   cursor: pointer;
@@ -92,6 +104,12 @@ hr {
 }
 
 .page {
+  white-space: nowrap;
+  cursor: pointer;
+  color: black;
+}
+
+.pointer_page {
   white-space: nowrap;
   cursor: pointer;
   color: black;

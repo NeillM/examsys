@@ -66,7 +66,7 @@ if (isset($_POST['save_changes'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=7,9,10" >
   <meta http-equiv="Content-Type" content="text/html; charset=utf8">
 
-  <title>Rog&#333;: Edit Help File</title>
+  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />

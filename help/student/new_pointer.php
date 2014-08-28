@@ -32,19 +32,21 @@ if (isset($_POST['submit'])) {
   $title = $_POST['title'];
   $pageID = $_POST['pageid'];
   
-  $articleid = $this->create_pointer($title, $pageID);
+  $articleid = $help_system->create_pointer($title, $pageID);
   
   $mysqli->close();
   header("location: index.php?id=$articleid");
   exit;  
 } else {
+  $id = null;
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
   
-  <title>Rog&#333;: Help and Support Center</title>
+  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
@@ -62,71 +64,68 @@ if (isset($_POST['submit'])) {
     <?php $help_system->display_toc($id); ?>
   </div>
   <div id="contents">
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="Page Title..." /></p>
+    
+    <p style="margin-left:20px" class="key"><?php echo $string['msg'] ?></p>
+    
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="Page Title..." required /></p>
 
 <div id="pointertoc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">
 <?php
-  $sub_section = 0;
-  $help_section = 0;
-  $help_toc = array();
+    $sql = 'SELECT articleid, title FROM student_help WHERE id != 1 AND deleted IS NULL AND language = ? ORDER BY title, id';
+
+    $sub_section = 0;
+    $old_title = '';
+    $parent = '';
+    $old_parent = '';
+    $help_toc = array();
+    $help_toc_titles = array();
     
-  $result = $mysqli->prepare("SELECT id, title FROM student_help WHERE id != 1 AND language = ? ORDER BY title, id");
-	$result->bind_param('s', $_SESSION['ROGO_language']);
-  $result->execute();
-  $result->bind_result($page_id, $page_title);
-  while ($result->fetch()) {
-    $help_toc[$help_section]['id'] = $page_id;
-    $help_toc[$help_section]['title'] = $page_title;
-    $help_section++;
-  }
-  $result->close();
-  
-
-  $old_title = '';
-  for ($i=0; $i<$help_section; $i++) {
-    $slash_pos = strpos($help_toc[$i]['title'], '/');
-    if ($slash_pos !== false) {
-      $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
-      $icon = 'single_page.png';
-    } else {
-      if ($old_title != '' and strpos($help_toc[($i)]['title'], $old_title) === false and $sub_section == 1) { 
-        echo "</div>\n";
-        $sub_section = 0;
-      }
-
-      $tmp_title = $help_toc[$i]['title'];
-	  if (isset($help_toc[($i+1)]['title']) and strpos($help_toc[($i+1)]['title'], $tmp_title . '/') !== false) {
-        $icon = 'closed_book.png';
-        for ($a=$i; $a<$help_section; $a++) {
-          if ($_GET['id'] == $help_toc[$a]['id']) $icon = 'open_book.png';
-          if (isset($help_toc[($a+1)]['title']) and strpos($help_toc[($a+1)]['title'], $tmp_title . '/') === false) break;
+    $help_section = 0;
+    $result = $mysqli->prepare($sql);
+    $result->bind_param('s', $language);
+    $result->execute();
+    $result->bind_result($id, $title);
+    while ($result->fetch()) {
+      $help_toc[$help_section]['id'] = $id;
+      $help_toc[$help_section]['title'] = $title;
+      $help_toc_titles[$id] = $title;
+      $help_section++;
+    }
+    $result->close();
+    
+    for ($i=0; $i<$help_section; $i++) {
+      $id = $help_toc[$i]['id'];
+      $slash_pos = strpos($help_toc[$i]['title'], '/');
+      if ($slash_pos !== false) {
+        $parent = substr($help_toc[$i]['title'], 0, $slash_pos);
+        if ($old_parent != '' and $parent != $old_parent) {
+          echo "</div>\n";
         }
-        $old_title = $tmp_title;
-      } else {
-        $icon = 'single_page.png';
-        $old_title = $tmp_title;
-      }
-    }
-    if ($icon == 'closed_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$i\" class=\"icon16_active\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
-      echo "<div style=\"display:none; margin-left:18px\" id=\"submenu$i\">";
-      $sub_section = 1;
-    } elseif ($icon == 'open_book.png') {
-      echo "<div><img src=\"../$icon\" id=\"button$i\" class=\"icon16_active\" />&nbsp;<a href=\"\" onclick=\"updateMenu('submenu$i','button$i'); return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
-      echo "<div style=\"display:block; margin-left:18px\" id=\"submenu$i\">";
-      $sub_section = 1;
-    } else {
-      if (strpos($help_toc[($i)]['title'], $old_title) === false and $sub_section == 1) {
-        echo "</div>\n";
-        $sub_section = 0;
-      }
-      echo "<div><input type=\"radio\" name=\"pageid\" value=\"" . $help_toc[$i]['id'] . "\"><img src=\"../$icon\" class=\"icon16_active\" alt=\"\" border=\"0\" />&nbsp;<a style=\"color:#003DB2\" href=\"\" onclick=\"return false;\"><nobr>" . $tmp_title . "</nobr></a></div>\n";
-    }
-  }
+        $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
 
-  if ($sub_section == 1) echo "</div>\n";
-?>
+        if ($parent != $old_parent) {
+          $icon = 'closed_book.png';
+          echo "<div class=\"pointer_book\" id=\"pointer_sect$id\"><img src=\"../$icon\" id=\"pointer_button$id\" class=\"icon16_active\" />" . $parent . "</div>\n";
+          echo "<div class=\"pointer_closed_submenu\" id=\"pointer_submenu$id\">";
+        }
+        $old_parent = $parent;
+        $icon = 'single_page.png';      
+      } else {
+        if ($old_parent != '') {
+          echo "</div>\n";
+        }
+        $tmp_title = $help_toc[$i]['title'];
+        $icon = 'single_page.png';
+        $parent = '';
+        $old_parent = $parent;
+      }
+      echo "<div id=\"title$id\" class=\"pointer_page\"><input type=\"radio\" name=\"pageid\" value=\"$id\" id=\"radio$id\" /><label for=\"radio$id\"><img src=\"../$icon\" class=\"icon16_active\" />$tmp_title</label></div>\n";
+      
+    }
+
+    if ($old_parent != '') echo "</div>\n";
+    ?>
 </div>
 <br />
 <div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>

@@ -132,6 +132,11 @@ $parts = count($folders_array) - 1;
       $('#showretired').click(function() {
         $('.retired').toggle();
       });
+      
+      $(document).click(function() {
+        hideMenus();
+      });
+      
     });
   </script>
 </head>
