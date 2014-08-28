@@ -77,9 +77,11 @@ if (!$module_code) {
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        sortList: [[0,0]]
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[0,0]]
+        });
+      }
 
       $(".l").click(function() {
         selLine($(this).attr('id'),event);

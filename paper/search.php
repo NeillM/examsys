@@ -126,7 +126,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
 	echo "<div class=\"head_title\">\n";
 
   if (!isset($_POST['submit'])) {
-    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>";
     echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
     if (isset($_REQUEST['module'])) {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
@@ -137,7 +137,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
 
   if (isset($_POST['submit'])) {
 	  if ($type_problem) {
-      echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\">";
+      echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />";
       if (isset($_REQUEST['module'])) {
         echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
       }
@@ -170,7 +170,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     $results->store_result();
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
 
-    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>";
     echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
     if (isset($_REQUEST['module'])) {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';

@@ -55,11 +55,12 @@ if (isset($_GET['teamID'])) {
   <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script>
     $(function () {
-      $("#maindata").tablesorter({ 
-        // sort on the second column, order asc 
-        dateFormat: 'uk',
-        sortList: [[1,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[1,0]] 
+        });
+      }
     });
   </script>
 </head>

@@ -62,9 +62,11 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        sortList: [[0,1]]
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[0,1]]
+        });
+      }
 
       $(".l").click(function() {
         selLine($(this).attr('id'),event);

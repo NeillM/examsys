@@ -65,11 +65,12 @@ function get_list($list, $db) {
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>    
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[0,0]] 
-      });
-
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[0,0]] 
+        });
+      }
     });
   </script></head>
 <body>

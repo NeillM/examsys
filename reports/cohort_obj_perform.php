@@ -89,9 +89,9 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
   
   echo "<div class=\"page_title\">" . $string['learningobjectiveanalysis'];
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
@@ -107,7 +107,8 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   
   $qid_list = substr($qid_list, 0, -1); 
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
-  unset($objByModule['none_of_the_above']);  
+  unset($objByModule['none_of_the_above']);
+
   if (count($objByModule) == 0) {
 		echo "</table>" . $notice->info_strip($string['msg2'], 100);
   } else {

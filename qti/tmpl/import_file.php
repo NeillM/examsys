@@ -78,7 +78,7 @@ echo draw_toprightmenu();
 <div id="content">
 <?php
 echo "<div class=\"head_title\">\n";
-echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
 echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
 $modutils = module_utils::get_instance();
 $module = $modutils->get_moduleid_from_id($module, $mysqli);

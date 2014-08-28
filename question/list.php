@@ -104,10 +104,12 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script>
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[0,0]]
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[0,0]]
+        });
+      }
       
       $('.q').dblclick(function() {
         ed();
@@ -146,7 +148,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   }
   
   echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   
   echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if (isset($_GET['module'])) {

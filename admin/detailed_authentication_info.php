@@ -39,7 +39,7 @@ require_once '../classes/dateutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    .sechead {background-color:#EAEAEA}
+    .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
   </style>
   
   <?php echo $configObject->get('cfg_js_root') ?>

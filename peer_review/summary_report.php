@@ -100,9 +100,11 @@ require_once 'summary_report.inc';
         $('#toprightmenu').hide();
       })
 
-      $("#maindata").tablesorter({ 
-        sortList: [[2,0],[3,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[2,0],[3,0]] 
+        });
+      }
 
     });
   </script>
@@ -135,7 +137,7 @@ require_once 'summary_report.inc';
   echo "<div style=\"font-size:80%\">\n";
 
   echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if (isset( $_GET['module'] ) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';

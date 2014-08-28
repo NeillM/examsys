@@ -64,11 +64,12 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        // sort on the second column, order asc 
-        dateFormat: 'uk',
-        sortList: [[2,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[2,0]] 
+        });
+      }
       
       populateTicks();
       

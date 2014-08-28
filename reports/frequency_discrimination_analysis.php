@@ -1894,7 +1894,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     // No one has taken the paper yet.
     echo '<div class="head_title">';
 
-    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if (isset($_GET['folder']) and $_GET['folder'] != '') {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
@@ -1936,7 +1936,7 @@ SQL;
     while ($result->fetch()) {
       if ($display_header == true) {
         echo '<div class="head_title">';
-        echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+        echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
         echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
         if (isset($_GET['folder']) and $_GET['folder'] != '') {
           echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
@@ -1950,14 +1950,14 @@ SQL;
 
         echo '<br /><div class="key">';
         echo '<table cellpadding="2" cellspacing="0" border="0">';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidatenumber'] . '</td><td style="width:500px">' . number_format($user_total) . '</td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['p_warning'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidatenumber'] . '</td><td style="width:375px">' . number_format($user_total) . '</td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['p_warning'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right"><nobr>' . $string['groupsizes'] . '</nobr></td><td>' . $cohort_percent . '% (' . $user_no . ' ' . $string['pergroup'] . ')</td><td rowspan="7" style="vertical-align:top"><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['d_warning'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['boldstems'] . '</td><td>' . $string['correctanswers'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">p=</td><td>' . $string['p_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">d=</td><td>' . $string['d_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">t=</td><td>' . $string['t_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">u=</td><td>' . $string['u_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">l=</td><td>' . $string['l_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">p =</td><td>' . $string['p_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">d =</td><td>' . $string['d_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">t =</td><td>' . $string['t_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">u =</td><td>' . $string['u_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">l =</td><td>' . $string['l_definition'] . '</td></tr>';
         echo '</table></div><br />';
 
         echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';

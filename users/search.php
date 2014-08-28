@@ -306,10 +306,12 @@ if (isset($_GET['paperID'])) {
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        // sort on the third column, order asc 
-        sortList: [[3,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          // sort on the third column, order asc 
+          sortList: [[3,0]] 
+        });
+      }
 
       $(document).click(function() {
         $('#menudiv').hide();
@@ -337,7 +339,7 @@ if (isset($_GET['paperID'])) {
 
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<div class=\"head_title\">\n";
-    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>";
     echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
     if (isset($_REQUEST['module'])) {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
@@ -351,7 +353,7 @@ if (isset($_GET['paperID'])) {
 <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>?sortby=<?php echo $sortby; ?>&order=<?php echo $ordering; ?>">
 
 <div class="head_title">
-<div style="float:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<div style="float:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
 echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
 if (isset($_GET['module'])) {

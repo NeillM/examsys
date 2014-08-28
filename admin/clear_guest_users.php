@@ -41,7 +41,7 @@ require '../include/sidebar_menu.inc';
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <style type="text/css">
-    .sechead {background-color:#EAEAEA}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     .l {border-bottom:1px solid #EEEEEE}
     .loff {border-bottom:1px solid #EEEEEE; color:#808080}
   </style>
@@ -91,7 +91,7 @@ require '../include/sidebar_menu.inc';
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <blockquote>
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:100%">
-<tr><td class="sechead"><?php echo $string['clear']; ?></td><td class="sechead"><?php echo $string['user']; ?></td><td class="sechead"><?php echo $string['surname']; ?></td><td class="sechead"><?php echo $string['firstnames']; ?></td><td class="sechead"><?php echo $string['title']; ?></td><td class="sechead"><?php echo $string['studentid']; ?></td><td class="sechead"><?php echo $string['datereserved']; ?></td><td class="sechead"><?php echo $string['assessmenttaken']; ?></td></tr>
+<tr><th><?php echo $string['clear'] ?></th><th><?php echo $string['user'] ?></th><th><?php echo $string['surname'] ?></th><th><?php echo $string['firstnames'] ?></th><th><?php echo $string['title'] ?></th><th><?php echo $string['studentid'] ?></th><th><?php echo $string['datereserved'] ?></th><th><?php echo $string['assessmenttaken'] ?></th></tr>
 <?php
   $used = array();
 

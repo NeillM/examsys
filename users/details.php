@@ -360,10 +360,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $('#menu2a').hide();
       $('#menu2b').show();
       
-      $("#maindata").tablesorter({ 
-        // sort on the second column, order asc 
-        sortList: [[1,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[1,0]] 
+        });
+      }
 
     });  
   </script>

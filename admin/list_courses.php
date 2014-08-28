@@ -51,9 +51,11 @@ require '../include/sort.inc';
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        sortList: [[0,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[0,0]] 
+        });
+      }
 
       $(".l").click(function() {
         selLine($(this).attr('id'),event);
@@ -77,7 +79,7 @@ require '../include/sort.inc';
 <div id="content">
 
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['courses']; ?></div>
 </div>

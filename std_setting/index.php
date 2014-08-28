@@ -132,10 +132,12 @@ function displayReview($review, $userObj) {
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[1,0]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[1,0]] 
+        });
+      }
       
       $(document).click(function() {
         reviewOff();

@@ -52,10 +52,12 @@ require '../include/sysadmin_auth.inc';
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[1,1]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[1,1]] 
+        });
+      }
 
       $(".l").click(function() {
         selLine($(this).attr('id'),event);

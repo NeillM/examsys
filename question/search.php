@@ -125,11 +125,12 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[0,0]]
-      });
-      
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({
+          dateFormat: 'uk',
+          sortList: [[0,0]]
+        });
+      }
       
       $('.q').dblclick(function() {
         ed();
@@ -158,7 +159,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     echo "<div id=\"content\" class=\"content\">\n";
     
     echo "<div class=\"head_title\">\n";
-    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
     echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
     if (isset($_GET['module'])) {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
@@ -359,7 +360,7 @@ if (isset($_GET['submit'])) {
   $hits = $result->num_rows;
 
   echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
 
   echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if ($_GET['module']) {

@@ -103,7 +103,7 @@ if (count($result['save']['data']->files) > 1) {
 $qti_ver = ($dest == "qti12") ? "v1.2.1" : "v2.1";
 
 echo "<div class=\"head_title\">\n";
-echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
 echo "<div class=\"breadcrumb\">";
 if ($module != '') {
   echo '<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';

@@ -44,10 +44,12 @@
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>    
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[0,1]] 
-      });
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[0,1]] 
+        });
+      }
 
       $(".l").click(function() {
         window.location='sms_import_detail.php?day=' + $(this).attr('id');

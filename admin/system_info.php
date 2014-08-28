@@ -38,7 +38,7 @@ require_once '../classes/dateutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    .sechead {background-color:#EAEAEA}
+    .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     a {color:#215DC6}
     a.heading {color:#215DC6; font-weight:bold}
     a.heading:hover {color:#428EFF; font-weight:bold}

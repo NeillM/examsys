@@ -201,7 +201,7 @@ if ($language != 'en') {		// Make wider for non-English languages which have lon
   
   echo "<div style=\"font-size:80%\">\n";
   echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../reviews/index.php">' . $string['home'] . '</a></div>';
   echo "<div class=\"page_title\">" . $string['classtotals'] . ": <span style=\"font-weight:normal\">" . $paper . "</span></div>";
   echo "</div>\n";

@@ -46,11 +46,12 @@ require '../include/sysadmin_auth.inc';
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[0,1]] 
-      });
-
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[0,1]] 
+        });
+      }
     });
   </script>
 </head>

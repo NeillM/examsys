@@ -135,7 +135,7 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
   }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 
   echo '</table>';
 	
@@ -286,10 +286,12 @@ ob_start();
   var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
 
   $(function() {
-    $("#maindata").tablesorter({ 
-      // sort on the first column and third column, order asc 
-      sortList: [[2,0],[3,0]] 
-    });
+    if ($("#maindata").find("tr").size() > 1) {
+      $("#maindata").tablesorter({ 
+        // sort on the first column and third column, order asc 
+        sortList: [[2,0],[3,0]] 
+      });
+    }
     
     $(document).click(function() {
       $('#menudiv').hide();
@@ -412,7 +414,7 @@ echo draw_toprightmenu(30);
   
   echo "<div style=\"font-size:80%\">\n";
   echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></div>\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 
   if (isset($_GET['folder']) and $_GET['folder'] != '') {

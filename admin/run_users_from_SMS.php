@@ -58,10 +58,11 @@ $session_parts = explode('/', $session);
     <script type="text/javascript" src="../js/toprightmenu.js"></script>
     <script>
       $(function () {
-        $("#maindata").tablesorter({ 
-          sortList: [[1,0]] 
-        });
-
+        if ($("#maindata").find("tr").size() > 1) {
+          $("#maindata").tablesorter({ 
+            sortList: [[1,0]] 
+          });
+        }
       });
     </script>
   </head>

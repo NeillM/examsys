@@ -120,11 +120,12 @@ if (isset($_GET['folder'])) {
     }
     
     $(function () {
-      $("#maindata").tablesorter({ 
-        dateFormat: 'uk',
-        sortList: [[1,0]]
-      });
-
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: 'uk',
+          sortList: [[1,0]]
+        });
+      }
     });
   </script>
 </head>
