@@ -214,7 +214,6 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   $staff_team_array = $userObject->get_staff_team_modules();
   $module_no = count($staff_team_array);
   if ($module_no == 0) {
-    //echo '<div style="color:#C00000; padding-left:15px"><img src="./artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" /> <strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $configObject->get('support_email') . '">' . $configObject->get('support_email') . '</div>';
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"redwarn\"><img src=\"./artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></div></td><td><div class=\"redwarn\"><strong>" . $string['warning'] . "</strong> " . $string['nomodules'] . " <a href=\"mailto:" . $configObject->get('support_email') . "\" style=\"color:#316AC5\">" . $configObject->get('support_email') . "</div></td></tr></table>\n";
   }
   

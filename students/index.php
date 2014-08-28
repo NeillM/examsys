@@ -208,6 +208,15 @@ QUERY;
 }
 
 $paper_utils = Paper_utils::get_instance();
+
+$textsize = 100;
+$font = 'Arial';
+if ($userObject->is_special_needs()) {
+  // Look up special_needs data
+  $special_needs_percentage = $userObject->get_special_needs_percentage();
+  $textsize = $userObject->get_textsize($textsize);
+  $font = $userObject->get_font($font);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -215,7 +224,7 @@ $paper_utils = Paper_utils::get_instance();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
@@ -224,7 +233,7 @@ $paper_utils = Paper_utils::get_instance();
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcements.css" />
   <style type="text/css">
-    body {padding-left:0px}
+    body {padding-left:0; font-size:<?php echo $textsize ?>%; font-family:<?php echo $font ?>}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -233,7 +242,7 @@ $paper_utils = Paper_utils::get_instance();
   <script>
 		function switchYear(toShow) {
 			var years = ['<?php echo implode('\',\'', $sessions_with_papers) ?>'];
-			for(var i = 0; i < years.length; i++) {
+			for (var i = 0; i < years.length; i++) {
 				target = document.getElementById('papers-' + years[i].replace('/', '-'));
 				link = document.getElementById('button-' + years[i].replace('/', '-'));
 				if (target != null) {
@@ -258,7 +267,7 @@ $paper_utils = Paper_utils::get_instance();
 				<div class="logo_lrg_txt">Rog&#333;</div>
 				<div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
       </th>
-      <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+      <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></th>
     </tr>
 	  <tr>
 	    <td colspan="2" style="background-color:#EEF4FF; text-align:right; vertical-align:bottom">

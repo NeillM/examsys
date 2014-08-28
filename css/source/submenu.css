@@ -70,10 +70,10 @@ div#left-sidebar {
 .file {
   float: left;
   display: table;
-  width: 375px;
+  width: 30em;
   padding-left: 32px;
   font-size: 90%;
-	padding-bottom: 12px;
+	padding-bottom: 1.4em;
 }
 .file_icon {
   display: table-cell;

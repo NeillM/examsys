@@ -35,7 +35,7 @@ function draw_toprightmenu($helpID = 1) {
   if ($userObject->is_impersonated()) {
 		$impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
 		$html .= '<div id="toprightmenu">';
-		$html .= '<div class="impersonate"><img src="' . $configObject->get('cfg_root_path') . '/artwork/agent.png" width="32" height="32" alt="Impersonate" style="float:left; padding-right:6px"/><div style="padding-top:1px">' . $string['loggedinas'] . ':<br /><strong>' . $impersonated_name . '</strong></div></div>';
+		$html .= '<div class="impersonate"><img src="' . $configObject->get('cfg_root_path') . '/artwork/agent.png" width="32" height="32" alt="Impersonate" style="float:left; padding-right:6px"/><div style="padding-top:1px; padding-right:1.4em">' . $string['loggedinas'] . ':<br /><strong>' . $impersonated_name . '</strong></div></div>';
 	} else {
 		$html .= '<div id="toprightmenu">';
 	}
