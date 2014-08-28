@@ -2178,7 +2178,11 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
   if (count($schools) > 0) {
     $schools_list = implode(',', $schools);
-    $school_sql = "AND schoolid IN ($schools_list)";
+    if ($userObject->has_role('SysAdmin')) {
+      $school_sql = '';
+    } else {
+      $school_sql = "AND schoolid IN ($schools_list)";
+    }
     $admin_school_sql = <<< SQL
 UNION SELECT DISTINCT users.id, title, initials, surname, first_names
 FROM users, admin_access
