@@ -6,7 +6,11 @@ table {
   text-align: left;
 }
 #modules_list input[type="checkbox"] {
-  margin-left: 22px;
+  margin-left: 4px;
+}
+.mod {
+  text-indent: 0;
+  margin-left: 18px;
 }
 #labs_list input[type="checkbox"] {
   margin-left: 22px;
