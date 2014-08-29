@@ -167,7 +167,7 @@ echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
 if ($module != 0) {
   // Don't want new papers created from the Unassigned folder.
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
 }
 // Question bank section
 echo "<br clear=\"left\">\n";
@@ -194,7 +194,7 @@ foreach ($bank_types as $type_name=>$url) {
 echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></div></div>\n";
 if ($module != 0) {   // Don't want new questions created from the Unassigned folder.
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/question_stats.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion(); return false;\">" . $string['newquestion'] . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/new_question.png\" alt=\"" . $string['newquestion'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion(); return false;\">" . $string['newquestion'] . "</a></div></div>\n";
 }
 
 // User section
