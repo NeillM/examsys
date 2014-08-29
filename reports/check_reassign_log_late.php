@@ -24,6 +24,8 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require_once '../classes/userutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $userID     = check_var('userID', 'GET', true, false, true);
@@ -37,67 +39,52 @@ $log_type   = check_var('log_type', 'GET', true, false, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['latesubmission']. ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['latesubmission']. ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB; margin:4px}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
   </style>
 
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
-    function confirmIntention() {
-      if (document.myform.button_pressed.value == 'Accept') {
-        var agree = confirm("<?php echo $string['msg3']; ?>");
-        if (agree) {
-          return true;
-        } else {
-          return false;
+    $(function() {
+      $("#myform").submit(function(e) {
+        if ($("#button_pressed").val() == 'Accept') {
+          var agree = confirm("<?php echo $string['msg3'] ?>");
+          if (!agree) {
+            e.preventDefault();
+          }
+        } else if ($("#button_pressed").val() == 'Reject') {
+          var agree = confirm("<?php echo $string['msg4'] ?>");
+          if (!agree) {
+            e.preventDefault();
+          }
         }
-      } else if (document.myform.button_pressed.value == 'Reject') {
-        var agree = confirm("<?php echo $string['msg4']; ?>");
-        if (agree) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
+      });
+      
+      $("#accept").click(function() {
+        $("#button_pressed").val('Accept');
+      });
+    
+      $("#reject").click(function() {
+        $("#button_pressed").val('Reject');
+      });
+    
+    });
   </script>
 </head>
 
 <body>
-<form name="myform" action="do_reassign_log_late.php" method="post" onsubmit="return confirmIntention();">
+<form name="myform" id="myform" action="do_reassign_log_late.php" method="post">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
-  $row_no = 0;
-  $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($end_date);
-  $result->store_result();
-  $result->fetch();
-  $row_no = $result->num_rows;
-  $result->close();
-
-  if ($row_no == 0) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+  if ($propertyObj->is_live()) {
+    echo "<h1>" . $string['warning'] . "</h1><p>" . $string['msg2'] . "</p><p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\"/></p>\n</body>\n</html>\n";
+    exit();
   }
-
-  if (time() < $end_date) {
-    echo "<p><strong>" . $string['warning'] . "</strong><p><p>" . $string['msg2'] . "</p>\n";
-    exit;
-  }
-
-  // Get details of the student.
-  $questions = array();
-  $q_no = 1;
-  $result = $mysqli->prepare("SELECT title, surname, first_names FROM users WHERE id = ? LIMIT 1");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($title, $surname, $first_names);
-  $result->fetch();
-  $result->close();
 
   // Get the order of the questions on the paper.
   $row_no = 0;
@@ -146,28 +133,29 @@ $log_type   = check_var('log_type', 'GET', true, false, true);
   }
 
   // Display which records are in log_late for the current student.
-  echo "<p><strong>$title $surname, $first_names</strong></p>\n";
+  $student_details = UserUtils::get_user_details($userID, $mysqli);
+  echo "<p style=\"font-size:120%\">" . $student_details['title'] . " " . $student_details['surname'] . ", " . $student_details['first_names'] . "</p>\n";
 
-  echo "<div style=\"font-size:100%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
-  echo "<tr style=\"font-weight:bold\"><td style=\"width:80px\">" . $string['question'] . "</td><td style=\"width:70px\">" . $string['screen'] . "</td><td style=\"width:150px\">" . $string['saved'] . "</td><td>" . $string['ipaddress'] . "</td></tr>\n";
+  echo "<div style=\"font-size:100%; background-color:#295AAD\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
+  echo "<tr><th style=\"width:80px\">" . $string['question'] . "</th><th style=\"width:70px\">" . $string['screen'] . "</th><th style=\"width:150px\">" . $string['saved'] . "</th><th>" . $string['ipaddress'] . "</th></tr>\n";
   echo "</table></div>\n";
 
 
-  echo "<div style=\"height:180px; overflow-y:scroll; border:1px solid #CCD9EA; background-color:white; font-size:90%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
+  echo "<div style=\"height:180px; overflow-y:scroll; border:1px solid #295AAD; background-color:white; font-size:90%\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
   foreach ($missing as $missing_question) {
     echo "<tr><td style=\"text-align:right; width:80px\">" . $missing_question['question_no'] . "</td><td style=\"text-align:right; width:70px\">" . $missing_question['screen'] . "</td><td style=\"width:150px\">" . $missing_question['updated'] . "</td><td>" . $missing_question['ipaddress'] . "</td></tr>\n";
   }
   echo "</table>\n</div><br />";
   echo "<div><strong>" . $string['Reason'] . ":</strong> <span style=\"font-size:80%; color:#808080\">" . $string['msg1'] . "</div>\n";
-  echo "<div><textarea name=\"reason\" cols=\"40\" rows=\"3\" style=\"width:100%; font-family:Arial,sans-serif\"></textarea></div>\n<br />";
+  echo "<div><textarea name=\"reason\" cols=\"40\" rows=\"5\" style=\"width:99%; font-family:Arial,sans-serif\"></textarea></div>\n<br />";
   echo "<div style=\"text-align:center\">\n";
 
-  echo "<input type=\"submit\" name=\"submit\" value=\"" . $string['accept'] . "\" onclick=\"document.myform.button_pressed.value='Accept';\" style=\"width:100px\" />&nbsp;<input type=\"submit\" name=\"submit\" value=\"" . $string['reject'] . "\" onclick=\"document.myform.button_pressed.value='Reject';\" style=\"width:100px\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"" . $string['Cancel'] . "\" style=\"width:100px\" onclick=\"window.close();\" /></div>";
+  echo "<input type=\"submit\" name=\"submit\" id=\"accept\" value=\"" . $string['accept'] . "\" class=\"ok\" />&nbsp;<input type=\"submit\" name=\"submit\" id=\"reject\" value=\"" . $string['reject'] . "\" class=\"ok\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"" . $string['Cancel'] . "\" class=\"cancel\" onclick=\"window.close();\" /></div>";
   echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"metadataID\" value=\"$metadataID\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
 
   $mysqli->close();
 ?>
-<input type="hidden" name="button_pressed" value="" />
+<input type="hidden" name="button_pressed" id="button_pressed" value="" />
 </form>
 </body>
 </html>
