@@ -104,9 +104,9 @@ if (isset($_POST['submit'])) {
 	echo draw_toprightmenu();
 ?>
 <div class="head_title" style="font-size:90%">
-	<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="details.php?module=<?php echo $_GET['module']; ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
-  <div class="page_title"><?php echo $string['newreferencematerial']; ?></div>
+	<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="details.php?module=<?php echo $_GET['module'] ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
+  <div class="page_title"><?php echo $string['newreferencematerial'] ?></div>
 </div>
 
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8">

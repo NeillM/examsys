@@ -51,7 +51,7 @@ function displayHead($string) {
   $html .= '  <div class="logo_lrg_txt">Rog&#333;</div>';
   $html .= '  <div class="logo_small_txt">' . $string['eassessmentmanagementsystem'] . '</div>';
   $html .= '  </th>';
-  $html .= '  <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>';
+  $html .= '  <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></th>';
   $html .= '</tr>';
 	$html .= '</table>';
 	

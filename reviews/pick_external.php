@@ -74,7 +74,7 @@ if ($_GET['mode'] == 0) {
 
 ?>
 <div class="head_title" style="font-size:90%">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
   <?php
   if (isset($_GET['module']) and $_GET['module'] != '') {

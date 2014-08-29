@@ -144,7 +144,7 @@ require_once '../classes/moduleutils.class.php';
 <div id="content">
 
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);

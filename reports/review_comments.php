@@ -670,7 +670,7 @@ $result->close();
 <form name="theform">
 
 <div class="head_title" style="font-size:90%">
-<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {

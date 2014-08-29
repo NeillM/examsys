@@ -136,7 +136,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 ?>
 <div id="content">
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
   <div class="page_title">Module: <span style="font-weight:normal"><?php echo $module_details['moduleid'] ?></span></div>
 </div>
@@ -145,7 +145,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   // Is it a self-enrol module.
   if (isset($module_details['selfenroll']) and $module_details['selfenroll'] == 1) {
     $selfenrol_url = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/self_enrol.php?moduleid=' . $module_details['moduleid'];
-    echo "<br /><div style=\"margin-left:auto; margin-right:auto; width:500px\"><img src=\"../artwork/self_enrol.png\" width=\"48\" height=\"48\" alt=\"modules\" style=\"float:left; margin-right:10px\" /> <div style=\"color:#F18103; font-weight:bold; line-height:200%\">" . $string['selfenrolmodule'] . "</div>" . $string['studenturl'] . ": <a href=\"$selfenrol_url\">$selfenrol_url</a></div>\n";
+    echo "<br /><div style=\"margin-left:auto; margin-right:auto; width:500px\"><img src=\"../artwork/self_enrol.png\" width=\"48\" height=\"48\" alt=\"modules\" style=\"float:left; margin-right:10px\" /> <div style=\"color:#F18103; font-weight:bold; line-height:200%\">" . $string['selfenrolmodule'] . "</div>" . $string['studenturl'] . ": <a href=\"$selfenrol_url\" style=\"color:#316ac5\">$selfenrol_url</a></div>\n";
   }
 
 

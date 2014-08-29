@@ -15,14 +15,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['moduleselfenrolment'] = 'Modul zápisu sebe sama do modulu';
-$string['moduleid'] = 'ID Modulu';
-$string['name'] = 'Jméno';
-$string['school'] = 'Škola';
-$string['academicyear'] = 'Akademický rok';
+$string['moduleid'] = 'ID Modulu:';
+$string['name'] = 'Jméno:';
+$string['school'] = 'Škola:';
+$string['academicyear'] = 'Akademický rok:';
 $string['enroll'] = 'Zápis';
 $string['iwouldliketo'] = '%s %s %s (%s), chcete se sám(a) zapsat do modulu.';
 $string['notavailableselfenrollment'] = 'Tento modul není k zápisu sebe sama nastaven.';
 $string['notactive'] = 'Tento modul není aktuálně aktivní.';
 $string['icanaccess'] = 'Zobrazit dokumenty, ke kterým mám přístup.';
 $string['enrolmentcompleted'] = 'Zápis ukončen';
+$string['nomodule'] = 'Module code <strong>%s</strong> not found.';
 ?>

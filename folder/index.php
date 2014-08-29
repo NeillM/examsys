@@ -151,7 +151,7 @@ $parts = count($folders_array) - 1;
 <div id="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   echo "<div style=\"position:absolute; right: 6px; top: 24px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\"\"";
   if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';

@@ -110,7 +110,7 @@ if (isset($_POST['submit'])) {
 <div id="content">
 
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/><a href="lti_keys_list.php"><?php echo $string['ltikeys']; ?></a></div>
   <div class="page_title"><?php echo $string['editltikeys']; ?></div>
 </div>

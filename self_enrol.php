@@ -29,14 +29,22 @@ require_once './classes/userutils.class.php';
 require_once './classes/moduleutils.class.php';
 require_once './classes/smsutils.class.php';
 
-check_var('moduleid', 'GET', true, false, false);
+if (isset($_GET['moduleid'])) {   // Old format
+  $module = $_GET['moduleid'];
+} elseif (isset($_GET['mod'])) {  // New shorter format
+  $module = $_GET['mod'];  
+} else {
+  display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], true);
+}
+
 $session = date_utils::get_current_academic_year();
 
-$modID = module_utils::get_idMod($_GET['moduleid'], $mysqli);  // Translate module code into ID
+$modID = module_utils::get_idMod($module, $mysqli);  // Translate module code into ID
 
 $mod_details = module_utils::get_full_details_by_ID($modID, $mysqli);
 if ($mod_details === false) {
-  display_error('Module ID error', 'Module code ' . $_GET['moduleid'] . ' not found.', false, true);
+  $msg = sprintf($string['nomodule'], $module);
+  display_error('Module ID error', $msg, false, true);
 }
 
 if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_POST['submit'])) {
@@ -51,15 +59,15 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['moduleselfenrolment'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['moduleselfenrolment'] . ' ' . $configObject->get('cfg_install_type') ?></title>
   
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <style type="text/css">
   body {font-size:90%}
-  .field {padding-top:4px; padding-left:6px; font-weight:bold}
+  .field {padding-top:4px; padding-right:4px; text-align:right}
   .topbar {
     height:70px;
-    background: #EEEEEE;
+    background:#EEEEEE;
     vertical-align:middle;
     font-size:150%;
     font-weight:bold;
@@ -69,7 +77,7 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
 </head>
 
 <body>
-<form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?moduleid=' . $_GET['moduleid']; ?>">
+<form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?mod=' . $module ?>">
 <?php
 
   $year_parts = explode('/',$session);
@@ -80,7 +88,7 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
   echo '<br /><div align="center"><table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">';
   echo '<tr><td class="topbar" style="text-align:right; width:55px"><img src="./artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td class="topbar" style="padding-left:15px; text-align:left">' . $string['moduleselfenrolment'] . '</td></tr>';
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
-  echo '<tr><td colspan="2"><table border="0" style="width:100%; text-align:left"><tr><td class="field" style="width:120px">' . $string['moduleid'] . '</td><td>' . $_GET['moduleid'] . '</td></tr>';
+  echo '<tr><td colspan="2"><table border="0" style="width:100%; text-align:left"><tr><td class="field" style="width:120px">' . $string['moduleid'] . '</td><td>' . $module . '</td></tr>';
   echo '<tr><td class="field">' . $string['name'] . '</td><td>' . $mod_details['fullname'] . '</td></tr>';
   echo '<tr><td class="field">' . $string['school'] . '</td><td>' . $mod_details['school'] . '</td></tr>';
   echo '<tr><td class="field">' . $string['academicyear'] . '</td><td><select name="session">';
@@ -94,21 +102,21 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
   echo '</select></td></tr>';
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   if (isset($_POST['submit'])) {
-    echo '<tr><td colspan="2"><strong>' . $string['enrolmentcompleted'] . '</strong></td></tr>';
+    echo '<tr><td colspan="2">&nbsp;<strong>' . $string['enrolmentcompleted'] . '</strong></td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
-    echo '<tr><td colspan="2"><a href="/"><img src="/artwork/link.png" width="16" height="16" alt=">" border="0" /></a>&nbsp;<strong><a href="/students/" style="color:blue">' . $string['icanaccess'] . '</a></strong></td></tr>';
+    echo '<tr><td colspan="2">&nbsp;<a href="/"><img src="./artwork/small_link.png" width="11" height="11" alt=">" /></a>&nbsp;<a href="' . $configObject->get('cfg_root_path') . '/students/">' . $string['icanaccess'] . '</a></td></tr>';
   } else {
     echo '<tr><td colspan="2">&nbsp;' . sprintf($string['iwouldliketo'], $userObject->get_title(), $userObject->get_initials(), $userObject->get_surname(), $userObject->get_username()) . '</td></tr>';
     echo '<tr><td colspan="2">&nbsp;</td></tr>';
     if ($mod_details['active'] == 0) {
       echo '<tr><td colspan="2" style="color:#C00000">' . $string['notactive'] . '</td></tr>';
-      echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submitdisabled" value="' . $string['enroll'] . '" style="width:100px" disabled />&nbsp;<input type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back();" style="width:100px" /></td></tr>';
+      echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submitdisabled" value="' . $string['enroll'] . '" class="ok" disabled /><input type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back();" class="cancel" /></td></tr>';
     } else {
       if ($mod_details['selfenroll'] == 0) {
         echo '<tr><td colspan="2" style="color:#C00000">' . $string['notavailableselfenrollment'] . '</td></tr>';
-        echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submitdisabled" value="' . $string['enroll'] . '" style="width:100px" disabled />&nbsp;<input type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back();" style="width:100px" /></td></tr>';
+        echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submitdisabled" value="' . $string['enroll'] . '" class="ok" disabled /><input type="button" name="cancel" value="' . $string['cancel'] . '" onclick="history.back();" class="cancel" /></td></tr>';
       } else {
-        echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="' . $string['enroll'] . '" style="width:100px" />&nbsp;<input type="button" name="cancel" value="' . $string['cancel'] . '" style="width:100px" onclick="history.back();" /></td></tr>';
+        echo '<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="' . $string['enroll'] . '" class="ok" /><input type="button" name="cancel" value="' . $string['cancel'] . '" class="cancel" onclick="history.back();" /></td></tr>';
 
       }
     }

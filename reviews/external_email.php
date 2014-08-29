@@ -98,7 +98,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
 	echo draw_toprightmenu();
 ?>
   <div class="head_title" style="font-size:90%">
-    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
     <?php
     if (isset($_GET['module']) and $_GET['module'] != '') {

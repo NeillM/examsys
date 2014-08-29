@@ -479,7 +479,7 @@ Class UserUtils {
     $userObject = UserObject::get_instance();
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
-      //don't add a user to a module multiple times
+      // Don't add a user to a module multiple times.
       return true;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");

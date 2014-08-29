@@ -143,7 +143,7 @@ MESSAGE;
 ?>
 <div id="content">
 <div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
   <div class="page_title"><?php echo $string['createnewuser'] ?></div>
 </div>
@@ -210,7 +210,7 @@ MESSAGE;
 <div id="content">
 
   <div class="head_title">
-    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
     <div class="page_title"><?php echo $string['createnewuser'] ?></div>
   </div>

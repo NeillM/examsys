@@ -84,7 +84,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   $question_data = getCohortData($mysqli, $moduleID, $startdate, $enddate, $_GET['repcourse'], $_GET['repmodule'], '%', $paperID, $paper_type, $_GET['ordering'], $student_no, $user_total, $percent);
 
   echo '<div class="head_title">';
-  echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>';
+  echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
