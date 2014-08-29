@@ -98,6 +98,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     // Get any questions to exclude.
     $exclude = array();
 
+    // TODO: use exlcude class.
     $exclude_result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
     $exclude_result->bind_param('i', $paperID);
     $exclude_result->execute();
@@ -119,7 +120,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     $angoff_review_marks = 0;
     $std_total = 0;
     $question_no = 0;
-    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
+    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0, 'exclude_EE'=>0, 'exclude_EI'=>0, 'exclude_EN'=>0, 'exclude_ME'=>0, 'exclude_MI'=>0, 'exclude_MN'=>0, 'exclude_HE'=>0, 'exclude_HI'=>0, 'exclude_HN'=>0);
     
     $ratings = load_question_ratings($reviews[$i]['std_setID'], $mysqli);
     $rating_no = count($ratings);
@@ -187,16 +188,16 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $reviews[$i]['distinction_score'] = round($results['distinction_score'], 1);
     } elseif ($reviews[$i]['method'] == 'Ebel') {
       $cut_marks = 0.0;
-      $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-      $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-      $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-      $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-      $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-      $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-      $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-      $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-      $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-      $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
+      $cut_marks += ($ebel_marks['EE'] + $ebel_marks['exclude_EE']) * $ebel_percents['EE'] * 100;
+      $cut_marks += ($ebel_marks['EI'] + $ebel_marks['exclude_EI']) * $ebel_percents['EI'] * 100;
+      $cut_marks += ($ebel_marks['EN'] + $ebel_marks['exclude_EN']) * $ebel_percents['EN'] * 100;
+      $cut_marks += ($ebel_marks['ME'] + $ebel_marks['exclude_ME']) * $ebel_percents['ME'] * 100;
+      $cut_marks += ($ebel_marks['MI'] + $ebel_marks['exclude_MI']) * $ebel_percents['MI'] * 100;
+      $cut_marks += ($ebel_marks['MN'] + $ebel_marks['exclude_MN']) * $ebel_percents['MN'] * 100;
+      $cut_marks += ($ebel_marks['HE'] + $ebel_marks['exclude_HE']) * $ebel_percents['HE'] * 100;
+      $cut_marks += ($ebel_marks['HI'] + $ebel_marks['exclude_HI']) * $ebel_percents['HI'] * 100;
+      $cut_marks += ($ebel_marks['HN'] + $ebel_marks['exclude_HN']) * $ebel_percents['HN'] * 100;
+      $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'] + $ebel_marks['exclude_EE'] + $ebel_marks['exclude_EI'] + $ebel_marks['exclude_EN'] + $ebel_marks['exclude_ME'] + $ebel_marks['exclude_MI'] + $ebel_marks['exclude_MN'] + $ebel_marks['exclude_HE'] + $ebel_marks['exclude_HI'] + $ebel_marks['exclude_HN'];
        
       $pass_score = ($total_marks == 0) ? $total_marks : ($cut_marks / ($total_marks  * 100)) * 100;
       $reviews[$i]['pass_score'] = round($pass_score, 1);

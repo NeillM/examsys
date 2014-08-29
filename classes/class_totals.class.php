@@ -399,12 +399,17 @@ class ClassTotals {
 	 */
 	 private function checkDisplayExcluded($exclude, $q_no, $q_type) {
     $subpart = '';
+    $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
 
     if ($q_type != 'mrq' and $q_type != 'rank' and strlen($exclude) > 1) {
       for ($i=0; $i<strlen($exclude); $i++) {
         if ($exclude{$i} == '1') {
           if ($subpart == '') {
-            $subpart = chr($i+97);
+            if ($q_type == 'extmatch') {
+              $subpart = $numerals[$i];              
+            } else {
+              $subpart = chr($i+97);
+            }
           } else {
             $subpart .= ', Q' . $q_no . chr($i+97);
           }
@@ -414,9 +419,9 @@ class ClassTotals {
 
     if (strpos($exclude, '1') !== false) {
       if ($this->display_excluded == '') {
-        $this->display_excluded = 'Q' . $q_no . $subpart;
+        $this->display_excluded = $q_no . $subpart;
       } else {
-        $this->display_excluded .= ', Q' . $q_no . $subpart;
+        $this->display_excluded .= ', ' . $q_no . $subpart;
       }
     }
   }
