@@ -99,7 +99,7 @@ $demo = true;
   if (file_exists('../users/photos/' . $original_username . '.jpg')) {
     $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $username . '.jpg');
     if (isset($demo) and $demo == true) {
-      echo '<td class="photo"><img src="pixel_photo.php?username=' . $username . '" ' . $photo_size[3] . ' alt="Photo" /></td>';
+      echo '<td class="photo"><img src="../users/pixel_photo.php?username=' . $username . '" ' . $photo_size[3] . ' alt="Photo" /></td>';
     } else {
       echo '<td style="width:180px"><img src="../users/photos/' . $original_username . '.jpg" ' . $photo_size[3] . ' alt="Photo" /></td>';
     }

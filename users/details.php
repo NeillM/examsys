@@ -343,7 +343,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     $user_details['first_names'] = demo_replace($user_details['first_names'], $demo);
     $user_details['initials'] = demo_replace($user_details['initials'], $demo);
     $user_details['student_id'] = demo_replace_number($user_details['student_id'], $demo);
-    $user_details['username'] = demo_replace_username($user_details['username'], $demo);
+    //$user_details['username'] = demo_replace_username($user_details['username'], $demo);
     $user_details['email'] = demo_replace_username($user_details['email'], $demo);
   }
 
@@ -356,21 +356,24 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   }
 ?>
 <div id="content">
-<table cellpadding="2" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%; line-height:150%; padding-bottom:10px">
+<table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%; line-height:175%; padding-bottom:10px">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
 <?php
-
-  $row_no = 6;
   if (stripos($user_details['roles'], 'Student') !== false) {
     $student_photo = $cfg_web_root . "users/photos/" . $user_details['username'] . ".jpg";
     if (file_exists($student_photo)) {
       $photo_size = getimagesize($student_photo);
-      echo "<tr><td rowspan=\"$row_no\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $user_details['username'] . ".jpg\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+      //echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $user_details['username'] . ".jpg\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+      if (isset($demo) and $demo == true) {
+        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"./pixel_photo.php?username=" . $user_details['username'] . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+      } else {
+        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $user_details['username'] . ".jpg\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+      }
     } else {
-      echo "<tr><td rowspan=\"$row_no\" width=\"100\" style=\"vertical-align:top; text-align:center\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
+      echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
     }
   } else {
-    echo "<tr><td rowspan=\"$row_no\" width=\"100\" style=\"vertical-align:top; text-align:center\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
+    echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
   }
   echo "<td colspan=\"4\" style=\"vertical-align:top\">&nbsp;<a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"search.php\">" . $string['usersearch'] . "</a><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /><input type=\"button\" id=\"edit\" value=\"" . $string['edit'] . "\" style=\"float:right; width:100px\" class=\"ok\" /></td></tr>\n";
   if (stripos($user_details['roles'],'Student') !== false) {
