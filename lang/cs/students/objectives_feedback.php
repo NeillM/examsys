@@ -29,7 +29,7 @@ $string['papertitle'] = 'Nadpis Dokumentu';
 $string['startedat'] = 'Započalav';
 $string['examlength'] = 'ukončena v';
 $string['timespent'] = 'Trvání';
-$string['outof'] = 'out&nbsp;of';
+$string['outof'] = 'z &nbsp;';
 $string['adjusted'] = 'upraveno';
 $string['staffmsg'] = 'Chcete-li vidět komentář ke konkrétním studentům, použijte, prosím, přístupu přes Celkový výkaz třídy.';
 

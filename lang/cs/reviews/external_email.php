@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['emailtemplate'] = 'Email Template';
+$string['emailtemplate'] = 'Emailová šablona';
 $string['to'] = 'To';
 $string['cc'] = 'Cc';
 $string['bcc'] = 'Bcc';
-$string['subject'] = 'Subject';
-$string['subject_msg0'] = '%s e-assessment review';
+$string['subject'] = 'Předmět';
+$string['subject_msg0'] = 'Komentář k e-testu %s ';
 $string['subject_msg1'] = 'REMINDER: %s e-assessment review';
-$string['message0'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Dear \$external_title \$external_surname,</p>\n<p>The online assessment <strong>\$paper_title</strong> is now available for you to log in and review. Please complete the review by the end of <strong>\$deadline</strong>. The exam will be delivered using our online assessment system Rog&#333;. To review the paper please log in at: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>Kind regards</p>\n<p>\$users_name</p>\n";
-$string['message1'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Dear \$external_title \$external_surname,</p>\n<p>We have noticed that you have not yet reviewed the online assessment <strong>\$paper_title</strong>. We would be very grateful if you could review this assessment by the end of <span style=\"font-weight:bold; color:#C00000\">\$deadline</span>. To review the paper please log in at: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>Any problems with accessing the paper please do not hesitate to contact me. Technical support for Rog&#333; is also available from: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>Kind regards</p>\n<p>\$users_name</p>\n";
-$string['emailsent'] = 'Email have been sent.';
-$string['back'] = '&lt back';
+$string['message0'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Milý/á\$external_title \$external_surname,</p>\n<p>Elektronický test <strong>\$paper_title</strong> je pro Vás nyní k dispozici a čeká na Vaši recenzi. Recenzi, prosím, dokončete do <strong>\$deadline</strong>.  K dokumentu se přihlásíte pomocí: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>V případě jakýchkoliv potíží s dostupností testu, prosím, kontaktujte: <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>S pozdravem</p>\n<p>\$users_name</p>\n";
+$string['message1'] = "<div style=\"text-align:right\"><img src=\"\$logo_path\" width=\"167\" height=\"70\" /></div><p>Milý/á \$external_title \$external_surname,</p>\n<p>Všimli jsme si, že jste elektronický test <strong>\$paper_title</strong> doposud nezkontroloval/a. Byli bychom velmi rádi, kdyby ste přezkum provedl/a do konce  <span style=\"font-weight:bold  color:#C00000\">\$deadline</span>. Ke kontrole testu se, prosím, přihlaste na: <a href=\"\$rogo_url\">\$rogo_url</a></p>\n<p>V případě jakýchkoliv průblémů s přístupem k testu kontaktujte technickou podporu:  <a href=\"mailto:\$support_email\">\$support_email</a></p>\n<p>Kind regards</p>\n<p>\$users_name</p>\n";
+$string['emailsent'] = 'Email byl zaslán.';
+$string['back'] = '&lt zpět';
 ?>

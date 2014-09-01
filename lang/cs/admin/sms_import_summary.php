@@ -18,6 +18,6 @@ $string['schools'] ='Školy';
 $string['smsimportsummary'] = 'Přehled nahraných SMS';
 $string['date'] = 'Datum';
 $string['modules'] = 'Moduly';
-$string['enroled'] = 'Zapsáno';
+$string['enroled'] = 'Zapsalo se';
 $string['deleted'] = 'Odstraněno';
 ?>

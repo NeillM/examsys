@@ -22,8 +22,8 @@ $string['bymodulecode'] = 'Podle kódu modulu';
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['usermanagement'] = 'Nastavení uživatelů';
-$string['createfolder'] = 'Create folder';
+$string['createfolder'] = 'Vytvořit složku';
 $string['mypersonalkeywords'] = 'Moje klíčová slova';
 $string['search'] = 'Hledat';
-$string['recent'] = 'Recent';
+$string['recent'] = 'Nedávné';
 ?>

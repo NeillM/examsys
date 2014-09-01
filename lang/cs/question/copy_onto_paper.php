@@ -16,8 +16,8 @@
 
 $string['copyontopaper'] = 'Kopírovat do dokumentu';
 $string['cancel'] = 'Zrušit';
-$string['close'] = 'Close';
-$string['gotopaper'] = 'Goto Paper';
+$string['close'] = 'Zavřít';
+$string['gotopaper'] = 'Přejít na dokument';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';
 $string['msg1'] = "Dokument je v současné době "aktivní". Aktuální datum je uvedeno mezi datumem jeho zahájení a ukončení. Tento bezpečnostní prvek tedy zabraňuje úpravě aktivního dokumentu.";
@@ -27,8 +27,8 @@ $string['error1'] = "Soubor <strong>'%s'</strong> nemůže být kopírován";
 $string['error2'] = "Soubor <strong>'%s'</strong> nemůže být kopírován.<br />Původní pojmenování bylo: %s";
 $string['error3'] = "Soubor <strong>'%s'</strong> nemůže být kopírován.<br />Soubor nenalezen.";
 $string['success'] = 'Úloha zkopírovaná do <strong>%s</strong>.';
-$string['duplicatename'] = "Promiňte <strong>'%s'</strong> jméno je již použito.";
+$string['duplicatename'] = "Promiňte, <strong>'%s'</strong> jméno je již použito.";
 $string['qcopyerrorno'] = 'Chyba při kopírování úlohy';
 $string['qcopyerror'] = 'Úloha %d nebyla zkopírována';
-$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
+$string['papernotonmodule'] = 'Mapování nelze zkopírovat - cílový test není v modulu mapovaných úloh ';
 ?>

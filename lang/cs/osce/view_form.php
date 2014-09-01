@@ -23,9 +23,9 @@ $string['clear pass'] = 'Uspěl';
 $string['fail'] = 'Nedostatečně';
 $string['borderline fail'] = 'Dostatečně';
 $string['borderline pass'] = 'Dobře';
-$string['pass'] = 'Uspěl';
-$string['good pass'] = 'Chvalitebně';
-$string['honours pass'] = 'Uspěl s vyznamenáním';
-$string['unsatisfactory'] = 'Nevyhovující';
-$string['competent'] = 'Schopný';
+$string['pass'] = 'Chvalitebně';
+$string['good pass'] = 'Výborně';
+$string['honours pass'] = 'Výborně s vyznamenáním';
+$string['unsatisfactory'] = 'Nepostačující';
+$string['competent'] = 'Postačující';
 ?>

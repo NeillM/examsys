@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['summativeexamfeedback'] = 'Summative Exam Feedback';
-$string['statistics'] = 'Statistics';
-$string['school'] = 'School';
-$string['exams'] = 'Exams';
-$string['objectivefeedback'] = 'Objective Feedback';
-$string['questionfeedback'] = 'Question Feedback';
-$string['cohortperformance'] = 'Cohort Performance';
-$string['externalexaminers'] = 'External Examiners';
+$string['summativeexamfeedback'] = 'Komentář k Sumativní zkoušce';
+$string['statistics'] = 'Statistika';
+$string['school'] = 'Škola';
+$string['exams'] = 'Zkoušky';
+$string['objectivefeedback'] = 'Komentář k Cílům';
+$string['questionfeedback'] = 'Komentář k Úlohám';
+$string['cohortperformance'] = 'Výkon Skupiny';
+$string['externalexaminers'] = 'Externí zkoušející';
 ?>

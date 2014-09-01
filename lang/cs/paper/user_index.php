@@ -39,8 +39,8 @@ $string['papernotavailable'] = 'Dokument není momentálně dostupný.';
 $string['papernotavailablestudents'] = 'Dokument není momentálně studentům dostupný.';
 $string['nottakenpaper'] = '(Doposud jste si tento dokument nevybral.)';
 $string['donotstart'] = "<strong>Neklikejte</strong> 'Start' dokud nedostanete pokyn od vyučujícího.";
-$string['hour'] = 'hour';
-$string['hours'] = 'hours';
+$string['hour'] = 'hodina';
+$string['hours'] = 'hodiny';
 $string['minutes'] = 'minuty ';
 $string['mins'] = 'minut';
 $string['secs'] = 'vteřin';
@@ -50,8 +50,8 @@ $string['guestaccount'] = 'Dočasný účet';
 $string['metadata_msg'] = "Vaše '%s' nesouhlasí s '%s'.";
 $string['timeexpired'] = 'Zbývající čas vypršel.';
 
-$string['tooltip_bidirectional'] = 'You are allowed to move both backwards and forwards between screens.';
-$string['tooltip_unidirectional'] = 'Once you have submitted a screen you will not be able to move back.';
-$string['tooltip_adjustmark'] = 'Your percentage will be automatically adjusted post-exam to account for the random mark someone could get by guessing at random. You are therefore advised to answer all questions on the paper.';
-$string['tooltip_testclip'] = 'This is a test audio clip for you to test your headphones and volume are set correctly.';
+$string['tooltip_bidirectional'] = 'Máte povoleno se mezi obrazovkami pohybovat dopředu i dozadu.';
+$string['tooltip_unidirectional'] = 'Jakmile potvrdíte své odpovědi odesláním formuláře, nebudete se moci vrátit zpět.';
+$string['tooltip_adjustmark'] = 'Vaše procenta budou po zkoušce automaticky upravena dle Náhodné známky, kterou by získal student, jež by odpovídal zcela nahodile. Z tohoto důvodu Vám tedy doporučujeme zodpovědět veškeré úlohy.';
+$string['tooltip_testclip'] = 'Toto je testovací zvukový klip, sloužící ke správnému nastavení sluchátek a hlasitosti..';
 ?>

@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/include/paper_types.inc';
 
-$string['papersbyschool'] = 'Papers by School';
-$string['statistics'] = 'Statistics';
-$string['school'] = 'School';
+$string['papersbyschool'] = 'Dokumenty dle Školy';
+$string['statistics'] = 'Statistika';
+$string['school'] = 'Škola';
 ?>

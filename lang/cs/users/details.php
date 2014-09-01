@@ -18,8 +18,8 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Nastavení uživatelů';
-$string['status'] = 'Status'; //cognate
-$string['student'] = 'Student'; //cognate
+$string['status'] = 'Status'; 
+$string['student'] = 'Student';
 $string['Students'] = 'Studenti';
 $string['externalexaminer'] = 'Oponenti';
 $string['graduate'] = 'Absolvent';
@@ -41,7 +41,7 @@ $string['modules'] = 'Moduly';
 $string['notes'] = 'Poznámky';
 $string['admin'] = 'Správce';
 $string['accessibility'] = 'Přístupnost';
-$string['metadata'] = 'Metadata'; //cognate
+$string['metadata'] = 'Metadata';
 $string['papername'] = 'Název dokumentu';
 $string['type'] = 'Typ';
 $string['started'] = 'Zahájeno';
@@ -68,7 +68,7 @@ $string['date'] = 'Datum';
 $string['paper'] = 'Dokument';
 $string['note'] = 'Poznámka';
 $string['author'] = 'Autor';
-$string['newnote'] = 'New Note';
+$string['newnote'] = 'Nová Poznámka';
 $string['extratime'] = 'Prodloužení';
 $string['fontsize'] = 'Velikost písma';
 $string['typeface'] = 'Typ písma';
@@ -78,9 +78,9 @@ $string['markscolour'] = 'Barva známek';
 $string['themecolour'] = 'Barva nadpisu/motivu';
 $string['labelscolour'] = 'Barva popisku';
 $string['unanswered'] = 'Nezodpovězeno';
-$string['dismisscolor'] = 'Dismiss Color';
-$string['medical'] = 'Medical';
-$string['breaks'] = 'Breaks';
+$string['dismisscolor'] = 'Odstranit Barvu';
+$string['medical'] = 'Lékařský';
+$string['breaks'] = 'Pauzy';
 $string['default'] = 'Výchozí';
 $string['noextratime'] = 'bez prodloužení';
 $string['angledefault'] = '&lt;výchozí&gt;';
@@ -103,7 +103,7 @@ $string['sysadmin'] = 'Systémový správce';
 $string['reset'] = 'Obnovit';
 $string['forcereset'] = 'Nucené obnovení';
 $string['classifiedinfo'] = 'Utajované informace';
-$string['custom'] = 'Custom';
+$string['custom'] = 'Rutina';
 $string['Access Denied']='Přístup odepřen';
 
 //Colour picker

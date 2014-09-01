@@ -29,5 +29,5 @@ $string['setlocked'] = 'Lze nastavit u zamknutých otázek';
 $string['validate'] = 'Ověřit';
 $string['displaywarning'] = 'Zobrazit upozornění';
 $string['colour'] = 'Barva';
-$string['enternameofstatus'] = 'Zadejte, prosím Název statusu.';
+$string['enternameofstatus'] = 'Zadejte, prosím, Název statusu.';
 $string['duplicateerror'] = 'Názvy statusů se nesmí shodovat.';

@@ -23,5 +23,5 @@ $string['Version'] = 'Verze';
 $string['Settings'] = 'Nastavení';
 $string['Function'] = 'Funkce';
 $string['Description'] = 'Popis';
-$string['ID'] = 'ID'; //cognate
+$string['ID'] = 'ID';
 ?>

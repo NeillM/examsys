@@ -17,10 +17,10 @@
 require '../lang/' . $language . '/include/paper_options.inc';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
-$string['importraf'] = 'Import Rog&#333; Assessment Format';
-$string['file'] = 'File';
-$string['importfile'] = 'Import File';
-$string['invalidzip'] = 'This is an invalid ZIP file.';
-$string['invalidraf'] = 'This is an invalid Rogo Assessment File (RAF).';
-$string['type'] = 'Type';
+$string['importraf'] = 'Importovat Rog&#333; Assessment Format';
+$string['file'] = 'Složka';
+$string['importfile'] = 'Importovat složku';
+$string['invalidzip'] = 'Toto je neplatný ZIP soubor.';
+$string['invalidraf'] = 'Toto je neplatný formát Rogo souboru (RAF = Rogo Assessment File).';
+$string['type'] = 'Typ';
 ?>

@@ -38,7 +38,7 @@ $string['unlock'] = 'Odemknout';
 $string['nooptionsdefined'] = 'Úloha nemá definovanou žádnou volbu';
 $string['noquestionscreen'] = '<strong>Varování:</strong> v okně nejsou žádné úlohy.<br />Pokud budete tento dokument použijete ke zkoušení, objeví se závada!';
 $string['markswarning'] = 'Okno %d má %d bodů z %d%% celkem v dokumentu. Abyste minimalizovali ztrátu bodů v případě závady na počítači, přidejte, prosím, další zalomení okna. ';
-$string['duplicateoptions'] = 'Duplicate options. MCQ options must be unique.';
+$string['duplicateoptions'] = 'Duplicitní možnosti. MCQ možnosti musí být jedinečné.';
 $string['nocorrect'] = 'Nelze najít správnou odpověď';
 $string['zeromarks'] = 'Varování: nastaveno nula bodů.';
 $string['toomanycorrect'] = 'Mnoho správných odpovědí';
@@ -58,7 +58,7 @@ $string['next'] = 'Další >>';
 $string['na'] = 'N/A';
 $string['Duplicate questions'] = 'Duplikovat Úlohu';
 $string['following_questions'] = 'Následující úlohy jsou';
-$string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';	// translate
-$string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';	// translate
+$string['mismatchblanktags'] = 'Neodpovídající prázdá či rolovací políčka.';
+$string['nomatchsession'] = 'Sezení v Názvu Testu (%s) neodpovídá sezení testu (%s).';
 
 ?>

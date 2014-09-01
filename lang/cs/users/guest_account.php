@@ -32,5 +32,5 @@ $string['msg'] = 'Zapište si přihlašovací údaje uvedené níže, pro příp
 $string['enterfirstname'] = "Zadejte, prosím, své jméno.";
 $string['entersurname'] = "Zadejte, prosím, své příjmení.";
 $string['error'] = 'Chyba';
-$string['mandatory'] = 'Mandatory data missing.';
+$string['mandatory'] = 'Chybí povinné údaje.';
 ?>

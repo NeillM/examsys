@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['problemsdetected'] = 'Problems detected with the following questions: %s';
-$string['pleasecontact'] = 'Please contact:';
+$string['problemsdetected'] = 'Byly zjištěny problémy u následujících úloh: %s: %s';
+$string['pleasecontact'] = 'Prosím, kontaktujte:';
 ?>
 

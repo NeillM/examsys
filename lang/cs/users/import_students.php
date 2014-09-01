@@ -16,19 +16,19 @@
 
 require '../lang/' . $language . '/include/user_search_options.inc';
 
-$string['sendwelcomeemail'] = 'Send welcome email to user';
+$string['sendwelcomeemail'] = 'Zaslat uživateli Uvítací email';
 $string['importstudents'] = 'Nahrát Studenty';
-$string['csvfile'] = 'CSV File:';
+$string['csvfile'] = 'CSV soubor:';
 $string['import'] = 'Importovat';
-$string['msg1'] = 'Rogō can bulk upload student details and create new accounts from CSV files. The first row should be a header row containing the following fields:';
+$string['msg1'] = 'Rogō dokáže nahrát podrobnosti studentů  a vytvářet nové účty z CVS souboru. První řádek by měl  obsahovat  záhlaví obsahující následující pole :';
 $string['msg2'] = "Další (nepovinná) pole 'Moduly' a 'Relace' mohou být přidána a použita k hromadnému zápisu nových studentů do daných modulů.";
-$string['loading'] = 'Loading...';
-$string['followingerrors'] = 'No users added due to the following errors:';
-$string['usersadded'] = 'users added';
-$string['usersupdated'] = 'existing users updated';
-$string['missingcolumn'] = 'Missing \'%s\' Colum from import please add it.';
-$string['finished'] = 'Finished';
-$string['loadstudents'] = 'Rogō: Load Students';
+$string['loading'] = 'Načítání...';
+$string['followingerrors'] = 'Nebyli přidáni žádní uživatelé, z důvodu následujících chyb:';
+$string['usersadded'] = 'uživatelé přidáni';
+$string['usersupdated'] = 'existující uživatelé aktualizováni';
+$string['missingcolumn'] = 'Chybí sloupec \'%s\' z importu, prosím doplňte.';
+$string['finished'] = 'Dokončeno';
+$string['loadstudents'] = 'Rogō: Načíst Studenty';
 $string['emailmsg1'] = 'Vytvořit nový uživatelský účet';
 $string['emailmsg2'] = 'Milá/ý';
 $string['emailmsg3'] = 'Byl vytvořen nový uživatelský účet, pomocí kterého se můžete přihlásit do systému on-line elektronického testování Rogō. Vaše osobní ověřovací údaje jsou totožné s univerzitním přihlašovacím jménem.';

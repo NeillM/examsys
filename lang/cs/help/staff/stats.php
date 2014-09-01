@@ -28,5 +28,5 @@ $string['tutorialstats'] = 'Statistiky tutoriálu';
 $string['filter'] = 'Filtr';
 $string['nohits'] = 'Žádná zobrazení';
 $string['nosearches'] = 'Žádná vyhledání';
-$string['notutorials'] = 'Žádné tutoriály zobrazeny.';
+$string['notutorials'] = 'Žádné tutoriály';
 ?>

@@ -28,7 +28,7 @@ $string['modules'] = 'Moduly';
 $string['optimizetables'] = 'Optimalizovat tabulky';
 $string['schools'] ='Školy';
 $string['smsimports'] = 'Nahrát SMS ';
-$string['statistics'] = 'Statistics';	// translate
+$string['statistics'] = 'Statistika';
 $string['systemerrors'] = 'Systémové chyby';
 $string['summativescheduling'] = 'Plánování sumativní zkoušky';
 $string['systeminformation'] = 'Systémové informace';
@@ -38,8 +38,8 @@ $string['msg2'] = 'Jste si skutečně jisti, že chcete odstranit staré Příst
 $string['announcments'] = 'Novinky &amp; oznámení';
 $string['imslti'] = 'Klíče LTI';
 $string['questionstatuses'] = 'Statusy úloh';
-$string['savefailattempts'] = 'Save Fail Attempts';
+$string['savefailattempts'] = 'Uložit nezdařené pokusy';
 $string['testing'] = 'Testování systémů';
-$string['bitbucket'] = 'Bitbucket:<br />Bug Reporting';	// translate
+$string['bitbucket'] = 'Bitbucket:<br />Hlášení chyb';
 
 ?>

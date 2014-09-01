@@ -16,9 +16,9 @@
 
 $string['linktopaper'] = 'Odkaz do dokumentu';
 $string['addtopaper'] = 'Přidat do dokumentu';
-$string['gotopaper'] = 'Goto Paper';
+$string['gotopaper'] = 'Přejít na dokument ';
 $string['cancel'] = 'Zrušit';
-$string['close'] = 'Close';
+$string['close'] = 'Zavřít';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';
 $string['msg1'] = "Dokument je v současné době "aktivní". Aktuální datum je uvedeno mezi datumem jeho zahájení a ukončení. Tento bezpečnostní prvek tedy zabraňuje úpravě aktivního dokumentu";
@@ -26,5 +26,5 @@ $string['msg2'] = 'Sumativní dokument je v současnosti uzamčen a nemohou v n�
 $string['newassessmentpaper'] = 'Nový dokument';
 $string['success'] = 'Úloha přidána';
 $string['duplicatename'] = "Promiňte <strong>'%s'</strong> jméno je již použito.";
-$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
+$string['papernotonmodule'] = 'Mapování nelze zkopírovat - cílový test není v modulu mapovaných úloh';
 ?>

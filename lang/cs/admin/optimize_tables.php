@@ -17,6 +17,6 @@
 $string['optimizetables'] = 'Optimalizovat tabulky';
 $string['tables'] = 'Tabulky:';
 $string['optimize'] = 'Optimalizovat';
-$string['finished'] = 'Hotovo';
+$string['finished'] = 'Dokončeno';
 $string['optimized'] = 'Optimalizováno.';
 ?>

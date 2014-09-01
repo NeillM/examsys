@@ -28,7 +28,7 @@ $string['home'] = 'Domů';
 $string['help'] = 'Pomoc';
 $string['line'] = 'Řádek';
 $string['cancel'] = 'Zrušit';
-$string['ok'] = 'OK'; //cognate
+$string['ok'] = 'OK';
 $string['save'] = 'Uložit';
 $string['accessdenied'] = 'Přístup odepřen';
 $string['accessdeniedadmin'] = '<strong>Přístup odepřen</strong><br />pokoušíte se vstoupit na správcovskou stránku.';
@@ -92,7 +92,7 @@ $string['html5warn'] = 'Rog&#333; vyžaduje podporu HTML5, aktualizujte, prosím
 $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
-$string['loggedinas'] = 'Logged in as';
+$string['loggedinas'] = 'Přihlášen jako';
 
 $configObject = Config::get_instance();
 $cfg_web_root = $configObject->get('cfg_web_root');

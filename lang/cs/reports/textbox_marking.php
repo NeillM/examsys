@@ -28,11 +28,11 @@ $string['finalisemarks'] = 'Dokončit hodnocení';
 $string['candidates'] = 'Kandidáti';
 $string['screen'] = 'Obrazovka';
 $string['note'] = 'Poznámka';
-$string['comments'] = 'Comments';
-$string['next'] = 'Next &gt;';
-$string['previous'] = '&lt; Previous';
-$string['finish'] = 'Finish';
+$string['comments'] = 'Komentáře';
+$string['next'] = 'Další &gt;';
+$string['previous'] = '&lt; Předchozí';
+$string['finish'] = 'Dokončit';
 $string['mark_progress'] = 'Student %d of %d';
-$string['answer_saved'] = 'Marks saved';
+$string['answer_saved'] = 'Známky uloženy';
 $string['noattempts'] = 'V daném období <strong>%s &ndash; %s</strong> zkoušku nesložil žádný student.';
 ?>

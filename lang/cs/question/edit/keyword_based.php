@@ -17,13 +17,13 @@
 require '../../lang/' . $language . '/include/status.inc';
 require '../../lang/' . $language . '/include/blooms.inc';
 
-$string['editor'] = 'Editor'; //cognate
+$string['editor'] = 'Editor'; 
 $string['changes'] = 'Změny';
 $string['comments'] = 'Poznámky';
 $string['mapping'] = 'Mapování';
 $string['created'] = 'Vytvořeno:';
 $string['modified'] = 'Upraveno:';
-$string['metadata'] = 'Metadata'; //cognate
+$string['metadata'] = 'Metadata'; 
 $string['keywords'] = 'Klíčová slova';
 $string['teams'] = 'Týmy';
 $string['mappingdisabled'] = 'Mapování vypnuto';

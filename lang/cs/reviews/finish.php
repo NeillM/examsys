@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['reviewcomplete'] = 'Review Complete';
-$string['deadline'] = 'Deadline';
-$string['generalcomments'] = 'General Comments';
-$string['generalmsg'] = 'Please use the area below to record any general comments about the difficulty, appropriateness or other comments about the paper as a whole.';
-$string['saveclose'] = 'Save &amp; Close';
-$string['savefinish'] = 'Save &amp; Finish';
+$string['reviewcomplete'] = 'Kontrola dokončena';
+$string['deadline'] = 'Uzavírka';
+$string['generalcomments'] = 'Obecné Komentáře';
+$string['generalmsg'] = 'Obecné připomínky k celkovému testu (obtížnost, vhodnost atd.) zaznamenejte do níže uvedené oblasti.';
+$string['saveclose'] = 'Uložiz &amp; Zavřít';
+$string['savefinish'] = 'Uložit &amp; Ukončit';
 ?>

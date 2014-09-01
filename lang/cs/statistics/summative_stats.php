@@ -16,16 +16,16 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamstats'] = 'Summative Exams';
-$string['statistics'] = 'Statistics';
-$string['month'] = 'Month';
-$string['papers'] = 'Papers';
-$string['owner'] = 'Owners';
-$string['mean'] = 'Mean';
+$string['summativeexamstats'] = 'Summativní zkoušky';
+$string['statistics'] = 'Statistika';
+$string['month'] = 'měsíc';
+$string['papers'] = 'Dokumenty';
+$string['owner'] = 'Vlastník';
+$string['mean'] = 'Průměr';
 $string['min'] = 'Min';
 $string['max'] = 'Max';
-$string['studentpapers'] = 'Student/Papers';
-$string['cohortsizes'] = 'Cohort Sizes';
-$string['uniquestudents'] = 'Unique students = %s';
-$string['totals'] = 'Totals';
+$string['studentpapers'] = 'Studentů/Dokumentů';
+$string['cohortsizes'] = 'Velikost Skupiny';
+$string['uniquestudents'] = 'Unikátních studentů = %s';
+$string['totals'] = 'Souhrny';
 ?>

@@ -14,5 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['pagetitle'] = 'Page Title...';
+$string['pagetitle'] = 'Nadpis stránky...';
 ?>

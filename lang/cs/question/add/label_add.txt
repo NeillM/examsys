@@ -23,7 +23,7 @@ $string['no'] = 'Ne';
 $string['warning'] = 'VAROVÁNÍ';
 $string['errormessage'] = 'Pokud změníte opakované popisky na jedinečné, budou některé z nich na obrázku smazány.';
 $string['continue'] = 'Chcete pokračovat?';
-$string['errorcanvas'] = 'Canvas not supported';	// translate
-$string['errorimageslabelling'] = 'Labelling question cannot be displayed because some images were not loaded.';	// translate
+$string['errorcanvas'] = 'Canvas není podporován';
+$string['errorimageslabelling'] = 'Štítkovací úlohu nelze zobrazit, jelikož se některé obrázky  nenačetly.';
 
 ?>

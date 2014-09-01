@@ -15,5 +15,5 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['frequencyanalysis'] = 'OSCE: Frekvenční analýza';
-$string['studentsonly'] = 'students only';
+$string['studentsonly'] = 'pouze studenti';
 ?>
