@@ -132,6 +132,23 @@ Class CourseUtils {
     return $exist;
   }
   
+  static function get_course_details_by_name($name, $db) {
+    $result = $db->prepare("SELECT description, deleted, schoolid FROM courses WHERE name = ? LIMIT 1");
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($description, $deleted, $schoolid);
+    if ($result->num_rows == 0) {
+      $details = false;
+    } else {
+      $result->fetch();
+      $details = array('description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid);
+    }
+    $result->close();
+    
+    return $details;
+  }
+  
 }
 
 ?>

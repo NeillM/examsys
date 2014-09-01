@@ -173,7 +173,7 @@ if (isset($_POST['submit'])) {
     }
 
     function resizeList() {
-      winH = $(window).height() - 80;
+      winH = $(document.body).height() - 90;
 
       $('#list1').css('height', winH + 'px');
       $('#list2').css('height', winH + 'px');

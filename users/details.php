@@ -29,7 +29,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
-require_once '../include/sort.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
@@ -49,9 +48,7 @@ if (isset($_GET['tab'])) {
   $tab = 'log';
 }
 
-function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color) {
-  global $string;
-
+function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, $string) {
   $html = "<tr><td colspan=\"" . ($col_span - 1) . "\" style=\"background-color:$bg_color\">";
   $html .= '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr>';
 
@@ -109,59 +106,8 @@ function formatsec($seconds) {
   return $timestring;
 }
 
-if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('Admin', 'SysAdmin'))) {
-  $initials = '';
-  $first_names_array = explode(' ', $_POST['first_names']);
-  foreach ($first_names_array as $individual_name) {
-    $initials .= trim(substr($individual_name,0,1));
-  }
-  // Update 'users' table.
-  $tmp_roles = $_POST['roles'];
-  $grade = $_POST['grade'];
 
-  $tmp_first_names = $_POST['first_names'];
-  $tmp_surname = $_POST['surname'];
-  $tmp_email = $_POST['email'];
-	$tmp_gender = $_POST['gender'];
-	
-	if ($tmp_gender == '') $tmp_gender = NULL;
-
-  if (isset($_POST['password']) and $_POST['password'] != '') {
-    $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, password = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
-    $result->bind_param('sssssisssssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $_POST['password'], $tmp_email, $tmp_first_names, $tmp_gender, $_POST['old_userID']);
-  } else {
-    $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
-    $result->bind_param('sssssissssi', $tmp_roles, $_POST['title'], $initials, $tmp_surname, $grade, $_POST['year'], $_POST['username'], $tmp_email, $tmp_first_names, $tmp_gender, $_POST['old_userID']);
-  }
-  $result->execute();
-  $result->close();
-
-  // Remove from teams if 'left'.
-  if (strtolower($tmp_roles) == 'left') {
-    UserUtils::clear_staff_modules_by_userID($_POST['old_userID'], $mysqli);
-  }
-
-  // Remove from admin access if role changed from Admin
-  if ($userObject->has_role('SysAdmin')) {
-    if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
-      UserUtils::clear_admin_access($_POST['old_userID'], $mysqli);
-    }
-  }
-
-  $username = $_POST['username'];
-  // Update 'sid' table;
-  $result = $mysqli->prepare("DELETE FROM sid WHERE userID = ?");
-  $result->bind_param('i', $_POST['old_userID']);
-  $result->execute();
-  $result->close();
-
-  if (isset($_POST['sid']) and $_POST['sid'] != '' and $_POST['sid'] != $string['unknown']) {
-    $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
-    $result->bind_param('si', $_POST['sid'], $_POST['old_userID']);
-    $result->execute();
-    $result->close();
-  }
-} elseif (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
+if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   UserUtils::clear_admin_access($userID, $mysqli);
 
   for ($i=0; $i<$_POST['admin_school_no']; $i++) {
@@ -228,6 +174,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <style type="text/css">
@@ -235,10 +182,12 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     .sch_check {text-align:right; width:40px; padding-right:6px}
     .medical {background-image: url('../artwork/medical_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
     .breaks {background-image: url('../artwork/moon_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
+    .field {padding-left:4px; width:95px}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     function reviewPaper(started, userid, surname, papername, log_type, metadataID) {
       var winwidth = screen.width - 80;
@@ -360,6 +309,13 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       $('#menu2a').hide();
       $('#menu2b').show();
       
+      $('#edit').click(function() {
+        editwin=window.open("edit_details.php?userID=<?php echo $userID ?>","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        if (window.focus) {
+          editwin.focus();
+        }        
+      });
+      
       if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({ 
           sortList: [[1,0]] 
@@ -372,240 +328,93 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
 <body>
 <?php
-  $records_found = 0;
-    
-  $user_result = $mysqli->prepare("SELECT DISTINCT id, roles, grade, title, initials, first_names, surname, email, yearofstudy, grade, password, gender, username, student_id, user_deleted FROM users LEFT JOIN sid ON users.id = sid.userID WHERE users.id = ?");
-  $user_result->bind_param('i', $userID);
-  $user_result->execute();
-  $user_result->bind_result($tmp_id, $tmp_roles, $tmp_grade, $tmp_title, $tmp_initials, $tmp_first_names, $tmp_surname, $email, $tmp_year, $grade, $password, $gender, $username, $student_id, $user_deleted);
-  $user_result->store_result();
-  $user_result->fetch();
-  $records_found = $user_result->num_rows;
-  $user_result->close();
-  
-
-  if ($records_found == 0) {
+  $user_details = UserUtils::get_user_details($userID, $mysqli);
+  if ($user_details === false) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
-
-  $needs_result = $mysqli->prepare("SELECT special_id FROM special_needs WHERE userID = ?");
-  $needs_result->bind_param('i', $userID);
-  $needs_result->execute();
-  $needs_result->bind_result($special_id);
-  if ($needs_result->num_rows > 0) $special_needs = true;
-  $needs_result->close();
-
+  
   require '../tools/colour_picker/colour_picker.inc';
   require '../include/user_search_options.inc';
 
-  $original_username = $username;
-	$original_student_id = $student_id;
   if ($demo == true) {
     // Hide the personal details.
-    $tmp_surname = demo_replace($tmp_surname, $demo);
-    $tmp_first_names = demo_replace($tmp_first_names, $demo);
-    $tmp_initials = demo_replace($tmp_initials, $demo);
-    $student_id = demo_replace_number($student_id, $demo);
-    $username = demo_replace_username($username, $demo);
-    $email = demo_replace_username($email, $demo);
+    $user_details['surname'] = demo_replace($user_details['surname'], $demo);
+    $user_details['first_names'] = demo_replace($user_details['first_names'], $demo);
+    $user_details['initials'] = demo_replace($user_details['initials'], $demo);
+    $user_details['student_id'] = demo_replace_number($user_details['student_id'], $demo);
+    $user_details['username'] = demo_replace_username($user_details['username'], $demo);
+    $user_details['email'] = demo_replace_username($user_details['email'], $demo);
   }
 
-  $tmp_name = $tmp_title . ' ' . $tmp_initials . ' ' . $tmp_surname;
+  $course_details = CourseUtils::get_course_details_by_name($user_details['grade'], $mysqli);
 
-  $description = '';
-  $user_query = $mysqli->prepare("SELECT DISTINCT description FROM courses WHERE name = ? LIMIT 1");
-  $user_query->bind_param('s', $grade);
-  $user_query->execute();
-  $user_query->bind_result($description);
-  $user_query->fetch();
-  $user_query->close();
-
-  if ($user_deleted == '') {
+  if ($user_details['user_deleted'] == '') {
     $bg_color = '#EEF4FF';
   } else {
     $bg_color = '#FFC0C0';
   }
 ?>
 <div id="content">
-<table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%">
+<table cellpadding="2" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%; line-height:150%; padding-bottom:10px">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
 <?php
 
-  if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    if (strpos($tmp_roles, 'Student') !== false or stripos($tmp_roles, 'graduate') !== false or strpos($tmp_roles, 'left') !== false or strpos($tmp_roles, 'suspended') !== false) {
-      $student_photo =  $cfg_web_root . 'users/photos/' . $original_username . '.jpg';
-      $row_no = 7;
-      if (file_exists($student_photo)) {
-        $photo_size = getimagesize("photos/$original_username.jpg");
-        if ($demo == true) {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img style=\"filter:progid:DXImageTransform.Microsoft.Pixelate(maxSquare=8)\" src=\"photos/$original_username.jpg\" " . $photo_size[3] . " alt=\"Student Photo\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
-        } else {
-          echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$original_username.jpg\" " . $photo_size[3] . " alt=\"Student Photo\" &nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
-        }
-      } else {
-        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"54\" height=\"57\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
-      }
+  $row_no = 6;
+  if (stripos($user_details['roles'], 'Student') !== false) {
+    $student_photo = $cfg_web_root . "users/photos/" . $user_details['username'] . ".jpg";
+    if (file_exists($student_photo)) {
+      $photo_size = getimagesize($student_photo);
+      echo "<tr><td rowspan=\"$row_no\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $user_details['username'] . ".jpg\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
     } else {
-      $row_no = 9;
-      echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"54\" height=\"57\" alt=\"User Icon\" /></td><td>&nbsp;" . $string['name'] . "</td><td colspan=\"3\">";
+      echo "<tr><td rowspan=\"$row_no\" width=\"100\" style=\"vertical-align:top; text-align:center\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
     }
-    $title_array = explode(',', $string['title_types']);
-    echo '<select name="title">';
-    foreach ($title_array as $individual_title) {
-      if ($individual_title == $tmp_title) {
-        echo '<option value="' . $individual_title . '" selected>' . $individual_title . '</option>';
-      } else {
-        echo '<option value="' . $individual_title . '">' . $individual_title . '</option>';
-      }
-    }
-    echo "</select>&nbsp;<input type=\"text\" name=\"first_names\" size=\"20\" value=\"$tmp_first_names\" />&nbsp;<input type=\"text\" size=\"15\" name=\"surname\" value=\"$tmp_surname\" /></td><td style=\"text-align:right\"><input type=\"submit\" name=\"update\" value=\"" . $string['update'] . "\" class=\"ok\" /></td></td></tr>\n";
-    echo "<tr><td>&nbsp;" . $string['email'] . "</td><td><input type=\"text\" size=\"35\" name=\"email\" value=\"$email\" /></td>\n";
-    if (stripos($tmp_roles, 'Student') !== false or stripos($tmp_roles, 'Graduate') !== false) {
-      if ($student_id == '') $student_id = $string['unknown'];
-      echo "<td>&nbsp;" . $string['studentid'] . "</td><td colspan=\"2\"><input type=\"text\" size=\"15\" name=\"sid\" value=\"$student_id\" /></td></tr>\n";
-    } else {
-      echo "<td colspan=\"3\"></td></tr>\n";
-    }
-    if (stripos($tmp_roles, 'Student') !== false or stripos($tmp_roles,'graduate') !== false or stripos($tmp_roles,'left') !== false or stripos($tmp_roles,'suspended') !== false) {
-      // Student editing
-      echo "<tr><td>&nbsp;" . $string['course'] . "</td><td><select name=\"grade\" style=\"width:300px\">";
-      $found = 0;
-
-      $course_details = $mysqli->prepare("SELECT DISTINCT name, description FROM courses ORDER BY name");
-      $course_details->execute();
-      $course_details->bind_result($name, $description);
-      while ($course_details->fetch()) {
-        if ($name == $grade) {
-          $found = 1;
-          echo "<option value=\"$name\" selected>$name: $description</option>\n";
-        } else {
-          echo "<option value=\"$name\">$name: $description</option>\n";
-        }
-      }
-      if ($found == 0) echo "<option value=\"" . $grade . "\" selected>" . $grade . ": " . $string['unknown'] . "</option>\n";
-      $course_details->close();
-      echo "</select></td><td colspan=\"3\">&nbsp;</td></tr>\n";
-      echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td><select name=\"year\">";
-      for ($i=1; $i<=6; $i++) {
-        if ($i == $tmp_year) {
-          echo "<option value=\"$i\" selected>" . $string['year'] . " $i</option>";
-        } else {
-          echo "<option value=\"$i\">" . $string['year'] . " $i</option>";
-        }
-      }
-      echo "</select></td>";
-    } else {
-      // Staff editing
-      echo "<tr><td>&nbsp;" . $string['type'] . "<input type=\"hidden\" name=\"year\" value=\"$tmp_year\" /></td><td>";
-      echo "<select name=\"grade\">\n<option value=\"\"></option>\n";
-      ?>
-      <option value="University Lecturer"<?php if ($grade == 'University Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universitylecturer'] ?></option>
-      <option value="University Librarian"<?php if ($grade == 'University Librarian' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universitylibrarian'] ?></option>
-      <option value="University Admin"<?php if ($grade == 'University Admin' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universityadmin'] ?></option>
-      <option value="Technical Staff"<?php if ($grade == 'Technical Staff' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['universitytechnical'] ?></option>
-      <option value="NHS Lecturer"<?php if ($grade == 'NHS Lecturer' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['nhslecturer'] ?></option>
-      <option value="NHS Admin"<?php if ($grade == 'NHS Admin' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['nhsadmin'] ?></option>
-      <option value="Staff External Examiner"<?php if ($grade == 'Staff External Examiner' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['externalexaminer'] ?></option>
-      <option value="Invigilator"<?php if ($grade == 'Invigilator' and $tmp_roles != 'inactive') echo ' selected'; ?>><?php echo $string['invigilator'] ?></option>
-      <option value="inactive"<?php if ($tmp_roles == 'inactive') echo ' selected'; ?>><?php echo $string['inactivestaff'] ?></option>
-      <option value="left"<?php if ($tmp_grade == 'left') echo ' selected'; ?>><?php echo $string['leftuniversity'] ?></option>
-      <?php
-      echo "</select>\n";
-    }
-    echo "<td>&nbsp;" . $string['status'] . "</td><td colspan=\"2\"><select name=\"roles\">";
-    $old_optgroup = '';
-
-    $roles_array = array('#Staff', 'Staff');
-    if ($userObject->has_role('SysAdmin')) {
-      $roles_array[] = 'Staff,Admin';
-      $roles_array[] = 'Staff,SysAdmin';
-    } elseif ($userObject->has_role('Admin')) {
-      $roles_array[] = 'Staff,Admin';
-    }
-    $roles_array[] = 'Staff,Student';
-    $roles_array[] = 'External Examiner';
-    $roles_array[] = 'Invigilator';
-    $roles_array[] = '#Students';
-    $roles_array[] = 'Student';
-    $roles_array[] = 'Graduate';
-    $roles_array[] = 'Left';
-    $roles_array[] = 'Suspended';
-
-    foreach ($roles_array as $value) {
-      if (substr($value,0,1) == '#') {
-        if ($old_optgroup != '') echo "</optgroup>\n";
-        echo "<optgroup label=\"" . $string[substr($value,1)] . "\">\n";
-        $old_optgroup = $value;
-      } else {
-        $display_val = str_replace(' ', '', $value);
-        $display_val = str_replace(',', '', $display_val);
-        $display_val = $string[strtolower($display_val)];
-        if (strtolower($value) == strtolower($tmp_roles)) {
-          echo "<option value=\"$value\" selected>$display_val</option>";
-        } else {
-          echo "<option value=\"$value\">$display_val</option>";
-        }
-      }
-    }
-    echo "</optgroup>\n</select>\n";
-    echo "<input type=\"hidden\" name=\"prev_roles\" value=\"$tmp_roles\" /></td></tr>\n";
-
-    if ($userObject->has_role('SysAdmin')) {
-      echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"username\" value=\"$username\" /></td><td>&nbsp;" . $string['password'] . "</td><td colspan=\"2\">";
-      if ($configObject->get('cfg_use_ldap') and array_reduce($configObject->get('cfg_institutional_domains'), 'NetworkUtils::check_email_domain')) {
-        echo $string['externalauth'];
-      } else {
-        $url_email = urlencode($email);
-        echo "<input type=\"button\" onclick=\"resetPassword('$url_email')\" value=\"{$string['reset']}\" />";
-
-        if ($userObject->has_role('SysAdmin')) {
-          echo "&nbsp;<input type=\"button\" onclick=\"forceResetPassword('$username')\" value=\"{$string['forcereset']}\" />";
-        }
-
-      }
-      echo "<input type=\"hidden\" name=\"old_userID\" value=\"$tmp_id\" /></td></tr>\n";
-    } else {
-      echo "<tr><td>&nbsp;" . $string['username'] . "&nbsp;</td><td><input type=\"text\" size=\"15\" name=\"uneditableusername\" value=\"$username\" disabled /><input type=\"hidden\" name=\"username\" value=\"$username\" /></td><td colspan=\"2\">&nbsp;</td><td>&nbsp;<input type=\"hidden\" name=\"old_userID\" value=\"$tmp_id\" /></td></tr>\n";
-    }
-    echo "<tr><td>&nbsp;" . $string['gender'] . "&nbsp;</td><td><select name=\"gender\">\n";
-    if ($gender == 'Male') {
-      echo "<option value=\"Male\" selected>" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n";
-    } elseif ($gender == 'Female') {
-      echo "<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\" selected>" . $string['female'] . "</option>\n";
-    } else {
-      echo "<option value=\"\"></option>\n<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n";
-    }
-    echo "</select></td><td>&nbsp;" . $string['userid'] . "</td><td colspan=\"2\">" . $userID . "</td></tr>\n";
-    echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
   } else {
-    if (stripos($tmp_roles, 'Student') !== false) {
-      $student_photo = $cfg_web_root . 'users/photos/$username.jpg';
-      $row_no = 10;
-      if (file_exists($student_photo)) {
-        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"photos/$username.jpg\" width=\"180\" height=\"270\" alt=\"Student Photo\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
-      } else {
-        echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td width=\"110\">&nbsp;Name:</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
-      }
-    } else {
-      $row_no = 5;
-      echo "<tr><td valign=\"top\" rowspan=\"$row_no\" width=\"70\" align=\"center\"><img src=\"../artwork/user_icon.png\" width=\"58\" height=\"61\" alt=\"User Icon\" border=\"0\" /></td><td width=\"110\">&nbsp;Name</td><td>$tmp_title $tmp_initials $tmp_surname</td></tr>\n";
-    }
-    if (stripos($tmp_roles,'Student') !== false) {
-      if ($student_id == '') $student_id = $string['unknown'];
-      echo "<tr><td>&nbsp;" . $string['studentid'] . "</td><td>$student_id</td></tr>\n";
-    }
-    echo "<tr><td>&nbsp;" . $string['email'] . "</td><td><a href=\"mailto:$email\">$email</a></td></tr>\n";
-    if (stripos($tmp_roles, 'Student') !== false) {
-      echo "<tr><td>&nbsp;" . $string['yearofstudy'] . "</td><td>{$string['year']} $tmp_year</td></tr>\n";
-      echo "<tr><td>&nbsp;" . $string['course'] . "</td><td>$grade - $description</td></tr>\n";
-    }
-    echo "<tr><td>&nbsp;" . $string['username'] . "</td><td>$username</td></tr>\n";
-    echo "<tr><td>&nbsp;" . $string['password'] . "</td><td style=\"color:#808080\">&lt;{$string['classifiedinfo']}&gt;</td></tr>\n";
-    echo "<tr><td>&nbsp;" . $string['gender'] . "</td><td>$gender</td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
-    echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+    echo "<tr><td rowspan=\"$row_no\" width=\"100\" style=\"vertical-align:top; text-align:center\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
   }
+  echo "<td colspan=\"4\" style=\"vertical-align:top\">&nbsp;<a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"search.php\">" . $string['usersearch'] . "</a><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /><input type=\"button\" id=\"edit\" value=\"" . $string['edit'] . "\" style=\"float:right; width:100px\" class=\"ok\" /></td></tr>\n";
+  if (stripos($user_details['roles'],'Student') !== false) {
+    if ($user_details['student_id'] == '') $user_details['student_id'] = $string['unknown'];
+    $sid = $user_details['student_id'];
+  }  else {
+    $sid = '';
+    $string['studentid'] = '';
+  }
+  echo "<tr><td class=\"field\">" . $string['name'] . "</td><td>" . $user_details['title'] . ' ' . $user_details['first_names'] . ' ' . $user_details['surname'] . "</td>";
+  echo "<td class=\"field\">" . $string['studentid'] . "</td><td>" . $sid . "</td></tr>\n";
+
+  echo "<tr><td class=\"field\">" . $string['email'] . "</td><td><a href=\"mailto:" . $user_details['email'] . "\">" . $user_details['email'] . "</a></td>";
+  if (stripos($user_details['roles'],'Student') !== false) {
+    echo "<td class=\"field\">" . $string['yearofstudy'] . "</td><td>" . $user_details['yearofstudy'] . "</td>";
+  } else {
+    echo "<td class=\"field\"></td><td></td>";
+  }
+  echo "</tr>\n";
+  if (stripos($user_details['roles'], 'Student') !== false) {
+    echo "<tr><td class=\"field\">" . $string['course'] . "</td><td>" . $user_details['grade'] . " - " . $course_details['description'] . "</td>";
+    echo "<td class=\"field\">" . $string['status'] . "</td><td>" . $user_details['roles'] . "</td>";
+    echo "</tr>\n";
+  } else {
+    echo "<tr><td class=\"field\">" . $string['type'] . "</td><td>" . $user_details['grade'] . "</td>";
+    echo "<td class=\"field\">" . $string['status'] . "</td><td>" . $user_details['roles'] . "</td>";
+    echo "</tr>\n";    
+  }
+  echo "<tr><td class=\"field\">" . $string['username'] . "</td><td>" . $user_details['username'] . "</td>";
+  if ($userObject->has_role('SysAdmin')) {
+    echo "<td class=\"field\">" . $string['password'] . "</td><td><input type=\"button\" onclick=\"resetPassword('" .  urlencode($user_details['email']) . "')\" value=\"{$string['reset']}\" />&nbsp;<input type=\"button\" onclick=\"forceResetPassword('" . $user_details['username'] . "')\" value=\"{$string['forcereset']}\" /></td></tr>\n";
+  } else {
+    echo "<td class=\"field\"></td><td></td></tr>\n";
+  }
+  echo "</tr>\n";
+  echo "<tr><td class=\"field\">" . $string['gender'] . "</td><td>" . $user_details['gender'] . "</td>";
+  if ($userObject->has_role('SysAdmin')) {
+    echo "<td class=\"field\">Rog&#333; ID</td><td>$userID</td></tr>\n";
+  } else {
+    echo "<td class=\"field\"></td><td></td></tr>\n";
+  }
+  echo "</tr>\n";
+
+  
 ?>
 </form>
 </table>
@@ -615,13 +424,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Log_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo drawTabs('Log', 6, '', $tmp_roles, $bg_color);
-
-  $sortby = 'started';
-  if (isset($_GET['sortby'])) $sortby = $_GET['sortby'];
-
-  $ordering = 'desc';
-  if (isset($_GET['ordering'])) $ordering = $_GET['ordering'];
+  echo drawTabs('Log', 6, '', $user_details['roles'], $bg_color, $string);
 
   $old_q_paper = '';
   $old_started = '';
@@ -630,20 +433,14 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $old_paper_title = '';
   $results_no = 0;
   $paper = array();
-
-  if ($ordering == 'asc') {
-    $new_order = 'desc';
-  } else {
-    $new_order = 'asc';
-  }
   
   echo "<tr><td>";
-  $table_order = array(''=>18, $string['papername']=>300, $string['type']=>150, $string['started']=>100, $string['ipaddress']=>100);
-  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+  $table_order = array('', $string['papername'], $string['type'], $string['started'], $string['ipaddress']);
+  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\" style=\"width:100%\">\n";
   echo "<thead>\n";
   echo "<tr>\n";
-  foreach ($table_order as $display => $col_width) {
-    echo "<th style=\"width:" . $col_width . "px\" class=\"coltitle\">$display</th>\n";
+  foreach ($table_order as $col_title) {
+    echo "<th style=\"background-color:#1E3C7B\" class=\"coltitle\">$col_title</th>\n";
   }
 ?>
   </tr>
@@ -663,7 +460,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 
   if ($log_viewable) {
-    if (stripos($tmp_roles, 'External Examiner') !== false) {      // Get the papers the External is down to review.
+    if (stripos($user_details['roles'], 'External Examiner') !== false) {      // Get the papers the External is down to review.
       $external_array = array();
 
       $sql = "SELECT DISTINCT
@@ -681,7 +478,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 							ORDER BY
 								paper_title";
       $stmt = $mysqli->prepare($sql);
-      $stmt->bind_param('ii', $tmp_id, $tmp_id);
+      $stmt->bind_param('ii', $userID, $userID);
       $stmt->execute();
       $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $started, $display_started);
       while ($stmt->fetch()) {
@@ -709,7 +506,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
       foreach ($queries as $query_sql) {
         $stmt = $mysqli->prepare($query_sql);
-        $stmt->bind_param('i', $tmp_id);
+        $stmt->bind_param('i', $userID);
         $stmt->execute();
         $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $ipaddress, $metadataID);
         while ($stmt->fetch()) {
@@ -764,9 +561,6 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
       $stmt->close();
     }
-    if ($results_no > 0) {
-      $paper = array_csort($paper, $sortby, $ordering);
-    }
 
     for ($i=0; $i<$results_no; $i++) {
       if (strpos($paper[$i]['q_paper'],'[deleted') !== false ) {
@@ -774,16 +568,16 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
       }
       switch ($paper[$i]['type']) {
         case '0':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '1':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '2':
-          if (stripos($tmp_roles, 'External Examiner') !== false) {
-            echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
+          if (stripos($user_details['roles'], 'External Examiner') !== false) {
+            echo "<tr><td><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           } else {
-            echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
+            echo "<tr><td><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           }
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
           echo ">" . $paper[$i]['q_paper'] . "</a></td><td";
@@ -791,28 +585,28 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
           echo ">" . $string['summative'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '3':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/survey_16.gif\" width=\"16\" height=\"16\" alt=\"Survey data is anonymous, no entry.\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['survey'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><img src=\"../artwork/survey_16.gif\" width=\"16\" height=\"16\" alt=\"Survey data is anonymous, no entry.\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['survey'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '4':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','$username','" . str_replace("'","&#8217;",$tmp_surname) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $tmp_surname . "\" /></a></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr><td><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','$username','" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case '5':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/offline_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $string['offlinepaper'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr><td><img src=\"../artwork/offline_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>" . $paper[$i]['q_paper'] . "</td><td>" . $string['offlinepaper'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case '6':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/peer_review_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr><td><img src=\"../artwork/peer_review_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case 'Objectives-based feedback report':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/objectives_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['Objectives Feedback report'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><img src=\"../artwork/objectives_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['Objectives Feedback report'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case 'Question-based feedback report':
-          echo "<tr style=\"height:17px\"><td style=\"text-align:right\"><img src=\"../artwork/questions_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['Questions Feedback report'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><img src=\"../artwork/questions_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['Questions Feedback report'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case $string['pagenotfound']:
-          echo "<tr style=\"height:17px; color:#C00000\"><td style=\"text-align:right\"><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"color:#C00000\"><td><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case $string['accessdenied']:
-          echo "<tr style=\"height:17px; color:#C00000\"><td style=\"text-align:right\"><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>&nbsp;" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr style=\"color:#C00000\"><td><img src=\"../artwork/access_denied_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>" . $paper[$i]['q_paper'] . "</td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
       }
     }
@@ -841,15 +635,15 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   $results->fetch();
   $results->close();
 
-  echo drawTabs('Modules', 4, '', $tmp_roles, $bg_color);
+  echo drawTabs('Modules', 4, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\" style=\"width:20px\">&nbsp;</td><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['name'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td></tr>\n";
   $old_year = '';
   $row_no = 0;
   $user_modules = array();
   $current_year = false;
 
-  $results = $mysqli->prepare("SELECT DISTINCT modules.id, modules.moduleid, fullname, modules_student.calendar_year, attempt FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND userID=? ORDER BY modules_student.calendar_year DESC, modules.moduleid");
-  $results->bind_param('i', $tmp_id);
+  $results = $mysqli->prepare("SELECT DISTINCT modules.id, modules.moduleid, fullname, modules_student.calendar_year, attempt FROM (modules_student, modules) WHERE modules_student.idMod = modules.id AND userID = ? ORDER BY modules_student.calendar_year DESC, modules.moduleid");
+  $results->bind_param('i', $userID);
   $results->execute();
   $results->store_result();
   $results->bind_result($idMod, $moduleid, $fullname, $calendar_year, $attempt);
@@ -869,7 +663,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   if ($current_year == false) {
     echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year();
     if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-      echo "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+      echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
     }
     echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
@@ -878,11 +672,11 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
     if ($user_modules[$i]['calendar_year'] != $old_year) {
       echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
       if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year()) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
-        echo "&nbsp;&nbsp;<a href=\"#\" style=\"color:blue\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','$grade'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+        echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
       }
-      echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+      echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    echo "<tr><td></td><td><a style=\"color:blue\" href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a style=\"color:blue\" href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
+    echo "<tr><td></td><td><a href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
     $old_year = $user_modules[$i]['calendar_year'];
   }
 
@@ -895,9 +689,9 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=admin\" method=\"post\">";
+  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=admin\" method=\"post\">";
 
-  echo drawTabs('Admin', 1, '', $tmp_roles, $bg_color);
+  echo drawTabs('Admin', 1, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
 
@@ -905,7 +699,7 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
 
   $old_faculty = '';
   $admin_school_no = 0;
-  $results = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE schools.facultyID=faculty.id ORDER BY faculty.name, school");
+  $results = $mysqli->prepare("SELECT schools.id, faculty.name, school FROM schools, faculty WHERE schools.facultyID = faculty.id ORDER BY faculty.name, school");
   $results->execute();
   $results->bind_result($schoolID, $faculty, $school);
   while ($results->fetch()) {
@@ -945,13 +739,13 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Notes_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo drawTabs('Notes', 4, '', $tmp_roles, $bg_color);
+  echo drawTabs('Notes', 4, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;" . $string['date'] . "</td><td class=\"coltitle\">" . $string['paper'] . "</td><td class=\"coltitle\">" . $string['note'] . "</td><td class=\"coltitle\">" . $string['author'] . "</td></tr>\n";
   
 	echo "<tr><td colspan=\"4\"><input type=\"button\" name=\"createname\" onclick=\"newStudentNote()\" value=\"" .  $string['newnote'] . "\" /></td></tr>\n";
 
   $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \" {$configObject->get('cfg_short_date')}\"), paper_id, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID = users.id AND student_notes.userID = ?");
-  $results->bind_param('i', $tmp_id);
+  $results->bind_param('i', $userID);
   $results->execute();
   $results->store_result();
   $results->bind_result($note, $note_date, $note_paper_id, $paper_title, $note_author);
@@ -968,13 +762,13 @@ if (isset($_POST['update']) and $demo == false and $userObject->has_role(array('
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left; display:none\">\n";
   }
-  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=accessibility\" method=\"post\">";
-  echo drawTabs('Accessibility', 1, '', $tmp_roles, $bg_color);
+  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=accessibility\" method=\"post\">";
+  echo drawTabs('Accessibility', 1, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"padding-top:20px; text-align:left\">";
 
   $result = $mysqli->prepare("SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss, medical, breaks FROM special_needs WHERE userID = ? LIMIT 1");
-  $result->bind_param('i', $tmp_id);
+  $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
   $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
@@ -1184,8 +978,8 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$tmp_id&tab=metadata\" method=\"post\">";
-  echo drawTabs('Metadata', 5, '', $tmp_roles, $bg_color);
+  echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=metadata\" method=\"post\">";
+  echo drawTabs('Metadata', 5, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
   $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND userID = ?");
   $stmt->bind_param('i', $userID);
@@ -1226,7 +1020,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo drawTabs('Teams', 4, '', $tmp_roles, $bg_color);
+  echo drawTabs('Teams', 4, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
   if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
     echo "<tr><td colspan=\"4\">&nbsp;<img onclick=\"editMultiTeams(); return false;\" src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editteams'] . "\" />&nbsp;<a href=\"\" onclick=\"editMultiTeams(); return false;\">" . $string['editteams'] . "</a></td></tr>\n";
@@ -1234,7 +1028,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
 
   if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $userID) {   // Only allow Admin/SysAdmin or current user to view this information
     $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? ORDER BY moduleID");
-    $result->bind_param('i', $tmp_id);
+    $result->bind_param('i', $userID);
     $result->execute();
     $result->store_result();
     $result->bind_result($moduleID, $fullname, $added, $type);
