@@ -19,6 +19,7 @@ require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Nastavení uživatelů';
 $string['usersearch'] = 'User Search';
+$string['user'] = 'User:';
 $string['edit'] = 'Edit';
 $string['status'] = 'Status'; 
 $string['student'] = 'Student';

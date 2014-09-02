@@ -28,6 +28,7 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
+
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/users/search.php');
 
 if (isset($_GET['moduleID'])) {
@@ -168,67 +169,67 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
   </table>
 
 <?php
-  if (isset($state['advanced']) and $state['advanced'] == 'true') {
+  if (isset($state['advanced']) and $state['advanced'] == 'table') {
     echo "<table id=\"menu3\" style=\"width:100%; display:" . $state['advanced'] . "\">\n";
   } else {
     echo "<table id=\"menu3\" style=\"width:100%; display:none\">\n";
   }
   echo '<tr><td>';
   if (isset($state['chkbox1']) and $state['chkbox1'] == 'false') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox1\" name=\"students\" /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox1\" name=\"students\" checked /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" checked /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
   }
   if (isset($state['chkbox2']) and $state['chkbox2'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" checked /><label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" checked /><label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" /><label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" /><label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
   }
   if (isset($state['chkbox3']) and $state['chkbox3'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" checked /><label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" checked /><label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" /><label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" /><label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
   }
   if (isset($state['chkbox4']) and $state['chkbox4'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" checked /><label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" checked /><label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" /><label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" /><label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
   }
   //----------------------------
   echo "<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#808080; color:#808080\" />\n";
   if (isset($state['chkbox5']) and $state['chkbox5'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox5\" name=\"staff\" checked /><label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" checked /><label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox5\" name=\"staff\" /><label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" /><label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
   }
   if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
     if (isset($state['chkbox6']) and $state['chkbox6'] == 'true') {
-      echo "<div><input type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /><label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /><label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
     } else {
-      echo "<div><input type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /><label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /><label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
     }
   }
   if ($userObject->has_role('SysAdmin')) {
     if (isset($state['chkbox10']) and $state['chkbox10'] == 'true') {
-      echo "<div><input type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" checked /><label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" checked /><label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
     } else {
-      echo "<div><input type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" /><label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" /><label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
     }
   }
   if (isset($state['chkbox7']) and $state['chkbox7'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" checked /><label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" checked /><label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" /><label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" /><label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
   }
   if (isset($state['chkbox8']) and $state['chkbox8'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox8\" name=\"externals\" checked /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" checked /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox8\" name=\"externals\" /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
   }
   if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
-    echo "<div><input type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" checked /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" checked /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
   } else {
-    echo "<div><input type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
   }
 ?>
 </td></tr>

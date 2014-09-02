@@ -336,6 +336,8 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   
   require '../tools/colour_picker/colour_picker.inc';
   require '../include/user_search_options.inc';
+  require '../include/toprightmenu.inc';
+	echo draw_toprightmenu();
 
   if ($demo == true) {
     // Hide the personal details.
@@ -343,7 +345,6 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     $user_details['first_names'] = demo_replace($user_details['first_names'], $demo);
     $user_details['initials'] = demo_replace($user_details['initials'], $demo);
     $user_details['student_id'] = demo_replace_number($user_details['student_id'], $demo);
-    //$user_details['username'] = demo_replace_username($user_details['username'], $demo);
     $user_details['email'] = demo_replace_username($user_details['email'], $demo);
   }
 
@@ -363,7 +364,6 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     $student_photo = $cfg_web_root . "users/photos/" . $user_details['username'] . ".jpg";
     if (file_exists($student_photo)) {
       $photo_size = getimagesize($student_photo);
-      //echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $user_details['username'] . ".jpg\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       if (isset($demo) and $demo == true) {
         echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"./pixel_photo.php?username=" . $user_details['username'] . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       } else {
@@ -375,7 +375,11 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   } else {
     echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
   }
-  echo "<td colspan=\"4\" style=\"vertical-align:top\">&nbsp;<a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"search.php\">" . $string['usersearch'] . "</a><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /><input type=\"button\" id=\"edit\" value=\"" . $string['edit'] . "\" style=\"float:right; width:100px\" class=\"ok\" /></td></tr>\n";
+  echo "<td colspan=\"4\" style=\"vertical-align:top\">&nbsp;<a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"search.php\">" . $string['usersearch'] . "</a><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />";
+  if ($userObject->has_role('SysAdmin')) {
+    echo "<input type=\"button\" id=\"edit\" value=\"" . $string['edit'] . "\" style=\"float:right; width:100px\" class=\"ok\" />";
+  }
+  echo "</td></tr>\n";
   if (stripos($user_details['roles'],'Student') !== false) {
     if ($user_details['student_id'] == '') $user_details['student_id'] = $string['unknown'];
     $sid = $user_details['student_id'];
@@ -383,7 +387,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     $sid = '';
     $string['studentid'] = '';
   }
-  echo "<tr><td class=\"field\">" . $string['name'] . "</td><td>" . $user_details['title'] . ' ' . $user_details['first_names'] . ' ' . $user_details['surname'] . "</td>";
+  echo "<tr><td colspan=\"2\" class=\"page_title\" style=\"padding-left:2px !important\">" . $string['user'] . " <span style=\"font-weight:normal\">" . $user_details['title'] . ' ' . $user_details['first_names'] . ' ' . $user_details['surname'] . "</span></td>";
   echo "<td class=\"field\">" . $string['studentid'] . "</td><td>" . $sid . "</td></tr>\n";
 
   echo "<tr><td class=\"field\">" . $string['email'] . "</td><td><a href=\"mailto:" . $user_details['email'] . "\">" . $user_details['email'] . "</a></td>";
