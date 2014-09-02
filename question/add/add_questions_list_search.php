@@ -113,7 +113,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     <option value="true_false" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'true_false') echo 'selected '; ?>><?php echo $string['true_false']; ?></option>
   </select>
   <?php
-    search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', 100);
+    search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', $string, $state, 100);
   ?>
   &nbsp;<input type="submit" value=" <?php echo $string['search']; ?> " name="search" />
   </form>

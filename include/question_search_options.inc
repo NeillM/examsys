@@ -365,10 +365,10 @@ if (!isset($status_array)) {
 }
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', 100); ?></div>
-  <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status_dropdown($status_array); ?></div>
-  <div style="margin-left:4px"><?php echo $string['blooms'].': '; search_utils::display_blooms_dropdown(); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', $string, $state, 100); ?></div>
+  <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status($status_array, $state); ?></div>
+  <div style="margin-left:4px"><?php echo $string['blooms'].': '; search_utils::display_blooms_dropdown($string, $state); ?></div>
 
   <div style="margin-left:4px"><?php echo $string['keyword'].': '; ?> <select style="max-width:185px" name="keywordID"><br />
   <option value=""></option>

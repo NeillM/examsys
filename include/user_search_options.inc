@@ -135,7 +135,7 @@ if (isset($username) and $search_surname == '' and $search_username == '' and $s
 <tr><td style="padding-left:0"><input type="text" name="search_username" size="10" value="<?php echo $search_username ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="10" value="<?php echo $search_student_id ?>" /></td></tr>
 </table>
 <div><?php echo $string['module'] ?><br /><?php 
-search_utils::display_staff_modules_dropdown($userObject, $mysqli); 
+search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); 
 ?></div>
 
 <div><?php echo $string['academicyear'] ?><br /><select name="calendar_year">

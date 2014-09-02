@@ -214,8 +214,8 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 ?>
   <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module'] ?> <?php search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner'] ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers', 100); ?></div>
+  <div style="margin-left:4px"><?php echo $string['module'] ?> <?php search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner'] ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers', $string, $state, 100); ?></div>
 </td></tr>
 </table>
 
