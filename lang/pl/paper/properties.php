@@ -67,7 +67,7 @@ $string['overallclass1'] = '&lt;Automatyczna&gt;';
 $string['overallclass2'] = 'Jednoznacznie niezdany | Na granicy | Jednoznacznie zdany';
 $string['overallclass3'] = 'Niezdany | Na granicy niezdania | Na granicy zdania | Zdany | Zdecydowanie zdany';
 $string['overallclass4'] = 'Jednoznacznie niezdany | Na granicy | Jednoznacznie zdany | Wyróżniająco zdany';
-$string['overallclass5'] = 'Niezdany', 'Zdany';
+$string['overallclass5'] = 'Niezdany | Zdany';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['distinction'] = 'Wyróżnienie';
 $string['method'] = 'Metoda';
@@ -87,7 +87,7 @@ $string['allpeerspergroup'] = 'wszystkich członków grupy';
 $string['singlereview'] = 'recenzja indywidualna';
 $string['numberfrom'] = 'Numeruj od';
 $string['groupdetails'] = 'Szczegóły dot. grupy';
-$string['tooltip_random'] = 'Rogo oszacuje jaką ocenę dostałby student odpowiadając na wszystkie pytania całkowicie losowo. Następnie odpowiednio skalowane są procenty.';
+$string['tooltip_random'] = 'Rog&#333; oszacuje jaką ocenę dostałby student odpowiadając na wszystkie pytania całkowicie losowo. Następnie odpowiednio skalowane są procenty.';
 $string['tooltip_calculator'] = 'Kalkulator JavaScript dostępny jest dla studentów podczas egzaminu.';
 $string['tooltip_audio'] = 'Na stronie informacyjnej egzaminu umieszczony będzie próbny klip audio, umożliwiający studentom sprawdzenie poziomu dźwięku.';
 
