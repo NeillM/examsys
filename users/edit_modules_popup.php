@@ -36,10 +36,8 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-function drawTabs($current_tab) {
-  global $string;
-
-  $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
+function drawTabs($current_tab, $string) {
+  $html = '<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%; background-color:#F1F5FB"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
   for ($i=1; $i<=3; $i++) {
     if ($i == $current_tab) {
       $html .= "<td class=\"tabon\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
@@ -51,24 +49,24 @@ function drawTabs($current_tab) {
   return $html;
 }
 
-function list_modules($mod, $id, $student_mod) {
+function list_modules($mod, $id, $student_mod, $string) {
   $old_letter = '';
 
   if ($id == '1') {
-    echo "<div style=\"display:block; width:100%; border-bottom:6px\" id=\"list$id\">";
+    echo "<div class=\"content\" id=\"list$id\">";
   } else {
-    echo "<div style=\"display:none; width:100%; border-bottom:6px\" id=\"list$id\">";
+    echo "<div class=\"content\" id=\"list$id\">";
   }
 
-  echo drawTabs($id);
+  echo drawTabs($id, $string);
 
   if ($id == '1') {
-    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
+    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
   } else {
-    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
+    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
   }
 
-  $loop=0;
+  $loop = 0;
   foreach ($mod as $idMod => $mod_info) {
     $moduleid = $mod_info['moduleid'];
     $fullname = $mod_info['fullname'];
@@ -138,8 +136,39 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <style type="text/css">
-    body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
-    td {font-size:90%}
+    html {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: 90%;
+      background-color: #F1F5FB;
+    }
+    .content {
+      position: absolute;
+      overflow-y: no-scroll;
+      top: 0;
+      bottom: 40px;
+      width: 100%;
+      font-size: 90%;
+      background-color: white;
+      margin-bottom: 30px;
+      width: 98%;
+      margin-left: 1%;
+      margin-right: 1%;
+    }
+    .footer {
+      height: 40px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+    }
 		.r1 {
 			text-indent:-23px;
 			padding-left:43px;
@@ -171,22 +200,6 @@ if (isset($_POST['submit'])) {
 
       $('#' + tabID).show();
     }
-
-    function resizeList() {
-      winH = $(document.body).height() - 90;
-
-      $('#list1').css('height', winH + 'px');
-      $('#list2').css('height', winH + 'px');
-      $('#list3').css('height', winH + 'px');
-    }
-		
-    $(function () {
-			resizeList();
-			
-			$(window).resize(function(){
-				resizeList();
-			});
-		});
   </script>
 </head>
 <body>
@@ -196,7 +209,7 @@ if (isset($_POST['submit'])) {
   // Get existing modules for the user in passed calendar year.
   $student_modules = array();
   $result = $mysqli->prepare("SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ?");
-  $result->bind_param('is', $_GET['userID'], $session);
+  $result->bind_param('is', $userID, $session);
   $result->execute();
   $result->bind_result($idMod, $moduleid, $attempt);
   while ($result->fetch()) {
@@ -222,19 +235,19 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   if ($mod_count == 0) {
-    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . $string['nomodules'] . " <strong>" . $_GET['session'] . "</strong>.</div>";
+    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . $string['nomodules'] . " <strong>" . $session . "</strong>.</div>";
   } else {
-    list_modules($modules, 1, $student_modules);
-    list_modules($modules, 2, $student_modules);
-    list_modules($modules, 3, $student_modules);
+    list_modules($modules, 1, $student_modules, $string);
+    list_modules($modules, 2, $student_modules, $string);
+    list_modules($modules, 3, $student_modules, $string);
   }
 
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"userID\" value=\"" . $_GET['userID'] . "\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"session\" value=\"" . $session . "\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"session\" value=\"$session\" /></div></td>\n</tr>\n";
 ?>
-<br /><br />
-<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+
+  <div class="footer" align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok'] ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

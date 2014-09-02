@@ -83,8 +83,44 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-    body {font-size:90%; background-color:#F1F5FB}
-    hr {width:100%; border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5}
+    html {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: 90%;
+      background-color: #F1F5FB;
+    }
+    .header {
+      height: 60px;
+      width: 100%;
+      position: absolute;
+    }
+    .content {
+      position: absolute;
+      overflow-y: scroll;
+      top: 64px;
+      bottom: 50px;
+      width: 98%;
+      border: 1px solid #CCD9EA;
+      font-size: 90%;
+      background-color: white;
+      margin-left: 1%;
+      margin-right: 1%;
+    }
+    .footer {
+      height: 40px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+    }
+    hr {width:100%; border:0; height:1px; color:#E5E5E5; background-color:whit}
     .r1 {background-color:white}
     .r2 {background-color:#FFBD69}
     .g {color:#808080}
@@ -102,33 +138,19 @@ if (isset($_POST['submit'])) {
         $('#' + objectID).removeClass('r1');
       }
     }
-    
-    function resizeList() {
-      winH = $(window).height() - 120;
-
-      $('#list').css('height', winH + 'px');
-    }
-		
-    $(function () {
-			resizeList();
-			
-			$(window).resize(function(){
-				resizeList();
-			});
-		});	
   </script>
 </head>
 <body>
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
 
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" class="header">
   <tr><td style="width:66px; height:55px; background-color:white; border-bottom:1px solid #CCD9EA; text-align:center"><img src="../artwork/user_accounts_icon.png" width="48" height="48 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
   </table>
 
 <?php
   $team_members = UserUtils::get_staff_modules_list_by_modID($_GET['module'], $mysqli);
 
-  echo "<div style=\"height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:10px 4px 6px 4px; font-size:90%\" id=\"list\">";
+  echo "<div class=\"content\" id=\"list\">";
   $staff_no = 0;
   $old_letter = '';
 
@@ -168,7 +190,7 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"staff_no\" value=\"$staff_no\" /></div></td>\n</tr>\n";
 ?>
 
-<div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div class="footer" style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

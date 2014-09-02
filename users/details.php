@@ -229,7 +229,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     }
 
     function editMultiTeams() {
-      editwin=window.open("../folder/edit_multi_teams_popup.php?userID=<?php echo $userID ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      editwin=window.open("../module/edit_multi_teams_popup.php?userID=<?php echo $userID ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }
