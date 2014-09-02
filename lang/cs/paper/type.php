@@ -17,18 +17,18 @@
 require_once '../lang/' . $language . '/include/paper_options.inc';
 
 $string['showretired'] = 'Zobrazit neplatné';
-$string['screen'] = 'Screen';
-$string['screens'] = 'Screens';
-$string['mins'] = 'mins';
-$string['SelfenrolURL'] = "Self-enrol URL";
-$string['createnewpaper'] = 'Create new Paper';
-$string['manageobjectives'] = 'Manage Objectives';
-$string['managekeywords'] = 'Manage Keywords';
-$string['referencematerial'] = 'Reference Material';
-$string['type'] = 'Type';
-$string['author'] = 'Author';
-$string['create'] = 'Create';
-$string['nomodulesset'] = 'No modules set';
-$string['unspecifiedsession'] = 'Unspecified Session';
-$string['examcalendar'] = 'Summative Exam Calendar';
+$string['screen'] = 'Obrazovka';
+$string['screens'] = 'Obrazovky';
+$string['mins'] = 'minut';
+$string['SelfenrolURL'] = "URL pro samo-přihlášení";
+$string['createnewpaper'] = 'Vytvořit Nový dokument';
+$string['manageobjectives'] = 'Správa Cílů';
+$string['managekeywords'] = 'Správa Klíčových slov';
+$string['referencematerial'] = 'Referenční Materiál';
+$string['type'] = 'Typ';
+$string['author'] = 'Autor';
+$string['create'] = 'Vytvořit';
+$string['nomodulesset'] = 'Není nastaven žádný Modul';
+$string['unspecifiedsession'] = 'Nespecifikované Sezení';
+$string['examcalendar'] = 'Kalendář Sumativního testování';
 ?>

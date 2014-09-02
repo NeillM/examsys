@@ -19,9 +19,8 @@ require './lang/' . $language . '/include/paper_types.inc';
 
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
-$string['createfolder'] = 'Create folder';
+$string['createfolder'] = 'Vytvořit Složku';
 $string['mypersonalkeywords'] = 'Moje klíčová slova';
-$string['createnewpaper'] = 'Nový dokument';
 $string['reviewed'] = 'Hodnoceno';
 $string['notreviewed'] = 'Nehodnoceno';
 $string['myfolders'] = 'Moje složky';
@@ -32,7 +31,7 @@ $string['allmodules'] = 'Všechny moduly...';
 $string['allmodulesinschool'] = 'Všechny moduly ve škole...';
 $string['myrecentpapers'] = 'Moje naposledy otevřené dokumenty';
 $string['create'] = 'Vytvořit';
-$string['foldername'] = 'Folder Name';
+$string['foldername'] = 'Název Složky';
 $string['search'] = 'Hledat';
 $string['createnewquestion'] = 'Nová úloha';
 $string['questions'] = 'Úlohy';
@@ -48,7 +47,7 @@ $string['duplicatefoldername'] = 'Duplicitní název složky, použijte, prosím
 $string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, prosím, kontaktujte:';
 $string['papersforreview'] = 'Dokumenty k rezenci';
 $string['deadline'] = 'Uzávěrka:';
-$string['recent'] = 'Recent';
-$string['unassigned'] = 'Unassigned';
-$string['unassignedmsg'] = 'Questions/papers not on any module';
+$string['recent'] = 'Nedávné';
+$string['unassigned'] = 'Nepřiřazené';
+$string['unassignedmsg'] = 'Úlohy/dokumenty nejsou v žádném modulu';
 ?>

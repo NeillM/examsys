@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['classlist'] = 'OSCE: Class List';
-$string['error1'] = 'No module selected so no students could be found.';
-$string['error2'] = 'No academic year set so no students could be found.';
-$string['error3'] = 'No students have been found on the module.';
+$string['error1'] = 'Nebyl vybrán žádný Modul, proto nemohli být nalezeni žádní Studenti.';
+$string['error2'] = 'Nebyl nastaven žádný Akademický rok, proto nemohli být nalezeni žádní Studenti.';
+$string['error3'] = 'V tomto Modulu nebyli nalezeni žádní Studenti.';
 ?>

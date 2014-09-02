@@ -16,7 +16,7 @@
 
 $string['frequencydiscrimination'] = 'Frekvenční & diskriminační analýza';
 $string['reporttitle'] = 'Frekvenční &amp; diskriminační (U-L) analýza';
-$string['PaperNotAttempted'] = "O tento dokument se nikdo nepokusil.";
+$string['PaperNotAttempted'] = "Tento test se nikdo nepokusil vyplnit.";
 $string['NotEnoughData'] = "Nedostatek údajů k výpočtu nejlepší a nejhorší skupiny. Zvolte vyšší procento, prosím.";
 $string['AllItemsCorrect'] = "Všechny položky správně";
 $string['totalcandidatenumber'] = 'Celkový počet kandidátů';
@@ -31,7 +31,7 @@ $string['BottomGroup'] = "Nejhorší skupina";
 $string['meanWordCount'] = "průměr počtu slov";
 $string['groupsizes'] = 'Horní/spodní velikost skupiny';
 $string['pergroup'] = 'za skupinu';
-$string['boldstems'] = 'Bold analýza??';
+$string['boldstems'] = 'Tlustě označené';
 $string['correctanswers'] = 'reprezentuje správné odpovědi';
 $string['p_definition'] = 'Obtížnost položky (podíl správných odpovědí studentů)';
 $string['d_definition'] = 'hodnota citlivosti';
@@ -60,6 +60,6 @@ $string['save'] = 'Uložit výjimky';
 $string['screen'] = 'Obrazovka';
 $string['warning1'] = 'Varování: Obtížnost je menší než 0.2';
 $string['warning2'] = 'Varování: Rozlišení je menší než 0.15';
-$string['abstain'] = 'Abstain';
-$string['unmarkedscripts'] = '%d unmarked scripts';
+$string['abstain'] = 'Zdrželo se';
+$string['unmarkedscripts'] = '%d neohodnocených skript';
 ?>

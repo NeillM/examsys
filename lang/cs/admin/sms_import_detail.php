@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['modules'] = 'Moduly';
-$string['academicyear'] = 'Academic Year';
+$string['academicyear'] = 'Akademický rok';
 $string['schools'] ='Školy';
 $string['smsimportsummary'] = 'Přehled nahraných SMS';
 $string['smsimportson'] = 'SMS nahráno na';

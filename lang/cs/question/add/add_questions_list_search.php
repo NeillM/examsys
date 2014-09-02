@@ -26,5 +26,5 @@ $string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
 $string['locked'] = 'Uzamčeno';
 $string['anyowner'] = '(libovolný vlastník)';
 $string['myquestionsonly'] = '(pouze moje úlohy)';
-$string['status'] = 'Status'; //cognate
+$string['status'] = 'Status';
 ?>

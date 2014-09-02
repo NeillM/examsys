@@ -17,6 +17,6 @@
 $string['deniedlogwarnings'] = 'Upozornění na zamítnutá přihlášení';
 $string['date'] = 'Datum';
 $string['user'] = 'Uživatel';
-$string['url'] = 'URL'; //cognate
+$string['url'] = 'URL';
 $string['message'] = 'Vzkaz';
 ?>

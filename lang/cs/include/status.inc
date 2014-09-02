@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['status'] = 'Status'; //cognate
+$string['status'] = 'Status';
 $string['anystatus'] = '(libovolný status)';
 $string['anynonretiredstatus'] = '(libovolný platný status)';
 $string['normal'] = 'Normální';
 $string['retired'] = 'Neplatná';
 $string['incomplete'] = 'Nedokončená';
 $string['experimental'] = 'Pokusná';
-$string['beta'] = 'Beta '; //cognate
+$string['beta'] = 'Beta ';
 ?>

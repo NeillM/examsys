@@ -16,5 +16,5 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['msg'] = 'Jste si skutečně jisti, že chcete tento kurz odstranit ?';
+$string['msg'] = 'Jste si skutečně jisti, že chcete tento kurz odstranit?';
 ?>

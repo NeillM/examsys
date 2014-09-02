@@ -14,15 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['accessibility'] = 'Accessibility';
-$string['extratime'] = 'Extra time';
-$string['backgroundcolour'] = 'Background colour';
-$string['foregroundcolour'] = 'Foreground colour';
-$string['markscolour'] = 'Marks colour';
-$string['themecolour'] = 'Theme/Heading colour';
-$string['labelcolour'] = 'Label colour';
-$string['unansweredbackground'] = 'Unanswered background';
-$string['questiondismiss'] = 'Question dismiss';
-$string['fontsize'] = 'Font size';
-$string['typeface'] = 'Typeface';
+$string['accessibility'] = 'Dostupnost';
+$string['extratime'] = 'Extra čas';
+$string['backgroundcolour'] = 'Barva pozadí';
+$string['foregroundcolour'] = 'Barva písma';
+$string['markscolour'] = 'Barva Hodnocení';
+$string['themecolour'] = 'Barva Nadpisu,Témata';
+$string['labelcolour'] = 'Barva štítku';
+$string['unansweredbackground'] = 'Barva pod Nezodpovězenými úlohami';
+$string['questiondismiss'] = 'Opustit úlohu';
+$string['fontsize'] = 'Velikost písma';
+$string['typeface'] = 'Typ písma';
 ?>

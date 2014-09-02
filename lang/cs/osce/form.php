@@ -22,11 +22,11 @@ $string['save'] = 'Uložit';
 $string['paperavailable'] = 'Dokument, u kterého se pokoušíte o přístup, je k dispozici pouze v následujících časech:';
 $string['from'] = 'Z';
 $string['to'] = 'Do';$string['marking3'] = array('Neuspěl', 'Na hraně', 'Uspěl');
-$string['marking3'] = array('Clear Fail', 'Borderline', 'Clear Pass');
+$string['marking3'] = array('Neuspěl', 'Na hraně', 'Uspěl');
 $string['marking4'] = array('Nedostatečně', 'Dostatečně', 'Dobře', 'Chvalitebně', 'Výborně');
 $string['marking5'] = array('Nepostačující', 'Postačující');
 $string['marking6'] = array('Neuspěl', 'Na hraně', 'Uspěl', 'Uspěl s vyznamenáním');
-$string['marking7'] = array('Fail', 'Pass');
-$string['savefailed'] = 'Save Failed!';	// translate
-$string['tryagain'] = 'Please try again.';	// translate
+$string['marking7'] = array('Neuspěl', 'Uspěl');
+$string['savefailed'] = 'Uložení se nezdařilo!';	
+$string['tryagain'] = 'Prosím, zkuste znovu.';	
 ?>

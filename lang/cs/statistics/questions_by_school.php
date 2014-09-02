@@ -14,25 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['statistics'] = 'Statistics';
-$string['questionsbyschool'] = 'Questions by School';
-$string['school'] = 'School';
-$string['info'] = 'Information Block';
-$string['keyword_based'] = 'Keyword-based';
-$string['random'] = 'Random Block';
-$string['dichotomous'] = 'Dichotomous';
+$string['statistics'] = 'Statistika';
+$string['questionsbyschool'] = 'Úlohy dle Školy';
+$string['school'] = 'Škola';
+$string['info'] = 'Informační blok';
+$string['keyword_based'] = 'Úloha s Klíčovým slovem';
+$string['random'] = 'Náhodný blok';
+$string['dichotomous'] = 'Dichotomoie';
 $string['extmatch'] = 'EMQ';
-$string['blank'] = 'Fill-in-the-Blank';
+$string['blank'] = 'Doplň Prázdné';
 $string['hotspot'] = 'Image Hotspot';
-$string['labelling'] = 'Labelling';
+$string['labelling'] = 'Štítkování';
 $string['likert'] = 'Likert Scale';
 $string['matrix'] = 'Matrix';
 $string['mcq'] = 'MCQ';
 $string['mrq'] = 'MRQ';
-$string['rank'] = 'Ranking';
+$string['rank'] = 'Přiřazování';
 $string['sct'] = 'SCT';
 $string['textbox'] = 'Textbox';
-$string['true_false'] = 'True/False';
-$string['area'] = 'Area';
-$string['enhancedcalc'] = 'Calculation';
+$string['true_false'] = 'Pravda/Nepravda';
+$string['area'] = 'Plocha';
+$string['enhancedcalc'] = 'Početní úloha';
 ?>

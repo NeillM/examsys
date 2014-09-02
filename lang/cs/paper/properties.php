@@ -23,8 +23,8 @@ $string['warning'] = 'Varování: název dokumentu je již použit pro jiné hod
 $string['availablefromyear'] = 'Rok OD je větší než rok DO - nelogické!';
 $string['availablefrommonth'] = 'Měsíc OD je větší než měsíc DO - nelogické!';
 $string['availablefromday'] = 'Den OD je větší než den DO - nelogické!';
-$string['availablefromhour'] = 'The available from hour is greater than the available to hour - this is illogical!';
-$string['availablefromminute'] = 'The available from minute is greater than the available to minute - this is illogical!';
+$string['availablefromhour'] = 'Hodiny: Dostupnost OD je vyšší než dostupnost DO  - nelogické!';
+$string['availablefromminute'] = 'Minuty: Dostupnost OD je vyšší než dostupnost DO  - nelogické!';
 $string['msg1'] = 'Nejsou vybrány žádné moduly. Dokument musí být přiřazen nejméně k jednomu modulu.';
 $string['msg2'] = 'Začátek a konec sumativní zkoušky musí být ve stejný den (záložka \'Přístupová práva\' ).';
 $string['msg3'] = 'U sumativních zkoušek musí být zadána délka trvání.\nTa odpovídá času vyměřenému k vykonání zkoušky, bez přidaného času pro např. dyslektické studenty.';
@@ -41,7 +41,7 @@ $string['generaltab'] = 'Celkem';
 $string['generalheading'] = 'Název dokumentu, známkování a možnosti zobrazení';
 $string['paperdetails'] = 'Detaily dokumentu';
 $string['onlyonexamday'] = '(pouze v den zkoušky)';
-$string['url'] = 'URL'; //cognate
+$string['url'] = 'URL';
 $string['name'] = 'Název';
 $string['type'] = 'Typ';
 $string['folder'] = 'Složka';
@@ -67,14 +67,14 @@ $string['overallclass1'] = '&lt;Automaticky&gt;';
 $string['overallclass2'] = 'Neuspěl | Na hraně | Uspěl';
 $string['overallclass3'] = 'Nedostatečně | Dostatečně | Dobře | Chvalitebně | Výborně';
 $string['overallclass4'] = 'Neuspěl | Na hraně | Uspěl | Uspěl s vyznamenáním';
-$string['overallclass5'] = 'Pass | Fail';
+$string['overallclass5'] = 'Uspěl | Neuspěl';
 $string['passmark'] = 'Potřebná známka';
 $string['distinction'] = 'S vyznamenáním';
 $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Neupraveno';
 $string['calculatrrandommark'] = 'Vypočítat náhodnou známku';
 $string['stdset'] = 'Nastavení standardů';
-$string['borderlinemethod'] = 'Borderline Method';
+$string['borderlinemethod'] = 'Borderline Metoda';
 $string['ticks_crosses'] = 'Odškrtnutí/Křížky';
 $string['question_marks'] = 'Hodnocení úlohy';
 $string['hideallfeedback'] = 'Skrýt veškeré komentáře';
@@ -87,9 +87,9 @@ $string['allpeerspergroup'] = 'Všichni členové skupiny';
 $string['singlereview'] = 'Jeden komentář';
 $string['numberfrom'] = 'Číslo z';
 $string['groupdetails'] = 'Podrobnosti skupiny';
-$string['tooltip_random'] = 'Rogo will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
-$string['tooltip_calculator'] = 'A JavaScript software calculator is available to students within the assessment.';
-$string['tooltip_audio'] = 'A test audio clip will be placed on the exam information page so students can test sound levels before starting.';
+$string['tooltip_random'] = 'Rogo vypočítá ohodnocení, jakého by student dosáhl náhodným zodpovězením úloh. Procentuální hodnocení je následně tomuto uzpůsobeno.';
+$string['tooltip_calculator'] = 'Studentům je v rámci testu k dispozici JavaScriptová kalkulačka.';
+$string['tooltip_audio'] = 'Na úvodní stránce Zkoušky bude umístěn zkušební zvukový klip, aby si studenti mohli upravit hlasitost ještě před zahájením testování.';
 
 // Security tab
 $string['securitytab'] = 'Bezpečnost';
@@ -106,16 +106,16 @@ $string['to'] = 'do';
 $string['restricttolabs'] = 'Omezit na učebny';
 $string['restricttometadata'] = 'Omezit na metadata';
 $string['na'] = 'N/A';
-$string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into Rogo with their own personal password. This password can be given out to students within the computer lab.';
+$string['tooltip_password'] = 'Tímto se  přidá další přístupové heslo k testu; k heslu, kterým se studenti hlásí do systému. Toto heslo lze studentům sdělit až  v počítačové učebně před zkouškou samotnou.';
 
-// Reviewers tab
+// Záložka Recenzenta 
 $string['reviewerstab'] = 'Recenzenti';
 $string['reviewersheading'] = 'Nastavení interních/externích recenzentů a termínů.';
 $string['internalreviewers'] = 'Interní recenzenti';;
 $string['externalexaminers'] = 'Externí recenzenti';
 $string['deadline'] = 'Uzávěrka';
 
-// Exam Rubric tab
+// Záložka zkoušky
 $string['rubrictab'] = 'Rubrika zkoušky';
 $string['rubricheading'] = 'Před zahájením sumativní zkoušky, se studentům zobrazí Rubrika zkoušky.';
 
@@ -139,8 +139,8 @@ $string['on'] = 'Zapnuto';
 $string['off'] = 'Vypnuto';
 $string['objectivesreport'] = 'Komentář dle cílů';
 $string['questionfeedback'] = 'Komentáře dle úloh';
-$string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
-$string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
+$string['externalexaminerfeedback'] = 'Výsledky třídy (externí zkoušející)';
+$string['externalwarning'] = 'Pokud zapnuto, externisté mají u testu přístup k Celkovému přehledu třídy..';
 $string['textualfeedback'] = 'Textový Komentář';
 $string['above'] = 'Nad';
 $string['message'] = 'Zpráva';
@@ -166,7 +166,7 @@ $string['themecolours'] = 'Barevné motivy';
 $string['standardcolours'] = 'Standardní barvy';
 $string['more'] = 'Více...';
 $string['cancel'] = 'Zrušit';
-$string['OK'] = 'OK'; //cognate
+$string['OK'] = 'OK';
 
 $string['markingguidance'] = 'Pokyny pro zkoušejícího';
 $string['cohortperformancefeedback'] = 'Komentář k výkonu skupiny';

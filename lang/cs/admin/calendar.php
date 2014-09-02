@@ -36,5 +36,5 @@ $string['lab_warning'] = 'Upozornění: není nastavena žádná počítačová 
 $string['duration_warning'] = 'Není nastavena délka trvání!';
 $string['labs'] = 'Počítačové učebny';
 $string['metadata'] = 'Metadata';
-$string['extraevents'] = '<strong>SysAdmin:</strong> Double-click on the calender to add extra events.';
+$string['extraevents'] = '<strong>SysAdmin:</strong> Pro přidání události dvakrát klikněte na kalendář.';
 ?>

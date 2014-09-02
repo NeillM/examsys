@@ -1,6 +1,6 @@
 <?php         //cz
 $string['listsettings'] = 'Seznam nastavení';
-$string['standardssetting'] = 'Standardní nastavení';
+$string['standardssetting'] = 'Nastavení standardů';
 $string['standardsetter'] = 'Nastavení standardů';
 $string['date'] = 'Datum';
 $string['passscore'] = 'Potřebné skóre';
@@ -8,7 +8,7 @@ $string['distinction'] = 'S vyznamenáním';
 $string['reviewmarks'] = 'Přehled známek';
 $string['papertotal'] = 'Přehled dokumentu';
 $string['method'] = 'Metoda';
-$string['aboutstandardssetting'] = 'O standardním nastavení';
+$string['aboutstandardssetting'] = 'O nastavení standardů';
 $string['createmodifiedangoff'] = 'Nová modifikovaná Angoffova metoda';
 $string['createebelmethod'] = 'Nová Ebelova metoda';
 $string['editrating'] = 'Upravit hodnocení';

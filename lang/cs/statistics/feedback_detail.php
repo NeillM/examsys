@@ -16,14 +16,14 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamfeedback'] = 'Summative Exam Feedback';
-$string['feedbackstats'] = 'Feedback Statistics';
-$string['statistics'] = 'Statistics';
-$string['paper'] = 'Paper';
-$string['feedbackreleased'] = 'Feedback Released';
-$string['students'] = 'Students';
-$string['feedbackviewed'] = 'Feedback Viewed';
-$string['objectivefeedback'] = 'Objective Feedback';
-$string['questionfeedback'] = 'Question Feedback';
-$string['cohortperformance'] = 'Cohort Performance';
+$string['summativeexamfeedback'] = 'Komentář k Sumativní zkoušce';
+$string['feedbackstats'] = 'Statistika komentáře';
+$string['statistics'] = 'Statistika';
+$string['paper'] = 'Dokument';
+$string['feedbackreleased'] = 'Komentář vydán';
+$string['students'] = 'Studenti';
+$string['feedbackviewed'] = 'Komentář shlédnut';
+$string['objectivefeedback'] = 'Komentář k Cílům';
+$string['questionfeedback'] = 'Komentář k Úlohám';
+$string['cohortperformance'] = 'Výkon Skupiny';
 ?>

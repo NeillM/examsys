@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/osce/form.php';
 
-$string['osce'] = 'OSCE:'; //cognate
+$string['osce'] = 'OSCE:'; 
 $string['examiner'] = 'Zkoušející:';
 $string['date'] = 'Datum:';
 $string['classification'] = 'Klasifikace:';

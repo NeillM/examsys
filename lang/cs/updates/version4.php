@@ -17,7 +17,7 @@
 $string['systemupdate'] = 'Aktualizace systému';
 $string['actionrequired'] = 'Požadovaná akce';
 $string['readonly'] = "Nezapomeňte zpřístupnit <strong>/config/config.inc.php</strong> pouze ke čtení! (chmod 444)";
-$string['finished'] = 'Hotovo!';
+$string['finished'] = 'Dokončeno!';
 $string['couldnotwrite'] = 'Chyba: nelze zapsat konfigurační soubor!';
 $string['msg1'] = 'Tento skript aktualizuje databázové struktury tak, aby odpovídaly novému % s kódu. Nevadí, pokud je tento skript spuštěn opakovaně, jelikož kontroluje aktuální strukturu databáze před aplikací jakýchkoli změn.';
 $string['msg2'] = 'Aktualizační skript potřebuje k aktualizaci databáze uživatelů a tabulky přihlašovací jméno a heslo administrátora MySQL . Toto uživatelské jméno není na serveru uloženo a je použito pouze tímto aktualizačním skriptem.';
