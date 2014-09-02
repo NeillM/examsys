@@ -24,6 +24,7 @@
 
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
 require '../../include/errors.inc';
+require_once '../../classes/helputils.class.php';
 
 $originalid = check_var('id', 'GET', true, false, true);
 

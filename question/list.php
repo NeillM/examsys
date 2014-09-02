@@ -102,6 +102,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/sidebar.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script>
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {

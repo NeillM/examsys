@@ -26,7 +26,7 @@ require '../../include/staff_student_auth.inc';
 require '../../include/errors.inc';
 require_once '../../classes/helputils.class.php';
 
-check_var('title', 'GET', true, false, false);
+$title = check_var('title', 'GET', true, false, true);
 
 $id = null;
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);

@@ -49,6 +49,10 @@ Class OnlineHelp {
     $this->highlight = $highlight;
   }
   
+	/**
+	 * Display the toolbar at the top of the window.
+	 * @param int $id - The ID of the current help page.
+	 */
   public function display_toolbar($id) {
     echo "<script>\nvar id = $id;\n</script>\n";
     echo '<form name="myform" action="search.php" method="get">';
@@ -64,6 +68,10 @@ Class OnlineHelp {
     echo '</div><div class="toolbar_search"><input type="text" id="searchbox" name="searchstring" value="' . $searchstring . '" placeholder="' . $this->string['search'] . '" /><img id="search" src="../search.png" width="16" height="16" title="' . $this->string['search'] . '" alt="' . $this->string['search'] . '" /></div></form>';
   }
 
+	/**
+	 * Displays the table of contents.
+	 * @param int $pageid - The ID of the current help page - used to highlight current page in TOC.
+	 */
   public function display_toc($pageid) {
     if (isset($_GET['scrOfY'])) {
       echo "<script>\nvar scrOfY = " . $_GET['scrOfY'] . ";\n</script>\n";
@@ -163,10 +171,11 @@ Class OnlineHelp {
     if ($old_parent != '') echo "</div>\n";
   }  
 
-  private function getTitle($path) {
-    return str_replace('/', ': ', $path);
-  }
-  
+	/**
+	 * Loads details of a help page and returns them in an array.
+	 * @param int $articleid - The ID of the help page to return.
+   * @return array of page details.
+	 */
   public function get_page_details($articleid) {
     if ($this->type == 'student') {
       $sql = 'SELECT id, title, body, type, DATE_FORMAT(checkout_time,\'%Y%m%d%H%i%S\') AS checkout_time, checkout_authorID, NULL AS roles FROM student_help WHERE id = ? AND language = ? AND deleted IS NULL LIMIT 1';
@@ -196,6 +205,14 @@ Class OnlineHelp {
     return array('id'=>$id, 'title'=>$title, 'body'=>$body, 'page_type'=>$page_type, 'checkout_time'=>$checkout_time, 'checkout_authorID'=>$checkout_authorID, 'roles'=>$roles);
   }
   
+	/**
+	 * Saves a staff help page back to the database.
+	 * @param string $title     - The title of the help page.
+	 * @param string $body      - The main contents of the help page.
+	 * @param string $roles     - The roles of users allowed to view the page.
+	 * @param string $articleid - The ID of the help page being saved.
+	 * @param string $pointerid - The ID of the pointer page.
+	 */
   private function save_staff_page($title, $body, $roles, $articleid, $pointerid) {
     $body_plain = strip_tags($body);
     
@@ -219,6 +236,13 @@ Class OnlineHelp {
     }    
   }
   
+	/**
+	 * Saves a student help page back to the database.
+	 * @param string $title     - The title of the help page.
+	 * @param string $body      - The main contents of the help page.
+	 * @param string $articleid - The ID of the help page being saved.
+	 * @param string $pointerid - The ID of the pointer page.
+	 */
   private function save_student_page($title, $body, $articleid, $pointerid) {
     $body_plain = strip_tags($body);
     if ($articleid == $pointerid) {
@@ -234,13 +258,21 @@ Class OnlineHelp {
       $result->execute();
       $result->close();
 
-      $result = $this->db->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULLWHERE articleid = ? AND language = ?");
+      $result = $this->db->prepare("UPDATE student_help SET body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?");
       $result->bind_param('ssis', $body, $body_plain, $pointerid, $this->language);
       $result->execute();
       $result->close();
     }
   }
   
+	/**
+	 * Saves a help page back to the database.
+	 * @param string $title     - The title of the help page.
+	 * @param string $body      - The main contents of the help page.
+	 * @param string $roles     - The roles of users allowed to view the page.
+   * @param string $articleid - The ID of the help page being saved.
+	 * @param string $pointerid - The ID of the pointer page.
+	 */
   public function save_page($title, $body, $roles, $articleid, $pointerid) {
     $articleid = (int)$articleid;
     $pointerid = (int)$pointerid;
@@ -252,9 +284,16 @@ Class OnlineHelp {
     }
   }
   
+	/**
+	 * Displays the contents of a help folder.
+	 * @param string $folder - The name of the folder to display.
+	 */
   public function display_folder($folder) {
     $t = $folder . '/%';
-    $result = $this->db->prepare("SELECT articleid, title FROM staff_help WHERE title LIKE ? AND language = ? ORDER BY title");
+    
+    $sql = 'SELECT articleid, title FROM ' . $this->type . '_help WHERE title LIKE ? AND language = ? ORDER BY title';
+    
+    $result = $this->db->prepare($sql);
     $result->bind_param('ss', $t, $this->language);
     $result->execute();
     $result->store_result();
@@ -278,6 +317,10 @@ Class OnlineHelp {
     echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";    
   }
 
+	/**
+	 * Displays a specific help page.
+	 * @param int $id - The ID of the folder to display.
+	 */
   public function display_page($id) {
     $page_details = $this->get_page_details($id);
     $original_title = $page_details['title'];
@@ -291,23 +334,14 @@ Class OnlineHelp {
       $msg = sprintf($this->string['furtherassistance'], $this->configObject->get('support_email'), $this->configObject->get('support_email'));
       $this->notice->display_notice_and_exit($this->db, $this->string['pagenotfound'], $msg, $this->string['pagenotfound'], '/artwork/page_not_found.png', '#C00000');
     }
-    
-    $this->record_in_log($id);
 
-    if ($id == 1) {
-      // ID 1 is for the homepage.
-      echo "<div>\n";
-    } else {
-      echo "<div class=\"help_title\">" . $this->getTitle($page_details['title']) . "</div>\n";
-      echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
-    }
-
-    $offset = 0;
+    $this->display_header($id, $page_details['title']);
 
     // Perform replacement on certain strings.
     $page_details['body'] = str_replace('$support_email', '<a href="mailto:' . $this->configObject->get('support_email') . '">' . $this->configObject->get('support_email') . '</a>', $page_details['body']);
     $page_details['body'] = str_replace('$local_server', NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'], $page_details['body']);
 
+    $offset = 0;
     if ($this->highlight !== null) {
       do {
         $found = stripos($page_details['body'], $this->highlight, $offset);
@@ -325,22 +359,48 @@ Class OnlineHelp {
       } while ($found !== false);
     }
     echo $page_details['body'];
-    if ($id > 1) {    // Display footer
+    $this->display_footer($id);
+    
+    $this->record_in_log($id);
+  }
+
+	/**
+	 * Displays a header for a help page.
+	 * @param int $id       - The ID of the help page to display.
+	 * @param string $title - The title of the help page.
+	 */
+  private function display_header($id, $title) {
+    if ($id == 1) {
+      // ID 1 is for the homepage.
+      echo "<div>\n";
+    } else {
+      echo "<div class=\"help_title\">" . str_replace('/', ': ', $title) . "</div>\n";
+      echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
+    }    
+  }
+  
+	/**
+	 * Displays a footer for a help page.
+	 * @param int $id - The ID of the help page to display.
+	 */
+  private function display_footer($id) {
+    if ($id > 1) {    // Do not display footer if ID is one.
       echo "<div class=\"footer_line\"></div>\n";
       echo "<div class=\"footer_left gototop\"><img src=\"../../artwork/top_icon.gif\" width=\"9\" height=\"12\" />&nbsp;" . $this->string['top'] . "</div>\n";
       if ($this->userObject->has_role('SysAdmin')) {
         echo '<div class="footer_right">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $this->configObject->get('cfg_root_path') . '/help/staff/index.php?id=' . $id . '</div>';
       }
-    }    
+    }
   }
   
+	/**
+	 * Record a page hit in the log table.
+	 * @param int $id - The ID of the help page to log.
+	 */
   private function record_in_log($id) {
     if ($id != '1' and !$this->userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-      if ($this->type == 'student') {
-        $sql = "INSERT INTO help_log VALUES (NULL, 'student', ?, NOW(), ?)";
-      } else {
-        $sql = "INSERT INTO help_log VALUES (NULL, 'staff', ?, NOW(), ?)";        
-      }
+      $sql = "INSERT INTO help_log VALUES (NULL, '" . $this->type . "', ?, NOW(), ?)";
+
       $result = $this->db->prepare($sql);
       $result->bind_param('ii', $this->userObject->get_user_ID(), $id);
       $result->execute();  
@@ -348,117 +408,131 @@ Class OnlineHelp {
     }
   }
   
+	/**
+	 * Record a search in the search log.
+	 * @param string $searchstring - The search string used.
+	 * @param int $total_hits      - The number of hits found.
+	 */
   private function record_in_search_log($searchstring, $total_hits) {
-    if ($this->type == 'student') {
-      $result = $mysqli->prepare("INSERT INTO help_searches VALUES (NULL, 'student', ?, NOW(), ?, ?)");
-    } else {
-      $result = $mysqli->prepare("INSERT INTO help_searches VALUES (NULL, 'staff', ?, NOW(), ?, ?)");
-    }
+    $sql = "INSERT INTO help_searches VALUES (NULL, '" . $this->type . "', ?, NOW(), ?, ?)";
+    
+    $result = $mysqli->prepare($sql);
     $result->bind_param('isi', $this->userObject->get_user_ID(), $searchstring, $total_hits);
     $result->execute();  
     $result->close();
   }
   
-  private function get_max_id() {
-    $articleid = 0;
+	/**
+	 * Creates a new help page in the database.
+	 * @param string $title - The title of the new help page.
+	 * @param string $body  - The main content of the help page.
+	 * @param string $roles - Which roles are allowed to view the page.
+   * @return int the ID of the newly created page.
+	 */
+  public function create_page($title, $body, $roles = '') {
+    $body_plain = strip_tags($body);
+
     if ($this->type == 'student') {
-      $sql = 'SELECT MAX(articleid) FROM student_help';
+      $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL, ?, 0, '0000-00-00 00:00:00')");
+      $result->bind_param('ssss', title, $body, $body_plain, $this->language);
     } else {
-      $sql = 'SELECT MAX(articleid) FROM staff_help';      
+      $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL, ?, 0, '0000-00-00 00:00:00')");
+      $result->bind_param('sssss', $title, $body, $body_plain, $_POST['page_roles'], $this->language);
     }
-    $result = $this->db->prepare($sql);
-    $result->execute();
-    $result->bind_result($articleid);
-    $result->fetch();
+    $result->execute();  
     $result->close();
+    
+    $articleid = $this->db->insert_id;
+    
+    // Update the articleid to match the new id field.
+    $result = $this->db->prepare("UPDATE " . $this->type . "_help SET articleid = ? WHERE id = ?");
+    $result->bind_param('ii', $articleid, $articleid);
+    $result->execute();  
+    $result->close();  
     
     return $articleid;
   }
   
-  public function create_page($title, $body, $roles = '') {
-    $body_plain = strip_tags($body);
-    
-    $articleid = $this->get_max_id() + 1;
-
-    if ($this->type == 'student') {
-      $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL, ?, ?, '0000-00-00 00:00:00')");
-      $result->bind_param('ssssi', title, $body, $body_plain, $this->language, $articleid);
-    } else {
-      $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL, ?, ?, '0000-00-00 00:00:00')");
-      $result->bind_param('sssssi', $title, $body, $body_plain, $_POST['page_roles'], $this->language, $articleid);
-    }
-    $result->execute();  
-    $result->close();
-    
-    return $this->db->insert_id;
-  }
-  
+	/**
+	 * Creates a new help pointer in the database.
+	 * @param string $title   - The title of the new pointer page.
+	 * @param string $pageID  - The ID of the page to point to.
+   * @return int the ID of the newly created pointer page.
+	 */
   public function create_pointer($title, $pageID) {
-    $articleid = $this->get_max_id() + 1;
-    
     if ($this->type == 'student') {
-      $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, NULL, '" . $this->language . "', ?, '0000-00-00 00:00:00')");
+      $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, NULL, '" . $this->language . "', 0, '0000-00-00 00:00:00')");
       $result->bind_param('ssi', $title, $pageID, $articleid);
-      
     } else {
-      $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, 'Staff', NULL, '" . $this->language . "', ?, '0000-00-00 00:00:00')");
+      $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, 'Staff', NULL, '" . $this->language . "', 0, '0000-00-00 00:00:00')");
       $result->bind_param('ssi', $title, $pageID, $articleid);
       
     }
     $result->execute();  
     $result->close();
     
-    return $this->db->insert_id;
+    $articleid = $this->db->insert_id;
+    
+    // Update the articleid to match the new id field.
+    $result = $this->db->prepare("UPDATE " . $this->type . "_help SET articleid = ? WHERE id = ?");
+    $result->bind_param('ii', $articleid, $articleid);
+    $result->execute();  
+    $result->close();  
+    
+    return $articleid;
   }
   
+	/**
+	 * Sets an edit lock on a page.
+	 * @param int $articleid - The ID of the help page to lock.
+	 */
   public function set_edit_lock($articleid) {
-    if ($this->type == 'student') {
-      $sql = 'UPDATE student_help SET checkout_time = NOW(), checkout_authorID = ? WHERE articleid = ? AND language = ?';
-    } else {
-      $sql = 'UPDATE staff_help SET checkout_time = NOW(), checkout_authorID = ? WHERE articleid = ? AND language = ?';
-    }
+    $sql = 'UPDATE ' . $this->type . '_help SET checkout_time = NOW(), checkout_authorID = ? WHERE articleid = ? AND language = ?';
+
     $result = $this->db->prepare($sql);
     $result->bind_param('iis', $this->userObject->get_user_ID(), $articleid, $this->language);
     $result->execute();
     $result->close();
   }
   
+	/**
+	 * Releases an edit lock on a page.
+	 * @param int $articleid - The ID of the help page to lock.
+	 */
   public function release_edit_lock($articleid) {
-    if ($this->type == 'student') {
-      $sql = 'UPDATE student_help SET checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?';
-    } else {
-      $sql = 'UPDATE staff_help SET checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?';
-    }
+    $sql = 'UPDATE ' . $this->type . '_help SET checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?';
+
     $result = $this->db->prepare($sql);
     $result->bind_param('is', $articleid, $this->language);
     $result->execute();
     $result->close();
   }
   
+	/**
+	 * Sets a specified help page ID to be deleted.
+	 * @param int $pageID - The ID of the help page to delete.
+	 */
   private function delete_id($pageID) {
-    if ($this->type == 'student') {
-      $table = 'student_help';
-    } else {
-      $table = 'staff_help';
-    }
-    $deleteQuery = $this->db->prepare("UPDATE $table SET deleted = NOW() WHERE articleid = ? AND language = ?");
+    $sql = 'UPDATE ' . $this->type . '_help SET deleted = NOW() WHERE articleid = ? AND language = ?';
+    
+    $deleteQuery = $this->db->prepare($sql);
     $deleteQuery->bind_param('is', $pageID, $this->language);
     $deleteQuery->execute();
     $deleteQuery->close();  
   }
   
+	/**
+	 * Deletes a specific help page.
+	 * @param int $originalID - The ID of the help page or pointer to delete.
+	 */
   public function delete_page($originalID) {
-    if ($this->type == 'student') {
-      $table = 'student_help';
-    } else {
-      $table = 'staff_help';
-    }
-
     $page_details = $this->get_page_details($originalID);
 
     if ($page_details['page_type'] == 'page') {
       // Search for any pointers to the current page.
-      $result = $this->db->prepare("SELECT articleid, body FROM $table WHERE type = 'pointer' AND articleid != ? AND body = ? AND language = ?");
+      $sql = "SELECT articleid, body FROM " . $this->type . "_help WHERE type = 'pointer' AND articleid != ? AND body = ? AND language = ?";
+      
+      $result = $this->db->prepare($sql);
       $result->bind_param('iis', $originalID, $originalID, $this->language);
       $result->execute();
       $result->store_result();
@@ -472,13 +546,24 @@ Class OnlineHelp {
     $this->delete_id($originalID);      // Delete the original page.
   }
   
+	/**
+	 * Restores a deleted help page.
+	 * @param int $pageID - The ID of the help page to restore.
+	 */
   public function restore_page($pageID) {
-    $restore = $mysqli->prepare("UPDATE staff_help SET deleted = NULL WHERE articleid = ? AND language = ?");
+    $sql = 'UPDATE ' . $this->type . '_help SET deleted = NULL WHERE articleid = ? AND language = ?';
+    
+    $restore = $mysqli->prepare($sql);
     $restore->bind_param('is', pageID, $this->language);
     $restore->execute();
     $restore->close();
   }
   
+	/**
+	 * Performs a full-text search on the help database.
+	 * @param string $searchstring - The search term to use for the search.
+   * @return array of search results.
+	 */
   public function find($searchstring) {
     $search_results = array();
     

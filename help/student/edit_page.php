@@ -30,7 +30,7 @@ require_once '../../classes/userutils.class.php';
 $pageid = check_var('id', 'REQUEST', true, false, true);
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 
-header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
+header('Content-Type: text/html; charset=utf8');
 
 $page_details = $help_system->get_page_details($pageid);
 
@@ -87,16 +87,16 @@ if (isset($_POST['save_changes'])) {
 <body>
 <div id="wrapper">
   <div id="toolbar">
-    <?php $help_system->display_toolbar($id); ?>
+    <?php $help_system->display_toolbar($pageid); ?>
   </div>
 
   <div id="toc">
-    <?php $help_system->display_toc($id); ?>
+    <?php $help_system->display_toc($pageid); ?>
   </div>
   <div id="contents">
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>">
 <?php
-  if ($type == 'pointer') {
+  if ($page_details['page_type'] == 'pointer') {
     $edit_id = $page_details['body'];
     $ogiginal_details = $help_system->get_page_details($edit_id);
     $page_details['body'] = $ogiginal_details['body'];
@@ -110,14 +110,14 @@ if (isset($_POST['save_changes'])) {
   // Check for lockout.
   $current_time = date('YmdHis');
   $disabled = '';
-  if ($userObject->get_user_ID() != $page_checkout_authorID) {
-    if ($page_checkout_time != '' and $current_time - $page_checkout_time < 10000) {
+  if ($userObject->get_user_ID() != $page_details['checkout_authorID']) {
+    if ($page_details['checkout_time'] != '' and $current_time - $page_checkout_time < 10000) {
       $editor = UserUtils::get_user_details($page_details['checkout_authorID'], $mysqli);
       $editor_name = $editor['title'] . ' ' . $editor['initials'] . ' ' . $editor['surname'];
       echo "<script>\n";
       echo "  alert('" . $string['entertitle'] . " $editor_name. " . $string['isinreadonly'] . "')";
       echo "</script>\n";
-      $checkout_authorID = $page_checkout_authorID;
+      $checkout_authorID = $page_details['checkout_authorID'];
       $disabled = ' disabled';
     } else {
       // Set the lock to the current time/author.
@@ -125,7 +125,7 @@ if (isset($_POST['save_changes'])) {
 
       $checkout_authorID = $userObject->get_user_ID();
     }
-  } elseif ($disabled == '' and $userObject->get_user_ID() == $page_checkout_authorID) {
+  } elseif ($disabled == '' and $userObject->get_user_ID() == $page_details['checkout_authorID']) {
     $checkout_authorID = $userObject->get_user_ID();
   }
 ?>
