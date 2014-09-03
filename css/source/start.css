@@ -204,6 +204,8 @@ pre {
   width: 7em;
   margin-left: 1em;
   margin-right: 1em;
+  margin-top: 1px;
+  margin-bottom: 1px;
   color: black !important;
 }
 #finish {
@@ -212,6 +214,8 @@ pre {
   font-weight: bold;
   margin-left: 1em;
   margin-right: 1em;
+  margin-top: 1px;
+  margin-bottom: 1px;
   color: black !important;
 }
 #previous {
@@ -219,6 +223,8 @@ pre {
   width: 7em;
   margin-left: 1em;
   margin-right: 1em;
+  margin-top: 1px;
+  margin-bottom: 1px;
   color: black !important;
 }
 #savemsg {
@@ -289,9 +295,15 @@ pre {
   height: 24px;
 }
 #fire_exit {
-  width: 40px;
+  width: 30px;
   height: 30px;
   cursor: pointer;
   background-image: url('../artwork/fire_exit.png');
   background-repeat: no-repeat;
+}
+.copyright {
+  color: white;
+  width: 18em;
+  font-size: 90%;
+  padding-left: 10px;
 }

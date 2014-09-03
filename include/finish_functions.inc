@@ -456,7 +456,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
       $returnarray = $enhancedcalc->calculate_user_mark();
 
       if ($returnarray !== Q_MARKING_UNMARKED) {
-        //save the extra data back into the log record.
+        // Save the extra data back into the log record.
         $sql = "UPDATE log$paper_type set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
         $storemark = $mysqlidb->prepare($sql);
         $new_useranswerstring = $enhancedcalc->useranswer_to_string();

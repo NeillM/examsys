@@ -771,7 +771,10 @@ class EnhancedCalc extends Question implements questionInterface {
 		}
 		echo "</td></tr>\n</table>\n";
 		if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') {
-			echo "<div class=\"fback\" style=\"margin-left:17px\">&nbsp;" . $tmp_fback . "</div>\n";
+      foreach ($varname as $individual_varname) {
+        $tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
+      }
+			echo "<br /><div class=\"fback\">" . $tmp_fback . "</div>\n";
 		}
 	}
 
