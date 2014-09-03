@@ -9,5 +9,5 @@
   }
   
   var updateState = function (state_name, content) {
-    $.post('../include/set_state.php', {state_name: state_name, content: content, page: document.URL}, function(responseText){ }, "html");
+    $.post(cfgRootPath + '/include/set_state.php', {state_name: state_name, content: content, page: document.URL}, function(responseText){ }, "html");
   }

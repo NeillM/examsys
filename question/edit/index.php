@@ -93,8 +93,6 @@ function save_options($question, $userObject, $db) {
         $question->options[] = $option;
       }
     }
-    //var_dump($option);
-    //exit;
 
     if ($option != null and !in_array('media', $question->get_compound_fields())) {
       // Handle changes in media
@@ -313,7 +311,6 @@ if ($critical_error == '') {
       $do_save = true;
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
-    //$question->clear_checkout();
     redirect($userObject, $question->id, $configObject, $mysqli);
   }
 
@@ -325,7 +322,7 @@ if ($critical_error == '') {
           $errors[] = $string['datasaveerror'];
         } else {
           // Possibility that we might be converting a MRQ to MCQ
-          if(isset($_POST['mcqconvert']) and $_POST['mcqconvert'] == '1') {
+          if (isset($_POST['mcqconvert']) and $_POST['mcqconvert'] == '1') {
             $i = 1;
             $correct_option = 0;
             foreach ($question->options as $option) {
@@ -340,7 +337,8 @@ if ($critical_error == '') {
 
           // Insert into Papers
           if (isset($_POST['addpaper'])) {
-            insert_into_papers($paper_id, $question->id);
+            insert_into_papers($paper_id, $question->id, $mysqli);
+            $logger->track_change('Paper', $paper_id, $userObject->get_user_ID(), '', $question->id, 'Add Question');
           }
 
           save_keywords($question, $userObject->get_user_ID(), true, $mysqli, $string);

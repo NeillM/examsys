@@ -77,7 +77,7 @@ function makeMenu($options) {
   foreach ($options as $title=>$url) {
     $itemID = $menuNo . '_' . $line;
     if (substr($url,0,1) == '-') {
-      echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"hideMenus(event)\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:red; color:red\" /></div>\n";
+      echo "<div class=\"popupitemline\" id=\"$itemID\" onclick=\"hideMenus(event)\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0\" /></div>\n";
       } elseif (substr($url,0,1) == '#') {
       echo "<div class=\"popupitembold\" id=\"$itemID\">" . substr($url,1) . "</div>\n";
     } else {

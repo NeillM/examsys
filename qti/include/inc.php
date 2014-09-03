@@ -23,7 +23,6 @@
  */
 
 if (file_exists("../storage/st_main.php")) {
-  require_once '../../include/staff_auth.inc';
   require_once "../../include/display_functions.inc";
   require_once "../storage/st_main.php";
   require_once "../storage/qti12_storage.php";
@@ -35,7 +34,6 @@ if (file_exists("../storage/st_main.php")) {
   require_once '../include/nicexhtml.php';
   require_once '../include/simpleimage.php';
 } else {
-  require_once '../include/staff_auth.inc';
   require_once "../include/display_functions.inc";
   require_once "storage/st_main.php";
   require_once "storage/qti12_storage.php";

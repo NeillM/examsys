@@ -22,13 +22,15 @@
  * @package
  */
 
+require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
 require_once 'include/inc.php';
 
-$file = GetVar('file');
+$file = check_var('file', 'GET', true, false, true);
 $file = str_replace("..", "", $file);
-$path = GetVar('path');
+$path = check_var('path', 'GET', true, false, true);
 $path = str_replace("..", "", $path);
-$title = GetVar('title');
+$title = check_var('path', 'GET', true, false, true);
 
 $base_dir = $cfg_web_root.'qti/exports/';
 
@@ -47,7 +49,6 @@ $filename = $file;
 if ($title) $filename = CleanFileName($title).".".$ext;
 
 function head($text) {
-  //echo($text."\n");
   header($text);
 }
 

@@ -22,7 +22,7 @@
  * @package
  */
 
-/* touchstone Load params list
+/* Rogo Load params list
  *
  * q_ids = list of question ids if type is batch_q or question
  * p_ids = list of paper types if type is batch_q or paper

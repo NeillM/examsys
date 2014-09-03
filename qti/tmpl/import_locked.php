@@ -21,6 +21,7 @@
  * @copyright Copyright (c) 2011 The University of Nottingham
  * @package
  */
+require_once '../include/staff_auth.inc';
 ?>
 <!DOCTYPE html>
 <html onscroll="scrollXY();" onclick="hideMenus();">

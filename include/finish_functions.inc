@@ -569,7 +569,11 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
         if (isset($paper[$question]['user_answer'])) {
           $tmp_user_answer = $paper[$question]['user_answer'];
           $answer_parts = explode(';', $tmp_user_answer);
-          $tmp_user_answer = substr($answer_parts[1], 0, -2);
+          if (isset($answer_parts[1])) {
+            $tmp_user_answer = substr($answer_parts[1], 0, -2);
+          } else {
+            $tmp_user_answer = '';
+          }
 
           $percents = explode(',', $answer_parts[0]);
         } else {
@@ -583,16 +587,16 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
           $paper[$question]['correct'][0] = '';
         }
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
-					//<!-- ======================== HTML5 part include finf ================= -->
+					//<!-- ======================== HTML5 part ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 2) . "' height='" . ($paper[$question]['q_media_height'] + 24) . "'></canvas>\n";
 					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					$extra = $tmp_display_students_response.$tmp_display_correct_answer.$tmp_display_question_mark.$tmp_display_feedback.$hide_if_unanswered;			
 					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-        	echo "<script language='javascript'>\n";
+        	echo "<script>\n";
 					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" width=\"" . ($paper[$question]['q_media_width'] + 2) . "\" height=\"" . ($paper[$question]['q_media_height'] + 24) . "\" id=\"externalinterfaceq" . $question_no . "_1\" align=\"top\">');\n";
 					echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/question/edit/area.swf\" />');\n";
 					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
@@ -838,7 +842,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '&nbsp;<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" border="0" />';
+                echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') echo ' ' . $strong_on . $string['iscorrect'] . $strong_off;
               }
               echo '</td></tr>';
@@ -857,7 +861,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
                 if ($tmp_exclude{0} == '1') echo '</span>';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '&nbsp;<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" border="0" />';
+                echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') echo ' <strong>' . $string['iscorrect'] . '</strong>';
               }
               echo '</td></tr>';
@@ -1723,7 +1727,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
         if ($option_answered == 0) {
           reset_feedback($hide_if_unanswered);
           echo "<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
-          //$paper[$question]['mark'] = 0;
         } elseif ($paper[$question]['score_method'] == 'Mark per Question') {
           $paper[$question]['mark'] = ($all_correct) ? $paper[$question]['marks_correct'] : $paper[$question]['marks_incorrect'];
         }
@@ -2074,10 +2077,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
   <div>
 				<?php
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
-				  //"<!-- ======================== HTML5 part include finf ================= -->
+				  //"<!-- ======================== HTML5 part ================= -->
 				  echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 301) . "' height='" . ($paper[$question]['q_media_height'] + 30) . "'></canvas>\n";
 				  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				  echo "<script language='JavaScript' type='text/javascript'>\n";
+				  echo "<script>\n";
 				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . $tmp_correct . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
 					echo "', '" . $extra . "','#FFC0C0','hotspot','script');\n";
@@ -2272,10 +2275,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
 				$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
 	
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
-					//<!-- ======================== HTML5 part include finf ================= -->
+					//<!-- ======================== HTML5 part ================= -->
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
 					if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
 					echo "','";
@@ -2351,7 +2354,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
 		// Display any objectives mapped
     echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
 
-	if (isset($overrides[$paper[$question]['q_id']])) {
+    if (isset($overrides[$paper[$question]['q_id']])) {
       $paper[$question]['mark'] = $overrides[$paper[$question]['q_id']]['adjmark'];
     }
     // Write out the marks for the question
@@ -2386,6 +2389,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
 
 function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $question, $q_type, $string, $db) {
   $html = '';
+  if (count($moduleID) == 0) {
+    return $html;
+  }
 
   if ($q_type != 'info' and $q_type != 'likert' and !isset($_GET['disable_mappings'])) {
     $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $q_id, $db);
@@ -2472,7 +2478,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
           $gradetoret = ($user_mark - $total_random_mark) / ($total_marks - $total_random_mark);
           if ($gradetoret < 0) $gradetoret = 0;
           if (isset($lti) and $lti->valid) {
-            //return grade back to VLE
+            // Return grade back to VLE
             $lti->send_grade($gradetoret);
           }
         } else {
@@ -2491,7 +2497,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
         $gradetoret = $user_mark / $total_marks;
         if ($gradetoret < 0) $gradetoret = 0;
         if (isset($lti) and $lti->valid) {
-          //return grade back to VLE
+          // Return grade back to VLE
           $lti->send_grade($gradetoret);
         }
       }

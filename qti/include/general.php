@@ -172,16 +172,16 @@ function LogForQuestion($id) {
   $errors_save = (count($result['save']['errors']) > 0 && isset($result['save']['errors'][$id])) ? $result['save']['errors'][$id] : array();
   $warnings_save = (count($result['save']['warnings']) > 0 && isset($result['save']['warnings'][$id])) ? $result['save']['warnings'][$id] : array();
   if (count($errors_load) == 0 && count($warnings_load) == 0 && count($errors_save) == 0 && count($warnings_save) == 0) {
-    echo "<div style='color:#00c000'>Success</div>";
+    echo "<div style='color:#008000'>Success</div>";
   }
 
   if (count($errors_load) > 0) {
-    echo "<div style='color:#c00000;font-weight:bold;'>Error:</div>";
+    echo "<div style='color:#C00000;font-weight:bold;'>Error:</div>";
     foreach ($errors_load as $error) {
       echo "<div style='color:#c00000'>".$error."</div>";
     }
   } else if (count($errors_save) > 0) {
-    echo "<div style='color:#c00000;font-weight:bold;'>Error:</div>";
+    echo "<div style='color:#C00000;font-weight:bold;'>Error:</div>";
     foreach ($errors_save as $error) {
       echo "<div style='color:#c00000'>".$error."</div>";
     }
@@ -217,12 +217,8 @@ function DetectQTIVersion($filename) {
 }
 
 function FindQuestion(&$questions, $id) {
-  //echo "Finding question !$id!<br>";
-  //print_p($questions,false);
   $id = trim($id);
   foreach ($questions as & $question) {
-    //echo "Question !".$question->load_id."!<br>";
-    //echo "Question !".$question->save_id."!<br>";
     if ($question->load_id == $id) {
       return $question;
     }
@@ -256,7 +252,7 @@ function ConvertType($type) {
 
 function GenerateMediaType($filename) {
   $ext = strtolower(substr($filename, strrpos($filename, ".") + 1));
-  //echo "Extension : $ext<br>";
+
   return "image/".$ext;
 }
 
@@ -266,6 +262,7 @@ function for_id($in) {
   $in = str_replace("\"", "_", $in);
   $in = str_replace("'", "_", $in);
   $in = str_replace("’", "_", $in);
+  
   return $in;
 }
 
@@ -279,10 +276,6 @@ function MakeValidHTML($in,$trim=0) {
   }
 
   $in = "<div>XXX-START-XXX".$in."XXX-END-XXX</div>";
-  /*echo "Making Valid HTML:<br>";
-   echo "<pre>";
-   echo htmlentities($in);
-   echo "</pre>";*/
 
   libxml_use_internal_errors(true);
   $doc = new DOMDocument();
@@ -292,11 +285,7 @@ function MakeValidHTML($in,$trim=0) {
   
   // Required specifically for Likert Scales but mostly harmless
   $in = str_replace('<br>', '<br />', $in);
-  
-  /*echo "Int:<br>";
-   echo "<pre>";
-   echo htmlentities($in);
-   echo "</pre>";*/
+
   $in = substr($in, strpos($in, "XXX-START-XXX") + 13);
   $in = substr($in, 0, strpos($in, "XXX-END-XXX"));
   if($trim==0) {
@@ -306,10 +295,7 @@ function MakeValidHTML($in,$trim=0) {
   if (substr($in, 0, 2) == "</") {
     $in = substr($in, strpos($in, ">") + 1);
   }
-  /*echo "Result:<br>";
-   echo "<pre>";
-   echo htmlentities($in);
-   echo "</pre>";*/
+
   return $in;
 }
 
@@ -328,7 +314,6 @@ function RemoveLoneP($in) {
     $opentag = trim(substr($opentag, 0, strpos($opentag, " ")));
     $closetag = substr($in, strrpos($in, "<") + 2);
     $closetag = strtolower(substr($closetag, 0, strlen($closetag) - 1));
-    //echo htmlentities("OPEN :!$opentag!, CLOSE :!$closetag!")."<br>";
 
     if ($opentag != $closetag) return $in.$append;
 
@@ -336,7 +321,7 @@ function RemoveLoneP($in) {
 
     $middletext = substr($in, strpos($in, ">") + 1);
     $middletext = substr($middletext, 0, strrpos($middletext, "<"));
-    //echo htmlentities("Middle Test : !$middletext!")."<br>";
+
     if (strpos(" ".$middletext, "<".$opentag.">") > 0) return $in.$append;
 
     return $middletext.$append;

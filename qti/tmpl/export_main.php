@@ -18,12 +18,13 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+require_once '../include/staff_auth.inc';
 ?>
 <!DOCTYPE html>
-<html onscroll="scrollXY();" onclick="hideMenus();">
+<html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -37,8 +38,6 @@
 
   <style type="text/css">
     .divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-    a {color:black}
-    a:hover {color:blue}
     .f {float:left; width:375px; padding-left:12px; font-size:80%}
     .recent {color:blue; font-size:90%}
     .param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
@@ -94,7 +93,7 @@ if (count($result['save']['data']->files) > 1) {
       }
     }
     $zip->close();
-    $files[] = new ST_File("export.zip", $paper_row['paper_title'], $dir, 'zip');
+    $files[] = new ST_File("export.zip", $paper_title, $dir, 'zip');
   }
 } else {
   $files = $result['save']['data']->files;
@@ -106,13 +105,13 @@ echo "<div class=\"head_title\">\n";
 echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
 echo "<div class=\"breadcrumb\">";
 if ($module != '') {
-  echo '<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  echo '<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 } elseif ($folder != '') {
   echo '<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
 } else {
   echo '<a href="../index.php">' . $string['home'] . '</a>';
 }
-echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_row['paper_title'] . '</a></div>';
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
 echo "<div class=\"page_title\">" . $string['exporttoqti'] . "</div>";
 echo "</div>";
@@ -121,34 +120,34 @@ echo "</div>";
 <br />
 <table border="0" cellpadding="0" cellspacing="0" width="500" class="dialog_border" style="text-align:left">
 	<tr>
-		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['exporttoqti']; ?></td>
+		<td class="dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['exporttoqti'] ?></td>
 	</tr>
 	<tr>
 		<td class="dialog_body" colspan="2">
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php printf($string['exportsready'], $qti_ver) ?></div>
 			<?php foreach ($files as $file) : ?>
 				<?php $path = $file->path; ?>
-				<div style="margin-left:25px; line-height:150%"><img src="../artwork/import_16.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
+				<div style="margin-left:25px; line-height:150%"><img src="../artwork/download_16.gif" width="16" height="16" alt="bullet" />&nbsp;
 					<strong><a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $string['download'] . ' ' . $file->title ?>.xml</a></strong>
 				</div>
 			<?php endforeach; ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation']; ?></div>
-			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/result.html');"><?php echo $string['viewdetails']; ?></a>
+			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
+				<a href="" onclick="newPopup('exports/<?php echo $path ?>/result.html'); return false;"><?php echo $string['viewdetails']; ?></a>
 			</div>
 <?php if ($show_debug) : ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['debuginformation']; ?></div>
-			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_load.html');"><?php echo $string['loadingdebug']; ?></a>
+			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
+				<a href="" onclick="newPopup('exports/<?php echo $path ?>/debug_load.html'); return false;"><?php echo $string['loadingdebug']; ?></a>
 			</div>
-			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_int.html');"><?php echo $string['intermediateformatdebug']; ?></a>
+			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
+				<a href="" onclick="newPopup('exports/<?php echo $path ?>/debug_int.html'); return false;"><?php echo $string['intermediateformatdebug']; ?></a>
 			</div>
-			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_save.html');"><?php echo $string['savingdebug']; ?></a>
+			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
+				<a href="" onclick="newPopup('exports/<?php echo $path ?>/debug_save.html'); return false;"><?php echo $string['savingdebug']; ?></a>
 			</div>
-			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;&nbsp;
-				<a href="Javascript:newPopup('exports/<?php echo $path ?>/debug_res.html');"><?php echo $string['generaldebuginfo']; ?></a>
+			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
+				<a href="" onclick="newPopup('exports/<?php echo $path ?>/debug_res.html'); return false;"><?php echo $string['generaldebuginfo']; ?></a>
 			</div>
 <?php endif; ?>
 			<br />

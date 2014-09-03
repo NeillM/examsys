@@ -34,7 +34,7 @@ div#left-sidebar {
 .f {
   float: left;
   display: table;
-  width: 375px;
+  width: 345px;
   padding-left: 32px;
   font-size: 90%;
 	padding-bottom: 12px;
@@ -155,6 +155,12 @@ a.greylink:hover {
 }
 .popupitem:hover {
   background-color: #FFE7A2;
+}
+.popupitemline {
+  padding-left: 14px;
+  padding-right: 14px;
+  background-color: white;
+  border: 1px solid white;
 }
 .popupitembold {
   padding-left: 4px;

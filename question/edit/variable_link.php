@@ -79,15 +79,16 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	
-  <title><?php echo $string['variablelink'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['variablelink'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 	
   <link rel="stylesheet" href="../../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../../css/finish.css" type="text/css" />
 	<style type="text/css">
 		body {font-size:90%; margin-bottom:5px}
 		.title {background-color:#5590CF; color:white; font-size:160%; font-weight:bold; padding:6px}
-		.q_no {text-align:right; vertical-align:top; cursor:pointer; width:50px; padding-right:6px; padding-left:6px;}
+		.q_no {text-align:right; vertical-align:top; cursor:pointer; width:50px; padding-right:6px; padding-left:6px}
 		.divider {font-size:80%; font-weight:bold; padding-left:6px}
+    .ok {font-size:90%}
   </style>
 
   <script>
@@ -98,8 +99,8 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
         }
       }
 
-      window.opener.document.getElementById('<?php echo $_GET['elementID']; ?>').value = selectedRef;
-      window.opener.document.getElementById('<?php echo $_GET['iconID']; ?>').src = '/artwork/variable_link_on.png';
+      window.opener.document.getElementById('<?php echo $_GET['elementID'] ?>').value = selectedRef;
+      window.opener.document.getElementById('<?php echo $_GET['iconID'] ?>').src = '../../artwork/variable_link_on.png';
       window.close();
     }
   </script>
@@ -168,7 +169,7 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
   $mysqli->close();
 ?>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td style="text-align:center" colspan="2"><input type="button" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="copyValue()" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close()" /></td></tr>
+<tr><td style="text-align:center" colspan="2"><input type="button" name="submit" value="<?php echo $string['ok']; ?>" class="ok" onclick="copyValue()" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close()" /></td></tr>
 </table>
 </form>
 

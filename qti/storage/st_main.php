@@ -18,12 +18,12 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
-require_once('st_question.php');
-require_once('st_paper.php');
+require_once 'st_question.php';
+require_once 'st_paper.php';
 
 // main storage class, contains a bunch of questions,
 // a bunch of papers which link to questions, and possibly some other stuff

@@ -246,10 +246,8 @@ HTML;
   return $html;
 }
 
-function insert_into_papers($p_id, $q_id) {
-  global $mysqli;
-	
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
+function insert_into_papers($p_id, $q_id, $db) {
+  $result = $db->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->bind_result($screen, $display_pos);
@@ -260,20 +258,20 @@ function insert_into_papers($p_id, $q_id) {
   if ($screen == 0) $screen++;
 
   // Force random mark to recalculate.
-  $result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
+  $result = $db->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->close();
 
-  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
+  if ($result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
     $result->bind_param('iiii', $p_id, $q_id, $screen, $display_pos);
     $result->execute();
     $result->close();
   } else {
-    display_error("Papers Add Error", $mysqli->error);
+    display_error("Papers Add Error", $db->error);
   }
-  echo $mysqli->error;
-  return $mysqli->insert_id;
+  
+  return $db->insert_id;
 }
 
 function disable_locked($question, &$dis_class, &$dis_readonly) {

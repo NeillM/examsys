@@ -379,10 +379,10 @@ class RAF {
 		  $old_q_id = $this->getQID_GUID($q['guid']);
 		
 		  if ($old_q_id !== false) {
-				$this->logger->track_change('Copied Question', $q_id, $this->userID, $old_q_id, $q_id, 'Imported from RAF file at ' . date($date_format));		// Log as a copied file
+				$this->logger->track_change('Paper', $q_id, $this->userID, $old_q_id, $q_id, 'Add Question (from RAF)');		// Log as a copied file
 			}
 		} else {
-			$this->logger->track_change('New Question', $q_id, $this->userID, '', 'Imported from RAF file at ' . date($date_format), '');										// Log as a new file that has been imported
+			$this->logger->track_change('Paper', $q_id, $this->userID, '', $q_id, 'Add Question (from RAF)');										// Log as a new file that has been imported
 		}
 		
 		return $q_id;

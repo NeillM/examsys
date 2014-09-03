@@ -48,7 +48,7 @@ class IE_qti12_Load extends IE_Main {
 
     // values for likert scales
 
-    // from touchstone
+    // from Rogo
     ExplodeToArray($this->likert_values, $string['failpass3']);
     ExplodeToArray($this->likert_values, $string['disagre3']);
 
@@ -59,7 +59,7 @@ class IE_qti12_Load extends IE_Main {
     ExplodeToArray($this->likert_values, $string['disagre5b']);
     ExplodeToArray($this->likert_values, $string['disagre5c']);
 
-    // from qmp
+    // from QMP
     ExplodeToArray($this->likert_values, $string['qmpagree3']);
     ExplodeToArray($this->likert_values, $string['qmplike3']);
     ExplodeToArray($this->likert_values, $string['qmplikeme3']);
@@ -396,10 +396,10 @@ $numb=0;
 
       if (MatchArraySet($this->likert_values, $response_list, $this->abstainvalues)) return "likert";
 
-      // hack to ensure touchstone fill in the blanks are imported as such
+      // hack to ensure Rogo fill in the blanks are imported as such
       if ($question->qmd_itemtype == "Select a Blank" || $question->qmd_itemtype == "Select a Blank") return "blank";
 
-      // hack to ensure touchstone likert are imported as such
+      // hack to ensure Rogo likert are imported as such
       if ($question->qmd_itemtype == "Likert Scale") return "likert";
 
       return "mcq";
@@ -578,7 +578,7 @@ $numb=0;
   function LoadBlank(&$source) {
     global $string;
 
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Blank();
 
     $dest->load_id = $source->load_id;
@@ -1071,7 +1071,7 @@ $numb=0;
 
   // DONE
   function LoadExtmatch(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Extmatch();
 
     $dest->load_id = $source->load_id;
@@ -1176,7 +1176,7 @@ $numb=0;
 
   // NEW
   function LoadFlash(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Flash();
 
     $dest->load_id = $source->load_id;
@@ -1191,7 +1191,7 @@ $numb=0;
 
   // NEW
   function LoadHotspot(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Hotspot();
 
     $dest->load_id = $source->load_id;
@@ -1232,7 +1232,7 @@ $numb=0;
     }
     unset($dest->hotspots[0]);
 
-    // load in any raw option data when a touchstone export
+    // load in any raw option data when a Rogo export
     if (array_key_exists("RAW_HOTSPOT", $source->params)) {
       $dest->hotspots = array();
       $dest->raw_option = $source->params['RAW_HOTSPOT'];
@@ -1247,7 +1247,7 @@ $numb=0;
 
   // DONE
   function LoadInfo(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Info();
 
     $dest->load_id = $source->load_id;
@@ -1263,7 +1263,7 @@ $numb=0;
   function LoadLabelling(&$source) {
     global $string;
 
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Labelling();
 
     $dest->load_id = $source->load_id;
@@ -1354,7 +1354,7 @@ $numb=0;
       $dest->labels[] = $destlabel;
     }
 
-    // load in any raw option data when a touchstone export
+    // load in any raw option data when a Rogo export
     if (array_key_exists("RAW_LABELLING", $source->params)) {
       unset($dest->labels);
       $dest->raw_option = $source->params['RAW_LABELLING'];
@@ -1375,7 +1375,7 @@ $numb=0;
   function LoadLikert(&$source) {
     global $string;
 
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Likert();
 
     $dest->load_id = $source->load_id;
@@ -1894,7 +1894,7 @@ $numb=0;
 
   // DONE
   function LoadRank(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Rank();
 
     $dest->load_id = $source->load_id;
@@ -1973,7 +1973,7 @@ $numb=0;
   function LoadTextbox(&$source) {
     global $string;
 
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question_Textbox();
 
     $dest->load_id = $source->load_id;
@@ -2019,7 +2019,7 @@ $numb=0;
   }
 
   function LoadUnknown(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question();
 
     $dest->load_id = $source->load_id;
@@ -2032,7 +2032,7 @@ $numb=0;
   }
 
   function LoadError(&$source) {
-    // easy to do, no feedback in touchstone so goes the way of the dinosar
+    // easy to do, no feedback in Rogo so goes the way of the dinosar
     $dest = new ST_Question();
 
     $dest->load_id = $source->load_id;

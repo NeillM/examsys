@@ -18,10 +18,11 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
+require_once '../classes/logger.class.php';
 
 function xml2array($xmlObject, $out = array()) {
   foreach ((array)$xmlObject as $index => $node) $out[$index] = (is_object($node)) ? xml2array($node) : $node;
@@ -45,7 +46,7 @@ class IE_Local_Save extends IE_Main {
 
   // main save function
   function Save($params, &$data) {
-    global $string;
+    global $mysqli, $string;
 
     echo "<h4>{$string['params']}</h4>";
     print_p($params);
@@ -102,7 +103,6 @@ class IE_Local_Save extends IE_Main {
     $module_id = -1;
 
     $paperutils = Paper_utils::get_instance();
-    global $mysqli;
     $module_id1 = $paperutils->get_modules($paper_row['property_id'], $mysqli);
 
     if ($module_id1 !== false) {
@@ -113,7 +113,6 @@ class IE_Local_Save extends IE_Main {
     $q_group = $modutils->get_moduleid_from_id($module_id, $mysqli);
 
     if ($module_id !== false) {
-
 
       // Get a list of the team and user's keywords
       $user_keywords = array();
@@ -134,7 +133,6 @@ class IE_Local_Save extends IE_Main {
 
       // stuff from parameters
       $this->q_row['ownerID'] = $ownerid;
-   //   $this->q_row['q_group'] = $q_group;
 
       // general stuff that needs to be done for every qtype
       $this->q_row['creation_date'] = date("Y-m-d H:i:s");
@@ -196,8 +194,6 @@ class IE_Local_Save extends IE_Main {
         $this->SaveRank($question);
       } elseif ($question->type == "textbox") {
         $this->SaveTextbox($question);
-      } elseif ($question->type == "timedate") {
-        $this->SaveTimeDate($question);
       } else {
         $this->AddError("Question type " . $question->type . " not yet supported", $question->load_id);
         continue;
@@ -295,8 +291,8 @@ class IE_Local_Save extends IE_Main {
       }
     }
 
-    //print_p($data->questions,false);
-
+    $logger = new Logger($mysqli);
+    
     if (!empty($data->papers)) {
       foreach ($data->papers as & $paper) {
         foreach ($paper->screens as & $screen) {
@@ -310,6 +306,8 @@ class IE_Local_Save extends IE_Main {
             $p_row['screen'] = $nextscreen;
             $p_row['display_pos'] = $nextid++;
             $this->db->InsertRow('papers', 'p_id', $p_row);
+            
+            $logger->track_change('Paper', $paperid, $userID, '', $q_id, 'Add Question (from QTI)');
           }
           $nextscreen++;
         }

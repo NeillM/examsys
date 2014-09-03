@@ -181,7 +181,7 @@ class ST_Question_Hotspot extends ST_Question {
   var $scenario = '';
   var $feedback = '';
   var $hotspots = array(); // array of STQ_Hotspot_Spot
-  // raw labeling option text for touchstone->qti->touchstone
+  // raw labeling option text for rogo->qti->rogo
   var $raw_option = '';
 }
 
@@ -234,7 +234,7 @@ class ST_Question_Labelling extends ST_Question {
   var $arrows = array(); // array of STQ_Labelling_Arrow
   var $labels = array();
 
-  // raw labeling option text for touchstone->qti->touchstone
+  // raw labeling option text for rogo->qti->rogo
   var $raw_option = '';
   // STORE LABELING INFO IN HERE!!!!
 }

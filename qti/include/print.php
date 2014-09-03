@@ -32,6 +32,7 @@ function OutputHeader_pp() {
 ?>
 
 <style type="text/css">
+body {font-family:Arial,sans-serif; font-size:90%}
 .print_cont {
 	/*border: 1px solid #CCCCCC;*/
 	margin:6px;
@@ -66,39 +67,35 @@ function OutputHeader_pp() {
 	padding:6px;
 }
 </style>
-<script type="text/javascript">
+<script>
+  function print_nice_expand(id) {
+    $('print_nice_' + id).style.display = 'inline';
+  }
 
-function print_nice_expand(id)
-{
-	$('print_nice_' + id).style.display = 'inline';
-	
-}
+  function print_nice_contract(id) {
+    $('print_nice_' + id).style.display = 'none';
+  }
 
-function print_nice_contract(id)
-{
-	$('print_nice_' + id).style.display = 'none';
-}
+  function print_nice_expand_all(id) {
+    print_nice_expand(id)
+  }
 
-function print_nice_expand_all(id)
-{
-	print_nice_expand(id)
-}
-
-function print_nice_toggle_raw(id)
-{
-	if ($('print_nice_raw_' + id).style.display == 'none')
-	{
-		$('print_nice_raw_' + id).style.display = 'inline';
-	} else {
-		$('print_nice_raw_' + id).style.display = 'none';
-	}
-}
+  function print_nice_toggle_raw(id) {
+    if ($('print_nice_raw_' + id).style.display == 'none') {
+      $('print_nice_raw_' + id).style.display = 'inline';
+    } else {
+      $('print_nice_raw_' + id).style.display = 'none';
+    }
+  }
 </script>
 
 <?php
 }
 
 function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $print_nice_stack = array()) {
+	$configObject = Config::get_instance();
+  $base_dir = $configObject->get('cfg_root_path');
+
   OutputHeader_pp();
   global $nice_id;
   if (is_array($elem) || is_object($elem)) {
@@ -117,13 +114,13 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     $title = '';
     $isarray = false;
     if (is_array($elem)) {
-      $title = "<img src='/qti/artwork/array.png' width='16' height='16'> Array (".count($elem).")";
+      $title = "<img src='$base_dir/qti/artwork/array.png' width='16' height='16'> Array (".count($elem).")";
       $isarray = true;
       //echo '<tr><td colspan=2 style="background-color:#333333;"><strong><font color=white>ARRAY</font></strong></td></tr>';
       } else {
       //echo '<tr><td colspan=2 style="background-color:#333333;"><strong>';
       //echo '<font color=white>+ * - OBJECT Type: '.get_class($elem).'</font></strong></td></tr>';
-      $title = "<img src='/qti/artwork/class.png' width='16' height='16'> Object Type: ".get_class($elem);
+      $title = "<img src='$base_dir/qti/artwork/class.png' width='16' height='16'> Object Type: ".get_class($elem);
 
       //			if (is_callable(array(get_class($elem),"__toString")))
       if (is_callable(array($elem, "__toString"))) {
@@ -135,13 +132,13 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     }
     echo "<div class='print_cont'>";
     echo "<div class='print_head'>";
-    echo "<img src='/qti/artwork/plus.png' width='16' height='16' onclick='print_nice_expand(".$nice_id.")'>";
-    echo "<img src='/qti/artwork/star.png' width='16' height='16' onclick='print_nice_expand_all(".$nice_id.")'>";
-    echo "<img src='/qti/artwork/minus.png' width='16' height='16' onclick='print_nice_contract(".$nice_id.")'>";
-    echo "<img src='/qti/artwork/raw.png' width='16' height='16' onclick='print_nice_toggle_raw(".$nice_id.")'>";
+    echo "<img src='$base_dir/qti/artwork/plus.png' width='16' height='16' onclick='print_nice_expand(".$nice_id.")'>";
+    echo "<img src='$base_dir/qti/artwork/star.png' width='16' height='16' onclick='print_nice_expand_all(".$nice_id.")'>";
+    echo "<img src='$base_dir/qti/artwork/minus.png' width='16' height='16' onclick='print_nice_contract(".$nice_id.")'>";
+    echo "<img src='$base_dir/qti/artwork/raw.png' width='16' height='16' onclick='print_nice_toggle_raw(".$nice_id.")'>";
     echo "&nbsp;&nbsp;";
     echo $title."</div>";
-    echo "<div class='print_raw' id='print_nice_raw_".$nice_id."' style='display:none;'><pre>";
+    echo "<div class='print_raw' id='print_nice_raw_".$nice_id."' style=\"display:none\"><pre>";
     print_r($elem);
     echo "</pre></div>";
     $style = '';
@@ -150,7 +147,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     echo "<div class='print_body' id='print_nice_".$nice_id."' style='".$style."'>";
     $nice_id++;
     if (count($elem) > 0) {
-      echo "<table border=0 cellspacing=0 cellpadding=2 width=100%>";
+      echo "<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">";
       $color = 0;
       foreach ($elem as $k => $v) {
         if ($max_level % 2) {
