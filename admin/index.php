@@ -143,7 +143,7 @@ require '../include/sysadmin_auth.inc';
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
 	$menudata['savefailattempts']			= array('list_save_fails.php', 'save_fail_48.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
-	$menudata['statistics']		= array('../statistics/index.php', 'pie_chart_48.png');
+	$menudata['statistics']		= array('../statistics/index.php', 'statistics.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
 		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}
