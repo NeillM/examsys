@@ -26,6 +26,7 @@ require '../include/staff_auth.inc';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
+require_once '../classes/folderutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
@@ -142,17 +143,6 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
-  
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
 ?>
 <div id="content">
 
@@ -160,14 +150,14 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
 <?php
-    if ($folder != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
 ?>
-  <div class="page_title">SCT Responses/Reasons</div>
+  <div class="page_title"><?php echo $string['sctresponses'] ?></div>
 </div>
 
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -230,7 +220,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
 ?>
 </table>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>">
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" class="ok" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" class="ok" style="width:250px" /></div>
 </form>
 </div>
     

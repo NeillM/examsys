@@ -33,7 +33,6 @@ Class StateUtils {
     $result = $db->prepare("SELECT state_name, content FROM state WHERE page = ? AND userID = ?");
     $result->bind_param('si', $page, $userID);
     $result->execute();
-    $result->store_result();
     $result->bind_result($state_name, $content);
     while ($result->fetch()) {
       $state_array[$state_name] = $content;

@@ -83,11 +83,11 @@ Class OnlineHelp {
       $sql = 'SELECT articleid, title FROM student_help WHERE id != 1 AND deleted IS NULL AND language = ? ORDER BY title, id';
     } else {
       if ($this->userObject->has_role('SysAdmin')) {
-        $sql = 'SELECT articleid, title FROM staff_help WHERE roles IN ("SysAdmin", "Admin", "Staff") AND deleted IS NULL AND language = ? ORDER BY title, id';
+        $sql = 'SELECT articleid, title FROM staff_help WHERE id != 1 AND roles IN ("SysAdmin", "Admin", "Staff") AND deleted IS NULL AND language = ? ORDER BY title, id';
       } elseif ($this->userObject->has_role('Admin')) {
-        $sql = 'SELECT articleid, title FROM staff_help WHERE roles IN ("Admin", "Staff") AND deleted IS NULL AND language = ? ORDER BY title, id';
+        $sql = 'SELECT articleid, title FROM staff_help WHERE id != 1 AND roles IN ("Admin", "Staff") AND deleted IS NULL AND language = ? ORDER BY title, id';
       } else {
-        $sql = 'SELECT articleid, title FROM staff_help WHERE roles = "Staff" AND deleted IS NULL AND language = ? ORDER BY title, id';
+        $sql = 'SELECT articleid, title FROM staff_help WHERE id != 1 AND roles = "Staff" AND deleted IS NULL AND language = ? ORDER BY title, id';
       }
     }
 

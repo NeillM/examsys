@@ -37,7 +37,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
   <?php
     if (isset($_SESSION['_lti_context'])) {
-      echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n";
+      echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n"; // Make the LTI screen blend in more.
     }
   ?>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
@@ -155,7 +155,7 @@ HTML;
 									} else {
 										$value='';
 									}
-									echo '<td><input type="' . $field->type . '" name="' . $field->name . '" value="' . $value . '"></td>';
+									echo '<td><input type="' . $field->type . '" name="' . $field->name . '" value="' . $value . '" style="width:240px"></td>';
 									echo '</tr>';
 								}
 							}

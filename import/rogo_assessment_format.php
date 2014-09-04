@@ -63,12 +63,27 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   require '../include/paper_options.inc';
+  require '../include/toprightmenu.inc';
+
+  echo draw_toprightmenu();
 ?>
 <div id="content">
-<br />
-<br />
+<div class="head_title">
+<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+<div class="breadcrumb">
+<?php
+$modutils = module_utils::get_instance();
+echo '<a href="../index.php">' . $string['home'] . '</a>';
+if ($module != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . $modutils->get_moduleid_from_id($module, $mysqli) . '</a>';
+} elseif ($folder != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+}
+echo "</div><div class=\"page_title\">" . $string['importraf'] . "</div>";
+echo "</div>";
+?>
 <form name="myform" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" enctype="multipart/form-data">
-<table cellspacing="0" cellpadding="0" border="0" style="width:500px; text-align:left" class="dialog_border"> 
+<table cellspacing="0" cellpadding="0" border="0" style="margin-top:70px; width:500px; text-align:left" class="dialog_border"> 
 	<tr> 
 		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/raf_file.png" width="48" height="48" /></td><td class="dialog_header" style="width:445px"><?php echo $string['importraf'] ?></td> 
 	</tr> 

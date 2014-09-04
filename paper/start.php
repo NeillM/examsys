@@ -1309,7 +1309,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   $midexam_clarification = $configObject->get('midexam_clarification');
-
+  
+  if ($propertyObj->get_paper_type() === '3') {
+    $calculator = 0;    
+  } else {
+    $calculator = $propertyObj->get_calculator();
+  }
+  
   if (in_array('students', $midexam_clarification)) {
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     echo $exam_announcementObj->display_student_announcements();
@@ -1324,7 +1330,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $propertyObj->get_paper_prologue() . '</td></tr>';
       if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
       
-			display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+			display_question($configObject, $question, $propertyObj->get_paper_type(), $calculator, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
       
 			$previous_q_type = $question['q_type'];
       $q_displayed++;
