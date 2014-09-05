@@ -26,7 +26,7 @@ require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete 
 require '../../include/errors.inc';
 require_once '../../classes/helputils.class.php';
 
-$originalid = check_var('id', 'GET', true, false, true);
+$originalID = check_var('id', 'GET', true, false, true);
 
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 $help_system->delete_page($originalID);
