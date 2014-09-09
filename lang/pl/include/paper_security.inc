@@ -23,4 +23,5 @@ $string['error_time'] = 'Arkusz, który chcesz zobaczyć dostępny jest tylko po
 $string['notregistered'] = '%s %s (%s) nie jest zarejestrowany na <strong>%s</strong> w <strong>%s</strong>.';
 $string['error_module'] = 'Nie ma tego arkusza w żadnym module.';
 $string['error_metadata'] = 'Metadane użytkownika nie są zgodne <strong>%s: %s</strong>';
+$string['alreadycompleted'] = 'Assessment has already been completed at <strong>%s</strong>.';
 ?>

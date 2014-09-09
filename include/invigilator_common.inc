@@ -81,6 +81,17 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
     </thead>
     <tbody>
   <?php
+    // Get guest account details.
+    $guest_accounts = array();
+    $sql = "SELECT assigned_account, title, first_names, surname FROM temp_users";
+    $results = $db->prepare($sql);
+    $results->execute();
+    $results->bind_result($assigned_account, $title, $first_names, $surname);
+    while($results->fetch()) {
+      $guest_accounts[$assigned_account] = array('title'=>$title, 'first_names'=>$first_names, 'surname'=>$surname);
+    }
+    $results->close();
+    
     // Get all students who should are able to access this paper
     $sql = "SELECT DISTINCT extra_time, medical, breaks, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( " . $modules . ") AND calendar_year = ? AND modules_student.userID = users.id";
     $results = $db->prepare($sql);
@@ -110,13 +121,25 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
     $results->store_result();
     $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
     while ($results->fetch()) {
-      $student_object[$userID]['user_ID'] = $userID;
-      $student_object[$userID]['surname'] = $surname;
-      $student_object[$userID]['first_names'] = $first_names;
-      $student_object[$userID]['title'] = $title;
-      $student_object[$userID]['extra_time_percentage'] = $extra_time_percentage;
-      $student_object[$userID]['medical'] = $medical;
-      $student_object[$userID]['breaks'] = $breaks;
+      if ($first_names == 'Temporary Account') {
+        $username = strtolower($surname);
+        
+        $student_object[$userID]['user_ID'] = $userID;
+        $student_object[$userID]['surname'] = $guest_accounts[$username]['surname'];
+        $student_object[$userID]['first_names'] = $guest_accounts[$username]['first_names'];
+        $student_object[$userID]['title'] = $guest_accounts[$username]['title'];
+        $student_object[$userID]['extra_time_percentage'] = 0;
+        $student_object[$userID]['medical'] = '';
+        $student_object[$userID]['breaks'] = '';
+      } else {
+        $student_object[$userID]['user_ID'] = $userID;
+        $student_object[$userID]['surname'] = $surname;
+        $student_object[$userID]['first_names'] = $first_names;
+        $student_object[$userID]['title'] = $title;
+        $student_object[$userID]['extra_time_percentage'] = $extra_time_percentage;
+        $student_object[$userID]['medical'] = $medical;
+        $student_object[$userID]['breaks'] = $breaks;
+      }
     }
     $results->close();
 

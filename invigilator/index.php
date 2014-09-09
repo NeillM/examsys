@@ -427,7 +427,6 @@ if ($properties_list !== false and count($properties_list) > 0) {
         $invigilator_id = $userObject->get_user_ID();
         $end_datetime = $log_lab_end_time->save($invigilator_id);
         $exam_started = true;
-        //$start_date = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'));
         $start_date = date($configObject->get('cfg_long_time_php'));
       }
     }

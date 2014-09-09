@@ -84,7 +84,7 @@ hr.head-line {
 .warning-img {
 	vertical-align: text-top;
 	margin-top: -2px;
-	width: 12pg;
+	width: 12px;
 	height: 11px;
 	padding-right: 5px;
 }
@@ -100,4 +100,14 @@ hr.head-line {
 .labs .current {
 	color: #fff;
 	background-color: #ff6300;
+}
+
+.finished {
+  color: white;
+  background-color: #538135;
+  font-size: 80%;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }

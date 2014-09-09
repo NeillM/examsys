@@ -340,18 +340,23 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
       echo "<td><a href=\"user_index.php?id=" . $paper_display[$i]['crypt_name'] . "\">" . $paper_display[$i]['paper_title'] . "</a>";
       echo ' <img src="../artwork/key.png" width="16" height="16" alt="Key" /> <span style="color:#C88607; font-weight:bold; font-size:80%">' . $string['passwordRequired'] . '</span>';
     }
-    echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];
-    if ($paper_display[$i]['max_screen'] == 1) {
-      echo ' ' . $string['screen'] . ', ';
+    if ($paper_display[$i]['completed'] == '') {
+      echo '<br /><span style="color:#808080; font-size:80%">(' . $paper_display[$i]['max_screen'];
+      if ($paper_display[$i]['max_screen'] == 1) {
+        echo ' ' . $string['screen'] . ', ';
+      } else {
+        echo ' ' . $string['screens'] . ', ';
+      }
+      if ($paper_display[$i]['bidirectional'] == 1) {
+        echo $string['Bidirectional'];
+      } else {
+        echo $string['Unidirectional'];
+      }
+      echo ")</span>";
     } else {
-      echo ' ' . $string['screens'] . ', ';
+      echo '<br /><span class="finished">' . $string['finished'] . '</span>';
     }
-    if ($paper_display[$i]['bidirectional'] == 1) {
-      echo $string['Bidirectional'];
-    } else {
-      echo $string['Unidirectional'];
-    }
-    echo ")</span></td></tr>\n";
+    echo "</td></tr>\n";
   }
   echo "</table>\n</div>\n";
 }

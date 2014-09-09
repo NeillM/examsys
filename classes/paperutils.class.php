@@ -483,19 +483,11 @@ Class PaperUtils {
     }
 
     $paper_no = 0;
-    $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password FROM (papers, properties) WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() $exclude_sql GROUP BY paper");
-    if ($db->error) {
-      try {
-        throw new Exception("MySQL error $db->error <br /> ", $db->errno);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-        exit();
-      }
-    }
+    $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password, completed FROM (papers, properties) LEFT JOIN log_metadata ON properties.property_id = log_metadata.paperID AND userID = ? WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() $exclude_sql GROUP BY paper");
+    $paper_query->bind_param('i', $userObj->get_user_ID());
     $paper_query->execute();
     $paper_query->store_result();
-    $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password);
+    $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password, $completed);
     while ($paper_query->fetch()) {
       if ($labs != '') {
         $machineOK = false;
@@ -538,6 +530,7 @@ Class PaperUtils {
         $paper_display[$paper_no]['max_screen'] = $max_screen;
         $paper_display[$paper_no]['bidirectional'] = $bidirectional;
         $paper_display[$paper_no]['password'] = $password;
+        $paper_display[$paper_no]['completed'] = $completed;
         $paper_no++;
       }
     }
