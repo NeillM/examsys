@@ -347,13 +347,13 @@ $modIDs = array_keys(Paper_utils::get_modules($paperID, $mysqli));
 
 if ($userObject->has_role('Student')) {
 
-  // Check for additional password on the paper
+  // Check for additional password on the paper.
   check_paper_password($propertyObj->get_password(), $string, $mysqli);
 
-  // Check time security
+  // Check time security.
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);
 
-  //Check room security
+  //Check room security.
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
                                 $propertyObj->get_labs(),
                                 $current_address,
@@ -362,14 +362,17 @@ if ($userObject->has_role('Student')) {
                                 $mysqli
                               );
 
-  // check modules if the user is a student and the paper is not formative
+  // Check modules if the user is a student and the paper is not formative.
   $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
 
-  // Check for any metadata security restrictions
+  // Check for any metadata security restrictions.
   check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
+  
+  // Check if the student has clicked 'Finish'.
+  check_finished($propertyObj, $userObject, $string, $mysqli);
 }
 
-//get lab info used in log metadata
+// Get lab info used in log metadata.
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
   $lab_name = $lab_object->get_name();
@@ -423,12 +426,12 @@ $allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
 */
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2' and !$is_question_preview_mode) {
-  //has this lab had an end time set?
+  // Has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
-//check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
+// Check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
 if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($propertyObj->get_paper_type() == '1' or ($propertyObj->get_paper_type() == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
   $propertyObj->set_paper_type('_late');
 }
@@ -720,44 +723,40 @@ if ($css != '') {
     return true;
   }
 <?php
-  } elseif ($propertyObj->get_bidirectional() == 0) {
+  } elseif ($propertyObj->get_bidirectional() == 0) {   // Linear navigation
 ?>
-  var confirmSubmit = function() {
-    if (submitted == true) {
-      return false;
+  var confirmSubmit = function(event) {
+    if ($('#button_pressed').val() == 'finish') {
+      showDialog("<?php echo $string['javacheck2'] ?>");
+    } else {
+      showDialog("<?php echo $string['javacheck1'] ?>");
     }
-    var agree = confirm("<?php echo $string['javacheck1']; ?>");
-    if (agree) {
+    
+    $("#dialog_ok").click(function(event) {
       $('body').css('cursor','wait');
       submitted = true;
-      return true;
-    } else {
-      $('body').css('cursor','default');
-      return false;
-    }
+      $("#overlay").hide();
+      conductSave(event);
+    });
+    
   }
 <?php
-  } else {
+  } else {                              // Bi-directional navigation
 ?>
-  var confirmSubmit = function() {
+  var confirmSubmit = function(event) {
 	  if (submitted == true) {
       return false;
     }
     if ($('#button_pressed').val() == 'finish') {
-      var agree = confirm("<?php echo $string['javacheck2'] ?>");
-      if (agree) {
+      showDialog("<?php echo $string['javacheck2'] ?>");
+      $("#dialog_ok").click(function(event) {
         $('body').css('cursor','wait');
         submitted = true;
-        return true;
-      } else {
-        $('#savemsg').html("");
-        $('body').css('cursor','default');
-        return false;
-      }
+        $("#overlay").hide();
+        conductSave(event);
+      });
     } else {
-      $('body').css('cursor','wait');
-      submitted = true;
-      return true;
+      conductSave(event);
     }
   }
   
@@ -784,13 +783,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 		usingAjax = true;
     last_saved_user_answers = $('#qForm').serialize();
 		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />";?>');
-		$('#next').click(userSubmit);
+    $('#next').click(checkSubmit);
 
 		$('#previous').replaceWith('<?php echo "<input id=\"previous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 1) . "\" />";?>');
-		$('#previous').click(userSubmit);
+		$('#previous').click(checkSubmit);
 
 		$('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";?>');
-		$('#finish').click(userSubmit);
+		$('#finish').click(checkSubmit);
 
 		<?php // Attach UI events ?>
 		$('.rankselect').change(rankCheck);
@@ -812,6 +811,60 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   });
 
   <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
+  var checkSubmit = function (event) {
+    if (typeof(tinyMCE) != "undefined") {
+      tinyMCE.triggerSave();
+    }
+    
+    var formData = $('#qForm').serialize();
+    submitType = 'userSubmit';
+    stopAutoSave();
+    if (!!event) {
+      $('#button_pressed').attr('value',event.target.id);
+    }
+    
+    $("#dialog_cancel").click(function() {
+      $('#savemsg').html("");
+      $('body').css('cursor','default');
+      $("#overlay").hide();
+    });
+
+    confirmSubmit();
+  }
+  
+  function conductSave(event) {
+    if (typeof(tinyMCE) != "undefined") {
+      tinyMCE.triggerSave();
+    }
+
+    var formData = $('#qForm').serialize();
+    submitType = 'userSubmit';
+    stopAutoSave();
+    
+    $('#saveError').fadeOut('slow');
+    $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
+    <?php // Log which method the users submitted the page via ?>
+      if ($('#button_pressed').val() == 'finish') {
+        $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
+      } else {
+        $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
+      }
+    
+    if (last_saved_user_answers !== formData<?php if (!isset($user_answers[$current_screen])) echo ' || true' ?>) {
+      ajaxSave(1);
+    } else {
+      ajaxSave(0);
+    }
+  }
+  
+  function showDialog(msg) {
+    $("#overlay").show();
+    $("#dialog_cancel").focus();
+    $("#submit_dialog_msg").html(msg);
+    $("#submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
+    $("#submit_dialog").css('top', (($(window).height() / 2) - 65) + 'px');
+  }
+  
   var userSubmit = function (event) {
     <?php // Save any data from wysiwyg  ?>
     if (typeof(tinyMCE) != "undefined") {
@@ -828,7 +881,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
     if (confirmSubmit()) {
       $('#saveError').fadeOut('slow');
-      $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />")
+      $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
 
       <?php // Log which method the users submitted the page via ?>
       if (!!event) {
@@ -946,25 +999,26 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             return;
           },
           success: function (ret_data, jqXHR, textStatus) {
-              if (ret_data == randomPageID) {
-								<?php // Cache the form data to look for changes on next auto save ?>
-								last_saved_user_answers = this.data;
-								saveSuccess();
-								return;
-              }
-              if (this.retry()) {
-                return;
-              } else  {
-                saveFail();
-                return;
-              }
+            if (ret_data == randomPageID) {
+              $('#save_failed').val('');
+              <?php // Cache the form data to look for changes on next auto save ?>
+              last_saved_user_answers = this.data;
+              saveSuccess();
+              return;
+            }
+            if (this.retry()) {
+              return;
+            } else  {
+              saveFail();
+              return;
+            }
           },
           retry: function (){
             <?php // Retry if we can ?>
             this.tryCount++;
             if (this.tryCount <= this.retryLimit) {
               <?php // Indicate the retry on the url ?>
-              if(this.tryCount == 1) {
+              if (this.tryCount == 1) {
                 this.url = this.url + "&retry=" + this.tryCount;
               } else {
                 this.url = this.url.replace("&retry=" + (this.tryCount - 1), "&retry=" + this.tryCount);
@@ -987,9 +1041,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     } else if(submitType == 'forcedSubmit') {
       $('#qForm').submit();
     } else {
-      $('#savemsg').html("<?php echo $string['auto_ok']; ?>");
+      $('#savemsg').html("<?php echo $string['auto_ok'] ?>");
       <?php // Clear auto save message ?>
-      setTimeout("$('#savemsg').html(\"\")",5000);
+      setTimeout("$('#savemsg').html(\"\")", 5000);
     }
   }
 
@@ -1350,18 +1404,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
   } else {
     if ($current_screen > $no_screens) {
-      echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;';
-      if (!isset($_GET['q_id'])) {
-        echo $string['finishnote'];
-        if ($propertyObj->get_bidirectional() == 1) echo "<br />" . $string['gobackpink'];
-      }
-      echo "</div>\n<br />\n";
+      echo "<div class=\"callout\">\n<div id=\"calloutTxt\">" . $string['finishnote'] . "</div><b class=\"notch\"></b></div>\n";
     } elseif ($propertyObj->get_bidirectional() == 0) {
-      echo "<br />\n<div class=\"note\" style=\"text-align:center;font-size:90%\">";
-      if (isset($low_bandwidth) and $low_bandwidth == 0) echo '<img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;';
-      printf($string['pleasecomplete'], $current_screen);
-      echo "</div>\n<br />\n";
+      echo "<div class=\"callout\">\n<div id=\"calloutTxt\">" . sprintf($string['pleasecomplete'], $current_screen) . "</div><b class=\"notch\"></b></div>\n";
     }
   }
 
@@ -1418,6 +1463,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 <textarea id="save_failed" name="save_failed" style="display:none"></textarea>
 
 </form>
+</div>
+<div id="overlay">
+  <div id="submit_dialog">
+    <div id="submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="submit_dialog_msg"></p>
+    <div id="submit_dialog_buttons"><input type="button" name="dialog_ok" id="dialog_ok" class="ok" value="OK" /><input type="button" name="dialog_cancel" id="dialog_cancel" class="cancel" value="Cancel" />&nbsp;&nbsp;</div>
+  </div>
 </div>
 <?php
 

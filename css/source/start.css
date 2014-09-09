@@ -201,7 +201,7 @@ pre {
 }
 #next {
   font-size: 100%;
-  width: 7em;
+  width: 8em;
   margin-left: 1em;
   margin-right: 1em;
   margin-top: 1px;
@@ -210,7 +210,7 @@ pre {
 }
 #finish {
   font-size: 100%;
-  width: 7em;
+  width: 8em;
   font-weight: bold;
   margin-left: 1em;
   margin-right: 1em;
@@ -220,7 +220,7 @@ pre {
 }
 #previous {
   font-size: 100%;
-  width: 7em;
+  width: 8em;
   margin-left: 1em;
   margin-right: 1em;
   margin-top: 1px;
@@ -229,6 +229,7 @@ pre {
 }
 #savemsg {
   margin-right: 5px;
+  color: white;
 }
 #saveError {
   display: none;
@@ -307,3 +308,71 @@ pre {
   font-size: 90%;
   padding-left: 10px;
 }
+#overlay {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  z-index: 1000;
+  background: rgba(255,255,255,.5);
+}
+#submit_dialog {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 500px;
+  height: 130px;
+  border: 3px solid #1958B7;
+  background-color: white;
+}
+#submit_dialog_icon {
+  float: left;
+  margin: 10px 15px 10px 10px;
+}
+#submit_dialog_msg {
+  margin: 10px 10px 10px 20px;
+  text-align: left; 
+}
+#submit_dialog_buttons {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #EAEAEA;
+  text-align: right;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.callout {
+  margin-left: auto;
+  margin-right: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 100%;
+  width: 575px;
+  border: 0;
+  padding: 0;
+}
+#calloutTxt {
+  padding: 6px;
+	text-align: center;
+  background-color: #FCE282;
+}
+.notch {
+	position: relative;
+  top: -3px;
+  left: 485px;
+	margin: 0;
+	border-top: 10px solid #FCE282;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 0;
+	padding: 0;
+	width: 0;
+	height: 0;
+	font-size: 0;
+	line-height: 0;
+}
+

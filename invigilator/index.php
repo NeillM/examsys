@@ -199,6 +199,18 @@ if ($lab_object !== false) {
     });
   }
   
+  function unfinishExam() {
+	  $('#menudiv').hide();
+    $.post("../ajax/invigilator/unfinish_exam.php",
+    {
+      userID:$('#userID').val(),
+      paperID:$('#paperID').val()
+    },
+    function(data, status) {
+      refreshCohortList( $('#paperID').val() );
+    });    
+  }
+  
   function refreshCohortList(paperID) {
     dataSource = "../ajax/invigilator/refresh_cohort_list.php?paperID=" + paperID;
 
@@ -281,6 +293,7 @@ if ($lab_object !== false) {
     $('.menu-time').click(extendTime);
     $('.menu-note').click(newStudentNote);
     $('.menu-toilet').click(newToiletBreak);
+    $('.menu-unfinish').click(unfinishExam);
     StartClock();
     resizeLists();
     $(window).unload(KillClock);
@@ -335,6 +348,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     <li class="menu-time"><?php echo $string['extendtime'] ?></li>
     <li class="menu-note"><?php echo $string['addnote'] ?></li>
     <li class="menu-toilet"><?php echo $string['toiletbreak'] ?></li>
+    <li class="menu-unfinish">Set to unfinished</li>
   </ul>
 </div>
   

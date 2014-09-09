@@ -87,6 +87,31 @@ function check_datetime($start_date, $end_date, $string, $db) {
   }
 }
 
+function check_finished($propertyObj, $userObj, $string, $db) {
+  $notice = UserNotices::get_instance();
+  
+  if ($propertyObj->get_paper_type() != '2') {
+    return true;
+  }
+  
+  $userID = $userObj->get_user_ID();
+  $paperID = $propertyObj->get_property_id();
+  
+  $stmt = $db->prepare("SELECT UNIX_TIMESTAMP(completed) FROM log_metadata WHERE userID = ? AND paperID = ?");
+  $stmt->bind_param('ii', $userID, $paperID);
+  $stmt->execute();
+  $stmt->bind_result($completed);
+  $stmt->fetch();
+  $stmt->close();
+  
+  if ($completed != '') {
+    $msg = sprintf($string['alreadycompleted'], date('d/m/Y H:i', $completed));
+    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="window.close()" class="OK" />';
+    $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/square_exclamation_48.png', '#C00000', true, true);
+  }
+  
+}
+
 function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $notice = UserNotices::get_instance();
 

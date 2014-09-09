@@ -66,6 +66,9 @@ fieldset {
 .menu-toilet {
   background: url('../artwork/wc.png') no-repeat 6px 4px;  
 }
+.menu-unfinish {
+  background: url('../artwork/unfinish_exam.png') no-repeat 6px 4px;    
+}
 .tight {
   margin: 4px 0 2px 0;
 }
