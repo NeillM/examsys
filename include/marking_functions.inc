@@ -102,7 +102,8 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
       $save_answers->bind_param('iddisiissidsis', $response['q_id'], $response['mark'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID, $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss']);
     }
     $res = $save_answers->execute(); // Save to the database.
-    if ($res === false or $save_answers->affected_rows == 0) {
+    //if ($res === false or $save_answers->affected_rows == 0) {
+    if ($res === false) {
       $save_ok = false;
       break;
     }

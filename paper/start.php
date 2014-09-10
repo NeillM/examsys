@@ -651,6 +651,7 @@ if ($css != '') {
     if (isset($_POST['refpane'])) {
       echo "  changeRef(" . $_POST['refpane'] . ");\n";
     } else {
+      echo "  changeRef();\n";
       echo "  resizeReference();\n";
     }
     echo "$(window).resize(resizeReference);";
@@ -695,6 +696,8 @@ if ($css != '') {
       echo "      }\n";
       echo "    }\n";
       echo "  }\n";
+    } else {
+      echo "var changeRef = function(refID) {};\n";
     }
   ?>
   
@@ -720,7 +723,7 @@ if ($css != '') {
   if ($is_question_preview_mode === true) {
 ?>
   var confirmSubmit = function() {
-    return true;
+    conductSave(event);
   }
 <?php
   } elseif ($propertyObj->get_bidirectional() == 0) {   // Linear navigation
@@ -812,13 +815,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
   var checkSubmit = function (event) {
+    stopAutoSave();
     if (typeof(tinyMCE) != "undefined") {
       tinyMCE.triggerSave();
     }
     
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
-    stopAutoSave();
     if (!!event) {
       $('#button_pressed').attr('value',event.target.id);
     }
@@ -862,7 +865,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     $("#dialog_cancel").focus();
     $("#submit_dialog_msg").html(msg);
     $("#submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
-    $("#submit_dialog").css('top', (($(window).height() / 2) - 65) + 'px');
+    $("#submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
   }
   
   var userSubmit = function (event) {
@@ -877,26 +880,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     if (!!event) {
       $('#button_pressed').attr('value',event.target.id);
     }
-    
-
-    if (confirmSubmit()) {
-      $('#saveError').fadeOut('slow');
-      $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
-
-      <?php // Log which method the users submitted the page via ?>
-      if (!!event) {
-        if (event.target.id == 'finish') {
-          $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
-        } else {
-          $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
-        }
-      }
-      if (last_saved_user_answers !== formData<?php if (!isset($user_answers[$current_screen])) echo ' || true' ?>) {
-        ajaxSave(1);
-      } else {
-        ajaxSave(0);
-      }
-    }
+    confirmSubmit();
   }
 
   <?php  // Called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
@@ -962,7 +946,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           dataType: 'html',
           timeout: <?php
 											// Set the time out of one requst to be the maximum total time plus 5s for network latency
-											// PHP handles nomal timeouts. This is just to make sure the user won't wait forever if somthing
+											// PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
 											// weird happens.
 											echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
                    ?>,
@@ -1009,6 +993,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             if (this.retry()) {
               return;
             } else  {
+              alert(ret_data + ', ' + randomPageID + ', ' + this.tryCount);
               saveFail();
               return;
             }

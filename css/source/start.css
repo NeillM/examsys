@@ -235,7 +235,7 @@ pre {
   display: none;
   margin-left: 25%;
   margin-bottom: 5px;
-  width: 45%;
+  width: 600px;
   height: 60px;
 	padding: 0;
   border: 2px solid #C42828;
@@ -324,7 +324,7 @@ pre {
   top: 100px;
   left: 100px;
   width: 500px;
-  height: 130px;
+  height: 150px;
   border: 3px solid #1958B7;
   background-color: white;
 }
@@ -365,9 +365,9 @@ pre {
   top: -3px;
   left: 485px;
 	margin: 0;
-	border-top: 10px solid #FCE282;
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
+	border-top: 12px solid #FCE282;
+	border-left: 12px solid transparent;
+	border-right: 12px solid transparent;
 	border-bottom: 0;
 	padding: 0;
 	width: 0;

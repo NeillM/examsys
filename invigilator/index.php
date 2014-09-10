@@ -201,14 +201,11 @@ if ($lab_object !== false) {
   
   function unfinishExam() {
 	  $('#menudiv').hide();
-    $.post("../ajax/invigilator/unfinish_exam.php",
-    {
-      userID:$('#userID').val(),
-      paperID:$('#paperID').val()
-    },
-    function(data, status) {
-      refreshCohortList( $('#paperID').val() );
-    });    
+    unfinish = window.open("check_unfinish_exam.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "unfinish", "width=450,height=200,left=" + (screen.width / 2 - 275) + ",top=" + (screen.height / 2 - 100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+
+    if (window.focus) {
+      unfinish.focus();
+    }
   }
   
   function refreshCohortList(paperID) {

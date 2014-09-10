@@ -15,10 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* This AJAX script set the 'completed' field to NULL so that a student may
-* restart a summative exam if they finished it accidentally. 
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -31,7 +28,7 @@ require_once '../../include/errors.inc';
 $userID  = check_var('userID', 'POST', true, false, true);
 $paperID = check_var('paperID', 'POST', true, false, true);
 
-$sql = 'update log_metadata set  completed = null where userID = ? and paperID = ?';
+$sql = 'UPDATE log_metadata SET completed = null WHERE userID = ? AND paperID = ?';
 
 $stmt = $mysqli->prepare($sql);
 $stmt->bind_param('ii', $userID, $paperID);
@@ -40,3 +37,35 @@ $stmt->close();
     
 $mysqli->close();
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
+  <title>Exam Unfinished</title>
+  
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
+
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      window.opener.location.reload();
+      self.close();
+    });
+  </script>
+</head>
+
+<body>
+
+<p>Exam successfully unfinished.<p>
+
+<div class="button_bar">
+<form action="" method="get">
+<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();" />
+</form>
+</div>
+
+</body>
+</html>
