@@ -115,13 +115,8 @@ require_once 'summary_report.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
-	
-	$popup_width = 180;
-	if ($language != 'en') {		// Make wider for non-English languages which have longer words
-		$popup_width = 300;
-	}
 ?>
-<div id="menudiv" class="popupmenu" style="padding:5px; width:<?php echo $popup_width; ?>px">
+<div id="menudiv" class="popupmenu">
   <div class="popup_row" onclick="viewReviews();">
     <div class="popup_icon"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title" id="item1"><?php echo $string['Review Form'] ?></div>
@@ -140,7 +135,7 @@ require_once 'summary_report.inc';
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if (isset( $_GET['module'] ) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   } elseif (isset($_GET['folder'])) {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   }

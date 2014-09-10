@@ -17,6 +17,7 @@
 $string['reviewsummary'] = 'Přehled recenze'; 
 $string['Review Form'] = 'Formulář recenze';
 $string['Student Profile'] = 'Profil studenta';
+$string['title'] = 'Titul';
 $string['surname'] = 'Příjmení';
 $string['firstnames'] = 'Křestní jméno';
 $string['studentid'] = 'ID studenta';

@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -28,6 +28,9 @@ require '../../include/media.inc';
 require_once '../../classes/searchutils.class.php';
 require_once '../../classes/questionutils.class.php';
 require_once '../../classes/question_status.class.php';
+require_once '../../classes/stateutils.class.php';
+
+$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/question/search.php');
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);

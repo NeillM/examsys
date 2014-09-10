@@ -79,9 +79,9 @@
 <body>
 
 <table cellspacing="0" cellpadding="0" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #828790">
-<tr><td style="vertical-align:top; text-align:center" valign="top">
+<tr><td style="vertical-align:top; text-align:center">
 
-<table cellspacing="0" cellpadding="0" style="font-size:90%; width:144px; background-white; text-align:left">
+<table cellspacing="0" cellpadding="0" style="font-size:90%; width:144px; text-align:left">
 <tr><td id="button_unused" class="tabon" onclick="buttonclick('unused','add_questions_list.php?type=unused')"><?php echo $string['myunused'] ?></td></tr>
 <tr><td id="button_alphabetic" class="tab" onclick="buttonclick('alphabetic','add_questions_list.php?type=all')"><?php echo $string['allmyquestions'] ?></td></tr>
 <tr><td id="button_keywords" class="tab" onclick="buttonclick('keywords','add_questions_keywords_frame.php')"><?php echo $string['bykeywords'] ?></td></tr>

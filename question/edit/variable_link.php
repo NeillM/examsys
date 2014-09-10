@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -156,8 +156,6 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
 
   for ($i=0; $i<$q_no; $i++) {
     if ($paper_details[$i]['screen'] > 1 and $old_screen != $paper_details[$i]['screen']) {
-      //echo "<tr><td colspan=\"2\" class=\"divider\">Screen " . $paper_details[$i]['screen'] . "</td></tr>\n";
-      //echo "<tr><td colspan=\"2\" style=\"height:5px\"><img src=\"../artwork/divider_bar.gif\" width=\"290\" height=\"1\" /></td></tr>\n";
       echo '<tr><td colspan="2">&nbsp;</td></tr>';
       echo '<tr><td class="screenbrk" colspan="2"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper_details[$i]['screen'] . '</span></td></tr>';
 		}
