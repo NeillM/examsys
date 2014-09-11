@@ -179,6 +179,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
 
       $marks = $question['object']->calculate_question_mark();
 
+      $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
       echo "<div>" . reviewScale($question_no, '', $marks, $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group) . "</div>\n";
 
       // Negative marked?
