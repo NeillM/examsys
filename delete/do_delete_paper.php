@@ -67,7 +67,7 @@ $mysqli->close();
     $(function () {
       <?php
         if ($_POST['module'] != '') {
-          echo "self.opener.location.href = '../folder/details.php?module=" . $_POST['module'] . "';\n";
+          echo "self.opener.location.href = '../module/index.php?module=" . $_POST['module'] . "';\n";
         } elseif ($_POST['folder'] != '') {
           echo "self.opener.location.href = '../folder/details.php?folder=" . $_POST['folder'] . "';\n";
         } else {
@@ -85,7 +85,7 @@ $mysqli->close();
 
 <div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='../folder/details.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>'; window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='../module/index.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>'; window.close();" />
 </form>
 </div>
 

@@ -160,7 +160,7 @@ $total_mark   = $propertyObj->get_total_mark();
 $reviews_html .= '<div class="head_title"><div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
 $reviews_html .= '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if (isset($_GET['module']) and $_GET['module'] != '') {
-  $reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  $reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
 $reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div>';
 $reviews_html .= '<div class="page_title">' . $string['standardssetting'] . '</div>';

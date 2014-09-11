@@ -54,7 +54,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
     }
     
     function loadModule(moduleID) {
-      window.opener.location = "../folder/details.php?module=" + moduleID;
+      window.opener.location = "../module/index.php?module=" + moduleID;
       window.close();
     }
     
