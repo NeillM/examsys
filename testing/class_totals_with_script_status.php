@@ -87,6 +87,9 @@ $stmt->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
+    body {
+      font-size: 90%;
+    }
     #content {
       margin: 15px;
     }
@@ -127,8 +130,6 @@ $stmt->close();
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content">
-
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php">Administrative Tools</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../testing/index.php">Testing</a></div>
@@ -155,7 +156,7 @@ else:
   <p>Analysed <?php echo count($results) ?> out of <?php echo $papers ?> (<?php echo number_format(((count($results))/$papers * 100), 0) ?>%)</p>
   <ul class="papers">
 <?php
-  foreach ($results as $result):
+  foreach ($results as $result) {
 ?>
     <li class="<?php echo $result['status'] ?>"><a href="../paper/details.php?paperID=<?php echo $result['paper_id'] ?>">Paper ID <?php echo $result['paper_id'] ?></a>
 <?php
@@ -165,7 +166,7 @@ else:
 ?>
     </li>
 <?php
-  endforeach;
+  }
 ?>
   </ul>
 <?php

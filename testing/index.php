@@ -68,7 +68,6 @@ require '../include/sysadmin_auth.inc';
 		<li><a href="unittest.php">Unit tests</a></li>
 		<li><a href="selenium/README.txt">Selenium tests</a></li>
 		<li><a href="lang_test.php">Language translations</a></li>
-		<li><a href="class_totals_form.php">Check Class Totals reports between 2 different servers</a></li>
 		<li><a href="database_grants.php">Database grants</a></li>
 		<li><a href="database_indexes.php">Database indexes</a></li>
 		<li><a href="database_structure.php">Database structure</a></li>

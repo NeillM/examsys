@@ -119,17 +119,16 @@ function parseRawMarks($data) {
     if (strpos($row, ' id="res') !== false) {
       $cols = explode('<td', $row);
       
-      $tmp_parts = explode("setVars('", $cols[2]);
-      $started = substr($tmp_parts[1], 0, 19);
+      $tmp_parts = explode("setVars('", $cols[0]);
       
       $tmp_parts2 = explode(',', $tmp_parts[1]);
       $tmp_userID = $tmp_parts2[1];
      
-      $marks[$line]['mark'] = tidyLine($cols[5]);
-      $marks[$line]['percent'] = tidyLine($cols[6]);
+      $marks[$line]['mark'] = tidyLine($cols[7]);
+      $marks[$line]['percent'] = tidyLine($cols[8]);
       $marks[$line]['metadataID'] = str_replace("'", "", $tmp_parts2[0]);
       $marks[$line]['userID'] = $tmp_userID;
-
+      
       $line++;
     }
   }
@@ -158,7 +157,7 @@ function parseScript($data) {
 
 $papers = array();
 if (isset($_POST['paper']) and $_POST['paper'] != '') {
-  $result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id=?");
+  $result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id = ?");
   $result->bind_param('i', $_POST['paper']);
 } else {
   $result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > $start_dateSQL AND end_date < $end_dateSQL AND deleted IS NULL ORDER BY start_date");
