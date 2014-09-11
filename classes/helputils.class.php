@@ -434,7 +434,7 @@ Class OnlineHelp {
 
     if ($this->type == 'student') {
       $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL, ?, 0, '0000-00-00 00:00:00')");
-      $result->bind_param('ssss', title, $body, $body_plain, $this->language);
+      $result->bind_param('ssss', $title, $body, $body_plain, $this->language);
     } else {
       $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, ?, NULL, ?, 0, '0000-00-00 00:00:00')");
       $result->bind_param('sssss', $title, $body, $body_plain, $_POST['page_roles'], $this->language);
@@ -462,11 +462,10 @@ Class OnlineHelp {
   public function create_pointer($title, $pageID) {
     if ($this->type == 'student') {
       $result = $this->db->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, NULL, '" . $this->language . "', 0, '0000-00-00 00:00:00')");
-      $result->bind_param('ssi', $title, $pageID, $articleid);
+      $result->bind_param('ss', $title, $pageID);
     } else {
       $result = $this->db->prepare("INSERT INTO staff_help VALUES (NULL, ?, ?, NULL, 'pointer', NULL, NULL, 'Staff', NULL, '" . $this->language . "', 0, '0000-00-00 00:00:00')");
-      $result->bind_param('ssi', $title, $pageID, $articleid);
-      
+      $result->bind_param('ss', $title, $pageID);
     }
     $result->execute();  
     $result->close();
@@ -477,7 +476,7 @@ Class OnlineHelp {
     $result = $this->db->prepare("UPDATE " . $this->type . "_help SET articleid = ? WHERE id = ?");
     $result->bind_param('ii', $articleid, $articleid);
     $result->execute();  
-    $result->close();  
+    $result->close();
     
     return $articleid;
   }
