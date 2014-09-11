@@ -61,7 +61,6 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'area':
-    case 'calculation':
     case 'enhancedcalc':
     case 'flash':
     case 'textbox':

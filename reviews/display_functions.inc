@@ -44,7 +44,7 @@ function display_std($std_value, $inline=1) {
   return $html;
 }
 
-function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts) {
+function display_question ($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts) {
   global $external_review_deadline, $review, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $string, $language, $configObject;
   
   $q_id = $question['q_id'];
@@ -420,8 +420,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
         break;
       case 'enhancedcalc':
-        
-          //load old question data from the session (NB reviewer screens)
+        // Load old question data from the session (NB reviewer screens).
         $question['object']->load_all_user_answers($_SESSION['allans']);
 
         $extra = array('num_on_screen' => $question_no, 'reviewers' => true);

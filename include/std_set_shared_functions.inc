@@ -430,15 +430,15 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       echo $display_option['leadin'] . '<br />';
 			if ($configObject->get('cfg_interactive_qs') == 'html5') {
-				//<!-- ======================== HTML5 part include finf ================= -->
+				//<!-- ======================== HTML5 part ================= -->
 				echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 2) . "' height='" . ($display_option['q_media_height'] + 24) . "'></canvas>\n";
 				echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				echo "<script language='JavaScript' type='text/javascript'>\n";
+				echo "<script>\n";
 				echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $display_option['q_media'] . "', '" . $display_option['correct'] . "', '','','#FFC0C0','area','script');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->
 			} else {
-				echo "<script language='javascript'>\n";
+				echo "<script>\n";
 				echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" width=\"" . ($display_option['q_media_width'] + 2) . "\" height=\"" . ($display_option['q_media_height'] + 24) . "\" id=\"externalinterfaceq" . $question_no . "_1\" align=\"top\">');\n";
 				echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/question/edit/area.swf\" />');\n";
 				echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
@@ -537,41 +537,6 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       } else {
         $marks = $display_option['marks_correct'];
       }
-      break;
-    case 'calculation':
-      $figures = explode(',',$display_option['option_text']);
-      switch ($part_id) {
-        case 1:
-          $A = '<strong>$A</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 2:
-          $B = '<strong>$B</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 3:
-          $C = '<strong>$C</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 4:
-          $D = '<strong>$D</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 5:
-          $E = '<strong>$E</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 6:
-          $F = '<strong>$F</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 7:
-          $G = '<strong>$G</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 8:
-          $H = '<strong>$H</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 9:
-          $I = '<strong>$I</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 10:
-          $J = '<strong>$J</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        }
       break;
     case 'mcq':
       if ($firstoption['display_method'] == 'vertical' or $firstoption['display_method'] == 'vertical_other') {
@@ -843,15 +808,15 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
     <div>
 		<?php
 				if ($configObject->get('cfg_interactive_qs')=='html5') {
-				  //"<!-- ======================== HTML5 part include finf ================= -->
+				  //"<!-- ======================== HTML5 part ================= -->
 				  echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 301) . "' height='" . ($display_option['q_media_height'] + 30) . "'></canvas>\n";
 				  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				  echo "<script language='JavaScript' type='text/javascript'>\n";
+				  echo "<script>\n";
 				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $display_option['q_media'] . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0','hotspot','script');\n";
 				  echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-				  echo "<script language='JavaScript'>\n";
+				  echo "<script>\n";
 				  echo "function swfLoaded" . $question_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 				  echo "setUpFlash(num, message, '" . $language . "', '" . $display_option['q_media'] . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0');}\n";
@@ -883,10 +848,10 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       echo '<div align="center">';
 			
 			if ($configObject->get('cfg_interactive_qs')=='html5') {
-				//<!-- ======================== HTML5 part include finf ================= -->
+				//<!-- ======================== HTML5 part ================= -->
 				echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 				echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				echo "<script language='JavaScript' type='text/javascript'>\n";
+				echo "<script>\n";
 				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $display_option['q_media'] . "', '" . trim($display_option['correct']) . "', '',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','script');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->

@@ -23,10 +23,9 @@
 */
 
 require '../include/staff_auth.inc';
-require 'display_functions.inc';
+require './display_functions.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
-require '../config/start.inc';
 
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
@@ -46,6 +45,7 @@ check_var('id', 'GET', true, false, false);
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+require '../config/start.inc';
 
 $start_of_day_ts = strtotime('midnight');
 
@@ -173,6 +173,8 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/review.css" />
 <style type="text/css">
+  .var {font-weight: bold}
+  .value {display:none}
 <?php
 $css = '';
 
@@ -317,6 +319,13 @@ var lang = {
   }
 ?>
   $(function () {
+    $(function() {
+      $('.reveal').click(function() {
+        $('.var').toggle();
+        $('.value').toggle();
+      });
+    });
+
     $('#jumpscreen').change(function () {
       $('#button_pressed').val('jump_screen');
       $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");

@@ -342,108 +342,6 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $totalpos = $marks_correct;
 
         break;
-      case 'calculation':
-        $mark = 0;
-        // Log format is 'users answer', 'correct answer', 'variable values used'.
-        $settings = json_decode($old_settings, true);
-
-        $qid = 'q' . $question_no;
-        if (isset($_POST[$qid])) {
-          $saved_response = $_POST[$qid];
-        } else {
-          $saved_response = '';
-        }
-        $saved_response = trim($saved_response);
-
-        $qid = 'q' . $question_no . '_answer';
-        if (isset($_POST[$qid])) {
-          $question_variables = $_POST[$qid];
-        } else {
-          $question_variables = '';
-        }
-
-        $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-
-        $variable_array = explode(',', $question_variables);
-        $var_no = 1;
-        foreach ($variable_array as $individual_variable) {
-          switch ($var_no) {
-            case 1:
-              $A = $individual_variable;
-              break;
-            case 2:
-              $B = $individual_variable;
-              break;
-            case 3:
-              $C = $individual_variable;
-              break;
-            case 4:
-              $D = $individual_variable;
-              break;
-            case 5:
-              $E = $individual_variable;
-              break;
-            case 6:
-              $F = $individual_variable;
-              break;
-            case 7:
-              $G = $individual_variable;
-              break;
-            case 8:
-              $H = $individual_variable;
-              break;
-            case 9:
-              $I = $individual_variable;
-              break;
-            case 10:
-              $J = $individual_variable;
-              break;
-          }
-          $var_no++;
-        }
-        $answer_equation = trim($correct);
-
-        if ($answer_equation != '' and check_formula($answer_equation, $variable_array)) {
-          eval ("\$answer = $answer_equation;");
-          $decimals = ($settings['answer_decimals'] != '') ? $settings['answer_decimals'] : 0;
-          $answer = round($answer, $decimals);
-        } else {
-          $decimals = 0;
-          $answer = '';
-        }
-
-        if ($answer != '' and is_nan($answer)) { // Can't possible get Q correct if answer is not a number
-          $mark = $marks_incorrect;
-        } else {
-          if ($saved_response_clean != '') {
-            $difference = round(abs($saved_response_clean - $answer), 12);
-
-            $tolerance_full = $settings['tolerance_full'];
-            if (StringUtils::ends_with($tolerance_full, '%')) {
-              $tolerance_perc = rtrim($tolerance_full, '%');
-              $tolerance_full = abs(round($answer * ($tolerance_perc / 100), 12));
-            }
-            $tolerance_partial = $settings['tolerance_partial'];
-            if (StringUtils::ends_with($tolerance_partial, '%')) {
-              $tolerance_perc = rtrim($tolerance_partial, '%');
-              $tolerance_partial = abs(round($answer * ($tolerance_perc / 100), 12));
-            }
-
-            if ($saved_response_clean == '' . $answer) { // Want to treat $answer as a string here
-              $mark = $marks_correct;
-            } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-              $mark = $marks_correct;
-            } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-              $mark = $marks_partial;
-            } else {
-              $mark = $marks_incorrect;
-            }
-          }
-        }
-
-        $saved_response .= '|' . $answer . '|' . $question_variables;
-        $totalpos = $marks_correct;
-        break;
       case 'enhancedcalc':
         //DO NOTHING EXCEPT SAVE DATA
         require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
@@ -451,16 +349,15 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
         if (!is_array($settings)) {
           $settings = json_decode($settings, true);
-
         }
+        
         if (isset($settings['marks_correct'])) {
           $totalpos = $settings['marks_correct'];
         } else {
           $totalpos = null;
         }
+        
         $saved_response = EnhancedCalc::process_user_answer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
-
-        //unset($_SESSION['qid'][$log_id]);
         break;
       case 'dichotomous':
         $qid = 'q' . $question_no . '_' . $question_part;

@@ -43,4 +43,13 @@ $string['screen'] = 'Ekran';
 $string['note'] = 'Uwaga:';
 $string['notpossibletostandard'] = 'Nie jest możliwe wyznaczenie standardu dla testów scenariusza.';
 $string['cancel'] = 'Anuluj';
+$string['reviewermsg'] = 'To jest pytanie typu obliczeniowego. Zmienne są obliczane w czasie rzeczywistym i będą odmienne dla różnych kandydatów. Odpowiedź zaś opiera się na prostym wzorze. Kandydaci nie będą widzieli wyrażeń <strong>$A</strong> i podobnych, będą tylko widzieli losowo dobierane wartości.';
+$string['variable'] = 'Zmienna';
+$string['generated'] = 'Wygenerowana';
+$string['max'] = 'Maks.';
+$string['min'] = 'Min.';
+$string['formula'] = 'Wzór';
+$string['tolerancefull'] = 'Tolerancja dla punktacji pełnej';
+$string['tolerancepartial'] = 'Tolerancja dla punktacji ułamkowej';
+$string['togglevariables'] = 'Toggle Variables';
 ?>

@@ -119,7 +119,7 @@ function check_duplicates($q_screens, $string) {
  * @param array $status_array		- Array of status objects
  * @param object $db						- MySQLi connection.
  */
-function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $db) {
+function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $settings, $db) {
 	$question_marks = $temp_array[$row_no]['original_marks'];
 	$status 				= $temp_array[$row_no]['status'];
 	$score_method 	= $temp_array[$row_no]['score_method'];
@@ -129,8 +129,21 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
       if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
-    } elseif (($q_type == 'mcq' or $q_type == 'calculation') and $correct_array[0] == '') {
+    } elseif ($q_type == 'mcq' and $correct_array[0] == '') {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
+    } elseif ($q_type == 'enhancedcalc') {
+      $bkt_mismatch = false;
+      $formula = $settings['answers'];
+      foreach ($formula as $form) {
+        $opening_bkt = substr_count($form['formula'], '(');
+        $closing_bkt = substr_count($form['formula'], ')');
+        if ($opening_bkt !== $closing_bkt) {
+          $bkt_mismatch = true;
+        }
+      }
+      if ($bkt_mismatch) {
+        $temp_array[$row_no]['warnings'] = $string['mismatchbrackets'];
+      }
     } elseif ($q_type == 'mrq' and !in_array('y', $correct_array)) {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($q_type == 'textbox' and $question_marks == 0) {
@@ -694,7 +707,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $mysqli);
+        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -742,6 +755,7 @@ function check_latex_random($q_ids, $mysqli) {
     $old_q_media        = $q_media;
     $old_q_media_width  = $q_media_width;
     $old_q_media_height = $q_media_height;
+    $old_settings       = $settings;
     $old_option_text[]  = $option_text;
     if (trim($o_media != '')) {
       $old_o_media[]    = $o_media;
@@ -795,7 +809,7 @@ function check_latex_random($q_ids, $mysqli) {
     if ($properties->get_paper_type() < 3) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $mysqli);
+			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $mysqli);
 		}
 		
     // If we had random questions on paper need to check if they need LaTeX

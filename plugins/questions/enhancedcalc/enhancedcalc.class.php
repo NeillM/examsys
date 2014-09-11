@@ -979,7 +979,8 @@ class EnhancedCalc extends Question implements questionInterface {
 		} else {
 			$leadin = $this->leadin;
 			foreach ($this->useranswer['vars'] as $key => $value) {
-				$leadin = str_replace($key, '<span style="background-color:#FFFF80">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>' . $value, $leadin);
+				//$leadin = str_replace($key, '<span style="background-color:#FCE699">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>&nbsp;' . $value, $leadin);
+				$leadin = str_replace($key, '<span class="var">' . $key . '</span><span class="value">' . $value . '</span>', $leadin);
 			}
 		}
 
@@ -1055,11 +1056,11 @@ class EnhancedCalc extends Question implements questionInterface {
 		}
 
 		if (isset($extra['reviewers']) and $extra['reviewers']) {    // Display additional information for reviewers
-			echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 1px solid #C0C000; background-color:#FFFFC0; width:700px\">\n";
+			echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 2px solid #FCE699; background-color:#FFFFEE; width:700px\">\n";
 			echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
 			echo "<tr><td colspan=\"4\" style=\"text-align:justify\">" . $string['reviewermsg'] . "</td></tr>";
 			echo "<tr><td colspan=\"4\">&nbsp;</td></tr>";
-			echo "<tr style=\"font-weight:bold\"><td style=\"width:80px; border-bottom: 1px solid #C0C000\">{$string['variable']}</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['generated'] . "</td><td style=\"width:80px; border-bottom: 1px solid #C0C000\">" . $string['min'] . "</td><td style=\"width:460px; border-bottom: 1px solid #C0C000\">" . $string['max'] . "</td></tr>\n";
+			echo "<tr style=\"font-weight:bold\"><td style=\"width:80px; border-bottom: 1px solid #FCE699\">{$string['variable']}</td><td style=\"width:80px; border-bottom: 1px solid #FCE699\">" . $string['generated'] . "</td><td style=\"width:80px; border-bottom: 1px solid #FCE699\">" . $string['min'] . "</td><td style=\"width:460px; border-bottom: 1px solid #FCE699\">" . $string['max'] . "</td></tr>\n";
 
 			foreach ($this->settings['vars'] as $key => $value) {
 				echo "<tr><td>" . $key . "</td><td>" . $this->useranswer['vars'][$key] . "</td><td>" . $value['min'] . "</td><td>" . $value['max'] . "</td></tr>\n";
@@ -1083,6 +1084,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				}
 				echo "</td></tr>\n";
 			}
+      echo "<tr><td colspan=\"4\"><input type=\"button\" class=\"reveal\" value=\"" . $string['togglevariables'] . "\" /></td></tr>\n";
 			echo "</table>\n<br />";
 
 			$real_answer = $this->get_real_answer();
@@ -1090,7 +1092,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		}
 
 		if ($this->scenario != '') {
-				echo "<p>" . $this->scenario . "</p>\n";
+			echo "<p>" . $this->scenario . "</p>\n";
 		}
 		if ($this->q_media != '') {
 			echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";

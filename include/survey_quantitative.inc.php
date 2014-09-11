@@ -76,7 +76,7 @@ SQL;
           }
         }
         break;
-      case 'calculation':
+      case 'enhancedcalc':
         $tmp_score_method = array();
         $tmp_score_method = explode(',',$score_method);
         $tolerance = $tmp_score_method[1];

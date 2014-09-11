@@ -115,12 +115,22 @@ function check_ebel_distinction_type($reviewID, $db) {
   <style>
 		table {table-layout:auto}
 		#maincontent {height:auto}
+    .var {font-weight: bold}
+    .value {display:none}
   </style>
 	
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function() {
+      $('.reveal').click(function() {
+        $('.var').toggle();
+        $('.value').toggle();
+      });
+    });
+  </script>
 <?php
   if ($propertyObj->get_latex_needed() == 1) {
     echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
@@ -475,7 +485,7 @@ function check_ebel_distinction_type($reviewID, $db) {
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
   $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos, id_num");
-  $result->bind_param('i', $_GET['paperID']);
+  $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
   $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback, $settings);

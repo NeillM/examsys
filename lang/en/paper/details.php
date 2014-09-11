@@ -43,6 +43,7 @@ $string['duplicateoptions'] = 'Duplicate options. MCQ options must be unique.';
 $string['nocorrect'] = 'No correct answer specified';
 $string['zeromarks'] = 'Warning zero marks set.';
 $string['toomanycorrect'] = 'Too many correct options';
+$string['mismatchbrackets'] = 'Mismatching brackets found.';
 $string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'Correct answer missing for some options.';
 $string['nolabels'] = 'No labels added to image.';

@@ -41,4 +41,5 @@ $string['AllItemsCorrect'] = "All items correct";
 $string['formula'] = 'Formula';
 $string['tolerancefull'] = 'Tolerance for full marks';
 $string['tolerancepartial'] = 'Tolerance for partial marks';
+$string['togglevariables'] = 'Toggle Variables';
 ?>

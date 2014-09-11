@@ -43,4 +43,13 @@ $string['na'] = 'N/A';
 $string['screen'] = 'Obrazovka';
 $string['note'] = 'POZNÁMKA:';
 $string['notpossibletostandard'] = 'Není možné u úloh typu Test shody se scénářem.';
+$string['reviewermsg'] = 'Toto je početní úloha. Proměnné jsou vypočteny on-line a budou se pro jednotlivé kandidáty lišit. Odpověď je však založena na jednom výrazu. Kandidáti nevidí <strong>$A</strong>, atd. uvidí pouze náhodně generovaná čísla.';
+$string['variable'] = 'Proměnná';
+$string['generated'] = 'Generováno';
+$string['max'] = 'Maximum';
+$string['min'] = 'Minimum';
+$string['formula'] = 'Vzorec';
+$string['tolerancefull'] = 'Odchylka pro celkové hodnocení';
+$string['tolerancepartial'] = 'Odchylka pro částečné hodnocení';
+$string['togglevariables'] = 'Toggle Variables';
 ?>
