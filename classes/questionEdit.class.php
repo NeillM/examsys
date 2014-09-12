@@ -111,7 +111,7 @@ Class QuestionEdit extends RogoObject {
   protected $_unified_field_modifications = array();
 
   // These are the fields that are relevant for post-exam corrections
-  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial','correct_fback');
+  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'correct_fback');
 
   // Map our 'nice' property names to the database fields and 'parts' in track changes
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
@@ -302,6 +302,7 @@ Class QuestionEdit extends RogoObject {
    * @throws ValidationException
    */
   public function save($clear_checkout = true) {
+
 
     $success = false;
     if ($this->_logger == null ) $this->_logger =  new Logger($this->_mysqli);
@@ -551,6 +552,7 @@ QUERY;
 
     $errors = array();
     $changes = false;
+
     foreach ($this->_correctors as $corrector) {
       $tmp_errors = $corrector->execute($new_correct, $paper_id, $changes, $paper_type);
       if (count($tmp_errors) > 0) {
@@ -1540,7 +1542,7 @@ QUERY;
 
     // Required fields
     $missing_fields = '';
-    foreach($this->_fields_required as $req) {
+    foreach ($this->_fields_required as $req) {
       if (empty($this->$req)) $missing_fields .= $this->_pretty_names[$req] . ', ';
     }
     if ($missing_fields != '') {
@@ -1613,7 +1615,7 @@ QUERY;
 
     // Call save() on the options too if successful
     $i = 1;
-    foreach($this->options as $oid => $option) {
+    foreach ($this->options as $oid => $option) {
       $media = $option->get_media();
       if ($option->is_blank()) {
         $success = $option->delete();

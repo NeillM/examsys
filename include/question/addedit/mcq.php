@@ -18,7 +18,7 @@
 *
 * @author Rob Ingram
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -74,7 +74,7 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
   include 'options/opt_mcq.php';
 }
 
-if($question->get_locked() == '') {
+if ($question->get_locked() == '') {
 ?>
           <tbody class="add-option-holder">
             <tr>

@@ -208,7 +208,7 @@ if ($critical_error == '') {
       $save_individual = in_array('correct', array_keys($unified_part_names));
 			
       if ($save_individual) {
-        // calculation, mcq
+        // Calculation, MCQ
         $part_names = $question->get_change_fields();
         $fields = array();
         foreach ($part_names as $field) {
@@ -225,7 +225,7 @@ if ($critical_error == '') {
         }
         
       } else {
-        // dichotomous, mrq, rank, extmatch, matrix
+        // Dichotomous, MRQ, Ranking, extmatch, matrix, textbox
         $first = reset($question->options);
         $compound_part_names = $first->get_compound_fields();
 
@@ -237,12 +237,13 @@ if ($critical_error == '') {
           $loop_limit = count($question->options);
         }
         $part_names = $question->get_change_fields();
+
         $correct_answers = array();
         foreach ($part_names as $field) {
           for ($i = 1; $i <= $loop_limit; $i++) {
             if (isset($_POST[$field . $i])) {
               $correct_answers[$field][] = $_POST[$field . $i];
-            } elseif  (isset($_POST[$field])) {
+            } elseif (isset($_POST[$field])) {
               $correct_answers[$field] = $_POST[$field];
               break;
             } else {
@@ -255,11 +256,11 @@ if ($critical_error == '') {
       }
 
       // Save metadata
-      $part_names = array('bloom','status','teams');
+      $part_names = array('bloom', 'status', 'teams', 'correct_fback');
       if (!isset($_POST['teams'])) {
         $_POST['teams'] = array();
       }
-      foreach($part_names as $section_name) {
+      foreach ($part_names as $section_name) {
         if (isset($_POST["$section_name"])) {
           $method = "set_$section_name";
           $question->$method($_POST["$section_name"]);

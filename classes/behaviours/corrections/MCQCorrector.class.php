@@ -61,7 +61,7 @@ class MCQCorrector extends Corrector {
           $result->bind_result($user_answer, $id);
           while ($row = $result->fetch()) {
             $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id=?");
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
             $updateLog->bind_param('iii', $new_mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();
