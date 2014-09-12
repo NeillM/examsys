@@ -150,6 +150,7 @@ Class UserUtils {
     if ($username == '') {
       return false;
     }
+    $username = substr($username, 0, 60);
   
     $stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND user_deleted IS NULL");
     $stmt->bind_param('s', $username);
