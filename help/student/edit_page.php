@@ -30,7 +30,7 @@ require_once '../../classes/userutils.class.php';
 $pageid = check_var('id', 'REQUEST', true, false, true);
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 
-header('Content-Type: text/html; charset=utf8');
+header('Content-Type: text/html; charset=utf-8');
 
 $page_details = $help_system->get_page_details($pageid);
 

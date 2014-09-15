@@ -66,7 +66,7 @@ function unique_filename($filename, $path) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   
   <title>New Captivate Tutorial</title>
   
