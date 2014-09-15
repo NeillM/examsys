@@ -178,7 +178,7 @@ Class OnlineHelp {
 	 */
   public function get_page_details($articleid) {
     if ($this->type == 'student') {
-      $sql = 'SELECT id, title, body, type, DATE_FORMAT(checkout_time,\'%Y%m%d%H%i%S\') AS checkout_time, checkout_authorID, NULL AS roles FROM student_help WHERE id = ? AND language = ? AND deleted IS NULL LIMIT 1';
+      $sql = 'SELECT id, title, body, type, DATE_FORMAT(checkout_time,\'%Y%m%d%H%i%S\') AS checkout_time, checkout_authorID, NULL AS roles FROM student_help WHERE articleid = ? AND language = ? AND deleted IS NULL LIMIT 1';
     } else {
       if ($this->userObject->has_role('SysAdmin')) {
         $sql = 'SELECT id, title, body, type, DATE_FORMAT(checkout_time,\'%Y%m%d%H%i%S\') AS checkout_time, checkout_authorID, roles FROM staff_help WHERE articleid = ? AND language = ? AND roles IN ("SysAdmin", "Admin", "Staff") AND deleted IS NULL LIMIT 1';
@@ -192,7 +192,7 @@ Class OnlineHelp {
     $results->bind_param('is', $articleid, $this->language);
     $results->execute();
     $results->store_result();
-
+    
     $results->bind_result($id, $title, $body, $page_type, $checkout_time, $checkout_authorID, $roles);
     $results->fetch();
     $row_no = $results->num_rows;
@@ -374,7 +374,7 @@ Class OnlineHelp {
       // ID 1 is for the homepage.
       echo "<div>\n";
     } else {
-      echo "<div class=\"help_title\">" . str_replace('/', ': ', $title) . "</div>\n";
+      echo "<div class=\"help_title\">" . str_replace('/', ': ', $title) . "<img class=\"flag\" src=\"../" . $this->language . ".png\" /></div>\n";
       echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
     }    
   }
