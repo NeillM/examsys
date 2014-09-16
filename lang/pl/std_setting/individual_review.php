@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/std_setting/std_set_shared.php';
+require '../lang/' . $language . '/paper/start.php';
 
 $string['modifiedangoffmethod'] = 'Modyfikowana metoda Angoffa';
 $string['ebelmethod'] = 'Metoda Ebla';
@@ -42,7 +43,7 @@ $string['na'] = 'Brak';
 $string['screen'] = 'Ekran';
 $string['note'] = 'Uwaga:';
 $string['notpossibletostandard'] = 'Nie jest możliwe wyznaczenie standardu dla testów scenariusza.';
-$string['cancel'] = 'Anuluj';
+$string['notvisible'] = '<strong>Information:</strong> (not visible to candidates)';
 $string['reviewermsg'] = 'To jest pytanie typu obliczeniowego. Zmienne są obliczane w czasie rzeczywistym i będą odmienne dla różnych kandydatów. Odpowiedź zaś opiera się na prostym wzorze. Kandydaci nie będą widzieli wyrażeń <strong>$A</strong> i podobnych, będą tylko widzieli losowo dobierane wartości.';
 $string['variable'] = 'Zmienna';
 $string['generated'] = 'Wygenerowana';

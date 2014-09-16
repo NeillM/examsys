@@ -21,7 +21,6 @@ $string['admintools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
 $string['createfolder'] = 'Create folder';
 $string['mypersonalkeywords'] = 'Moje własne słowa kluczowe';
-$string['createnewpaper'] = 'Utwórz nowy arkusz';
 $string['reviewed'] = 'Przejrzany';
 $string['notreviewed'] = 'Nie przejrzano';
 $string['myfolders'] = 'Moje foldery';

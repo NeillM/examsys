@@ -41,4 +41,5 @@ $string['msgselectable3'] = 'Již jste vybrali ';
 $string['msgselectable4'] = 'Vyberte, prosím,  jiný ranking.';
 $string['AllItemsCorrect'] = "Všechny položky správně";
 $string['other'] = 'Ostatní';
+$string['togglevariables'] = 'Toggle Variables';
 ?>

@@ -23,7 +23,6 @@ $string['notinteam'] = 'Uwaga: nie jesteś w zespole';
 $string['type'] = 'Typ';
 $string['owner'] = 'Właściciel';
 $string['modified'] = 'Zmodyfikowano';
-$string['status'] = 'Status'; //cognate //Status, Stan
 $string['myquestionsonly'] = 'tylko moje pytania';
 $string['search'] = 'Szukaj';
 $string['clear'] = 'Oczyść';

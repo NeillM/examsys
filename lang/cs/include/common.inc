@@ -94,12 +94,6 @@ $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
 $string['loggedinas'] = 'Přihlášen jako';
 
-$configObject = Config::get_instance();
-$cfg_web_root = $configObject->get('cfg_web_root');
-$language = LangUtils::getLang($cfg_web_root);
-
-require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
-
 $string['register'] = 'Registrovat jako Zaměstnance';
 $string['register1'] = 'Registrovat jako ';
 $string['demomodule'] = 'Demo Modul';

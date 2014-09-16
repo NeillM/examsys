@@ -14,20 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/include/paper_options.inc';
-require_once '../lang/' . $language . '/include/paper_types.inc';
-
-$string['folderproperties'] = 'Właściwości folderu';
-$string['showretired'] = 'Pokaż wycofane';
-$string['edit'] = 'Edytuj';
-$string['screen'] = 'Ekran';
-$string['screens'] = 'Ekrany';
-$string['mins'] = 'min.';
-$string['managekeywords'] = 'Zarządzaj słowami kluczowymi';
-$string['makesubfolder'] = 'Utwórz nowy podfolder';
-$string['deletefolder'] = 'Usuń ten folder';
-$string['type'] = 'Typ';
-$string['author'] = 'Autor';
-$string['create'] = 'Utwórz';
-$string['foldername'] = 'Folder Name';
+require '../../lang/' . $language . '/help/staff/new_pointer.php';
 ?>

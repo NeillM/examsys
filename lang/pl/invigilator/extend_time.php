@@ -17,5 +17,4 @@
 $string['extendtime']   = 'Przedłuż czas';  
 $string['extendtimeby'] = 'Przedłuż czas o'; 
 $string['minutes']      = 'minut(y)';
-$string['submit']       = 'Wyślij'; 
-$string['close']        = 'Zamknij'; 
+?>

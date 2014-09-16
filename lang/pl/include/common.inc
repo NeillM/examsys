@@ -96,8 +96,6 @@ $string['note'] = 'Notatka';
 $string['studentname'] = 'Nazwisko Studenta';
 $string['loggedinas'] = 'Zalogowany jako';
 
-require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
-
 $string['register'] = 'Zarejestruj się jako Pracownik';
 $string['register1'] = 'Zarejestruj się jako ';
 $string['demomodule'] = 'Moduł Demonstracyjny';

@@ -1833,7 +1833,7 @@ QUERY;
             `message` text,
             `thedate` datetime NOT NULL,
             `duration` int(11) NOT NULL,
-            `bgcolor` varchar(16) DEFAULT NULL,
+            `bgcolor` varchar(16) NOT NULL,
             `deleted` datetime DEFAULT NULL,
             PRIMARY KEY (`id`)
           ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
@@ -1962,7 +1962,7 @@ QUERY;
 
     $this->tableList['killer_questions'] = <<<QUERY
         CREATE TABLE `killer_questions` (
-          `id` int(4) NOT NULL auto_increment,
+          `id` int(4) unsigned NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned NOT NULL,
           `q_id` int(4) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`id`),
@@ -2237,13 +2237,13 @@ QUERY;
           `userID` int(10) unsigned DEFAULT NULL,
           `paperID` mediumint(8) unsigned DEFAULT NULL,
           `started` datetime DEFAULT NULL,
-          `ipaddress` char(15) DEFAULT NULL,
+          `ipaddress` varchar(100) DEFAULT NULL,
           `student_grade` char(25) DEFAULT NULL,
           `year` tinyint(4) DEFAULT NULL,
           `attempt` tinyint(4) DEFAULT NULL,
           `completed` datetime DEFAULT NULL,
-          `lab_name` varchar(255) DEFAULT NULL
-          `highest_screen` tinyint(3) unsigned DEFAULT NULL,
+          `lab_name` varchar(255) DEFAULT NULL,
+          `highest_screen` tinyint(3) unsigned DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2421,7 +2421,7 @@ QUERY;
           `note_date` datetime default NULL,
           `paper_id` mediumint(8) unsigned default NULL,
           `note_authorID` int(10) unsigned default NULL,
-          `note_workstation` char(60) default NULL,
+          `note_workstation` char(100) default NULL,
           PRIMARY KEY (`note_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -2698,7 +2698,7 @@ QUERY;
           `response` text,
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
-          `metadataID` int(11) unsigned NOT NULL,
+          `metadataID` int(11) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2831,9 +2831,9 @@ QUERY;
     $this->tableList['staff_help'] = <<<QUERY
         CREATE TABLE `staff_help` (
           `id` smallint(6) NOT NULL auto_increment,
-          `title` text,
-          `body` text,
-          `body_plain` text,
+          `title` mediumtext,
+          `body` mediumtext,
+          `body_plain` mediumtext,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
           `checkout_authorID` int(10) unsigned default NULL,
@@ -2886,9 +2886,9 @@ QUERY;
     $this->tableList['student_help'] = <<<QUERY
         CREATE TABLE `student_help` (
           `id` smallint(6) NOT NULL auto_increment,
-          `title` text,
-          `body` text,
-          `body_plain` text,
+          `title` mediumtext,
+          `body` mediumtext,
+          `body_plain` mediumtext,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
           `checkout_authorID` int(10) unsigned default NULL,

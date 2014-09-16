@@ -23,7 +23,6 @@ $string['notinteam'] = 'Varování: není v týmu';
 $string['type'] = 'Typ';
 $string['owner'] = 'Vlastník';
 $string['modified'] = 'Upraveno';
-$string['status'] = 'Status';
 $string['myquestionsonly'] = 'pouze moje úlohy';
 $string['search'] = 'Hledat';
 $string['clear'] = 'Vyčistit';

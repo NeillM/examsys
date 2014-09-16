@@ -23,7 +23,6 @@ $string['notinteam'] = 'Warning: not in module';
 $string['type'] = 'Type';
 $string['owner'] = 'Owner';
 $string['modified'] = 'Modified';
-$string['status'] = 'Status';
 $string['myquestionsonly'] = 'my questions only';
 $string['search'] = 'Search';
 $string['clear'] = 'Clear';

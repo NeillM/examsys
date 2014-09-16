@@ -37,7 +37,6 @@ $string['reviewmarks'] = 'review marks';
 $string['cutscore'] = 'cut score';
 $string['saveexit'] = 'Save &amp; Exit';
 $string['savecontinue'] = 'Save &amp; Continue';
-$string['cancel'] = 'Cancel';
 $string['savebank'] = 'Save ratings into question bank';
 $string['cannotbeused'] = '<strong>Note:</strong> Ebel method cannot be used to standard set textbox questions.';
 $string['na'] = 'N/A';

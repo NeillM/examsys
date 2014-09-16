@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/std_setting/std_set_shared.php';
+require '../lang/' . $language . '/paper/start.php';
 
 $string['modifiedangoffmethod'] = 'Modifikovaná Angoffova metoda';
 $string['ebelmethod'] = 'Ebelova metoda';
@@ -36,13 +37,13 @@ $string['reviewmarks'] = 'přehled známek';
 $string['cutscore'] = 'snížené skóre';
 $string['saveexit'] = 'Uložit &amp; ukončit';
 $string['savecontinue'] = 'Uložit &amp; pokračovat';
-$string['cancel'] = 'Zrušit';
 $string['savebank'] = 'Uložit body hodnocení do banky úloh';
 $string['cannotbeused'] = '<strong>Poznámka:</strong> Ebelova metoda nemůže být použita u úloh typu standardní textové úlohy.';
 $string['na'] = 'N/A';
 $string['screen'] = 'Obrazovka';
 $string['note'] = 'POZNÁMKA:';
 $string['notpossibletostandard'] = 'Není možné u úloh typu Test shody se scénářem.';
+$string['notvisible'] = '<strong>Information:</strong> (not visible to candidates)';
 $string['reviewermsg'] = 'Toto je početní úloha. Proměnné jsou vypočteny on-line a budou se pro jednotlivé kandidáty lišit. Odpověď je však založena na jednom výrazu. Kandidáti nevidí <strong>$A</strong>, atd. uvidí pouze náhodně generovaná čísla.';
 $string['variable'] = 'Proměnná';
 $string['generated'] = 'Generováno';

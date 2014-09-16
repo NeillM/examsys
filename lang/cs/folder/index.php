@@ -30,5 +30,4 @@ $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['create'] = 'Vytvořit';
 $string['foldername'] = 'Název složky';
-
 ?>
