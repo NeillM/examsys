@@ -122,6 +122,10 @@ if ($log_metadata->get_record() === false) {
 }
 $metadataid = $log_metadata->get_metadata_id();
 
+if ($_GET['submitType'] == 'userSubmit') {
+  $log_metadata->set_highest_screen($_POST['old_screen']);
+}
+
 try {
   $ret = record_marks($propertyObj->get_property_id(), $mysqli, $propertyObj->get_paper_type(), $metadataid, $preview_q_id);
 } catch (RandomQuestionNotFound $ex) {

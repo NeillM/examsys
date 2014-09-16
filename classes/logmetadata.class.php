@@ -35,6 +35,7 @@ class LogMetadata {
   private $attempt;
   private $completed;
   private $lab_name;
+  private $highest_screen;
 
   /**
    * @var mysqli $db
@@ -62,6 +63,7 @@ class LogMetadata {
     $this->attempt        = null;
     $this->completed      = null;
     $this->lab_name       = null;
+    $this->highest_screen = 0;
     $this->userid         = $userID;
     $this->paper_id       = $paper_id;
     $this->db             = $db;
@@ -73,10 +75,10 @@ class LogMetadata {
    */
   public function get_record($metadataID = '', $set_start_time = true) {
     if ($metadataID == '') {
-      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name, highest_screen FROM log_metadata WHERE userID = ? AND paperID = ? ORDER BY id DESC LIMIT 1');
       $stmt->bind_param('ii', $this->userid, $this->paper_id);
     } else {
-      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name FROM log_metadata WHERE userID = ? AND id = ?');  // Add userID check for security reasons.
+      $stmt = $this->db->prepare('SELECT id, started, ipaddress, student_grade, year, attempt, completed, lab_name, highest_screen FROM log_metadata WHERE userID = ? AND id = ?');  // Add userID check for security reasons.
       $stmt->bind_param('ii', $this->userid, $metadataID);
     }
     $stmt->execute();
@@ -93,7 +95,8 @@ class LogMetadata {
                                       $this->year,
                                       $this->attempt,
                                       $this->completed,
-                                      $this->lab_name );
+                                      $this->lab_name, 
+                                      $this->highest_screen );
 
     $stmt->fetch();
     $stmt->close();
@@ -163,6 +166,15 @@ class LogMetadata {
     $result->execute();
     $result->close();
   }
+  
+  public function set_highest_screen($screen) {
+    $this->highest_screen = $screen;
+    $this->save();
+  }
+
+  public function get_highest_screen() {
+    return $this->highest_screen;
+  }
 
   /**
    * Indicate if the current user has completed the paper
@@ -191,9 +203,9 @@ class LogMetadata {
 
     if ($this->id != null) {
       // Update existing record
-      $query = 'UPDATE log_metadata SET ipaddress = ?, started = ?, attempt = ?, completed = ?, lab_name = ? WHERE id = ?';
+      $query = 'UPDATE log_metadata SET ipaddress = ?, started = ?, attempt = ?, completed = ?, lab_name = ?, highest_screen = ? WHERE id = ?';
       $stmt = $this->db->prepare($query);
-      $stmt->bind_param('ssissi', $this->ipaddress, $this->session_id, $this->attempt, $this->completed, $this->lab_name, $this->id);
+      $stmt->bind_param('ssissii', $this->ipaddress, $this->session_id, $this->attempt, $this->completed, $this->lab_name, $this->highest_screen, $this->id);
       $stmt->execute();
       $stmt->close();
     } else {

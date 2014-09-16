@@ -2223,6 +2223,7 @@ QUERY;
           `attempt` tinyint(4) default NULL,
           `completed` datetime DEFAULT NULL,
           `lab_name` varchar(255) DEFAULT NULL,
+          `highest_screen` tinyint(3) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
           KEY `idx_log_metadata_student_grade` (`student_grade`),
@@ -2242,6 +2243,7 @@ QUERY;
           `attempt` tinyint(4) DEFAULT NULL,
           `completed` datetime DEFAULT NULL,
           `lab_name` varchar(255) DEFAULT NULL
+          `highest_screen` tinyint(3) unsigned DEFAULT NULL,
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
