@@ -664,7 +664,7 @@ function qh_redraw_canvas() {
     //drop answer baloons
     if (this.qmode == 'answer' || this.qmode == 'script') {
       for (i=0;i<this.answers.length;i++) {
-        if (this.answers[i][0][1]!='false' && this.answers[i][0][2]!='false' && this.answers[i][0][1]!='' && this.answers[i][0][2]!='') {
+        if ((this.activeLabel == i || this.show_all_hotspots) && this.answers[i][0][1]!='false' && this.answers[i][0][2]!='false' && this.answers[i][0][1]!='' && this.answers[i][0][2]!='') {
           var flipv = fliph = 0;
 					if (this.canvas.width-300-1*this.answers[i][0][1]<40) fliph = 1;
 					if (this.answers[i][0][2]<25) flipv = 1;
