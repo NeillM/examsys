@@ -420,11 +420,15 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
   $tmp_q_id = 1;
   if ($paper_type == '5') {
     $answer_data = $mysqlidb->prepare("SELECT 1 AS screen, q_id, NULL AS user_answer, mark, NULL AS option_order, id FROM log5 WHERE metadataID = ? ORDER BY id");
+    $answer_data->bind_param('i', $metadataid);
+  } elseif ($paper_type == '2') {   // Check log_late as well!
+    $answer_data = $mysqlidb->prepare("(SELECT screen, q_id, user_answer, mark, option_order, id FROM log2 WHERE metadataID = ?) UNION (SELECT screen, q_id, user_answer, mark, option_order, id FROM log_late WHERE metadataID = ?) ORDER BY screen, id");
+    $answer_data->bind_param('ii', $metadataid, $metadataid);
   } else {
     $answer_data = $mysqlidb->prepare("SELECT screen, q_id, user_answer, mark, option_order, id FROM log$log_type WHERE metadataID = ? ORDER BY screen, id");
+    $answer_data->bind_param('i', $metadataid);
   }
   if ($answer_data) {
-    $answer_data->bind_param('i', $metadataid);
     $answer_data->execute();
     $answer_data->store_result();
     $answer_data->bind_result($screen, $q_id, $user_answer, $mark, $option_order, $uniqid);
@@ -524,9 +528,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
       echo '</table><br />';
 
       if ($completed_screens[$paper[$question]['screen']]) {
-        echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper[$question]['screen'] . '</span></div>';
+        echo '<div class="screenbrk"><span class="scr_no">' . sprintf($string['screen'], $paper[$question]['screen'], $max_screen) . '</span></div>';
       } else {
-        echo '<div class="staffview"><span class="scr_no"><strong>' . $string['screen'] . '&nbsp;' . $paper[$question]['screen'] . '</strong> not submitted</span></div>';      
+        echo '<div class="staffview"><span class="scr_no">' . sprintf($string['screen'], $paper[$question]['screen'], $max_screen) . ' <strong>not submitted</strong></span></div>';      
       }
       echo "<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"table-layout:fixed\">\n<col width=\"40\"><col>\n";
       if ($q_type != 'info') {
@@ -2489,7 +2493,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       }
       $html .= $percent . '%</td><td>' . $string['adjusted'] . '</td></tr>';
     } else {
-      $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:5em\">" . round($user_mark, 2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
+      $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:6.5em\">" . round($user_mark, 2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
       $html .= "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
       $html .= "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
       if (isset($_GET['percent'])) {

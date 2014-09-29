@@ -1,9 +1,9 @@
 html {
-  overflow:auto;
-  height:100%
+  overflow: auto;
+  height: 100%;
 }
 blockquote {
-  font-size:100%
+  font-size: 100%;
 }
 .ok {
   font-size: 100%;
@@ -11,18 +11,18 @@ blockquote {
   width: 10em;
 }
 .objH {
-  font-weight:bold;
-  color:#316AC5
+  font-weight: bold;
+  color: #316AC5;
 }
 .fback {
-  font-style:italic;
-  color:#C00000
+  font-style: italic;
+  color: #C00000;
 }
 .label {
-  color:#C00000
+  color: #C00000;
 }
 .err {
-  color:#C00000
+  color: #C00000;
 }
 .usermk {
   padding-left: 8px;
@@ -39,11 +39,11 @@ blockquote {
   color: black;  
 }
 .mkpad {
-  padding-top:10px
+  padding-top: 10px;
 }
 .answerindent {
-  margin-left:17px;
-  margin-right:15px
+  margin-left: 17px;
+  margin-right: 15px;
 }
 .std {
   display: block;
@@ -55,52 +55,42 @@ blockquote {
 	padding-right: 4px;
 }
 .exclude {
-  color:red;
-  text-decoration:line-through
+  color: red;
+  text-decoration: line-through;
 }
 input.exclude, select.exclude {
-  border: 1px solid red
+  border: 1px solid red;
 }
 .box {
-  width:90%;
-  background-color:#E4EEFC;
-  border:1px solid #B5C4DF;
-  border-radius:4px;
-  text-align:left
+  width: 90%;
+  background-color: #E4EEFC;
+  border: 1px solid #B5C4DF;
+  border-radius: 4px;
+  text-align: left;
 }
 .scr_no {
-  margin-left:25px
+  margin-left: 25px;
 }
 .screenbrk {
-  color:#15428B;
-  font-weight:bold;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  border-top: 1px solid #B5C4DF;
-  background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-  background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-  background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-	vertical-align:top;
+  color: #808080;
+  font-size: 90%;
+  height: 70px;
+  width: 100%;
+  border-top: 2px solid #808080;
 }
 .studentview {
-  color:#800000;
-  font-size:90%;
-  font-weight:bold;
-  padding-left:15px;
-  padding-bottom:2px
+  color: #C00000;
+  font-size: 90%;
+  font-weight: bold;
+  padding-left: 15px;
+  padding-bottom: 2px;
 }
 .staffview {
-  color:#800000;
-  font-size:90%;
-  height:70px;
-  width:100%;
-  padding-top:2px;
-  background: -moz-linear-gradient(top, #FF8282, #FFFFFF);
-  background: -webkit-linear-gradient(top, #FF8282, #FFFFFF);
-  background-image: -ms-linear-gradient(top, #FF8282 0%, #FFFFFF 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='#FFFFFF');
+  color: #C00000;
+  font-size: 90%;
+  height: 70px;
+  width: 100%;
+  border-top: 2px solid #C00000;
 }
 .raw_textarea {
   display: none;
@@ -109,7 +99,7 @@ input.exclude, select.exclude {
   margin-top: 26px;
   margin-right: 26px;
   border: 1px solid #909090;
-  padding:2px;
+  padding: 2px;
   text-align: justify;
   overflow: scroll;
 }

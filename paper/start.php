@@ -715,7 +715,6 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             if (this.retry()) {
               return;
             } else  {
-              alert(ret_data + ', ' + randomPageID + ', ' + this.tryCount);
               saveFail();
               return;
             }

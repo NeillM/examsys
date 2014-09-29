@@ -285,7 +285,8 @@ pre {
 .busyicon {
   width: 23px;
   height: 23px;
-  vertical-align: bottom;
+  margin-bottom: 1px;
+  vertical-align: middle;
 }
 .defaultSkin table.mceLayout {
   margin-top: 6px;
@@ -375,4 +376,3 @@ pre {
 	font-size: 0;
 	line-height: 0;
 }
-
