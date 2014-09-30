@@ -207,7 +207,7 @@ if ($_GET['module'] != '0') {
   $current_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
   $student_cohort = module_utils::get_student_members($current_year, $module, $mysqli);
 
-  $url = '../users/search.php?submit=Search&team=' . $module . '&calendar_year=' . $current_year . '&students=on&search_username=&student_id=';
+  $url = '../users/search.php?submit=Search&module=' . $module . '&calendar_year=' . $current_year . '&students=on&search_username=&student_id=';
   $student_no = count($student_cohort);
   if ($student_no == 0) {
     $student_class = 'red';

@@ -158,11 +158,10 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <?php
   if (isset($state['menu8'])) {
-    echo "<table id=\"menu8\" style=\"display:" . $state['menu8'] . "\">\n";
+    echo "<div id=\"menu8\" style=\"margin-left:15px; display:" . $state['menu8'] . "\">\n";
   } else {
-    echo "<table id=\"menu8\" style=\"display:none\">\n";
+    echo "<div id=\"menu8\" style=\"margin-left:15px; display:none\">\n";
   }
-  echo '<tr><td>';
   if (isset($state['checkbox1']) and $state['checkbox1'] == 'false') {
     $checked = '';
   } else {
@@ -191,8 +190,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\"$checked /> <label for=\"checkbox4\">" . $string['options'] . "</label></div>\n";
 ?>
-</td></tr>
-</table>
+</div>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
@@ -207,22 +205,24 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <?php
   if (isset($state['menu6'])) {
-    echo "<table id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
+    echo "<table id=\"menu6\" style=\"margin-left:12px; display:" . $state['menu6'] . "\">\n";
   } else {
-    echo "<table id=\"menu6\" style=\"display:none\">\n";
+    echo "<table id=\"menu6\" style=\"margin-left:12px; display:none\">\n";
   }
+  echo '<tr><td colspan="2">';
 
   $date_options = array("dont remember"=>$string['dont remember'], "week"=>$string['week'], "month"=>$string['month'], "year"=>$string['year'], "specify"=>$string['specify']);
   $i = 1;
   foreach ($date_options as $date_value=>$date_label) {
     if ((isset($_GET['question_date']) and $_GET['question_date'] == $date_value) or (!isset($_GET['question_date']) and $date_value == 'dont remember')) {
-      echo "<tr><td colspan=\"2\"><input type=\"radio\" id=\"question_date$i\" name=\"question_date\" value=\"$date_value\" checked />&nbsp;" . $string[$date_value] . "</td></tr>";
+      echo "<div><input type=\"radio\" id=\"question_date$i\" name=\"question_date\" value=\"$date_value\" checked />" . $string[$date_value] . "</div>";
     } else {
-      echo "<tr><td colspan=\"2\"><input type=\"radio\" id=\"question_date$i\" name=\"question_date\" value=\"$date_value\" />&nbsp;" . $string[$date_value] . "</td></tr>";
+      echo "<div><input type=\"radio\" id=\"question_date$i\" name=\"question_date\" value=\"$date_value\" />" . $string[$date_value] . "</div>";
     }
     $i++;
   }
 ?>
+</td></tr>
 
 <tr><td style="text-align:right"><?php echo $string['from']; ?>&nbsp;</td><td>
 <?php
@@ -343,7 +343,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </table>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color: black" onclick="updateMenu(9);"><?php echo $string['metadata']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color: black" onclick="updateMenu(9);"><?php echo $string['metadata'] ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
       echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
@@ -355,16 +355,15 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <?php
   if (isset($state['menu9'])) {
-    echo "<table id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
+    echo "<div id=\"menu9\" style=\"margin-left:15px; display:" . $state['menu9'] . "\">\n";
   } else {
-    echo "<table id=\"menu9\" style=\"display:none\">\n";
+    echo "<div id=\"menu9\" style=\"margin-left:15px; display:none\">\n";
   }
 
 if (!isset($status_array)) {
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 }
 ?>
-  <tr><td>
   <div style="margin-left:4px"><?php echo $string['module']; search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); ?></div>
   <div style="margin-left:4px"><?php echo $string['owner']; search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', $string, $state, 100); ?></div>
   <div style="margin-left:4px"><?php echo $string['status'].': '; search_utils::display_status($status_array, $state); ?></div>
@@ -408,8 +407,7 @@ if (!isset($status_array)) {
   echo "</optgroup>\n";
 ?>
 </select></div>
-</td></tr>
-</table>
+</div>
 
 <br />
 

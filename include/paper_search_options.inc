@@ -126,9 +126,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
 <?php
   if (isset($state['menu6'])) {
-    echo "<table id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
+    echo "<table id=\"menu6\" style=\"margin-left:12px; display:" . $state['menu6'] . "\">\n";
   } else {
-    echo "<table id=\"menu6\" style=\"display:none\">\n";
+    echo "<table id=\"menu6\" style=\"margin-left:12px; display:none\">\n";
   }
 ?>
 <tr><td><div style="margin-left:4px"><?php echo $string['date']; ?>&nbsp;</div></td><td>
@@ -167,7 +167,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 ?>
 </select>
 </td></tr>
-<tr><td><div style="margin-left:4px"><?php echo $string['lab']; ?>&nbsp;</div></td><td><select style="width:150px" name="lab"><option value=""><?php echo $string['anylab']; ?></option>
+<tr><td><div style="margin-left:4px"><?php echo $string['lab']; ?>&nbsp;</div></td><td><select style="width:150px" name="lab"><option value=""><?php echo $string['anylab'] ?></option>
 <?php
   $old_campus = '';
 
@@ -208,16 +208,14 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     $state['menu9'] = 'block';
   }
   if (isset($state['menu9'])) {
-    echo "<table id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
+    echo "<div id=\"menu9\" style=\"margin-left:15px; display:" . $state['menu9'] . "\">\n";
   } else {
-    echo "<table id=\"menu9\" style=\"display:none\">\n";
+    echo "<div id=\"menu9\" style=\"margin-left:15px; display:none\">\n";
   }
 ?>
-  <tr><td>
   <div style="margin-left:4px"><?php echo $string['module'] ?> <?php search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); ?></div>
   <div style="margin-left:4px"><?php echo $string['owner'] ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers', $string, $state, 100); ?></div>
-</td></tr>
-</table>
+</div>
 
 <br />
 <div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['search'] ?>" /></div>

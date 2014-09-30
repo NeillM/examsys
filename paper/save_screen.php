@@ -106,7 +106,7 @@ $is_preview = (isset($_POST['mode']) and $_POST['mode'] == 'preview');
 
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
-  $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
+  $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 

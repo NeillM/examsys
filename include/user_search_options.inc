@@ -31,11 +31,6 @@ require_once '../classes/stateutils.class.php';
 
 $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/users/search.php');
 
-if (isset($_GET['moduleID'])) {
-  $moduleID = $_GET['moduleID'];
-} else {
-  $moduleID = '';
-}
 if (isset($_GET['calendar_year'])) {
   $calendar_year = $_GET['calendar_year'];
 } else {
@@ -63,19 +58,15 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function checkRoles() {
-    if ($('#roles').val().search("Student") == -1) {
-      $('#performancesummary2b').css('color', '#808080');
-      $('#performancesummary2c').css('color', '#808080');
+    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate") == -1) {
+      $('#performancesummary2b').addClass('grey');
+      $('#performancesummary2c').addClass('grey');
     } else {
-      $('#performancesummary2b').css('color', '#black');
-      $('#performancesummary2c').css('color', '#black');
+      $('#performancesummary2b').removeClass('grey');
+      $('#performancesummary2c').removeClass('grey');
     }
   }
 
-  function viewProfileSingle() {
-    document.location.href='details.php?userID=' + getLastID($('#userID').val());
-  }
-  
   function viewPerformanceSummary() {
     if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
       alert("You have selected a non-student user.");
@@ -98,6 +89,29 @@ if (isset($_GET['calendar_year'])) {
 
     return id_list[last_elm];
   }
+  
+  function performanceSummary() {
+    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
+      alert("You have selected a non-student user.");
+    } else {
+      window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
+    }
+  }
+  
+  $(function () {
+    $('#performancesummary2b').click(function() {
+      performanceSummary();
+    });
+    
+    $('#performancesummary2c').click(function() {
+      performanceSummary();
+    });
+    
+    $('.viewprofile').click(function() {
+      document.location.href='details.php?userID=' + getLastID($('#userID').val());
+    });
+    
+  });
   </script>
 <?php
 if (isset($_GET['search_surname'])) {
@@ -125,22 +139,22 @@ if (isset($username) and $search_surname == '' and $search_username == '' and $s
 <form name="PapersMenu" action="search.php" method="get">
 <br />
 
-<table cellpadding="0" cellspacing="0" border="0" style="width:210px; font-size:110%; margin-left:-5px">
+<table cellpadding="0" cellspacing="0" border="0" style="width:210px; font-size:110%">
 <tr><td>
-<div><strong><?php echo $string['genmsg']; ?></strong></div>
+<div><strong><?php echo $string['genmsg'] ?></strong></div>
 <div style="font-size:50%">&nbsp;</div>
-<div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname ?>" /></div>
+<div><?php echo $string['name'] ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname ?>" /></div>
 
-<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
-<tr><td style="padding-left:0"><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid'] ?></td></tr>
-<tr><td style="padding-left:0"><input type="text" name="search_username" size="10" value="<?php echo $search_username ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="10" value="<?php echo $search_student_id ?>" /></td></tr>
+<table cellpadding="0" cellspacing="0" border="0">
+<tr><td style="padding-left:0; padding-right:10px"><?php echo $string['username']; ?></td><td><?php echo $string['studentid'] ?></td></tr>
+<tr><td style="padding-left:0; padding-right:10px"><input type="text" name="search_username" size="10" value="<?php echo $search_username ?>" /></td><td><input type="text" name="student_id" size="10" value="<?php echo $search_student_id ?>" /></td></tr>
 </table>
 <div><?php echo $string['module'] ?><br /><?php 
 search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); 
 ?></div>
 
 <div><?php echo $string['academicyear'] ?><br /><select name="calendar_year">
-<option value="%"><?php echo $string['anyyear']; ?></option>
+<option value="%"><?php echo $string['anyyear'] ?></option>
 <?php
   $result = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
   $result->execute();
@@ -159,7 +173,7 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced'] ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(3);"><?php
+  <td style="text-align:right"><a href="#" onclick="updateMenu(3);"><?php
     if (isset($state['advanced']) and $state['advanced'] == 'true') {
       echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
@@ -170,11 +184,10 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 
 <?php
   if (isset($state['advanced']) and $state['advanced'] == 'table') {
-    echo "<table id=\"menu3\" style=\"width:100%; display:" . $state['advanced'] . "\">\n";
+    echo "<div id=\"menu3\" style=\"margin-left:15px; width:180px; display:" . $state['advanced'] . "\">\n";
   } else {
-    echo "<table id=\"menu3\" style=\"width:100%; display:none\">\n";
+    echo "<div id=\"menu3\" style=\"margin-left:15px; width:180px; display:none\">\n";
   }
-  echo '<tr><td>';
   if (isset($state['chkbox1']) and $state['chkbox1'] == 'false') {
     echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
   } else {
@@ -232,8 +245,7 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
     echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
   }
 ?>
-</td></tr>
-</table>
+</div>
 
 <br />
 
@@ -244,11 +256,11 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 <br />
 <br />
 
-<div class="submenuheading"><?php echo $string['usertasks']; ?></div>
+<div class="submenuheading"><?php echo $string['usertasks'] ?></div>
 
 <div id="menu2a">
-<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><?php echo $string['viewuserfile']; ?></div>
-<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/report_grey_16.png" alt="<?php echo $string['performsummary']; ?>" /><?php echo $string['performsummary']; ?></div>
+<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
+<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/report_grey_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
@@ -262,8 +274,8 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 </div>
 
 <div id="menu2b">
-<div class="menuitem" onclick="viewProfileSingle()"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><a onclick="return false" href="#"><?php echo $string['viewuserfile']; ?></a></div>
-<div class="menuitem" onclick="viewPerformanceSummary()"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary']; ?>" /><a onclick="return false" href="#"><?php echo $string['performsummary']; ?></a></div>
+<div class="menuitem viewprofile"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
+<div class="menuitem" id="performancesummary2b"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/small_user_icon_grey.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</div>';
@@ -274,8 +286,8 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 </div>
 
 <div id="menu2c">
-<div class="menuitem" onclick="viewProfileSingle()"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><a onclick="return false" href="#"><?php echo $string['viewuserfile']; ?></a></div>
-<div class="menuitem" onclick="viewPerformanceSummary()"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary']; ?>" /><a onclick="return false" href="#"><?php echo $string['performsummary']; ?></a></div>
+<div class="menuitem viewprofile"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
+<div class="menuitem" id="performancesummary2c"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
@@ -291,6 +303,6 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 </div>
 
 <input type="hidden" id="userID" name="userID" value="" />
-<input type="hidden" id="roles" name="roles" value="<?php if (isset($tmp_roles)) echo $tmp_roles; ?>" />
+<input type="hidden" id="roles" name="roles" value="" />
 </form>
 </div>

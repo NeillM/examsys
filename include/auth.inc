@@ -31,39 +31,6 @@ require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 $notice = UserNotices::get_instance();
 
-function db_change_user($db, $userObj) {
-  global $db_errors, $string;
-  
-  $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd','cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd','cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
-
-  $configObject = Config::get_instance();
-  $arr = $configObject->get($getback);
-  foreach ($arr as $k=>$v) {
-    ${$k} = $v;
-  }
-
-  //select the aproprate database user
-  if ($userObj->has_role('SysAdmin')) {
-    $result = $db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-  } else if ($userObj->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
-    $result = $db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
-  } else if ($userObj->has_role('Student')) {
-    $result = $db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-  } else if ($userObj->has_role('External Examiner')) {
-    $result = $db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
-  } else if ($userObj->has_role('Invigilator')) {
-    $result = $db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
-  } else {
-    $result = false;
-  }
-
-  if ($result === false) {
-    $db_errors = '<strong>' . $string['nodatabaseconnection'] . '</strong>';
-    return false;
-  }
-  return true;
-}
-
 /**
  * This is function encpw encrpts a password using SHA-512 for storage in the DB.
  * MD5 encryption is kept for backwards compatibility.
