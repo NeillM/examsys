@@ -51,7 +51,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
       $errors[] = $string['emailaddressininstitutionaldomains'];
     } else {
       // If it is, look for the user in the database
-      $stmt = $mysqli->prepare("SELECT id, title, surname FROM users WHERE email=? ORDER BY id DESC LIMIT 1");
+      $stmt = $mysqli->prepare("SELECT id, title, surname FROM users WHERE email = ? ORDER BY id DESC LIMIT 1");
       $stmt->bind_param('s', $email);
       $stmt->execute();
       $stmt->store_result();

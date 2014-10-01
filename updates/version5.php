@@ -178,7 +178,7 @@ if (!isset($_POST['update'])) {
 
   error_reporting(-1);
   ob_start();
-
+  
   echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>";
   echo "<div>Starting at " . date("H:i:s") . "</div>\n<ol>";
   ob_flush();

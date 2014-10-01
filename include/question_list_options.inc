@@ -165,7 +165,7 @@ if (!isset($module_details) && $module != '0') {
   
   function count_questions() {
     var n = $(".q:visible").length;
-    $("#q_count").text('(' + n.toLocaleString() + ')');
+    $("#q_count").text('(' + n.toLocaleString("<?php echo $language ?>") + ')');
   }
   
   function resizeList() {

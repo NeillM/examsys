@@ -97,20 +97,21 @@ if (isset($_GET['log_type']) and (($_GET['log_type'] == '0' or $_GET['log_type']
 }
 
 $low_bandwidth = 0;
+$lab_id = null;
 
 // Get lab info
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
 
 $summative_exam_session_started = false;
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
-if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2'){
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
   // Has this lab had an end time set?
-  $log_lab_end_time = new LogLabEndTime( $lab_id, $propertyObj, $mysqli );
+  $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
