@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
 
   $tmp_role = 'Staff%';
   
-  $result = $mysqli->prepare("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE ? AND grade != 'left' ORDER BY surname, initials");
+  $result = $mysqli->prepare("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE ? AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
   $result->bind_param('s', $tmp_role);
   $result->execute();
   $result->store_result();
