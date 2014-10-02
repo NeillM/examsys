@@ -235,6 +235,7 @@ if ($e6 == 'improved') {
       }
       echo "<tr><td>" . $string['processor'] . "</td><td>$processor</td></tr>\n";
       echo "<tr><td>" . $string['cores'] . "</td><td>$core_no</td></tr>\n";
+    
     } else {
       // Try Solaris command
       $results = shell_exec('psrinfo -pv');
@@ -256,12 +257,15 @@ if ($e6 == 'improved') {
         }
       }
     }
+
     if (isset($processor_parts[0])) {
       echo "<tr><td>" . $string['processor'] . "</td><td>" . $processor_parts[0] . "($speed)</td></tr>\n";
       echo "<tr><td>" . $string['cpus'] . "</td><td>$physical ($virtual virtual)</td></tr>\n";
     }
   } else {
-    echo "<tr><td>" . $string['processor'] . "</td><td>" . php_uname('m') . "</td></tr>\n";
+    $results = shell_exec('wmic cpu get name');
+    $lines = explode('<br />', nl2br($results));
+    echo "<tr><td>" . $string['processor'] . "</td><td>" . $lines[1] . "</td></tr>\n";
   }
 
   echo "<tr><td style=\"width:90px\">" . $string['servername'] . "</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
@@ -284,6 +288,21 @@ if ($e6 == 'improved') {
 
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
 
+  function format_space($bytes) {
+    $space = '';
+    
+    $num = $bytes / 1073741824;
+    
+    if ($num > 1024) {
+      $num = $bytes / 1099511627776;
+      $space = round($num, 2) . ' TB';
+    } else {
+      $space = round($num) . ' GB';
+    }
+    
+    return $space;
+  }
+  
   if (php_uname('s') == 'Windows NT') {
     $disks = `fsutil fsinfo drives`;
     $disks = str_word_count($disks,1);
@@ -291,8 +310,10 @@ if ($e6 == 'improved') {
     foreach ($disks as $key=>$disk) {
       if ($disk != 'Drives') {
         $driveID = strtoupper($disk) . ':';
-        $master_array[$i][3] = round(((@disk_free_space($driveID) / 1024) / 1024) / 1024) . 'G';
-        $master_array[$i][1] = round(((@disk_total_space($driveID) / 1024) / 1024) / 1024) . 'G';
+        $master_array[$i][3] = format_space(@disk_free_space($driveID));
+        $master_array[$i][1] = format_space(@disk_total_space($driveID));
+        $master_array[$i]['free'] = round(@disk_free_space($driveID) / 1073741824);
+        $master_array[$i]['total'] = round(@disk_total_space($driveID) / 1073741824);
         $master_array[$i][5] = $disk . ':';
       }
       $i++;
@@ -318,12 +339,14 @@ if ($e6 == 'improved') {
   for ($i=1; $i<($row_no-1);$i++) {
     if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
       echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" /></td><td>' . $master_array[$i][5] . '<br />';
-			echo '<span style="border: 1px solid #808080; display:block; height:11px; width:150px">';
-      if (intval($master_array[$i][3]) < intval($master_array[$i][1])) {
-			  $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
-        if ((intval($master_array[$i][1]) - intval($master_array[$i][3])) > (intval($master_array[$i][1]) * 0.9)) {
+      echo '<span style="border: 1px solid #808080; display:block; height:11px; width:150px">';
+      if (intval($master_array[$i]['free']) < intval($master_array[$i]['total'])) {
+          
+	$bar_width = round((1 - (intval($master_array[$i]['free']) / intval($master_array[$i]['total']))) * 148);
+
+        if ((intval($master_array[$i]['total']) - intval($master_array[$i]['free'])) > (intval($master_array[$i]['total']) * 0.9)) {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#DA2626"></span>';  // Red bar
-				} else {
+        } else {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
         }
       } else {
