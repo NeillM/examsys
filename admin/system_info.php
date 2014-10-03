@@ -26,6 +26,23 @@ require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
+
+/**
+ * Formats space in human-readable format.
+ * @param int $space - Raw bytes to be converted.
+ * @param string space in human readable format.
+ */
+function format_space($space) {
+  $units = array('KB', 'MB', 'GB', 'TB');
+  $i = -1;
+  do {
+    $i++;
+    $space = $space / 1024;
+    $correct_units = $units[$i];
+  } while ($space > 1024);
+
+  return round($space, 1) . ' ' . $correct_units;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -295,8 +312,8 @@ if ($e6 == 'improved') {
     foreach ($disks as $key=>$disk) {
       if ($disk != 'Drives') {
         $driveID = strtoupper($disk) . ':';
-        $master_array[$i][3] = round(@disk_free_space($driveID) / 1073741824) . 'G';
-        $master_array[$i][1] = round(@disk_total_space($driveID) / 1073741824) . 'G';
+        $master_array[$i][3] = @disk_free_space($driveID);
+        $master_array[$i][1] = @disk_total_space($driveID);
         $master_array[$i][5] = $disk . ':';
       }
       $i++;
@@ -304,7 +321,7 @@ if ($e6 == 'improved') {
     $row_no = $i + 1;
   } else {
     $master_array = array();
-    $results = shell_exec('df -h');
+    $results = shell_exec('df');
     $lines = explode('<br />', nl2br($results));
     $row_no = 0;
     foreach ($lines as $individual_line) {
@@ -325,15 +342,19 @@ if ($e6 == 'improved') {
       echo '<span style="border: 1px solid #808080; display:block; height:11px; background-color:#EAEAEA; width:150px">';
       if (intval($master_array[$i][3]) < intval($master_array[$i][1])) {
           
-	$bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
+        $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
+        
+        $free_percent = ($master_array[$i][3] / $master_array[$i][1]) * 100;
+        $used_percent = 100 - $free_percent;
+        $bar_width = 1.48 * $used_percent;
 
-        if ((intval($master_array[$i][3]) - intval($master_array[$i][1])) > (intval($master_array[$i][3]) * 0.9)) {
+        if ($used_percent > 90) {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#DA2626"></span>';  // Red bar
         } else {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
         }
       }
-      echo '</span><span style="color:#808080">' . sprintf($string['freespace'], $master_array[$i][3], $master_array[$i][1]) . '</span></td></tr>';
+      echo '</span><span style="color:#808080">' . sprintf($string['freespace'], format_space($master_array[$i][3]), format_space($master_array[$i][1])) . '</span></td></tr>';
     }
   }
   echo '</table></td></tr>';
