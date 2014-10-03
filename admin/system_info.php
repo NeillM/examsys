@@ -321,7 +321,7 @@ if ($e6 == 'improved') {
     $row_no = $i + 1;
   } else {
     $master_array = array();
-    $results = shell_exec('df');
+    $results = shell_exec('df -B1');
     $lines = explode('<br />', nl2br($results));
     $row_no = 0;
     foreach ($lines as $individual_line) {
