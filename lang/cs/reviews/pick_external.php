@@ -17,6 +17,7 @@
 $string['externalexaminers'] = 'Externí zkoušející';
 $string['initialinvitation'] = 'Počáteční pozvánka';
 $string['reminder'] = 'Upomínka';
+$string['viewcomments'] = 'View Comments';
 $string['msg'] = 'Prosím, vyberte Externího zkoušejícího, jemuž byste chtěli zaslat email.';
-$string['noexternals'] = "V současnosti nejsou k testu přiřazeni žádní externisté. Pokud si přejete některé doplnit, použijte, prosím, možnosti "Upravit vlastnosti".";
+$string['noexternals'] = 'V současnosti nejsou k testu přiřazeni žádní externisté. Pokud si přejete některé doplnit, použijte, prosím, možnosti "Upravit vlastnosti".';
 ?>

@@ -21,6 +21,7 @@ $string['bcc'] = 'Bcc';
 $string['subject'] = 'Subject';
 $string['subject_msg0'] = '%s e-assessment review';
 $string['subject_msg1'] = 'REMINDER: %s e-assessment review';
+$string['subject_msg2'] = '%s review comments';
 $string['emailsent'] = 'Email have been sent.';
 $string['back'] = '&lt back';
 $string['email'] = 'Email';

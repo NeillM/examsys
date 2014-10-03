@@ -678,6 +678,7 @@ if ($properties->get_paper_type() == '2') {
 
 	$external_menu['Initial Invitation'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=0";
 	$external_menu['Reminder'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=1";
+	$external_menu['View Comments'] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=2";
   
   makeMenu($external_menu);  
 

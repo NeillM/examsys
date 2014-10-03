@@ -28,6 +28,7 @@ require_once '../classes/paperproperties.class.php';
 require_once '../config/external_email_msg.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+$mode = check_var('mode', 'GET', true, false, true);
 $externalID = check_var('externalID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
@@ -77,12 +78,15 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   
   $to = $external_details['email'];
 
-  if ($_GET['mode'] == 0) {
+  if ($mode == 0) {
     $message = $string['message0'];
     $subject = sprintf($string['subject_msg0'], $configObject->get('cfg_company'));
-  } else {
+  } elseif ($mode == 1) {
     $message = $string['message1'];    
     $subject = sprintf($string['subject_msg1'], $configObject->get('cfg_company'));
+  } else {
+    $message = $string['message2'];
+    $subject = sprintf($string['subject_msg2'], $configObject->get('cfg_company'));
   }
   $message = str_replace('$users_name', $userObject->get_first_first_name(), $message);
   $message = str_replace('$support_email', $support_email, $message);
@@ -93,6 +97,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   $message = str_replace('$external_first_name', $external_details['first_name'], $message);
   $message = str_replace('$external_title', $external_details['title'], $message);
   $message = str_replace('$logo_path', $logo_path, $message);
+  $message = str_replace('$cfg_company', $configObject->get('cfg_company'), $message);
     
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu();

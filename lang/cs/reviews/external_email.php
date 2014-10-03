@@ -21,6 +21,7 @@ $string['bcc'] = 'Bcc';
 $string['subject'] = 'Předmět';
 $string['subject_msg0'] = 'Komentář k e-testu %s ';
 $string['subject_msg1'] = 'REMINDER: %s e-assessment review';
+$string['subject_msg2'] = '%s review comments';
 $string['emailsent'] = 'Email byl zaslán.';
 $string['back'] = '&lt zpět';
 $string['email'] = 'E-mail';

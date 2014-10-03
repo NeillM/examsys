@@ -68,8 +68,10 @@ echo draw_toprightmenu();
 
 if ($_GET['mode'] == 0) {
   $type = $string['initialinvitation'];
+} elseif ($_GET['mode'] == 1) {
+  $type = $string['reminder'];
 } else {
-  $type = $string['reminder'];    
+  $type = $string['viewcomments'];    
 }
 
 ?>

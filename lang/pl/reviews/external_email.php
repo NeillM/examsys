@@ -21,6 +21,7 @@ $string['bcc'] = 'Bcc'; //cognate
 $string['subject'] = 'Temat'; 
 $string['subject_msg0'] = 'Przegląd e-egzaminu %s';
 $string['subject_msg1'] = 'PRZYPOMNIENIE: Przegląd e-egzaminu %s';
+$string['subject_msg2'] = '%s review comments';
 $string['emailsent'] = 'Email wysłano.';
 $string['back'] = '&lt wstecz';
 $string['email'] = 'Email'; //cognate

@@ -17,6 +17,7 @@
 $string['externalexaminers'] = 'Zewnetrzni egzaminatorzy';
 $string['initialinvitation'] = 'Poczatkowe zaproszenie';
 $string['reminder'] = 'Przypomnienie';
+$string['viewcomments'] = 'View Comments';
 $string['msg'] = 'Kliknij na nazwisko zewnetrznego egzaminatora, do którego ma byc wyslany email aby przedstawic okno edytora.';
 $string['noexternals'] = "Obecnie żaden egzaminator zewnętrzny nie jest przypisany do arkusza. Użyj 'Edytuj Właściwości' aby któregoś dodać.";
 ?>
