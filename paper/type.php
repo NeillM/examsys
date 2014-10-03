@@ -89,7 +89,7 @@ if ($_GET['module'] != '0') {
   <script>
     function updatePaperCount() {
       var n = $(".file:visible").length;
-      $("#paper_count").text(n.toLocaleString());
+      $("#paper_count").text(n.toLocaleString("<?php echo $language ?>"));
     }
     
     $(function () {
