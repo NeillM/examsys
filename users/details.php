@@ -310,7 +310,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
       $('#menu2b').show();
       
       $('#edit').click(function() {
-        editwin=window.open("edit_details.php?userID=<?php echo $userID ?>","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        editwin=window.open("edit_details.php?userID=<?php echo $userID ?>","edituser","width=600,height=420,left="+(screen.width/2-260)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
         if (window.focus) {
           editwin.focus();
         }        
@@ -361,13 +361,13 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
 <?php
   if (stripos($user_details['roles'], 'Student') !== false) {
-    $student_photo = $cfg_web_root . "users/photos/" . $user_details['username'] . ".jpg";
-    if (file_exists($student_photo)) {
-      $photo_size = getimagesize($student_photo);
+    $student_photo = UserUtils::student_photo_exist($user_details['username']);
+    if ($student_photo !== false) {
+      $photo_size = getimagesize('photos/' .$student_photo);
       if (isset($demo) and $demo == true) {
         echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"./pixel_photo.php?username=" . $user_details['username'] . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       } else {
-        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $user_details['username'] . ".jpg\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $student_photo . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       }
     } else {
       echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";

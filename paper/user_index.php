@@ -31,6 +31,7 @@ require_once '../include/paper_security.inc';
 require_once '../classes/stringutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
+require_once '../classes/userutils.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/timer.class.php';
 require_once '../classes/lab_factory.class.php';
@@ -359,15 +360,16 @@ if ($textsize > 120) {
   echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%; margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
-    if (file_exists($cfg_web_root . 'users/photos/' . $userObject->get_username() . '.jpg')) {
-      $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $userObject->get_username() . '.jpg');
+    $student_photo = UserUtils::student_photo_exist($userObject->get_username());
+    if ($student_photo !== false) {
+      $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $student_photo);
       echo '<td rowspan="';
       if ($sound_demo == '1') {
         echo '8';
       } else {
         echo '7';
       }
-      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] . '</div><img src="../users/photos/' . $userObject->get_username() . '.jpg" ' . $photo_size[3] . ' alt="Photo" style="border: 10px solid white" /></td>';
+      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] . '</div><img src="../users/photos/' . $student_photo . '" ' . $photo_size[3] . ' alt="Photo" style="border: 10px solid white" /></td>';
     }
   }
   echo '</tr>';

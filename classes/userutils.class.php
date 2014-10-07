@@ -641,6 +641,24 @@ Class UserUtils {
     $result->execute();  
     $result->close();
 	}
+  
+  static function student_photo_exist($username) {
+    $found = false;
+    $configObj = Config::get_instance();
+    
+    $filename = $configObj->get('cfg_web_root') . "users/photos/" . $username;
+    if (file_exists($filename . '.jpg')) {
+      $found = $username . '.jpg';
+    } elseif (file_exists($filename . '.jpeg')) {
+      $found = $username . '.jpeg';
+    } elseif (file_exists($filename . '.gif')) {
+      $found = $username . '.gif';
+    } elseif (file_exists($filename . '.png')) {
+      $found = $username . '.png';
+    }
+    
+    return $found;
+  }
 
 
 }

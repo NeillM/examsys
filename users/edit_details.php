@@ -40,6 +40,20 @@ if ($user_details === false) {
 }
 
 if (isset($_POST['submit'])) {
+  $cfg_web_root = $configObject->get('cfg_web_root');
+
+  if (isset($_FILES['photofile']['name'])) {
+    $filename = $_FILES['photofile']['name'];
+    $explode = explode('.', $filename);
+    $count = count($explode) - 1;  
+    $file_ext = $explode[$count];
+
+    if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $cfg_web_root . 'users/photos/' . $_POST['username'] . '.' . $file_ext)) {
+      echo "error!";
+      exit;
+    }
+  }
+  
   $initials = '';
   $first_names_array = explode(' ', $_POST['first_names']);
   foreach ($first_names_array as $individual_name) {
@@ -126,7 +140,7 @@ if (isset($_POST['submit'])) {
   </table>
   <br />
   
-  <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
+  <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post" enctype="multipart/form-data">
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
   echo "<tr><td>" . $string['name'] . "</td><td>";
@@ -217,6 +231,7 @@ if (isset($_POST['submit'])) {
   }
   echo "</optgroup>\n</select>\n";
   echo "<input type=\"hidden\" name=\"prev_roles\" value=\"" . $user_details['roles'] . "\" /></td></tr>\n";
+  echo "<tr><td>" . $string['photo'] . "</td><td><input type=\"file\" name=\"photofile\" /></td></tr>";
   ?>
   </table>
 
