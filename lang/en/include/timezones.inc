@@ -32,6 +32,7 @@ $timezone_array = array(
   'Europe/London' => '(UTC) Dublin, Edinburgh, Lisbon, London',
   'Europe/Amsterdam' => '(UTC+01:00) Amsterdam, Berlin, Stockholm',
   'Europe/Athens' => '(UTC+02:00) Athens, Bucharest',
+  'Africa/Johannesburg' => '(UTC+02:00) Cape Town, Johannesburg',
   'Asia/Kuwait' => '(UTC+03:00) Kuwait, Riyadh',
   'Asia/Tehran' => '(UTC+03:30) Tehran',
   'Europe/Moscow' => '(UTC+04:00) Moscow, St. Petersburg, Volgograd',
