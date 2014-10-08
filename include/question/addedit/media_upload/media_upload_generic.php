@@ -18,7 +18,7 @@
  *
  * @author Rob Ingram
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 ?>
@@ -27,6 +27,6 @@
     <h2 class="midblue_header"><?php echo $string['uploadimage'] ?></h2>
     <p><?php echo $string['uploadinstructions'] ?></p>
     <p><label for="q_media" class="heavy"><?php echo $string['image'] ?></label> <input id="q_media" name="q_media" size="45" type="file" /></p>
-    <p class="align-centre"><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript: history.back();" class="cancel" /> <input type="submit" name="submit_media" value="<?php echo $string['next'] ?>" class="submit cancel" /></p>
+    <p class="align-centre"><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" class="cancel" /> <input type="submit" name="submit_media" value="<?php echo $string['next'] ?>" class="submit cancel" /></p>
   </div>
 </div>

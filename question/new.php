@@ -18,7 +18,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -32,13 +32,13 @@ require '../include/errors.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>New Question<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['newquestion'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style>
     body {font-size:75%}
     tr {cursor:pointer; height:48px}
-    .icon {width:48px; height:48px; line-height: 0;}
+    .icon {width:48px; height:48px; line-height:0}
     .desc {background-color:white; padding:3px}
     .desc:hover {background-color:#FFE7A2}
   </style>
