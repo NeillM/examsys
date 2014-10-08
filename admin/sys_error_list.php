@@ -78,7 +78,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
         openBug($(this).attr('id'),event);
       });
 
-      $(".menuitem").click(function(event) {
+      $("#sys_errors_menu").click(function(event) {
           event.stopPropagation();
           displayDetails($('#lineID').val(), event);
       });

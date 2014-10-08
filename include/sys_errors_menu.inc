@@ -32,7 +32,7 @@
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem"><a href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
+	<div id="sys_errors_menu" class="menuitem"><a href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
 </div>
 
 <form name="errorsMenu">
