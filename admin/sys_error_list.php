@@ -15,8 +15,8 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Simon Wilkinson
+*
+* @author Simon Wilkinson, Joseph Baxter
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -33,9 +33,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  
+
   <title>Rog&#333;: <?php echo $string['systemerrors'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -55,25 +55,32 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
     function refreshPage() {
       window.location = 'sys_error_list.php';
     }
-    
-    function openBug(lineID, evt) {
-      selLine(lineID, evt);
-      displayDetails();
+
+    function openBug(lineID, event) {
+      selLine(lineID, event);
+      displayDetails(lineID, event);
     }
-    
+
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
+        $("#maindata").tablesorter({
           sortList: [[0,1]]
         });
       }
 
-      $(".l").click(function() {
+      $(".l").click(function(event) {
+        event.stopPropagation();
         selLine($(this).attr('id'),event);
       });
 
-      $(".l").dblclick(function() {
+      $(".l").dblclick(function(event) {
+        event.stopPropagation();
         openBug($(this).attr('id'),event);
+      });
+
+      $(".menuitem").click(function(event) {
+          event.stopPropagation();
+          displayDetails($('#lineID').val(), event);
       });
 
     });
@@ -83,9 +90,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 <?php
   require '../include/sys_errors_menu.inc';
   require '../include/toprightmenu.inc';
-	
+
 	echo draw_toprightmenu();
-  
+
   if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
     $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id = sys_errors.userID ORDER BY sys_errors.id DESC LIMIT 1000";
   } else {
