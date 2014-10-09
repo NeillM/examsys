@@ -28,9 +28,11 @@ require '../include/year_tabs.inc';
 
 $current_year = check_var('calyear', 'GET', true, false, true);
 
-function display_row($month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max) {
+function display_row($month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max, $current_year) {
+  $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+
   if ($month_paper_no > 0) {
-    echo "<tr><td>" . $string[strtolower($month)] . "</td><td class=\"n\">$month_paper_no</td>";
+    echo "<tr><td><a href=\"summative_stats_detail.php?calyear=$current_year&month=$month\">" . $string[$month_names[$month - 1]] . "</a></td><td class=\"n\">$month_paper_no</td>";
     if ($month_papers_unused == 0) {
       echo "<td class=\"n grey\">$month_papers_unused</td>";
     } else {
@@ -57,9 +59,6 @@ function display_row($month, $string, $month_paper_no, $month_papers_unused, $mo
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <style type="text/css">
-    .grey {#C0C0C0}
-  </style>
 </head>
 
 <body>
@@ -98,7 +97,7 @@ $old_month = '';
 $month_papers_unused = 0;
 $distinct_users = array();
 
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%M'), start_date, end_date, labs FROM properties WHERE paper_type = '2' AND start_date > " . $current_year . "0901000000 AND end_date < " . ($current_year+1) . "0831235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%m'), start_date, end_date, labs FROM properties WHERE paper_type = '2' AND start_date >= " . $current_year . "0901000000 AND end_date < " . ($current_year+1) . "0831235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->store_result();
 $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date, $labs);
@@ -124,7 +123,7 @@ while ($result->fetch()) {
   if ($old_month != $month) {
 
     if ($old_month != '') {
-      display_row($old_month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max);
+      display_row($old_month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max, $current_year);
     }
     $month_paper_no = 0;
     $month_student_no = 0;
@@ -144,7 +143,7 @@ while ($result->fetch()) {
 	}
   $old_month = $month;
 }
-display_row($old_month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max);
+display_row($old_month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max, $current_year);
 
 echo "<tr><td>&nbsp;</td><td class=\"n subtotal\">" . number_format($total_paper_no) . "</td><td class=\"n subtotal\">" . number_format($total_paper_unused) . "</td><td class=\"subtotal\" colspan=\"3\">&nbsp;</td><td class=\"n subtotal\">" . number_format($total_student_no) . "</td></tr>\n";
 
