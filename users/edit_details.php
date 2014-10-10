@@ -42,15 +42,14 @@ if ($user_details === false) {
 if (isset($_POST['submit'])) {
   $cfg_web_root = $configObject->get('cfg_web_root');
 
-  if (isset($_FILES['photofile']['name'])) {
+  if (!empty($_FILES['photofile']['name'])) {
     $filename = $_FILES['photofile']['name'];
     $explode = explode('.', $filename);
     $count = count($explode) - 1;  
     $file_ext = $explode[$count];
 
     if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $cfg_web_root . 'users/photos/' . $_POST['username'] . '.' . $file_ext)) {
-      echo "error!";
-      exit;
+      log_error($userObject->get_user_ID(), 'Edit User', 'Application Error', 'Error uploading user photo - error: ' . $_FILES['photofile']['error'], $_SERVER['PHP_SELF'], 49, '', null, null, null);
     }
   }
   

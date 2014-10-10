@@ -563,7 +563,7 @@ class Authentication {
    * Return the username as entered by the user.
    */
   function get_username() {
-    if(isset($this->username) and $this->username != '') {
+    if (isset($this->username) and $this->username != '') {
       return $this->username;
     }
     return false;
