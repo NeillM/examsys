@@ -12,4 +12,3 @@ if ($original_paper_type == '2') {
   $fire = '';
 }
 $bottom_html .= '<tr>' . $fire . '<td class="copyright">&#169; 2014, e-Assessment University</td><td style="width:14em;text-align:center">';
-?>
