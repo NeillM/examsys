@@ -49,9 +49,9 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 
   function previewQ() {
     notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-	}
+  }
 	
-	function ed() {
+  function ed() {
     var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val());
     if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
       loc += '&type=' + $('#qType').val();
@@ -430,7 +430,7 @@ if (!isset($status_array)) {
 
 <div style="display:none" id="menu2b">
 	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
-	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
+	<div class="menuitem"><a id="edit" onclick="ed(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
 	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
 	<div class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
 	<div class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
@@ -439,7 +439,7 @@ if (!isset($status_array)) {
 
 <div style="display:none" id="menu2c">
 	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
-	<div class="menuitem"><a id="edit" onclick="editQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
+	<div class="menuitem"><a id="edit" onclick="ed(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
 	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
 	<div class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
 	<div class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
