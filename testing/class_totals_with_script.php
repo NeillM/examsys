@@ -23,7 +23,7 @@
  *   3. For each student call finish.php and compare the mark.
  *   4. Echo errors for any which do not match.
  *
- * @author Simon Wilkinson
+ * @author Simon Wilkinson and Joseph Baxter
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
@@ -79,12 +79,10 @@ $result->close();
           var period = $('#period').val();
           var paper = $('#paper').val();
           var passwd = $('#passwd').val();
-          var username = $('#username').val();
           $.post('class_totals_with_script_ajax.php',
                   {
                     period:period,
                     paper:paper,
-                    username:username,
                     passwd:passwd
                   });
           $('#results').show();
@@ -142,8 +140,6 @@ endforeach;
 ?>
       </select>
     </dd>
-    <dt>Username:</dt>
-    <dd><input type="text" id="username" name="username" class="required" style="width:100px" /></dd>
     <dt>Password:</dt>
     <dd><input type="password" id="passwd" name="passwd" class="required" style="width:100px" /></dd>
   </dl>
