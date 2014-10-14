@@ -18,7 +18,7 @@
  *
  * Authentication routine which permits staff only access.
  *
- * @author Simon Wilkinson, Anthony Brown and Joseph Baxter
+ * @author Simon Wilkinson, Anthony Brown
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
@@ -63,17 +63,6 @@ $external_allowed_pages = array(
 if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $configObject->get('cfg_root_path') . "/reviews/");
-  }
-}
-
-// Redirect the system cron if it is straying
-// $cron_allowed_pages is an array that contains the set of scripts that the system cron
-// CAN access all other pages should exit the cron
-$cron_allowed_pages = array("$cfg_root_path/testing/testing/class_totals_with_script_cli.php"=>1,
-                            "$cfg_root_path/testing/testing/classes/class_totals.php"=>1);
-if ($userObject->has_role('SysCron')) {
-  if (!isset($cron_allowed_pages[$_SERVER['PHP_SELF']])) {
-    exit;
   }
 }
 
