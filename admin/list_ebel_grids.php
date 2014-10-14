@@ -44,7 +44,8 @@
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     $(function () {      
-      $(".l").click(function() {
+      $(".l").click(function(event) {
+        event.stopPropagation();
         selLine($(this).attr('id'),event);
       });
 
