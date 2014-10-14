@@ -59,7 +59,8 @@ require '../include/sysadmin_auth.inc';
         });
       }
 
-      $(".l").click(function() {
+      $(".l").click(function(event) {
+        event.stopPropagation();
         selLine($(this).attr('id'),event);
       });
 

@@ -191,9 +191,9 @@ if (count($moduleIDs) > 0) {
   }
 
   function addQuestions(display, screen_no) {
-    winH = screen.height - 80
+    winH = screen.height - 100
     winW = screen.width - 80
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + $('#scrOfY').val() + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/add/add_questions_frame.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&scrOfY=" + $('#scrOfY').val() + "&display_pos=" + display + "&max_screen=" + screen_no + "","notice","width=" + winW + ",height=" + winH + ",left=40,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       notice.focus();
     }
