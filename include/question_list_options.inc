@@ -169,8 +169,8 @@ if (!isset($module_details) && $module != '0') {
   }
   
   function resizeList() {
-    var offset = $('#list').offset();
-    winH = ($(window).height() - offset.top) - 2;
+    var offset = $('#list').position().top;
+    winH = ($(window).height() - offset) - 2;
 
     $('#list').css('height', winH + 'px');
   }

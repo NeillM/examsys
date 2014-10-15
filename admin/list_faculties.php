@@ -51,7 +51,8 @@
         });
       }
 
-      $(".l").click(function() {
+      $(".l").click(function(event) {
+        event.stopPropagation();
         selLine($(this).attr('id'),event);
       });
 
