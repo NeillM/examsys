@@ -66,6 +66,18 @@ if ($userObject->has_role('External Examiner')) {
   }
 }
 
+// Redirect the system cron if it is straying
+// $cron_allowed_pages is an array that contains the set of scripts that the system cron
+// CAN access all other pages should exit the cron
+$cron_allowed_pages = array("$cfg_root_path/testing/testing/class_totals_with_script_cli.php"=>1,
+                            "$cfg_root_path/testing/testing/classes/class_totals.php"=>1);
+if ($userObject->has_role('SysCron')) {
+  if (!isset($cron_allowed_pages[$_SERVER['PHP_SELF']])) {
+      var_dump($_SERVER['PHP_SELF']);
+      exit;
+  }
+}
+
 // Get teams if the user is not an External Examiner.
 if ($userObject->has_role('External Examiner')) {
   $staff_modules = array();

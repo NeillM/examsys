@@ -72,6 +72,9 @@ Class InstallUtils {
   public static $cfg_db_inv_user;
   public static $cfg_db_inv_passwd;
 
+  public static $cfg_cron_user;
+  public static $cfg_cron_passwd;
+
   public static $cfg_db_name;
   public static $db_admin_username;
   public static $db_admin_passwd;
@@ -593,7 +596,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_db_inv_user = self::$cfg_db_basename . '_inv';
     self::$cfg_db_inv_passwd = gen_password() . gen_password();
 
-
+    self::$cfg_cron_user = 'cron';
+    self::$cfg_cron_passwd = gen_password() . gen_password();
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
@@ -984,6 +988,20 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                             self::$db
                           );
 
+    //create cron user
+    UserUtils::create_user( self::$cfg_cron_user,
+                            self::$cfg_cron_passwd,
+                            '',
+                            '',
+                            'cron',
+                            '',
+                            '',
+                            '',
+                            '',
+                            'Staff,SysCron',
+                            '',
+                            self::$db
+                          );
 
     //create 100 guest accounts
     for ($i=1; $i<=100; $i++) {
@@ -1456,6 +1474,9 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_short_time_php = '{cfg_short_time_php}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
+// cron user
+  \$cfg_cron_user = '{cfg_cron_user}';
+  \$cfg_cron_passwd = '{cfg_cron_passwd}';
 
 // Reports
   \$percent_decimals = 2;
@@ -1588,6 +1609,9 @@ CONFIG;
     $config = str_replace('{cfg_db_sct_passwd}', self::$cfg_db_sct_passwd, $config);
     $config = str_replace('{cfg_db_inv_user}', self::$cfg_db_inv_user, $config);
     $config = str_replace('{cfg_db_inv_passwd}', self::$cfg_db_inv_passwd, $config);
+
+    $config = str_replace('{cfg_cron_user}', self::$cfg_cron_user, $config);
+    $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
 
     $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
     $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
