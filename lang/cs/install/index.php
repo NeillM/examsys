@@ -18,8 +18,9 @@ $string['rdbusername'] = 'Uživatelské jméno';
 $string['rdbpassword'] = 'Heslo';
 $string['timedateformats'] = 'Čas/Datum - formáty';
 
-$string['date'] = 'Datum';
-$string['datetime'] = 'Datum/Čas';
+$string['date'] = 'Datum (%s)';
+$string['shortdatetime'] = 'Short Date/Time (%s)';
+$string['longdatetime'] = 'Long Date/Time (%s)';
 $string['longdatephp'] = 'Nezkrácené datum (%s)';
 $string['shortdatephp'] = 'Zkrácené datum (%s)';
 $string['longtimephp'] = 'Nezkrácený čas (%s)';

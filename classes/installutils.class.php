@@ -41,6 +41,7 @@ Class InstallUtils {
   public static $cfg_company;
   public static $cfg_short_date;
   public static $cfg_long_date_time;
+  public static $cfg_short_date_time;
   public static $cfg_long_date_php;
   public static $cfg_short_date_php;
   public static $cfg_long_time_php;
@@ -164,8 +165,9 @@ Class InstallUtils {
 $mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format';
 $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 ?>
-        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
-        <div><label for="cfg_long_date_time"><?php echo sprintf($string['datetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /></div>
+        <div><label for="cfg_long_date_time"><?php echo sprintf($string['longdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_short_date_time"><?php echo sprintf($string['shortdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" /></div>
         <div><label for="cfg_long_date_php"><?php echo sprintf($string['longdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" /></div>
         <div><label for="cfg_short_date_php"><?php echo sprintf($string['shortdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" /></div>
         <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
@@ -308,6 +310,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     self::$cfg_short_date = $_POST['cfg_short_date'];
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
+    self::$cfg_short_date_time = $_POST['cfg_short_date_time'];
     self::$cfg_long_date_php = $_POST['cfg_long_date_php'];
     self::$cfg_short_date_php = $_POST['cfg_short_date_php'];
     self::$cfg_long_time_php = $_POST['cfg_long_time_php'];
@@ -1337,7 +1340,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         h1 {margin-left:16px; font-size:140%; color;#1F497D}
         .error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
         .warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
-        label {float:left; width:160px; padding-left:0em; text-align:right; padding-right:6px}
+        label {float:left; width:175px; padding-left:0em; text-align:right; padding-right:6px}
         p {clear:both}
         .submit {margin-left:42%; padding-top:2em}
         table {border:none;padding:0px}
@@ -1446,6 +1449,7 @@ require \$root . '/include/path_functions.inc.php';
 // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
+  \$cfg_short_date_time = '{cfg_short_date_time}';
   \$cfg_long_date_php = '{cfg_long_date_php}';
   \$cfg_short_date_php = '{cfg_short_date_php}';
   \$cfg_long_time_php = '{cfg_long_time_php}';
@@ -1590,6 +1594,7 @@ CONFIG;
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
     $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
+    $config = str_replace('{cfg_short_date_time}', self::$cfg_short_date_time, $config);
     $config = str_replace('{cfg_long_date_php}', self::$cfg_long_date_php, $config);
     $config = str_replace('{cfg_short_date_php}', self::$cfg_short_date_php, $config);
     $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
