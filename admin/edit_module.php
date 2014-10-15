@@ -66,7 +66,10 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   if (isset($_POST['external'])) $module['checklist'] .= ',external';
   if (isset($_POST['stdset']))   $module['checklist'] .= ',stdset';
   if (isset($_POST['mapping']))  $module['checklist'] .= ',mapping';
-  $module['checklist'] = substr($module['checklist'], 1);
+  if ($module['checklist'] != '') {
+    $module['checklist'] = substr($module['checklist'], 1);
+  }
+  
 
   // Update the properties of the module.
   $module['moduleid'] = trim($_POST['modulecode']);

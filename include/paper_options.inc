@@ -61,14 +61,16 @@ if (count($moduleIDs) > 0) {
   $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $moduleIDs) . ")");
   $stmt->execute();
   $stmt->bind_result($tmp_checklist);
-  $check[] = array();
+  $check = array();
   while ($stmt->fetch()) {
-    $tmp = explode(',', $tmp_checklist);
-    foreach ($tmp as $c) {
-      $check[$c] = $c;
+    if ($tmp_checklist != '') {
+      $tmp = explode(',', $tmp_checklist);
+      foreach ($tmp as $c => $type) {
+        $check[] = $type;
+      }
     }
   }
-  $checklist = implode(',', array_keys($check));
+  $checklist = implode(',', $check);
   $stmt->close();
 }
 ?>
@@ -173,8 +175,8 @@ if (count($moduleIDs) > 0) {
   }
 
   function retirePaper() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/check_retire_paper.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/paper/check_retire_paper.php?paperID=<?php echo $paperID; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>","notice","width=500,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250,screen.height/2-105);
     if (window.focus) {
       notice.focus();
     }
