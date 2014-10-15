@@ -642,6 +642,15 @@ Class UserUtils {
     $result->close();
 	}
   
+  /**
+   * Does a search for a student photo in the /users/photos/ directory.
+   * A search is performed against JPEG, GIF and PNG file types.
+   *
+   * @param string $username Username of the student we wish to search for.
+   * @return bool|string Returns false if file not found, otherwise will return
+   *                      the username and extention (file) is has matched.
+   *
+   */
   static function student_photo_exist($username) {
     $found = false;
     $configObj = Config::get_instance();
