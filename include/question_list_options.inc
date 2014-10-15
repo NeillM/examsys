@@ -165,7 +165,14 @@ if (!isset($module_details) && $module != '0') {
   
   function count_questions() {
     var n = $(".q:visible").length;
-    $("#q_count").text('(' + n.toLocaleString("<?php echo $language ?>") + ')');
+    var count = n.toLocaleString("<?php echo $language ?>");
+    // Old browsers use and old implementation of toLocaleString so we need to check for decimal places
+    // in the string and remove them.
+    var dp = count.indexOf('.');
+    if (dp !== -1) {
+      count = count.slice(0,dp);
+    }
+    $("#q_count").text('(' + count + ')');
   }
   
   function resizeList() {
