@@ -45,7 +45,12 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
 $type = check_var('type', 'GET', true, false, true);
 $module = check_var('module', 'GET', true, false, true);
 
-$module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+if ($module == 0) {
+  $module_details['moduleid'] = 0;
+  $module_details['active'] = 1;
+} else {
+  $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+}
 
 if (strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));

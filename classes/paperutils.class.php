@@ -195,6 +195,30 @@ Class PaperUtils {
     return $modules;
   }
 
+   /**
+   * Function to count the number of un-assigned modules for a user
+   *
+   * @param int $user_id User ID
+   * @param mysqli $db Database link object
+   * @return int $count the number of unassigned modules
+   */
+  public function count_unassigned($user_id, $db) {
+    $query = $db->prepare("SELECT count(properties.property_id)"
+      . " FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id"
+      . " LEFT JOIN papers ON properties.property_id=papers.paper"
+      . " LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id"
+      . " WHERE paper_ownerID = ?"
+      . " AND idMod is NULL"
+      . " AND deleted IS NULL");
+    $query->bind_param('i', $user_id);
+    $query->execute();
+    $query->bind_result($count);
+    $query->fetch();
+    $query->close();
+
+    return $count;
+  }
+  
   public function q_feedback_enabled($moduleIDs, $db) {
     if (count($moduleIDs) == 0) {
       return false;
