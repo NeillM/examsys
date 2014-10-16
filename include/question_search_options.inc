@@ -40,13 +40,6 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     return id_list[last_elm];
   }
 
-  function checkForm() {
-    if ($('#searchterm').val() == "") {
-      alert ("<?php echo $string['entersearchterm'];?>");
-      return false;
-    }
-  }
-
   function previewQ() {
     notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
   }
@@ -117,7 +110,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get" onsubmit="return checkForm()">
+<form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
 
 <table cellpadding="4" cellspacing="0" border="0" style="width:210px">
 <tr><td>

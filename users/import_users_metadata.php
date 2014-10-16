@@ -52,27 +52,34 @@ if (!$module_details) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="../js/sidebar.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/sidebar.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      $(document).click(function() {
+        hideMenus();
+      });
+    });
+  </script>
   
   <style type="text/css">
-    p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     .failed {color:#C00000}
   </style>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
   require '../include/module_options.inc';
 ?>
-<div id="content" class="content" style="font-size:90%; padding-left:10px">
+<div id="content" class="content" style="font-size:90%">
 <br />
 
 <?php
