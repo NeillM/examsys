@@ -95,7 +95,7 @@ $string['NoGroup'] = 'No Group can be found for the current user.';
 $string['note'] = 'Note';
 $string['studentname'] = 'Student Name';
 $string['loggedinas'] = 'Logged in as';
-
+$string['crondisallowed'] = 'cron attempted to run disallowed script';
 $string['register'] = 'Register as Staff User';
 $string['register1'] = 'Register as ';
 $string['demomodule'] = 'Demo Module';

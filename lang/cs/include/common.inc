@@ -93,7 +93,7 @@ $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
 $string['loggedinas'] = 'Přihlášen jako';
-
+$string['crondisallowed'] = 'cron attempted to run disallowed script';
 $string['register'] = 'Registrovat jako Zaměstnance';
 $string['register1'] = 'Registrovat jako ';
 $string['demomodule'] = 'Demo Modul';

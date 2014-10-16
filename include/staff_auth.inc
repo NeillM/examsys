@@ -30,7 +30,7 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
-
+require_once $cfg_web_root . 'classes/logger.class.php';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
@@ -63,6 +63,19 @@ $external_allowed_pages = array(
 if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $configObject->get('cfg_root_path') . "/reviews/");
+  }
+}
+
+// Redirect the system cron if it is straying
+// $cron_allowed_pages is an array that contains the set of scripts that the system cron
+// CAN access all other pages should exit the cron
+$cron_allowed_pages = array("$cfg_root_path/testing/testing/class_totals_with_script_cli.php"=>1,
+                            "$cfg_root_path/testing/testing/classes/class_totals.php"=>1);
+if ($userObject->has_role('SysCron')) {
+  if (!isset($cron_allowed_pages[$_SERVER['PHP_SELF']])) {
+    $logger = new Logger($mysqli);
+    $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $string['crondisallowed']);
+    exit;
   }
 }
 
