@@ -290,11 +290,12 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
     $url = './module/index.php?module=' . $idMod;
     echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $folder_title['code'] . "</a><br /><span class=\"grey\">" . str_replace('&', '&amp;', $folder_title['fullName']) . "</span></div></div>\n";
   }
-  $url = './module/index.php?module=0';
-  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['unassigned'] . "</a><br /><span class=\"grey\">" . $string['unassignedmsg'] . "</span></div></div>\n";
-
-
-  
+  // Display un-assigned papers.
+  $paper_utils = new PaperUtils();
+  if ($paper_utils->count_unassigned($userObject->get_user_ID(), $mysqli)) {
+    $url = './module/index.php?module=0';
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['unassigned'] . "</a><br /><span class=\"grey\">" . $string['unassignedmsg'] . "</span></div></div>\n";
+  }
 
   $mysqli->close();
 ?>
