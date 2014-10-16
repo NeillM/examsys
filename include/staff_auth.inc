@@ -30,7 +30,7 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
-
+require_once $cfg_web_root . 'classes/logger.class.php';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
@@ -73,8 +73,9 @@ $cron_allowed_pages = array("$cfg_root_path/testing/testing/class_totals_with_sc
                             "$cfg_root_path/testing/testing/classes/class_totals.php"=>1);
 if ($userObject->has_role('SysCron')) {
   if (!isset($cron_allowed_pages[$_SERVER['PHP_SELF']])) {
-      var_dump($_SERVER['PHP_SELF']);
-      exit;
+    $logger = new Logger($mysqli);
+    $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $string['crondisallowed']);
+    exit;
   }
 }
 
