@@ -234,7 +234,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 	}
 
   if ($_GET['module'] == '0') {
-    $sql = "SELECT DISTINCT NULL AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (users, questions) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " AND idMod IS NULL GROUP BY q_id";
+    $sql = "SELECT DISTINCT NULL AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (users, questions) LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id WHERE users.id = questions.ownerID AND ownerID = " . $userObject->get_user_ID() . " AND idMod = 0 GROUP BY q_id";
   } elseif ($_GET['type'] == 'performance') {
     $sql = "SELECT DISTINCT NULL AS extra_field, p, d, questions.q_id, theme, leadin_plain AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, performance_main, performance_details, questions_modules) WHERE questions.q_id = performance_main.q_id AND performance_main.id = performance_details.perform_id AND questions.q_id = questions_modules.q_id AND idMod = $module";
   } elseif ($_GET['type'] == 'keyword') {
