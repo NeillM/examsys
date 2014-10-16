@@ -303,6 +303,6 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 </div>
 
 <input type="hidden" id="userID" name="userID" value="" />
-<input type="hidden" id="roles" name="roles" value="" />
+<input type="hidden" id="roles" name="roles" value="<?php if (isset($user_details['roles'])) echo $user_details['roles'] ?>" />
 </form>
 </div>
