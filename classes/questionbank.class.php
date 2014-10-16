@@ -199,22 +199,47 @@ class QuestionBank {
     switch ($type) {
       case 'all':
       case 'type':
-        $sql = 'SELECT COUNT(questions.q_id), q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ?' . $ownerID . ' AND deleted IS NULL GROUP BY q_type';
+        $sql = 'SELECT COUNT(questions.q_id), q_type'
+        . ' FROM questions, questions_modules'
+        . ' WHERE questions.q_id = questions_modules.q_id'
+        . ' AND idMod = ?' . $ownerID
+        . ' AND deleted IS NULL GROUP BY q_type';
         break;
       case 'status':
-        $sql = 'SELECT COUNT(questions.q_id), name FROM questions, questions_modules, question_statuses WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id AND idMod = ?' . $ownerID . ' AND deleted IS NULL GROUP BY status';
+        $sql = 'SELECT COUNT(questions.q_id), name'
+        . ' FROM questions, questions_modules, question_statuses'
+        . ' WHERE questions.status = question_statuses.id'
+        . ' AND questions.q_id = questions_modules.q_id'
+        . ' AND idMod = ?' . $ownerID
+        . ' AND deleted IS NULL GROUP BY status';
         break;
       case 'bloom':
-        $sql = 'SELECT COUNT(questions.q_id), bloom FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod = ?' . $ownerID . ' AND deleted IS NULL GROUP BY bloom';
+        $sql = 'SELECT COUNT(questions.q_id), bloom'
+        . ' FROM questions, questions_modules'
+        . ' WHERE questions.q_id = questions_modules.q_id'
+        . ' AND idMod = ?' . $ownerID
+        . ' AND deleted IS NULL GROUP BY bloom';
         break;
       case 'keyword':
-        $sql = 'SELECT COUNT(questions.q_id), keywordID FROM questions, questions_modules, keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND questions.q_id = questions_modules.q_id AND idMod = ?' . $ownerID . ' AND questions.q_id = keywords_question.q_id AND deleted IS NULL GROUP BY keywordID';
+        $sql = 'SELECT COUNT(questions.q_id), keywordID'
+        . ' FROM questions, questions_modules, keywords_question, keywords_user'
+        . ' WHERE keywords_question.keywordID = keywords_user.id'
+        . ' AND questions.q_id = questions_modules.q_id'
+        . ' AND idMod = ?' . $ownerID
+        . ' AND questions.q_id = keywords_question.q_id'
+        . ' AND deleted IS NULL GROUP BY keywordID';
         break;
       case 'objective':
         $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
         $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
         $all_years = implode("','", $all_years);
-        $sql = "SELECT COUNT(questions.q_id), relationships.obj_id FROM questions, questions_modules, relationships WHERE questions.q_id = relationships.question_id AND questions.q_id = questions_modules.q_id AND questions_modules.idMod = ?' . $ownerID . '  AND calendar_year IN ('{$all_years}') AND deleted IS NULL GROUP BY relationships.obj_id";
+        $sql = "SELECT COUNT(questions.q_id), relationships.obj_id"
+          . " FROM questions, questions_modules, relationships"
+          . " WHERE questions.q_id = relationships.question_id"
+          . " AND questions.q_id = questions_modules.q_id"
+          . " AND questions_modules.idMod = ? $ownerID "
+          . " AND calendar_year IN ('{$all_years}')"
+          . " AND deleted IS NULL GROUP BY relationships.obj_id";
         break;
     }
     
