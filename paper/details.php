@@ -79,8 +79,23 @@ if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 
   exit();
 }
 
-if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-  exit();
+// Can the user acsess the paper?
+$paper_ownerID = Paper_utils::get_ownerID($paperID, $mysqli);
+
+if ($paper_ownerID == $userObject->get_user_ID()) {
+  $on_staff_module = true;
+} else {
+  $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+  foreach ($paper_modules as $paper_moduleID=>$paper_module) {
+    if ($userObject->is_staff_user_on_module($paper_moduleID)) {
+      $on_staff_module = true;
+    }
+  }
+}
+
+if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if ($properties->get_paper_type() == '4') {		// OSCE
