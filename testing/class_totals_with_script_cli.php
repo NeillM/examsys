@@ -27,23 +27,31 @@
 
 require_once 'classes/class_totals.php';
 require_once '../classes/dbutils.class.php';
-require_once '../config/config.inc.php';
+include_once '../include/load_config.php';
+
+$cfg_web_host = $configObject->get('cfg_web_host');
+$support_email = $configObject->get('support_email');
+$cfg_cron_user = $configObject->get('cfg_cron_user');
+$cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
+
+// DB connection.
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
+  $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),
+  $configObject->get('notice'), $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
 // Exit if not on command line.
 if (php_sapi_name() != 'cli') {
-  echo 'This script should only be run on the command line';
-  exit;
+  require '../include/sysadmin_auth.inc';
+  $msg = sprintf($string['furtherassistance'], $support_email, $support_email);
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (!isset($cfg_cron_user) or !isset($cfg_cron_passwd)) {
+if ($cfg_cron_user == null or $cfg_cron_passwd == null) {
   echo 'This script requires the cron use to be set-up';
   exit;
 }
 
 set_time_limit(0);
-
-// DB connection.
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass, $cfg_db_port);
 
 // Timestamp function for logging.
 function timestamp() {
@@ -57,8 +65,8 @@ function timestamp() {
 echo "\n" . timestamp() . ": Starting class totals check.\n";
 
 $rootpath =  basename(dirname(dirname(__FILE__)));
-$userresult = $mysqli->prepare("SELECT id FROM users WHERE username = '$cfg_cron_user' LIMIT 1");
-$userresult->bind_param('s', $username);
+$userresult = $mysqli->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
+$userresult->bind_param('s', $cfg_cron_user);
 $userresult->execute();
 $userresult->bind_result($userid);
 $userresult->fetch();
