@@ -192,8 +192,10 @@ class QuestionBank {
 
     // Un-assigned papers should be limited to the owner.
     if ($this->idMod == 0) {
-        $userObject = UserObject::get_instance();
-        $ownerID = ' AND ownerID = ' . $userObject->get_user_ID();
+      $userObject = UserObject::get_instance();
+      $ownerID = ' AND ownerID = ' . $userObject->get_user_ID();
+    } else {
+      $ownerID = '';
     }
     
     switch ($type) {
@@ -233,6 +235,7 @@ class QuestionBank {
         $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
         $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
         $all_years = implode("','", $all_years);
+        
         $sql = "SELECT COUNT(questions.q_id), relationships.obj_id"
           . " FROM questions, questions_modules, relationships"
           . " WHERE questions.q_id = relationships.question_id"
