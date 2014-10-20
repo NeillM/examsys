@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  Class to handle results caching in the database.
+ * Class to handle results caching in the database.
  *
  * @author Simon Wilkinson
  * @version 1.0
@@ -33,11 +33,25 @@ class ResultsCache {
   	$this->db = $db;
   }
 
+	/**
+	 * Works out if the current paper needs caching.
+	 * @param object $propertyObj - Paper properties object.
+	 * @param int $percent				- The passed in percentage into Class Totals.
+	 * @param int $absent   			- Whether absent students are included in Class Totals report.
+   * 
+	 * @return bool               - True = paper should be re-cached, False = it does not.
+	 */
   public function should_cache($propertyObj, $percent, $absent) {
     $paperID    = $propertyObj->get_property_id();
     $paper_type = $propertyObj->get_paper_type();
     $end_date   = $propertyObj->get_end_date();
 
+    /** Do NOT cache if:
+     *    - $percentage is not 100
+     *    - $absent students is on
+     *    - %paper_type is not 2 (e.g. summative exam)
+     *    - current date/time is less than paper end date/time
+     */
     if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1 or $paper_type == 3 or date('U') < $end_date) {
       return false;
     }
@@ -50,13 +64,19 @@ class ResultsCache {
     $result->fetch();
     $result->close();
 
-    if (isset($cached) and $cached != '') {
+    if (isset($cached) and $cached != '') {   // If we have a valid record do not re-cache.
       $recache = false;
     }
 
     return $recache;
   }
   
+	/**
+	 * Loads basic statistics about a paper into an array.
+	 * @param int $paperID - The ID of the paper you need statistics for.
+   * 
+	 * @return array       - Set of basic stats for a given paper.
+	 */
   public function get_paper_cache($paperID) {
     $stats = array();
     
@@ -70,6 +90,12 @@ class ResultsCache {
     return $stats;
   }
   
+	/**
+	 * Loads paper pecentage scores for a given student.
+	 * @param int $userID - The ID of the user you need statistics for.
+   * 
+	 * @return array       - Set of percentage scores keyed by paper ID.
+	 */
   public function get_paper_marks_by_student($userID) {
     $marks = array();
 
@@ -88,6 +114,12 @@ class ResultsCache {
   public function get_question_marks_by_student($userID) {
   }
   
+	/**
+	 * Loads median marks for all questions on a given paper.
+	 * @param int $paperID - The ID of the paper you need statistics for.
+   * 
+	 * @return array       - Set of medians keyed by question ID.
+	 */
   public function get_median_question_marks_by_paper($paperID) {
     $marks = array();
 
@@ -103,10 +135,22 @@ class ResultsCache {
     return $marks;
   }
   
+	/**
+	 * Loads question marks for all questions on a given paper for a specific user.
+	 * @param int $userID       - The ID of the user you need statistics for.
+	 * @param string $tog_type  - The type of the assessment (e.g. which log table to use).
+	 * @param int $paperID      - The ID of the paper you need statistics for.
+   * 
+	 * @return array            - Set of question marks keyed by question ID.
+	 */
   public function get_student_question_marks_by_paper($userID, $log_type, $paperID) {
     $marks = array();
-
-    $result = $this->db->prepare("SELECT q_id, adjmark FROM log$log_type, log_metadata WHERE log$log_type.metadataID = log_metadata.id AND userID = ? AND paperID = ?");
+    
+    if ($log_type == '4') {   // OSCE table structure is completely different.
+      $result = $this->db->prepare("SELECT q_id, rating FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND userID = ? AND q_paper = ?");
+    } else {
+      $result = $this->db->prepare("SELECT q_id, adjmark FROM log$log_type, log_metadata WHERE log$log_type.metadataID = log_metadata.id AND userID = ? AND paperID = ?");
+    }
     $result->bind_param('ii', $userID, $paperID);
     $result->execute();
     $result->bind_result($q_id, $adjmark);
@@ -118,6 +162,13 @@ class ResultsCache {
     return $marks;
   }
   
+	/**
+	 * Loads user percentage scores for a given paper.
+	 * @param int $paperID    - The ID of the paper you need statistics for.
+	 * @param bool $sort_date - True = sort in percentage order.
+   * 
+	 * @return array          - Set of paper percentage marks keyed by user ID.
+	 */
   public function get_paper_marks_by_paper($paperID, $sort_data = false) {
     $marks = array();
     
@@ -139,14 +190,25 @@ class ResultsCache {
     return $marks;
   }
   
-  public function save_paper_cache($paperID, $percent, $absent, $stats) {
+	/**
+	 * Saves basic statistics about a paper in the database.
+	 * @param int $paperID  - The ID of the paper we are dealing with.
+	 * @param array $stats  - Array containing the statistics to be saved.
+	 */
+  public function save_paper_cache($paperID, $stats) {
     $result = $this->db->prepare("REPLACE INTO cache_paper_stats (paperID, cached, max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent) VALUES (?, UNIX_TIMESTAMP(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $result->bind_param('iddddddddddd', $paperID, $stats['max_mark'], $stats['max_percent'], $stats['min_mark'], $stats['min_percent'], $stats['q1'], $stats['q2'], $stats['q3'], $stats['mean_mark'], $stats['mean_percent'], $stats['stddev_mark'], $stats['stddev_percent']);
     $result->execute();
     $result->close();
   }
 
-  public function save_student_mark_cache($paperID, $percent, $absent, $user_results) {
+	/**
+	 * Saves the paper mark and percentage score for a given student.
+	 * @param int $paperID        - The ID of the paper we are dealing with.
+	 * @param int $userID         - The ID of the user we are dealing with.
+	 * @param array $user_results - Array containing the statistics to be saved.
+	 */
+  public function save_student_mark_cache($paperID, $user_results) {
     $user_no = count($user_results);
 
     $this->db->autocommit(false);
@@ -162,7 +224,12 @@ class ResultsCache {
     $this->db->autocommit(true);
   }
 
-  public function save_median_question_marks($paperID, $percent, $absent, $q_medians) {
+	/**
+	 * Saves the mean/median of a question on a paper.
+	 * @param int $paperID     - The ID of the paper we are dealing with.
+	 * @param array $q_medians - Array containing the statistics to be saved.
+	 */
+  public function save_median_question_marks($paperID, $q_medians) {
     $this->db->autocommit(false);
 
     $result = $this->db->prepare("REPLACE INTO cache_median_question_marks (paperID, questionID, median, mean) VALUES (?, ?, ?, ?)");

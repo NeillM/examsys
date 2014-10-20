@@ -106,11 +106,11 @@ $stats = $report->get_stats();                        // Generate the main stati
 
 $results_cache = new ResultsCache($mysqli);
 if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
-  $results_cache->save_paper_cache($paperID, $percent, $absent, $stats);                  // Cache general paper stats
+  $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($paperID, $percent, $absent, $user_results);    // Cache student/paper marks
+  $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($paperID, $percent, $absent, $q_medians);    // Cache the question/paper medians
+  $results_cache->save_median_question_marks($paperID, $q_medians);   // Cache the question/paper medians
 }
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);

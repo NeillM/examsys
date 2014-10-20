@@ -89,8 +89,6 @@ class ClassTotals {
 	private $unmarked_textbox = false;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string) {
-    $userObject = UserObject::get_instance();
-
     $this->db                 = $db;
     $this->demo               = is_demo($userObject);
     $this->paperID            = $propertyObj->get_property_id();
@@ -209,12 +207,16 @@ class ClassTotals {
 	 */
   public function compile_report($recache) {
     $results_cache = new ResultsCache($this->db);
-    $this->recache = false;
+    if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
+      $this->recache = true;
+    } else {
+      $this->recache = false;
+    }
     
     $moduleID = Paper_utils::get_modules($this->paperID, $this->db);
     $this->moduleID_in = implode(',', array_keys($moduleID));
 
-    $this->exclusions->load();                                                                                // Get any questions to exclude.
+    $this->exclusions->load();                                                      // Get any questions to exclude.
 
     $this->load_answers();
 
@@ -222,38 +224,38 @@ class ClassTotals {
 
     $this->load_absent();
 
-    $this->find_users();                                                                                      // Get all the users on the module(s) the paper is on.
+    $this->find_users();                                                            // Get all the users on the module(s) the paper is on.
 
-    $this->load_metadata();                                                                                   // Query for metadata
+    $this->load_metadata();                                                         // Query for metadata
 
-    $this->load_overrides();																																									// Load marking overrides (e.g. Calculation question).
+    $this->load_overrides();                                                        // Load marking overrides (e.g. Calculation question).
 
-    $this->load_results();                                                                                    // Load the student data
+    $this->load_results();                                                          // Load the student data
 
-    $this->adjust_marks();                                                                                    // Scale marks (random marks or standards setting)
+    $this->adjust_marks();                                                          // Scale marks (random marks or standards setting)
 
-    $this->add_rank();                                                                                        // Add in rank data.
+    $this->add_rank();                                                              // Add in rank data.
 
-    $this->convert_moduleIDs();                                                                               // Convert Module IDs into codes
+    $this->convert_moduleIDs();                                                     // Convert Module IDs into codes
 
-    $this->flag_subpart();                                                                                    // Used to flag subsets of the cohort (i.e. top 33%)
+    $this->flag_subpart();                                                          // Used to flag subsets of the cohort (i.e. top 33%)
 
-    $this->add_absent_students();                                                                             // Add any absent students into main dataset
+    $this->add_absent_students();                                                   // Add any absent students into main dataset
 
-    $this->generate_stats();                                                                                  // Generate the main statistics
+    $this->generate_stats();                                                        // Generate the main statistics
 
-    $this->add_deciles();                                                                                     // Add in deciles per student
+    $this->add_deciles();                                                           // Add in deciles per student
 		
-    $this->sort_results();                                                                                    // Sort the whole array by the right column
+    $this->sort_results();                                                          // Sort the whole array by the right column
     
-    $this->load_special_needs();                                                                               // Load which users have special needs
-		
+    $this->load_special_needs();                                                    // Load which users have special needs
+    
     if ($this->recache) {
-      $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
+      $results_cache->save_paper_cache($this->paperID, $this->stats);                 // Cache general paper stats
 
-      $results_cache->save_student_mark_cache($this->paperID, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
+      $results_cache->save_student_mark_cache($this->paperID, $this->user_results);   // Cache student/paper marks
 
-      $results_cache->save_median_question_marks($this->paperID, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
+      $results_cache->save_median_question_marks($this->paperID, $this->q_medians);   // Cache the question/paper medians
 			
 			// Unset the re-caching flag now we have just cached the marks.
 			$this->propertyObj->set_recache_marks(0);
@@ -518,9 +520,9 @@ class ClassTotals {
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
 
 		if ($this->demo) {
-      $this->user_results[$user_number]['surname']     = demo_replace($this->user_results[$user_number]['surname']);
-      $this->user_results[$user_number]['initials']    = demo_replace($this->user_results[$user_number]['initials']);
-      $this->user_results[$user_number]['first_names'] = demo_replace($this->user_results[$user_number]['first_names']);
+      $this->user_results[$user_number]['surname']     = demo_replace($this->user_results[$user_number]['surname'], true, true, $this->user_results[$user_number]['surname']{0});
+      $this->user_results[$user_number]['initials']    = demo_replace($this->user_results[$user_number]['initials'], true, true, $this->user_results[$user_number]['initials']{0});
+      $this->user_results[$user_number]['first_names'] = demo_replace($this->user_results[$user_number]['first_names'], true, true, $this->user_results[$user_number]['first_names']{0});
       $this->user_results[$user_number]['email']       = demo_replace($this->user_results[$user_number]['email']);
       $this->user_results[$user_number]['student_id']  = demo_replace_number($this->user_results[$user_number]['student_id']);
     }
