@@ -34,7 +34,6 @@ $string['paperlockedwarning'] = '<strong>Dokument je uzamčen</strong>&nbsp;&nbs
 $string['paperlockedclick'] ='Kliknutím získáte více informací';
 $string['earlywarning'] = '<strong>Varování: Čas/Datum </strong>&nbsp;&nbsp;&nbsp;Zahájení tohoto dokumentu je naplánováno před %sam';
 $string['farfuturewarning'] = '<strong>Varování: Čas/Datum </strong>&nbsp;&nbsp;&nbsp;Zahájení tohoto dokumentu je naplánováno s velkým předstihem na (%s)';
-$string['unlock'] = 'Odemknout';
 $string['nooptionsdefined'] = 'Úloha nemá definovanou žádnou volbu';
 $string['noquestionscreen'] = '<strong>Varování:</strong> v okně nejsou žádné úlohy.<br />Pokud budete tento dokument použijete ke zkoušení, objeví se závada!';
 $string['markswarning'] = 'Okno %d má %d bodů z %d%% celkem v dokumentu. Abyste minimalizovali ztrátu bodů v případě závady na počítači, přidejte, prosím, další zalomení okna. ';

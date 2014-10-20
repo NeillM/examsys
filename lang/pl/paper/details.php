@@ -35,7 +35,6 @@ $string['paperlockedwarning'] = '<strong>Arkusz zablokowany</strong>&nbsp;&nbsp;
 $string['paperlockedclick'] ='Kliknij po więcej informacji';
 $string['earlywarning'] = '<strong>Ostrzeżenie dot. czasu/daty</strong>&nbsp;&nbsp;&nbsp;Ten arkusz planowany jest na wcześniej niż %sam';
 $string['farfuturewarning'] = '<strong>Ostrzeżenie dot. czasu/daty</strong>&nbsp;&nbsp;&nbsp;Ten arkusz planowany jest na daleką przyszłość (%s)';
-$string['unlock'] = 'Odblokuj';
 $string['nooptionsdefined'] = 'Dla pytania nie zdefiniowano żadnych opcji';
 $string['noquestionscreen'] = '<strong>Uwaga:</strong> na tym ekranie nie ma żadnych pytań.<br />Spowoduje to błąd podczas testowania pytania!';
 $string['markswarning'] = 'Ekran %d ma %d punkty/ów, co stanowi %d%% całej liczby punktów tego arkusza. Wprowadź dodatkowe przerwy ekranowe w celu zminimalizowania start danych w przypadku zawieszenia komputera.';// Please insert additional screen breaks to minimise data loss in the event of a computer crash.';
