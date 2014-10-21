@@ -403,7 +403,11 @@ while ($user_data->fetch()) {
     echo '<td></td>';
   }
 
-  echo '<td>' . $string[mb_strtolower($tmp_title)] . '</td>';
+  if ($tmp_title != null) {
+    echo '<td>' . $string[mb_strtolower($tmp_title)] . '</td>';
+  } else {
+    echo '<td></td>';
+  }
   
   if ($tmp_first_names == '') $tmp_first_names = ' ';
   
