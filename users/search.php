@@ -60,7 +60,7 @@ if ($calendar_year == '%') {
 $needs_array = get_special_needs($mysqli);
 
 // We should only display the first 10,000 rows to avoid browser issues.
-$limit = 1000;
+$limit = 10000;
 
 if (isset($_GET['submit'])) {
   $username_sql = '';
