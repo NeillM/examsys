@@ -74,9 +74,16 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+// Redirect students to their page.
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
-  header("location: user_index.php?id=" . $properties->get_crypt_name());
-  exit();
+  if ($properties->get_paper_type() == '2') {
+    // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+  } else {
+    header("location: user_index.php?id=" . $properties->get_crypt_name());
+    exit();
+  }
 }
 
 // Can the user acsess the paper?
