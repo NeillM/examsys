@@ -2,7 +2,7 @@
     $('.chk').click(updateChkState);
   });
 
-	var updateChkState = function () {
+  var updateChkState = function () {
     var state_name = $(this).attr('id');
     var content = $(this).is(':checked');
     updateState(state_name, content);

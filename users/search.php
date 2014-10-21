@@ -59,6 +59,9 @@ if ($calendar_year == '%') {
 
 $needs_array = get_special_needs($mysqli);
 
+// We should only display the first 10,000 rows to avoid browser issues.
+$limit = 1000;
+
 if (isset($_GET['submit'])) {
   $username_sql = '';
   $title_sql = '';
@@ -134,18 +137,18 @@ $query_string = "(SELECT DISTINCT users.id, roles, NULL AS student_id, surname, 
         AND users.id = modules_staff.memberID
         AND modules_staff.idMod = '" . $_GET['module'] . "'
         AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-        AND user_deleted IS NULL)";
+        AND user_deleted IS NULL LIMIT $limit)";
       } else {
         $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
           FROM users
           WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-          AND user_deleted IS NULL";
+          AND user_deleted IS NULL LIMIT $limit";
       }
     } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
       $query_string = "SELECT DISTINCT users.id, roles, NULL AS student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
         FROM users
         WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-        AND user_deleted IS NULL";
+        AND user_deleted IS NULL LIMIT $limit";
     } else {
       // Student search
       if ($moduleID == '%') {
@@ -153,7 +156,7 @@ $query_string = "(SELECT DISTINCT users.id, roles, NULL AS student_id, surname, 
           FROM users
           LEFT JOIN sid ON users.id = sid.userID
           WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
-          AND user_deleted IS NULL";
+          AND user_deleted IS NULL LIMIT $limit";
       } else {
         $roles_sql = 'AND ' . $roles_sql;
         if ($moduleID == '%') {
@@ -165,7 +168,7 @@ $query_string = "(SELECT DISTINCT users.id, roles, NULL AS student_id, surname, 
           FROM (users, modules_student)
           LEFT JOIN sid ON users.id = sid.userID
           WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
-          AND user_deleted IS NULL";
+          AND user_deleted IS NULL LIMIT $limit";
       }
     }
 
@@ -350,6 +353,11 @@ if (isset($_GET['student_id'])) {
   $tmp_student_id = '';
 }
 
+if ($user_data->num_rows == $limit) {
+  echo " <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0; padding-left:0\"><img src=\"../artwork/exclamation_48.png\" width=\"32\" height=\"32\" alt=\""
+    . $string['warning'] . "\" /></td>" . "<td class=\"redwarn\">" . $string['largeresult'] . "</td></tr></table>";
+}
+
 $table_order = array('#1', '#2', $string['title'], 'Surname', 'First Names', $string['username'], $string['studentid'], $string['year'], $string['course']);
 echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
 echo "<thead>\n";
@@ -416,7 +424,7 @@ while ($user_data->fetch()) {
   }
   echo "<td>$tmp_yearofstudy</td>";
   echo "<td>$tmp_grade</td></tr>\n";
-
+  
   $x++;
 }
 
