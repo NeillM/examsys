@@ -29,12 +29,12 @@ require_once $cfg_web_root . 'classes/authentication.class.php';
 require_once $cfg_web_root . 'classes/paperproperties.class.php';
 
 // Check for key parameters
-$crypt_name = check_var('id', 'RESPONSE', true, false, true);
+$crypt_name = check_var('id', 'REQUEST', true, false, true);
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 // Get some properties from the paper.
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($crypt_name, $mysqli, $string, true);
 $paperID = $propertyObj->get_property_id();
 $paper_password = $propertyObj->get_password();
 
