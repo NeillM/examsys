@@ -81,7 +81,7 @@ echo draw_toprightmenu();
 </thead>
 <tbody>
 <?php
-$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried LIMIT 10000");
+$result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried DESC LIMIT 10000");
 $result->execute();
 $result->store_result();
 $result->bind_result($tried, $ipaddress, $page, $msg, $userID, $title, $initials, $surname);
@@ -89,7 +89,7 @@ while ($result->fetch()) {
   $tried_date = new DateTime();
   $tried_date->setTimestamp($tried);
 
-  echo "<tr class=\"l\"><td class=\"d\">" . $tried_date->format($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td><a href=\"../users/details.php?submit=Search&userID=$userID\">$title $initials $surname</a></td><td>$page</td><td>$msg</td></tr>\n";
+  echo "<tr class=\"l\"><td class=\"d\">" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</td><td><a href=\"../users/details.php?submit=Search&userID=$userID\">$title $initials $surname</a></td><td>$page</td><td>$msg</td></tr>\n";
 }
 ?>
 </tbody>
