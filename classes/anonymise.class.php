@@ -73,8 +73,8 @@ class Anonymise {
   }
   
   public function process_names() {
-    // Update the user table
-    $result = $this->db->prepare("SELECT id, title, gender FROM users WHERE roles NOT LIKE '%SysAdmin%'");
+    // Update the user table (Do NOT update SysAdmin accounts or the temp accounts: user1, user2, etc).
+    $result = $this->db->prepare("SELECT id, title, gender FROM users WHERE roles NOT LIKE '%SysAdmin%' AND username NOT LIKE 'user%'");
     $result->execute();
     $result->bind_result($id, $title, $gender);
     $result->store_result();
