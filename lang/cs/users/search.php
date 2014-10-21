@@ -22,4 +22,6 @@ $string['usersearch'] = 'Hledání uživatelů';
 $string['msg1']="<strong>Pozor</strong>&nbsp;&nbsp;&nbsp; nemáte žádnou specifikaci kategorie hledání v parametrech 'Rozšířené'.";
 $string['msg2']="V rámci zadananých kritérií nebyl nalezen žádný odpovídající uživatel";
 $string['performsummary'] = 'Přehled výsledků';
+$string['largeresult'] = "The search has returned a large number of users. Only the first 10,000 are displayed."
+  . " Please try narrowing your search criteria";
 ?>
