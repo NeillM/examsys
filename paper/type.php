@@ -37,7 +37,7 @@ require_once '../classes/paperutils.class.php';
 $module = check_var('module', 'GET', true, false, true);
 $type = check_var('type', 'GET', true, false, true);
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
+$state = $stateutil->getState();
 
 if ($_GET['module'] != '0') {
   $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
