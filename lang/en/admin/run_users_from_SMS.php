@@ -20,7 +20,7 @@ $string['runningsmsimport'] = 'Running SMS Import';
 $string['academicyear'] = 'Academic Year';
 $string['modulecode'] = 'Module Code';
 $string['url'] = 'URL';
-$string['enrolements'] = 'Enrolements';
+$string['enrolements'] = 'Enrolments';
 $string['deletions'] = 'Deletions';
 ?>
 
