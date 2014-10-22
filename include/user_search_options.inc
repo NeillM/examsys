@@ -54,7 +54,7 @@ if (isset($_GET['calendar_year'])) {
     $('#icon' + ID).attr('src', icon);
     $('#icon' + ID).attr('alt', alttag);
     
- 		updateState('advanced', $('#menu' + ID).css('display'));
+    updateState('advanced', $('#menu' + ID).css('display'));
   }
   
   function checkRoles() {
@@ -203,16 +203,16 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced'] ?></a></td>
   <td style="text-align:right"><a href="#" onclick="updateMenu(3);"><?php
-    if (isset($state['advanced']) and $state['advanced'] == 'true') {
-      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
-    } else {
+    if (isset($state['advanced']) and $state['advanced'] == 'none') {
       echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
+    } else {
+      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
-  if (isset($state['advanced']) and $state['advanced'] == 'table') {
+  if (isset($state['advanced'])) {
     echo "<div id=\"menu3\" style=\"margin-left:15px; width:180px; display:" . $state['advanced'] . "\">\n";
   } else {
     echo "<div id=\"menu3\" style=\"margin-left:15px; width:180px; display:none\">\n";
