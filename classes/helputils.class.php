@@ -552,8 +552,8 @@ Class OnlineHelp {
   public function restore_page($pageID) {
     $sql = 'UPDATE ' . $this->type . '_help SET deleted = NULL WHERE articleid = ? AND language = ?';
     
-    $restore = $mysqli->prepare($sql);
-    $restore->bind_param('is', pageID, $this->language);
+    $restore = $this->db->prepare($sql);
+    $restore->bind_param('is', $pageID, $this->language);
     $restore->execute();
     $restore->close();
   }

@@ -45,6 +45,9 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
     <link rel="stylesheet" type="text/css" href="../../css/help.css" />
     
     <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+    <script>
+      langStrings = {'confirmdelete': '<?php echo $string['confirmdelete'] ?>'};
+    </script>
     <script type="text/javascript" src="../../js/help.js"></script>
   </head>
   
