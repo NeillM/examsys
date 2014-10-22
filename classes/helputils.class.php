@@ -416,7 +416,7 @@ Class OnlineHelp {
   private function record_in_search_log($searchstring, $total_hits) {
     $sql = "INSERT INTO help_searches VALUES (NULL, '" . $this->type . "', ?, NOW(), ?, ?)";
     
-    $result = $mysqli->prepare($sql);
+    $result = $this->db->prepare($sql);
     $result->bind_param('isi', $this->userObject->get_user_ID(), $searchstring, $total_hits);
     $result->execute();  
     $result->close();
