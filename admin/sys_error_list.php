@@ -25,7 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../classes/stateutils.class.php';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
+$state = $stateutil->getState();
 
 ?>
 <!DOCTYPE html>

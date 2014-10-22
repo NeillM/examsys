@@ -40,7 +40,7 @@ require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
 require_once '../classes/CMFactory.class.php';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
+$state = $stateutil->getState();
 
 $type = check_var('type', 'GET', true, false, true);
 $module = check_var('module', 'GET', true, false, true);
