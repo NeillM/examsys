@@ -16,6 +16,10 @@
 
 /**
 *
+* This class randomises all the names, usernames, student ID and email addresses
+* in the database. This is intended only for use on test/beta servers. The action
+* cannot be undone.
+* 
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -44,6 +48,9 @@ class Anonymise {
     $this->unknown_no     = 0; 
   }
   
+	/**
+	 * Check we are NOT running the script on a live server.
+	 */
   public function check_security() {
     // Only allow to run the script if the server has test, local, alpha or beta in its name. 
     if (strstr(strtolower($_SERVER['HTTP_HOST']), 'test') === false and strstr(strtolower($_SERVER['HTTP_HOST']), 'local') === false and strstr(strtolower($_SERVER['HTTP_HOST']), 'alpha') === false and strstr(strtolower($_SERVER['HTTP_HOST']), 'beta') === false) {
@@ -51,6 +58,9 @@ class Anonymise {
     }
   }
 
+	/**
+	 * Load existing names in male, female and unknown gender categories.
+	 */
   public function load_names() {
     $result = $this->db->prepare("SELECT first_names, surname, title, gender FROM users WHERE first_names != ''");
     $result->execute();
@@ -72,6 +82,9 @@ class Anonymise {
     $this->unknown_no = count($this->unknown_names);    
   }
   
+	/**
+	 * Update all accounts apart from SysAdmin and the temp user accounts.
+	 */
   public function process_names() {
     // Update the user table (Do NOT update SysAdmin accounts or the temp accounts: user1, user2, etc).
     $result = $this->db->prepare("SELECT id, title, gender FROM users WHERE roles NOT LIKE '%SysAdmin%' AND username NOT LIKE 'user%'");
@@ -91,6 +104,9 @@ class Anonymise {
     $result->close();
   }
   
+	/**
+	 * Process all the sid (Student ID) records.
+	 */
   public function process_sids() {
     $new_student_id = 4000000;
     
@@ -105,6 +121,9 @@ class Anonymise {
     $result->close();
   }
   
+	/**
+	 * Update all the user records.
+	 */
   private function update_user($id, $type) {
     $first_names  = $this->pick_first_names($type);
     $surname      = $this->pick_surname($type);
@@ -118,6 +137,9 @@ class Anonymise {
     $result->close();
   }
   
+  /**
+	 * Update all a sid (Student ID) records.
+	 */
   private function update_sid($userID, $student_id) {
     $result = $this->db->prepare("UPDATE sid SET student_id = ? WHERE userID = ?");
     $result->bind_param('si', $student_id, $userID);
@@ -125,6 +147,11 @@ class Anonymise {
     $result->close();
   }
   
+  /**
+	 * Select a random first name based on gender.
+	 * @param string $type - The gender
+   * @return string - The selected first names.
+	 */
   private function pick_first_names($type) {
     if ($type == 'male') {
       $picked = (rand(1, $this->male_no)) - 1;
@@ -140,6 +167,11 @@ class Anonymise {
     return $first_name;
   }
   
+  /**
+	 * Select a random surname based on gender.
+	 * @param string $type - The gender
+   * @return string - The selected surname.
+	 */
   private function pick_surname($type) {
     if ($type == 'male') {
       $picked = (rand(1, $this->male_no)) - 1;
@@ -154,7 +186,12 @@ class Anonymise {
     
     return $surname;
   }
-  
+
+  /**
+	 * Generate initials from passed in forenames.
+	 * @param string $forenames - List of user forenames.
+   * @return string - The generated initials. 
+	 */
   private function get_initials($fornames) {
     $initial = explode(' ', $fornames);
     $initials = '';
@@ -168,6 +205,12 @@ class Anonymise {
     return $initials;
   }
   
+  /**
+	 * Generate an email address based on first name and surname.
+	 * @param string $first_names - The first names of the user.
+	 * @param string $surname     - The surname of the user.
+   * @return string - The generated email address. 
+	 */
   private function get_email($first_names, $surname) {
     $parts = explode(' ', $first_names);
     
