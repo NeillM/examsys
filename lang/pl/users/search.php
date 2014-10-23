@@ -23,4 +23,6 @@ $string['performsummary'] = 'Podsumowanie osiągnięć';
 
 $string['msg1']="<strong>Uwaga</strong>&nbsp;&nbsp;&nbsp;Nie zaznaczono żadnych kategorii wyszukiwania w sekcji 'Zaawansowane'.";
 $string['msg2']="Nie znaleziono żadnego użytkownika według tak określonych kryteriów";
+$string['largeresult'] = "The search has returned a large number of users. Only the first 10,000 are displayed."
+  . " Please try narrowing your search criteria";
 ?>

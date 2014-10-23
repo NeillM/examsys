@@ -152,7 +152,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Paper type folders
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['papers'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/module/type.php');
+$state = $stateutil->getState($configObject->get('cfg_root_path') . '/module/type.php');
 
 if (isset($state['showretired']) and $state['showretired'] == 'true') {
   $types_used = module_utils::paper_types($module, true, $mysqli);

@@ -340,9 +340,11 @@ if ($e6 == 'improved') {
     if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
       echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" /></td><td>' . $master_array[$i][5] . '<br />';
       echo '<span style="border: 1px solid #808080; display:block; height:11px; background-color:#EAEAEA; width:150px">';
-      if (intval($master_array[$i][3]) < intval($master_array[$i][1])) {
+
+      if ($master_array[$i][1] > 0) {
           
         $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
+        
         
         $free_percent = ($master_array[$i][3] / $master_array[$i][1]) * 100;
         $used_percent = 100 - $free_percent;
@@ -353,6 +355,7 @@ if ($e6 == 'improved') {
         } else {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
         }
+        
       }
       echo '</span><span style="color:#808080">' . sprintf($string['freespace'], format_space($master_array[$i][3]), format_space($master_array[$i][1])) . '</span></td></tr>';
     }

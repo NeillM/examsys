@@ -31,7 +31,7 @@ require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/textboxmarkingutils.class.php';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli);
+$state = $stateutil->getState();
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $q_id       = check_var('q_id', 'GET', true, false, true);

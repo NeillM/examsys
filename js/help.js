@@ -14,7 +14,9 @@ $(function() {
   });
   
   $('#delete').click(function() {
-    window.location = 'delete_page.php?id=' + id;
+    if (confirm(langStrings['confirmdelete'])) {
+      window.location = 'delete_page.php?id=' + id;
+    }
   });
   
   $('#new').click(function() {

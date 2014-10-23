@@ -416,7 +416,7 @@ Class OnlineHelp {
   private function record_in_search_log($searchstring, $total_hits) {
     $sql = "INSERT INTO help_searches VALUES (NULL, '" . $this->type . "', ?, NOW(), ?, ?)";
     
-    $result = $mysqli->prepare($sql);
+    $result = $this->db->prepare($sql);
     $result->bind_param('isi', $this->userObject->get_user_ID(), $searchstring, $total_hits);
     $result->execute();  
     $result->close();
@@ -552,8 +552,8 @@ Class OnlineHelp {
   public function restore_page($pageID) {
     $sql = 'UPDATE ' . $this->type . '_help SET deleted = NULL WHERE articleid = ? AND language = ?';
     
-    $restore = $mysqli->prepare($sql);
-    $restore->bind_param('is', pageID, $this->language);
+    $restore = $this->db->prepare($sql);
+    $restore->bind_param('is', $pageID, $this->language);
     $restore->execute();
     $restore->close();
   }

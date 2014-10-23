@@ -45,7 +45,6 @@ check_var('id', 'GET', true, false, false);
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
-require '../config/start.inc';
 
 $start_of_day_ts = strtotime('midnight');
 
@@ -62,6 +61,8 @@ $start_date						= $propertyObj->get_start_date();
 $paper_type						= $propertyObj->get_paper_type();
 $original_paper_type	= $propertyObj->get_paper_type();
 $paper_prologue 			= $propertyObj->get_paper_prologue();
+
+require '../config/start.inc';
 
 // Get how many screens make up the question paper.
 $screen_data = array();

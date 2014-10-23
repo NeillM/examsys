@@ -30,7 +30,7 @@ require_once '../../classes/questionutils.class.php';
 require_once '../../classes/question_status.class.php';
 require_once '../../classes/stateutils.class.php';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/question/search.php');
+$state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/search.php');
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
