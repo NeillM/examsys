@@ -48,7 +48,7 @@ function get_folders($staff_modules, $userID, $db) {
     $folder_array = explode(';', $folder_name);
     $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
     $display_name = str_replace("'", "\'", $display_name);
-    $url = $configObject->get('cfg_root_path') . '/folder/details.php?folder=' . $folder_id;
+    $url = $configObject->get('cfg_root_path') . '/folder/index.php?folder=' . $folder_id;
     $my_folders_array[$display_name] = $url;
   }
   $result->close();

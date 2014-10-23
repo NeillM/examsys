@@ -101,7 +101,7 @@ if (isset($_POST['moduleID'])) {
     }
 
     function closeWindow() {
-      window.opener.location.href = '/folder/details.php?folder=<?php echo $folderID; ?>';
+      window.opener.location.href = '/folder/index.php?folder=<?php echo $folderID; ?>';
       window.close();
     }
      

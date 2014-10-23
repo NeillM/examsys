@@ -16,6 +16,10 @@
 
 /**
 *
+* Collection of functions which handle the different aspects of paper security.
+* Used in start.php, finish.php, save_screen.php and fire_evacuation.php amongst
+* others.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,6 +34,18 @@ require_once $cfg_web_root . '/classes/lab_factory.class.php';
 require_once $cfg_web_root . '/classes/lab.class.php';
 require_once $cfg_web_root . '/classes/dateutils.class.php';
 
+/**
+ * Check that the current IP address of the user is in one of the allowed
+ * computer labs.
+ * @param string $paper_type  - Type of the assessment (e.g. 0 = Formative, 1 = Progress Test, etc).
+ * @param string $lab_needed  - The IDs of the labs assigned to the current paper.
+ * @param string $address     - The IP Address/Client Name to be checked against the labs
+ * @param string $pword       - The password set on the assessment (optional)
+ * @param array $string       - Language translation strings.
+ * @param object $db          - The MySQL connection.
+ * 
+ * @return int	- 1 = lab requires low bandwidth, 0 = lab is high bandwidth
+ */
 function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
   $low_bandwidth = 0;
   $lab_name = NULL;
@@ -48,7 +64,7 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
     }
     $stmt->close();
   } else {
-    // Exit if a summative exam is on no labs and no password.
+    // Exit if a summative exam is on no labs and no password. There has to be some for of security.
     if ($paper_type == '2' and trim($pword) == '') {
       $notice->access_denied($db, $string, $string['specificpassword'], true, true);
     }
@@ -57,6 +73,16 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
   return $low_bandwidth;
 }
 
+/**
+ * Check if there is a password on the assessment and if so will work out whether it needs
+ * to show the password entry form.
+ * @param string $password  - Type of the assessment (e.g. 0 = Formative, 1 = Progress Test, etc).
+ * @param array $string     - Language translation strings.
+ * @param bool $show_form   - If true then it will display a form for the student to enter the password.
+ *                            Files like user_index.php can ask the student for a password by start.php
+ *                            and finish.php should not ask, password should already be set.
+ * @param object $db        - The MySQL connection.
+ */
 function check_paper_password($password, $string, $db, $show_form = false) {
   if ($password != '') {
     if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
@@ -77,9 +103,19 @@ function check_paper_password($password, $string, $db, $show_form = false) {
   }
 }
 
+/**
+ * Check if the assessment can be taken at the current time. This time window is relaxed: 1 min
+ * before the set start time and 60 mins after the end.
+ * @param string $start_date  - Start date/time of the assessment.
+ * @param string $end_date    - End date/time of the assessment.
+ * @param array $string       - Language translation strings.
+ * @param object $db          - The MySQL connection.
+ */
 function check_datetime($start_date, $end_date, $string, $db) {
   $notice = UserNotices::get_instance();
 
+  // Allow 1 minute before the start time of the assessment.
+  // Allow 60 minutes after the end time of the assessment.
   if ((time()+60) < $start_date or (time()-3600) > $end_date) {
     $msg = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
     $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="window.close()" class="OK" />';
@@ -118,7 +154,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $attempt = 1;
   $usern = $userObj->get_username();
 
-  if (stripos($usern, 'user') !== 0) {
+  if (stripos($usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
      if (count($moduleIDs) > 0) {
       $cal_year_sql = '';
       if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";

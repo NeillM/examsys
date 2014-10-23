@@ -69,7 +69,7 @@ $mysqli->close();
         if ($_POST['module'] != '') {
           echo "self.opener.location.href = '../module/index.php?module=" . $_POST['module'] . "';\n";
         } elseif ($_POST['folder'] != '') {
-          echo "self.opener.location.href = '../folder/details.php?folder=" . $_POST['folder'] . "';\n";
+          echo "self.opener.location.href = '../folder/index.php?folder=" . $_POST['folder'] . "';\n";
         } else {
           echo "self.opener.location.href = '../index.php';\n";
         }
