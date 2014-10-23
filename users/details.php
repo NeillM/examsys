@@ -683,7 +683,11 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
-    echo "<tr><td></td><td><a href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
+    echo "<tr><td>";
+    if ($user_modules[$i]['attempt'] != 1) {
+      echo '<img src="../artwork/resit.png" width="16" height="16" alt="Resit" title="' . $string['resitcandidate'] . '" />';
+    }
+    echo "</td><td><a href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['moduleid']}</a></td><td>&nbsp;<a href=\"../module/index.php?module={$user_modules[$i]['idMod']}\">{$user_modules[$i]['fullname']}</a></td><td>{$user_modules[$i]['calendar_year']}</td></tr>\n";
     $old_year = $user_modules[$i]['calendar_year'];
   }
 

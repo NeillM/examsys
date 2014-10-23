@@ -107,7 +107,8 @@ $string['reset'] = 'Obnovit';
 $string['forcereset'] = 'Nucené obnovení';
 $string['classifiedinfo'] = 'Utajované informace';
 $string['custom'] = 'Rutina';
-$string['Access Denied']='Přístup odepřen';
+$string['Access Denied'] = 'Přístup odepřen';
+$string['resitcandidate'] = 'Přeřadit studenta (resit)';
 
 //Colour picker
 $string['colour'] = 'Barva';

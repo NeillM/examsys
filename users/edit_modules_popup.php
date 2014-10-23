@@ -53,9 +53,9 @@ function list_modules($mod, $id, $student_mod, $string) {
   $old_letter = '';
 
   if ($id == '1') {
-    echo "<div class=\"content\" id=\"list$id\">";
+    echo "<div class=\"content\" style=\"display:block\" id=\"list$id\">";
   } else {
-    echo "<div class=\"content\" id=\"list$id\">";
+    echo "<div class=\"content\" style=\"display:none\" id=\"list$id\">";
   }
 
   echo drawTabs($id, $string);
@@ -223,7 +223,8 @@ if (isset($_POST['submit'])) {
   $modules = array();
   $mod_count = 0;
 
-  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 ORDER BY moduleid");
+  // Get a list of all modules for display.
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND deleted IS NULL AND mod_deleted IS NULL ORDER BY moduleid");
   $result->execute();
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $fullname);

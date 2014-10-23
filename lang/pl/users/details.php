@@ -108,6 +108,7 @@ $string['classifiedinfo'] = 'informacja zastrzeżona';
 $string['custom'] = 'Własna';
 $string['Access Denied']='Brak dostępu';
 $string['newnote'] = 'Nowa notatka...';
+$string['resitcandidate'] = 'Przesadź kandydata';
 
 //demo
 $string['demo1'] = 'Miasta';
