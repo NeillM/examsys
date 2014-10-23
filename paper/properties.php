@@ -97,6 +97,10 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs) {
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+$modules_array = $properties->get_modules();
+
+$q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
+
 // Build up a list of all past reviewers and labs for the 'changes' tab
 $changed_reviewers = array();
 $changed_labs = array();
@@ -667,7 +671,9 @@ if (isset($_POST['Submit'])) {
 
       $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
     }
-    if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
+    // Include check to $q_feedback_enabled to see if question-based feedback
+    // is switched on at the module level.
+    if ($q_feedback_enabled and isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
       $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
       $editProperties->bind_param('i', $paperID);
       $editProperties->execute();
@@ -1847,7 +1853,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 		$modules_array = $properties->get_modules();
 
-    $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
+    //$q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
 
 		$total_modules = array_merge($staff_modules, $modules_array);
     
