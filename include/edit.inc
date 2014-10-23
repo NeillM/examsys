@@ -44,10 +44,10 @@ function check_fullSave($q_id, $mysqli) {
 }
 
 function redirect($userObj, $q_id, $configObj, $db) {
-  // Release the lock.
+  // Release the users lock.
   if ($_POST['checkout_author'] == $userObj->get_user_ID()) {
-    $result = $db->prepare("UPDATE questions SET checkout_time = NULL, checkout_authorID = NULL WHERE q_id = ?");
-    $result->bind_param('i', $q_id);
+    $result = $db->prepare("UPDATE questions SET checkout_time = NULL, checkout_authorID = NULL WHERE q_id = ? AND checkout_authorID = ?");
+    $result->bind_param('ii', $q_id, $userObj->get_user_ID());
     $result->execute();
     $result->close();
   }

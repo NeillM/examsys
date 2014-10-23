@@ -85,7 +85,7 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
           echo ':' . $paper['start_minute'];
         }
         echo '&nbsp;' . $paper['am_pm'] . '</td>';
-        echo '<td class="p" id="p' . $cellID . '" onmouseover="showCallout2(' . $cellID . ', \'' . $paper['message'] . '\')" onmouseout="hideCallout2()">' . $paper['title'] . ' (' . ($paper['duration']/60) . ' hrs)</td></tr>';
+        echo '<td class="p" id="p' . $cellID . '" onmouseover="showCallout2(' . $cellID . ', \'' . htmlspecialchars($paper['message']) . '\')" onmouseout="hideCallout2()">' . $paper['title'] . ' (' . ($paper['duration']/60) . ' hrs)</td></tr>';
         $cellID++;
       }
     }
