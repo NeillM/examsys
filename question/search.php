@@ -348,7 +348,7 @@ if (isset($_GET['submit'])) {
       . " LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id"
       . " LEFT OUTER JOIN options ON options.o_id = questions.q_id"
       . " WHERE questions.status = question_statuses.id"
-      . " AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
+      . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
       . " AND deleted IS NULL ORDER BY leadin_plain";
   } else {
     $sql = "SELECT DISTINCT title, initials, surname, q_type,"
@@ -357,8 +357,8 @@ if (isset($_GET['submit'])) {
       . " LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id"
       . " LEFT OUTER JOIN options ON options.o_id = questions.q_id"
       . " WHERE questions.status = question_statuses.id"
-      . " AND questions.q_id=keywords_question.q_id $keywordsSQL"
-      . " AND questions.ownerID=users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
+      . " AND questions.q_id = keywords_question.q_id $keywordsSQL"
+      . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
       . " AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
   $result = $mysqli->prepare($sql);
@@ -387,8 +387,8 @@ if (isset($_GET['submit'])) {
     echo "'" . $_GET['searchterm'] . "'";
   } elseif (isset($_GET['searchtype']) and $_GET['searchtype'] != '%') {
     echo $string[$_GET['searchtype']];
-  } else {
-    echo $_GET['module'];
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
   }
   echo "</span></div>\n</div>\n";
 ?>
