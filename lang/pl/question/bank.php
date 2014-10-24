@@ -33,10 +33,10 @@ $string['referencematerial'] = 'Materiał pomocniczy';
 $string['nokeywords'] = 'Do tego modułu nie dodano żadnych słów kluczowych.';
 $string['question'] = 'Pytanie';
 $string['questions'] = 'Pytania';
-$string['noquestions'] = 'No questions found in bank.';
-$string['noquestionsbloom']  = 'No questions found in bank by Bloom\'s Taxonomy.';
-$string['noquestionsstatus'] = 'No questions found in bank by status.';
-$string['noquestionsperformance'] = 'No questions found in bank by performance.';
-$string['noquestionsobjective'] = 'No questions found link bank linked to learning objectives.';
+$string['noquestions'] = 'W banku nie znaleziono żadnych pytań.';
+$string['noquestionsbloom']  = 'W banku nie znaleziono żadnych pytań wg. taksonomi Blooma.';
+$string['noquestionsstatus'] = 'W banku nie znaleziono żadnych pytań wg. statusu.';
+$string['noquestionsperformance'] = 'W banku nie znaleziono żadnych pytań na podstawie osiągnięć.';
+$string['noquestionsobjective'] = 'W banku nie znaleziono żadnych pytań powiązanych z celami kształcenia.';
 $string['search'] = 'Szukaj';
 ?>

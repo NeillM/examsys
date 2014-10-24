@@ -19,7 +19,7 @@ require './lang/' . $language . '/include/paper_types.inc';
 
 $string['admintools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
-$string['createfolder'] = 'Create folder';
+$string['createfolder'] = 'Utwórz folder';
 $string['mypersonalkeywords'] = 'Moje własne słowa kluczowe';
 $string['reviewed'] = 'Przejrzany';
 $string['notreviewed'] = 'Nie przejrzano';
@@ -31,7 +31,7 @@ $string['allmodules'] = 'Wszystkie moduły...';
 $string['allmodulesinschool'] = 'Wszystkie moduły dla katedry...';
 $string['myrecentpapers'] = 'Moje ostatnie arkusze';
 $string['create'] = 'Utwórz';
-$string['foldername'] = 'Folder Name';
+$string['foldername'] = 'Nazwa folderu';
 $string['search'] = 'Szukaj';
 $string['createnewquestion'] = 'Utwórz nowe pytanie';
 $string['questions'] = 'Pytania';

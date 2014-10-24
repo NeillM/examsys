@@ -70,6 +70,6 @@ $string['midexamclarifications'] = 'Wyjaśnienia śródegzaminacyjne';
 $string['examchecklist'] = 'Zestawienie dla egzaminu';
 $string['viewrubric'] = 'Ogląd rubryki';
 $string['examrubric'] = 'Rubryka egzaminu';
-$string['unknowncomputer'] = 'Unknown Computer';
-$string['unknowncomputermsg'] = 'The computer you are attempting to access Rog&#333; from is not recognised.<br />Please call one of the emergency numbers for help.';
+$string['unknowncomputer'] = 'NNieznany komputer';
+$string['unknowncomputermsg'] = 'Komputer z którego chcesz uzyskać dostęp do Rog&#333; nie został rozpoznany.<br />Zadzwoń na jeden z numerów awaryjnych aby uzyskać pomoc.';
 ?>

@@ -20,7 +20,7 @@ require '../lang/' . $language . '/include/months.inc';
 $string['editsession'] = 'Edytuj sesję';
 $string['title'] = 'Tytuł';
 $string['session'] = 'Sesja';
-$string['date'] = 'Dane';
+$string['date'] = 'Data';
 $string['url'] = 'URL'; //cognate
 $string['new'] = 'Nowy...';
 $string['save'] = 'Zachowaj';

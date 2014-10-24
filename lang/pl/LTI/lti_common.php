@@ -30,5 +30,5 @@ $string['myfolders'] = 'Moje foldery';
 $string['papersoncurrentmodule'] = 'Arkusze w tym module';
 $string['describemodulechoice'] = 'Wybierz arkusz, który ma być przyłączony';
 $string['missingfields'] ='Brakujące pola'; 
-$string['module'] = 'Module: %s';
+$string['module'] = 'Moduł: %s';
 ?>

@@ -40,6 +40,6 @@ $string['bloomstaxonomy'] = 'Taksonomia Blooma';
 $string['keyword'] = 'Słowo kluczowe';
 $string['performance'] = 'Osiągnięcia';
 $string['learningoutcome'] = 'Cele kształcenia';
-$string['showlockedquestions'] = 'show Locked questions';
-$string['noquestions'] = 'No questions found in Question Bank.';
+$string['showlockedquestions'] = 'Pokaż zablokowane pytania';
+$string['noquestions'] = 'W banku nie znaleziono żadnych pytań';
 ?>

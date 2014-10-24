@@ -29,6 +29,6 @@ $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';
 $string['nomodulesset'] = 'Brak modułów';
-$string['unspecifiedsession'] = 'Nieokrelona sesja';
-$string['examcalendar'] = 'Summative Exam Calendar';
+$string['unspecifiedsession'] = 'Nieokreślona sesja';
+$string['examcalendar'] = 'Kalendarz egzaminów końcowych';
 ?>

@@ -29,5 +29,5 @@ $string['deletefolder'] = 'Usuń ten folder';
 $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['create'] = 'Utwórz';
-$string['foldername'] = 'Folder Name';
+$string['foldername'] = 'Nazwa folderu';
 ?>

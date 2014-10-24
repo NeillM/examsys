@@ -16,6 +16,6 @@
 
 require '../lang/' . $language . '/users/details.php';
 
-$string['edituserdetails'] = 'Edit User Details';
-$string['photo'] = 'Photo';
+$string['edituserdetails'] = 'Edytuj dane użytkownika';
+$string['photo'] = 'Fotografia';
 ?>

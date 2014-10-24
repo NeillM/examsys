@@ -38,5 +38,5 @@ $string['reviewers'] = 'Recenzenci';
 $string['started'] = 'Rozpoczęte';
 $string['completed'] = 'Zakończone';
 $string['generalpapercomments'] = 'Ogólne komentarze do arkusza';
-$string['cannotcomment'] = 'Cannot Comment';
+$string['cannotcomment'] = 'Nie można komentować';
 ?>

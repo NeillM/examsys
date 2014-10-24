@@ -41,5 +41,5 @@ $string['AllItemsCorrect'] = "Wszystkie elementy poprawne";
 $string['formula'] = 'Wzór';
 $string['tolerancefull'] = 'Tolerancja dla punktacji pełnej';
 $string['tolerancepartial'] = 'Tolerancja dla punktacji ułamkowej';
-$string['togglevariables'] = 'Toggle Variables';
+$string['togglevariables'] = 'Przełącz zmienne';
 ?>

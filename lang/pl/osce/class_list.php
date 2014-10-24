@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['classlist'] = 'OSCE: Class List';
-$string['error1'] = 'Nie wybrano modułu dlatego nie można było znaleźć studentów.';
-$string['error2'] = 'Nie okreslono roku akademickiego dlatego nie można było znaleźć studentów.';
+$string['classlist'] = 'OSCE: Lista klasy';
+$string['error1'] = 'Nie wybrano modułu, dlatego nie można było znaleźć studentów.';
+$string['error2'] = 'Nie określono roku akademickiego dlatego nie można było znaleźć studentów.';
 $string['error3'] = 'Nie znaleziono studentów w tym module.';
 ?>

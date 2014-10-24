@@ -50,5 +50,5 @@ $string['summativetestmsg'] = '<strong>Tylko dla kadry &ndash; ta sekcja nie jes
 $string['nodurationwarning'] = 'Nie określono czasu trwania egzaminu'; 
 $string['startwarning'] = 'Arkusz zaplanowano na czas wcześniejszy niż %d:00'; 
 $string['nolabswarning'] = 'Nie określono pracowni'; 
-$string['finished'] = 'Finished';
+$string['finished'] = 'Zakończono';
 ?>

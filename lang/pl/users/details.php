@@ -18,9 +18,9 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
  
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
-$string['usersearch'] = 'User Search';
-$string['user'] = 'User:';
-$string['edit'] = 'Edit';
+$string['usersearch'] = 'Wyszukiwanie użytkowników';
+$string['user'] = 'Użytkownik:';
+$string['edit'] = 'Edytuj';
 $string['status'] = 'Status'; //cognate //Status, Stan
 $string['student'] = 'Student'; //cognate
 $string['Students'] = 'Studenci';

@@ -25,5 +25,5 @@ $string['notavailableselfenrollment'] = 'Ten moduł nie jest dostępny do samodz
 $string['notactive'] = 'Ten moduł nie jest aktualnie aktywny.';
 $string['icanaccess'] = 'Pokaż arkusze, do których mam dostęp';
 $string['enrolmentcompleted'] = 'Zapisywanie zakończone';
-$string['nomodule'] = 'Module code <strong>%s</strong> not found.';
+$string['nomodule'] = 'Kod modułu <strong>%s</strong> nie został znaleziony.';
 ?>
