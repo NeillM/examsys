@@ -164,34 +164,32 @@ class PaperProperties {
   */
   static function get_paper_properties_by_lab($lab_object, $db) {
     $sql = "SELECT
-                    properties.property_id,
-                    paper_title,
-                    UNIX_TIMESTAMP(start_date) AS start_date,
-                    UNIX_TIMESTAMP(end_date) AS end_date,
-                    exam_duration,
-                    calendar_year,
-                    password,
-                    timezone,
-                    rubric,
-                    labs
+    			properties.property_id,
+    			paper_title,
+    			UNIX_TIMESTAMP(start_date) AS start_date,
+          UNIX_TIMESTAMP(end_date) AS end_date,
+    			exam_duration,
+    			calendar_year,
+    			password,
+    			timezone,
+          rubric
     		FROM
-                    properties
+    			properties
     		WHERE
-                    paper_type = '2' AND
-                    labs LIKE ? AND
-                    start_date < DATE_ADD( NOW(), interval 30 minute ) AND
-                    end_date > NOW() AND
-                    deleted IS NULL";
+    			paper_type = '2' AND
+    			labs REGEXP ? AND
+    			start_date < DATE_ADD( NOW(), interval 30 minute ) AND
+    			end_date > NOW() AND
+    			deleted IS NULL";
 
     $paper_results = $db->prepare($sql);
     // TODO get_lab_based_on_client only fetches the first lab that populates $lab_object
     // If an ip address is on many labs we only use with the first we come across
-    // Here we reduce the result set by using a like and reduce further in the code later on due to the result being a comma seperated string
-    $lab_like = '%' . $lab_object->get_id() . '%';
-    $paper_results->bind_param('s', $lab_like);
+    $lab_regexp = "(^|,)(" . $lab_object->get_id() . ")(,|$)";
+    $paper_results->bind_param('s', $lab_regexp);
     $paper_results->execute();
     $paper_results->store_result();
-    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone, $rubric, $labs);
+    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone, $rubric);
 
     if ($paper_results->num_rows <= 0) {
       $paper_results->close();
@@ -200,30 +198,22 @@ class PaperProperties {
 
     $properties = array();
     while ($paper_results->fetch()) {
-      // We need to parse the possible multiple labs to ensure we are in one of them
-      $multi_labs = explode(',', $labs);
-      foreach ($multi_labs as $lab) {
-        if ($lab == $lab_object->get_id()) {
-          $property_object = new PaperProperties($db);
-          $property_object->set_property_id($property_id);
-          $property_object->set_paper_title($paper_title);
-          $property_object->set_start_date($start_date);
-          $property_object->set_end_date($end_date);
-          $property_object->set_exam_duration($exam_duration);
-          $property_object->set_calendar_year($calendar_year);
-          $property_object->set_calendar_year($calendar_year);
-          $property_object->set_password($password);
-          $property_object->set_timezone($timezone);
-          $property_object->set_display_start_date();
-          $property_object->set_display_start_time();
-          $property_object->set_display_end_date();
-          $property_object->set_display_end_time();
-          $property_object->set_rubric($rubric);
-          $properties[] = $property_object;
-          break;
-        }
-      }
-      
+      $property_object = new PaperProperties($db);
+      $property_object->set_property_id($property_id);
+      $property_object->set_paper_title($paper_title);
+      $property_object->set_start_date($start_date);
+      $property_object->set_end_date($end_date);
+      $property_object->set_exam_duration($exam_duration);
+      $property_object->set_calendar_year($calendar_year);
+      $property_object->set_calendar_year($calendar_year);
+      $property_object->set_password($password);
+      $property_object->set_timezone($timezone);
+      $property_object->set_display_start_date();
+      $property_object->set_display_start_time();
+      $property_object->set_display_end_date();
+      $property_object->set_display_end_time();
+      $property_object->set_rubric($rubric);
+      $properties[] = $property_object;
     }
 
     $paper_results->close();
