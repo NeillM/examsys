@@ -117,7 +117,6 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="./js/toprightmenu.js"></script>
   <script type="text/javascript" src="./js/sidebar.js"></script>
-  <?php echo $configObject->get('cfg_js_root') ?>
   <script>
     $(function () {
       $('#theform').validate({

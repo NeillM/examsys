@@ -1,5 +1,9 @@
 $(function () {
-	$('#toprightmenu_icon').click(function() {
+  $(document).click(function() {
+    $('#toprightmenu').fadeOut();
+  });
+  
+  $('#toprightmenu_icon').click(function() {
 		if ($('#toprightmenu').is(':visible')) {
 			$('#toprightmenu').fadeOut();
 		} else {

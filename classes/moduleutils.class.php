@@ -41,7 +41,7 @@ Class module_utils extends RogoStaticSingleton {
 
 /**
  *
- * Utility class for module related functionality
+ * Utility class for module related functionality.
  *
  * @author Anthony Brown
  * @version 1.0
@@ -55,10 +55,17 @@ Class module {
   */
   public function __construct() {}
   
+  /**
+   * Gets a list of staff on a modules' team.
+   * 
+   * @param integer $idMod - The ID of the module to use.
+   * @param object $db     - MySQLi database connection.
+   * @return array - List of staff on the module.
+   */
   public function get_staff_members($idMod, $db) {
     $members = array();
     
-    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? ORDER BY surname, initials");
+    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? AND user_deleted IS NULL ORDER BY surname, initials");
     $result->bind_param('i', $idMod);
     $result->execute();
     $result->store_result();
@@ -72,6 +79,14 @@ Class module {
     return $members;
   }
 
+  /**
+   * Gets a list of students on a module.
+   * 
+   * @param string $calendar_year - Which academic session to use.
+   * @param integer $idMod        - The ID of the module to use.
+   * @param object $db            - MySQLi database connection.
+   * @return array - List of students on the module.
+   */
   public function get_student_members($calendar_year, $idMod, $db) {
     $members = array();
     
@@ -88,6 +103,32 @@ Class module {
     return $members;
   }
 
+  /**
+   * Creates a new module.
+   * 
+   * @param integer $moduleid           - The code of the module.
+   * @param string $fullname            - The full name of the module.
+   * @param integer $active             - Is the module active or inactive.
+   * @param integer $schoolID           - Which school the module belongs to.
+   * @param string $vle_api             - Which curriculum map or VLE to use for learning objectives.
+   * @param string $sms_api             - Which SMS system to link to.
+   * @param integer $selfEnroll         - Can students self-enrol in the module.
+   * @param bool $peer                  - Is Peer Review turned on.
+   * @param bool $external              - Is External Examiner turned on.
+   * @param bool $stdset                - Is Standard Setting turned on.
+   * @param bool $mapping               - Is mapping turned on. 
+   * @param integer $neg_marking        - Can negative marking be used in questions.
+   * @param string $ebel_grid_template  - Which Ebel grid to assign (optional).
+   * @param object $db                  - MySQLi database connection.
+   * @param integer $sms_import         - 
+   * @param integer $timed_exams        - Are timed summative exams allowed.
+   * @param integer $exam_q_feedback    - Is question-based feedback allowed for summative exams.
+   * @param integer $add_team_members   - Are team members allowed to add others.
+   * @param integer $map_level          - What level to link to in the curriculum map.
+   * @param string $academic_year_start - Day the module changes academic year.
+   * 
+   * @return boolean - True if module successfully added.
+   */
   public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01') {
 
     // Return false if missing madatory fields. schoolid is actually a number
@@ -129,11 +170,11 @@ Class module {
   }
   
   /**
-   * Update any part of a modules db record 
+   * Update any part of a modules DB record.
    * 
-   * @param type $moduleid - the code of the module to update
-   * @param type $updateData - an array of key value pairs to update e.g 'fullname'=>'New full Name'
-   * @param type $db
+   * @param integer $orig_moduleid  - the code of the module to update
+   * @param type $updateData        - an array of key value pairs to update e.g 'fullname'=>'New full Name'
+   * @param object $db              - MySQLi database connection.
    * @return boolean
    */
   public function update_module_by_code($orig_moduleid, $updateData, $db) {
@@ -264,9 +305,9 @@ Class module {
 
   /**
    * Check if a module with the given code already exists
-   * @param  string $moduleid The Module ID (code) for the module
-   * @param  mysqli $db       Database link class
-   * @return boolean          True if there is already a module with the code
+   * @param string $moduleid - The Module ID (code) for the module
+   * @param object $db       - Database link class
+   * @return boolean - True if there is already a module with the code
    */
   public function module_exists($moduleid, $db) {
     if ($moduleid == '') {  // No ID, don't bother to check the database.
@@ -293,9 +334,9 @@ Class module {
 
   /**
    * Get the full details of a module given its module code
-   * @param  string $modID The Module ID (code) for the module
-   * @param  mysqli $db    Database link class
-   * @return array         Associative array containing the details of the module
+   * @param string $modID - The Module ID (code) for the module
+   * @param object $db    - Database link class
+   * @return array - Associative array containing the details of the module
    */
   public function get_full_details_by_name($modID, $db) {
     $moduleid = self::get_idMod($modID, $db);
@@ -308,8 +349,8 @@ Class module {
 
   /**
    * Get the full details of a module given its ID
-   * @param  integer $modID Database ID of the module
-   * @param  mysqli $db     Database link class
+   * @param integer $modID - Database ID of the module
+   * @param object $db     - Database link class
    * @return array e.g  'idMod' => int 291
    *                     'moduleid' => string '001' (length=3)
    *                     'fullname' => string 'This is a test module 22' (length=24)
@@ -399,9 +440,9 @@ Class module {
 
   /**
    * Check if the module with the given ID is set to allow team members to add other members of staff to the team
-   * @param  string   $modID Module code of the module
-   * @param  mysqli   $db    Database link class
-   * @return boolean         Can team members add others to the team
+   * @param string $modID - Module code of the module
+   * @param object $db    - Database link class
+   * @return boolean - Can team members add others to the team
    */
   public function is_allowed_add_team_members_by_name($modID, $db) {
     $moduleid = self::get_idMod($modID, $db);
@@ -414,9 +455,9 @@ Class module {
 
   /**
    * Check if the module with the given ID is set to allow team members to add other members of staff to the team
-   * @param  integer  $modID Database ID of the module
-   * @param  mysqli   $db    Database link class
-   * @return boolean         Can team members add others to the team
+   * @param integer $modID - Database ID of the module
+   * @param object $db     - Database link class
+   * @return boolean - Can team members add others to the team
    */
   public function is_allowed_add_team_members_by_id($modID, $db) {
     $data = self::get_full_details_by_ID($modID, $db);
@@ -432,9 +473,9 @@ Class module {
 
   /**
    * The Module ID (code) of a module given its database ID
-   * @param  integer $modID Database ID of the module
-   * @param  mysqli  $db    Database link object
-   * @return string         Module ID (code) of the module or false if not found
+   * @param integer $modID - Database ID of the module
+   * @param object $db     - Database link object
+   * @return string  -  Module ID (code) of the module or false if not found
    */
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
