@@ -271,7 +271,7 @@ require_once 'summary_report.inc';
   $master_array = array_csort($master_array, $sortby, $ordering);
   
   for ($i=0; $i<$user_number; $i++) {
-    if ($master_array[$i]['student_id'] > 0) {
+    if ($master_array[$i]['student_id'] != '') {
       echo '<tr onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');">';
       echo '<td class="greyln col"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');" /></td>';
       echo '<td class="greyln col">' . $master_array[$i]['title'] . '</span></td>';
