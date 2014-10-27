@@ -367,9 +367,10 @@ if (!isset($_POST['update'])) {
 
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
-    
+  }
+  if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'cache_paper_stats', $cfg_web_host)) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_web_host . '\'';
-    $updater_utils->execute_query($sql, true);
+    $updater_utils->execute_query($sql, true);    
   }
 
   // 20/05/2013 (brzsw) - Add cache_student_paper_marks table
@@ -386,6 +387,7 @@ if (!isset($_POST['update'])) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
+
 
   // 20/05/2013 (brzsw) - Add cache_median_question_marks table
   if (!$updater_utils->does_table_exist('cache_median_question_marks')) {
