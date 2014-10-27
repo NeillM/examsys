@@ -2,13 +2,13 @@ body {
   padding-top: 0;
   padding-bottom: 0;
   padding-right: 0;
-  padding-left: 243px;
+  padding-left: 256px;
 }
 div#left-sidebar {
   position: absolute;
   top: 0;
   left: 0;
-  width: 227px;
+  width: 240px;
   height: 100%;
   padding-right: 0;
   padding-left: 16px;

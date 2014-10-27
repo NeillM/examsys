@@ -19,6 +19,6 @@ require '../lang/' . $language . '/delete/delete.inc';
 $string['confirmdelete'] = 'Potvrdit odstranění odkazu';
 $string['msg'] = 'Odstranění odkazu zajistí vymazání v dokumentu.<br /><br /> <strong>Neodstraní</strong> aktuální úlohu z banku úloh.';
 $string['msg2'] = 'Pokoušíte se vymazat úlohu ze Zamčeného testu, což není proveditelné.';
-$string['delete'] = 'Odstranit odkaz';
-$string['deletes'] = 'Odstranit odkazy';
+$string['delete'] = 'Odstranit Otázka';
+$string['deletes'] = 'Odstranit Dotazy';
 ?>
