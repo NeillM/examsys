@@ -38,6 +38,7 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
+    #displaycredits {position:absolute; bottom:22px; text-align:center; width:90%; cursor:pointer; color:#295AAD; font-weight:bold}
 	  #content img {width:16px; height:16px; padding-right:6px}
     .divider {padding-left:16px; padding-bottom:2px; font-weight:bold}
     .sch {background-image: url('../artwork/folder_16.png'); background-repeat:no-repeat; background-position:30px center; padding-left:50px; color:#295AAD; cursor:pointer; padding-top:2px; padding-bottom:2px}
@@ -50,6 +51,7 @@
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/sidebar.js"></script>
   <script>
     $(function () {
       $('.mod').click(function() {
