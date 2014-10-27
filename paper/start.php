@@ -1453,10 +1453,12 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_q
     $question['leadin'] = '<span style="color: #f00;">' . $string['error_keywords'] . '</span>';
     $question['q_type'] = 'keyword_based';
     $question['q_id'] = -1;
-    $question['display_pos'] = $q_no;
     $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
     $question['options'] = array();
+    $question['screen'] = $random_q_data['screen'];
+    $question['assigned_number'] = $random_q_data['assigned_number'];
+    $question['no_on_screen'] = $question['display_pos'] = $q_no;
   }
 
   return $question;

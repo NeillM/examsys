@@ -177,14 +177,16 @@ class PaperProperties {
     			properties
     		WHERE
     			paper_type = '2' AND
-    			labs LIKE ? AND
+    			labs REGEXP ? AND
     			start_date < DATE_ADD( NOW(), interval 30 minute ) AND
     			end_date > NOW() AND
     			deleted IS NULL";
 
     $paper_results = $db->prepare($sql);
-    $lab_like = '%' . $lab_object->get_id() . '%'; //TODO this is how the old code work !! concatenated field not sure if this always works if a room is on many labs
-    $paper_results->bind_param('s', $lab_like);
+    // TODO get_lab_based_on_client only fetches the first lab that populates $lab_object
+    // If an ip address is on many labs we only use with the first we come across
+    $lab_regexp = "(^|,)(" . $lab_object->get_id() . ")(,|$)";
+    $paper_results->bind_param('s', $lab_regexp);
     $paper_results->execute();
     $paper_results->store_result();
     $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone, $rubric);

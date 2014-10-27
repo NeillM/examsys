@@ -22,8 +22,8 @@
 * @package
 */
 
-require '../../include/invigilator_auth.inc';
-require_once '../../include/errors.inc';
+require '../include/invigilator_auth.inc';
+require_once '../include/errors.inc';
 
 $userID  = check_var('userID', 'POST', true, false, true);
 $paperID = check_var('paperID', 'POST', true, false, true);
