@@ -43,6 +43,7 @@ header("Content-Disposition: attachment; filename=data.csv");
 
 // Write out headings
 echo "Title,Surname,First Names,Student ID,Reviewed,Group";
+$heading_no = count($questions);
 if ($review_type == 1) echo ",Reviews";
 for ($i=1; $i<=$heading_no; $i++) {
   echo ',Q' . $i;
