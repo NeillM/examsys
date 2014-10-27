@@ -314,8 +314,8 @@ echo draw_toprightmenu(30);
           echo "<td class=\"$class $role_css\">" . $user_results[$i]['student_id'];
         }
         
-        if ($report->has_special_need($user_results[$i]['userID'])) {
-          echo '&nbsp;&nbsp;';
+        if ($report->has_special_need($user_results[$i]['userID']) or isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
+          echo '&nbsp;';
         }
         // Add icons
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
