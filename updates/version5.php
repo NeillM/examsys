@@ -367,6 +367,9 @@ if (!isset($_POST['update'])) {
 
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
+    
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_web_host . '\'';
+    $updater_utils->execute_query($sql, true);
   }
 
   // 20/05/2013 (brzsw) - Add cache_student_paper_marks table
