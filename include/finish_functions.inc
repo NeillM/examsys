@@ -180,8 +180,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
   // Get any questions to exclude.
   $exclusions = new Exclusion($paperID, $mysqlidb);
   $exclusions->load();
-
-  if ($paper_type == '2' and ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
+  
+  if (($paper_type == '1' or $paper_type == '2') and ($userObj->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
     if (!isset($_GET['userID']) and !isset($_GET['q_id'])) { 
       $tmp_string = sprintf($string['thankyoumsg'], $paper_title);
       echo '<blockquote><div class="thankyou">' . $string['thankyou'] . '</div><p>' . $tmp_string . '</p><br />';
