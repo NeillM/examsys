@@ -69,8 +69,6 @@ if (isset($_POST['submit'])) {
   $result->execute();
   $result->close();
   
- // var_dump($tmp_roles, $_POST['title'], $initials, $_POST['surname'], $_POST['grade'], $_POST['year'], $_POST['username'], $_POST['email'], $_POST['first_names'], $gender, $userID);
-
   // Remove from teams if 'left'.
   if (strtolower($tmp_roles) == 'left') {
     UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
@@ -115,6 +113,12 @@ if (isset($_POST['submit'])) {
 </html>
 <?php
 }
+
+if ($user_details['gender'] == 'Male') {
+  $generic_icon = '../artwork/user_male_48.png';
+} else {
+  $generic_icon = '../artwork/user_female_48.png';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -135,7 +139,7 @@ if (isset($_POST['submit'])) {
 
 <body>
   <table cellspacing="0" cellpadding="5" border="0" style="width:100%; background-color:white">
-    <tr><td style="border-bottom:1px solid #CCD9EA; width:50px"><img src="../artwork/user_female_48.png" width="48" height="48" /></td><td class="dkblue_header" style="background-color:white; font-size:160%; border-bottom:1px solid #CCD9EA; font-weight:bold"><?php echo $string['edituserdetails'] ?></td></tr>
+    <tr><td style="border-bottom:1px solid #CCD9EA; width:50px"><img src="<?php echo $generic_icon ?>" width="48" height="48" /></td><td class="dkblue_header" style="background-color:white; font-size:160%; border-bottom:1px solid #CCD9EA; font-weight:bold"><?php echo $string['edituserdetails'] ?></td></tr>
   </table>
   <br />
   

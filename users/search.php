@@ -200,6 +200,7 @@ if (isset($_GET['submit'])) {
     .uline:hover {background-color:#FFE7A2}
     .uline.highlight {background-color:#FFBD69}
     td {padding-left: 0 !important}
+    .l {line-height: 160%}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>

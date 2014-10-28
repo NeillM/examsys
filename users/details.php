@@ -310,7 +310,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
       $('#menu2b').show();
       
       $('#edit').click(function() {
-        editwin=window.open("edit_details.php?userID=<?php echo $userID ?>","edituser","width=600,height=420,left="+(screen.width/2-260)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        editwin=window.open("edit_details.php?userID=<?php echo $userID ?>","edituser","width=600,height=450,left="+(screen.width/2-260)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
         if (window.focus) {
           editwin.focus();
         }        
@@ -360,6 +360,11 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%; line-height:175%; padding-bottom:10px">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
 <?php
+  if ($user_details['gender'] == 'Male') {
+    $generic_icon = '../artwork/user_male_64.png';
+  } else {
+    $generic_icon = '../artwork/user_female_64.png';
+  }
   if (stripos($user_details['roles'], 'Student') !== false) {
     $student_photo = UserUtils::student_photo_exist($user_details['username']);
     if ($student_photo !== false) {
@@ -370,10 +375,10 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
         echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $student_photo . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       }
     } else {
-      echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
+      echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"$generic_icon\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
     }
   } else {
-    echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"../artwork/user_female_64.png\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
+    echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"$generic_icon\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
   }
   echo "<td colspan=\"4\" style=\"vertical-align:top\">&nbsp;<a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"search.php\">" . $string['usersearch'] . "</a><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />";
   if ($userObject->has_role('SysAdmin')) {
@@ -408,7 +413,12 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   }
   echo "<tr><td class=\"field\">" . $string['username'] . "</td><td>" . $user_details['username'] . "</td>";
   if ($userObject->has_role('SysAdmin')) {
-    echo "<td class=\"field\">" . $string['password'] . "</td><td><input type=\"button\" onclick=\"resetPassword('" .  urlencode($user_details['email']) . "')\" value=\"{$string['reset']}\" />&nbsp;<input type=\"button\" onclick=\"forceResetPassword('" . $user_details['username'] . "')\" value=\"{$string['forcereset']}\" /></td></tr>\n";
+    echo "<td class=\"field\">" . $string['password'] . "</td><td>";
+    $authinfo = $authentication->version_info(true, false);
+    if (stripos($authinfo, 'LDAP') === false) {    // Don't show if LDAP is on.
+      echo "<input type=\"button\" onclick=\"resetPassword('" .  urlencode($user_details['email']) . "')\" value=\"{$string['reset']}\" />&nbsp;";
+    }
+    echo "<input type=\"button\" onclick=\"forceResetPassword('" . $user_details['username'] . "')\" value=\"{$string['forcereset']}\" /></td></tr>\n";
   } else {
     echo "<td class=\"field\"></td><td></td></tr>\n";
   }
