@@ -39,6 +39,11 @@ require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/exam_announcements.class.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/paper/finish.php';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 check_var('id', 'GET', true, false, false);
 
 //get the paper properties
