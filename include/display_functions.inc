@@ -1307,15 +1307,22 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
     echo '<ol class="extmatch">';
     for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
-      $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
-      $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
-
+      if(isset($matching_answers[$part_id-1])) {
+        $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
+        $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
+      } else {
+        $answer_no = 0;
+      }
       echo '<li>';
       if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') echo '<div>' . $matching_scenarios[$part_id] . '</div>';
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
         echo "<div>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '') . "</div>\n<br />";
       }
-      $sub_answers = explode('$', $matching_answers[$part_id - 1]);
+      if(isset($matching_answers[$part_id-1])) {
+        $sub_answers = explode('$', $matching_answers[$part_id - 1]);
+      } else {
+        $sub_answers = array();
+      }
       $list_size = 10;
       if (count($matching_options) < 10) $list_size = count($matching_options);
       if ($answer_no == 1) {
