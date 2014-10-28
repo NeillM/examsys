@@ -39,7 +39,14 @@ require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/exam_announcements.class.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/paper/finish.php';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 check_var('id', 'GET', true, false, false);
+
+ob_start();
 
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
@@ -206,4 +213,5 @@ require '../config/finish.inc';
 
   echo "</body>\n</html>";
   $mysqli->close();
+  ob_end_flush();
 ?>
