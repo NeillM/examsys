@@ -319,7 +319,7 @@ if ($exam_duration !== null) {
   }
 
   function reviewPaper(metadataID, type) {
-    exam = window.open("./paper/finish.php?id=<?php echo $_GET['id']; ?>&metadataID="+metadataID+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    exam = window.open("finish.php?id=<?php echo $_GET['id']; ?>&metadataID="+metadataID+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       exam.focus();
     }
