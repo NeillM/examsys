@@ -81,7 +81,7 @@ class LABELLINGCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $mark = 0;
             $all_correct = true;
             $correct_no = 0;

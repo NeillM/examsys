@@ -79,7 +79,7 @@ class EXTMATCHCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $big_user_parts = explode('|',$user_answer);
             $mark = 0;
             $all_correct = true;

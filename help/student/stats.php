@@ -200,7 +200,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   } else {
     echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border-left: #295AAD 1px solid\">\n";
     echo "<tr><th>" . $string['page'] . "</th><th>" . $string['hits'] . "</th></tr>\n";
-    while ($row = $search_results->fetch()) {
+    while ($search_results->fetch()) {
       echo "<tr><td class=\"txt\">$title</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
     echo "</table>\n";
@@ -220,7 +220,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   } else {
     echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border-left: #295AAD 1px solid\">\n";
     echo "<tr><th>" . $string['searches'] . "</th><th>" . $string['term'] . "</th><th>" . $string['results'] . "</th></tr>\n";
-    while ($row = $search_results->fetch()) {
+    while ($search_results->fetch()) {
       if ($hits == 0) {
         echo "<tr style=\"color:#C00000\"><td class=\"num\">" . number_format($no_searches) . "</td><td class=\"txt\">$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
       } else {

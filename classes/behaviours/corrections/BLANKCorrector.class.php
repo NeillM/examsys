@@ -89,7 +89,7 @@ class BLANKCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $user_answers = explode('|', $user_answer);
             // Drop first element
             array_shift($user_answers);

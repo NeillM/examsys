@@ -78,7 +78,7 @@ class MRQCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $user_answers = str_split($user_answer);
 
             $mark = 0;

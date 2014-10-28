@@ -98,7 +98,7 @@ require '../include/sidebar_menu.inc';
   $result = $mysqli->prepare("SELECT id, first_names, surname, title, student_id, assigned_account, DATE_FORMAT(reserved,'%d/%m/%Y %H:%i:%s') FROM temp_users");
   $result->execute();
   $result->bind_result($id, $first_names, $surname, $title, $student_id, $assigned_account, $reserved);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $assigned_account = str_replace('user','',$assigned_account);
     
     $used[$assigned_account]['id'] = $id;

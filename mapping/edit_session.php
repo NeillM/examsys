@@ -114,7 +114,7 @@ if (isset($_POST['Edit'])) {
           $result = $mysqli->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
           $result->execute();
           $result->bind_result($largest);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $maxID = $largest + 1;
           }
         }

@@ -32,7 +32,7 @@ $obj_data->bind_param('dis', $_POST['identifier'], $_POST['moduleID'], $_POST['s
 $obj_data->execute();
 $obj_data->store_result();
 $obj_data->bind_result($obj_id);
-while ($row = $obj_data->fetch()) {
+while ($obj_data->fetch()) {
   // Delete from 'relationships' table.
   $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
   $result->bind_param('iis', $obj_id, $_POST['moduleID'], $_POST['session']);
