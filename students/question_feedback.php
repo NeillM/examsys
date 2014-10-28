@@ -46,6 +46,8 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 
 check_var('id', 'GET', true, false, false);
 
+ob_start();
+
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
@@ -211,4 +213,5 @@ require '../config/finish.inc';
 
   echo "</body>\n</html>";
   $mysqli->close();
+  ob_end_flush();
 ?>
