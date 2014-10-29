@@ -70,4 +70,5 @@ $string['improved'] = 'Improved';
 $string['basic'] = 'Basic';
 $string['none'] = 'none';
 $string['company'] = 'Company';
+$string['webserver'] = 'Web server';
 ?>
