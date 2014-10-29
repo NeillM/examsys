@@ -42,10 +42,10 @@ require_once './classes/announcementutils.class.php';
 function get_review_papers($userID, $db) {
   $papers = array();
 
-  $result = $db->prepare("SELECT paper_title, property_id, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
+  $result = $db->prepare("SELECT paper_title, property_id, fullscreen, DATE_FORMAT(internal_review_deadline,'%d/%m/%Y') AS internal_review_deadline, crypt_name, paper_type FROM (properties, properties_reviewers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND internal_review_deadline >= CURDATE() AND reviewerID = ? AND type = 'internal' ORDER BY paper_title");
   $result->bind_param('i', $userID);
   $result->execute();
-  $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name);
+  $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name, $paper_type);
   $result->store_result();    
   while ($result->fetch()) {
     $reviewed = '';
@@ -56,7 +56,7 @@ function get_review_papers($userID, $db) {
     $result2->fetch();
     $result2->close();
 
-    $papers[] = array('paper_title'=>$paper_title, 'crypt_name'=>$crypt_name, 'fullscreen'=>$fullscreen, 'reviewed'=>$reviewed, 'internal_review_deadline'=>$internal_review_deadline);      
+    $papers[] = array('paper_title'=>$paper_title, 'crypt_name'=>$crypt_name, 'fullscreen'=>$fullscreen, 'reviewed'=>$reviewed, 'internal_review_deadline'=>$internal_review_deadline, 'type' => $paper_type);
   }
 
   $result->close();
@@ -234,7 +234,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
     echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['papersforreview'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   }
   foreach($review_papers as $review_paper) {
-    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\"><img src=\"./artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Paper Icon\" /></a></td>\n";
+    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . Paper_utils::displayIcon($review_paper['type'], '', '', '', '', '') . "</a></td>\n";
     echo "  <td><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
     if ($review_paper['reviewed'] == '') {
       echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
