@@ -212,7 +212,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           $new_status = $status;
         }
 
-        $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+        $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
         $guid = $server_ipaddress . uniqid('', true);
 
         $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
