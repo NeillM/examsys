@@ -1241,7 +1241,7 @@ class ClassTotals {
                                     lab_name, 
                                     student_id, 
                                     attempt, 
-                                    DATE_FORMAT(started, '{$this->config->get('cfg_short_date_time')}') AS display_started, 
+                                    DATE_FORMAT(started, '{$this->config->get('cfg_long_date_time')}') AS display_started, 
                                     started, 
                                     student_grade 
                                   FROM 
