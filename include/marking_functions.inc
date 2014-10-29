@@ -490,7 +490,11 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
               $saved_response .= '|';
             }
             $qid = 'q' . $question_no . '_' . $option_no;
-            $correct_answers = explode('$', $correct_options[$option_no - 1]);
+            if (isset($correct_options[$option_no - 1])) {
+                $correct_answers = explode('$', $correct_options[$option_no - 1]);
+            } else {
+                $correct_answers = array();
+            }
             if (isset($_POST[$qid])) {
               $answer_count = count($_POST[$qid]);
               if ($score_method == 'Mark per Question' and (is_array($_POST[$qid]) or $_POST[$qid] != 'u')) {

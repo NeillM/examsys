@@ -1595,7 +1595,11 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
           }
           echo '<br />';
           $separate_answers = array();
-          $separate_answers = explode('$', $correct_answers[$i]);
+          if (isset($correct_answers[$i])) {
+            $separate_answers = explode('$', $correct_answers[$i]);
+          } else {
+            $separate_answers = array();
+          }
           $separate_user_answers = array();
           $separate_user_answers = explode('$', $user_answers[$i]);
 
