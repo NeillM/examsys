@@ -411,7 +411,11 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     echo "<td class=\"field\">" . $string['status'] . "</td><td>" . $user_details['roles'] . "</td>";
     echo "</tr>\n";    
   }
-  echo "<tr><td class=\"field\">" . $string['username'] . "</td><td>" . $user_details['username'] . "</td>";
+  if ($demo) {
+    echo "<tr><td class=\"field\">" . $string['username'] . "</td><td>" . demo_replace_username($user_details['username'], $demo) . "</td>";
+  } else {
+    echo "<tr><td class=\"field\">" . $string['username'] . "</td><td>" . $user_details['username'] . "</td>";
+  }
   if ($userObject->has_role('SysAdmin')) {
     echo "<td class=\"field\">" . $string['password'] . "</td><td>";
     $authinfo = $authentication->version_info(true, false);
