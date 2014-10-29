@@ -252,7 +252,7 @@ if (!isset($_POST['submit'])) {
         $new_status = $status;
       }
 
-			$server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+			$server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
       $guid = $server_ipaddress . uniqid('', true);
 
       $mysqli->autocommit(false);

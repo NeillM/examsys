@@ -287,7 +287,7 @@ if ($e6 == 'improved') {
 
   echo "<tr><td style=\"width:90px\">" . $string['servername'] . "</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
   echo "<tr><td>" . $string['hostname'] . "</td><td>" . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
-  echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . apache_getenv("SERVER_ADDR") . "</td></tr>\n";
+  echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . NetworkUtils::get_server_address() . "</td></tr>\n";
   echo "<tr><td>" . $string['clock'] . "</td><td>" . date('d F Y H:i:s') . "</td></tr>\n";;
   echo "<tr><td>" . $string['os'] . "</td><td>" . php_uname('s') . "</td></tr>\n";;
   echo "<tr><td>" . $string['apache'] . "</td><td>" . apache_get_version() . "</td></tr>\n";
