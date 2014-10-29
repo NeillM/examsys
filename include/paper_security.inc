@@ -150,6 +150,7 @@ function check_finished($propertyObj, $userObj, $string, $db) {
 
 function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $notice = UserNotices::get_instance();
+  $configObject = Config::get_instance();
 
   $attempt = 1;
   $usern = $userObj->get_username();
@@ -175,14 +176,15 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
             $html .= ', ' . $mod_details['moduleid'];
           }
         }
-        $tmp_string = sprintf($string['notregistered'], $userObj->get_title(), $userObj->get_surname(), $userObj->get_username(), $html, $calendar_year);
-        $notice->access_denied($db, $string, $tmp_string, true, true);
+        $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
       } else {
         $stmt->fetch();
       }
       $stmt->close();
     } else {
-      $notice->access_denied($db, $string, $string['error_module'], true, true);
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
@@ -192,13 +194,14 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
 function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
 	if (!$userObj->is_temporary_account()) {			// Do not check metadata security if temporary account
 		$notice = UserNotices::get_instance();
-		
+		$configObject = Config::get_instance();
 		$metadata = Paper_utils::get_metadata($property_id, $db);
 
 		foreach ($metadata as $security_type=>$security_value) {
 			if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
 				$tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-				$notice->access_denied($db, $string, $tmp_string, true, true);
+				$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+				$notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 			}
 		}
 	}
