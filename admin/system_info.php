@@ -306,17 +306,17 @@ if ($e6 == 'improved') {
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
 
   if (php_uname('s') == 'Windows NT') {
-    $disks = `fsutil fsinfo drives`;
-    $disks = str_word_count($disks,1);
-    $i = 0;
-    foreach ($disks as $key=>$disk) {
-      if ($disk != 'Drives') {
-        $driveID = strtoupper($disk) . ':';
-        $master_array[$i][3] = @disk_free_space($driveID);
-        $master_array[$i][1] = @disk_total_space($driveID);
-        $master_array[$i][5] = $disk . ':';
+    $disks = array('A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
+      'J:\\', 'K:\\', 'L:\\', 'M:\\', 'N:\\', 'O:\\', 'P:\\', 'Q:\\', 'R:\\', 'S:\\', 'T:\\',
+      'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\');
+    $i = 1;
+    foreach ($disks as $disk) {
+      if (file_exists($disk)) {
+        $master_array[$i][3] = @disk_free_space($disk);
+        $master_array[$i][1] = @disk_total_space($disk);
+        $master_array[$i][5] = $disk;
+        $i++;
       }
-      $i++;
     }
     $row_no = $i + 1;
   } else {
