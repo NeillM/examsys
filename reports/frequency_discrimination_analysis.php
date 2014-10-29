@@ -801,7 +801,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           $l = 0;
         }
         if ($exclusions->is_question_excluded($q_id)) {
-          $tmp_exclude = $excluded[$q_id];
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);;
         } else {
           $tmp_exclude = '';
         }
@@ -1244,7 +1244,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         }
         $i = 0;
         if ($exclusions->is_question_excluded($q_id)) {
-          $tmp_exclude = $excluded[$q_id];
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
@@ -1315,7 +1315,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         break;
       case 'sct':
         if ($exclusions->is_question_excluded($q_id)) {
-          $tmp_exclude = get_exclusions_by_qid($q_id);
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
