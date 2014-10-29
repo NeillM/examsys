@@ -28,7 +28,6 @@ require '../lang/' . $language . '/paper/properties.php';
 
 $ref_line = 0;
 ?>
-<table cellpadding="0" cellspacing="3" border="0" style="width:100%">
 <?php
 // Get the current metadata settings for the paper
 $current_settings = array();
@@ -65,5 +64,5 @@ if ($_GET['modules'] != '') {
 }
 
 $mysqli->close();
-echo "</table>\n<input type=\"hidden\" name=\"reference_no\" value=\"$ref_line\" />";
+echo "\n<input type=\"hidden\" name=\"reference_no\" value=\"$ref_line\" />";
 ?>

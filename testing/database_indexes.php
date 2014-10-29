@@ -35,9 +35,9 @@ function get_indexes($db_name, $table_name, $db) {
   $result = $db->prepare("SHOW INDEXES IN $db_name.$table_name");
   $result->execute();
   $result->store_result();
-  $result->bind_result($table, $non_unique, $key_name, $seq_in_index, $column_name, $collation, $cardinality, $sub_part, $packed, $null, $index_type, $comment, $index_comment);
+  $result->bind_result($table, $non_unique, $key_name, $seq_in_index, $column_name, $collation, $cardinality, $sub_part, $packed, $null, $index_type, $comment);
   while ($result->fetch()) {
-    $details[] = array($table, $non_unique, $key_name, $seq_in_index, $column_name, $collation, $cardinality, $sub_part, $packed, $null, $index_type, $comment, $index_comment);
+    $details[] = array($table, $non_unique, $key_name, $seq_in_index, $column_name, $collation, $cardinality, $sub_part, $packed, $null, $index_type, $comment);
   }
   $result->close();
   
