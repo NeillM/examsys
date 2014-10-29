@@ -287,10 +287,10 @@ if ($e6 == 'improved') {
 
   echo "<tr><td style=\"width:90px\">" . $string['servername'] . "</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
   echo "<tr><td>" . $string['hostname'] . "</td><td>" . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
-  echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . apache_getenv("SERVER_ADDR") . "</td></tr>\n";
+  echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . NetworkUtils::get_server_address() . "</td></tr>\n";
   echo "<tr><td>" . $string['clock'] . "</td><td>" . date('d F Y H:i:s') . "</td></tr>\n";;
   echo "<tr><td>" . $string['os'] . "</td><td>" . php_uname('s') . "</td></tr>\n";;
-  echo "<tr><td>" . $string['apache'] . "</td><td>" . apache_get_version() . "</td></tr>\n";
+  echo "<tr><td>" . $string['webserver'] . "</td><td>" . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
   echo "<tr><td>" . $string['php'] . "</td><td>" . phpversion() . "</td></tr>\n";
   echo "<tr><td>" . $string['mysql'] . "</td><td>" . $mysqli->server_info . "</td></tr>\n";
 
@@ -306,17 +306,17 @@ if ($e6 == 'improved') {
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
 
   if (php_uname('s') == 'Windows NT') {
-    $disks = `fsutil fsinfo drives`;
-    $disks = str_word_count($disks,1);
-    $i = 0;
-    foreach ($disks as $key=>$disk) {
-      if ($disk != 'Drives') {
-        $driveID = strtoupper($disk) . ':';
-        $master_array[$i][3] = @disk_free_space($driveID);
-        $master_array[$i][1] = @disk_total_space($driveID);
-        $master_array[$i][5] = $disk . ':';
+    $disks = array('A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
+      'J:\\', 'K:\\', 'L:\\', 'M:\\', 'N:\\', 'O:\\', 'P:\\', 'Q:\\', 'R:\\', 'S:\\', 'T:\\',
+      'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\');
+    $i = 1;
+    foreach ($disks as $disk) {
+      if (file_exists($disk)) {
+        $master_array[$i][3] = @disk_free_space($disk);
+        $master_array[$i][1] = @disk_total_space($disk);
+        $master_array[$i][5] = $disk;
+        $i++;
       }
-      $i++;
     }
     $row_no = $i + 1;
   } else {

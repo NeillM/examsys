@@ -48,7 +48,7 @@ function insert_into_questions($q_type, $theme, $scenario, $leadin, $correct_fba
   $leadin_plain = trim(strip_tags($leadin));
   // Make bloom field safe for MySQL strict mode
   $bloom = ($bloom == '') ? NULL : $bloom;
-  $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+  $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
   $guid = $server_ipaddress . uniqid('', true);
 
   if ($result = $mysqli->prepare("INSERT INTO questions VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, NULL, ?, ?, NULL, ?)")) {

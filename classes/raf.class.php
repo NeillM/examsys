@@ -351,7 +351,7 @@ class RAF {
 		if ($q['q_option_order'] == '') $q['q_option_order'] = 'display order';
 		if ($q['score_method'] == '') 	$q['score_method'] = 'Mark per Option';
 
-		$server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+		$server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
 		$guid = $server_ipaddress . uniqid('', true);
 
 		$status_string = $q['status'];

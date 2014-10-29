@@ -72,5 +72,29 @@ Class NetworkUtils {
     }
     return $output;
   }
+
+  /**
+   * Get the IP address of the web server Rogo is running on.
+   *
+   * @return string The IP address of the webserver.
+   */
+  static function get_server_address() {
+    if (!empty($_SERVER['SERVER_ADDR'])) {
+      // This should work on Apache and most other server.
+      return $_SERVER['SERVER_ADDR'];
+    } elseif (!empty($_SERVER['LOCAL_ADDR'])) {
+      // This will work on IIS when PHP is running as a CGI module.
+      return $_SERVER['LOCAL_ADDR'];
+    } elseif (function_exists('apache_getenv')) {
+      // Fall back on an apache method if $_SERVER does not exsist.
+      return apache_getenv('SERVER_ADDR');
+    } elseif (function_exists('gethostname')) {
+      // A possibly expensive emergency fall back, it will return the IP address of the systems name,
+      // which maynot be the same as the web server IP, especially if localhost or 127.0.0.1 is being used.
+      return gethostbyname(gethostname());
+    } else {
+      return '0.0.0.0';
+    }
+  }
 }
 ?>

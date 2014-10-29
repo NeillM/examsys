@@ -63,7 +63,7 @@ Class question_info {
         if ($q_group == '') {
           $q_group = $module;
         } else {
-          $q_group = ', ' . $module;
+          $q_group .= ', ' . $module;
         }
       }
     }

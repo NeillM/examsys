@@ -64,6 +64,7 @@ $state = $stateutil->getState();
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({
+          dateFormat: 'uk',
           sortList: [[0,1]]
         });
       }

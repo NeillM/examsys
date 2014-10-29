@@ -330,7 +330,7 @@ Class QuestionEdit extends RogoObject {
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+        $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
         $this->guid = $server_ipaddress . uniqid('', true);
         $params = array_merge(array('ssssssssssssssissssisssssss'), $this->_data);
         $query = <<< QUERY

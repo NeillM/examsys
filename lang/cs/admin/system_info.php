@@ -70,5 +70,5 @@ $string['improved'] = 'Vylepšená';
 $string['basic'] = 'Základní';	
 $string['none'] = 'žádná';
 $string['company'] = 'Společnost';
-
+$string['webserver'] = 'Web server';
 ?>
