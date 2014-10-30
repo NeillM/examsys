@@ -287,6 +287,10 @@ Class UON_SATURN extends SmsUtils {
 
               if (!$demomode) {
                 $tmp_userID = UserUtils::create_user($lookup_username, '', $sms->Title, $sms->Forename, $sms->Surname, $sms->Email, $sms->CourseCode, $sms->Gender, $sms->YearofStudy, 'Student', $sms->StudentID, $mysqli);
+                if($tmp_userID == false) {
+                  echo 'ERROR: unable to establish surname for ' . $lookup_username . '<br />';
+                  continue;
+                }
               }
               $current_users[$lookup_username]['userID']			= $tmp_userID;
               $current_users[$lookup_username]['grade']				= $sms->CourseCode;
