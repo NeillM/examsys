@@ -71,11 +71,11 @@ function drawHeader($tmp_page_no) {
   if ($tmp_page_no < $page_total) {
     echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">' . $string['next'] . '</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
   } else {
-    echo '&nbsp;&nbsp;' . $string['next'] . '&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" />&nbsp;';
+    echo '&nbsp;&nbsp;<span class="grey">' . $string['next'] . '</span>&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" />&nbsp;';
   }
   echo "</td></tr></table>\n";
 }
-  $id = null;
+  $id = 0;
 ?>
 <!DOCTYPE html>
 <html>
@@ -97,7 +97,7 @@ function drawHeader($tmp_page_no) {
         $('#page' + page).hide();
       }
       $('#page' + targetID).show();
-      $('#contents').scrollTo(0,0);
+      $('#contents').scrollTop();
     }
   </script>
 </head>
