@@ -359,7 +359,7 @@ if (isset($_GET['student_id'])) {
 }
 
 if ($roles_sql == '') {
-  echo "<p>" . $notice->info_strip($string['msg1'], 100) . "</p>";
+  echo "<div>" . $notice->info_strip($string['msg1'], 100) . "</div>";
   exit();
 }
 
