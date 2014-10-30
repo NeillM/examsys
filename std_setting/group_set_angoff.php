@@ -229,7 +229,7 @@ while ($stmt->fetch()) {
     if ($old_leadin != '') {
       if ($li_set == 1) echo "</td></tr>\n";
       $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-      display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
+      display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
       
       if ($old_screen != $screen) {
         echo '<tr><td colspan="2">';
@@ -293,7 +293,7 @@ $stmt->close();
 
 // Print the options for the last question on the screen.
 $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
+display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
 
 echo '</td></tr></table>';
 echo '<br />';

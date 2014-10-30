@@ -502,7 +502,7 @@ function check_ebel_distinction_type($reviewID, $db) {
       if ($old_leadin != '') {
         if ($li_set == 1) echo "</td></tr>\n";
         $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-        if (count($options_array) > 0) display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
+        if (count($options_array) > 0) display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
         if ($old_screen != $screen) {
           echo '<tr><td colspan="2">';
           echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
@@ -567,7 +567,7 @@ function check_ebel_distinction_type($reviewID, $db) {
 
   // Print the options for the last question on the screen.
   $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-  if (count($options_array) > 0) display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
+  if (count($options_array) > 0) display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
 
   echo '</td></tr></table></td></tr>';
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";

@@ -32,8 +32,12 @@ function checkVariables($number) {
   return $new_number;
 }
 
-function display_options($options, $q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $tmp_reviews, $tmp_exclude, $is_group) {
+function display_options($screen, $options, $q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $tmp_reviews, $tmp_exclude, $is_group) {
   global $marking, $question_no, $part_id, $labelcolor, $old_likert_label, $li_set, $bgcolor, $total_marks, $old_correct_fback, $stdID, $std_excluded, $string;
+  static $allanswers;
+  if (!isset($allanswers)) {
+    $allanswers = array();
+  }
 
   $display_inline = array('dichotomous', 'mrq', 'rank', 'flash');
 
@@ -164,6 +168,7 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       $question['theme'] = $current_theme;
       $question['leadin'] = $current_leadin;
       $question['scenario'] = $current_scenario;      
+      $question['q_id'] = $q_id;      
       
       require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
       if (!isset($configObj)) {
@@ -171,11 +176,14 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       }
       $question['object'] = new EnhancedCalc($configObj);
       $question['object']->load($question);
+      $question['object']->load_all_user_answers($allanswers);
 
       $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
 
       echo '<tr><td class="q_no">' . $question_no. '.&nbsp;</td><td>';
       $question['object']->render_paper($extra);
+
+      $allanswers[$screen][$q_id]['uans'] =  $question['object']->get_real_answer();
 
       $marks = $question['object']->calculate_question_mark();
 

@@ -911,7 +911,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
   } elseif ($question['q_type'] == 'enhancedcalc') {
     $settings = json_decode($question['settings'], true);
     $answer_equation = $question['options'][0]['correct'];
-    //put the caculated awnser in the session for use in linked caculation questions (N.B only for reviewers screen!!)
+    // Put the calculated answer in the session for use in linked calculation questions (N.B only for reviewers screen!!)
     $_SESSION['allans'][$current_screen][$question['q_id']] = $question['object']->useranswer;
     
     echo '<tr><td></td><td>';

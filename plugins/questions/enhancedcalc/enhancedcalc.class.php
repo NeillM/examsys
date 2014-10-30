@@ -536,7 +536,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	 */
 	static public function process_user_answer(&$postdata, &$session) {
 		$data = $session;
-
+    
 		foreach ($postdata as $key => $value) {
 			$data[$key] = $value;
 		}
@@ -799,7 +799,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			$uansarray = array();
 			$find_qid = $this->parse_linked_ans($inputVal);
 			$pre_user_answers = '';
-			
+
 			if (!is_array($user_answers)) {
 				$user_answers = array();
 				$inputVal = 'ERROR';
@@ -946,7 +946,6 @@ class EnhancedCalc extends Question implements questionInterface {
 			// Create an empty array to hold the generated variables
 			$this->useranswer['vars'] = array();
 		}
-
 
 		// Check to see if variables have been previously generated if not put them in an array to be generated
 		foreach ($this->settings['vars'] as $key => $value) {
@@ -1177,7 +1176,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * Get the full correct andwer for the question
+	 * Get the full correct answer for the question
 	 * @return string Answer including units if applicable
 	 */
 	public function get_real_answer() {
