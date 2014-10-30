@@ -411,7 +411,7 @@ while ($user_data->fetch()) {
   }
   
   if ($tmp_first_names == '') $tmp_first_names = ' ';
-  
+  if ($tmp_surname == '') $tmp_surname = ' ';
   echo '<td>' . demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) . '</td>';
   echo '<td>' . demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) . '</td>';
   echo '<td>' . demo_replace($tmp_username, $demo, false) . '</td>';
