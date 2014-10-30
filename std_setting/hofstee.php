@@ -47,7 +47,7 @@ if (count($marks) == 0) {  // If there are no marks, re-cache off class totals.
   $startdate = $properties->get_raw_start_date();
   $enddate   = $properties->get_raw_end_date();
   
-  $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli);
+  $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli, $string);
   $report->compile_report(true);
 
   $marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));

@@ -58,7 +58,7 @@ $crypt_name = $propertyObj->get_crypt_name();
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();                                        // Get any questions to exclude.
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->load_answers();
 $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();

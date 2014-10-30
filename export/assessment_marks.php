@@ -49,7 +49,7 @@ $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 $repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->compile_report(false);
 
 $user_results = $report->get_user_results();
