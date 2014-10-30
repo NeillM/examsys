@@ -192,7 +192,7 @@ $password           = $propertyObj->get_password();
 $modIDs							= array_keys($propertyObj->get_modules());
 
 // If the start / end date has not been set yet we need to set $display_start_date to '' to prevent errors on hidden input variables.
-if (empty($paper_start) || empty ($paper_end)) {
+if (empty($paper_start) or empty ($paper_end)) {
 	$display_start_date = '';
 } else {
 	// Adjust for timezones.
