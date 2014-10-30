@@ -423,6 +423,9 @@ if (isset($_GET['submit'])) {
     } else {
       echo "<td class=\"licon\">";      
     }
+    if (trim($theme) != '') {
+      echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
+    }
     echo "$tmp_leadin</td>";
     echo "<td>$title $initials $surname</td>";
     echo '<td><nobr>' . $string[$q_type] . '</nobr></td>';

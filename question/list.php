@@ -350,7 +350,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       echo '<td class="l">';      
     }
     if (trim($theme) != '') {
-      echo '<span class="t">' . $theme . '</span><br />';
+      echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }
     echo $leadin . '</td>';
     echo '<td class="nobr">' . $string[$q_type] . '</td>';
