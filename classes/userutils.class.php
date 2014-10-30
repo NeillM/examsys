@@ -48,7 +48,7 @@ Class UserUtils {
   }
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
-    if (trim($username) == '' or  trim($surname) == '' or $role == '') {
+    if (empty(trim($username)) or  empty(trim($surname)) or empty($role)) {
       return false;
     }
 
