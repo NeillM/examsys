@@ -193,61 +193,60 @@ class QuestionBank {
     // Un-assigned papers should be limited to the owner.
     if ($this->idMod == 0) {
       $userObject = UserObject::get_instance();
-      $ownerID = ' AND ownerID = ' . $userObject->get_user_ID();
+      $ownerSQL = 'questions_modules.idMOD IS NULL AND ownerID = ' . $userObject->get_user_ID();
     } else {
-      $ownerID = '';
+      $ownerSQL = 'questions_modules.idMod =  ' . $this->idMod;
     }
     
     switch ($type) {
       case 'all':
       case 'type':
         $sql = 'SELECT COUNT(questions.q_id), q_type'
-        . ' FROM questions, questions_modules'
-        . ' WHERE questions.q_id = questions_modules.q_id'
-        . ' AND idMod = ?' . $ownerID
+        . ' FROM questions LEFT JOIN questions_modules'
+        . ' ON questions.q_id = questions_modules.q_id'
+        . ' WHERE ' . $ownerSQL
         . ' AND deleted IS NULL GROUP BY q_type';
         break;
       case 'status':
         $sql = 'SELECT COUNT(questions.q_id), name'
-        . ' FROM questions, questions_modules, question_statuses'
+        . ' FROM (questions, question_statuses) LEFT JOIN questions_modules'
+        . ' ON questions.q_id = questions_modules.q_id'
         . ' WHERE questions.status = question_statuses.id'
-        . ' AND questions.q_id = questions_modules.q_id'
-        . ' AND idMod = ?' . $ownerID
+        . ' AND ' . $ownerSQL
         . ' AND deleted IS NULL GROUP BY status';
         break;
       case 'bloom':
         $sql = 'SELECT COUNT(questions.q_id), bloom'
-        . ' FROM questions, questions_modules'
-        . ' WHERE questions.q_id = questions_modules.q_id'
-        . ' AND idMod = ?' . $ownerID
+        . ' FROM questions LEFT JOIN questions_modules'
+        . ' ON questions.q_id = questions_modules.q_id'
+        . ' WHERE ' . $ownerSQL
         . ' AND deleted IS NULL GROUP BY bloom';
         break;
       case 'keyword':
         $sql = 'SELECT COUNT(questions.q_id), keywordID'
-        . ' FROM questions, questions_modules, keywords_question, keywords_user'
+        . ' FROM (questions, keywords_question, keywords_user) LEFT JOIN questions_modules'
+        . ' ON questions.q_id = questions_modules.q_id'
         . ' WHERE keywords_question.keywordID = keywords_user.id'
-        . ' AND questions.q_id = questions_modules.q_id'
-        . ' AND idMod = ?' . $ownerID
+        . ' AND ' . $ownerSQL
         . ' AND questions.q_id = keywords_question.q_id'
         . ' AND deleted IS NULL GROUP BY keywordID';
-        break;
+        break;      
       case 'objective':
         $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
         $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
         $all_years = implode("','", $all_years);
         
         $sql = "SELECT COUNT(questions.q_id), relationships.obj_id"
-          . " FROM questions, questions_modules, relationships"
+          . " FROM (questions, relationships) LEFT JOIN questions_modules"
+          . " ON questions.q_id = questions_modules.q_id"
           . " WHERE questions.q_id = relationships.question_id"
-          . " AND questions.q_id = questions_modules.q_id"
-          . " AND questions_modules.idMod = ? $ownerID "
+          . " AND $ownerSQL "
           . " AND calendar_year IN ('{$all_years}')"
           . " AND deleted IS NULL GROUP BY relationships.obj_id";
         break;
     }
     
     $result = $this->db->prepare($sql);
-    $result->bind_param('i', $this->idMod);
     $result->execute();
     $result->bind_result($number, $type);
     while ($result->fetch()) {
