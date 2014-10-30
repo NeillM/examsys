@@ -140,7 +140,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
  } elseif (isset($_GET['bloom'])) {
     $bank_type = ': ' . $_GET['type'];
   } elseif ($_GET['type'] == 'performance') {
-    $types = array('ve' => 'Very Easy', 'e' => 'Easy', 'm' => 'Moderate', 'h' => 'Hard', 'vh' => 'Very Hard', 'highest' => 'Highest', 'high' => 'High', 'intermediate'  => 'Intermediate', 'low'  => 'Low');
+    $types = array('veryeasy' => 'Very Easy', 'easy' => 'Easy', 'moderate' => 'Moderate', 'hard' => 'Hard', 'veryhard' => 'Very Hard', 'highest' => 'Highest', 'high' => 'High', 'intermediate'  => 'Intermediate', 'low'  => 'Low');
     $bank_type = ': ' . $types[$_GET['subtype']];
   } elseif ($module != '') {
     $bank_type = ": $module_code";
