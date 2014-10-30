@@ -358,6 +358,11 @@ if (isset($_GET['student_id'])) {
   $tmp_student_id = '';
 }
 
+if ($roles_sql == '') {
+  echo "<p>" . $notice->info_strip($string['msg1'], 100) . "</p>";
+  exit();
+}
+
 if ($user_data->num_rows == $limit) {
   echo " <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0; padding-left:0\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\""
     . $string['warning'] . "\" /></td>" . "<td class=\"redwarn\">" . $string['largeresult'] . "</td></tr></table>";
@@ -380,10 +385,6 @@ foreach ($table_order as $display) {
 
 <tbody>
 <?php
-if ($roles_sql == '') {
-  echo "</table>" . $notice->info_strip($string['msg1'], 100) . "</div>\n</body>\n</html>\n";
-  exit();
-}
 
 if ($user_data->num_rows == 0) {
   echo "</table>" . $notice->info_strip($string['msg2'], 100) . "</div>\n</body>\n</html>\n";
