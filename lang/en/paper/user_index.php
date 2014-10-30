@@ -43,6 +43,7 @@ $string['hour'] = 'hour';
 $string['hours'] = 'hours';
 $string['minutes'] = 'minutes';
 $string['mins'] = 'mins';
+$string['notset'] = 'Not set';
 $string['secs'] = 'secs';
 $string['papernotfound'] = 'Paper not Found';
 $string['requestedpaper'] = 'The requested paper cannot be found.';
