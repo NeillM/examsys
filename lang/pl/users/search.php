@@ -20,8 +20,8 @@ require '../lang/' . $language . '/include/titles.inc';
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
 $string['usersearch'] = 'Wyszukiwanie użytkowników';
 $string['performsummary'] = 'Podsumowanie osiągnięć';
-
-$string['msg1']="<strong>Uwaga</strong>&nbsp;&nbsp;&nbsp;Nie zaznaczono żadnych kategorii wyszukiwania w sekcji 'Zaawansowane'.";
-$string['msg2']="Nie znaleziono żadnego użytkownika według tak określonych kryteriów";
-$string['largeresult'] = "Wyszukiwanie zwróciło dużą liczbę użytkowników. Tylko pierwsze 10,000 będzie przedstawione. Zawęź kryteria wyszukiwania";
+$string['msg1'] = "<strong>Uwaga</strong>&nbsp;&nbsp;&nbsp;Nie zaznaczono żadnych kategorii wyszukiwania w sekcji 'Zaawansowane'.";
+$string['msg2'] = 'Nie znaleziono żadnego użytkownika według tak określonych kryteriów';
+$string['largeresult'] = 'Large number of users found, only the first 10,000 are displayed.'
+  . ' Please try narrowing your search criteria.';
 ?>

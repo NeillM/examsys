@@ -359,7 +359,7 @@ if (isset($_GET['student_id'])) {
 }
 
 if ($user_data->num_rows == $limit) {
-  echo " <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0; padding-left:0\"><img src=\"../artwork/exclamation_48.png\" width=\"32\" height=\"32\" alt=\""
+  echo " <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0; padding-left:0\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\""
     . $string['warning'] . "\" /></td>" . "<td class=\"redwarn\">" . $string['largeresult'] . "</td></tr></table>";
 }
 

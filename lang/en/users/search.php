@@ -20,9 +20,8 @@ require '../lang/' . $language . '/include/titles.inc';
 $string['usermanagement'] = 'User Management';
 $string['usersearch'] = 'User Search';
 $string['performsummary'] = 'Performance Summary';
-
-$string['msg1']="<strong>Warning:</strong>&nbsp;&nbsp;You have not ticked any categories under 'Advanced' to search for.";
-$string['msg2']="No users found for specified search criteria";
-$string['largeresult'] = "The search has returned a large number of users. Only the first 10,000 are displayed."
-  . " Please try narrowing your search criteria";
+$string['msg1'] = "<strong>Warning:</strong>&nbsp;&nbsp;You have not ticked any categories under 'Advanced' to search for.";
+$string['msg2'] = 'No users found for specified search criteria';
+$string['largeresult'] = 'Large number of users found, only the first 10,000 are displayed.'
+  . ' Please try narrowing your search criteria.';
 ?>
