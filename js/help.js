@@ -67,7 +67,7 @@ $(function() {
     $('#pointer_button' + sectionID).attr('src', icon);
   });
 
-  $('.page').click(function() {
+  $('#toc div.page').click(function() {
     var str = $(this).attr('id');
     window.location = 'index.php?id=' + str.substr(5) + '&scrOfY=' + $('#toc').scrollTop();
   });
