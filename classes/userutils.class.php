@@ -48,7 +48,9 @@ Class UserUtils {
   }
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
-    if (empty(trim($username)) or  empty(trim($surname)) or empty($role)) {
+    $username = trim($username);
+    $surname = trim($surname);
+    if (empty($username) or  empty($surname) or empty($role)) {
       return false;
     }
 
@@ -61,7 +63,7 @@ Class UserUtils {
       }
       $initials = strtoupper($initials);
 
-      $surname = self::my_ucwords(trim($surname));
+      $surname = self::my_ucwords($surname);
       $title = self::my_ucwords(trim($title));
 
       // If there is no password generate a default one.
