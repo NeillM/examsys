@@ -191,8 +191,8 @@ $sound_demo         = $propertyObj->get_sound_demo();
 $password           = $propertyObj->get_password();
 $modIDs							= array_keys($propertyObj->get_modules());
 
-if ($userObject->has_role('External Examiner')) {
-  // Don't do timezone stuff as dates may not be set before review.
+// If the start / end date has not been set yet we need to set $display_start_date to '' to prevent errors on hidden input variables.
+if (empty($paper_start) || empty ($paper_end)) {
 	$display_start_date = '';
 } else {
 	// Adjust for timezones.
@@ -377,10 +377,15 @@ if ($textsize > 120) {
 
   if ($test_type != '2') {
     $html = '';
-    if (time() < $paper_start or time() > $paper_end) {
+    if ((time() < $paper_start or time() > $paper_end) and !$userObject->has_role('External Examiner')) {
       $html = ' class="warn"';
     }
-    echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' ' . $string['to'] . ' ' . $display_end_date;
+    if (empty($paper_start) or empty ($paper_end)) {
+      // The start / end date has not been set yet so display Availability: Not set to the user.
+      echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $string['notset'];
+    } else {
+      echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' ' . $string['to'] . ' ' . $display_end_date;
+    }
     if ($timezone != 'Europe/London') echo ' (' . str_replace('_',' ',$timezone) . ')';
   }
   echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
