@@ -65,7 +65,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
     $(function () {
       
       $('#back').click(function (){
-        window.location.href = 'pick_external.php?paperID=<?php echo $_GET['paperID'] ?>&mode=<?php echo $_GET['mode'] ?>';
+        window.location.href = 'pick_external.php?paperID=<?php echo $_GET['paperID'] ?>&mode=<?php echo $_GET['mode'] ?>&module=<?php echo $_GET['module'] ?>';
       });
       
     });
