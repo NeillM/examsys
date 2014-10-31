@@ -26,6 +26,7 @@ $string['ebelgridtemplates'] = 'Szablony siatek metody Ebel';
 $string['faculties'] = 'Wydziały';
 $string['modules'] = 'Moduły';
 $string['optimizetables'] = 'Optymalizuj tablice';
+$string['phpinfo'] = 'phpinfo()';
 $string['questionstatuses'] = 'Statusy pytania';
 $string['savefailattempts'] = 'Zachowaj nieudane próby';
 $string['schools'] = 'Katedry';

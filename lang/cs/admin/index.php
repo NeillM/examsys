@@ -26,6 +26,7 @@ $string['ebelgridtemplates'] = 'Šablony Ebelovy mřížky';
 $string['faculties'] = 'Fakulty';
 $string['modules'] = 'Moduly';
 $string['optimizetables'] = 'Optimalizovat tabulky';
+$string['phpinfo'] = 'phpinfo()';
 $string['schools'] ='Školy';
 $string['smsimports'] = 'Nahrát SMS ';
 $string['statistics'] = 'Statistika';

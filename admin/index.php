@@ -30,7 +30,7 @@ require '../include/sysadmin_auth.inc';
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+<title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -140,6 +140,7 @@ require '../include/sysadmin_auth.inc';
 	$menudata['modules']							= array('list_modules.php', 'modules_icon.png');
 	$menudata['announcments']					= array('list_announcements.php', 'news_48.png');
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
+	$menudata['phpinfo']              = array('phpinfo.php', 'php.png');
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
 	$menudata['savefailattempts']			= array('list_save_fails.php', 'save_fail_48.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');

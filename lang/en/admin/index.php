@@ -26,6 +26,7 @@ $string['ebelgridtemplates'] = 'Ebel Grid Templates';
 $string['faculties'] = 'Faculties';
 $string['modules'] = 'Modules';
 $string['optimizetables'] = 'Optimize Tables';
+$string['phpinfo'] = 'phpinfo()';
 $string['questionstatuses'] = 'Question statuses';
 $string['savefailattempts'] = 'Save Fail Attempts';
 $string['schools'] = 'Schools';
