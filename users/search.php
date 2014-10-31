@@ -124,7 +124,7 @@ if (isset($_GET['submit'])) {
     if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['sysadminstaff']) and $_GET['sysadminstaff'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '')) {
       if ($_GET['module'] != '') {
         $query_string = "(SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM users, modules_student, modules
+        FROM (users, modules_student, modules)
         LEFT JOIN sid ON users.id = sid.userID
         WHERE modules_student.idMod = modules.id
         AND users.id = modules_student.userID
@@ -133,7 +133,7 @@ if (isset($_GET['submit'])) {
         AND user_deleted IS NULL)
         UNION
         (SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM users, modules_staff, modules
+        FROM (users, modules_staff, modules)
         LEFT JOIN sid ON users.id = sid.userID
         WHERE modules_staff.idMod = modules.id
         AND users.id = modules_staff.memberID
