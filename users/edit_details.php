@@ -33,13 +33,23 @@ require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'GET', true, false, true);
 
+$errors = false;
+
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 if ($user_details === false) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) and $_POST['username'] != $_POST['prev_username']) {
+  // Check new username is not already used. Overwriting usernames could screw up other accounts.
+  if (UserUtils::username_exists($_POST['username'], $mysqli)) {
+    $errors = 'Username exists';
+  }
+}  
+
+
+if (isset($_POST['submit']) and !$errors) {
   $cfg_web_root = $configObject->get('cfg_web_root');
 
   if (!empty($_FILES['photofile']['name'])) {
@@ -93,7 +103,6 @@ if (isset($_POST['submit'])) {
     $result->execute();
     $result->close();
   }
-  //exit;
 ?>
 <!DOCTYPE html>
 <html>
@@ -132,6 +141,7 @@ if ($user_details['gender'] == 'Male') {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#EEF4FF}
+    .form-error {border: 2px solid #C00000 !important}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -158,7 +168,11 @@ if ($user_details['gender'] == 'Male') {
   }
   echo "</select> <input type=\"text\" value=\"" . $user_details['first_names'] . "\" name=\"first_names\" required /> <input type=\"text\" value=\"" . $user_details['surname'] . "\" name=\"surname\" required /></td></tr>\n";
   echo "<tr><td>" . $string['studentid'] . "</td><td><input type=\"text\" value=\"" . $user_details['student_id'] . "\" name=\"sid\" /></td></tr>\n";
-  echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $user_details['username'] . "\" name=\"username\" required /></td></tr>\n";
+  if ($errors == 'Username exists') {
+    echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $_POST['username'] . "\" name=\"username\" class=\"form-error\" required />&nbsp;&nbsp;<span style=\"color:#C00000\">" . $string['usernameexists'] . "</span></td></tr>\n";
+  } else {
+    echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $user_details['username'] . "\" name=\"username\" required /></td></tr>\n";
+  }
   echo "<tr><td>" . $string['email'] . "</td><td><input type=\"text\" value=\"" . $user_details['email'] . "\" name=\"email\" style=\"width:340px\" required /></td></tr>\n";
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"grade\" style=\"width:300px\">";
   $found = 0;
@@ -234,6 +248,7 @@ if ($user_details['gender'] == 'Male') {
   }
   echo "</optgroup>\n</select>\n";
   echo "<input type=\"hidden\" name=\"prev_roles\" value=\"" . $user_details['roles'] . "\" /></td></tr>\n";
+  echo "<input type=\"hidden\" name=\"prev_username\" value=\"" . $user_details['username'] . "\" /></td></tr>\n";
   echo "<tr><td>" . $string['photo'] . "</td><td><input type=\"file\" name=\"photofile\" /></td></tr>";
   ?>
   </table>
