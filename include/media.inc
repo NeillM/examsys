@@ -45,7 +45,9 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
 
   if ($imageid > -1) $html .= "<div id=\"media$imageid\" class=\"media\">";
   // Is the file an image or something else (e.g. RasMol)?
-  if (in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
+  if (!array_key_exists('extension', $fn_parts)) {
+    $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+  } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
     if ($border_color == '') {
       $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" alt=\"Image\" />";
     } else {
