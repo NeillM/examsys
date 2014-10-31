@@ -316,6 +316,7 @@ if ($lab_object !== false) {
 <?php
 if (!$lab_object) {
   echo "<div style=\"background-color:white\">\n";
+  echo '<div style="float:right; padding-right:5px"><a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" /></a></div>';
   emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
   echo "<p><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px; padding-bottom:40px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['unknowncomputer'] . "</span><br /><br />" . $string['unknowncomputermsg'] . "</p><br clear=\"all\" />";
 
@@ -576,6 +577,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
   <?php
 } else {
   echo "<div style=\"background-color:white\">\n";
+  echo '<div style="float:right; padding-right:5px"><a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" /></a></div>';
   emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
   echo "<p><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
 
