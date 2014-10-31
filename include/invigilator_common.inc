@@ -291,10 +291,10 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
       echo "<div id=\"p$cellID\">";
     }
     if ($student_object['medical'] != '') {
-      echo '<img src="../artwork/medical_16.gif" class="16icon" alt="Medical" onmouseover="showCallout(\'' . $cellID . '\', \'' . $student_object['medical'] . '\')" onmouseout="hideCallout()" />';
+      echo '<img src="../artwork/medical_16.gif" class="16icon" alt="Medical" onmouseover="showCallout(\'' . $cellID . '\', \'' . addslashes($student_object['medical']) . '\')" onmouseout="hideCallout()" />';
     }
     if ($student_object['breaks'] != '') {
-      echo '<img src="../artwork/moon_16.gif" class="16icon" alt="Breaks" onmouseover="showCallout(\'' . $cellID . '\', \'' . $student_object['breaks'] . '\')" onmouseout="hideCallout()" />';
+      echo '<img src="../artwork/moon_16.gif" class="16icon" alt="Breaks" onmouseover="showCallout(\'' . $cellID . '\', \'' . addslashes($student_object['breaks']) . '\')" onmouseout="hideCallout()" />';
     }
     if ($student_object['medical'] != '' or $student_object['breaks'] != '') {
       echo "</div>\n";
