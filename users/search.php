@@ -409,7 +409,12 @@ while ($user_data->fetch()) {
   }
 
   if ($tmp_title != null) {
-    echo '<td>' . $string[mb_strtolower($tmp_title)] . '</td>';
+    $lowertitle = mb_strtolower($tmp_title);
+    if (array_key_exists($lowertitle, $string)) {
+      echo '<td>' . $string[$lowertitle] . '</td>';
+    } else {
+      echo '<td></td>';
+    }
   } else {
     echo '<td></td>';
   }
