@@ -66,7 +66,7 @@ class EXTMATCHCorrector extends Corrector {
       }
 
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log{$paper_type}'.

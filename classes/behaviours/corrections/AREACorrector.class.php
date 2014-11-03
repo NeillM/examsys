@@ -120,7 +120,7 @@ class AREACorrector extends Corrector {
       if (count($errors) == 0) {
         $this->invalidate_paper_cache($paper_id);
       }
-   }
+    }
 
     return $errors;
   }
