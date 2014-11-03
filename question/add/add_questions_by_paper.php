@@ -58,6 +58,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   </style>
 
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script>
     function Qpreview(qID) {
@@ -95,10 +96,10 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">" . $string['question'] . "</th><th class=\"vert_div\">" . $string['type'] . "</th><th style=\"width:90px\" class=\"vert_div\">" . $string['modified'] . "</th><th class=\"vert_div\" style=\"width:90px\">" . $string['status'] . "</th></tr>\n";
 
   // Get the questions in order off the paper.
-  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id = question_exclude.q_id WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id = question_exclude.q_id WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('i', $question_paper);
   $stmt->execute();
-  $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts, $status);
+  $stmt->bind_result($q_id, $leadin, $q_type, $screen, $last_edited, $locked, $parts, $status);
   $old_screen = 0;
   $question_no = 0;
   while ($stmt->fetch()) {
