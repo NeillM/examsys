@@ -31,4 +31,5 @@ $string['create'] = 'Vytvořit';
 $string['nomodulesset'] = 'Není nastaven žádný Modul';
 $string['unspecifiedsession'] = 'Nespecifikované Sezení';
 $string['examcalendar'] = 'Kalendář Sumativního testování';
+$string['newpaper'] = 'Nový dokument';
 ?>

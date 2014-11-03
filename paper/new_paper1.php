@@ -26,6 +26,8 @@
 
 require '../include/staff_auth.inc';
 require '../classes/dateutils.class.php';
+
+$paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 ?>
 <!DOCTYPE html>
 <html>
@@ -49,6 +51,12 @@ require '../classes/dateutils.class.php';
         }
       });
       $('form').removeAttr('novalidate');
+      
+      <?php
+      if (isset($_GET['type'])) {
+        echo "  activate('" . $paper_types[$_GET['type']] . "')\n";
+      }
+      ?>
     });
 
     function over(id) {

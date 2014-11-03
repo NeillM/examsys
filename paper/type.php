@@ -87,6 +87,13 @@ if ($_GET['module'] != '0') {
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
+    function newPaper() {
+      notice = window.open("../paper/new_paper1.php?module=<?php echo $module ?>&type=<?php echo $type ?>","paper","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      if (window.focus) {
+        notice.focus();
+      }
+    }
+    
     function updatePaperCount() {
       var n = $(".file:visible").length;
       $("#paper_count").text(n.toLocaleString("<?php echo $language ?>"));
@@ -129,10 +136,14 @@ if ($_GET['module'] != '0') {
   <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<span id="paper_count"><?php echo $types_used[$type] ?></span>)</div>
 </div>
 
-  
 <?php
+if ($module != 0) {
+  // Don't want new papers created from the Unassigned folder.
+  echo "<br /><div class=\"f\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
+}
+
 if ($_GET['type'] == 2) {
-  echo "<br /><div class=\"f\"><div class=\"f_icon\"><a href=\"../admin/calendar.php#week" . date("W") . "\"><img src=\"../artwork/calendar_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../admin/calendar.php#week" . date("W") . "\">" . $string['examcalendar'] . "<br />" . date('Y') . "</a></div></div>\n";
+  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"../admin/calendar.php#week" . date("W") . "\"><img src=\"../artwork/calendar_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../admin/calendar.php#week" . date("W") . "\">" . $string['examcalendar'] . "<br />" . date('Y') . "</a></div></div>\n";
 }
 
 // UPDATED SQL query simplified removed the modules table as no data was coming from it. Also removed distinct as group by was doing it. The user data is returned but for some reason the icons alt tags (that contain the user data don't display

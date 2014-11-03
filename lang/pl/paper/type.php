@@ -31,4 +31,5 @@ $string['create'] = 'Utwórz';
 $string['nomodulesset'] = 'Brak modułów';
 $string['unspecifiedsession'] = 'Nieokreślona sesja';
 $string['examcalendar'] = 'Kalendarz egzaminów końcowych';
+$string['newpaper'] = 'Nowy arkusz';
 ?>

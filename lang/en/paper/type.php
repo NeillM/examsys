@@ -31,4 +31,5 @@ $string['create'] = 'Create';
 $string['nomodulesset'] = 'No modules set';
 $string['unspecifiedsession'] = 'Unspecified Session';
 $string['examcalendar'] = 'Summative Exam Calendar';
+$string['newpaper'] = 'New Paper';
 ?>
