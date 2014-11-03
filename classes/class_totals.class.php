@@ -519,14 +519,6 @@ class ClassTotals {
     $this->user_results[$user_number]['marking_complete'] = $marking_comp;
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
 
-		if ($this->demo) {
-      $this->user_results[$user_number]['surname']     = demo_replace($this->user_results[$user_number]['surname'], true, true, $this->user_results[$user_number]['surname']{0});
-      $this->user_results[$user_number]['initials']    = demo_replace($this->user_results[$user_number]['initials'], true, true, $this->user_results[$user_number]['initials']{0});
-      $this->user_results[$user_number]['first_names'] = demo_replace($this->user_results[$user_number]['first_names'], true, true, $this->user_results[$user_number]['first_names']{0});
-      $this->user_results[$user_number]['email']       = demo_replace($this->user_results[$user_number]['email']);
-      $this->user_results[$user_number]['student_id']  = demo_replace_number($this->user_results[$user_number]['student_id']);
-    }
-
     // Add metadata
     $userID = $this->user_results[$user_number]['userID'];
     if (!empty($this->metadata_array['types'])) {
@@ -1267,6 +1259,15 @@ class ClassTotals {
       } else {
         $room = $lab_name;
       }
+      
+      if ($this->demo) {
+        $surname     = demo_replace($surname, true, true, $surname{0});
+        $initials    = demo_replace($initials, true, true, $initials{0});
+        $first_names = demo_replace($first_names, true, true, $first_names{0});
+        $email       = demo_replace($email);
+        $student_id  = demo_replace_number($student_id);
+      }
+      
       $this->user_results[$metadataID] = array(
                                                 'metadataID'=>$metadataID, 
                                                 'userID'=>$userID, 
