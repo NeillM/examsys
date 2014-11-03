@@ -68,7 +68,7 @@ $paper = $propertyObj->get_paper_title();
   $candidate_no = 0;
   if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
+    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
     $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_userID);
@@ -141,7 +141,7 @@ $paper = $propertyObj->get_paper_title();
       } elseif ($_GET['action'] == 'finalise') {
         $candidates_marked = 0;
         // Check how many candidates are marked for this question.
-        $marked = $mysqli->prepare("SELECT mark FROM log2, log_metadata, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND roles LIKE '%Student%' AND paperID = ? AND q_id = ?");
+        $marked = $mysqli->prepare("SELECT mark FROM log2, log_metadata, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles = 'graduate') AND paperID = ? AND q_id = ?");
         $marked->bind_param('ii', $paperID, $q_id);
         $marked->execute();
         $marked->bind_result($mark);
