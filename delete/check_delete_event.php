@@ -16,7 +16,7 @@
 
 /**
 * 
-* Confirm that it is OK to proceed deleting a course.
+* Confirm that it is OK to proceed deleting a calendar event.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -45,12 +45,12 @@ $mysqli->close();
 
 <body>
 
-<p><strong><?php echo $string['msg']; ?></strong></p>
-<br />
+<p><?php echo $string['msg'] ?></p>
+
 <div class="button_bar">
 <form action="do_delete_event.php" method="post">
 <input type="hidden" name="eventID" value="<?php echo $eventID ?>" />
-<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 

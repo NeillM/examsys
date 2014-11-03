@@ -36,7 +36,7 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-
+  
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -72,7 +72,7 @@
   <div class="page_title"><?php echo $string['ebeltemplates'] ?></div>
 </div>
   
-<table class="header">
+<table class="header" cellpadding="2" cellspacing="0">
 <tr>
 <th class="col10"><?php echo $string['gridnames']; ?></th><th>&nbsp;</th></tr>
 <?php

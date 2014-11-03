@@ -276,7 +276,6 @@ if (isset($_GET['submit'])) {
 
       $(document).click(function() {
         $('#menudiv').hide();
-        userOff();
       });
     });
   </script>

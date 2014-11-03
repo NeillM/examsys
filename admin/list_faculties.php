@@ -36,7 +36,7 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-
+  
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
@@ -79,7 +79,7 @@
   <div class="page_title"><?php echo $string['faculties'] ?></div>
 </div>
   
-<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <thead>
 <tr>
 <th class="col10"><?php echo $string['name'] ?></th><th><?php echo $string['schoolno'] ?></th><th style="width:50%" class="vert_div"></th>

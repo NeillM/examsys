@@ -27,7 +27,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('courseID', 'GET', true, false, false);
+$courseID = check_var('courseID', 'GET', true, false, true);
 
 $mysqli->close();
 ?>
@@ -44,13 +44,13 @@ $mysqli->close();
 </head>
 
 <body>
-
-<p><strong><?php echo $string['msg']; ?></strong></p>
+<br />
+<div><strong><?php echo $string['msg'] ?></strong></div>
 <br />
 <div class="button_bar">
 <form action="do_delete_course.php" method="post">
-<input type="hidden" name="courseID" value="<?php echo $_GET['courseID']; ?>" />
-<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input type="hidden" name="courseID" value="<?php echo $courseID ?>" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 

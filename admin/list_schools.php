@@ -95,7 +95,7 @@ $result->close();
   <div class="page_title"><?php echo $string['schools'] ?> (<?php echo $result->num_rows ?>)</div>
 </div>
   
-<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <thead>
 <tr>
   <th class="col10" style="width:50%"><?php echo $string['name'] ?></th>

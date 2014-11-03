@@ -28,8 +28,8 @@
   }
   
   function deleteAnnouncement() {
-    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + $('#lineID').val() + "","announcements","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + $('#lineID').val() + "","announcements","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-225,screen.height/2-90);
     if (window.focus) {
       notice.focus();
     }

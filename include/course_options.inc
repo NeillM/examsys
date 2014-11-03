@@ -29,8 +29,8 @@
   }
 
   function deleteCourse() {
-    notice=window.open("../delete/check_delete_course.php?courseID=" + $('#lineID').val() + "","notice","width=420,height=230,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210, screen.height/2-85);
+    notice=window.open("../delete/check_delete_course.php?courseID=" + $('#lineID').val() + "","notice","width=450,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-210, screen.height/2-105);
     if (window.focus) {
       notice.focus();
     }

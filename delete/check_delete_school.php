@@ -43,7 +43,7 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['confirmdelete']; ?></title>
+  <title><?php echo $string['confirmdelete'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -51,12 +51,12 @@ $mysqli->close();
 
 <body>
 
-<p><?php echo $string['msg']; ?></p>
-<br />
+<p><?php echo $string['msg'] ?></p>
+
 <div class="button_bar">
 <form action="do_delete_school.php" method="post">
-<input type="hidden" name="schoolID" value="<?php echo $_GET['schoolID']; ?>" />
-<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input type="hidden" name="schoolID" value="<?php echo $schoolID ?>" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
 

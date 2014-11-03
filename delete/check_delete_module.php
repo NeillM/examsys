@@ -54,7 +54,7 @@ $mysqli->close();
 <body>
 
 <p><?php echo sprintf($string['msg'], $moduleid) ?></p>
-<br />
+
 <div class="button_bar">
 <form action="do_delete_module.php" method="post">
 <input type="hidden" name="idMod" value="<?php echo $_GET['idMod']; ?>" />

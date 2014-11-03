@@ -42,8 +42,8 @@ $next_session = date_utils::get_next_academic_year();
   }
 
   function deleteModule() {
-    notice=window.open("../delete/check_delete_module.php?idMod=" + $('#lineID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_module.php?idMod=" + $('#lineID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-225,screen.height/2-90);
     if (window.focus) {
       notice.focus();
     }
