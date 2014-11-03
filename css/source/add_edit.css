@@ -75,7 +75,7 @@ dd {
   visibility: hidden;
 }
 
-.disabled {
+.disabled[type="text"] {
 	border: 1px solid #CCCCCC !important;
   background-color: #F9F9F9;
 	color: #595959;

@@ -58,7 +58,7 @@ $paperID = $propertyObj->get_property_id();
  * Setup some feature related flags
  *
  */
- 
+
 // Are we in a staff test and preview mode?
 $is_preview_mode = ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and isset($_REQUEST['mode']) and $_REQUEST['mode'] == 'preview');
 
@@ -123,7 +123,7 @@ if ($userObject->has_role('Student')) {
 
   // Check for any metadata security restrictions.
   check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
-  
+
   // Check if the student has clicked 'Finish'.
   check_finished($propertyObj, $userObject, $string, $mysqli);
 }
@@ -347,7 +347,7 @@ if ($css != '') {
     echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
   }
-  
+
   if (Paper_utils::need_interactiveQ($screen_data, $current_screen)) {
     if ($configObject->get('cfg_interactive_qs') == 'html5') {
       echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
@@ -417,12 +417,16 @@ if ($css != '') {
       echo "        }\n";
       echo "      }\n";
       echo "    }\n";
-      echo "  }\n";
+      echo "  }\n\n";
+      // Expand the first Reference material item.
+      echo "  $(document).ready(function() {\n";
+      echo "    changeRef(0);\n";
+      echo "  });";
     } else {
       echo "var changeRef = function(refID) {};\n";
     }
   ?>
-  
+
 
   var resizeReference = function() {
 		winH = $(window).height();
@@ -456,14 +460,14 @@ if ($css != '') {
     } else {
       showDialog("<?php echo $string['javacheck1'] ?>");
     }
-    
+
     $("#dialog_ok").click(function(event) {
       $('body').css('cursor','wait');
       submitted = true;
       $("#overlay").hide();
       conductSave(event);
     });
-    
+
   }
 <?php
   } else {                              // Bi-directional navigation
@@ -484,7 +488,7 @@ if ($css != '') {
       conductSave(event);
     }
   }
-  
+
   $(document).ready(function () {
     $('#jumpscreen').change(function () {
       $('#button_pressed').val('jump_screen');
@@ -502,7 +506,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var autoSaveRef = '';
 	var last_save_point = (new Date).getTime();
   var last_saved_user_answers = null;    <?php // Holds the data of the last successful auto save ?>
-  
+
   $(document).ready(function () {
 		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
 		usingAjax = true;
@@ -522,10 +526,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
 		 <?php // Setup autosave ?>
 		startAutoSave();
-                
+
 		<?php // Stop forms being submitted with ENTER  ?>
 		$('input[type=text]').keydown(function (event) {
-				event = event || window.event;            
+				event = event || window.event;
 				if (event.keyCode == 13) {
 					event.preventDefault();
 					return false;
@@ -541,13 +545,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     if (typeof(tinyMCE) != "undefined") {
       tinyMCE.triggerSave();
     }
-    
+
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     if (!!event) {
       $('#button_pressed').attr('value',event.target.id);
     }
-    
+
     $("#dialog_cancel").click(function() {
       $('#savemsg').html("");
       $('body').css('cursor','default');
@@ -556,7 +560,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
     confirmSubmit();
   }
-  
+
   function conductSave(event) {
     if (typeof(tinyMCE) != "undefined") {
       tinyMCE.triggerSave();
@@ -565,7 +569,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     stopAutoSave();
-    
+
     $('#saveError').fadeOut('slow');
     $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
     <?php // Log which method the users submitted the page via ?>
@@ -574,14 +578,14 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       } else {
         $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
       }
-    
+
     //if (last_saved_user_answers !== formData<?php if (!isset($user_answers[$current_screen])) echo ' || true' ?>) {
       ajaxSave(1);
     //} else {
     //  ajaxSave(0);
     //}
   }
-  
+
   function showDialog(msg) {
     $("#overlay").show();
     $("#dialog_cancel").focus();
@@ -589,13 +593,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     $("#submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
     $("#submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
   }
-  
+
   var userSubmit = function (event) {
     <?php // Save any data from wysiwyg  ?>
     if (typeof(tinyMCE) != "undefined") {
       tinyMCE.triggerSave();
     }
-    
+
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     stopAutoSave();
@@ -787,7 +791,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   });
 <?php
 }
-?>	
+?>
 </script>
 <script type="text/javascript" src="../js/start.js"></script>
 </head>
@@ -1069,13 +1073,13 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   $midexam_clarification = $configObject->get('midexam_clarification');
-  
+
   if ($propertyObj->get_paper_type() === '3') {
-    $calculator = 0;    
+    $calculator = 0;
   } else {
     $calculator = $propertyObj->get_calculator();
   }
-  
+
   if (in_array('students', $midexam_clarification)) {
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     echo $exam_announcementObj->display_student_announcements();
@@ -1089,9 +1093,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
       if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr style=\"display:none\" id=\"unansweredkey\"><td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> " . $string['unansweredquestion'] . "</td></tr>\n";
       if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $propertyObj->get_paper_prologue() . '</td></tr>';
       if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-      
+
 			display_question($configObject, $question, $propertyObj->get_paper_type(), $calculator, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
-      
+
 			$previous_q_type = $question['q_type'];
       $q_displayed++;
     }
@@ -1250,7 +1254,7 @@ function get_screens($is_question_preview_mode, $paperID, $db) {
   }
   $stmt->free_result();
   $stmt->close();
-  
+
   return $screen_data;
 }
 
@@ -1269,7 +1273,7 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
   $selected_q_id = '';
   $current_screen = $random_q_data['screen'];
   $q_no = $random_q_data['no_on_screen'];
-	
+
   if (isset($user_answers[$current_screen])) {
     // Match user's answers with random question ID.
     $question_on_screen = array_keys($user_answers[$current_screen]);
@@ -1349,7 +1353,7 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
     $question['options'] = array();
   }
-	
+
   return $question;
 }
 
@@ -1485,7 +1489,7 @@ function load_reference_materials($paperID, $db) {
 		$ref_no++;
 	}
 	$stmt->close();
-	
+
 	return $reference_materials;
 }
 
@@ -1502,7 +1506,7 @@ function get_max_reference_width($reference_materials) {
 			$max_ref_width = $reference_material['width'];
 		}
 	}
-	
+
 	return $max_ref_width;
 }
 

@@ -74,7 +74,7 @@ class TRUE_FALSECorrector extends Corrector {
         $this->_question->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','),  implode(',', $new_correct_val), $this->_lang_strings['postexamchange']);
       }
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log{$paper_type}'.
