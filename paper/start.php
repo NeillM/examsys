@@ -74,7 +74,7 @@ $is_question_preview_mode = (isset($_GET['q_id']));
 if (!$is_first_launch) require '../include/marking_functions.inc';
 
 $screen_data = get_screens($is_question_preview_mode, $paperID, $mysqli);
-$no_screens = count($screen_data);
+$no_screens = $propertyObj->get_max_screen();
 
 //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 $original_paper_type = $propertyObj->get_paper_type();
@@ -1213,7 +1213,7 @@ if ($unanswered) {
  * @param bool $is_question_preview_mode  - Are we previewing a single question
  * @param array $paperID                  - ID of the paper to look up
  * @param object $db                      - Mysqli object
- * @param array - Returns an array of screens then question ID and question type.
+ * @return array - Returns an array of screens then question ID and question type.
  *
  */
 function get_screens($is_question_preview_mode, $paperID, $db) {
