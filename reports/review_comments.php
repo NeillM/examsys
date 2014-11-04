@@ -599,16 +599,12 @@ $result->close();
     .pencil {cursor:pointer; width:16px; height:16px}
     .status {width:16px; height:16px}
     .screenbrk {
-      color:#15428B;
-      font-weight:bold;
-      font-size:90%;
-      height:70px;
-      width:100%;
-      border-top: 1px solid #B5C4DF;
-      background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+      padding-top: 3px;
+      color: #808080;
+      font-size: 90%;
+      height: 70px;
+      width: 100%;
+      border-top: 2px solid #808080;
     }
     .reviewbar {
 		  color:white;
@@ -728,9 +724,7 @@ $result->close();
       $options_buffer = array();
       $correct_buffer = array();
       if ($old_screen != $screen) {
-        echo '<tr><td colspan="2">';
-        echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
-        echo '</td></tr>';
+        echo '<tr><td colspan="2"><br /><div class="screenbrk">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['screen'] . '&nbsp;' . $screen . '</div></td></tr>';
       }
     }
     if ($q_type == 'labelling') {
