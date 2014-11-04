@@ -96,7 +96,13 @@ if ($_GET['module'] != '0') {
     
     function updatePaperCount() {
       var n = $(".file:visible").length;
-      $("#paper_count").text(n.toLocaleString("<?php echo $language ?>"));
+      var papercount = n.toLocaleString("<?php echo $language ?>").toFixed();
+      
+      var decimals = papercount.indexOf('.');
+        if (decimals !== -1) {
+          papercount = papercount.slice(0, decimals);
+        }
+      $("#paper_count").text(papercount);
     }
     
     $(function () {
