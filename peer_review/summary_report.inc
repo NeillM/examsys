@@ -168,7 +168,11 @@ function parse_group_data($questions, &$user_data) {
         $user_data[$studentID]['have_review'] = $review_no;
       }
     }
-    $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
+    if(array_key_exists('userID', $student)) {
+      $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
+    } else {
+      $user_data[$studentID]['have_review'] = 0;
+    }
   }
 }
 
@@ -204,6 +208,10 @@ function parse_single_data($questions, &$user_data) {
         $user_data[0]['total_percent'][$questionID] = ($student_marks / $available_marks) * 100;
       }
     }
-    $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
+    if(array_key_exists('userID', $student)) {
+      $user_data[$studentID]['have_review'] = isset($reviewers[$student['userID']]);
+    } else {
+      $user_data[$studentID]['have_review'] = 0;
+    }
   }
 }

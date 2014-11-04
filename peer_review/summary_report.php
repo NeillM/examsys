@@ -247,7 +247,11 @@ require_once 'summary_report.inc';
           $q_no++;
         }
         if ($_GET['percent'] == '1') {
-          $master_array[$user_number]['overall'] = round($student['total_percent'][$questionID], 0);
+          if(array_key_exists('total_percent', $student)) {
+            $master_array[$user_number]['overall'] = round($student['total_percent'][$questionID], 0);
+          } else {
+            $master_array[$user_number]['overall'] = '';
+          }
         } else {
           $master_array[$user_number]['overall'] = padDecimals($mean_total / $question_no, 2);
         }
