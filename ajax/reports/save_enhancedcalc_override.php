@@ -16,7 +16,7 @@
 
 /**
 *
-* Save marks for individual textbox questions
+* Save marks for individual Calculation questions.
 *
 * @author Rob Ingram
 * @version 1.0

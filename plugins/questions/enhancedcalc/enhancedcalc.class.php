@@ -852,8 +852,8 @@ class EnhancedCalc extends Question implements questionInterface {
 				}
 			}
 		}
-		
-		if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR')) {
+    
+		if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
 			$inputVal = $this->substitute_and_eval_vars($this->useranswer['vars'], $inputVal);
 			if (!is_numeric($inputVal)) {
 				 $inputVal = 'ERROR';
@@ -910,7 +910,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	
 	/**
 	 * replace $A,$B,$C .... in a string and evluate using php eval
-	 * N.B ONLY Used to caculate compound question varables only in in Rserve mode
+	 * N.B ONLY Used to calculate compound question varables only in in Rserve mode
 	 * 
 	 * @param  array $vars array('$VARNAME'=>VALUE)
 	 * @param string $formula sting in the format "($A+$B)/$C"
@@ -920,7 +920,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		$varname = array_keys($vars);
 		$varvalue = array_values($vars);
 		$vars_subed = str_replace($varname, $varvalue, $formula);
-		
+    
 		return @eval( "return (string)(" . $vars_subed . ");");
 	}
 	
@@ -957,7 +957,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				}
 				$max = $this->variable_substitution($value['max'], $this->alluseranswers);
 				$inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
-				$dec = $this->variable_substitution($value['dec'], $this->alluseranswers);
+				$dec = (int)$value['dec'];
 
 				$this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
 			}
@@ -978,7 +978,6 @@ class EnhancedCalc extends Question implements questionInterface {
 		} else {
 			$leadin = $this->leadin;
 			foreach ($this->useranswer['vars'] as $key => $value) {
-				//$leadin = str_replace($key, '<span style="background-color:#FCE699">&nbsp;<strong>' . $key . '</strong>&nbsp;</span>&nbsp;' . $value, $leadin);
 				$leadin = str_replace($key, '<span class="var">' . $key . '</span><span class="value">' . $value . '</span>', $leadin);
 			}
 		}
