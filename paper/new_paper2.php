@@ -161,6 +161,7 @@ require '../lang/' . $language. '/include/timezones.inc';
 <?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" style="width:650px; background-color:#FFC0C0" value="<?php echo $_POST['paper_name']; ?>" style="width:650px" />
 <input type="hidden" name="module" value="<?php echo $_POST['module']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="<?php echo $_POST['paper_type']; ?>" />
+<input type="hidden" name="default_academic_year" value="<?php echo $_POST['default_academic_year']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
 <br />
 <br />
