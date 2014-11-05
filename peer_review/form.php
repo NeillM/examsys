@@ -271,17 +271,18 @@ if (isset($_POST['submit'] )) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['peerreview']; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    table {font-size:100%}
-    td p {margin:0px; padding:0px}
-    p {margin:0px; padding:0px}
+    body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    td p {margin:0; padding:0}
+    p {margin:0; padding:0}
     .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
     .group {padding-left:5px; color:white}
     .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
     .col {text-align:center; color:<?php echo $labelcolor; ?>}
     .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
     .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
+    .thankyou {margin-left: 10px; font-size: 350%; font-weight: bold; line-height: 140%}
   </style>
 
   <script>
@@ -297,12 +298,8 @@ if (isset($_POST['submit'] )) {
   echo '<div style="float:right; padding-right:10px; position: relative; top: 10px"><a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" /></a></div>';
   echo '<div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['Reviewer'] . ':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['Group'] . ':</strong> ' . $group . '</strong></div></td></tr></table>';
   
-  if ($language == 'en') {
-    echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['Thank You'] . '</p>';
-  } else {
-    // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-    echo '<p style="margin-left:10px; font-size:450%">' . $string['Thank You'] . '</p>';
-  }
+  echo '<p class="thankyou">' . $string['Thank You'] . '</p>';
+
   echo '<p style="margin-left:10px">' . $string['The ratings saved'] . '</p>';
   echo '<br/><p style="margin-left:10px"><a href="../students/index.php">' . $string['homepagelink'] . '</a></p>';
 } else {
@@ -325,10 +322,11 @@ if (isset($_POST['submit'] )) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['peerreview']; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {margin:0px; font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+  body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
   table {font-size:100%}
-  td p {margin:0px}
+  td p {margin:0}
   .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
   .group {padding-left:5px; color:white}
   .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
