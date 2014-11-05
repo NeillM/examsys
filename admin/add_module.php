@@ -131,10 +131,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     .field {text-align:right; padding-right:10px}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
+  <script type="text/javascript" src="../js/system_tooltips.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
 <?php
@@ -162,15 +163,15 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 <?php
   }
 ?>
+      $('#stdset').click(function() {
+        if ($('#stdset').prop('checked')) {
+          $('#ebelgrid').show();
+        } else {
+          $('#ebelgrid').hide();
+        }
+      });
+    
     });
-
-    function showHideGrid() {
-      if ($('#stdset').attr('checked')) {
-        $('#ebelgrid').show();
-      } else {
-        $('#ebelgrid').hide();
-      }
-    }
   </script>
   </head>
 
@@ -222,7 +223,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   echo '</select></td></tr>';
 ?>
-    <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text"  name="academic_year_start" value="<?php echo $configObject->get('cfg_academic_year_start') ?>" style="width:50px" required /></td></tr>
+    <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text"  name="academic_year_start" value="<?php echo $configObject->get('cfg_academic_year_start') ?>" style="width:50px" required /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_format'] ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
 <?php
   foreach ($vle_apis as $vle_name => $vle_api_data) {
@@ -238,7 +239,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     </select>
     <div id="map_level_holder"></div>
     </td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer" checked="checked" /><?php echo $string['peerreview'] ?>, <input type="checkbox" name="external" checked /><?php echo $string['externalexaminers'] ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /><?php echo $string['standardssetting'] ?>, <input type="checkbox" name="mapping" /><?php echo $string['mapping'] ?></td></tr>
+    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer" checked="checked" /><?php echo $string['peerreview'] ?>, <input type="checkbox" name="external" checked /><?php echo $string['externalexaminers'] ?>, <input type="checkbox" id="stdset" name="stdset" /><?php echo $string['standardssetting'] ?>, <input type="checkbox" name="mapping" /><?php echo $string['mapping'] ?></td></tr>
     <tr><td class="field"><?php echo $string['active'] ?></td><td><input type="checkbox" name="active" checked /></td></tr>
     <tr><td class="field"><?php echo $string['allowselfenrol'] ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
     <tr><td class="field"><?php echo $string['negativemarking'] ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>

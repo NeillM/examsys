@@ -50,4 +50,5 @@ $string['maplevel'] = 'Mapping level';
 $string['session'] = 'Session';
 $string['module'] = 'Module';
 $string['level'] = 'level';
+$string['tooltip_format'] = 'Format is MM/DD';
 ?>

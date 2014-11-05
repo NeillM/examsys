@@ -50,4 +50,5 @@ $string['session'] = 'Relace';
 $string['module'] = 'Modul';
 $string['maplevel'] = 'Úroveň mapování';
 $string['level'] = 'Úroveň';
+$string['tooltip_format'] = 'Format is MM/DD';
 ?>
