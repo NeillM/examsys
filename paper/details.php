@@ -877,11 +877,12 @@ function check_latex_random($q_ids, $mysqli) {
       echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
     }
   }
-  echo '</div><div onclick="qOff()" class="page_title"';
-  if ($properties->get_retired() != '') {
-    echo ' class="retired"';
+  echo '</div>';
+  $title_class = 'page_title';
+  if ($properties->get_retired() !== '') {
+    $title_class .= ' retired';
   }
-  echo '>' . $properties->get_paper_title() . '</div>';
+  echo '<div onclick="qOff()" class="' . $title_class . '">' . $properties->get_paper_title() . '</div>';
   echo "</div>\n";
   
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
