@@ -96,7 +96,7 @@ if ($_GET['module'] != '0') {
     
     function updatePaperCount() {
       var n = $(".file:visible").length;
-      var papercount = n.toLocaleString("<?php echo $language ?>").toFixed();
+      var papercount = n.toLocaleString("<?php echo $language ?>");
       
       var decimals = papercount.indexOf('.');
         if (decimals !== -1) {
