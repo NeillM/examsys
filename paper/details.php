@@ -879,7 +879,7 @@ function check_latex_random($q_ids, $mysqli) {
   }
   echo '</div>';
   $title_class = 'page_title';
-  if ($properties->get_retired() !== '') {
+  if ($properties->get_retired() != '') {
     $title_class .= ' retired';
   }
   echo '<div onclick="qOff()" class="' . $title_class . '">' . $properties->get_paper_title() . '</div>';
