@@ -293,8 +293,10 @@ if (isset($_POST['submit'] )) {
 <body>
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['Reviewer'] . ':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['Group'] . ':</strong> ' . $group . '</strong></div></td></tr></table>';
-
+  echo '<tr><td>';
+  echo '<div style="float:right; padding-right:10px; position: relative; top: 10px"><a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" /></a></div>';
+  echo '<div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['Reviewer'] . ':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['Group'] . ':</strong> ' . $group . '</strong></div></td></tr></table>';
+  
   if ($language == 'en') {
     echo '<p style="margin-left:10px; font-size:450%; font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['Thank You'] . '</p>';
   } else {
@@ -302,6 +304,7 @@ if (isset($_POST['submit'] )) {
     echo '<p style="margin-left:10px; font-size:450%">' . $string['Thank You'] . '</p>';
   }
   echo '<p style="margin-left:10px">' . $string['The ratings saved'] . '</p>';
+  echo '<br/><p style="margin-left:10px"><a href="../students/index.php">' . $string['homepagelink'] . '</a></p>';
 } else {
   // Get existing values.
   $saved_results = array();
