@@ -204,10 +204,11 @@ class ClassTotals {
 	/**
 	 * Initiates the building of the main Class Totals report.
 	 * @param bool $recache - True = will force paper caches to be updated.
+     * @param bool $review - If true we are reviewing so should not cache.
 	 */
-  public function compile_report($recache) {
+  public function compile_report($recache, $review = false) {
     $results_cache = new ResultsCache($this->db);
-    if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
+    if (!$review and ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent))) {
       $this->recache = true;
     } else {
       $this->recache = false;
