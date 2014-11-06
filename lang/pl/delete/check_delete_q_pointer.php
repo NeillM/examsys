@@ -17,8 +17,8 @@
 require '../lang/' . $language . '/delete/delete.inc';
 
 $string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
-$string['msg'] = 'Removing this question from the paper will only alter the paper.<br /><br />It does <strong>not</strong> delete the actual question in the question bank.';
+$string['msg'] = 'Usunięcie tego pytania z arkusza tylko zmieni arkusz.<br /><br />To <strong>nie</strong> usunie tego pytania z banku pytań.';
 $string['msg2'] = 'Próbujesz usunąć pytanie z zablokowanego arkusza - to nie jest dopuszczalne.';
-$string['delete'] = 'Remove Question';
-$string['deletes'] = 'Remove Questions';
+$string['delete'] = 'Usuń pytanie';
+$string['deletes'] = 'Usuń pytania';
 ?>
