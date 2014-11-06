@@ -62,7 +62,7 @@ $repcourse    = '%';
 $repmodule    = '';
 
 $report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
-$report->compile_report(false);
+$report->compile_report(false, true);
 
 $user_results = $report->get_user_results();
 $paper_buffer = $report->get_paper_buffer();
