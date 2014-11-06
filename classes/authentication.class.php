@@ -150,7 +150,6 @@ class Authentication {
       $name = $auth[2];
 
       //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
-      //$this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, true));
       $this->returndata[$number] = new authtypereturn();
       $this->authinfo[$number] = array($name => $authtype);
 
@@ -227,14 +226,15 @@ class Authentication {
 
       return false;
     }
+    
     $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+    
     if ($insert == true) {
       array_unshift($this->callbackregister[$section], $callback);
       array_unshift($this->callbackregisterdata[$section], array($number => $name));
     } else {
       $this->callbackregister[$section][] = $callback;
       $this->callbackregisterdata[$section][] = array($number => $name);
-
     }
 
     return true;
@@ -273,7 +273,7 @@ class Authentication {
   }
 
   /*
-   * Disply the standard Rogo login form
+   * Display the standard Rogo login form
 	 * @param bool $display	- True = display form after failing to log in, False = no form displayed but still runs callback routines.
    */
 	 function display_error_form($display = true) {
