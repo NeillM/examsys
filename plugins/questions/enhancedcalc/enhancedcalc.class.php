@@ -130,7 +130,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			if (!isset($this->useranswer['vars'])) {
 				$this->error = 'No Variables stored';
 				$this->qmark = 0;
-
+        
 				return Q_MARKING_UNCALC_ANSWER;
 			}
 
@@ -194,7 +194,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				 *
 				 */
 				$this->useranswer['cans'] = $enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
-			} catch (Exception $e) {
+              } catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
 					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
@@ -209,7 +209,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 				return $returnstatus;
 			}
-
+      
 			try {
 				if (isset($this->settings['tolerance_full'])) {
 					$this->settings['tolerance_full'] = $this->set_blank_to_zero($this->settings['tolerance_full']);
@@ -1179,17 +1179,20 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * @return string Answer including units if applicable
 	 */
 	public function get_real_answer() {
+    global $string;
 		$this->decode_settings();
 		$units = $this->settings['answers'][0]['units'];
 
 		$this->add_to_useranswer('uans', "1 $units");   // Set a bogus answer before marking.
 		$this->calculate_user_mark();
 
-		if ($this->settings['show_units'] == true) {
+		if ($this->settings['show_units'] == true && isset($this->useranswer['cans'])) {
 			return $this->useranswer['cans'];
-		} else {
+		} else if (isset($this->useranswer['cans'])) {
 			return $this->useranswer['cans'] . ' ' . $units;
-		}
+    } else {
+      return $string['Error'];
+    }
 	}
 
 	/**
