@@ -833,7 +833,7 @@ function qh_mouseDragMove(e){
     if (this.hotspot_over != '') this.label_elem_drag = this.hotspot_over;
 	} else { //change of cursor
     //this.drag_box_id = -1;
-		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
+		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height) && this.canvas.style.cursor != 'wait'){
 			var over_object = false;     
       
       //test for buttons

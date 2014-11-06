@@ -54,4 +54,5 @@ $string['tooltip_unidirectional'] = 'Po przedłożeniu ekranu nie będzie możli
 $string['tooltip_adjustmark'] = 'Twoje procenty będą po egzaminie automatycznie poprawione z uwzględnieniem możliwości odpowiedzi "na chybił-trafił". Zalecane jest dlatego odpowiedzenie na wszystkie pytania w arkuszu.';
 $string['tooltip_testclip'] = 'To jest testowy klip dźwiękowy pozwalający sprawdzić ustawień głośności w słuchawkach użytkownika.';
 $string['photoid'] = 'identyfikator fotografii';
+$string['notset'] = '&lt;brak&gt;';
 ?>
