@@ -21,7 +21,7 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-var_dump("Hi");
+var_dump("Hi"); die();
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
