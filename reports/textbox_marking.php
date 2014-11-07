@@ -372,7 +372,8 @@ SQL;
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
         foreach($reminders as $reminder) {
-          if (trim($reminder['text']) !== '') {
+          $remindertext = trim($reminder['text'];
+          if (empty($remindertext)) {
             continue;
           }
           $checked = (in_array($reminder['option_id'], $reminders_selected)) ? ' checked="checked"' : '';
