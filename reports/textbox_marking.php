@@ -21,7 +21,7 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
+var_dump("Hi");
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
@@ -30,7 +30,7 @@ require_once '../classes/stateutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/textboxmarkingutils.class.php';
-var_dump("Hi");
+
 $state = $stateutil->getState();
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
