@@ -274,7 +274,7 @@ require_once $cfg_web_root . 'classes/textboxmarkingutils.class.php';
     // display Assessment stats options
 
     echo "<div class=\"reports_header\">" . $string['reviews'] . "</div>\n";
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&scrOfY=0&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
 
 		if ($properties->q_type_exist('sct')) {
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_sct_answers.php?type=external&',event)\">" . $string['sctresponses'] . "</a></div>\n";

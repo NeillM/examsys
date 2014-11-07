@@ -1,6 +1,6 @@
 
 function scrollXY() {
-  $('#scrOfY').val($('body,html').scrollTop());
+  $('#scrOfY').val($(window).scrollTop());
 }
 
 $(document).ready(function(){
