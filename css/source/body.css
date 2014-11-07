@@ -129,7 +129,8 @@ hr {
 }
 
 .errfield {
-  border: 1px solid #C00000  !important;
+  border: 1px solid #C00000 !important;
+  background-color: #FFDDDD !important;
 }
 
 .grey {

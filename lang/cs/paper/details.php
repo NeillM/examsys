@@ -60,5 +60,5 @@ $string['following_questions'] = 'Následující úlohy jsou';
 $string['mismatchbrackets'] = 'Mismatching brackets found.';
 $string['mismatchblanktags'] = 'Neodpovídající prázdá či rolovací políčka.';
 $string['nomatchsession'] = 'Sezení v Názvu Testu (%s) neodpovídá sezení testu (%s).';
-
+$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>

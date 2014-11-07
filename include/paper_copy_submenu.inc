@@ -41,8 +41,18 @@ require_once '../classes/dateutils.class.php';
   }
   
   function nextTable() {
-    $('#table1div').hide();
-    $('#table2div').show();
+    var paper_name = $('#new_paper').val();
+    $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data, status) {
+      if (data == 'unique') {
+        $('#table1div').hide();
+        $('#table2div').show();        
+        $('#new_paper').subClass('errfield');
+      } else {
+        $('#new_paper').addClass('errfield');
+        alert("<?php echo $string['namewarning'] ?>");
+      }
+    });
+ 
   }
   
   function checkCopyForm() {
@@ -88,7 +98,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?>&nbsp;</td>
-<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" required />
+<td colspan="4"><input type="text" id="new_paper" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" required />
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 <input type="hidden" name="module" value="<?php echo $module ?>" />
 <input type="hidden" name="folder" value="<?php echo $folder ?>" />
@@ -151,7 +161,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
   echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 } else {
-  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" onclick="checkName()" /></td>';
 }
 ?>
 </tr>
