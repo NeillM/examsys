@@ -43,6 +43,8 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 $paper_type = $properties->get_paper_type();
 $paper_title = $properties->get_paper_title();
 
+var_dump($properties);
+
 // Check the question exists on the paper.
 if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
