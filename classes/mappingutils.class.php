@@ -45,7 +45,7 @@ class MappingUtils {
         $map_level = $rels[0]->get_map_level();
       } else {
         // No existing relationships. Use VLE API as defined in the module
-        $stmt = $db->prepare("SELECT vle_api, map_level FROM modules WHERE id=? LIMIT 1");
+        $stmt = $db->prepare("SELECT vle_api, map_level FROM modules WHERE id = ? LIMIT 1");
         $stmt->bind_param('s', $idMod);
         $stmt->execute();
         $stmt->bind_result($vle_api, $map_level);

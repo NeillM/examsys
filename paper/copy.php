@@ -91,10 +91,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   $qids = array();
   while ($result->fetch()) {
     $qids[] = $question;
-    $addPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
-    $addPaper->bind_param('iiii', $new_paper_id, $question, $screen, $display_pos);
-    $addPaper->execute();
-    $addPaper->close();
+    
+    Paper_utils::add_question($new_paper_id, $question, $screen, $display_pos, $mysqli);
   }
   $result->close();
 
@@ -234,10 +232,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $addQuestion->close();
 
         // Add in a record to the papers table.
-        $addNewPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
-        $addNewPaper->bind_param('iiii', $new_paper_id, $question_id, $screen, $display_pos);
-        $addNewPaper->execute();
-        $addNewPaper->close();
+        Paper_utils::add_question($new_paper_id, $question_id, $screen, $display_pos, $mysqli);
 
         // Create a track changes record to say where question was copied from.
         $logger = new Logger($mysqli);
@@ -353,17 +348,25 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   } else {
     // We are copying between sessions we need to check for changed sessions/objectives
     $mappings_copy_objID = array();
-    $old_course = getObjectives($moduleIDs, $calendar_year, $_POST['paperID'], '', $mysqli);
-    $new_course = getObjectives($moduleIDs, $new_calendar_year, $_POST['paperID'], '', $mysqli);
+    $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
+    $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
     if (count($old_course) > 0 and count($new_course) > 0) {
-      foreach ($old_course as $module=>&$sessions) {
-        foreach ($sessions as $identifier=>&$session) {
+      foreach ($old_course as $module => &$sessions) {
+        foreach ($sessions as $identifier => &$session) {
           if (!empty($session['objectives'])) {
             foreach ($session['objectives'] as &$obj) {
-              $old_objID = $obj['id'];
-              $old_objGUID = $obj['guid'];
-                if (isset($new_course[$module][$identifier]['objectives'])){
-                  foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+              if (isset( $obj['id'])) {
+                $old_objID = $obj['id'];
+              } else {
+                $old_objID = NULL;
+              }
+              if (isset($obj['guid'])) {
+                $old_objGUID = $obj['guid'];
+              } else {
+                $old_objGUID = NULL;
+              }
+              if (isset($new_course[$module][$identifier]['objectives'])){
+                foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
                   if (($new_obj['id'] == $old_objID or $new_obj['guid'] == $old_objGUID) and $new_obj['content'] == $obj['content']) {
                     // Build a list of objectives that are still in both sessions
                     $mappings_copy_objID[$old_objID] = $new_obj['id'];
