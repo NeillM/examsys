@@ -269,7 +269,6 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 
     if ($vle_api != '') {
       // Get objectives from the Curriculum Map via REST request
-      //if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
       if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session])) {
 				$vle = CMFactory::GetCMAPI($vle_api);
         $vle->setMappingLevel($map_level);
@@ -321,7 +320,6 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
           $stmt = $db->prepare($sql);
           $stmt->bind_param('ss',$identifier,$sess['calendar_year']);
           $stmt->execute();
-          //$stmt->store_result();
           $stmt->bind_result($obj_id, $objective, $sequence);
           $i = 0;
           while ($stmt->fetch()) {
