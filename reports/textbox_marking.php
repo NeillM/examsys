@@ -372,7 +372,7 @@ SQL;
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
         foreach($reminders as $reminder) {
-          $remindertext = trim($reminder['text'];
+          $remindertext = trim($reminder['text']);
           if (empty($remindertext)) {
             continue;
           }
