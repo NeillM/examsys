@@ -21,7 +21,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-var_dump("Hi"); die();
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
@@ -373,7 +372,7 @@ SQL;
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
         foreach($reminders as $reminder) {
-          if (empty(trim($reminder['text']))) {
+          if (trim($reminder['text']) !== '') {
             continue;
           }
           $checked = (in_array($reminder['option_id'], $reminders_selected)) ? ' checked="checked"' : '';
