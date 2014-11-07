@@ -30,7 +30,7 @@ require_once '../classes/stateutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/textboxmarkingutils.class.php';
-
+var_dump("Hi");
 $state = $stateutil->getState();
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
@@ -43,7 +43,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 $paper_type = $properties->get_paper_type();
 $paper_title = $properties->get_paper_title();
 
-var_dump($properties);
+
 
 // Check the question exists on the paper.
 if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
