@@ -218,7 +218,7 @@ if (count($moduleIDs) > 0) {
   }
 
   function questionInfo() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","notice","innerWidth=700,innerHeight=660,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/info.php?q_id=" + getLastID($('#questionID').val()) + "","notice","width=700,height=660,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-350,screen.height/2-330);
     if (window.focus) {
       notice.focus();

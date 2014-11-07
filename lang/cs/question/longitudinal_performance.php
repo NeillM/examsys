@@ -17,7 +17,7 @@
 $string['longitudinalperformance'] = 'Dlouhodobá výkonnost';
 $string['papername'] = 'Název dokumentu';
 $string['calendaryear'] = 'Kalendářní rok';
-$string['questionno'] = 'Úloha číslo';
+$string['screen'] = 'Obrazovka';
 $string['datetaken'] = 'Dne';
 $string['cohort'] = 'Skupina';
 $string['p'] = 'P'; 

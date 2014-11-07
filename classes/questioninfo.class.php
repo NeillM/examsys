@@ -148,7 +148,7 @@ Class question_info {
     $performance = array();
   
     //get performace data from all papers this question has appered on
-    $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\" {$configObject->get('cfg_short_date')}\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id=performance_details.perform_id AND q_id=?");
+    $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\" {$configObject->get('cfg_short_date')}\"), part_no, p, d FROM performance_main, performance_details WHERE performance_main.id = performance_details.perform_id AND q_id = ?");
     $result->bind_param('i', $q_id);
     $result->execute();
     $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);
@@ -157,7 +157,7 @@ Class question_info {
     }
     $result->close();
 
-    $result = $db->prepare("SELECT property_id, paper_title, paper_type, screen, calendar_year FROM (papers, properties) WHERE properties.property_id=papers.paper AND question=? AND deleted IS NULL");
+    $result = $db->prepare("SELECT property_id, paper_title, paper_type, screen, calendar_year FROM (papers, properties) WHERE properties.property_id = papers.paper AND question = ? AND deleted IS NULL");
     $result->bind_param('i', $q_id);
     $result->execute();
     $result->bind_result($property_id, $paper_title, $paper_type, $screen, $calendar_year);

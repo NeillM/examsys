@@ -27,7 +27,7 @@ require '../include/errors.inc';
 require '../include/sort.inc';
 require '../classes/questioninfo.class.php';
   
-check_var('q_id', 'GET', true, false, false);
+$q_id = check_var('q_id', 'GET', true, false, true);
   
 ?>
 <!DOCTYPE html>
@@ -42,9 +42,9 @@ check_var('q_id', 'GET', true, false, false);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/add_edit.css" />
   <style type="text/css">
-    body {background-color:#F1F5FB; font-size:80%}
+    body {background-color:white; font-size:80%}
     th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
-    td {vertical-align:top; padding-top:3px; padding-bottom:3px}
+    td {vertical-align:top; padding-top:3px; padding-bottom:3px; border-bottom:1px solid #C0C0C0}
     .num {text-align:right}
   </style>
   
@@ -68,17 +68,15 @@ check_var('q_id', 'GET', true, false, false);
 <th></th>
 <th><?php echo $string['papername']; ?></th>
 <th><?php echo $string['calendaryear']; ?></th>
-<th><?php echo $string['questionno']; ?></th>
+<th><?php echo $string['screen']; ?></th>
 <th><?php echo $string['datetaken']; ?></th>
 <th><?php echo $string['cohort']; ?></th>
 <th></th>
 <th><?php echo $string['p']; ?></th>
 <th><?php echo $string['d']; ?></th>
-<th style="width:40%"></th>
 </tr>
 <?php
-  $q_id = (int)$_GET['q_id'];
-  $lockformat=$configObject->get('cfg_long_date_time');
+  $lockformat = $configObject->get('cfg_long_date_time');
   $question_data = $mysqli->prepare("SELECT email, title, surname, initials, DATE_FORMAT(creation_date,\"%d/%m/%Y %H:%i\") AS creation_date, DATE_FORMAT(last_edited,\"%d/%m/%Y %H:%i\") AS last_edited, DATE_FORMAT(locked,\"$lockformat\") AS locked, q_type, std, status FROM (users, questions) WHERE users.id=questions.ownerID AND q_id=? LIMIT 1");
   $question_data->bind_param('i', $q_id);
   $question_data->execute();
@@ -146,13 +144,12 @@ check_var('q_id', 'GET', true, false, false);
  
   $row = 0;
   foreach ($display_data as $display_line) {
-    $alt = ($row++ % 2 == 1) ? ' class="alt"' : '';
     if ($display_line['q_id'] == $q_id) {
-      echo "<tr style=\"background-color:#FFC0C0\">";
+      echo "<tr style=\"font-weight:bold\">";
     } else {
-      echo "<tr{$alt}>";
+      echo "<tr>";
     }
-    echo "<td><img src=\"../artwork/" . $display_line['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
+    echo "<td><img src=\"../artwork/" . $display_line['icon'] . "\" width=\"16\" height=\"16\" alt=\"icon\" /></td>";
     echo "<td><a href=\"\" onclick=\"loadPaper(" . $display_line['paperID'] . ")\">" . $display_line['title'] . "</a></td><td>" . $display_line['calendar_year'] . "</td>";
     echo "<td class=\"num\">" . $display_line['screen'] . "</td>";
     if (isset($display_line['taken'])) {
@@ -168,7 +165,7 @@ check_var('q_id', 'GET', true, false, false);
       echo "<td></td>";
       echo "<td></td>";
     }
-    echo "<td></td></tr>\n";
+    echo "</tr>\n";
   }
 
 ?>

@@ -17,7 +17,7 @@
 $string['longitudinalperformance'] = 'Osiągnięcia długoterminowe';  
 $string['papername'] = 'Nazwa arkusza';
 $string['calendaryear'] = 'Rok kalendarzowy';
-$string['questionno'] = 'Numer pytania';
+$string['screen'] = 'Ekran';
 $string['datetaken'] = 'Data egazminu';
 $string['cohort'] = 'Grupa';
 $string['p'] = 'P'; //cognate

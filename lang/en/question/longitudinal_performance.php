@@ -17,7 +17,7 @@
 $string['longitudinalperformance'] = 'Longitudinal Performance';
 $string['papername'] = 'Paper Name';
 $string['calendaryear'] = 'Calendar Year';
-$string['questionno'] = 'Question No';
+$string['screen'] = 'Screen';
 $string['datetaken'] = 'Date Taken';
 $string['cohort'] = 'Cohort';
 $string['p'] = 'P';
