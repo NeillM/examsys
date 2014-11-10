@@ -68,10 +68,43 @@ function doSuccess(data) {
   } else if (action.indexOf('prev') > -1) {
     $('#ans_' + id).closest('.student-answer-block').hide();
     $('#ans_' + (--id)).closest('.student-answer-block').show();
+  } else if (action.indexOf('finish') > -1) {
+    params = getURLParams();
+    phase = params.phase;
+    startdate = params.startdate;
+    enddate = params.enddate;
+    paperid = params.paperID;
+    repcourse = params.repcourse;
+    baseparams = 'action=mark&repmodule=&repcourse=%&sortby=name&module=&folder=&percent=100&absent=0&studentsonly=1&ordering=asc' +
+            '&meta1=First%20names=%&meta2=Forename=%&meta3=Group=%&meta4=Seminar%20Group=%&meta5=surname=%&meta6=Tutor%20Group=%&phase=';
+    baseurl = '../reports/textbox_select_q.php?';
+    extraParams = phase + '&repcourse=' + repcourse + '&startdate=' + startdate + '&enddate=' + enddate + '&paperID=' + paperid;
+    textbox_select_q_url = baseurl + baseparams + extraParams;
+    window.location.replace(textbox_select_q_url);
   }
 }
 
 function doError() {
   $('#save_fail_message').show(); 
   alert(langStrings['saveerror']);
+}
+
+/**
+ * Get an array of URL parameters
+ * @returns {Array} URL parameter name (array key) and value.
+ */
+function getURLParams() {
+
+    var pageURL = window.location.search.substring(1);
+    var params = pageURL.split('&');
+    var paramsArray = [];
+
+    for (var i = 0; i < params.length; i++) {
+        var param = params[i].split('=');
+
+        paramName = param[0];
+        paramValue = param[1];
+        paramsArray[paramName] = paramValue;
+    }
+    return paramsArray;
 }
