@@ -118,11 +118,11 @@ class IE_Local_Save extends IE_Main {
       $user_keywords = array();
       if (is_array($module_id)) {
         foreach (array_keys($module_id) as $mod_id) {
-          $user_keywordsl = $this->GetExistingKeywords($mod_id, $userID);
+          $user_keywordsl = $this->GetExistingKeywords($mod_id);
           $user_keywords = array_merge($user_keywords, $user_keywordsl);
         }
       } else {
-        $user_keywords = $this->GetExistingKeywords($module_id, $userID);
+        $user_keywords = $this->GetExistingKeywords($module_id);
       }
     }
 
@@ -740,7 +740,7 @@ class IE_Local_Save extends IE_Main {
     $this->o_rows[] = $o_row;
   }
 
-  function GetExistingKeywords($module_id, $userID) {
+  function GetExistingKeywords($module_id) {
     // We'll keep the keywords cached in an array and build it up as we add new keywords
     $user_keywords = array();
 
@@ -753,27 +753,9 @@ class IE_Local_Save extends IE_Main {
 
     if (count($t_kwds) > 0) {
       for ($i = 0; $i < count($t_kwds); $i++) {
-        $user_keywords[$t_kwds[$i]['keyword']][] = $t_kwds[$i]['id'];
+        $user_keywords['mod' . $module_id][$t_kwds[$i]['keyword']][] = $t_kwds[$i]['id'];
       }
     }
-/*
-    $this->db->SetTable('keywords_user');
-    $this->db->AddField('id');
-    $this->db->AddField('keyword');
-    $this->db->AddWhere('userID', $userID, 'i');
-    $this->db->AddWhere('keyword_type', 'personal', 's');
-    $u_kwds = $this->db->GetMultiRow();
-
-    if (count($u_kwds) > 0) {
-      for ($i = 0; $i < count($u_kwds); $i++) {
-        if (!isset($user_keywords[$u_kwds[$i]['keyword']])) {
-          if(!in_array($u_kwds[$i]['id'], $user_keywords[$u_kwds[$i]['keyword']]))
-          {
-            $user_keywords[$u_kwds[$i]['keyword']][] = $u_kwds[$i]['id'];
-          }
-        }
-      }
-    }*/
 
     return $user_keywords;
   }
@@ -796,7 +778,7 @@ class IE_Local_Save extends IE_Main {
       $kw_id = -1;
 
       // Exclude existing keywords from the list that we want to save
-      if (!in_array($q_keywords[$i], array_keys($user_keywords))) {
+      if (!in_array($q_keywords[$i], array_keys($user_keywords['mod' . $moduleID]))) {
         // Add keyword to this user's list
         $ku_row = array('userID' => $moduleID, 'keyword' => $q_keywords[$i], 'keyword_type' => 'team');
         $this->db->InsertRow('keywords_user', 'id', $ku_row);
@@ -804,7 +786,7 @@ class IE_Local_Save extends IE_Main {
 
         $new_keywords[$q_keywords[$i]] = $kw_id;
       } else {
-        $kw_id = $user_keywords[$q_keywords[$i]][0];
+        $kw_id = $user_keywords['mod' . $moduleID][$q_keywords[$i]][0];
       }
 
       // Add keyword to the keyword question link table
