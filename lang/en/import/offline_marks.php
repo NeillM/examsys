@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require $cfg_web_root . "lang/$language/include/paper_options.inc";
+require '../lang/' . $language . '/paper/type.php';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['uploadmarks'] = 'Upload Marks';

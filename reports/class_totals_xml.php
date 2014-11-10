@@ -251,8 +251,8 @@ for ($i=0; $i<$user_no; $i++) {
   if ($user_results[$i]['visible'] == 1) {
     echo '<Row>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname'],  ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names'],  ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname'], ENT_COMPAT, 'UTF-8') . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names'], ENT_COMPAT, 'UTF-8') . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['username'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_grade'] . '</Data></Cell>';
