@@ -312,12 +312,12 @@ if (!$userObject->has_role('Student')) {
 <?php
   				}
 ?>
-		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility; ?>>
+		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility ?>>
 <?php
   				$last_session = $module['year'];
 
           if (isset($performance_summary_years[$module['year']])) {
-            echo "<div style=\"margin-top:4px; margin-left:10px\"><a href=\"performance_summary.php#" . $module['year'] . "\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" alt=\"arrow\" /></a>&nbsp;<a href=\"performance_summary.php#" . $module['year'] . "\">" . $string['performsummary'] . "</a></div>";
+            echo "<div style=\"margin-top:4px; margin-left:10px\"><input type=\"button\" onclick=\"window.location='performance_summary.php#" . $module['year'] . "'\" value=\"" . $string['performsummary'] . "\" /></div>";
           }
         }
 ?>
@@ -388,7 +388,7 @@ if (!$userObject->has_role('Student')) {
 <?php
   } else {
 ?>
-	 <p style="margin-left:20px"><?php echo $string['nopapers']; ?></p>
+	 <p style="margin-left:20px"><?php echo $string['nopapers'] ?></p>
 <?php
   }
 }
