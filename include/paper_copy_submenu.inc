@@ -49,7 +49,7 @@ require_once '../classes/dateutils.class.php';
         $('#new_paper').subClass('errfield');
       } else {
         $('#new_paper').addClass('errfield');
-        alert("<?php echo $string['namewarning'] ?>");
+        alert("<?php echo $string['namewarning']; ?>");
       }
     });
  
@@ -75,11 +75,11 @@ require_once '../classes/dateutils.class.php';
   }
 	
   $(function () {
-		$(".cancel").click(function(event) {
+    $(".cancel").click(function(event) {
       $('#copy_submenu').hide();
-			event.stopPropagation();
-		});
-	});
+      event.stopPropagation();
+    });
+  });
 </script>
 
 <div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:340px" id="copy_submenu" onclick="showCopyMenu(true, event);">

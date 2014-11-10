@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require $cfg_web_root . "lang/$language/include/paper_options.inc"; 
+require '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['marksloaded'] = 'Známky nahrány.';
 $string['msg1'] = 'CSV soubor by měl obsahovat sloupce v následujícím pořadí: studentské_id, Otázka 1, Otázka 2...';

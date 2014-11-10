@@ -61,5 +61,4 @@ $string['deletescreenbreak'] = 'Usuń podzielnik ekranu';
 $string['next'] = 'Dalej >>';  
 $string['na'] = 'Brak'; 
 $string['nomatchsession'] = 'Sesja w tytule arkusza (%s) nie odpowiada sesji arkusza (%s).';
-$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>

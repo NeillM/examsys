@@ -137,4 +137,5 @@ $string['insertscreenbreak'] = 'Insert screen break';
 $string['deletescreenbreak'] = 'Delete screen break';
 $string['addscreenbreak'] = 'Add screen break';
 $string['papers'] = 'Papers';
+$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>
