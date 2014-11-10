@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require $cfg_web_root . "lang/$language/include/paper_options.inc";
+require '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['uploadmarks'] = 'Załaduj punkty';
 $string['marksloaded'] = 'Punkty/ów załadowano.';

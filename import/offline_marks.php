@@ -252,7 +252,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
     .num {text-align:right}
     .failed {background-color:#FFC0C0; color:#C00000; font-weight:bold}
   </style></head>
-
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <body onclick="hideMenus()">
 <?php
   include '../include/paper_options.inc';
