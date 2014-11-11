@@ -163,10 +163,12 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
           $db->commit();
         }
 
-        $result = $db->prepare("INSERT INTO log_metadata VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
+        $result = $db->prepare("INSERT INTO log_metadata (userID, paperID, started, ipaddress, student_grade, year, attempt) "
+          . "VALUES (?, ?, ?, ?, ?, ?, ?)");
         $ip = '127.0.0.1';
         $attempt = 1;
-        $result->bind_param('iisssii', $students[$sid]['id'], $paperID, $paper_date, $ip, $students[$sid]['grade'], $students[$sid]['year'], $attempt);
+        $result->bind_param('iisssii', $students[$sid]['id'], $paperID, $paper_date, $ip, $students[$sid]['grade'],
+          $students[$sid]['year'], $attempt);
         $res = $result->execute();
         if ($res == false) {
           $save_ok = false;
@@ -178,7 +180,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
         if ($save_ok) {
           echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td>" . $students[$sid]['title'] . "</td><td>" . $students[$sid]['surname'] . "</td><td>" . $students[$sid]['first_names'] . "</td><td>$sid</td>";
           for ($q=1; $q<=$question_no; $q++) {
-            $result = $db->prepare("INSERT INTO log5 VALUES(NULL, ?, ?, ?, ?, ?)");
+            $result = $db->prepare("INSERT INTO log5 (q_id, mark, adjmark, totalpos, metadataID) VALUES (?, ?, ?, ?, ?)");
             $mark = trim($fields[$q]);
             if ($mark > $paper[$q]['marks_correct']) {
               $save_mark = NULL;
