@@ -34,6 +34,10 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
 
+if (is_null($properties->get_external_review_deadline())) {
+  $notice->display_notice_and_exit($mysqli, $string['error'], $string['noexaminers'], $string['noexaminers'], '/artwork/square_exclamation_48.png', '#C00000', true, true);
+}
+
 $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
 $external_review_deadline->setTimezone($local_time);
 
@@ -65,7 +69,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
     $(function () {
       
       $('#back').click(function (){
-        window.location.href = 'pick_external.php?paperID=<?php echo $_GET['paperID'] ?>&mode=<?php echo $_GET['mode'] ?>&module=<?php echo $_GET['module'] ?>';
+        window.location.href = 'pick_external.php?paperID=<?php echo $paperID ?>&mode=<?php echo $mode ?>&module=<?php echo $_GET['module'] ?>';
       });
       
     });

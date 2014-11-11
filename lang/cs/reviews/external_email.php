@@ -25,4 +25,5 @@ $string['subject_msg2'] = '%s review comments';
 $string['emailsent'] = 'Email byl zaslán.';
 $string['back'] = '&lt zpět';
 $string['email'] = 'E-mail';
+$string['noexaminers'] = 'No deadline has been set for the external examiners.';
 ?>

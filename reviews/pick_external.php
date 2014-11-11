@@ -43,7 +43,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style>
     body {font-size: 90%}
-    input {width: 180px; margin: 1px;}
+    input {width: 180px; margin: 1px}
   </style>
   
   <script type="text/javascript" src="../js/staff_help.js"></script>

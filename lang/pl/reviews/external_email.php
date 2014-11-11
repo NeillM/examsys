@@ -25,4 +25,5 @@ $string['subject_msg2'] = '%s przejrzyj komentarze';
 $string['emailsent'] = 'Email wysłano.';
 $string['back'] = '&lt wstecz';
 $string['email'] = 'Email'; //cognate
+$string['noexaminers'] = 'No deadline has been set for the external examiners.';
 ?>

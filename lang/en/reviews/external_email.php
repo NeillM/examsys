@@ -25,4 +25,5 @@ $string['subject_msg2'] = '%s review comments';
 $string['emailsent'] = 'Email has been sent.';
 $string['back'] = '&lt back';
 $string['email'] = 'Email';
+$string['noexaminers'] = 'No deadline has been set for the external examiners.';
 ?>
