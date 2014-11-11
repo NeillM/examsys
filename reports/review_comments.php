@@ -731,7 +731,7 @@ $result->close();
       $tmp_first_split = explode(';', $correct);
       $tmp_second_split = explode('$', $tmp_first_split[11]);
       for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') {
+        if (array_key_exists($label_no, $tmp_second_split) and substr($tmp_second_split[$label_no],0,1) != '|') {
           $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
           if ($tmp_second_split[$label_no-2] > 150) {
             $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
