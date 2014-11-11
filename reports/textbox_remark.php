@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
   $result->execute();
   $result->close();
 
-  for ($student=1; $student<$_POST['student_no']; $student++) {
+  for ($student=1; $student<=$_POST['student_no']; $student++) {
     if (isset($_POST["student$student"]) and $_POST["student$student"] != '') {
       $result = $mysqli->prepare("INSERT INTO textbox_remark VALUES (NULL, ?, ?)");
       $result->bind_param('ii', $paperID, $_POST["student$student"]);

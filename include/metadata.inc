@@ -229,7 +229,7 @@ HEADING;
 
       // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
       $checked = $on = '';
-      if (in_array($team_name, $current_teams) or $team_name == $module) {
+      if (in_array($team_name, $current_teams) or in_array($team_idMod, $module)) {
         $checked = ' checked="checked"';
         $on = ' on';
       }
