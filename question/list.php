@@ -117,6 +117,10 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       });
 
     });
+
+    $( document ).ready(function() {
+      check_checkboxes();
+    });
   </script>
 </head>
 
