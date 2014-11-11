@@ -54,7 +54,10 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-	
+  <link rel="stylesheet" type="text/css" href="../css/screen.css" />
+  <style type="text/css">
+      #content * {margin:auto; padding:auto};
+  </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
