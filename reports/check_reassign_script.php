@@ -101,7 +101,7 @@ if (isset($_POST['submit'])) {
     }
 
     function do_resize() {
-      var tmp_height = $(document).height() - 185;
+      var tmp_height = $(document).height() - 200;
       $("#userlist").height(tmp_height);
     }
     
