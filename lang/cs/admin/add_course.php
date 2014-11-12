@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['courses'] = 'Kurzy';
 $string['createnewcourse'] = 'Nový kurz';
 $string['code'] = 'Identifikátor';
 $string['name'] = 'Název';

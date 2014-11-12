@@ -28,16 +28,12 @@ $unique_course = true;
 if (isset($_POST['submit'])) {
   // Check for unique username
   $tmp_course = trim($_POST['course']);
-
-  $result = $mysqli->prepare("SELECT name FROM courses WHERE name=?");
-  $result->bind_param('s', $tmp_course);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_course);
-  $result->fetch();
-  if ($result->num_rows > 0) $unique_course = false;
-  $result->free_result();
-  $result->close();
+  
+  if (CourseUtils::course_exists($tmp_course, $mysqli)) {
+    $unique_course = false;
+  } else {
+    $unique_course = true;
+  }
 }
 
 if (isset($_POST['submit']) and $unique_course == true) {
@@ -95,7 +91,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
   <div id="content">
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png"class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="list_courses.php"><?php echo $string['courses'] ?></a></div>
     <div class="page_title"><?php echo $string['createnewcourse']; ?></div>
   </div>
   <br />
@@ -115,7 +111,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['school'] ?></td><td><select name="school" required>
     <option value=""></option>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY name, school");
       $result->execute();
       $result->bind_result($schoolid, $school, $faculty);
 

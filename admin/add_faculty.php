@@ -24,27 +24,18 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require '../classes/facultyutils.class.php';
   
 $duplicate = false;
 if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] == '1')) {
   $add_faculty = trim($_POST['add_faculty']);
   if ($add_faculty != '') {
     // Check for existing name
-
-    $result = $mysqli->prepare("SELECT id FROM faculty WHERE name=? AND deleted IS NULL");
-    $result->bind_param('s', $add_faculty);
-    $result->execute(); 
-    $result->store_result();
-    if ($result->num_rows() > 0) {
+    if (FacultyUtils::facultyname_exists($add_faculty, $mysqli)) {
       $duplicate = true;
-    }
-    $result->close();
-
-    if (!$duplicate) {
-      $result = $mysqli->prepare("INSERT INTO faculty VALUES (NULL, ?, NULL)");
-      $result->bind_param('s', $add_faculty);
-      $result->execute();  
-      $result->close();
+    } else {
+      $duplicate = false;
+      FacultyUtils::add_faculty($add_faculty, $mysqli);
     }
   }
   if (!$duplicate) {
@@ -97,7 +88,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 </head>
 
 <body>
-<h1><?php echo $string['addfaculty']; ?></h1>
+<h1><?php echo $string['addfaculty'] ?></h1>
 <form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <div><?php
 if ($duplicate) {
@@ -108,7 +99,7 @@ if ($duplicate) {
 }
 ?>
 </div>
-<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
+<div align="right"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 
 </body>

@@ -79,7 +79,7 @@ Class CourseUtils {
       return false;
     }
     
-    $result = $db->prepare("DELETE FROM courses WHERE name = ? limit 1");
+    $result = $db->prepare("DELETE FROM courses WHERE name = ? AND deleted IS NULL LIMIT 1");
     $result->bind_param('s', $name);
     $result->execute();
     $result->close();
