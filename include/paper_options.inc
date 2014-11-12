@@ -304,7 +304,11 @@ echo "<div id=\"menu1\">\n";
   }
   echo "<div class=\"menuitem\"><a href=\"#\" onclick=\"return paperProperties(); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" alt=\"" . $string['editproperties'] . "\" />" . $string['editproperties'] . "</a></div>\n";
   if ($properties->get_paper_type() == '2') {
-    echo "<div class=\"menuitem cascade\" id=\"emailexternals\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','emailexternals',myOptions1,myURLs1,event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email.png\" alt=\"" . $string['emailexternals'] . "\" />" . $string['emailexternals'] . "</a></div>\n";
+    if (is_null($properties->get_external_review_deadline())) {
+      echo "<div class=\"grey menuitem\" id=\"emailexternalsgrey\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email_grey.png\" alt=\"" . $string['emailexternals'] . "\" />" . $string['emailexternals'] . "</a></div>\n";
+    } else {
+      echo "<div class=\"menuitem cascade\" id=\"emailexternals\"><a href=\"#\" onclick=\"hideAssStatsMenu(event); hideCopyMenu(event); showMenu('popup1','papertasks','emailexternals',myOptions1,myURLs1,event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email.png\" alt=\"" . $string['emailexternals'] . "\" />" . $string['emailexternals'] . "</a></div>\n";
+    }
   }
   if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5' or $properties->get_paper_type() == '6') {
     if ($properties->get_item_no() == 0) {
