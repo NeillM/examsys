@@ -28,32 +28,20 @@ require_once '../classes/logger.class.php';
 
 $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
 
-$result = $mysqli->prepare("SELECT name FROM faculty WHERE id = ?");
-$result->bind_param('i', $facultyID);
-$result->execute();
-$result->store_result();
-$result->bind_result($name);
-$result->fetch();
-if ($result->num_rows == 0) {
-  $result->close();
+// Check the Faculty ID actually exists for editing.
+if (!FacultyUtils::facultyid_exists($facultyID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-$result->close();
 
 $duplicate = false;
 if (isset($_POST['submit'])) {
   // Check for existing name
-
-  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name = ?");
-  $result->bind_param('s', $_POST['new_faculty']);
-  $result->execute(); 
-  $result->store_result();
-  if ($result->num_rows() > 0) {
+  
+  if (FacultyUtils::facultyname_exists($_POST['new_faculty'], $mysqli)) {
     $duplicate = true;
   }
-  $result->close();
-
+          
   if (!$duplicate) {
     $result = $mysqli->prepare("UPDATE faculty SET name = ? WHERE id = ?");
     $result->bind_param('si', $_POST['new_faculty'], $facultyID);
