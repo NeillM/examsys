@@ -289,7 +289,7 @@ ob_start();
     if ($("#maindata").find("tr").size() > 1) {
       $("#maindata").tablesorter({ 
         // sort on the first column and third column, order asc 
-        dateFormat: 'uk',
+        dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
         sortList: [[2,0],[3,0]] 
       });
     }
