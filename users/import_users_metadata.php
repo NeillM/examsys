@@ -66,6 +66,10 @@ if (!$module_details) {
       $(document).click(function() {
         hideMenus();
       });
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
   </script>
   
@@ -222,7 +226,7 @@ if ($file_problem) {
 ?></td></tr>
 </table>
 <br />
-<p style="padding-bottom:10px"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" id="cancel" /></p>
 </form>
 </div>
 </td>

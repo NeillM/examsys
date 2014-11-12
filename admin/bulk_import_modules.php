@@ -49,7 +49,7 @@ function returnTrueFalse($value) {
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    p {margin:0px; padding:0px}
+    p {margin:0; padding:0}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
     li {list-style-type: none}
@@ -60,7 +60,13 @@ function returnTrueFalse($value) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script>
-    $(function () { $('#import_form').validate(); });
+    $(function () {
+      $('#import_form').validate();
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });
   </script>
   </head>
 
@@ -84,7 +90,7 @@ function returnTrueFalse($value) {
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:600px">
         <tr>
-        <td valign="middle" align="left" style="background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<span style="font-size:140%; font-weight:bold" class="dialog_header"><?php echo $string['bulkmoduleimport']; ?></span></td>
+        <td valign="middle" align="left" style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /><span style="font-size:140%; font-weight:bold" class="dialog_header"><?php echo $string['bulkmoduleimport']; ?></span></td>
         </tr>
         <tr>
         <td align="left" class="dialog_body">
@@ -218,9 +224,9 @@ function returnTrueFalse($value) {
     <?php
   } else {
 ?>
-<table border="0" cellpadding="4" cellspacing="0" style="width:650px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
+<table border="0" cellpadding="4" cellspacing="0" style="width:900px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
 <tr>
-<td class="dialog_header" style="width:56px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['bulkmoduleimport'] ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:844px"><?php echo $string['bulkmoduleimport'] ?></span></td>
 </tr>
 <tr>
 <td align="left" style="padding:10px" class="dialog_body" colspan="2">
@@ -235,7 +241,7 @@ function returnTrueFalse($value) {
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
-<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" id="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" /></p>
 </form>
 </div>
 </td>

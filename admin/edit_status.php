@@ -129,10 +129,17 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
           return true;
         }
       });
+      
       $('form').removeAttr('novalidate');
 
       $('#span_colour').click(function (e) { e.stopPropagation(); showPicker('colour', e); });
+      
       $('html').click(hidePicker);
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
+      
     });
 
   </script>
@@ -182,7 +189,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
         <tr>
           <td colspan="2" class="align-center">
             <input type="hidden" name="id" value="<?php echo $s_id ?>" />
-            <input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" class="cancel" />
+            <input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" />
           </td>
         </tr>
       </table>

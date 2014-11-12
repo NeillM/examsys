@@ -40,7 +40,14 @@ ob_start();
   
 	<title><?php echo $string['importusers'] . " " . $configObject->get('cfg_install_type') ?></title>
 	
-	<script type="text/javascript" src="/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });  
+  </script>
   
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
@@ -96,9 +103,9 @@ ob_start();
 <br />
 <br />
 
-<table style="width:755px" class="dialog_border">
+<table style="width:780px" class="dialog_border">
 <tr>
-<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importusers']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:724px"><?php echo $string['importusers']; ?></span></td>
 </tr>
 <tr>
 <td align="left" class="dialog_body" colspan="2">
@@ -122,7 +129,7 @@ if ($file_problem) {
 ?>
 
 <div align="center"><input type="checkbox" name="welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></div>
-<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" id="cancel" /></p>
 </form>
 </div>
 </td>

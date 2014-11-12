@@ -94,6 +94,10 @@ SCRIPT;
       });
       $('form').removeAttr('novalidate');
    
+      $('#cancel').click(function() {
+        history.back();
+      });
+      
       $('.icon').click(function() {
         current = $('#icon_type').val();
         $('#' + current).css('border-color', 'white');
@@ -162,12 +166,12 @@ if (substr($startdate, 0, 4) < date('Y')) {
 <td class="field"><?php echo $string['Student Message'] ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $student_msg ?></textarea></td>
 </tr>
 <tr>
-<td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="save" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td>
+<td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="save" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>
 </tr>
 </table>
 
 <input type="hidden" id="icon_type" name="icon_type" value="icon<?php echo $news_icon ?>" />
-<input type="hidden" name="announcementid" value="<?php echo $_GET['announcementid'] ?>" />
+<input type="hidden" name="announcementid" value="<?php echo $announcementid ?>" />
 </form>
 </div>
   

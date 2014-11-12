@@ -100,9 +100,11 @@ if (isset($_POST['submit'])) {
         newvalue = $(this).attr('id');
         $('#' + newvalue).css('border-color', '#FFBD69');
         $('#color').val(newvalue)
-        
       });
       
+      $('#cancel').click(function() {
+        window.close();
+      });
     });
   </script>
   </head>
@@ -162,7 +164,7 @@ if (isset($_POST['submit'])) {
       </td>
     </tr>
     <tr>
-      <td colspan="2" style="padding-top:20px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="window.close()" /></td>
+      <td colspan="2" style="padding-top:20px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>
     </tr>
   </table>
     

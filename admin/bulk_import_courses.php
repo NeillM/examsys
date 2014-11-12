@@ -52,7 +52,13 @@ ini_set("auto_detect_line_endings", true);
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script>
-    $(function () { $('#import_form').validate(); });
+    $(function () {
+      $('#import_form').validate();
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });
   </script>
   </head>
 
@@ -181,7 +187,7 @@ ini_set("auto_detect_line_endings", true);
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
-<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" id="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" /></p>
 <br />
 </form>
 </div>

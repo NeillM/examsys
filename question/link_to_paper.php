@@ -82,6 +82,10 @@ if (!isset($_POST['submit'])) {
 			$(window).resize(function() {
 				resizeList();
 			});
+      
+      $('#cancel').click(function() {
+        window.close();
+      });
 
 <?php
   if ($map_outcomes) {
@@ -126,7 +130,7 @@ if (!isset($_POST['submit'])) {
   echo "</table>\n</div>";
   
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
-  echo "<div style=\"text-align:center; padding-top:4px;\"><img src=\"../artwork/working.gif\" id=\"working\" width=\"16\" height=\"16\" alt=\"Working\" style=\"display: none\" /> <input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" />&nbsp;&nbsp;<input type=\"button\" class=\"cancel\" name=\"cancel\" onclick=\"window.close();\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
+  echo "<div style=\"text-align:center; padding-top:4px;\"><img src=\"../artwork/working.gif\" id=\"working\" width=\"16\" height=\"16\" alt=\"Working\" style=\"display: none\" /> <input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['addtopaper'] . "\" /><input type=\"button\" class=\"cancel\" name=\"cancel\" id=\"cancel\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
   $property_id = $_POST['property_id'];
   $properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);

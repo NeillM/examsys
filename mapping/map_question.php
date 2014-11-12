@@ -102,7 +102,13 @@ function display_q($configObject, $target_id, $db) {
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-
+  <script>
+    $(function () {
+      $('#cancel').click(function() {
+        window.close();
+      });
+    });  
+  </script>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" href="../css/start.css" type="text/css" />
   <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
@@ -132,7 +138,7 @@ if (isset($_POST['submit'])) {
   echo "<br />";
   echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
-  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" onclick=\"window.close()\"/></div>";
+  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" id=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" /></div>";
 
   echo "</form>\n</div>\n";
 }

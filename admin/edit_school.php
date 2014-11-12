@@ -31,7 +31,7 @@ $schoolid = check_var('schoolid', 'GET', true, false, true);
 $school = $string['prompt'];
 $faculty = '';
 
-$result = $mysqli->prepare("SELECT school, facultyID FROM schools WHERE id = ?");
+$result = $mysqli->prepare("SELECT school, facultyID FROM schools WHERE id = ? AND deleted IS NULL");
 $result->bind_param('i', $schoolid);
 $result->execute();
 $result->store_result();
@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
 
 $faculties = 0;
 $faculty_list = array();
-$result = $mysqli->prepare("SELECT id, name FROM faculty ORDER BY name");
+$result = $mysqli->prepare("SELECT id, name FROM faculty WHERE deleted IS NULL ORDER BY name");
 $result->execute();
 $result->bind_result($facultyID, $name);
 while ($result->fetch()) {
@@ -100,7 +100,7 @@ $result->close();
       padding: 16px;
       background-color: #FFD9D9;
       color: #800000;
-      border: 2px solid #800000
+      border: 2px solid #800000;
     }
   </style>
 
@@ -117,6 +117,9 @@ $result->close();
         }
       });
       $('form').removeAttr('novalidate');
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
   </script>
   </head>
@@ -137,7 +140,7 @@ $result->close();
 
   <br />
   <div align="center">
-  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid; ?>">
+  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid ?>">
 <?php
   if (isset($error) and $error = 'duplicate') {
 ?>
@@ -146,7 +149,7 @@ $result->close();
   }
 ?>
     <table cellpadding="0" cellspacing="2" border="0">
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" id="school" name="school" value="<?php echo $school; ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" id="school" name="school" value="<?php echo $school ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty'] ?></td><td><select name="faculty">
     <?php
       foreach ($faculty_list as $faculty) {
@@ -156,7 +159,7 @@ $result->close();
     ?>
     </select></td></tr>
     </table>
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 </div>

@@ -96,7 +96,12 @@ if (isset($_POST['submit']) and $course_exists == false) {
           return true;
         }
       });
+      
       $('form').removeAttr('novalidate');
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
     
     function codeWarning() {
@@ -159,7 +164,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
     </select></td></tr>
     </table>
     <input type="hidden" name="courseID" value="<?php echo $courseID; ?>" />
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"><input type="button" class="cancel" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input type="button" class="cancel" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 <?php

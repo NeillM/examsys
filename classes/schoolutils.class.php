@@ -177,7 +177,7 @@ Class SchoolUtils {
 	static function schoolid_exists($schoolID, $db) {
 		$row_no = 0;
 
-		$query = 'SELECT id FROM schools WHERE id = ?';
+		$query = 'SELECT id FROM schools WHERE id = ? AND deleted IS NULL';
 		$stmt = $db->prepare($query);
 		$stmt->bind_param('i', $schoolID);
 		$stmt->execute();
@@ -199,7 +199,7 @@ Class SchoolUtils {
 		$schoolID = 0;
 		$row_no = 0;
 
-		$stmt = $db->prepare('SELECT id FROM schools WHERE school = ?');
+		$stmt = $db->prepare('SELECT id FROM schools WHERE school = ? AND deleted IS NULL');
 		$stmt->bind_param('s', $school);
 		$stmt->execute();
     $stmt->bind_result($schoolID);
@@ -213,6 +213,19 @@ Class SchoolUtils {
 		  return false;
 		}
 	}
+  
+  static function get_school_faculty($schoolID, $db) {
+    $school_name = false;
+    
+    $stmt = $db->prepare('SELECT school FROM schools WHERE id = ?');
+		$stmt->bind_param('i', $schoolID);
+		$stmt->execute();
+    $stmt->bind_result($school_name);
+		$stmt->store_result();
+		$stmt->close();
+    
+    return $school_name;
+  }
 
 	/**
 	 * Delete a school by setting a flag

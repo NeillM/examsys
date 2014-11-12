@@ -68,44 +68,54 @@ $variables = unserialize(base64_decode($variables));
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<title><?php printf($string['errordetails'], $error_id); ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php printf($string['errordetails'], $error_id); ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<style type="text/css">
-body {font-size:80%}
-table {border-collapse:collapse; width:100%}
-td {border: 1px solid #C0C0C0; padding:2px}
-.f {background-color:#EEEEEE; width:250px}
-</style>
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:80%}
+    table {border-collapse:collapse; width:100%}
+    td {border: 1px solid #C0C0C0; padding:2px}
+    .f {background-color:#EEEEEE; width:250px}
+  </style>
+
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });
+  </script>
+
 </head>
 
 <body>
 
 <div style="overflow:auto; height:745px">
 <table>
-<tr><td class="f"><?php echo $string['date']; ?></td><td><?php echo $occurred; ?></td></tr>
-<tr><td class="f"><?php echo $string['staff']; ?></td><td><?php echo $title . ' ' . $initials . ' ' . $surname; ?></td></tr>
-<tr><td class="f"><?php echo $string['username']; ?></td><td><?php echo $auth_user; ?></td></tr>
-<tr><td class="f"><?php echo $string['type']; ?></td><td><?php echo $errtype; ?></td></tr>
-<tr><td class="f"><?php echo $string['description']; ?></td><td><?php echo $errstr; ?></td></tr>
-<tr><td class="f"><?php echo $string['file']; ?></td><td><?php echo $errfile . ' (line ' . $errline . ')'; ?></td></tr>
-<tr><td class="f"><?php echo $string['paperid']; ?></td><td><?php echo $paperID; ?></td></tr>
-<tr><td class="f"><?php echo $string['querystring']; ?></td><td><?php echo $query_string; ?></td></tr>
-<tr><td class="f"><?php echo $string['post']; ?></td><td><?php echo $post_data; ?></td></tr>
-<tr><td class="f"><?php echo $string['phpself']; ?></td><td><?php echo $php_self; ?></td></tr>
-<tr><td class="f"><?php echo $string['requestmethod']; ?></td><td><?php echo $request_method; ?></td></tr>
-<tr><td class="f" style="vertical-align: top;" ><?php echo $string['occurranceoferror']; ?></td><td><?php echo $similar_errors; ?></td></tr>
-<tr><td class="f"><?php echo $string['datefixed']; ?></td><td><?php echo ($fixed == '' ? 'n/a' : $fixed); ?></td></tr>
-<tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace']; ?></td><td><?php echo $backtrace; ?></td></tr>
-<tr><td class="f" style="vertical-align: top"><?php echo $string['variables']; ?></td><td><?php if(isset($variables) and !($variables === '' or $variables === false)) {
+<tr><td class="f"><?php echo $string['date'] ?></td><td><?php echo $occurred; ?></td></tr>
+<tr><td class="f"><?php echo $string['staff'] ?></td><td><?php echo $title . ' ' . $initials . ' ' . $surname ?></td></tr>
+<tr><td class="f"><?php echo $string['username'] ?></td><td><?php echo $auth_user ?></td></tr>
+<tr><td class="f"><?php echo $string['type'] ?></td><td><?php echo $errtype ?></td></tr>
+<tr><td class="f"><?php echo $string['description'] ?></td><td><?php echo $errstr ?></td></tr>
+<tr><td class="f"><?php echo $string['file'] ?></td><td><?php echo $errfile . ' (line ' . $errline . ')' ?></td></tr>
+<tr><td class="f"><?php echo $string['paperid'] ?></td><td><?php echo $paperID ?></td></tr>
+<tr><td class="f"><?php echo $string['querystring'] ?></td><td><?php echo $query_string ?></td></tr>
+<tr><td class="f"><?php echo $string['post'] ?></td><td><?php echo $post_data ?></td></tr>
+<tr><td class="f"><?php echo $string['phpself'] ?></td><td><?php echo $php_self ?></td></tr>
+<tr><td class="f"><?php echo $string['requestmethod'] ?></td><td><?php echo $request_method ?></td></tr>
+<tr><td class="f" style="vertical-align: top" ><?php echo $string['occurranceoferror'] ?></td><td><?php echo $similar_errors ?></td></tr>
+<tr><td class="f"><?php echo $string['datefixed'] ?></td><td><?php echo ($fixed == '' ? 'n/a' : $fixed); ?></td></tr>
+<tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace'] ?></td><td><?php echo $backtrace ?></td></tr>
+<tr><td class="f" style="vertical-align: top"><?php echo $string['variables'] ?></td><td><?php if(isset($variables) and !($variables === '' or $variables === false)) {
       ini_set('xdebug.var_display_max_data','-1'); var_dump($variables); } ?></td></tr>
 </table>
 </div>
 <br />
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>?errorID=<?php echo $_GET['errorID']; ?>" method="post" name="myform">
-<div style="text-align:center"><input type="button" name="close" value="<?php echo $string['close']; ?>" style="width:100px" onclick="javascript:window.close();" />&nbsp;&nbsp;
+<div style="text-align:center"><input type="button" name="close" id="cancel" value="<?php echo $string['close']; ?>" style="width:100px" onclick="javascript:window.close();" />&nbsp;&nbsp;
 <?php
 if ($fixed == '') {
   echo '<input type="submit" name="submit" value="' . $string['fixed'] . '" style="width:100px" />';

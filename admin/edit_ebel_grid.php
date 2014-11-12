@@ -106,7 +106,12 @@ if (isset($_POST['submit'])) {
           return true;
         }
       });
+      
       $('form').removeAttr('novalidate');
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
   </script>
 </head>
@@ -148,7 +153,7 @@ if (isset($_POST['submit'])) {
     <tr><td style="text-align:right"><?php echo $string['hard'] ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE2', $HE2) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI2', $HI2) ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN2', $HN2) ?></td><td style="border:0"><input type="text" value="" name="hard_total" size="8" style="border:0" /></td></tr>
     <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0" /></td></tr>
     
-    <tr><td colspan="4"style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();" /></td></tr>
+    <tr><td colspan="4"style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></td></tr>
     </table>
     
     <br />

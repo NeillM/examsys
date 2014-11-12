@@ -89,6 +89,9 @@ $result->close();
         }
       });
       $('form').removeAttr('novalidate');
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
   </script>
   </head>
@@ -128,7 +131,7 @@ $result->close();
     ?>
     </select></td></tr>
     </table>
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>" /><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>" /><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 </div>

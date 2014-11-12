@@ -175,6 +175,10 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
           $('#ebelgrid').hide();
         }
       });
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
 
     function setSidebarMenu() {
@@ -318,7 +322,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $module['moduleid'] . "\" />\n";
   ?>
-    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 </div>

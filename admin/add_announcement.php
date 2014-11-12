@@ -80,6 +80,10 @@ SCRIPT;
       });
       $('form').removeAttr('novalidate');
    
+      $('#cancel').click(function() {
+        history.back();
+      });
+      
       $('.icon').click(function() {
         current = $('#icon_type').val();
         $('#' + current).css('border-color', 'white');
@@ -145,7 +149,7 @@ SCRIPT;
     <td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin:0" rows="5" cols="20"></textarea></td>
   </tr>
   <tr>
-    <td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td>
+    <td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>
   </tr>
 </table>
 
