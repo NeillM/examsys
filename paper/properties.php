@@ -1246,7 +1246,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/general_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['generalheading']; ?></td></tr>
 <td style="text-align:left; vertical-align:top" colspan="2">
    <?php
-     echo "<table class=\"cellpad2\" width=\"100%\">\n";
+     echo "<table class=\"cellpad2\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
      echo "<tr><td colspan=\"4\" class=\"headbar\">&nbsp;" . $string['paperdetails'] . "</td></tr>\n";
      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1412,7 +1412,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
   <?php
 			echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
 			echo "<tr><td colspan=\"4\">" . $string['markingguidance'] . "</td></tr>\n";
-			echo "<tr><td colspan=\"4\"><textarea class=\"mceEditor\" id=\"osce_marking_guidance\" name=\"osce_marking_guidance\" style=\"width:684px; height:230px\">" .  htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES) . "</textarea></td></tr>";
+			echo "<tr><td colspan=\"4\" style=\"padding: 0\"><textarea class=\"mceEditor\" id=\"osce_marking_guidance\" name=\"osce_marking_guidance\" style=\"width:100%; height:230px\">" .  htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES) . "</textarea></td></tr>";
 		
     } elseif ($properties->get_paper_type() == '6') {  // Peer Review
       $review = $properties->get_display_question_mark();
