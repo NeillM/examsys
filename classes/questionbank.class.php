@@ -205,7 +205,7 @@ class QuestionBank {
         . ' FROM questions LEFT JOIN questions_modules'
         . ' ON questions.q_id = questions_modules.q_id'
         . ' WHERE ' . $ownerSQL
-        . ' AND deleted IS NULL GROUP BY q_type';
+        . ' AND deleted IS NULL AND status != -1 GROUP BY q_type';
         break;
       case 'status':
         $sql = 'SELECT COUNT(questions.q_id), name'
@@ -220,7 +220,7 @@ class QuestionBank {
         . ' FROM questions LEFT JOIN questions_modules'
         . ' ON questions.q_id = questions_modules.q_id'
         . ' WHERE ' . $ownerSQL
-        . ' AND deleted IS NULL GROUP BY bloom';
+        . ' AND deleted IS NULL AND status != -1 GROUP BY bloom';
         break;
       case 'keyword':
         $sql = 'SELECT COUNT(questions.q_id), keywordID'
@@ -229,7 +229,7 @@ class QuestionBank {
         . ' WHERE keywords_question.keywordID = keywords_user.id'
         . ' AND ' . $ownerSQL
         . ' AND questions.q_id = keywords_question.q_id'
-        . ' AND deleted IS NULL GROUP BY keywordID';
+        . ' AND deleted IS NULL AND status != -1 GROUP BY keywordID';
         break;      
       case 'objective':
         $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
@@ -242,7 +242,7 @@ class QuestionBank {
           . " WHERE questions.q_id = relationships.question_id"
           . " AND $ownerSQL "
           . " AND calendar_year IN ('{$all_years}')"
-          . " AND deleted IS NULL GROUP BY relationships.obj_id";
+          . " AND deleted IS NULL AND status != -1 GROUP BY relationships.obj_id";
         break;
     }
     
