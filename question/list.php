@@ -118,8 +118,12 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 
     });
 
-    $( document ).ready(function() {
+    $(function () {
       check_checkboxes();
+      
+      $(document).click(function() {
+        hideMenus(this);
+      });
     });
   </script>
 </head>
