@@ -48,6 +48,7 @@ Class InstallUtils {
   public static $cfg_short_time_php;
   public static $cfg_timezone;
   public static $cfg_tmpdir;
+  public static $cfg_tablesorter_date_time;
 
   //database config options
   public static $cfg_db_host;
@@ -320,7 +321,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_short_time_php = $_POST['cfg_short_time_php'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
-
+    if (self::$cfg_long_date_time == "%d/%m/%Y %H:%i") {
+      self::$cfg_tablesorter_date_time = 'uk';
+    } else {
+      self::$cfg_tablesorter_date_time = 'us';
+    }
     //Authentication
     if (isset($_POST['useLti'])) {
       self::$cfg_auth_lti = true;
@@ -1468,6 +1473,7 @@ require \$root . '/include/path_functions.inc.php';
 // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
+  \$cfg_tablesorter_date_time = '{cfg_tablesorter_date_time}';
   \$cfg_short_date_time = '{cfg_short_date_time}';
   \$cfg_long_date_php = '{cfg_long_date_php}';
   \$cfg_short_date_php = '{cfg_short_date_php}';
@@ -1626,7 +1632,7 @@ CONFIG;
     $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
-    
+    $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
     $config = str_replace('{labsecuritytype}', self::$cfg_labsecuritytype, $config);
     $config = str_replace('{interactivequestions}', self::$cfg_interactivequestions, $config);
 

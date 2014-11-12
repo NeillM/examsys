@@ -67,7 +67,7 @@ function get_list($list, $db) {
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({ 
-          dateFormat: 'uk',
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
           sortList: [[0,0]] 
         });
       }
