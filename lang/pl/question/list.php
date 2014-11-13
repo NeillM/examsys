@@ -42,4 +42,5 @@ $string['performance'] = 'Osiągnięcia';
 $string['learningoutcome'] = 'Cele kształcenia';
 $string['showlockedquestions'] = 'Pokaż zablokowane pytania';
 $string['noquestions'] = 'W banku nie znaleziono żadnych pytań';
+$string['nostatus'] = 'No status set';
 ?>
