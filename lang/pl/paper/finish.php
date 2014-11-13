@@ -73,4 +73,6 @@ $string['overriddenby'] = 'Ocena skorygowana przez';
 $string['questionclarification'] = 'Wyjaśnienie pytania';
 $string['EnhancedCalcCorrectError'] = 'Błąd: Poprawna odpowiedź nie może być obliczona';
 $string['student'] = 'Student'; //cognate
+$string['started'] = 'Started';
+$string['finished'] = 'Finished';
 ?>

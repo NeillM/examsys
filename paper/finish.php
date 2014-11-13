@@ -351,7 +351,7 @@ require '../config/finish.inc';
   
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   if ($show_feedback) {
-    display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $metadataid, $mysqli, $status_array, $overrides, $preview_q_id);
+    display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);

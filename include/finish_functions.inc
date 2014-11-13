@@ -158,7 +158,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
   return $value;
 }
 
-function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $metadataid, $mysqlidb, $status_array, $overrides, $preview_q_id = null) {
+function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_metadata, $mysqlidb, $status_array, $overrides, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
   
   $paperID          = $propertyObj->get_property_id();
@@ -169,6 +169,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
   $max_screen       = $propertyObj->get_max_screen();
   $moduleID         = $propertyObj->get_modules();$moduleID = $propertyObj->get_modules();
   $calendar_year    = $propertyObj->get_calendar_year();
+  
+  $metadataid = $log_metadata->get_metadata_id();
 
   $configObject = Config::get_instance();
   $strong_on = '';
@@ -2382,7 +2384,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $meta
 
   // Marks summary
   if ($preview_q_id == null) {
-    echo display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $mysqlidb);
+    echo display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $log_metadata, $mysqlidb);
   }
 
   if ($paper_postscript != '') echo "<br />\n<blockquote>$paper_postscript</blockquote>\n";
@@ -2467,16 +2469,20 @@ function display_question_mark($tmp_display_question_mark, &$paper, $q_type, $qu
   return $html;
 }
 
-function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $db) {
+function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_random_mark, $total_marks, $string, $paperID, $log_metadata, $db) {
+  $configObject = Config::get_instance();
   $html = '';
-
+  
+  $start_date = $log_metadata->get_start_datetime();
+  $finish_date = $log_metadata->get_finish_datetime();
+  
   if ($total_marks > 0 and $paper_type != 3) {
     $lti = UoN_LTI::get_instance();
     $html .= '<br /><div class="key">';
     $html .= '<table cellpadding="2" cellspacing="0" border="0" style="text-align:left">';
     $html .= '<tr><td colspan="3" style="padding:0 0 0.6em 0; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
     if ($marking == 1) {
-      $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:6.5em\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
+      $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:8em\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
       $html .= "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(43);\" src=\"../artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" /></td></tr>\n";
       $html .= "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
       $html .= "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
@@ -2497,7 +2503,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       }
       $html .= $percent . '%</td><td>' . $string['adjusted'] . '</td></tr>';
     } else {
-      $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:6.5em\">" . round($user_mark, 2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
+      $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:8em\">" . round($user_mark, 2) . " " . $string['outof'] . " $total_marks</td></tr>\n";
       $html .= "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td></tr>\n";
       $html .= "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
       if (isset($_GET['percent'])) {
@@ -2513,7 +2519,14 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       }
       $html .= "$percent%</td></tr>\n";
     }
+    
+    $dateformat = $configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php');
 
+    
+    $html .= "<tr><td>" . $string['started'] . "</td><td style=\"text-align:right\">" . $start_date->format($dateformat) . "</td></tr>";
+    if (!is_null($finish_date)) {
+      $html .= "<tr><td>" . $string['finished'] . "</td><td style=\"text-align:right\">" . $finish_date->format($dateformat) . "</td></tr>";
+    }
     $textual_feedback = Paper_utils::get_textual_feedback($paperID, $db, 'ASC');
 
     $msg = '';

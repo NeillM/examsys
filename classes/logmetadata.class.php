@@ -54,19 +54,20 @@ class LogMetadata {
    * @param mysqli     $db         Database connection
    */
   public function __construct($userID, $paper_id, $db) {
-    $this->id             = null;
-    $this->session_id     = null;
-    $this->start_datetime = null;
-    $this->ipaddress      = null;
-    $this->student_grade  = null;
-    $this->year           = null;
-    $this->attempt        = null;
-    $this->completed      = null;
-    $this->lab_name       = null;
-    $this->highest_screen = 0;
-    $this->userid         = $userID;
-    $this->paper_id       = $paper_id;
-    $this->db             = $db;
+    $this->id              = null;
+    $this->session_id      = null;
+    $this->start_datetime  = null;
+    $this->finish_datetime = null;
+    $this->ipaddress       = null;
+    $this->student_grade   = null;
+    $this->year            = null;
+    $this->attempt         = null;
+    $this->completed       = null;
+    $this->lab_name        = null;
+    $this->highest_screen  = 0;
+    $this->userid          = $userID;
+    $this->paper_id        = $paper_id;
+    $this->db              = $db;
   }
 
   /**
@@ -104,7 +105,9 @@ class LogMetadata {
     if ($set_start_time or isset($this->session_id)) {
       $this->populate_start_date_time();
     }
-
+    if ($this->completed != '') {
+      $this->populate_finish_date_time();
+    }
     return true;
   }
 
@@ -135,6 +138,10 @@ class LogMetadata {
 
   public function get_start_datetime() {
     return $this->start_datetime;
+  }
+
+  public function get_finish_datetime() {
+    return $this->finish_datetime;
   }
 
   /**
@@ -228,7 +235,7 @@ class LogMetadata {
    */
   private function populate_start_date_time() {
     if ($this->session_id != NULL) {
-      $this->start_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $this->session_id );
+      $this->start_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $this->session_id);
       $this->start_datetime->format('Y-m-d H:i:s');
     } else {
       $this->start_datetime = new DateTime;
@@ -237,6 +244,11 @@ class LogMetadata {
       
       $this->save();  // Make sure started is updated in the DB.
     }
+  }
+  
+  private function populate_finish_date_time() {
+    $this->finish_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $this->completed);
+    $this->finish_datetime->format('Y-m-d H:i:s');
   }
 
 }
