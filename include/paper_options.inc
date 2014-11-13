@@ -502,7 +502,7 @@ if ($properties->get_paper_type() == '2') {
   // Internal Peer review
   if (strpos($checklist, 'peer') !== false) {
     if (count($properties->get_internal_reviewers()) == 0) {
-      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewed'] . "</a></td><td>" . $string['unset'] . "</td></tr>\n";
+      echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['peerreviewes'] . "</a></td><td>" . $string['unset'] . "</td></tr>\n";
     } else {
       $tmp_array = $properties->get_internal_reviewers();
       $internal_array = array();
@@ -538,7 +538,7 @@ if ($properties->get_paper_type() == '2') {
   // External examiners
   if (strpos($checklist, 'external') !== false) {
     if (count($properties->get_externals()) == 0) {
-      echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td>" . $string['externalreviews'] . "</td><td>" . $string['unset'] . "</td></tr>\n";
+      echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a href=\"\" class=\"checklist\" onclick=\"paperProperties(); return false;\">" . $string['externalreviews'] . "</td><td>" . $string['unset'] . "</td></tr>\n";
     } else {
       $tmp_array = $properties->get_externals();
       $external_array = array();
