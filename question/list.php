@@ -369,7 +369,11 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
       echo '<td>' . ($d / 100) . '</td>';    
     }
     echo '<td>' . $modified . '</td>';
-    echo "<td>" . $status_array[$status]->get_name() . "</td></tr>\n";
+    if ($status == -1) {
+      echo "<td>" . $string['nostatus'] . "</td></tr>\n";
+    } else {
+      echo "<td>" . $status_array[$status]->get_name() . "</td></tr>\n";
+    }
     $display_no++;
   }
 	$search_results->close();
