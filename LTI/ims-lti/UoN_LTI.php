@@ -250,7 +250,7 @@ class UoN_LTI extends BLTI {
           echo nl2br($e->getTraceAsString());
         }
       }
-      $extra='';
+      $extra = '';
       if (!$deleted) {
         $extra=' WHERE deleted IS NULL ';
       }
@@ -267,7 +267,6 @@ class UoN_LTI extends BLTI {
       $stmt->execute();
       $stmt->store_result();
       $stmt->bind_result($lti_keys_id, $lti_keys_key, $lti_keys_secret, $lti_keys_name, $lti_keys_context_id, $lti_keys_deleted, $lti_keys_updated_on);
-
 
       $rows = $stmt->num_rows;
       while ($stmt->fetch()) {
@@ -420,7 +419,7 @@ class UoN_LTI extends BLTI {
   function add_lti_user($lti_user_equ, $lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE updated_on=NOW()");
+      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE updated_on = NOW()");
       $result->bind_param('ss', $lti_user_key, $lti_user_equ);
       $result->execute();
       $ret = $this->db->insert_id;
@@ -437,12 +436,12 @@ class UoN_LTI extends BLTI {
   function update_lti_user($lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on=NOW() WHERE lti_user_key=? ");
+      $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on = NOW() WHERE lti_user_key = ?");
       if ($this->db->error) {
         try {
           $a = $this->db->error;
           $b = $this->db->errno;
-          throw new Exception("0MySQL error $a <br /> Query:<br /> $query", $b);
+          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -564,7 +563,7 @@ class UoN_LTI extends BLTI {
       $db=$this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br /> Query:<br /> ", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());

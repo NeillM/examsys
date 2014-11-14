@@ -410,7 +410,6 @@ class Authentication {
             $errline = 0;
             $errstr = 'Couldnt create user see variables for more info';
             $variables = array('lookup' => &$lookup, 'info' => &$info, 'authentication' => &$this);
-            //log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null)
             log_error($userid, $username, 'Application Warning', $errstr, $errfile, $errline, '', null, $variables, null);
           }
 
@@ -451,7 +450,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -464,7 +463,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -477,7 +476,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -487,7 +486,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 

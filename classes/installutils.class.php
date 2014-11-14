@@ -2322,7 +2322,7 @@ QUERY;
     $this->tableList['lti_user'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_user` (
           `lti_user_key` varchar(255) NOT NULL,
-          `lti_user_equ` varchar(255) NOT NULL,
+          `lti_user_equ` int(10) unsigned,
           `updated_on` datetime NOT NULL,
           PRIMARY KEY (`lti_user_key`),
           KEY `lti_user_equ` (`lti_user_equ`)

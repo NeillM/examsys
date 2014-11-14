@@ -93,12 +93,12 @@ ob_start();
 
     if (isset($lm_count) and $lm_count > 0) {
       $logquery = $mysqli->prepare("INSERT INTO log0_deleted SELECT l.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 
       $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 
@@ -123,12 +123,12 @@ ob_start();
 
     if (isset($lm_count) and $lm_count > 0) {
       $logquery = $mysqli->prepare("INSERT INTO log1_deleted SELECT l.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 
       $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 

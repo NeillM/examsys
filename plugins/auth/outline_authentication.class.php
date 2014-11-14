@@ -83,7 +83,7 @@ class outline_authentication {
 
   function set_error($msg) {
     if (strlen($this->error) > 0) {
-      $this->error .= '<br>';
+      $this->error .= '<br />';
     }
     $this->error .= $msg;
   }
@@ -96,9 +96,7 @@ class outline_authentication {
     $this->settings = & $object->settings;
     $this->session = & $object->calling_object->session;
     $this->request = & $object->calling_object->request;
-
   }
-
 
   function error_handling($context = null) {
     $context1 = array();
@@ -115,7 +113,7 @@ class outline_authentication {
   }
 
 
-//fake function used in mocking but if things go wrong have an outline here
+  // Fake function used in mocking but if things go wrong have an outline here
   function mock($callingobject, $settings, $number, $name, $db, $returndata, $form) {
     return false;
   }
@@ -180,7 +178,6 @@ class outline_authentication {
    * @return bool
    */
   function register_callback($callback, $section, $number, $name, $insert = false) {
-    //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
     $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
   }
 
