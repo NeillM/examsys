@@ -446,6 +446,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   $max_property_id = 0;
   $paper_details = array();
   $paper_ids = array();
+  $property_id = 0;
   // Get scheduled summative exams
   if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
     // Get papers running on various dates.
