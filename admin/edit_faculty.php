@@ -25,11 +25,13 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/facultyutils.class.php';
 
 $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
 
 // Check the Faculty ID actually exists for editing.
-if (!FacultyUtils::facultyid_exists($facultyID, $mysqli)) {
+$name = FacultyUtils::faculty_name_by_id($facultyID, $mysqli);
+if (!$name) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -108,7 +110,7 @@ if (isset($_POST['submit'])) {
 <?php
 if ($duplicate) {
   echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" maxlength="80" required autofocus />';
-  echo "<script language=\"JavaScript\">\nalert('" . $string['warning'] . "');\n</script>\n";
+  echo "<script>\nalert('" . $string['warning'] . "');\n</script>\n";
 } else {
   echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" maxlength="80" required autofocus />';
 }

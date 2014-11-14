@@ -27,30 +27,26 @@
 
 Class FacultyUtils {
 
-/**
- * Checks if a faculty ID already exists.
- * @param string $facultyID - The ID of the faculty to be checked
- * @param object $db        - Link to mysqli
- * @return bool             - True if the faculty ID already exists and is not deleted
- */
-  static function facultyid_exists($facultyID, $db) {
-    $result = $db->prepare("SELECT id FROM faculty WHERE id = ? AND deleted IS NULL");
+  /**
+   * Returns a name for a given faculty ID.
+   * @param string $facultyID - The ID of the faculty to be checked
+   * @param object $db        - Link to mysqli
+   * @return bool|string      - False if the faculty does not exist, otherwise returns the name.
+   */
+  static function faculty_name_by_id($facultyID, $db) {
+    $faculty_name = false;
+    
+    $result = $db->prepare("SELECT name FROM faculty WHERE id = ? AND deleted IS NULL");
     $result->bind_param('i', $facultyID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($tmp_paperid);
+    $result->bind_result($faculty_name);
     $result->fetch();
-    if ($result->num_rows == 0) {
-      $exist = false;
-    } else {
-      $exist = true;
-    }
-    $result->free_result();
     $result->close();
 
-    return $exist;
+    return $faculty_name;
   }
-
+  
   /**
    * Checks if a faculty name already exists.
    * @param string $facultyname - The ID of the faculty to be checked
