@@ -156,7 +156,7 @@ Class SchoolUtils {
 	static function school_exists_in_faculty($facultyID, $school, $db) {
 		$row_no = 0;
 
-		$query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ?';
+		$query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ? AND deleted IS NULL';
 		$stmt = $db->prepare($query);
 		$stmt->bind_param('si', $school, $facultyID);
 		$stmt->execute();
@@ -217,7 +217,7 @@ Class SchoolUtils {
   static function get_school_faculty($schoolID, $db) {
     $school_name = false;
     
-    $stmt = $db->prepare('SELECT school FROM schools WHERE id = ?');
+    $stmt = $db->prepare('SELECT school FROM schools WHERE id = ? AND deleted IS NULL');
 		$stmt->bind_param('i', $schoolID);
 		$stmt->execute();
     $stmt->bind_result($school_name);
