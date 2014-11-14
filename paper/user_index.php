@@ -338,7 +338,7 @@ if ($exam_duration !== null) {
 <div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   require '../include/toprightmenu.inc';
-	echo draw_toprightmenu(31);
+	echo draw_toprightmenu(14);
 ?>
 <br clear="all" />
 <form name="theform">
