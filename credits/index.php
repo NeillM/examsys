@@ -35,7 +35,9 @@
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
+    html, body {height: 100%}
 		td {vertical-align:top}
+    .ok {position:absolute; bottom: -50px}
   </style>
 </head>
 <body>
@@ -51,12 +53,14 @@
 <p>Rog&#333; <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
 <table cellpadding="0" cellspacing="0" border="0" style="width:660px">
 <tr><td style="width:240px">
-<strong><?php echo $string['designprogramming']; ?></strong><br />
+<strong><?php echo $string['designprogramming'] ?></strong><br />
 Dr Simon Wilkinson<br />
 Dr Rob Ingram<br />
 Anthony Brown<br />
 Simon Atack<br />
-Joseph Baxter<br />
+Dr Joseph Baxter<br />
+Neill Magill<br />
+Barry Oosthuizen<br />
 Ben Parish<br />
 Josef Martiňák<br />
 <br />
@@ -97,7 +101,7 @@ jQuery UI 1.10.4 - <a href="http://jqueryui.com" target="_blank">http://jqueryui
 </tr>
 </table>
 
-<input type="button" value="OK" name="<?php echo $string['ok']; ?>" class="ok" onclick="window.close()" />
+<input type="button" value="OK" name="<?php echo $string['ok'] ?>" class="ok" onclick="window.close()" />
 </div>
 
 
