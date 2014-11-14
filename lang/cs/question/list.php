@@ -42,5 +42,4 @@ $string['performance'] = 'výkon';
 $string['learningoutcome'] = 'Výsledek výuky';
 $string['showlockedquestions'] = 'Zobrazit Uzamčené úlohy';
 $string['noquestions'] = 'V Bance úloh nebyly nalezeny žádné úlohy.';
-$string['nostatus'] = 'No status set';
 ?>

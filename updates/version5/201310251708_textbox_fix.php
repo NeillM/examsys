@@ -1,7 +1,6 @@
 <?php
 
 if (!$updater_utils->has_updated('textbox_fix')) {
-//if (!file_exists("./stopfile_textbox_fix.txt")) {
   // Add some temporary indexes to speed up update.
   for ($i=0; $i<3; $i++) {
     $result = $mysqli->prepare("ALTER TABLE log$i ADD INDEX tmp_q_idx(q_id)");
@@ -39,6 +38,5 @@ if (!$updater_utils->has_updated('textbox_fix')) {
   }
 
   echo "<li>Updated Textbox totalpos values.</li>";
-  //touch("./stopfile_textbox_fix.txt");
   $updater_utils->record_update('textbox_fix');
 }
