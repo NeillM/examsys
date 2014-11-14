@@ -132,8 +132,17 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		} else {
 			$('.notch').css('left', '20px');
 		}
+    
+    var top_pos = position.top;
+    if (top_pos - $(window).scrollTop() > ($(window).height() - 135)) {
+      top_pos -= 135;
+      $('.notch').hide();
+    } else {
+      $('.notch').show();      
+    }
+    
 		$('#callout').css('left', left_pos);
-		$('#callout').css('top', position.top + p.height() + 12);
+		$('#callout').css('top', top_pos + p.height() + 12);
 		$('#duration').html(duration + ' mins');
 		
 		if (start_time == end_time) {
@@ -215,8 +224,16 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		} else {
 			$('.notch').css('left', '20px');
 		}
-		$('#callout2').css('left', left_pos);
-		$('#callout2').css('top', position.top + p.height() + 12);
+    
+    var top_pos = position.top;
+    if (top_pos - $(window).scrollTop() > ($(window).height() - 80)) {
+      top_pos -= 80;
+      $('.notch').hide();
+    } else {
+      $('.notch').show();      
+    }
+    $('#callout2').css('left', left_pos);
+		$('#callout2').css('top', top_pos + p.height() + 12);
 		$('#message').html(message);
 		$('#callout2').show();
   }
