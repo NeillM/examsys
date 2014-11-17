@@ -15,5 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['convert'] = 'Convert';
-$string['msg'] = 'Are you sure you wish to convert this summative exam into a formative quiz?';
+$string['msg'] = 'Are you sure you wish to convert this summative exam into a formative self-assessment?';
 ?>
