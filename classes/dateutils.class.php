@@ -37,9 +37,13 @@ Class date_utils {
 	}
 
 	static function get_next_academic_year($specific_year_start = '')	{
-    $oneYearOn = date('Y-m-d', strtotime('+1 years'));
+    $session = date_utils::get_academic_year(date('Y/m/d'), $specific_year_start);
     
-		return date_utils::get_academic_year($oneYearOn, $specific_year_start);
+    $parts = explode('/', $session);
+   
+    $next_session = ($parts[0] + 1) . '/' . ($parts[1] + 1);
+    
+		return $next_session;
 	}
 
   static function inc_academic_year($year) {
@@ -75,7 +79,7 @@ Class date_utils {
 		} else {
 			$session = date('Y') . '/' . (date('y') + 1);
 		}
-		
+
 		return $session;
 	}
   
