@@ -463,6 +463,7 @@ var lang = {
     
     $('#previous').click(function() {
       $('body').css('cursor','wait');
+      $('#qForm').attr('action', '<?php $_SERVER['PHP_SELF'] . "?id=" . $_GET['id']?>');
     });
     
     $('#next').click(function() {
