@@ -81,10 +81,36 @@ for ($i=0; $i<count($items); $i++) {
       }
     }
   } elseif ($type == 'f') {   // Folders
-    $restore = $mysqli->prepare("UPDATE folders SET deleted = NULL WHERE id = ?");
-    $restore->bind_param('i', $item_id);
-    $restore->execute();  
+    // Get the name of the restored folder;
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE id = ?");
+    $result->bind_param('i', $item_id);
+    $result->execute();
+    $result->bind_result($deleted_folder_title);
+    $result->fetch();
+    $result->close();
+
+    // Check to see if the original folder name has been reused.
+    $split_title = explode('[deleted',$deleted_folder_title);
+    $tmp_title = trim($split_title[0]);
+    $result = $mysqli->prepare("SELECT name FROM folders WHERE name = ? and id != ?");
+    $result->bind_param('si', $tmp_title, $item_id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($folder_title);
+    $result->fetch();
+
+    if ($result->num_rows == 0) {
+      $new_title = trim($split_title[0]);
+    } else {
+      $new_title = $deleted_folder_title;
+    }
+    $result->close();
+
+    $restore = $mysqli->prepare("UPDATE folders SET deleted = NULL, name = ? WHERE id = ?");
+    $restore->bind_param('si', $new_title, $item_id);
+    $restore->execute();
     $restore->close();
+    
   } elseif ($type == 'q') {   // Questions
     $restore = $mysqli->prepare("UPDATE questions SET deleted = NULL WHERE q_id = ?");
     $restore->bind_param('i', $item_id);
