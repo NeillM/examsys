@@ -63,6 +63,21 @@ if ($parent != '') {
   $result->close();
 }
 
+// Delete sub dirs.
+$sub_folder_name = $name . ';%';
+$result = $mysqli->prepare("SELECT id FROM folders WHERE name LIKE ? AND ownerID = ? AND deleted IS NULL");
+$result->bind_param('si', $sub_folder_name, $userObject->get_user_ID());
+$result->execute();
+$result->store_result();
+$result->bind_result($subID);
+while ($result->fetch()) {
+  $delete = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
+  $delete->bind_param('ii', $subID, $userObject->get_user_ID());
+  $delete->execute();
+  $delete->close();
+}
+$result->close();
+
 $result = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
 $result->bind_param('ii', $folderID, $userObject->get_user_ID());
 $result->execute();

@@ -1966,7 +1966,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . htmlentities($user_choices[$blank_count]) .  "\"$exclude_mod />";
                 echo display_response($tmp_display_students_response, 'cross');
               }
-              if ($tmp_display_correct_answer == '1') {
+            }
+            if ($tmp_display_correct_answer == '1') {
                 echo '<strong>(';
                 $answer_string = '';
                 foreach ($answer_list as $individual_answer) {
@@ -1974,7 +1975,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
                 echo rtrim($answer_string, ', ');
                 echo ')</strong>';
-              }
             }
           } else {                                                                // Dropdown menus
             if ($tmp_display_correct_answer == '1') {
