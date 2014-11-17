@@ -334,7 +334,7 @@ Class UserUtils {
   }
   
   /**
-   * Lists the team a user id is on (uses the user object for the curent users
+   * Lists the teams a user ID is on (uses the user object for the curent users
    * use this if we are not dealing with the logged in user)
    * 
    * @param string $userID the id of the user
@@ -348,7 +348,8 @@ Class UserUtils {
                             FROM 
                                 modules_staff, modules 
                             WHERE 
-                                modules_staff.idMod = modules.id AND 
+                                modules_staff.idMod = modules.id AND
+                                mod_deleted IS NULL AND
                                 type = 'System' AND 
                                 memberID = ?");
     $result->bind_param('i', $userID);
@@ -429,7 +430,7 @@ Class UserUtils {
    */
   static function get_staff_modules_list_by_name($team_name, $db) {
     $team_members = array();
-    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ?");
+    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ? AND mod_deleted IS NULL");
     $result->bind_param('s', $team_name);
     $result->execute();
     $result->bind_result($memberID);
