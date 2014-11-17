@@ -63,7 +63,7 @@ if (isset($_POST['submit'])) {
   $new_email = trim($_POST['new_email']);
   $new_first_names = UserUtils::my_ucwords(trim($_POST['new_first_names']));
   $new_grade = $_POST['new_grade'];
-	$new_year = $_POST['new_year'];
+	$new_year = (isset($_POST['new_year']) ? $_POST['new_year'] : 1);
 }
 
 if (isset($_POST['submit']) and $unique_username == true) {
