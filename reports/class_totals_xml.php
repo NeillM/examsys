@@ -368,7 +368,7 @@ echo '<Cell ss:StyleID="s26"><Data ss:Type="Number">' . ($pass_mark / 100) . '</
 echo '</Row>';
 if ($marking == '0') {
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['averagemark'] . '</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $stats['mean_mark'] . '</Data></Cell>';
   echo '</Row>';
 } elseif ($marking == '1') {
