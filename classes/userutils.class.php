@@ -294,7 +294,7 @@ Class UserUtils {
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
-      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW(), 'System')");
+      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW())");
       $stmt->bind_param('ii', $idMod, $tmp_userID);
       $stmt->execute();
       $stmt->close();
@@ -350,7 +350,6 @@ Class UserUtils {
                             WHERE 
                                 modules_staff.idMod = modules.id AND
                                 mod_deleted IS NULL AND
-                                type = 'System' AND 
                                 memberID = ?");
     $result->bind_param('i', $userID);
     $result->execute();

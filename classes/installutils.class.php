@@ -2378,7 +2378,6 @@ QUERY;
           `idMod` int(11) unsigned DEFAULT NULL,
           `memberID` int(10) unsigned DEFAULT NULL,
           `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          `type` enum('System','Custom') DEFAULT NULL,
           PRIMARY KEY (`groupID`),
           KEY `name` (`idMod`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}

@@ -1050,19 +1050,19 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Teams_tab\" style=\"width:100%; display:none\">\n";
   }
   echo drawTabs('Teams', 4, '', $user_details['roles'], $bg_color, $string);
-  echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td></tr>\n";
+  echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td></tr>\n";
   if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
     echo "<tr><td colspan=\"4\">&nbsp;<img onclick=\"editMultiTeams(); return false;\" src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editteams'] . "\" />&nbsp;<a href=\"\" onclick=\"editMultiTeams(); return false;\">" . $string['editteams'] . "</a></td></tr>\n";
   }
 
   if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $userID) {   // Only allow Admin/SysAdmin or current user to view this information
-    $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added, type FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? ORDER BY moduleID");
+    $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? ORDER BY moduleID");
     $result->bind_param('i', $userID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($moduleID, $fullname, $added, $type);
+    $result->bind_result($moduleID, $fullname, $added);
     while ($result->fetch()) {
-      echo "<tr><td>&nbsp;$moduleID</td><td>$fullname</td><td>$added</td><td>" . $string[strtolower($type)] . "</td></tr>\n";
+      echo "<tr><td>&nbsp;$moduleID</td><td>$fullname</td><td>$added</td></tr>\n";
     }
     $result->close();
   } else {

@@ -135,8 +135,8 @@ if (isset($_POST['submit'])) {
 
 <?php
   $user_teams = array();
-  $result = $mysqli->prepare("SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND type = 'System' AND memberID = ?");
-  $result->bind_param('i', $_GET['userID']);
+  $result = $mysqli->prepare("SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ?");
+  $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($moduleID, $idMod);
   while ($result->fetch()) {
@@ -148,7 +148,7 @@ if (isset($_POST['submit'])) {
   $mod_no = 0;
   echo "<div class=\"content\" id=\"list\">";
   
-  $result = $mysqli->prepare("SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 ORDER BY school, moduleid");
+  $result = $mysqli->prepare("SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleid");
   $result->execute();
   $result->bind_result($school, $moduleid, $fullname, $idMod);
   while ($result->fetch()) {
