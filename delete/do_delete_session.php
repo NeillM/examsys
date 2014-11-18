@@ -69,8 +69,8 @@ $mysqli->close();
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
 		$(document).ready(function() {
-      window.opener.location = window.opener.parent.location.href;
-      window.close();
+      window.opener.location.reload();
+      self.close();
     });
   </script>
 </head>

@@ -77,7 +77,7 @@ if (isset($_POST['submit'])) {
 ?>
   <script>
     $(function () {
-      window.opener.location = window.opener.parent.location.href;
+      window.opener.location.reload();
       window.close();
     });
   </script>

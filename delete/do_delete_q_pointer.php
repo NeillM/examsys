@@ -113,7 +113,7 @@ $mysqli->close();
 
 <div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="OK" class="ok" onclick="window.opener.location = window.opener.parent.location.href; window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="window.opener.location.reload(); window.close();" />
 </form>
 </div>
 
