@@ -144,19 +144,18 @@ class BLTI {
           $db = $parm['db'];
           if ($db->error) {
             try {
-              throw new Exception("0MySQL error $mysqli->error <br> Query:<br> $query", $msqli->errno);
+              throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
             } catch (Exception $e) {
               echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
               echo nl2br($e->getTraceAsString());
             }
           }
-          $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key=? AND `deleted` IS NULL");
+          $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
           $stmt->bind_param('s', $oauth_consumer_key);
           $stmt->execute();
           $stmt->store_result();
           $stmt->bind_result($rsecret, $rcontext_id, $rname);
-          while ($stmt->fetch())
-          {
+          while ($stmt->fetch()) {
             $secret = $rsecret;
             $name = $rname;
             if (isset($rcontext_id)) {
@@ -166,7 +165,7 @@ class BLTI {
           }
           $stmt->close();
           if (!is_string($secret)) {
-            $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
+            $this->message = 'Could not retrieve secret oauth_consumer_key=' . $oauth_consumer_key;
             return;
           }
         }

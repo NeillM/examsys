@@ -121,7 +121,6 @@ if (!$lti->isInstructor()) {
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
     $session = date_utils::get_current_academic_year();
 
-
     if (is_null($c_internal_id)) {
    //   $lti_i::invalid_module_code($c_internal_id, $data, 'no returned data');
     }
@@ -162,7 +161,6 @@ if (!$lti->isInstructor()) {
       }
     }
 
-
     if (!$lti_i::allow_staff_edit_link()) {
       $_SESSION['lti']['paperlink'] = $returned[0];
       header("location: ../paper/user_index.php?id=" . $returned[0]);
@@ -188,7 +186,7 @@ if (!$lti->isInstructor()) {
 
       $problem = false;
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli) and  $lti_i::allow_module_create($v) ) {
+        if (!module_utils::module_exists($v[1], $mysqli) and $lti_i::allow_module_create($v) ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
             echo "\n</body>\n</html>\n";

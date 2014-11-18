@@ -17,7 +17,7 @@
 
 /**
  *
- * The lti login authentication function.
+ * The LTI login authentication function.
  *
  * @author Simon Atack
  * @version 1.0
@@ -71,11 +71,11 @@ class ltilogin_auth extends outline_authentication {
     $this->savetodebug('Starting to lookup user');
     $returned = $this->lti->lookup_lti_user();
 
-    $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, true));
+    $this->savetodebug('Data returned from LTI lookup was: ' . var_export($returned, true));
 
     if ($returned !== false) {
 
-      $sql="SELECT username FROM users WHERE id = ?";
+      $sql = "SELECT username FROM users WHERE id = ?";
       $result=$this->db->prepare($sql);
       $result->bind_param('i', $returned[0]);
       $result->execute();
