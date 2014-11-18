@@ -84,8 +84,8 @@ $type						= $propertyObj->get_rubric();
 * Set the default colour scheme for this paper and allow current users' special settings to override
 * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
 */
-$bgcolor = $paper_fgcolor = $textsize = $marks_color = $paper_themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $paper_themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
+$bgcolor = $paper_fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 $modules = Paper_utils::get_modules($property_id, $mysqli);
 
@@ -278,7 +278,7 @@ if (isset($_POST['submit'] )) {
     p {margin:0; padding:0}
     .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
     .group {padding-left:5px; color:white}
-    .title {font-size:130%; font-weight:bold; color:<?php echo $paper_themecolor; ?>; border-top:1px solid #C0C0C0}
+    .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
     .col {text-align:center; color:<?php echo $labelcolor; ?>}
     .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
     .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
@@ -329,7 +329,7 @@ if (isset($_POST['submit'] )) {
   td p {margin:0}
   .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
   .group {padding-left:5px; color:white}
-  .title {font-size:130%; font-weight:bold; color:<?php echo $paper_themecolor; ?>; border-top:1px solid #C0C0C0}
+  .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
   .col {text-align:center; color:<?php echo $labelcolor; ?>}
   .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
   .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
