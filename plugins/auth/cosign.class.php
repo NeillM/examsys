@@ -17,7 +17,7 @@
 
 /**
  *
- * The cosign authentication class
+ * The Cosign authentication class
  *
  * @author Simon Atack
  * @version 1.0
@@ -39,7 +39,6 @@ class cosign_auth extends outline_authentication {
   function init($object) {
     parent::init($object);
     $this->cosign = new cosign($this->settings['cosign_cfg'], $this);
-
   }
 
   function register_callback_routines() {
@@ -65,19 +64,15 @@ class cosign_auth extends outline_authentication {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'submit';
-      //$newbutton->value = ' ' . $string['cosgin'] . ' ';
       $newbutton->value = ' Login via Co-Sign ';
       $newbutton->name = 'cosignlogin';
       $newbutton->class = 'cosignlogin';
       $displaystdformobj->buttons[] = $newbutton;
 
-      $displaystdformobj->disablerequired=true;
-      //$newscript = "\$('.guestlogin').click(function() {\n  window.location.href = 'cosign.php';\n});";
-      //$displaystdformobj->scripts[] = $newscript;
+      $displaystdformobj->disablerequired = true;
     }
 
-
-    //possibility of making button to POST via jquery to the cosign login page with our login data then detect response
+    // Possibility of making button to POST via jquery to the cosign login page with our login data then detect response
     return $displaystdformobj;
   }
 
@@ -95,21 +90,21 @@ class cosign_auth extends outline_authentication {
     }
     $this->savetodebug('request string decoded info: ' . var_export($requestmod, true));
 
-// run cosing auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
+    // Run cosing auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
 
-    if((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true and isset($this->request['cosignlogin'])) or ( ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === false   ) or (!isset($this->settings['cosign_button'])) )     ) or (strpos($_SERVER['QUERY_STRING'],'cosign') !== false )  )  {
-      //button is enabled
+    if ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true and isset($this->request['cosignlogin'])) or ( ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === false   ) or (!isset($this->settings['cosign_button'])) )     ) or (strpos($_SERVER['QUERY_STRING'],'cosign') !== false )  )  {
+      // Button is enabled
       $this->savetodebug('starting cosign auth process');
 
       $status=$this->cosign->cosign_auth();
 
     } else {
-      // button is disabled
+      // Button is disabled
       $this->savetodebug('conditions for cosign login not met');
-return $authobj;
+      return $authobj;
     }
 
-    if($status===false) {
+    if ($status===false) {
       $this->savetodebug('cosign block reports auth as failed');
       $authobj->fail($this->number);
       $authobj->message = 'Not valid cosign';
@@ -118,7 +113,7 @@ return $authobj;
     }
 
     $this->savetodebug('cosign block reports auth as SUCCEEDED');
-    // bit below looks username up in the rogo table to get an id.
+    // Bit below looks username up in the rogo table to get an id.
 
     extract($this->settings);
 
@@ -138,9 +133,8 @@ return $authobj;
       return $authobj;
     }
 
-
     $this->savetodebug('Now looking up userid in table from username');
-    if(!isset($sql_extra)) {
+    if (!isset($sql_extra)) {
       $sql_extra = '';
     }
     $sql = "SELECT $username_col AS username, $id_col AS id FROM $table WHERE $username_col = ? $sql_extra";
@@ -162,7 +156,7 @@ return $authobj;
 
       return $authobj;
     } elseif ($result->num_rows() == 0) {
-      //apache says ok but no association to rogo
+      // Cosign says OK but no association to Rogo
 
       $this->savetodebug('cosign authenticated but no local account');
       $data = new stdClass();
@@ -170,7 +164,6 @@ return $authobj;
         $this->settings['search_field'] = 'username';
       }
       $data->{$this->settings['search_field']} = $username;
-
 
       if (isset($this->settings['enable_fudgecreateuser']) and $this->settings['enable_fudgecreateuser'] == true) {
         $this->createnewuserassociation = true;
@@ -185,18 +178,15 @@ return $authobj;
       return $authobj;
     }
 
-    if($result->num_rows() == 1) {
+    if ($result->num_rows() == 1) {
       $this->savetodebug('Successfully authenticated on this module username=' . $username . ' id:' . $id);
 
-      //sucessfull  authentication
+      // Sucessfull  authentication
       $authobj->success($this->number, $id);
 
     }
 
-
     return $authobj;
-
   }
-
 
 }

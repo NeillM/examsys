@@ -294,7 +294,7 @@ Class UserUtils {
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
-      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW(), 'System')");
+      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW())");
       $stmt->bind_param('ii', $idMod, $tmp_userID);
       $stmt->execute();
       $stmt->close();
@@ -334,7 +334,7 @@ Class UserUtils {
   }
   
   /**
-   * Lists the team a user id is on (uses the user object for the curent users
+   * Lists the teams a user ID is on (uses the user object for the curent users
    * use this if we are not dealing with the logged in user)
    * 
    * @param string $userID the id of the user
@@ -348,8 +348,8 @@ Class UserUtils {
                             FROM 
                                 modules_staff, modules 
                             WHERE 
-                                modules_staff.idMod = modules.id AND 
-                                type = 'System' AND 
+                                modules_staff.idMod = modules.id AND
+                                mod_deleted IS NULL AND
                                 memberID = ?");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -429,7 +429,7 @@ Class UserUtils {
    */
   static function get_staff_modules_list_by_name($team_name, $db) {
     $team_members = array();
-    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ?");
+    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ? AND mod_deleted IS NULL");
     $result->bind_param('s', $team_name);
     $result->execute();
     $result->bind_result($memberID);
