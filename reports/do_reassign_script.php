@@ -146,7 +146,7 @@ $mysqli->autocommit(true);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 </head>
 
-<body onload="window.opener.location.reload(); window.close();">
+<body onload="window.opener.location = window.opener.parent.location.href; window.close();">
 
 </body>
 </html>

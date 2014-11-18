@@ -44,11 +44,10 @@ if (isset($_POST['submit'])) {
   ?>
   <script>
     function closeWindow() {
-      window.opener.location.reload();
+      window.opener.location = window.opener.parent.location.href;
       window.close();
     }
   </script></head>
-  <body onload="window.opener.location.reload(); closeWindow();">
   <?php
     } else {
   ?>
@@ -58,10 +57,10 @@ if (isset($_POST['submit'])) {
       window.close();
     }
   </script></head>
-  <body onload="closeWindow();">
   <?php
     }
   ?>
+  <body onload="closeWindow();">
   <form>
     <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
   </form>
