@@ -31,7 +31,7 @@ class UoN_LTI extends BLTI {
   // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
 
   static $inst;
-  static $class_name='UoN_LTI';
+  static $class_name = 'UoN_LTI';
   /**
    * Create and return the Global instance of parent::$class_name for use in
    * the Local scope.
@@ -237,7 +237,6 @@ class UoN_LTI extends BLTI {
     }
   }
 
-
   function get_lti_keys($deleted = false) {
     $dataret = array();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -252,7 +251,7 @@ class UoN_LTI extends BLTI {
       }
       $extra = '';
       if (!$deleted) {
-        $extra=' WHERE deleted IS NULL ';
+        $extra = ' WHERE deleted IS NULL ';
       }
       $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
       if ($db->error) {
@@ -270,7 +269,7 @@ class UoN_LTI extends BLTI {
 
       $rows = $stmt->num_rows;
       while ($stmt->fetch()) {
-        $dataret[$lti_keys_id]=array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
+        $dataret[$lti_keys_id] = array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
       }
       $stmt->close();
 
@@ -291,7 +290,6 @@ class UoN_LTI extends BLTI {
       $rows = $stmt->num_rows;
       $stmt->fetch();
       $stmt->close();
-
     }
     
     return $rows > 0;
@@ -384,7 +382,7 @@ class UoN_LTI extends BLTI {
   function lookup_lti_user($lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE  lti_user_key=?");
+      $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE lti_user_key = ?");
       if ($this->db->error) {
         try {
           $a = $this->db->error;
