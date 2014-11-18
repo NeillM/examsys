@@ -84,8 +84,8 @@ $type						= $propertyObj->get_rubric();
 * Set the default colour scheme for this paper and allow current users' special settings to override
 * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
 */
-$bgcolor = $paper_fgcolor = $textsize = $marks_color = $paper_themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $paper_themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
+$bgcolor = $paper_fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 $modules = Paper_utils::get_modules($property_id, $mysqli);
 
