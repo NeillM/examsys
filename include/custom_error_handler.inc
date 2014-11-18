@@ -194,8 +194,8 @@ function error_handling($context = null) {
         }
         $context1[$key] = $tmp;
       } elseif (is_array($value)) {
-        //inner loop
-        $context1[$key] = error_handling($value);
+        // Just use basic error handling as this was causing endless loops when fed back recursively into this function.
+        return $context;
       } else {
         $context1[$key] = $value;
       }
