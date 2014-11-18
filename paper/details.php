@@ -142,7 +142,7 @@ function check_duplicates($q_screens, $string) {
  * @param array $status_array		- Array of status objects
  * @param object $db						- MySQLi connection.
  */
-function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $settings, $db) {
+function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $settings, $properties, $db) {
 	$question_marks = $temp_array[$row_no]['original_marks'];
 	$status 				= $temp_array[$row_no]['status'];
 	$score_method 	= $temp_array[$row_no]['score_method'];
@@ -202,6 +202,8 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
         $temp_array[$row_no]['warnings'] = $string['nolabels'];
       }
+    } elseif ($q_type == 'random' and $properties->get_paper_type() == '2') {
+      $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
@@ -730,7 +732,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $mysqli);
+        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -832,7 +834,7 @@ function check_latex_random($q_ids, $mysqli) {
     if ($properties->get_paper_type() < 3) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $mysqli);
+			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
 		}
 		
     // If we had random questions on paper need to check if they need LaTeX

@@ -61,4 +61,5 @@ $string['deletescreenbreak'] = 'Delete screen break';
 $string['next'] = 'Next >>';
 $string['na'] = 'N/A';
 $string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
+$string['notsummativeexams'] = 'Should not use with Summative Exams';
 ?>
