@@ -142,7 +142,7 @@ if (isset($_POST['submit'])) {
 
 	echo draw_toprightmenu();
 
-  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
+  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&repcourse=" . $_GET['repcourse'] . "\" method=\"post\">\n";
   echo '<div class="head_title">';
   echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
   echo '<div class="breadcrumb" style="height:20px"><a href="../index.php">' . $string['home'] . '</a>';
