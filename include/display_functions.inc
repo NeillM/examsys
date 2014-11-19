@@ -602,7 +602,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-					echo "sendTextToAS3('" . $language . "','q" . $question_no . "', 1, '" . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "');\n";
+					echo "sendTextToAS3('" . $language . "','q" . $question_no . "', 1, '../media/" . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "');\n";
 					echo "</script>\n";
 					}
 				?>

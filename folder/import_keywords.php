@@ -77,7 +77,7 @@ $file_problem = false;
 if (isset($_POST['submit'])) {
   $filename = $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_keywords.txt';
   
-  if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
+  if ($_FILES['txtfile']['type'] == 'text/plain' and $_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
       exit();

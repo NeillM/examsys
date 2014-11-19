@@ -278,7 +278,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   <?php
     if ($userObject->has_role('SysAdmin')) {
   ?>
-    $('.day').dblclick(function() {
+    $('.day, .daycur').dblclick(function() {
       newEvent(this.id);
     });
   <?php
@@ -620,7 +620,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
         } elseif (($day_no - $subtract) <= $days_in_month) {
           $dayid = 'd' . ($day_no - $subtract) . '_' . $current_month . '_' .$current_year;
           if (($day_no - $subtract) == date("j") and $current_month == date("n") and $current_year == date("Y")) {  // Current day
-            echo '<td class="daycur" id=\"$dayid\">';
+            echo "<td class=\"daycur\" id=\"$dayid\">";
           } else {
             echo "<td class=\"day\" id=\"$dayid\">";
           }
