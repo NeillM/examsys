@@ -114,8 +114,8 @@ $parts = count($folders_array) - 1;
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     function deleteFolder() {
-      notice=window.open("../delete/check_delete_folder.php?folderID=<?php echo $folder; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      notice.moveTo(screen.width/2-210,screen.height/2-85);
+      notice=window.open("../delete/check_delete_folder.php?folderID=<?php echo $folder; ?>","notice","width=500,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-210,screen.height/2-105);
       if (window.focus) {
         notice.focus();
       }
