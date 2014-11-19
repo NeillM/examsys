@@ -541,6 +541,9 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     }
 
     switch ($q_type) {
+      case 'random':
+        echo "<div class=\"q_warning\">" . $string['randomwarning'] . "</div>\n";
+        break;
       case 'area':
         echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
         if ($exclusions->is_question_excluded($q_id)) {
@@ -1683,13 +1686,13 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
+<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
     body {margin-bottom: 10px}
     h1 {margin-left: 15px; font-size: 18pt}
     p {margin-left: 0; margin-right: 0}
     .figures {text-align: right}
     .q_no {text-align: right; vertical-align: top; width: 50px}
-    .grey {color: #808080}
     .extmatch li {padding-bottom: 14px; vertical-align: text-bottom; list-style-type: lower-roman}
     .correct {color: #000; font-weight: bold}
     .excluded {color:red; text-decoration: line-through}

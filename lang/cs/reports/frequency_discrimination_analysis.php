@@ -62,4 +62,5 @@ $string['warning1'] = 'Varování: Obtížnost je menší než 0.2';
 $string['warning2'] = 'Varování: Rozlišení je menší než 0.15';
 $string['abstain'] = 'Zdrželo se';
 $string['unmarkedscripts'] = '%d neohodnocených skript';
+$string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
 ?>
