@@ -33,8 +33,10 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 // Check the paperID exists
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-// Check the paper is not set to be linear
-if ($properties->get_bidirectional() == '0') {
+// Check the paper is not set to be linear.
+// Check if paper is Summative Exam.
+// Check if paper is not live.
+if ($properties->get_bidirectional() == '0' or $properties->get_paper_type() != '2' or !$properties->is_live()) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -131,10 +133,10 @@ exit();
 <h1 class="dkblue_header"><?php echo sprintf($string['questionscreen'], $questionNo, $screenNo); ?></h1>
 <textarea class="mceEditor" id="msg" name="msg" cols="80" rows="4" style="width:100%; height:340px"><?php echo htmlspecialchars($msg, ENT_NOQUOTES); ?></textarea><br />
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" class="cancel" /></div>
-<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
-<input type="hidden" name="q_id" value="<?php echo $q_id; ?>" />
-<input type="hidden" name="screenNo" value="<?php echo $screenNo; ?>" />
-<input type="hidden" name="questionNo" value="<?php echo $questionNo; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
+<input type="hidden" name="q_id" value="<?php echo $q_id ?>" />
+<input type="hidden" name="screenNo" value="<?php echo $screenNo ?>" />
+<input type="hidden" name="questionNo" value="<?php echo $questionNo ?>" />
 </form>
 
 </body>
