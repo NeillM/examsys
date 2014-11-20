@@ -23,14 +23,30 @@
 */
 
 require '../include/invigilator_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/noteutils.class.php';
+
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
+$userID = check_var('userID', 'REQUEST', true, false, true);  // User ID is the student ID.
+
+// Does the paper exist?
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+// Does the student exist?
+if (!UserUtils::userid_exists($userID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
 	  $note_msg = trim($_POST['note']);
 		if ($note_msg != '') {  // Check we are not saving nothing.
-			StudentNotes::add_note($_POST['student_userID'], $note_msg, $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
+			StudentNotes::add_note($userID, $note_msg, $paperID, $userObject->get_user_ID(), $mysqli);
 		}
 	} else {
 		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
@@ -40,25 +56,25 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
   <html>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <head><title><?php echo $string['note']; ?></title>
+  <head><title><?php echo $string['note'] ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
   <script>
     $(function () {
-      window.opener.location.href='./index.php?tab=<?php echo $_POST['paperID'] ?>';
+      window.opener.location.href='./index.php?tab=<?php echo $paperID ?>';
       window.close();
     });
   </script>
   </head>
   <body>
   <form>
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="window.close();" /></div>
+    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok'] ?>" onclick="window.close();" /></div>
   </form>
   <?php
   } else {
-    $student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
+    $student_details = UserUtils::get_user_details($userID, $mysqli);
 		    
-		$note_details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
+		$note_details = StudentNotes::get_note($paperID, $userID, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
@@ -66,7 +82,7 @@ if (isset($_POST['submit'])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-	<title><?php echo $string['note']; ?></title>
+	<title><?php echo $string['note'] ?></title>
 
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
@@ -96,14 +112,14 @@ if (isset($_POST['submit'])) {
   echo '</div>';
   
 
-  echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
+  echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required>" . $note_details['note'] . "</textarea><br />\n";
 ?>
 
 <br />
 <div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
-<input type="hidden" name="student_userID" value="<?php echo $_GET['userID']; ?>" />
+<input type="hidden" name="userID" value="<?php echo $userID ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
 </form>
 
