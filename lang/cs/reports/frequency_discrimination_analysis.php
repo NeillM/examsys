@@ -63,4 +63,5 @@ $string['warning2'] = 'Varování: Rozlišení je menší než 0.15';
 $string['abstain'] = 'Zdrželo se';
 $string['unmarkedscripts'] = '%d neohodnocených skript';
 $string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
+$string['keywordwarning'] = '<strong>Warning:</strong> Keyword-based questions cannot be analysed in this report.';
 ?>
