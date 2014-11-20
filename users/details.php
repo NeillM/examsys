@@ -317,7 +317,8 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
       });
       
       if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
+        $("#maindata").tablesorter({
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
           sortList: [[1,0]] 
         });
       }
