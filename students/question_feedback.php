@@ -209,7 +209,7 @@ require '../config/finish.inc';
   echo '</table>';
   
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-  display_feedback($propertyObj, $userID, $log_type, $userObject, $metadataid, $mysqli, $status_array, $preview_q_id);
+  display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();
