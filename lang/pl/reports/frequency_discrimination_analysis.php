@@ -63,4 +63,5 @@ $string['warning2'] = 'Uwaga: Różnicowanie jest mniejsze niż 0.15';
 $string['abstain'] = 'Odmowa odpowiedzi';
 $string['unmarkedscripts'] = '%d nieocenione skrypty';
 $string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
+$string['keywordwarning'] = '<strong>Warning:</strong> Keyword-based questions cannot be analysed in this report.';
 ?>

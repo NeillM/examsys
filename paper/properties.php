@@ -1853,8 +1853,6 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 		$modules_array = $properties->get_modules();
 
-    //$q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
-
 		$total_modules = array_merge($staff_modules, $modules_array);
     
     $module_sql = implode("','", $total_modules);
@@ -1931,7 +1929,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       } else {
         echo "<input type=\"radio\" name=\"objectives_report\" value=\"1\" checked=\"checked\" />". $string['on'] . "</td><td><input type=\"radio\" name=\"objectives_report\" value=\"0\" />" . $string['off'] . "</td>";
       }
-      echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+      echo "<td>" . $string['objectivesreport'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/objectives_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
     }
     if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
@@ -1945,7 +1943,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "<td>" . $string['questionfeedback'] . "<br />";
       if ($properties->get_paper_type() == '2') echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
-      echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
+      echo "<a href=\"https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/question_feedback.php?id=" . $properties->get_crypt_name() . "</a></td></tr>\n";
     }
      
     if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
@@ -1958,7 +1956,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       } else {
         echo "<input type=\"radio\" name=\"cohort_performance\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"cohort_performance\" value=\"0\" />" . $string['off'] . "</td>";
       }
-      echo "<td>" . $string['cohortperformancefeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/students/performance_summary.php</a></td></tr>\n";
+      echo "<td>" . $string['cohortperformancefeedback'] . "<br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/performance_summary.php\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/performance_summary.php</a></td></tr>\n";
     }
 
     if (in_array($properties->get_paper_type(), array('1', '2'))) {
@@ -1971,7 +1969,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       } else {
         echo "<input type=\"radio\" name=\"external_examiner\" value=\"1\" checked=\"checked\" />" . $string['on'] . "</td><td><input type=\"radio\" name=\"external_examiner\" value=\"0\" />" . $string['off'] . "</td>";
       }
-      echo "<td>" . $string['externalexaminerfeedback'] . "<br /><span style=\"color:#808080\">" . $string['externalwarning'] . "</span><br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . "/reviews/\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . "/reviews/</a></td></tr>\n";
+      echo "<td>" . $string['externalexaminerfeedback'] . "<br /><span style=\"color:#808080\">" . $string['externalwarning'] . "</span><br /><a href=\"https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/\" target=\"_blank\">https://" . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/</a></td></tr>\n";
     }
 
     echo "</table>\n";

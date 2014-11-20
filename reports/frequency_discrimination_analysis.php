@@ -544,6 +544,9 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
       case 'random':
         echo "<div class=\"q_warning\">" . $string['randomwarning'] . "</div>\n";
         break;
+      case 'keyword_based':
+        echo "<div class=\"q_warning\">" . $string['keywordwarning'] . "</div>\n";
+        break;
       case 'area':
         echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
         if ($exclusions->is_question_excluded($q_id)) {

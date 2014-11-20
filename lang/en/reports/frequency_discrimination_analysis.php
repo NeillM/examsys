@@ -63,4 +63,5 @@ $string['warning2'] = 'Warning: Discrimination less than 0.15';
 $string['abstain'] = 'Abstain';
 $string['unmarkedscripts'] = '%d unmarked scripts';
 $string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
+$string['keywordwarning'] = '<strong>Warning:</strong> Keyword-based questions cannot be analysed in this report.';
 ?>

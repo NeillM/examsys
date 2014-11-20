@@ -334,7 +334,7 @@ if (!$userObject->has_role('Student')) {
             if ($paper['original_type'] == '4') {
               $script_name = '../osce/view_form.php?id=' . $paper['crypt_name'];
             } else {
-              $script_name = '../paper/feedback.php?id=' . $paper['crypt_name'];
+              $script_name = '../students/question_feedback.php?id=' . $paper['crypt_name'];
             }
           } else {
             $script_name = '../paper/user_index.php?id=' . $paper['crypt_name'];
