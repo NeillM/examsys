@@ -546,7 +546,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
         $modules = '\'' . $modules . '\'';
 
-        echo "<div class=\"cohortlist\" id=\"cohortlist_" . $paperID . "\">\n";
+        echo "<div class=\"cohortlist\" id=\"cohortlist_" . $property_id . "\">\n";
         get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $mysqli);
         echo "</div>\n";
         ?>
