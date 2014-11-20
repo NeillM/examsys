@@ -35,4 +35,5 @@ $string['finish'] = 'Finish';
 $string['mark_progress'] = 'Student %d of %d';
 $string['answer_saved'] = 'Marks saved';
 $string['noattempts'] = 'This paper has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
+$string['tooltip_comments'] = 'Comments are only for staff. These cannot be viewed by students.';
 ?>

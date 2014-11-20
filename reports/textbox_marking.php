@@ -42,8 +42,6 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 $paper_type = $properties->get_paper_type();
 $paper_title = $properties->get_paper_title();
 
-
-
 // Check the question exists on the paper.
 if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -381,7 +379,7 @@ SQL;
         }
         echo '</ul>' . "\n";
       }
-      echo '<label for="comment_' . $answer_no . '"><strong>' . $string['comments'] . '</strong><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="6" class="comment-box">' . $comments . '</textarea>' . "\n";
+      echo '<label for="comment_' . $answer_no . '"><strong>' . $string['comments'] . '</strong> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_comments'] . '" /><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="6" class="comment-box">' . $comments . '</textarea>' . "\n";
 
       if ($answer_no != 1 and $answer_no <= $candidate_no) {
         echo '<input type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '" value="' . $string['previous'] . '" />';

@@ -35,4 +35,5 @@ $string['finish'] = 'Dokončit';
 $string['mark_progress'] = 'Student %d of %d';
 $string['answer_saved'] = 'Známky uloženy';
 $string['noattempts'] = 'V daném období <strong>%s &ndash; %s</strong> zkoušku nesložil žádný student.';
+$string['tooltip_comments'] = 'Comments are only for staff. These cannot be viewed by students.';
 ?>
