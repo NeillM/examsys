@@ -359,19 +359,6 @@ if ($critical_error == '') {
             save_objective_mappings($mysqli, $_POST['objective_modules'], $paper_id, $question->id);
           }
 
-          // Save a default team if defined
-          if ($mode == 'Add') {
-            $team_for_state = '';
-            if ($module != '') {
-              $team_for_state = $module;
-            } else {
-              $q_teams = $question->get_teams();
-              $q_teams = array_values($q_teams);
-              if (is_array($q_teams) and count($q_teams) > 0) $team_for_state = $q_teams[0];
-            }
-            $stateutil->setState($userObject->get_user_ID(), 'default_team', $team_for_state, '/question/edit/index.php', $mysqli);
-          }
-
           // Stuff not to do on correction/limited save
           if (!isset($_POST['submit']) or $_POST['submit'] != $string['correct']) {
             // Save review comments and responses
@@ -648,8 +635,6 @@ if ($question->get_type() != '') require_once '../../include/question/addedit/' 
 $q_teams = array();
 if (count($question->get_teams()) > 0) {
   $q_teams = $question->get_teams();
-} elseif (isset($state['default_team'])) {
-  $q_teams = explode(',', $state['default_team']);
 } elseif (isset($module)) {
   $q_teams[$module] = module_utils::get_moduleid_from_id($module, $mysqli);
 }

@@ -25,6 +25,8 @@
  */
 
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/questionutils.class.php';
+require_once $cfg_web_root . 'classes/keywordutils.class.php';
 
 Class Paper_utils extends RogoStaticSingleton {
   public static $inst = NULL;
@@ -571,13 +573,42 @@ Class PaperUtils {
    * @param  array      $screen      The screen number to check
    * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
    */
-  function need_interactiveQ($screen_data, $screen) {
+  function need_interactiveQ($screen_data, $screen, $db) {
     $interactive = false;
-
+    $checktypes = array('hotspot', 'labelling', 'area');
     if (isset($screen_data[$screen])) {
       foreach ($screen_data[$screen] as $question_part) {
-        if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
+        if (in_array($question_part[0], $checktypes)) {
           $interactive = true;
+        } else if ($question_part[0] == 'random') {
+          $options = QuestionUtils::get_options_text($question_part[1], $db);
+          $types = array();
+          foreach ($options as $opt) {
+              $qtype = QuestionUtils::get_question_type($opt, $db);
+              $types[] = $qtype;
+          }
+          foreach ($types as $t) {
+            if (in_array($t, $checktypes)) {
+              $interactive = true;
+              break;
+            }
+          }
+        } else if ($question_part[0] == 'keyword_based') {
+          $options = QuestionUtils::get_options_text($question_part[1], $db);
+          foreach ($options as $opt) {
+            $keywords = keyword_utils::get_keyword_questions($opt, $db);
+            $types = array();
+            foreach ($keywords as $key) {
+              $qtype = QuestionUtils::get_question_type($key, $db);
+              $types[] = $qtype;
+            }
+          }
+          foreach ($types as $t) {
+            if (in_array($t, $checktypes)) {
+              $interactive = true;
+              break;
+            }
+          }
         }
       }
     }
@@ -593,7 +624,7 @@ Class PaperUtils {
    */
   public function get_recent($userID, $db) {
     $recent = array();
-    
+
     $result = $db->prepare("SELECT paperID, paper_title FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
     $result->bind_param('i', $userID);
     $result->execute();

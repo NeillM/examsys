@@ -329,5 +329,43 @@ SQL;
 
     return $count;
   }
+
+  /**
+   * Function to get available options text for question
+   *
+   * @param int $qid question identifier
+   * @param mysqli $db
+   * @return array option_text for supplied option
+   */
+  static function get_options_text($qid, $db) {
+    $options = $db->prepare("SELECT option_text FROM options WHERE o_id = ?");
+    $options->bind_param('i', $qid);
+    $options->execute();
+    $options->store_result();
+    $options->bind_result($optionstext);
+    $optionsarray = array();
+    while ($options->fetch()) {
+        $optionsarray[] = $optionstext;
+    }
+    $options->close();
+    return $optionsarray;
+  }
+
+  /**
+   * Function to get type of question
+   *
+   * @param int $qid question identifier
+   * @param mysqli $db
+   * @return string question type
+   */
+  static function get_question_type($qid, $db) {
+    $type = $db->prepare("SELECT q_type FROM questions WHERE q_id = ?");
+    $type->bind_param('i', $qid);
+    $type->execute();
+    $type->bind_result($qtype);
+    $type->fetch();
+    $type->close();
+    return $qtype;
+  }
 }
 ?>
