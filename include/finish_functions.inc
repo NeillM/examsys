@@ -312,7 +312,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
   }
   $answer_data->close();
 	
-	$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+  $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 	
   $paper[$q_no]['totalpos'] = qMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method);
   $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks_correct, $paper[$q_no]['option_text'], $paper[$q_no]['correct'], $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
@@ -320,10 +320,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
   // Parse for random questions.
   for ($i=1; $i<=$q_no; $i++) {
     if ($paper[$i]['q_type'] == 'random' or $paper[$i]['q_type'] == 'keyword_based') {
-      if ($paper[$i]['q_type'] == 'keyword_based') {
-        $selected_q_id = (isset($_POST['q' . $i . '_randomID'])) ? $_POST['q' . $i . '_randomID'] : 0;
-      } else {
-        $possible_array = array();
+      
+      $possible_array = array();
+      if ($paper[$i]['q_type'] == 'random') {
         foreach ($paper[$i]['option_text'] as $checkID) {
           $used = false;
           for ($j = 1; $j <= $q_no; $j++) {
@@ -336,17 +335,36 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             $possible_array[] = $checkID;
           }
         }
-
-        $possible_questions = implode(',', $possible_array);
-
-        $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE metadataID = ? AND screen = ? AND q_id IN ($possible_questions) ORDER BY id");
-        $answer_data->bind_param('ii', $metadataid, $paper[$i]['screen']);
-        $answer_data->execute();
-        $answer_data->bind_result($selected_q_id);
-        $answer_data->fetch();
-        $answer_data->close();
+      } else {
+        // Keyword.
+        $keyword = $mysqlidb->prepare("SELECT q_id from keywords_question where keywordID = ?");
+        $keyword->bind_param('i', $paper[$i]['option_text'][0]);
+        $keyword->execute();
+        $keyword->store_result();
+        $keyword->bind_result($checkID);
+        while ($keyword->fetch()) {
+          $used = false;
+          for ($j = 1; $j <= $q_no; $j++) {
+            if ($paper[$j]['q_id'] == $checkID) {
+              $used = true;
+              break;
+            }
+          }
+          if ($used == false) {
+            $possible_array[] = $checkID;
+          }
+        }
+        $keyword->close();
       }
+      $possible_questions = implode(',', $possible_array);
 
+      $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE metadataID = ? AND screen = ? AND q_id IN ($possible_questions) ORDER BY id");
+      $answer_data->bind_param('ii', $metadataid, $paper[$i]['screen']);
+      $answer_data->execute();
+      $answer_data->bind_result($selected_q_id);
+      $answer_data->fetch();
+      $answer_data->close();
+      
       // Look up selected question and overwrite data.
       if (isset($selected_q_id) and $selected_q_id > 0) {
         $stems = 0;
