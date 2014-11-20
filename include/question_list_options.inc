@@ -387,7 +387,27 @@ if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false a
 </div>
 <?php
 
-  makeMenu(array($string['info']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info",$string['keyword_based']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based",$string['random']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random","-"=>"-",$string['area']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area",$string['calculation']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc",$string['dichotomous']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous",$string['extmatch']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch",$string['blank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank",$string['hotspot']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot",$string['labelling']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling",$string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert",$string['matrix']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq",$string['mrq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq",$string['rank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank",$string['sct']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct",$string['textbox']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox",$string['true_false']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false"));
+  makeMenu(array(
+    $string['info'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info&module=$module",
+    $string['keyword_based'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based&module=$module",
+    $string['random'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random&module=$module",
+    "-" => "-",
+    $string['area'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area&module=$module",
+    $string['calculation'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc&module=$module",
+    $string['dichotomous'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous&module=$module",
+    $string['extmatch'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch&module=$module",
+    $string['blank'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank&module=$module",
+    $string['hotspot'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot&module=$module",
+    $string['labelling'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling&module=$module",
+    $string['likert'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert&module=$module",
+    $string['matrix'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix&module=$module",
+    $string['mcq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq&module=$module",
+    $string['mrq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq&module=$module",
+    $string['rank'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank&module=$module",
+    $string['sct'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct&module=$module",
+    $string['textbox'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox&module=$module",
+    $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false&module=$module")
+  );
 
   hideMenuScript($menuNo);
 ?>
