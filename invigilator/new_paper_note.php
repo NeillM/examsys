@@ -25,8 +25,15 @@
 require '../include/invigilator_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/noteutils.class.php';
+require_once '../classes/paperutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+// Does the paper exist?
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
@@ -53,7 +60,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
   <form>
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="closeWindow();" /></div>
+    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok'] ?>" class="ok" onclick="closeWindow();" /></div>
   </form>
   <?php
   } else {
@@ -110,7 +117,7 @@ if (isset($_POST['submit'])) {
 </table>
 <br />
 <div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" /></div>
-<input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
+<input type="hidden" name="note_id" value="<?php echo $note_details['note_id'] ?>" />
 </form>
 
 </body>

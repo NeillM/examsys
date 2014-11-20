@@ -25,13 +25,28 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/noteutils.class.php';
 
+$userID = check_var('userID', 'REQUEST', true, false, true);
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+// Does the paper exist?
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+// Does the student exist?
+if (!UserUtils::userid_exists($userID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-		StudentNotes::add_note($_POST['userID'], $_POST['note'], $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
+		StudentNotes::add_note($userID, $_POST['note'], $paperID, $userObject->get_user_ID(), $mysqli);
 	} else {
 		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
 	}
@@ -54,7 +69,7 @@ if (isset($_POST['submit'])) {
   ?>
   <script>
     function closeWindow() {
-      window.opener.location = "details.php?userID=<?php echo $_POST['userID']; ?>&tab=notes";
+      window.opener.location = "details.php?userID=<?php echo $userID ?>&tab=notes";
       window.close();
     }
   </script></head>
@@ -126,16 +141,16 @@ if (isset($_POST['submit'])) {
 	$disabled = '';
 	$note_details = array('note_id'=>0, 'note'=>'');
 	
-	$student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
+	$student_details = UserUtils::get_user_details($userID, $mysqli);
   
 	if (isset($_GET['paperID'])) {
     echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
 		
-		$note_details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
+		$note_details = StudentNotes::get_note($_GET['paperID'], $userID, $mysqli);
 		
     echo '<strong>' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['initials'] . '</strong><br />';
   } else {
-		$student_modules = UserUtils::load_student_modules($_GET['userID'], $mysqli);
+		$student_modules = UserUtils::load_student_modules($userID, $mysqli);
 		
 		$current_year = date_utils::get_current_academic_year();
 		$module_IDs = array();
@@ -164,10 +179,10 @@ if (isset($_POST['submit'])) {
   echo "<br />" . $string['note'] . "<br />\n";
   echo "<div style=\"text-align:center\"><textarea name=\"note\" id=\"note\" required>" . $note_details['note'] . "</textarea></div>\n";
 ?>
-<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"<?php echo $disabled; ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
-<input type="hidden" name="userID" value="<?php echo $_GET['userID']; ?>" />
-<input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling']; ?>" />
-<input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"<?php echo $disabled ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<input type="hidden" name="userID" value="<?php echo $userID ?>" />
+<input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling'] ?>" />
+<input type="hidden" name="note_id" value="<?php echo $note_details['note_id'] ?>" />
 </form>
 
 </body>
