@@ -571,13 +571,42 @@ Class PaperUtils {
    * @param  array      $screen      The screen number to check
    * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
    */
-  function need_interactiveQ($screen_data, $screen) {
+  function need_interactiveQ($screen_data, $screen, $db) {
     $interactive = false;
-
+    $checktypes = array('hotspot', 'labelling', 'area');
     if (isset($screen_data[$screen])) {
       foreach ($screen_data[$screen] as $question_part) {
-        if ($question_part[0] == 'hotspot' or $question_part[0] == 'labelling' or $question_part[0] == 'area') {
+        if (in_array($question_part[0], $checktypes)) {
           $interactive = true;
+        } else if ($question_part[0] == 'random') {
+          $options = $this->get_options_text($question_part[1], $db);
+          $types = array();
+          foreach ($options as $opt) {
+              $qtype = $this->get_question_type($opt, $db);
+              $types[] = $qtype;
+          }
+          foreach ($types as $t) {
+            if (in_array($t, $checktypes)) {
+              $interactive = true;
+              break;
+            }
+          }
+        } else if ($question_part[0] == 'keyword_based') {
+          $options = $this->get_options_text($question_part[1], $db);
+          foreach ($options as $opt) {
+            $keywords = $this->get_keyword_questions($opt, $db);
+            $types = array();
+            foreach ($keywords as $key) {
+              $qtype = $this->get_question_type($key, $db);
+              $types[] = $qtype;
+            }
+          }
+          foreach ($types as $t) {
+            if (in_array($t, $checktypes)) {
+              $interactive = true;
+              break;
+            }
+          }
         }
       }
     }
@@ -593,7 +622,7 @@ Class PaperUtils {
    */
   public function get_recent($userID, $db) {
     $recent = array();
-    
+
     $result = $db->prepare("SELECT paperID, paper_title FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -607,4 +636,62 @@ Class PaperUtils {
     return $recent;
   }
   
+  /**
+   * Function to get available options text for question
+   * 
+   * @param int $qid question identifier
+   * @param mysqli $db
+   * @return array option_text for supplied option
+   */
+  private function get_options_text($qid, $db) {
+    $options = $db->prepare("SELECT option_text FROM options WHERE o_id = ?");
+    $options->bind_param('i', $qid);
+    $options->execute();
+    $options->store_result();
+    $options->bind_result($optionstext);
+    $optionsarray = array();
+    while ($options->fetch()) {
+        $optionsarray[] = $optionstext;
+    }
+    $options->close();
+    return $optionsarray;
+  }
+
+  /**
+   * Function to get type of question
+   *
+   * @param int $qid question identifier
+   * @param mysqli $db
+   * @return string question type
+   */
+  private function get_question_type($qid, $db) {
+    $type = $db->prepare("SELECT q_type FROM questions WHERE q_id = ?");
+    $type->bind_param('i', $qid);
+    $type->execute();
+    $type->bind_result($qtype);
+    $type->fetch();
+    $type->close();
+    return $qtype;
+  }
+
+  /**
+   * Function to get questions from keyword
+   *
+   * @param int $kid keyword identifier
+   * @param mysqli $db
+   * @return array question identifiers
+   */
+  private function get_keyword_questions($kid, $db) {
+    $keyword = $db->prepare("SELECT q_id FROM keywords_question WHERE keywordID = ?");
+    $keyword->bind_param('i', $kid);
+    $keyword->execute();
+    $keyword->store_result();
+    $keyword->bind_result($question);
+    $keywordarray = array();
+    while ($keyword->fetch()) {
+        $keywordarray[] = $question;
+    }
+    $keyword->close();
+    return $keywordarray;
+  }
 }
