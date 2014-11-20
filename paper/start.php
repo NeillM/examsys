@@ -1368,7 +1368,7 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
  * @param array $string   			- Contains language translations.
  *
  */
-function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, $used_questions, $db, $string) {
+function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $db, $string) {
   $selected_q_id = '';
   $unique = true;
   $current_screen = $random_q_data['screen'];
