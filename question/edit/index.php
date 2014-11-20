@@ -168,9 +168,11 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
   if ($question->get_type() == 'labelling') {
     $label_images = array();
     for ($i = 1; $i <= 6; $i++) {
-      $lab_media = uploadFile('label_media' . $i);
-      if ($lab_media !== false) {
-        $label_images[] = $lab_media;
+      if (isset($_FILES['label_media' . $i]) and $_FILES['label_media' . $i]['name'] != '') {
+        $lab_media = uploadFile('label_media' . $i);
+        if ($lab_media !== false) {
+          $label_images[] = $lab_media;
+        }
       }
     }
   }
