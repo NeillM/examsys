@@ -94,7 +94,7 @@ if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user
   $on_staff_module = true;
 } else {
   $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
-  foreach ($paper_modules as $paper_moduleID=>$paper_module) {
+  foreach ($paper_modules as $paper_moduleID => $paper_module) {
     if ($userObject->is_staff_user_on_module($paper_moduleID)) {
       $on_staff_module = true;
     }
@@ -203,6 +203,8 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
         $temp_array[$row_no]['warnings'] = $string['nolabels'];
       }
     } elseif ($q_type == 'random' and $properties->get_paper_type() == '2') {
+      $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
+    } elseif ($q_type == 'keyword_based' and $properties->get_paper_type() == '2') {
       $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other') {
@@ -844,7 +846,7 @@ function check_latex_random($q_ids, $mysqli) {
 		
     if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark = ?, total_mark = ?, latex_needed = ? WHERE property_id = ?");
-      $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $_GET['paperID']);
+      $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $paperID);
       $result->execute();
       $result->close();
     }
@@ -1025,8 +1027,12 @@ function check_latex_random($q_ids, $mysqli) {
     echo "<td id=\"icon_" . ($question_number+1) . "\" class=\"{$killer_class}{$info_class}\">";
     if ($temp_array[$x]['q_type'] == 'random') {
       $dice_no = rand(1, 6);
-      if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
+      if ($temp_array[$x]['leadin'] == '') {
+        $temp_array[$x]['leadin'] = 'Random question block';
+      }
       echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
+    } elseif ($temp_array[$x]['q_type'] == 'keyword_based') {
+      echo '<img src="../artwork/keyword_q.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
     }
     echo '</td>';
 
@@ -1041,7 +1047,9 @@ function check_latex_random($q_ids, $mysqli) {
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
-      if ($temp_array[$x]['warnings'] != '') echo '<span class="q_warning">' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') {
+        echo '<span class="q_warning">' . $temp_array[$x]['warnings'] . '</span>';
+      }
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
 			if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {

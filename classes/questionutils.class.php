@@ -34,7 +34,7 @@ Class QuestionUtils {
    * @return string The leadin
    */
   static function question_exists($q_id, $db) {
-    $stmt = $db->prepare("SELECT q_id FROM questions WHERE q_id = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT q_id FROM questions WHERE q_id = ? AND deleted IS NULL LIMIT 1");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->store_result();

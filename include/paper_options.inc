@@ -664,9 +664,32 @@ if ($properties->get_paper_type() == '2') {
   }
 
   if ($properties->get_paper_type() == '6') {
-    makeMenu(array($string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params"));
+    makeMenu(array(
+      $string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",
+      $string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params")
+    );
   } else {
-    makeMenu(array($string['info']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info$params",$string['keyword_based']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based$params",$string['random']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random$params","-"=>"-",$string['area']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area$params",$string['calculation']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc$params",$string['dichotomous']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous$params",$string['extmatch']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch$params",$string['blank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank$params",$string['hotspot']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot$params",$string['labelling']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling$params",$string['likert']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",$string['matrix']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix$params",$string['mcq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params",$string['mrq']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq$params",$string['rank']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank$params",$string['sct']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct$params",$string['textbox']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox$params",$string['true_false']=>"{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params"));
+    makeMenu(array(
+      $string['info'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info$params",
+      $string['keyword_based'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based$params",
+      $string['random'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random$params",
+      "-" => "-",
+      $string['area'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=area$params",
+      $string['calculation'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=enhancedcalc$params",
+      $string['dichotomous'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=dichotomous$params",
+      $string['extmatch'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=extmatch$params",
+      $string['blank'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=blank$params",
+      $string['hotspot'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=hotspot$params",
+      $string['labelling'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=labelling$params",
+      $string['likert'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",
+      $string['matrix'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=matrix$params",
+      $string['mcq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params",
+      $string['mrq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mrq$params",
+      $string['rank'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank$params",
+      $string['sct'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct$params",
+      $string['textbox'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox$params",
+      $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params")
+    );
   }
 
 	$importexport_menu = array();
@@ -690,7 +713,10 @@ if ($properties->get_paper_type() == '2') {
 
 	makeMenu($importexport_menu);
 	
-  makeMenu(array($string['Continuous']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(), $string['Page-break per question']=>$configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1"));
+  makeMenu(array(
+    $string['Continuous'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(),
+    $string['Page-break per question'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1")
+  );
 
   hideMenuScript($menuNo);
 
