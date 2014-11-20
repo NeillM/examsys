@@ -25,6 +25,8 @@
  */
 
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/questionutils.class.php';
+require_once $cfg_web_root . 'classes/keywordutils.class.php';
 
 Class Paper_utils extends RogoStaticSingleton {
   public static $inst = NULL;
@@ -579,10 +581,10 @@ Class PaperUtils {
         if (in_array($question_part[0], $checktypes)) {
           $interactive = true;
         } else if ($question_part[0] == 'random') {
-          $options = $this->get_options_text($question_part[1], $db);
+          $options = QuestionUtils::get_options_text($question_part[1], $db);
           $types = array();
           foreach ($options as $opt) {
-              $qtype = $this->get_question_type($opt, $db);
+              $qtype = QuestionUtils::get_question_type($opt, $db);
               $types[] = $qtype;
           }
           foreach ($types as $t) {
@@ -592,12 +594,12 @@ Class PaperUtils {
             }
           }
         } else if ($question_part[0] == 'keyword_based') {
-          $options = $this->get_options_text($question_part[1], $db);
+          $options = QuestionUtils::get_options_text($question_part[1], $db);
           foreach ($options as $opt) {
-            $keywords = $this->get_keyword_questions($opt, $db);
+            $keywords = keyword_utils::get_keyword_questions($opt, $db);
             $types = array();
             foreach ($keywords as $key) {
-              $qtype = $this->get_question_type($key, $db);
+              $qtype = QuestionUtils::get_question_type($key, $db);
               $types[] = $qtype;
             }
           }
@@ -636,62 +638,4 @@ Class PaperUtils {
     return $recent;
   }
   
-  /**
-   * Function to get available options text for question
-   * 
-   * @param int $qid question identifier
-   * @param mysqli $db
-   * @return array option_text for supplied option
-   */
-  private function get_options_text($qid, $db) {
-    $options = $db->prepare("SELECT option_text FROM options WHERE o_id = ?");
-    $options->bind_param('i', $qid);
-    $options->execute();
-    $options->store_result();
-    $options->bind_result($optionstext);
-    $optionsarray = array();
-    while ($options->fetch()) {
-        $optionsarray[] = $optionstext;
-    }
-    $options->close();
-    return $optionsarray;
-  }
-
-  /**
-   * Function to get type of question
-   *
-   * @param int $qid question identifier
-   * @param mysqli $db
-   * @return string question type
-   */
-  private function get_question_type($qid, $db) {
-    $type = $db->prepare("SELECT q_type FROM questions WHERE q_id = ?");
-    $type->bind_param('i', $qid);
-    $type->execute();
-    $type->bind_result($qtype);
-    $type->fetch();
-    $type->close();
-    return $qtype;
-  }
-
-  /**
-   * Function to get questions from keyword
-   *
-   * @param int $kid keyword identifier
-   * @param mysqli $db
-   * @return array question identifiers
-   */
-  private function get_keyword_questions($kid, $db) {
-    $keyword = $db->prepare("SELECT q_id FROM keywords_question WHERE keywordID = ?");
-    $keyword->bind_param('i', $kid);
-    $keyword->execute();
-    $keyword->store_result();
-    $keyword->bind_result($question);
-    $keywordarray = array();
-    while ($keyword->fetch()) {
-        $keywordarray[] = $question;
-    }
-    $keyword->close();
-    return $keywordarray;
-  }
 }

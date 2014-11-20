@@ -61,4 +61,25 @@ Class keyword_utils {
     
     return $keyword;
   }
+
+  /**
+   * Function to get questions from keyword
+   *
+   * @param int $kid keyword identifier
+   * @param mysqli $db
+   * @return array question identifiers
+   */
+  static function get_keyword_questions($kid, $db) {
+    $keyword = $db->prepare("SELECT q_id FROM keywords_question WHERE keywordID = ?");
+    $keyword->bind_param('i', $kid);
+    $keyword->execute();
+    $keyword->store_result();
+    $keyword->bind_result($question);
+    $keywordarray = array();
+    while ($keyword->fetch()) {
+        $keywordarray[] = $question;
+    }
+    $keyword->close();
+    return $keywordarray;
+  }
 }
