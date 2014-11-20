@@ -167,7 +167,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
   $paper_postscript = $propertyObj->get_paper_postscript();
   $marking          = $propertyObj->get_marking();
   $max_screen       = $propertyObj->get_max_screen();
-  $moduleID         = $propertyObj->get_modules();$moduleID = $propertyObj->get_modules();
+  $moduleID         = $propertyObj->get_modules();
   $calendar_year    = $propertyObj->get_calendar_year();
   
   $metadataid = $log_metadata->get_metadata_id();
