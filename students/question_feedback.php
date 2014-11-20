@@ -109,7 +109,7 @@ $logger = new Logger($mysqli);
 if ($userObject->has_role('Student')) {
   $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  // Students write in the paperID
 } else {
-  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/paper/feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
+  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/students/question_feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
 }
 
 require '../config/finish.inc';
@@ -208,8 +208,24 @@ require '../config/finish.inc';
   echo $logo_html;
   echo '</table>';
   
+  // Get any marking override for the paper
+  $overrides = array();
+  $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
+          FROM marking_override m INNER JOIN users u ON m.marker_id = u.id
+          INNER JOIN log{$log_type} l ON m.log_id = l.id
+          WHERE user_id = ? AND paper_id = ?";
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('ii', $userID, $paperID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
+  while($result->fetch()) {
+    $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
+  }
+  $result->close();
+  
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-  display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $preview_q_id);
+  display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();
