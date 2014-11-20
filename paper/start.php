@@ -448,7 +448,7 @@ if ($css != '') {
 <?php
   if ($is_question_preview_mode === true) {
 ?>
-  var confirmSubmit = function() {
+  var confirmSubmit = function(event) {
     conductSave(event);
   }
 <?php
