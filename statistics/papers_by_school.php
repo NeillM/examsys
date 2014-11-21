@@ -70,7 +70,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <table class="stats">
 <tr>
 <th><?php echo $string['school']; ?></th>
-<th class="papertype"><?php echo $string['formative quiz']; ?></th>
+<th class="papertype"><?php echo $string['formative self-assessment']; ?></th>
 <th class="papertype"><?php echo $string['progress test']; ?></th>
 <th class="papertype"><?php echo $string['summative exam']; ?></th>
 <th class="papertype"><?php echo $string['survey']; ?></th>

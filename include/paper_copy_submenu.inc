@@ -113,7 +113,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
     case 0:
     case 1:
     case 2:
-      $types = array(0=>$string['formative quiz'], 1=>$string['progress test'], 2=>$string['summative exam']);
+      $types = array(0=>$string['formative self-assessment'], 1=>$string['progress test'], 2=>$string['summative exam']);
       break;
     case 3:
       $types = array(3=>$string['survey']);
