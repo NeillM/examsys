@@ -42,6 +42,39 @@ function display_row($month, $string, $month_paper_no, $month_papers_unused, $mo
   }
 }
 
+function count_labs($labs, &$lab_count) {
+  $lab_list = explode(',', $labs);
+  foreach ($lab_list as $labID) {
+    if ($labID != '') {
+      if (isset($lab_count[$labID])) {
+        $lab_count[$labID]++;
+      } else {
+        $lab_count[$labID] = 1;
+      }
+    }
+  }
+}
+
+function display_lab_stats($lab_count, $db) {
+  echo "<table class=\"stats\" style=\"width:300px !important\">\n";
+  echo "<tr><th>Computer Lab</th><th>Exam No</th></tr>";
+  $result = $db->prepare("SELECT id, name FROM labs ORDER BY name");
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($id, $name);
+  while ($result->fetch()) {
+    if (isset($lab_count[$id])) {
+      echo "<tr><td>$name</td><td class=\"n\">" . $lab_count[$id] . "</td></tr>";
+    } else {
+      $used_no = 0;
+      echo "<tr><td>$name</td><td class=\"n grey\">0</td></tr>";
+    }
+  }
+  $result->close();
+  
+  echo "</table>\n";
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -97,12 +130,16 @@ $old_month = '';
 $month_papers_unused = 0;
 $distinct_users = array();
 
+$lab_count = array();
+
 $result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%m'), start_date, end_date, labs FROM properties WHERE paper_type = '2' AND start_date >= " . $current_year . "0901000000 AND end_date < " . ($current_year+1) . "0831235959 AND labs != '' AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->store_result();
 $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date, $labs);
 while ($result->fetch()) {
   $paper_count = 0;
+  
+  count_labs($labs, $lab_count);
   
   $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
   $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
@@ -133,7 +170,6 @@ while ($result->fetch()) {
   }
   
   if ($paper_count > 0) {
-    $lab_no = substr_count($labs, ',') + 1;
     $total_paper_no++;
     $total_student_no += $paper_count;
     $month_paper_no++;
@@ -148,12 +184,16 @@ display_row($old_month, $string, $month_paper_no, $month_papers_unused, $month_s
 echo "<tr><td>&nbsp;</td><td class=\"n subtotal\">" . number_format($total_paper_no) . "</td><td class=\"n subtotal\">" . number_format($total_paper_unused) . "</td><td class=\"subtotal\" colspan=\"3\">&nbsp;</td><td class=\"n subtotal\">" . number_format($total_student_no) . "</td></tr>\n";
 
 $result->close();
-$mysqli->close();
 ?>
 </table>
 <br />
 <?php
   printf($string['uniquestudents'], number_format(count($distinct_users)));
+?>
+  <br />
+  <br />
+<?php
+  display_lab_stats($lab_count, $mysqli);
 ?>
 </blockquote>
 </div>
