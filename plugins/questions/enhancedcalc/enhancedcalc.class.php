@@ -652,130 +652,134 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * @param  array  $extra [description]
 	 */
 	public function render_feedback($extra = array()) {
-		global $string;
+            global $string;
 
-		// Make sure data is arrays not encoded
-		if (!is_array($this->useranswer)) {
-			$this->useranswer = json_decode($this->useranswer, true);
-		}
-		if (!is_array($this->settings)) {
-			$this->settings = json_decode($this->settings, true);
-		}
+            // Make sure data is arrays not encoded
+            if (!is_array($this->useranswer)) {
+                $this->useranswer = json_decode($this->useranswer, true);
+            }
+            if (!is_array($this->settings)) {
+                $this->settings = json_decode($this->settings, true);
+            }
 
-		if (isset($this->useranswer['vars'])) {
-			$varname = array_keys($this->useranswer['vars']);
-			$varvalue = array_values($this->useranswer['vars']);
-		} else {
-			$varname = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K');
-			$varvalue = array_fill(0, 11, '<span class="var_error"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!">&nbsp;ERROR</span>');
-		}
+            if (isset($this->useranswer['vars'])) {
+                $varname = array_keys($this->useranswer['vars']);
+                $varvalue = array_values($this->useranswer['vars']);
+            } else {
+                $varname = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K');
+                $varvalue = array_fill(0, 11, '<span class="var_error"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!">&nbsp;ERROR</span>');
+            }
 
-		$leadin = str_ireplace($varname, $varvalue, $this->leadin);
+            $leadin = str_ireplace($varname, $varvalue, $this->leadin);
 
-		// Deal with the failed variables
+            // Deal with the failed variables
 
-		if ($this->scenario != '') {
-			echo "<p>" . $this->scenario . "</p>\n";
-		}
-		if ($this->q_media != '') {
-			echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
-		}
-		
-		echo_content($leadin);
+            if ($this->scenario != '') {
+                echo "<p>" . $this->scenario . "</p>\n";
+            }
+            if ($this->q_media != '') {
+                echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
+            }
 
-		if (!isset($this->useranswer['uans']) or $this->useranswer['uans'] == '') {
-			if ($extra['hide_if_unanswered'] == 1) {
-				$extra['tmp_display_correct_answer']		= 0;
-				$extra['tmp_display_students_response'] = '0';
-				$extra['tmp_display_feedback']					= '0';
-				$extra['$tmp_display_question_mark']		= '0';
-			}
-		}
+            echo_content($leadin);
 
-		$saved_response = '';
-		$saved_response_clean = '';
-		if (isset($this->useranswer['uans'])) {
-			$saved_response = $this->useranswer['uans'];
-			$saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-		}
-		$part_id = 1;
+            if (!isset($this->useranswer['uans']) or $this->useranswer['uans'] == '') {
+                if ($extra['hide_if_unanswered'] == 1) {
+                    $extra['tmp_display_correct_answer'] = 0;
+                    $extra['tmp_display_students_response'] = '0';
+                    $extra['tmp_display_feedback'] = '0';
+                    $extra['$tmp_display_question_mark'] = '0';
+                }
+            }
 
-		$tmp_fback = $this->correct_fback;
+            $saved_response = '';
+            $saved_response_clean = '';
+            if (isset($this->useranswer['uans'])) {
+                $saved_response = $this->useranswer['uans'];
+                $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+            }
+            $part_id = 1;
 
-		echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
-		if ($extra['tmp_display_correct_answer'] == '1') {
-			echo '<td>';
-			if (isset($this->std[0])) {
-					echo display_std($this->std[0]);
-			}
-			echo '</td>';
-		} else {
-			echo '<td></td>';
-		}
+            $tmp_fback = $this->correct_fback;
 
-		if ($saved_response_clean == '') {
-			echo '<td>';
-			if ($extra['tmp_exclude'] == '1') {
-				echo '<span class="exclude">';
-			}
-			echo display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
-		} else {
-			echo '<td>';
-			if ($extra['tmp_exclude'] == '1') {
-				echo '<span class="exclude">';
-			}
-			
-			if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-				echo display_response($extra['tmp_display_students_response'], 'tick');
-			} elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-				echo display_response($extra['tmp_display_students_response'], 'half');
-			} elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_WRONG) {
-				echo display_response($extra['tmp_display_students_response'], 'cross');
-			} else {
-				echo display_response($extra['tmp_display_students_response'], 'unmarked');
-			}
-			echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />';
-		}
+            echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
+            if ($extra['tmp_display_correct_answer'] == '1') {
+                echo '<td>';
+                if (isset($this->std[0])) {
+                    echo display_std($this->std[0]);
+                }
+                echo '</td>';
+            } else {
+                echo '<td></td>';
+            }
+            $marked = true;
+            if ($saved_response_clean == '') {
+                echo '<td>';
+                if ($extra['tmp_exclude'] == '1') {
+                    echo '<span class="exclude">';
+                }
+                echo display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
+            } else {
+                echo '<td>';
+                if ($extra['tmp_exclude'] == '1') {
+                    echo '<span class="exclude">';
+                }
 
-		if ($this->useranswer['ans']['units_used'] == '') {
-			$display_units = '';
-		} else {
-			$display_units = ' ' . $this->useranswer['ans']['units_used'];
-		}
+                if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
+                    echo display_response($extra['tmp_display_students_response'], 'tick');
+                } elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
+                    echo display_response($extra['tmp_display_students_response'], 'half');
+                } elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_WRONG) {
+                    echo display_response($extra['tmp_display_students_response'], 'cross');
+                } else {
+                    echo display_response($extra['tmp_display_students_response'], 'unmarked');
+                    $marked = false;
+                }
+                if ($marked) {
+                    echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />';
+                }
+            }
 
-		if ($extra['tmp_display_correct_answer'] == '1') {
-			if (!isset($this->useranswer['status'])) {
-				echo ' <strong><span class="err">' . $string['unmarked'] . '</span></strong>';
-			} elseif (!isset($this->useranswer['cans'])) {
-				echo ' <strong><span class="err">' . $string['EnhancedCalcCorrectError'] . '</span></strong>';
-			} else {
-				echo ' <strong>' . $this->useranswer['cans'] . $display_units . '</strong>';
-			}
-		} else {
-			echo ' ';
-		}
+            if ($marked) {
+                if ($this->useranswer['ans']['units_used'] == '') {
+                    $display_units = '';
+                } else {
+                    $display_units = ' ' . $this->useranswer['ans']['units_used'];
+                }
+            }
+            if ($extra['tmp_display_correct_answer'] == '1') {
+                if (!isset($this->useranswer['status'])) {
+                    echo ' <strong><span class="err">' . $string['unmarked'] . '</span></strong>';
+                } elseif (!isset($this->useranswer['cans'])) {
+                    echo ' <strong><span class="err">' . $string['EnhancedCalcCorrectError'] . '</span></strong>';
+                } else {
+                    echo ' <strong>' . $this->useranswer['cans'] . $display_units . '</strong>';
+                }
+            } else {
+                echo ' ';
+            }
 
-		if (isset($this->useranswer['cans'])) {
-			if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-				echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . str_replace('#', '', $this->settings['fulltoltyp']);
-				echo ' (' . $this->useranswer['ans']['tolerance_fullansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_fullans'] . $display_units . ')';
-			}
-			if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-				echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . str_replace('#', '', $this->settings['parttoltyp']);
-				echo ' (' . $this->useranswer['ans']['tolerance_partialansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_partialans'] . $display_units . ')';
-			}
-		}
+            if (isset($this->useranswer['cans'])) {
+                if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
+                    echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . str_replace('#', '', $this->settings['fulltoltyp']);
+                    echo ' (' . $this->useranswer['ans']['tolerance_fullansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_fullans'] . $display_units . ')';
+                }
+                if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
+                    echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . str_replace('#', '', $this->settings['parttoltyp']);
+                    echo ' (' . $this->useranswer['ans']['tolerance_partialansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_partialans'] . $display_units . ')';
+                }
+            }
 
-		if ($extra['tmp_exclude'] == '1') {
-			echo '</span>';
-		}
-		echo "</td></tr>\n</table>\n";
-		if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') {
-      foreach ($varname as $individual_varname) {
-        $tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
-      }
-			echo "<br /><div class=\"fback\">" . $tmp_fback . "</div>\n";
-		}
+            if ($extra['tmp_exclude'] == '1') {
+                echo '</span>';
+            }
+            echo "</td></tr>\n</table>\n";
+            if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') {
+                foreach ($varname as $individual_varname) {
+                    $tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
+                }
+                echo "<br /><div class=\"fback\">" . $tmp_fback . "</div>\n";
+            }
 	}
 
 	/**
