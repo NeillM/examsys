@@ -192,7 +192,7 @@ $password           = $propertyObj->get_password();
 $modIDs							= array_keys($propertyObj->get_modules());
 
 // If OSCE paper we should exit as this is an invalid page.
-if ($test_type == 4) {
+if ($test_type == '4') {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
