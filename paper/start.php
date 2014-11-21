@@ -1113,6 +1113,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   if ($is_question_preview_mode) {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
   } else {
+    if ($is_preview_mode) {
+      echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
+    }
     if ($current_screen > $no_screens) {
       echo "<div class=\"callout\">\n<div id=\"calloutTxt\">" . $string['finishnote'] . "</div><b class=\"notch\"></b></div>\n";
     } elseif ($propertyObj->get_bidirectional() == 0) {
