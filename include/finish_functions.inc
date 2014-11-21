@@ -160,7 +160,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
 
 function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_metadata, $mysqlidb, $status_array, $overrides, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
-  
+
   $paperID          = $propertyObj->get_property_id();
   $paper_type       = $propertyObj->get_paper_type();
   $paper_title      = $propertyObj->get_paper_title();
@@ -495,8 +495,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
   }
 
   if ($preview_q_id == null) {
+    echo '<div class="screenbrk" style="height:30px; border-top:none"><span class="scr_no">' . sprintf($string['screen'], 1, $max_screen) . '</span></div>';
   ?>
-    <br />
     <div class="key">
     <table cellpadding="4" cellspacing="0" border="0" style="width:100%">
     <tr>
@@ -506,9 +506,11 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
     <?php echo $string['boldwords'] ; ?><br />
     <span class="fback"><?php echo $string['feedbackinred']; ?></span><br />
     <?php
-    if ($marking{0} == '2') echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> ' . $string['difficultyofthequestion'] . '</div></td>';
+    if ($marking{0} == '2') {
+      echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> ' . $string['difficultyofthequestion'] . '</div></td>';
+    }
     ?>
-    <td style="text-align:right; vertical-align:top; width:80px"><a href="javascript:window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
+    <td style="text-align:right; vertical-align:top; width:80px"><a href="window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
     </tr>
     </table>
     </div>
