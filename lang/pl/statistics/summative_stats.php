@@ -31,4 +31,6 @@ $string['totals'] = 'Wszystkich';
 $string['students'] = 'Studentów';
 $string['taken'] = 'Podjęty';
 $string['unused'] = 'Wolny';
+$string['computerlab'] = 'Computer Lab';
+$string['examno'] = 'Exam No';
 ?>

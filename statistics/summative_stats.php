@@ -55,9 +55,9 @@ function count_labs($labs, &$lab_count) {
   }
 }
 
-function display_lab_stats($lab_count, $db) {
-  echo "<table class=\"stats\" style=\"width:300px !important\">\n";
-  echo "<tr><th>Computer Lab</th><th>Exam No</th></tr>";
+function display_lab_stats($lab_count, $string, $db) {
+  echo "<table class=\"stats\" style=\"width:350px !important\">\n";
+  echo "<tr><th>" . $string['computerlab'] . "</th><th>" . $string['examno'] . "</th></tr>\n";
   $result = $db->prepare("SELECT id, name FROM labs ORDER BY name");
   $result->execute();
   $result->store_result();
@@ -193,7 +193,7 @@ $result->close();
   <br />
   <br />
 <?php
-  display_lab_stats($lab_count, $mysqli);
+  display_lab_stats($lab_count, $string, $mysqli);
 ?>
 </blockquote>
 </div>
