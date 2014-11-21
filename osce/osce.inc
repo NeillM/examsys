@@ -409,8 +409,12 @@ function set_classification($marking, &$user_results, $passmark, $user_no, $stri
     if ($user_results[$i]['killer_fail']) {
       $user_results[$i]['classification'] = $string['fail'];
     } elseif ($passmark == 'N/A') {     // Passmark is set to N/A - therefore use global rating from OSCE mark sheet
-      $rating_no = ($user_results[$i]['rating'] - 1);
-      $user_results[$i]['classification'] = $labels[$rating_no];
+      if (isset($user_results[$i]['rating']) and $user_results[$i]['rating'] > 0) {
+        $rating_no = ($user_results[$i]['rating'] - 1);
+        $user_results[$i]['classification'] = $labels[$rating_no];
+      } else {
+        $user_results[$i]['classification'] = '';
+      }
     } elseif ($user_results[$i]['percent'] >= $passmark) {
       $user_results[$i]['classification'] = $string['pass'];
     } else {
