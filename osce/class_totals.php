@@ -85,7 +85,6 @@ if ($borderline_method) {
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
-
 set_classification($propertyObj->get_marking(), $user_results, $passmark, $user_no, $string);
 $report->sort_results();
 $user_results = array_csort($user_results, $sortby, $ordering);
@@ -139,25 +138,18 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
     function setVars(metadataID, currentUserID) {
       $('#metadataID').val(metadataID);
       $('#userID').val(currentUserID);
-    }
-    
-    function viewScript() {
-      $('#menudiv').hide();
-      var winwidth = 750;
-      var winheight = screen.height-80;
-      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-    
-    function viewFeedback() {
-      $('#menudiv').hide();
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../students/objectives_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-    
-    function viewProfile() {
-      $('#menudiv').hide();
-      window.top.location = '../users/details.php?userID=' + $('#userID').val();
+      
+      if (metadataID == '') {
+        $('#item1').removeClass('popup_row');
+        $('#item1').addClass('popup_row_disabled');
+        $('#item2').removeClass('popup_row');
+        $('#item2').addClass('popup_row_disabled');
+      } else {
+        $('#item1').addClass('popup_row');
+        $('#item1').removeClass('popup_row_disabled');
+        $('#item2').addClass('popup_row');
+        $('#item2').removeClass('popup_row_disabled');
+      }
     }
     
 	<?php
@@ -167,14 +159,41 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
       if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({ 
           // sort on the first column and third column, order asc 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
           sortList: [[2,0],[3,0]] 
         });
       }
-      
-      $('.head_title').click(function() {
+     
+      $(document).click(function() {
         $('#menudiv').hide();
         $('#toprightmenu').hide();
-      })      
+      });
+      
+      // View OSCE Script
+      $('#item1').click(function() {
+        $('#menudiv').hide();
+        if ($('#metadataID').val() != '') {
+          var winwidth = 750;
+          var winheight = screen.height-80;
+          window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        }
+      });
+      
+      // View Feedback
+      $('#item2').click(function() {
+        $('#menudiv').hide();
+        if ($('#metadataID').val() != '') {
+          var winwidth = screen.width-80;
+          var winheight = screen.height-80;
+          window.open("../students/objectives_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        }
+      });
+      
+      // View student profile
+      $('#item3').click(function() {
+        $('#menudiv').hide();
+        window.location = '../users/details.php?userID=' + $('#userID').val();
+      });
       
     });
 	<?php
@@ -190,20 +209,16 @@ require '../include/toprightmenu.inc';
 	
 echo draw_toprightmenu();
 
-$popup_width = 180;
-if ($language != 'en') {
-  $popup_width = 300;
-}
 ?>
-<div id="menudiv" class="popupmenu" style="padding:5px; width:<?php echo $popup_width; ?>px">
-  <div class="popup_row" onclick="viewScript();">
+<div id="menudiv" class="popupmenu">
+  <div class="popup_row" id="item1">
     <div class="popup_icon"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item1"><?php echo $string['oscemarksheet'] ?></div>
+    <div class="popup_title"><?php echo $string['oscemarksheet'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="viewFeedback();">
+  <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item2"><?php echo $string['feedback']; ?></div>
+    <div class="popup_title"><?php echo $string['feedback']; ?></div>
   </div>
   
   <div class="popup_divider_row">
@@ -211,9 +226,9 @@ if ($language != 'en') {
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
   
-  <div class="popup_row" onclick="viewProfile();">
+  <div class="popup_row" id="item3">
     <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item3"><?php echo $string['studentprofile'] ?></div>
+    <div class="popup_title"><?php echo $string['studentprofile'] ?></div>
   </div>
 </div>
 
@@ -255,7 +270,6 @@ if ($language != 'en') {
   }
   echo "<div class=\"page_title\">$report_title</div>\n";
   echo "</div>\n";
-  
 
   // Output table header
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
@@ -277,7 +291,7 @@ if ($language != 'en') {
  
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
-      echo "<tr class=\"nonattend\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
+      echo "<tr class=\"nonattend\" onclick=\"popMenu(3, event); setVars('', '" . $user_results[$i]['userID'] . "');\"><td>&nbsp;</td><td>" . $user_results[$i]['title'] . "</td><td>" . $user_results[$i]['surname'] . "</td><td>" . $user_results[$i]['first_names'] . "</td><td>" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
     } else {
       echo "<tr onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['metadataID'] . "', '" . $user_results[$i]['userID'] . "');\">\n";
       echo "<td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" class=\"picon\" /></td>";
@@ -293,8 +307,10 @@ if ($language != 'en') {
       }
       
       echo '<td class="greyln col">' . $user_results[$i]['classification'];
-			if ($user_results[$i]['killer_fail'] == $string['fail']) echo '&nbsp;<img src="../artwork/skull_16.png" width=16" height="16" alt="skull" />';
-			echo '</td>';
+			if ($user_results[$i]['killer_fail'] == $string['fail']) {
+        echo '&nbsp;<img src="../artwork/skull_16.png" width=16" height="16" alt="skull" />';
+      }
+      echo '</td>';
       echo '<td class="greyln col">' . $user_results[$i]['display_started'] . '</td>';
       echo '<td class="greyln col">' . $user_results[$i]['examiner'] . '</td>';
       echo "</tr>\n";
