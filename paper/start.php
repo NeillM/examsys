@@ -1130,7 +1130,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   } else {
     echo $bottom_html;
     ?>
-    <span>
+    <span style="color:white">
     <?php
     if ($propertyObj->get_exam_duration() != null) {
       echo $timer_label;
