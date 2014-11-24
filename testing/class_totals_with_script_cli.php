@@ -64,7 +64,9 @@ function timestamp() {
 
 echo "\n" . timestamp() . ": Starting class totals check.\n";
 
-$rootpath =  basename(dirname(dirname(__FILE__)));
+// rootpath my be required depending on web server setup.
+//$rootpath =  basename(dirname(dirname(__FILE__)));
+$rootpath = '';
 $userresult = $mysqli->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
 $userresult->bind_param('s', $cfg_cron_user);
 $userresult->execute();
