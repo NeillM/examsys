@@ -33,9 +33,9 @@ require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
 require_once $cfg_web_root . 'classes/logger.class.php';
 $userObject = UserObject::get_instance();
 
-if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
-  // Current use is not Staff or External Examiner so display warning and exit.
-	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron'))) {
+  // Current user is not Staff, External Examiner or the system cron so display warning and exit.
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
 
@@ -70,7 +70,10 @@ if ($userObject->has_role('External Examiner')) {
 // $cron_allowed_pages is an array that contains the set of scripts that the system cron
 // CAN access all other pages should exit the cron
 $cron_allowed_pages = array("$cfg_root_path/testing/testing/class_totals_with_script_cli.php"=>1,
-                            "$cfg_root_path/testing/testing/classes/class_totals.php"=>1);
+                            "$cfg_root_path/reports/class_totals.php"=>1,
+                            "$cfg_root_path/reports/draw_distribution_chart.php"=>1,
+                            "$cfg_root_path/reports/draw_scatter_plot.php"=>1);
+
 if ($userObject->has_role('SysCron')) {
   if (!isset($cron_allowed_pages[$_SERVER['PHP_SELF']])) {
     $logger = new Logger($mysqli);
@@ -80,7 +83,7 @@ if ($userObject->has_role('SysCron')) {
 }
 
 // Get teams if the user is not an External Examiner.
-if ($userObject->has_role('External Examiner')) {
+if ($userObject->has_role('External Examiner') or $userObject->has_role('SysCron')) {
   $staff_modules = array();
 } else {
   $staff_modules = $userObject->get_staff_modules();
