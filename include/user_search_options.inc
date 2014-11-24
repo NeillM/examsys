@@ -109,6 +109,14 @@ if (isset($_GET['calendar_year'])) {
     $('.viewprofile').click(function() {
       document.location.href='details.php?userID=' + getLastID($('#userID').val());
     });
+    
+    $('#clearlti').click(function() {
+      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_clear_lti.php?userID=" + $('#userID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-225, screen.height/2-90);
+      if (window.focus) {
+        notice.focus();
+      }
+    });
 
     $(function () {
       $('#student_id').change(updateStaffChkBoxes);
@@ -294,6 +302,7 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
     if ($userObject->has_role('SysAdmin')) {
       echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="' . $string['deleteuser'] . '" />' . $string['deleteuser'] . '</div>';
+      echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/link_grey.png" alt="' . $string['clearltilinks'] . '" />' . $string['clearltilinks'] . '</div>';
     }
     echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
     echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
@@ -322,6 +331,7 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
   }
   if ($userObject->has_role('SysAdmin')) {
     echo '<div class="menuitem" onclick="deleteUser()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#" onclick="return false">' . $string['deleteuser'] . '</a></div>';
+    echo '<div class="menuitem" id="clearlti"><img class="sidebar_icon" src="../artwork/clear_lti_link.png" alt="' . $string['clearltilinks'] . '" /><a href="#" onclick="return false">' . $string['clearltilinks'] . '</a></div>';
   }
   if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
     echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';

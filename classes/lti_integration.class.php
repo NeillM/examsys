@@ -22,7 +22,7 @@ class lti_integration {
   public $description = 'Default';
   static function load() {
 
-    // Load the appropriate  lti integration class (if new one found load that else use this)
+    // Load the appropriate LTI integration class (if new one found load that else use this)
 
     $configObject = Config::get_instance();
 
@@ -36,7 +36,7 @@ class lti_integration {
       }
       return new lti_integration_extended();
     } else {
-      require_once $configObject->get('cfg_web_root') . '/plugins/LTI/' . 'default.class.php'; //$configObject->get('lti_integration'); //'config/integration/lti_integration.class.php';
+      require_once $configObject->get('cfg_web_root') . '/plugins/LTI/' . 'default.class.php';
 
       return new lti_integration_extended();
     }

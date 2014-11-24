@@ -16,7 +16,7 @@
 
 /**
 * 
-* Confirm that it is OK to proceed deleting a course.
+* Confirm that it is OK to proceed clearing the LTI links.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -25,9 +25,23 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/userutils.class.php';
 
-$courseID = check_var('courseID', 'GET', true, false, true);
+$userID = check_var('userID', 'GET', true, false, true);
+
+$user_list = explode(',', $userID);
+
+// We could be passed multiple user IDs.
+foreach ($user_list as $individual_userID) {
+  if ($individual_userID != '') {
+    $user_details = UserUtils::get_user_details($individual_userID, $mysqli);
+    if ($user_details === false) {
+      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
+  }
+}
 
 $mysqli->close();
 ?>
@@ -48,9 +62,9 @@ $mysqli->close();
 <div><strong><?php echo $string['msg'] ?></strong></div>
 <br />
 <div class="button_bar">
-<form action="do_delete_course.php" method="post">
-<input type="hidden" name="courseID" value="<?php echo $courseID ?>" />
-<input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" />
+<form action="do_clear_lti.php" method="post">
+<input type="hidden" name="userID" value="<?php echo $userID ?>" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['clearlti'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" />
 </form>
 </div>
 
