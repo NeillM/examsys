@@ -150,7 +150,7 @@ $string['typeundefined'] = 'No question type defined.';
 $string['typeinvalid'] = 'Unknown question type <em>%s</em>.';
 $string['questioninvalid'] = 'Invalid question ID.';
 $string['optioninvalid'] = 'Invalid option ID.';
-$string['mediauploaderror'] = 'Error uploading media file. Please click <a href="#" onclick="javascript: history.back();">Back</a> and try again.';
+$string['mediauploaderror'] = 'Error uploading media file. Are you sure you selected an Image? Please click <a href="#" onclick="javascript: history.back();">Back</a> and try again.';
 $string['datasaveerror'] = 'Error saving data. Please try again';
 $string['questionloaderror'] = 'Error loading question data.';
 $string['optionloaderror'] = 'Error loading option data.';

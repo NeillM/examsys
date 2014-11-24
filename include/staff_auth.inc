@@ -100,7 +100,7 @@ $system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 
 if ($userObject->has_role('SysAdmin')) {
   // SysAdmin can access anything!
-} elseif ($userObject->has_role('External Examiner')) {
+} elseif ($userObject->has_role('External Examiner') or $userObject->has_role('SysCron')) {
 } else {
   // Normal users can access things they own or are on the staff_module of only.
   $on_staff_module = false;
