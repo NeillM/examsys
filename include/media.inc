@@ -82,7 +82,7 @@ OBJEMBED;
 <param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" />
 <param name="FlashVars" value="mp3={$configObject->get('cfg_root_path')}/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
 </object>
-<audio>
+</audio>
 OBJEMBED;
   } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
     $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
