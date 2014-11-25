@@ -1457,7 +1457,7 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_
       }
     }
   } else {
-    $question['leadin'] = '<span style="color: #f00;">' . $string['error_keywords'] . '</span>';
+    $question['leadin'] = '<span style="color:#C00000">' . $string['error_keywords'] . '</span>';
     $question['q_type'] = 'keyword_based';
     $question['q_id'] = -1;
     $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
@@ -1475,8 +1475,8 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_
 *
 * Load any Reference Material into an array.
 * @param int $paperID - ID of the current paper
-* @param object $db   - Mysqli object
-* @return array				- Array of all reference material relevant to the current paper.
+* @param object $db   - database object
+* @return array       - Array of all reference material relevant to the current paper.
 */
 function load_reference_materials($paperID, $db) {
 	$reference_materials = array();
