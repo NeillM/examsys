@@ -41,7 +41,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $string['questionsearch'] . " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo $string['questionsearch'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -417,6 +417,11 @@ if (isset($_GET['submit'])) {
 
     $tmp_leadin = QuestionUtils::clean_leadin($leadin);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
+    
+    if ($q_type == 'sct') {
+      $sct_parts = explode('~', $tmp_leadin);
+      $tmp_leadin = $sct_parts[0];
+    }
 
     if ($locked == '') {
       echo "<td class=\"unlicon\">";
@@ -426,7 +431,7 @@ if (isset($_GET['submit'])) {
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }
-    echo "$tmp_leadin</td>";
+    echo $tmp_leadin . '</td>';
     echo "<td>$title $initials $surname</td>";
     echo '<td><nobr>' . $string[$q_type] . '</nobr></td>';
     echo '<td>' . $last_edited . '</td>';

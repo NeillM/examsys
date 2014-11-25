@@ -520,52 +520,35 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
       $stmt->close();
     } else {
       // Only allow Admin/SysAdmin or current user to view this information
-      $query_sql = '';
+      $queries = array();
+			
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log0 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log0.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log1 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log1.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 2 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type = '2' ORDER BY started";
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 3 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type = '3' ORDER BY started";
+      $queries[] = "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress, NULL AS metadataID FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? ORDER BY started";
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 5 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type = '5' ORDER BY started";
+      $queries[] = "SELECT DISTINCT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress, NULL AS metadataID FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ORDER BY started";
 
-      $query_sql .= "SELECT crypt_name, paper_title, paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type NOT IN ('0','1') ";
-      $query_sql .= "UNION ";
-      $query_sql .= "SELECT DISTINCT crypt_name, paper_title, 0 as paper_type, paperID, started, display_started, ipaddress, metadata
-                      FROM
-                          (SELECT crypt_name, paper_title, paper_type, paperID,
-                                  DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started,
-                                  ipaddress,log_metadata.id as metadata
-                          FROM properties, log_metadata
-                          WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type = '0') as m
-                      LEFT JOIN log0 l ON l.metadataID = m.metadata ";
-      $query_sql .= "UNION ";                          
-      $query_sql .= "SELECT DISTINCT crypt_name, paper_title, 1 as paper_type, paperID, started, display_started, ipaddress, metadata
-                      FROM
-                          (SELECT crypt_name, paper_title, paper_type, paperID,
-                                  DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started,
-                                  ipaddress,log_metadata.id as metadata
-                          FROM properties, log_metadata
-                          WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type = '1') as m
-                      LEFT JOIN log1 l ON l.metadataID = m.metadata ";
-      $query_sql .= "UNION ";
-      $query_sql .= "SELECT DISTINCT crypt_name, paper_title, paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log_late WHERE log_late.metadataID = log_metadata.id AND properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type IN ('0','1') ";
-      $query_sql .= "UNION ";
-      $query_sql .= "SELECT crypt_name, paper_title, 4 AS paper_type, q_paper, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress, NULL AS metadataID FROM properties, log4_overall WHERE properties.property_id = log4_overall.q_paper AND userID = ? AND paper_type IN('0','1') ";
-      $query_sql .= "UNION ";
-      $query_sql .= "SELECT DISTINCT crypt_name, paper_title, 6 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, NULL AS ipaddress, NULL AS metadataID FROM properties, log6 WHERE properties.property_id = log6.paperID AND reviewerID = ? ";
-      $query_sql .= "ORDER BY started";
-
-      $stmt = $mysqli->prepare($query_sql);
-      $stmt->bind_param('iiiiii', $userID, $userID, $userID, $userID, $userID, $userID);
-      $stmt->execute();
-      $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $ipaddress, $metadataID);
-      while ($stmt->fetch()) {
-        $paper[$results_no]['crypt_name']       = $crypt_name;
-        $paper[$results_no]['q_paper']          = $paper_title;
-        $paper[$results_no]['id']               = $q_paper;
-        $paper[$results_no]['type']             = $paper_type;
-        $paper[$results_no]['paper_type']       = $paper_types[$paper_type];
-        $paper[$results_no]['started']          = $started;
-        $paper[$results_no]['display_started']  = $display_started;
-        $paper[$results_no]['ipaddress']        = $ipaddress;
-        $paper[$results_no]['metadataID']       = $metadataID;
-        $results_no++;
+      foreach ($queries as $query_sql) {
+        $stmt = $mysqli->prepare($query_sql);
+        $stmt->bind_param('i', $userID);
+        $stmt->execute();
+        $stmt->bind_result($crypt_name, $paper_title, $paper_type, $q_paper, $started, $display_started, $ipaddress, $metadataID);
+        while ($stmt->fetch()) {
+					$paper[$results_no]['crypt_name']       = $crypt_name;
+					$paper[$results_no]['q_paper']          = $paper_title;
+					$paper[$results_no]['id']               = $q_paper;
+					$paper[$results_no]['type']             = $paper_type;
+					$paper[$results_no]['paper_type']       = $paper_types[$paper_type];
+					$paper[$results_no]['started']          = $started;
+					$paper[$results_no]['display_started']  = $display_started;
+					$paper[$results_no]['ipaddress']        = $ipaddress;
+					$paper[$results_no]['metadataID']       = $metadataID;
+					$results_no++;
+        }
+        $stmt->close();
       }
-      $stmt->close();
 
       // Add in feedback
       $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ?");
