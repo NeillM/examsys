@@ -616,20 +616,22 @@ QUERY;
    * Does this question type allow negative marking?  Check all the modules that the question is on
    * @return boolean
    */
-  public function allow_negative_marks($module = '') {
-    if ($this->_allow_negative_marks == null) {
-      $this->_allow_negative_marks = true;
-      // Check all the modules that the question is on
-      $moduleIds = implode(',',array_keys($this->teams));
-      if ($moduleIds != '') {
-        $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking=0");
-        $result->execute();
-        $result->store_result();
-        if ($result->num_rows > 0) $this->_allow_negative_marks = false;
-        $result->close();
-      }
-    }
+  public function allow_negative_marks() {
 
+    // Check all the modules that the question is on
+    $moduleIds = implode(',',array_keys($this->teams));
+    if ($moduleIds != '') {
+      $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking=0");
+      $result->execute();
+      $result->store_result();
+      if ($result->num_rows > 0) {
+        $this->_allow_negative_marks = false;
+      } else {
+        $this->_allow_negative_marks = true;
+      }
+      $result->close();
+    }
+    
     return $this->_allow_negative_marks;
   }
 

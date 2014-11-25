@@ -58,7 +58,12 @@ Class RecycleBin {
     while ($stmt->fetch()) {
       $recycle_bin[$i]['id'] = $id;
       $recycle_bin[$i]['type'] = 'question';
-      $recycle_bin[$i]['name'] = $leadin_plain;
+      if ($q_type == 'sct') {
+        $parts = explode('~', $leadin_plain);
+        $recycle_bin[$i]['name'] = $parts[0];
+      } else {
+        $recycle_bin[$i]['name'] = $leadin_plain;
+      }
       $recycle_bin[$i]['deleted'] = $deleted;
       $recycle_bin[$i]['subtype'] = $q_type;
       $i++;

@@ -680,6 +680,12 @@ function check_latex_random($q_ids, $mysqli) {
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
 
   while ($result->fetch()) {
+
+    if ($q_type == 'sct') {
+      $parts = explode('~', $leadin);
+      $leadin = $parts[0];
+    }
+
     if (!is_null($settings) and !is_array($settings)) {
       $settings = json_decode($settings, true);
     }
