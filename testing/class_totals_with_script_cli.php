@@ -94,7 +94,7 @@ while ($testresult->fetch()) {
 }
 $testresult->close();
 $headers = "From: $support_email\n";
-$headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
+$headers .= "MIME-Version: 1.0\nContent-type: text/plain; charset=UTF-8\n";
 $subject = 'Rogo Summative Exam check';
 if ($message != '') {
   echo $message;
