@@ -97,12 +97,13 @@ flashTarget = 'option_correct';
 									echo "var num = message.substring(5,message.length);\n";
 									echo "setUpFlash(num, message, '" . $language . "', '" . $media['filename'] . "', '" . trim($_POST['points1']) . "', '" . $fix_data . "','#FFC0C0');}\n";
 									echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash1\" width=\"" . ($media['width'] + 306) . "\" height=\"" . $plugin_height . "\" align=\"middle\">');\n";
+									echo "write_string('<param name=\"wmode\" value=\"opaque\" />');\n";
 									echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
 									echo "write_string('<param name=\"movie\" value=\"hotspot_correct.swf\" />');\n";
 									echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
 									echo "write_string('<param name=\"bgcolor\" value=\"#FFFFFF\" />');\n";
 									echo "write_string('<param name=\"wmode\" value=\"opaque\" />');\n";
-									echo "write_string('<embed src=\"hotspot_correct.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" width=\"" . ($media['width'] + 306) . "\" height=\"" . $plugin_height . "\" swliveconnect=\"true\" id=\"flash1\" name=\"flash1\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+									echo "write_string('<embed style=\"z-index:0;\" src=\"hotspot_correct.swf\" quality=\"high\" bgcolor=\"#FFFFFF\" width=\"" . ($media['width'] + 306) . "\" height=\"" . $plugin_height . "\" swliveconnect=\"true\" id=\"flash1\" name=\"flash1\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
 									echo "write_string('</object>');\n";
 									echo "</script>\n";
 								}
