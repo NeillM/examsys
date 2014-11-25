@@ -1079,11 +1079,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
 					echo "','" . $screen_pre_submitted . "','#FFC0C0');}\n";
 					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $question_no . "\" width=\"" . ($question['q_media_width'] + 435) . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
+					echo "write_string('<param name=\"wmode\" value=\"opaque\" />');\n";
 					echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
 					echo "write_string('<param name=\"movie\" value=\"../paper/hotspot_question.swf\" />');\n";
 					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
 					echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
-					echo "write_string('<embed src=\"../paper/hotspot_question.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($question['q_media_width'] + 435) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+					echo "write_string('<embed style=\"z-index:0;\" src=\"../paper/hotspot_question.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($question['q_media_width'] + 435) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
 					echo "write_string('</object>');\n";
 					echo "</script>\n";
 				}
