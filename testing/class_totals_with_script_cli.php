@@ -95,7 +95,7 @@ while ($testresult->fetch()) {
 $testresult->close();
 $headers = "From: $support_email\n";
 $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
-$subject = $cfg_web_host . ' Summative Exam check';
+$subject = 'Rogo Summative Exam check';
 if ($message != '') {
   echo $message;
   $sent = mail($support_email, $subject, $message, $headers);
