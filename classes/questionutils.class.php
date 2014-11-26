@@ -314,7 +314,7 @@ SQL;
     $select_random->bind_result($o_id, $option_text);
     while ($select_random->fetch()) {
       $delete_random = $db->prepare("DELETE FROM options where o_id = ? AND option_text = ?");
-      $delete_random->bind_param('ii', $o_id, $option_text);
+      $delete_random->bind_param('is', $o_id, $option_text);
       $delete_random->execute();
       $delete_random->close();
     }
