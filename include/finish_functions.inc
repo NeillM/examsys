@@ -357,13 +357,15 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         $keyword->close();
       }
       $possible_questions = implode(',', $possible_array);
-
-      $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE metadataID = ? AND screen = ? AND q_id IN ($possible_questions) ORDER BY id");
-      $answer_data->bind_param('ii', $metadataid, $paper[$i]['screen']);
-      $answer_data->execute();
-      $answer_data->bind_result($selected_q_id);
-      $answer_data->fetch();
-      $answer_data->close();
+      
+      if ($possible_questions != '') {
+        $answer_data = $mysqlidb->prepare("SELECT q_id FROM log$log_type WHERE metadataID = ? AND screen = ? AND q_id IN ($possible_questions) ORDER BY id");
+        $answer_data->bind_param('ii', $metadataid, $paper[$i]['screen']);
+        $answer_data->execute();
+        $answer_data->bind_result($selected_q_id);
+        $answer_data->fetch();
+        $answer_data->close();
+      }
       
       // Look up selected question and overwrite data.
       if (isset($selected_q_id) and $selected_q_id > 0) {
@@ -427,9 +429,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         $question_data->close();
       } else {
         $paper[$i]['q_type'] = 'random_failed';
-        $paper[$i]['leadin'] = "<span style=\"color: #f00;\">{$string['errorrandomnotfound']}</span>";
+        $paper[$i]['leadin'] = "<span style=\"color:#C00000\">{$string['errorrandomnotfound']}</span>";
       }
-			$tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
       $paper[$i]['totalpos'] = qMarks($q_type, $tmp_exclude, $marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method);
       $total_random_mark += qRandomMarks($q_type, $tmp_exclude, $old_marks_correct, $paper[$i]['option_text'], $paper[$i]['correct'], $display_method, $score_method, $q_media_width, $q_media_height);
