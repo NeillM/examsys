@@ -1306,6 +1306,8 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
   $question['no_on_screen'] = $question['display_pos'] = $q_no;
   $question['screen'] = $random_q_data['screen'];
 
+  $error = false;
+
   if ($unique) {
     // Look up selected question and overwrite data.
     $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,"
@@ -1318,46 +1320,54 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
     $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
       $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media,
       $o_media_width, $o_media_height, $notes, $q_option_order);
-    while ($question_data->fetch()) {
-      if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
-        $question['theme'] = $theme;
-        $question['scenario'] = $scenario;
-        $question['leadin'] = $leadin;
-        $question['notes'] = $notes;
-        $question['q_type'] = $q_type;
-        $question['q_id'] = $q_id;
-        $question['score_method'] = $score_method;
-        $question['display_method'] = $display_method;
-        $question['settings'] = $settings;
-        $question['q_media'] = $q_media;
-        $question['q_media_width'] = $q_media_width;
-        $question['q_media_height'] = $q_media_height;
-        $question['q_option_order'] = $q_option_order;
-        $question['dismiss'] = '';
-      }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
-          'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
-          'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
-    }
-
-    // Overwrite the screen data.
-    $screen_no = count($screen_data);
-    for ($i=1; $i<=$screen_no; $i++) {
-      if (isset($screen_data[$i])) {
-        $q_no = count($screen_data[$i]);
-      } else {
-        $q_no = 0;
-      }
-      for ($a=0; $a<$q_no; $a++) {
-        if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
-          $screen_data[$i][$a][0] = $q_type;
-          $screen_data[$i][$a][1] = $q_id;
+    if ($question_data->num_rows() > 0) {
+        while ($question_data->fetch()) {
+          if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
+            $question['theme'] = $theme;
+            $question['scenario'] = $scenario;
+            $question['leadin'] = $leadin;
+            $question['notes'] = $notes;
+            $question['q_type'] = $q_type;
+            $question['q_id'] = $q_id;
+            $question['score_method'] = $score_method;
+            $question['display_method'] = $display_method;
+            $question['settings'] = $settings;
+            $question['q_media'] = $q_media;
+            $question['q_media_width'] = $q_media_width;
+            $question['q_media_height'] = $q_media_height;
+            $question['q_option_order'] = $q_option_order;
+            $question['dismiss'] = '';
+          }
+          $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+              'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+              'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
         }
-      }
+        // Overwrite the screen data.
+        $screen_no = count($screen_data);
+        for ($i=1; $i<=$screen_no; $i++) {
+          if (isset($screen_data[$i])) {
+            $q_no = count($screen_data[$i]);
+          } else {
+            $q_no = 0;
+          }
+          for ($a=0; $a<$q_no; $a++) {
+            if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
+              $screen_data[$i][$a][0] = $q_type;
+              $screen_data[$i][$a][1] = $q_id;
+            }
+          }
+        }
+    } else {
+        $error = true;
     }
+    
   } else {
+    $error = true;
+  }
+
+  if ($error) {
     $question['leadin'] = '<span style="color: #f00;">' . $string['error_random'] . '</span>';
-    $question['q_type'] = 'keyword_based';
+    $question['q_type'] = 'random';
     $question['q_id'] = -1;
     $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
     $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
