@@ -1308,11 +1308,16 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
 
   if ($unique) {
     // Look up selected question and overwrite data.
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,"
+      . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+      . " q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options"
+      . " ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
+      $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media,
+      $o_media_width, $o_media_height, $notes, $q_option_order);
     while ($question_data->fetch()) {
       if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
         $question['theme'] = $theme;
@@ -1330,7 +1335,9 @@ function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_q
         $question['q_option_order'] = $q_option_order;
         $question['dismiss'] = '';
       }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+          'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+          'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
     }
 
     // Overwrite the screen data.
@@ -1389,7 +1396,8 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_
   if ($selected_q_id == '') {
     // Generate a random question ID from keywords.
     $question_ids = array();
-    $question_data = $db->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
+    $question_data = $db->prepare("SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND"
+      . " k.keywordID = ? AND q.deleted is NULL");
     $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
     $question_data->execute();
     $question_data->bind_result($q_id);
@@ -1411,11 +1419,16 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_
 
   if ($unique) {
     // Look up selected question and overwrite the question data.
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num");
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,"
+      . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+      . " q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON"
+      . " questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
+      $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media,
+      $o_media_width, $o_media_height, $notes, $q_option_order);
     while ($question_data->fetch()) {
       if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
         $question['assigned_number'] = $random_q_data['assigned_number'];
@@ -1437,7 +1450,9 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_
         $question['q_option_order'] = $q_option_order;
         $question['dismiss'] = '';
       }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+          'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+          'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
     }
     $question_data->close();
 
