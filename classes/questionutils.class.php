@@ -308,7 +308,7 @@ SQL;
     $delete->close();
 
     $select_random = $db->prepare("SELECT o.o_id, o.option_text FROM questions q, options o WHERE q.q_id = o.o_id AND q_type = 'random' AND o.option_text = ?");
-    $select_random->bind_param('i', $q_id);
+    $select_random->bind_param('s', $q_id);
     $select_random->execute();
     $select_random->store_result();
     $select_random->bind_result($o_id, $option_text);
