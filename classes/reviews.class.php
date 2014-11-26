@@ -101,12 +101,14 @@ class Review {
           $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($_POST['page_start']);
           if ($tmp_duration < 0) $tmp_duration += 86400;
           $tmp_duration += $_POST['previous_duration'];
-          $extcomments = $_POST["extcomments$question_no"];
+          if (isset($_POST["extcomments$question_no"])) {
+            $extcomments = $_POST["extcomments$question_no"];
 
-          $result = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
-          $result->bind_param('iisii', $q_id, $_POST["exttype$question_no"], $extcomments, $_POST['old_screen'], $this->metadataID);
-          $result->execute();  
-          $result->close();
+            $result = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
+            $result->bind_param('iisii', $q_id, $_POST["exttype$question_no"], $extcomments, $_POST['old_screen'], $this->metadataID);
+            $result->execute();
+            $result->close();
+          }
         }
       }
       $old_q_id = $q_id;
