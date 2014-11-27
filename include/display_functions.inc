@@ -874,6 +874,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
         $true_checked = '';
         $false_checked = '';
+        $abstain_checked = '';
 
         if ($question['display_method'] == 'dropdown') {
           echo "<select name=\"q" . $question_no . "\">\n";
@@ -900,6 +901,18 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo '<br />';
           }
           echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;" . $string['false'];
+          
+          if ($neg_marking) {
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
+              $abstain_checked = ' checked="checked"';
+            }
+            if ($question['display_method'] == 'horizontal') {
+              echo '&nbsp;&nbsp;&nbsp;';
+            } elseif ($question['display_method'] == 'vertical') {
+              echo '<br />';
+            }
+            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\"$abstain_checked />&nbsp;<span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span>";         
+          }
         }
 
         echo '</blockquote>';

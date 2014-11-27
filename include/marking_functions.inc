@@ -692,7 +692,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
         if ($saved_response == $correct) {
           $mark += $marks_correct;
-        } elseif ($saved_response != 'u') {
+        } elseif ($saved_response != 'u' and $saved_response != 'a') {
           $mark += $marks_incorrect;
         }
         $totalpos += $marks_correct;

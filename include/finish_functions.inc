@@ -1243,9 +1243,11 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
         $true_checked = '';
         $false_checked = '';
+        $abstain_checked = '';
 
         if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 't') $true_checked = ' checked="checked"';
         if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'f') $false_checked = ' checked="checked"';
+        if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == 'a') $abstain_checked = ' checked="checked"';
 
         echo '<table cellpadding="2" cellspacing="0" border="0"><tr>';
         echo '<td>';
@@ -1330,14 +1332,38 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           } else {
             echo $string['false'];
           }
-          echo '</td></tr>';
+          
+          
+          
+          // Abstain option
+          if ($paper[$question]['marks_incorrect'] < 0) {
+            if ($paper[$question]['display_method'] == 'horizontal') {
+              echo '&nbsp;&nbsp;&nbsp;</td>';
+            } elseif ($paper[$question]['display_method'] == 'vertical') {
+              echo '</td></tr><tr><td></td>';
+            }
+            
+            echo "<td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\"$abstain_checked /></td>";
+            if ($tmp_exclude{0} == '1') {
+              echo '<td class="exclude">';
+            } else {
+              echo "<td style=\"color:$labelcolor\">";
+            }
+            echo '&lt;' . $string['abstain'] . '&gt;';
+            
+            echo '</td>';
+          }
+          
+          
+          
+          echo '</tr>';
           if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {
             echo "<td style=\"color:#808080\" colspan=\"3\">" . $string['unanswered'] . "</td></tr>";
           }
         }
         echo '</table>';
 
-        if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u') {
+        if (!isset($paper[$question]['user_answer']) or $paper[$question]['user_answer'] == 'u' or $paper[$question]['user_answer'] == 'a') {
           $paper[$question]['mark'] = 0;
         } elseif ($paper[$question]['correct'][0] == $paper[$question]['user_answer']) {
           $paper[$question]['mark'] = $paper[$question]['marks_correct'];
