@@ -343,7 +343,10 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     
     echo " id=\"l" . $q_id . "_" . $display_no . "\">";
     
-
+    if ($q_type == 'sct') {
+        $parts = explode('~', $leadin);
+        $leadin = $parts[0];
+    }
     $leadin = str_replace('&nbsp;', ' ', $leadin);
     $leadin = str_replace("\n", '', $leadin);
     $leadin = str_replace("\r", '', $leadin);

@@ -128,11 +128,16 @@ function randomQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions, 
   
 
   // Look up selected question and overwrite data.
-  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+  $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect"
+    . ", marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+    . " q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND"
+    . " questions.q_id=options.o_id ORDER BY id_num");
   $question_data->bind_param('i', $selected_q_id);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
+    $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height,
+    $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
   while ($question_data->fetch()) {
     if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
       $question['theme'] = $theme;
@@ -151,7 +156,9 @@ function randomQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions, 
       $question['q_option_order'] = $q_option_order;
       $question['dismiss'] = '';
     }
-    $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+    $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+        'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+        'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
   }
   if (isset($question)) {
     $questions[] = $question;
@@ -172,7 +179,8 @@ function keywordQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions,
 
   // Generate a random question ID from keywords.
   $question_ids = array();
-  $question_data = $mysqli->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
+  $question_data = $mysqli->prepare("SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND"
+    . " k.keywordID = ? AND q.deleted is NULL");
   $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
   $question_data->execute();
   $question_data->bind_result($q_id);
@@ -193,11 +201,16 @@ function keywordQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions,
   
   if ($unique) {
     // Look up selected question and overwrite data.
-    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND questions.q_id=options.o_id ORDER BY id_num");
+    $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,"
+      . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+      . " q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions, options WHERE q_id=? AND"
+      . " questions.q_id=options.o_id ORDER BY id_num");
     $question_data->bind_param('i', $selected_q_id);
     $question_data->execute();
     $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
+    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
+      $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height,
+      $o_media, $o_media_width, $o_media_height, $notes, $q_option_order);
     while ($question_data->fetch()) {
       if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
         $question['theme'] = $theme;
@@ -216,7 +229,9 @@ function keywordQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions,
         $question['q_option_order'] = $q_option_order;
         $question['dismiss'] = '';
       }
-      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+      $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+          'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+          'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
     }
     echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
   } else {

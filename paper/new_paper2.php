@@ -506,7 +506,7 @@ if ($_POST['paper_type'] == 'summative') {
   echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #295AAD; border-left:1px solid #295AAD; border-right:1px solid #295AAD\">" . $string['modules'] . "</div>";
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
-  } else if ($_POST['paper_type'] == 'osce') {
+  } else if ($_POST['paper_type'] == 'osce' or (!$configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative')) {
     echo "<div style=\"display:block; background-color:white; height:310px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   } else {
     echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";

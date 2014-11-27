@@ -290,26 +290,34 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 
             if ($q->is_linked_question_var($var_data['min'])) {
                 list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['min']);
-                $vars[$var_name]['min'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
-                $questionChanged = true;
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['min'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
             }
 
             if ($q->is_linked_question_var($var_data['max'])) {
                 list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['max']);
-                $vars[$var_name]['max'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
-                $questionChanged = true;
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['max'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
             }
 
             if ($q->is_linked_ans($var_data['min'])) {
                 $linked_q_id = $q->parse_linked_ans($var_data['min']);
-                $vars[$var_name]['min'] = 'ans' . $calculation_qid_map[$linked_q_id];
-                $questionChanged = true;
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['min'] = 'ans' . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
             }
 
             if ($q->is_linked_ans($var_data['max'])) {
                 $linked_q_id = $q->parse_linked_ans($var_data['max']);
-                $vars[$var_name]['max'] = 'ans' . $calculation_qid_map[$linked_q_id];
-                $questionChanged = true;
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['max'] = 'ans' . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
             }
 
         }

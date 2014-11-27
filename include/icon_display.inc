@@ -53,7 +53,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     }
     echo '<br />';
   } else {
-		echo "<a class=\"blacklink\" href=\"./paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
+		echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
 		echo "<div class=\"file_details\"><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"blacklink\">" . $paper_title . '</a><br />';
   }
   if ($retired == '') {

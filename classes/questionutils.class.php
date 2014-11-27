@@ -294,7 +294,9 @@ SQL;
   }
 
 /**
-  * remove a question from rogo (N.B sets the deleted field we don't actuality delete the row form the questions table)
+  * remove a question from rogo
+  * Normal Questions - sets the deleted field we don't actuality delete the row form the questions table
+  * Random Questions - deletes the rows in optionsto ensure random questions cannot use the deleted question
   * @param $q_id the id of the question or property_id
 	* @param resource $db the database connection.
   * @return void
@@ -304,6 +306,19 @@ SQL;
     $delete->bind_param('i', $q_id);
     $delete->execute();
     $delete->close();
+
+    $select_random = $db->prepare("SELECT o.o_id, o.option_text FROM questions q, options o WHERE q.q_id = o.o_id AND q_type = 'random' AND o.option_text = ?");
+    $select_random->bind_param('s', $q_id);
+    $select_random->execute();
+    $select_random->store_result();
+    $select_random->bind_result($o_id, $option_text);
+    while ($select_random->fetch()) {
+      $delete_random = $db->prepare("DELETE FROM options where o_id = ? AND option_text = ?");
+      $delete_random->bind_param('is', $o_id, $option_text);
+      $delete_random->execute();
+      $delete_random->close();
+    }
+    $select_random->close();
   }
 
   static function lock_question($q_id, $db) {

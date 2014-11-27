@@ -400,18 +400,18 @@ function check_latex_class($candidates) {
 function check_latex_random($q_ids, $mysqli) {
   $q_ids = implode(',', $q_ids);
   $latex = 0;
-
-  $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
-  while ($result->fetch()) {
-    $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
-    if ($latex == 1) {
-      break;
+  if ($q_ids != '') {
+    $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+    while ($result->fetch()) {
+      $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+      if ($latex == 1) {
+        break;
+      }
     }
   }
-
   return $latex;
 }
 ?>
@@ -680,6 +680,12 @@ function check_latex_random($q_ids, $mysqli) {
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
 
   while ($result->fetch()) {
+
+    if ($q_type == 'sct') {
+      $parts = explode('~', $leadin);
+      $leadin = $parts[0];
+    }
+
     if (!is_null($settings) and !is_array($settings)) {
       $settings = json_decode($settings, true);
     }
