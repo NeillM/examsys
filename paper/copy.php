@@ -99,7 +99,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   // If we are copying in the same session we can copy the objectives
   if ($new_calendar_year == $calendar_year and count($qids) > 0) {
     $qids = implode(',', $qids);
-    $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, $new_paper_id as paper_id, question_id, obj_id, calendar_year, vle_api FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
+    $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, $new_paper_id as paper_id, question_id, obj_id, calendar_year, vle_api, map_level FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
     $result->bind_param('i', $paperid);
     $result->execute();
     $result->close();
@@ -349,7 +349,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     $i = 0;
     foreach ($old_qids as $old_id) {
       $new_question_id = $new_qids[$i];
-      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id, calendar_year, vle_api FROM relationships WHERE question_id = $old_id AND paper_id = ?)");
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id, calendar_year, vle_api, map_level FROM relationships WHERE question_id = $old_id AND paper_id = ?)");
       $result->bind_param('i', $paperid);
       $result->execute();
       $result->close();
