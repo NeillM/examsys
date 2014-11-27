@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once './lang/' . $language . '/include/paper_security.inc';
+require_once '../lang/' . $language . '/include/paper_security.inc';
 
 $string['startscreen'] = 'Úvodní obrazovka';
 $string['availability'] = 'Dostupnost';
