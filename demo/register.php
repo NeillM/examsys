@@ -51,12 +51,12 @@ $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObj
 function adduser($course, $tmp_roles, $new_username, $mysqli) {
   $new_password = trim($_POST['new_password']);
   $new_surname = StringUtils::my_ucwords(trim($_POST['new_surname']));
-	$new_title = $_POST['new_users_title'];
+  $new_title = $_POST['new_users_title'];
 
   $new_email = trim($_POST['new_email']);
   $new_first_names = StringUtils::my_ucwords(trim($_POST['new_first_names']));
-	$new_year = $_POST['new_year'];
-	$new_gender = $_POST['new_gender'];
+  $new_year = $_POST['new_year'];
+  $new_gender = $_POST['new_gender'];
 	
   $userid = UserUtils::create_user($new_username, $new_password, $new_title, $new_first_names, $new_surname, $new_email, $course, $new_gender, $new_year, $tmp_roles, '', $mysqli);
 
@@ -103,13 +103,13 @@ if (isset($_POST['submit'])) {
     // Add staff account
 		$new_username = trim($_POST['new_username']);
     $useridstf = adduser('Staff', 'Staff', $new_username, $mysqli);
-		UserUtils::add_staff_to_module_by_modulecode($useridstf, $new_moduleid, $mysqli);  	// Add staff to the new module
-		UserUtils::add_staff_to_module_by_modulecode($useridstf, 'DEMO', $mysqli);         	// Add staff to the general DEMO module
+    UserUtils::add_staff_to_module_by_modulecode($useridstf, $new_moduleid, $mysqli);  	// Add staff to the new module
+    UserUtils::add_staff_to_module_by_modulecode($useridstf, 'DEMO', $mysqli);         	// Add staff to the general DEMO module
     
 		// Add student account
-		$max_sid = 0;
+    $max_sid = 0;
     $new_username = $new_username . '-stu';
-		$userid = adduser('A10DEMO', 'Student', $new_username, $mysqli);
+    $userid = adduser('A10DEMO', 'Student', $new_username, $mysqli);
     $result = $mysqli->prepare("SELECT MAX(id) as a FROM users");
     $result->execute();
     $result->bind_result($max_sid);
@@ -118,18 +118,18 @@ if (isset($_POST['submit'])) {
 
     $max_sid++;
 
-		$result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
-		$result->bind_param('si', $max_sid, $userid);
-		$result->execute();
-		$result->close();
+    $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
+    $result->bind_param('si', $max_sid, $userid);
+    $result->execute();
+    $result->close();
 
-		UserUtils::add_student_to_module_by_name($userid, $new_moduleid, 1, $session, $mysqli); // Add student to the new module
-		UserUtils::add_student_to_module_by_name($userid, 'A10DEMO', 1, $session, $mysqli); // Add student to the demo module
+    UserUtils::add_student_to_module_by_name($userid, $new_moduleid, 1, $session, $mysqli); // Add student to the new module
+    UserUtils::add_student_to_module_by_name($userid, 'A10DEMO', 1, $session, $mysqli); // Add student to the demo module
   }
 	
   // Send out email welcome.
   if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
-	  $tmp_email = trim($_POST['new_email']);
+    $tmp_email = trim($_POST['new_email']);
 
     $subject = "{$string['newrogoaccount']}";
     $headers = "From: $tmp_email\n";
@@ -166,19 +166,19 @@ MESSAGE;
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
-	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
 </head>
 <body>
 
 <div id="content">
   <p><?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
 
-  <p><input type="button" name="home" value="Staff Homepage" onclick="window.location='<?php echo $configObject->get('cfg_web_root'); ?>staff/'" /></p>
+  <p><input type="button" name="home" value="Staff Homepage" onclick="window.location='../index.php'" /></p>
 </div>
   <?php
 } else {
@@ -186,148 +186,149 @@ MESSAGE;
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
-	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/header.css"/>
-	<style type="text/css">
-		.h {font-weight: bold; padding-top: 10px}
-	</style>
+    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/header.css"/>
+    <style type="text/css">
+            .h {font-weight: bold; padding-top: 10px}
+    </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-	<script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+    <script>
+        $(function () {
+          $('#theform').validate({
+            errorClass: 'errfield',
+            errorPlacement: function(error,element) {
+              return true;
+            }
+          });
+          $('form').removeAttr('novalidate');
+        });
+
+        function checkForm() {
+            username = $('#new_username').val();
+            for (a = 0; a < username.length; a++) {
+                char = username.substr(a, 1);
+                if (char == '_') {
+                    alert('<?php echo $string['usernamechars'] ?>');
+                    return false;
+                }
+            }
         }
-      });
-      $('form').removeAttr('novalidate');
-    });
-
-		function checkForm() {
-			username = $('#new_username').val();
-			for (a = 0; a < username.length; a++) {
-					char = username.substr(a, 1);
-					if (char == '_') {
-							alert('<?php echo $string['usernamechars'] ?>');
-							return false;
-					}
-			}
-		}
-	</script>
+    </script>
 </head>
 
 <body>
 <div id="content">
 <br />
 <form method="post" id="theform" name="newUser" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-	<div align="center">
-		<table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
-			<tr>
-				<td>
-					<table border="0" cellspacing="4" cellpadding="0" width="100%" style="background-color:white">
-						<tr>
-							<td style="width:48px"><img src="../artwork/self_enrol.png" width="48" height="48" alt="Key" /></td>
-							<td class="dkblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['register']; ?></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table border="0" cellspacing="6" cellpadding="0" style="background-color:#F1F5FB">
-						<tr>
-							<td colspan="2" class="h">Your Details</td>
-						</tr>
-						<tr>
-							<td align="right"><?php echo $string['title']; ?></td>
-							<td>
-								<select id="new_users_title" name="new_users_title" size="1" required>
+    <div align="center">
+        <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
+            <tr>
+                <td>
+                    <table border="0" cellspacing="4" cellpadding="0" width="100%" style="background-color:white">
+                        <tr>
+                            <td style="width:48px"><img src="../artwork/self_enrol.png" width="48" height="48" alt="Key" /></td>
+                            <td class="dkblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['register']; ?></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellspacing="6" cellpadding="0" style="background-color:#F1F5FB">
+                        <tr>
+                            <td colspan="2" class="h">Your Details</td>
+                        </tr>
+                        <tr>
+                            <td align="right"><?php echo $string['title']; ?></td>
+                            <td>
+                                <select id="new_users_title" name="new_users_title" size="1" required>
 
-									<?php
-									if ($language != 'en') {
-										echo "<option value=\"\"></option>\n";
-									}
-									$titles = explode(',', $string['title_types']);
-									foreach ($titles as $tmp_title) {
-										echo "<option value=\"$tmp_title\">$tmp_title</option>";
-									}
-									?>
-								</select></td>
-						</tr>
-						<tr>
-							<td align="right"><?php echo $string['firstnames']; ?></td>
-							<td><input type="text" id="new_first_names" name="new_first_names" size="40" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" required /></td>
-						</tr>
-						<tr>
-							<td align="right"><?php echo $string['lastname']; ?></td>
-							<td><input type="text" id="new_surname" name="new_surname" size="40" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" required /></td>
-						</tr>
-						<tr>
-							<td align="right"><?php echo $string['email']; ?></td>
-							<td><input type="text" id="new_email" name="new_email" size="40" value="<?php if (isset($_POST['email'])) {
-												 echo $_POST['email'];
-											 } else {
-												 echo '';
-											 } ?>" required /></td>
-						</tr>
-						<tr>
-							<td align="right"><?php echo $string['username']; ?></td>
-							<td><input type="text" id="new_username" name="new_username" id="new_username" size="12" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?> required />
-								&nbsp;&nbsp;&nbsp;<?php echo $string['password']; ?>
-								<input type="text" id="new_password" name="new_password" id="new_username" value="<?php
-									if (isset($_POST['password'])) {
-										echo $_POST['password'];
-									} else {
-										echo gen_password();
-									}
-									?>" size="12" required /></td>
-						</tr>
+                                    <?php
+                                    if ($language != 'en') {
+                                            echo "<option value=\"\"></option>\n";
+                                    }
+                                    $titles = explode(',', $string['title_types']);
+                                    foreach ($titles as $tmp_title) {
+                                            echo "<option value=\"$tmp_title\">$tmp_title</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right"><?php echo $string['firstnames']; ?></td>
+                            <td><input type="text" id="new_first_names" name="new_first_names" size="40" value="<?php if (isset($_POST['first_names'])) echo $_POST['first_names']; ?>" required /></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><?php echo $string['lastname']; ?></td>
+                            <td><input type="text" id="new_surname" name="new_surname" size="40" value="<?php if (isset($_POST['surname'])) echo $_POST['surname']; ?>" required /></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><?php echo $string['email']; ?></td>
+                            <td><input type="text" id="new_email" name="new_email" size="40" value="<?php if (isset($_POST['email'])) {
+                                    echo $_POST['email'];
+                                } else {
+                                        echo '';
+                                } ?>" required /></td>
+                        </tr>
+                        <tr>
+                            <td align="right"><?php echo $string['username']; ?></td>
+                            <td><input type="text" id="new_username" name="new_username" id="new_username" size="12" <?php if (isset($_POST['username']) and $unique_username != true) echo ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['username'] . '"'; ?> required />
+                                &nbsp;&nbsp;&nbsp;<?php echo $string['password']; ?>
+                                <input type="text" id="new_password" name="new_password" id="new_username" value="<?php
+                                        if (isset($_POST['password'])) {
+                                                echo $_POST['password'];
+                                        } else {
+                                                echo gen_password();
+                                        }
+                                        ?>" size="12" required /></td>
+                        </tr>
 
-						<input type="hidden" name="new_year" value="1"/>
+                        <input type="hidden" name="new_year" value="1"/>
 
-						<tr>
-							<td align="right"><?php echo $string['gender']; ?></td>
-							<td>
-								<select id="new_gender" name="new_gender" size="1" required>
-									<option value=""></option>
-									<option value="Male"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Male') echo ' selected'; ?>><?php echo $string['male']; ?></option>
-									<option value="Female"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Female') echo ' selected'; ?>><?php echo $string['female']; ?></option>
-								</select>
-							</td>
-						</tr>
+                        <tr>
+                            <td align="right"><?php echo $string['gender']; ?></td>
+                            <td>
+                                <select id="new_gender" name="new_gender" size="1" required>
+                                    <option value=""></option>
+                                    <option value="Male"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Male') echo ' selected'; ?>><?php echo $string['male']; ?></option>
+                                    <option value="Female"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Female') echo ' selected'; ?>><?php echo $string['female']; ?></option>
+                                </select>
+                            </td>
+                        </tr>
 
-						<tr>
-							<td colspan="2" class="h"><?php echo $string['demomodule']; ?></td>
-						</tr>
+                        <tr>
+                            <td colspan="2" class="h"><?php echo $string['demomodule']; ?></td>
+                        </tr>
 
-						<tr>
-							<td align="right"><?php echo $string['name']; ?></td>
-							<td><input type="text" id="new_grade2" name="new_grade2" size="40" value="<?php if (isset($_POST['new_grade2'])) echo $_POST['new_grade2']; ?>" required /></td>
-						</tr>
+                        <tr>
+                            <td align="right"><?php echo $string['name']; ?></td>
+                            <td><input type="text" id="new_grade2" name="new_grade2" size="40" value="<?php if (isset($_POST['new_grade2'])) echo $_POST['new_grade2']; ?>" required /></td>
+                        </tr>
 
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr>
-							<td>&nbsp;</td>
-							<td><input type="hidden" name="new_welcome" value="1"/>&nbsp;</td>
-						</tr>
-						<tr>
-							<td colspan="2" align="center"><input type="submit" name="submit" value="<?php echo $string['createaccount']; ?>"/></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<input type="hidden" size="15" name="new_sid"/>
+                        <tr>
+                            <td colspan="2">&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td><input type="hidden" name="new_welcome" value="1"/>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="center"><input type="submit" name="submit" value="<?php echo $string['createaccount']; ?>"/></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <input type="hidden" size="15" name="new_sid"/>
 </form>
 
 <?php
