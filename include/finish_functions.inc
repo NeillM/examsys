@@ -689,6 +689,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         $paper[$question]['object']->load($paper[$question]);
         $paper[$question]['object']->render_feedback(array('tmp_exclude' => $tmp_exclude, 'hide_if_unanswered' => $hide_if_unanswered, 'tmp_display_correct_answer' => $tmp_display_correct_answer, 'tmp_display_students_response' => $tmp_display_students_response, 'question' => $question, 'tmp_fback' => $tmp_fback, 'tmp_display_feedback' => $tmp_display_feedback));
 
+        if ($paper[$question]['object']->get_user_answer_raw() == '') {
+            reset_feedback($hide_if_unanswered);
+        }
         break;
       case 'dichotomous':
         // Check to see if the user has answered any options.
@@ -2384,7 +2387,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         echo_content($paper[$question]['leadin']);
 
         $movie = ($tmp_display_correct_answer == '0') ? $paper[$question]['q_media'] : $paper[$question]['o_media'][0];
-        if (!isset($paper[$question]['user_answer'])) {
+        $answered = explode(',', $paper[$question]['user_answer']);
+        if (!isset($paper[$question]['user_answer']) or $answered[0] == 0) {
           reset_feedback($hide_if_unanswered);
           if ($hide_if_unanswered == '1') {
             $movie = $paper[$question]['q_media'];
