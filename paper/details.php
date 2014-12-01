@@ -421,7 +421,7 @@ function check_latex_random($q_ids, $mysqli) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -458,7 +458,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
 <script defer="defer">
-  var paperID = '<?php echo $paperID; ?>';
+  var paperID = '<?php echo $paperID ?>';
 
   function addQID(qID, pID, clearall) {
     if (clearall) {
@@ -509,6 +509,14 @@ function check_latex_random($q_ids, $mysqli) {
       }
     }
 
+    if (qType == 'info') {
+      $('.clarification').removeClass('menuitem');
+      $('.clarification').addClass('greymenuitem');
+    } else {
+      $('.clarification').removeClass('greymenuitem');
+      $('.clarification').addClass('menuitem');
+    }
+    
     if (qType == 'random') {
       var row = '';
       for (i=1; i<=subparts; i++) {
@@ -552,7 +560,7 @@ function check_latex_random($q_ids, $mysqli) {
 	}
 ?>
 		
-    if (document.PapersMenu.questionID.value == '') {
+    if ($('#questionID').val() == '') {
       qOff();
     }
   }

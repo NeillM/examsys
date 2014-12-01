@@ -404,7 +404,7 @@ echo "<div id=\"menu1\">\n";
 	<div class="menuitem" id="information"><a href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
 	<?php
 		if ($exam_clarifications) {
-			echo "<div class=\"menuitem\" id=\"clarification\"><a href=\"#\" onclick=\"examClarification(); return false;\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" />" . $string['midexamclarification'] . "</a></div>\n";
+			echo "<div class=\"menuitem clarification\" id=\"clarification\"><a href=\"#\" onclick=\"examClarification(); return false;\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" />" . $string['midexamclarification'] . "</a></div>\n";
 		}
 	?>
 	<div class="menuitem" id="copy"><a href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
@@ -423,7 +423,7 @@ echo "<div id=\"menu1\">\n";
 	<div class="menuitem" id="information"><a href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
 	<?php
 		if ($exam_clarifications) {
-			echo "<div class=\"menuitem\" id=\"clarification\" onclick=\"examClarification()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['midexamclarification'] . "</a></div>\n";
+			echo "<div class=\"menuitem clarification\" id=\"clarification\" onclick=\"examClarification()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['midexamclarification'] . "</a></div>\n";
 		}
 	?>
 	<div class="menuitem" id="copy"><a href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx'] ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
