@@ -441,8 +441,9 @@ function check_latex_random($q_ids, $mysqli) {
   <![endif]-->
   <style type="text/css">
     <?php
-      if ($_SESSION['ROGO_language'] != 'en') {
+      if ($language != 'en') {
         echo "#content td.t, td.t {width: 180px !important}\n";
+      } else {
         echo "#content td.d, td.d {width: 130px !important}\n";
       }
       echo QuestionStatus::generate_status_css($status_array);
