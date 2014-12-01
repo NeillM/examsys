@@ -61,7 +61,7 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
   <td style="background-color:#FFC0C0">
   <p style="font-size:90%"><?php printf($string['nameused'], $_POST['new_paper']); ?></p>
 
-  <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back']; ?>" name="back" onclick="javascript: window.history.go(-1);"></div>
+  <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back'] ?>" name="back" onclick="window.history.go(-1);"></div>
   </td>
   </tr>
   </table>
@@ -542,6 +542,9 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 
   if (isset($_POST['session'])) {
     $new_calendar_year = $_POST['session'];
+    if ($new_calendar_year == '') {
+      $new_calendar_year = NULL;
+    }
   } else {
 		$academic_year_title = Paper_utils::academic_year_from_title($_POST['new_paper']);
 		if ($academic_year_title !== false) {
