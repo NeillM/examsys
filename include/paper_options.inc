@@ -35,6 +35,11 @@ require_once $cfg_web_root . 'classes/relationship.class.php';
 $userObject = UserObject::get_instance();
 
 $clarif_types = $configObject->get('midexam_clarification');
+
+if (!isset($properties)) {
+  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+}
+
 if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
   $exam_clarifications = true;  
 } else {
@@ -55,10 +60,6 @@ if (!isset($folder)) {
   } else{
     $folder = '';
   }
-}
-
-if (!isset($properties)) {
-  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 }
 
 $moduleIDs = $properties->get_modules();
