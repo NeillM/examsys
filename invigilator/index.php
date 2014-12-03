@@ -134,15 +134,15 @@ if ($lab_object !== false) {
   }
 
   function showCallout(cellID, displayTxt) {
-		var p = $('#p' + cellID);
-		var position = p.position();
+    var p = $('#p' + cellID);
+    var position = p.position();
 
-		var left_pos = position.left;
-		if (left_pos + 302 > $(window).width()) {
-			left_pos = $(window).width() - 302;
-		}
-		$('#callout').css('left', left_pos);
-		$('#callout').css('top', position.top + p.height() + 12);
+    var left_pos = position.left;
+    if (left_pos + 302 > $(window).width()) {
+      left_pos = $(window).width() - 302;
+    }
+    $('#callout').css('left', left_pos);
+    $('#callout').css('top', position.top + p.height() + 12);
 
     $('#calloutTxt').text(displayTxt);
     $('#callout').show();
@@ -179,7 +179,7 @@ if ($lab_object !== false) {
   }
 
   function newStudentNote() {
-	  $('#menudiv').hide();
+    $('#menudiv').hide();
     studentnote = window.open("new_student_note.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
@@ -188,7 +188,7 @@ if ($lab_object !== false) {
   }
 
   function newToiletBreak() {
-	  $('#menudiv').hide();
+    $('#menudiv').hide();
     $.post("../ajax/invigilator/toilet_break.php",
     {
       userID:$('#userID').val(),
@@ -200,7 +200,7 @@ if ($lab_object !== false) {
   }
 
   function unfinishExam() {
-	  $('#menudiv').hide();
+    $('#menudiv').hide();
     unfinish = window.open("check_unfinish_exam.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "unfinish", "width=450,height=200,left=" + (screen.width / 2 - 275) + ",top=" + (screen.height / 2 - 100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
@@ -227,7 +227,7 @@ if ($lab_object !== false) {
   }
 
   function extendTime() {
-	  $('#menudiv').hide();
+    $('#menudiv').hide();
     papernote = window.open("extend_time.php?paperID=" + $('#paperID').val() + "&userID=" + $('#userID').val(), "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
 
     if (window.focus) {
@@ -250,21 +250,21 @@ if ($lab_object !== false) {
 
   function clarifyMethod() {
   <?php
-	  if (is_array($properties_list)) {
-			foreach ($properties_list as $property_object) {
-				$paperID = $property_object->get_property_id();
-		?>
-			$.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
+    if (is_array($properties_list)) {
+      foreach ($properties_list as $property_object) {
+        $paperID = $property_object->get_property_id();
+    ?>
+      $.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
 
-				if ($('#store_<?php echo $paperID; ?>').html() != strip_tags(data)) {
+        if ($('#store_<?php echo $paperID; ?>').html() != strip_tags(data)) {
           $('#msg<?php echo $paperID; ?>').html(data);
           $('#store_<?php echo $paperID; ?>').html(strip_tags(data));
           $('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
-				}
-			});
-		<?php
+        }
+      });
+    <?php
       }
-		}
+    }
   ?>
   }
 
