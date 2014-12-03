@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
- 
+
 require_once '../include/invigilator_auth.inc';
 require_once '../classes/usernotices.class.php';
 require_once '../include/errors.inc';
@@ -55,7 +55,7 @@ $properties_list = array();
 if ($lab_object !== false) {
   $lab_id = $lab_object->get_id();
   $room_name = $lab_object->get_name();
-  
+
   $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
 }
 ?>
@@ -97,12 +97,12 @@ if ($lab_object !== false) {
     if ($('#old_highlightID').val() != '') {
       $('#l' + $('#old_highlightID').val()).css('background-color', 'white');
     }
-    
+
     $('#old_highlightID').val(paperID + '_' + tmpUserID);
     $('#old_highlightColor').val( $('#l' + paperID + '_' + tmpUserID).css('background-color') );
-    
+
     $('#l' + paperID + '_' + tmpUserID).css('background-color', '#FFBD69');
-    
+
     if (!e) var e = window.event;
     var currentX = e.clientX;
     var currentY = e.clientY;
@@ -136,14 +136,14 @@ if ($lab_object !== false) {
   function showCallout(cellID, displayTxt) {
 		var p = $('#p' + cellID);
 		var position = p.position();
-		
+
 		var left_pos = position.left;
 		if (left_pos + 302 > $(window).width()) {
 			left_pos = $(window).width() - 302;
 		}
 		$('#callout').css('left', left_pos);
-		$('#callout').css('top', position.top + p.height() + 12); 
-    
+		$('#callout').css('top', position.top + p.height() + 12);
+
     $('#calloutTxt').text(displayTxt);
     $('#callout').show();
   }
@@ -186,7 +186,7 @@ if ($lab_object !== false) {
       studentnote.focus();
     }
   }
-  
+
   function newToiletBreak() {
 	  $('#menudiv').hide();
     $.post("../ajax/invigilator/toilet_break.php",
@@ -198,7 +198,7 @@ if ($lab_object !== false) {
       refreshCohortList( $('#paperID').val() );
     });
   }
-  
+
   function unfinishExam() {
 	  $('#menudiv').hide();
     unfinish = window.open("check_unfinish_exam.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "unfinish", "width=450,height=200,left=" + (screen.width / 2 - 275) + ",top=" + (screen.height / 2 - 100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
@@ -207,7 +207,7 @@ if ($lab_object !== false) {
       unfinish.focus();
     }
   }
-  
+
   function refreshCohortList(paperID) {
     dataSource = "../ajax/invigilator/refresh_cohort_list.php?paperID=" + paperID;
 
@@ -220,7 +220,7 @@ if ($lab_object !== false) {
       papernote.focus();
     }
   }
-  
+
   function viewRubric(paperID) {
     $('#opaque').show();
     $('#rubric_' + paperID).show();
@@ -255,9 +255,11 @@ if ($lab_object !== false) {
 				$paperID = $property_object->get_property_id();
 		?>
 			$.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
-				if ($('#msg<?php echo $paperID; ?>').html() != data) {
-					$('#msg<?php echo $paperID; ?>').html(data);
-					$('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
+
+				if ($('#store_<?php echo $paperID; ?>').html() != strip_tags(data)) {
+          $('#msg<?php echo $paperID; ?>').html(data);
+          $('#store_<?php echo $paperID; ?>').html(strip_tags(data));
+          $('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
 				}
 			});
 		<?php
@@ -265,6 +267,12 @@ if ($lab_object !== false) {
 		}
   ?>
   }
+
+  function strip_tags(html) {
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent || tmp.innerText || "";
+}
 
   document.onmousedown = mouseSelect;
 
@@ -295,14 +303,14 @@ if ($lab_object !== false) {
     resizeLists();
     $(window).unload(KillClock);
     $(window).resize(resizeLists);
-    
+
     $('.tabs li a').click(changeTab);
-    
+
   <?php
   if (isset($_GET['tab'])) {
     echo "$(\"a[rel='paper" . $_GET['tab'] . "']\").click();\n";
   }
-  
+
   if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
     echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
   }
@@ -324,8 +332,8 @@ if (!$lab_object) {
   exit;
 }
 ?>
-  
-  
+
+
 <div id="callout" class="callout border-callout">
 <b class="border-notch notch"></b>
 <b class="notch"></b>
@@ -349,7 +357,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     <li class="menu-unfinish">Set to unfinished</li>
   </ul>
 </div>
-  
+
 <div class="tab-bar">
   <div class="tab-holder">
     <ol class="tabs">
@@ -373,7 +381,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     $start_date     = $property_object->get_display_start_time();
     $calendar_year  = $property_object->get_calendar_year();
     $rubric         = $property_object->get_rubric();
-    
+
     echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img onclick=\"$('#rubric_$property_id').hide(); $('#opaque').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
 
     // Get modules for this paper and check if timing is allowed
@@ -458,10 +466,10 @@ if ($properties_list !== false and count($properties_list) > 0) {
 
     $end_time_h = $end_datetime->format('H');
     $end_time_m = $end_datetime->format('i');
-    
+
     $password = $property_object->get_password();
     ?>
-          
+
           <div class="exam_details">
             <table style="width:100%" cellpadding="2" cellspacing="0" border="0">
               <tr>
@@ -507,7 +515,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
                   ?>
                 </td>
               </tr>
-              
+
               <tr>
                 <td><?php echo $string['start'] ?></td>
                 <td><?php echo $start_date ?></td>
@@ -530,17 +538,18 @@ if ($properties_list !== false and count($properties_list) > 0) {
                 }
                 ?>
               </tr>
-              
+
               <tr>
                 <td colspan="4"><input type="button" onclick="newPaperNote(<?php echo $property_id; ?>);" value="<?php echo $string['papernote'] ?>" class="ok" /><input type="button" onclick="viewRubric(<?php echo $property_id; ?>);" value="<?php echo $string['viewrubric'] ?>" class="ok" /></td>
               </tr>
 
-            </table>            
+            </table>
           </div>
         <?php
         if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
           echo "<div id=\"clarifymsgtbl\" class=\" cohortlist\" style=\"float:left; width:50%\"><table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%; line-height:150%\">\n<tr><th>" . $string['midexamclarifications'] . "</th></tr>\n</table>\n";
           echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">" . $string['examquestionclarifications'] . "</span></div>\n</div>\n";
+          echo '<div id="store_' . $property_id . '" styles="display: none;"></div>\n';
         }
         $modules = implode('\',\'', $modules);
 
@@ -571,7 +580,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
         <h1><?php echo $string['postexam'] ?></h1>
         <?php echo $string['postexamlist'] ?>
       </div>
-    
+
     <br/>
     </div>
   <?php
