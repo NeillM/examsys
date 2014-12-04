@@ -75,6 +75,71 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
   exit;
 }
 
+/**
+ * This function compares the old and the new courses session objectives to see which can be copied.
+ * 
+ * @param array $mappings_copy_objID - objectives to map
+ * @param array $old_course - old course objective information
+ * @param array $new_course - new course objective information
+ */
+function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_course) {
+      foreach ($old_course as $module => &$sessions) {
+        foreach ($sessions as $identifier => &$session) {
+          if (!empty($session['objectives'])) {
+            foreach ($session['objectives'] as &$obj) {
+              if (isset( $obj['id'])) {
+                $old_objID = $obj['id'];
+              } else {
+                $old_objID = NULL;
+              }
+              if (isset($obj['guid'])) {
+                $old_objGUID = $obj['guid'];
+              } else {
+                $old_objGUID = NULL;
+              }
+              // VLE Objectives.
+              if (isset($new_course[$module][$identifier]['VLE']) and $new_course[$module][$identifier]['VLE'] != '') {
+                if (isset($new_course[$module][$identifier]['objectives'])){
+                    foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+                      if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
+                              or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
+                              and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
+                                      and $new_obj['content'] == $obj['content'])) {
+                        // Build a list of objectives that are still in both sessions
+                        $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                        break;
+                      }
+                    }
+                }
+              // Internal Rogo Objectives.
+              } else {
+                foreach ($new_course as $module => &$sessions) {
+                  foreach ($sessions as $identifier => &$session) {
+                      if (isset($session['objectives'])){
+                        foreach ($session['objectives'] as $new_obj) {
+                          if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
+                            // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
+                            $new_content_check = strtolower($new_obj['content']);
+                            $new_content_check = preg_replace("/[^a-z0-9]/", '', $new_content_check);
+                            $old_content_check = strtolower($obj['content']);
+                            $old_content_check = preg_replace("/[^a-z0-9]/", '', $old_content_check);
+                            if ($new_content_check == $old_content_check) {
+                                // Build a list of objectives that are still in both sessions
+                                $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                                break;
+                            }
+                          }
+                        }
+                      }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+}
+
 $calendar_year = $new_calendar_year = '';
 $moduleID = NULL;
 $error = array();
@@ -97,12 +162,32 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   $result->close();
 
   // If we are copying in the same session we can copy the objectives
-  if ($new_calendar_year == $calendar_year and count($qids) > 0) {
+  if (count($qids) > 0) {
     $qids = implode(',', $qids);
-    $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, $new_paper_id as paper_id, question_id, obj_id, calendar_year, vle_api, map_level FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
-    $result->bind_param('i', $paperid);
-    $result->execute();
-    $result->close();
+    if ($new_calendar_year == $calendar_year) {
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, $new_paper_id as paper_id, question_id, obj_id,"
+        . " calendar_year, vle_api, map_level FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
+      $result->bind_param('i', $paperid);
+      $result->execute();
+      $result->close();
+    } else {
+        // We are copying between sessions we need to check for changed sessions/objectives
+        $mappings_copy_objID = array();
+        $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
+        $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
+        if (count($old_course) > 0 and count($new_course) > 0) {
+            copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
+            //Copy the objectives for each session where the objective still exists
+            $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ? as paper_id, question_id, ?, ?, vle_api, map_level"
+              . " FROM relationships WHERE question_id IN ($qids) AND paper_id = ? AND obj_id = ?)");
+            foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
+                $result->bind_param('iisii', $new_paper_id, $newmapid, $new_calendar_year, $paperid, $oldmapid);
+                $result->execute();
+            }
+           $result->close();
+        }
+
+    }
   }
 } else {    // Copy the paper and the questions.
   // Copy the properties (properties table)
@@ -349,7 +434,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     $i = 0;
     foreach ($old_qids as $old_id) {
       $new_question_id = $new_qids[$i];
-      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id, calendar_year, vle_api, map_level FROM relationships WHERE question_id = $old_id AND paper_id = ?)");
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id,"
+        . " calendar_year, vle_api, map_level FROM relationships WHERE question_id = $old_id AND paper_id = ?)");
       $result->bind_param('i', $paperid);
       $result->execute();
       $result->close();
@@ -361,94 +447,41 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
     $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
     if (count($old_course) > 0 and count($new_course) > 0) {
-      foreach ($old_course as $module => &$sessions) {
-        foreach ($sessions as $identifier => &$session) {
-          if (!empty($session['objectives'])) {
-            foreach ($session['objectives'] as &$obj) {
-              if (isset( $obj['id'])) {
-                $old_objID = $obj['id'];
-              } else {
-                $old_objID = NULL;
-              }
-              if (isset($obj['guid'])) {
-                $old_objGUID = $obj['guid'];
-              } else {
-                $old_objGUID = NULL;
-              }
-              // VLE Objectives.
-              if (isset($new_course[$module][$identifier]['VLE']) and $new_course[$module][$identifier]['VLE'] != '') {
-                if (isset($new_course[$module][$identifier]['objectives'])){
-                    foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
-                      if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
-                              or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
-                              and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
-                                      and $new_obj['content'] == $obj['content'])) {
-                        // Build a list of objectives that are still in both sessions
-                        $mappings_copy_objID[$old_objID] = $new_obj['id'];
-                        break;
-                      }
-                    }
-                }
-              // Internal Rogo Objectives.
-              } else {
-                foreach ($new_course as $module => &$sessions) {
-                  foreach ($sessions as $identifier => &$session) {
-                      if (isset($session['objectives'])){
-                        foreach ($session['objectives'] as $new_obj) {
-                          if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
-                            // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
-                            $new_content_check = strtolower($new_obj['content']);
-                            $new_content_check = preg_replace("/[^a-z0-9]/", '', $new_content_check);
-                            $old_content_check = strtolower($obj['content']);
-                            $old_content_check = preg_replace("/[^a-z0-9]/", '', $old_content_check);
-                            if ($new_content_check == $old_content_check) {
-                                // Build a list of objectives that are still in both sessions
-                                $mappings_copy_objID[$old_objID] = $new_obj['id'];
-                                break;
-                            }
-                          }
-                        }
-                      }
-                  }
-                }
-              }
+        copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
+
+        // Copy the objectives for each session where the objective still exists
+        $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM"
+          . " relationships WHERE question_id = ? AND paper_id = ? AND obj_id = ?)");
+        $nw_paperid = 0;
+        $nw_qid = 0;
+        $nw_mapid = 0;
+        $nw_calyr = 0;
+        $nw_oldid = 0;
+        $nw_oldpapid = 0;
+        $bw_oldoid = 0;
+        $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
+        if ($mysqli->error) {
+          $error[] = 'mysqli error ' . $mysql->error;
+        }
+        $i=0;
+        foreach ($old_qids as $old_id) {
+          foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
+            $nw_paperid		= $new_paper_id;
+            $nw_qid		= $new_qids[$i];
+            $nw_mapid		= $newmapid;
+            $nw_calyr		= $new_calendar_year;
+            $nw_oldid		= $old_id;
+            $nw_oldpapid	= $paperid;
+            $nw_oldoid		= $oldmapid;
+            $result->execute();
+            if ($mysqli->error) {
+              $error[] = 'mysqli error ' . $mysql->error;
             }
           }
+          $i++;
         }
+        $result->close();
       }
-
-      // Copy the objectives for each session where the objective still exists
-      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id = ?)");
-      $nw_paperid = 0;
-      $nw_qid = 0;
-      $nw_mapid = 0;
-      $nw_calyr = 0;
-      $nw_oldid = 0;
-      $nw_oldpapid = 0;
-      $bw_oldoid = 0;
-      $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
-      if ($mysqli->error) {
-        $error[] = 'mysqli error ' . $mysql->error;
-      }
-      $i=0;
-      foreach ($old_qids as $old_id) {
-        foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
-          $nw_paperid		= $new_paper_id;
-          $nw_qid				= $new_qids[$i];
-          $nw_mapid			= $newmapid;
-          $nw_calyr			= $new_calendar_year;
-          $nw_oldid			= $old_id;
-          $nw_oldpapid	= $paperid;
-          $nw_oldoid		= $oldmapid;
-          $result->execute();
-          if ($mysqli->error) {
-            $error[] = 'mysqli error ' . $mysql->error;
-          }
-        }
-        $i++;
-      }
-      $result->close();
-    }
   }
 }
 ?>
