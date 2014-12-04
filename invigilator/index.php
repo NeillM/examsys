@@ -549,7 +549,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
         if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
           echo "<div id=\"clarifymsgtbl\" class=\" cohortlist\" style=\"float:left; width:50%\"><table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%; line-height:150%\">\n<tr><th>" . $string['midexamclarifications'] . "</th></tr>\n</table>\n";
           echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">" . $string['examquestionclarifications'] . "</span></div>\n</div>\n";
-          echo '<div id="store_' . $property_id . '" styles="display: none;"></div>\n';
+          echo '<div id="store_' . $property_id . '" style="display: none;"></div>';
         }
         $modules = implode('\',\'', $modules);
 
