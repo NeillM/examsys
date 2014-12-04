@@ -355,6 +355,7 @@ SQL;
       if (is_numeric($student_mark)) {  // Marked previously so grey out.
         $style = ' marked';
         $style .= ($answer_no != $out_of) ? ' hide' : '';
+        $answer_shown = true;
       } elseif ($answer_shown) {
         $style = ' hide';
       } else {
