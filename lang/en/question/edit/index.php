@@ -243,6 +243,7 @@ $string['showmore'] = 'Show more';
 $string['hidemore'] = 'Hide more';
 $string['minor'] = 'Minor';
 $string['major'] = 'Major';
+$string['cannot'] = 'Cannot Comment';
 $string['pleaserank'] = 'Please rank the following &hellip; starting with the &hellip; first:';
 $string['addtobank'] = 'Add to Bank';
 $string['addtobankandpaper'] = 'Add to Bank &amp; Paper';

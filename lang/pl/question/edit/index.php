@@ -243,6 +243,7 @@ $string['showmore'] = 'Pokaż więcej';
 $string['hidemore'] = 'Ukryj nadmiar';
 $string['minor'] = 'Drobne';
 $string['major'] = 'Znaczące';
+$string['cannot'] = 'Cannot Comment';
 $string['pleaserank'] = 'Oceń co następuje &hellip; zaczynając od &hellip; pierwszego:';
 $string['addtobank'] = 'Dodaj do banku';
 $string['addtobankandpaper'] = 'Do banku i arkusza';
