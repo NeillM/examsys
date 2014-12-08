@@ -25,9 +25,13 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../include/std_set_shared_functions.inc';
+require_once '../classes/paperproperties.class.php';
 
 $paperID    = check_var('paperID', 'POST', true, false, true);
 $tmp_method = check_var('method', 'POST', true, false, true);
+
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $logger           = new Logger($mysqli);
 $rating           = '';
@@ -499,11 +503,22 @@ if (isset($_POST['alterpassmark']) and $_POST['alterpassmark'] == 1) {
 
 $module = (isset($_GET['module'])) ? $_GET['module'] : '';
 $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
-$mysqli->close();
-if (isset($_POST['continue'])) {
+
+  if (isset($_POST['continue'])) {
+    // Clicking continue does not leave the page, so we need to recalculate the paper marks here.
+    $no_reviews = 0;
+    $total_mark = $propertyObj->get_total_mark();
+    $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
+    foreach ($reviews as $review) {
+      if ($review['method'] != 'Hofstee') {
+      updateDB($review, $mysqli);
+    }
+  }
+  $mysqli->close();
   header("location: individual_review.php?&paperID=$paperID&std_setID=$std_setID&method=" . $_GET['method'] . "&module=$module&folder=$folder#$last_question");
   exit();
 } else {
+  $mysqli->close();
   header("location: index.php?paperID=$paperID&module=$module&folder=$folder");
   exit();
 }
