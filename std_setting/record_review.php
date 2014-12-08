@@ -510,8 +510,10 @@ if (isset($_POST['continue'])) {
   $total_mark = $propertyObj->get_total_mark();
   $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
   foreach ($reviews as $review) {
-    if ($review['method'] != 'Hofstee') {
-      updateDB($review, $mysqli);
+    if ($review['std_setID'] == $std_setID) {
+      if ($review['method'] != 'Hofstee') {
+        updateDB($review, $mysqli);
+      }
     }
   }
   $mysqli->close();
