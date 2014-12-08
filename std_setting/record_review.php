@@ -504,13 +504,13 @@ if (isset($_POST['alterpassmark']) and $_POST['alterpassmark'] == 1) {
 $module = (isset($_GET['module'])) ? $_GET['module'] : '';
 $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
 
-  if (isset($_POST['continue'])) {
-    // Clicking continue does not leave the page, so we need to recalculate the paper marks here.
-    $no_reviews = 0;
-    $total_mark = $propertyObj->get_total_mark();
-    $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
-    foreach ($reviews as $review) {
-      if ($review['method'] != 'Hofstee') {
+if (isset($_POST['continue'])) {
+  // Clicking continue does not leave the page, so we need to recalculate the paper marks here.
+  $no_reviews = 0;
+  $total_mark = $propertyObj->get_total_mark();
+  $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
+  foreach ($reviews as $review) {
+    if ($review['method'] != 'Hofstee') {
       updateDB($review, $mysqli);
     }
   }
