@@ -35,6 +35,9 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'GET', true, false, true);
+$student_id = check_var('student_id', 'GET', false, false, true);
+$search_surname = check_var('search_surname', 'GET', false, false, true);
+$search_username = check_var('search_username', 'GET', false, false, true);
 
 if ($userObject->has_role('Demo')) {
   $demo = true;
@@ -222,7 +225,10 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
     }
 
     function editModules(session, grade) {
-      editwin=window.open("edit_modules_popup.php?userID=<?php echo $userID ?>&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+      var student = "&student_id=<?php echo $student_id;?>";
+      var username = "&search_username=<?php echo $search_username; ?>";
+      var surname = "&search_surname=<?php echo $search_surname; ?>";
+      editwin=window.open("edit_modules_popup.php?userID=<?php echo $userID ?>" + student + username + surname + "&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }

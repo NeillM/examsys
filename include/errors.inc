@@ -106,38 +106,51 @@ function uploadError($errCode) {
 function check_var($var_name, $method, $mandatory, $headers, $return_var) {
   global $string;
   
-  if ($mandatory) {
-    if (is_array($method)) {
-      if (!isset($method[$var_name]) or $method[$var_name] === '' ) {
+  if (is_array($method)) {
+    if (!isset($method[$var_name]) or $method[$var_name] === '' ) {
+      if ($mandatory) {
         display_error($string['fatalerrormsg0'], $string['fatalerrorarray'], $headers);
-      }
-      if ($return_var) {
-        return $method[$var_name];
-      }
-    } elseif ($method == 'GET') {
-      if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
-      }
-      if ($return_var) {
-        return $_GET[$var_name];
-      }
-    } elseif ($method == 'POST') {
-      if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
-        
-        display_error($string['fatalerrormsg0'], $var_name, $headers);
-      }
-      if ($return_var) {
-        return $_POST[$var_name];
-      }
-    } else {
-      if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
-      }
-      if ($return_var) {
-        return $_REQUEST[$var_name];
+      } else {
+        return '';
       }
     }
+    if ($return_var) {
+      return $method[$var_name];
+    }
+  } elseif ($method == 'GET') {
+    if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
+      if ($mandatory) {
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
+      } else {
+        return '';
+      }
+    }
+    if ($return_var) {
+      return $_GET[$var_name];
+    }
+  } elseif ($method == 'POST') {
+    if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
+      if ($mandatory) {
+        display_error($string['fatalerrormsg0'], $var_name, $headers);
+      } else {
+        return '';
+      }
+    }
+    if ($return_var) {
+      return $_POST[$var_name];
+    }
+  } else {
+    if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
+      if ($mandatory) {
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
+      } else {
+        return '';
+      }
+    }
+    if ($return_var) {
+      return $_REQUEST[$var_name];
+    }
   }
-  
 }
+  
 ?>
