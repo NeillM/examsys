@@ -102,6 +102,9 @@ function uploadError($errCode) {
  * @param bool    $mandatory    If true then exit if the variable does not exist
  * @param bool    $headers      If true then output HTML header code
  * @param bool    $return_var   If true return the value of the tested variable back
+ *
+ * @return string|null If mandatory is true we return ihe variable if it exsits, it not mandatory we return null
+
  */
 function check_var($var_name, $method, $mandatory, $headers, $return_var) {
   global $string;
