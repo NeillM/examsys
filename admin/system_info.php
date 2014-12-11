@@ -357,6 +357,7 @@ if ($e6 == 'improved') {
         }
         
       }
+      // linux resutls are in kbyte blocks
       if (php_uname('s') != 'Windows NT') {
         $master_array[$i][3] = $master_array[$i][3] / 1024;
         $master_array[$i][1] = $master_array[$i][1] / 1024;
