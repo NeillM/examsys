@@ -1990,7 +1990,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           $answer_options = array();
           $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
           $answer_list = array();
-          $answer_list = explode(',', $answer_options[0]);
+          $answer_list = explode(',', strip_tags($answer_options[0]));
           $exclude_mod = (substr($tmp_exclude, $blank_count-1, 1) == '1') ? ' class="exclude"' : '';
           if ($paper[$question]['display_method'] == 'textboxes') {             // Textboxes
             $correct_flag = false;
@@ -2019,13 +2019,13 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               }
             }
             if ($tmp_display_correct_answer == '1') {
-                echo '<strong>(';
-                $answer_string = '';
-                foreach ($answer_list as $individual_answer) {
-                  $answer_string .= $individual_answer . ', ';
-                }
-                echo rtrim($answer_string, ', ');
-                echo ')</strong>';
+              echo '<strong>(';
+              $answer_string = '';
+              foreach ($answer_list as $individual_answer) {
+                $answer_string .= $individual_answer . ', ';
+              }
+              echo rtrim($answer_string, ', ');
+              echo ')</strong>';
             }
           } else {                                                                // Dropdown menus
             if ($tmp_display_correct_answer == '1') {

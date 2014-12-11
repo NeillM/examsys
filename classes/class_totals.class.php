@@ -583,7 +583,7 @@ class ClassTotals {
       $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
       
       $answer_list = explode(',', $blank_details[$i]);
-      $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
+      $answer_list[0] = str_replace("[/blank]", '', strip_tags($answer_list[0]));
       foreach ($answer_list as $individual_answer) {
         $correct[$i-1][] = html_entity_decode(trim($individual_answer));
       }
@@ -686,14 +686,12 @@ class ClassTotals {
         }
       } elseif ($question['q_type'] == 'blank') {
 				$user_answers = explode('|', $tmp_user_answer);
-        $count_user_awnser = count($user_answers)-1;
-        for ($a=0; $a<$count_user_awnser; $a++) {
+        $count_user_answer = count($user_answers)-1;
+        for ($a=0; $a<$count_user_answer; $a++) {
           if ($tmp_exclude{$a} == '0') {
             if ($question['display_method'] == 'dropdown') {
               $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
               $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a+1])));
-							
-							
 
               if ($student_answer == $correct_answer) {
                 $tmp_mark += $question['marks_correct'];
@@ -708,7 +706,7 @@ class ClassTotals {
               $match = false;
               if (isset($question['correct'][$a])) {
                 foreach ($question['correct'][$a] as $correct_alternative) {
-                  if (strtolower(trim($user_answers[$a+1])) == strtolower(trim($correct_alternative))) {
+                  if (strtolower(trim($user_answers[$a+1])) == strip_tags(strtolower(trim($correct_alternative)))) {
                     $match = true;
                   }
                 }
