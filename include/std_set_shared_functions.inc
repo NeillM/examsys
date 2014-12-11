@@ -92,7 +92,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       'name' => "$title $initials $surname");
   }
   $result->close();
-  
+ 
   $no_reviews = count($reviews);
   for ($i=0 ; $i<$no_reviews; $i++) {
     // Get any questions to exclude.
@@ -157,19 +157,21 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           if ($reviews[$i]['method'] == 'Modified Angoff') {
             $tmp_part = 0;
             foreach ($rating_array as $individual_rating) {
-							if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
-								if (substr($tmp_exclude, $tmp_part, 1) == '0') {
-									if ($q_type == 'textbox') {
-										$textbox_marks = $marks_array[$questionID][0];
-									  for ($a=0; $a<$textbox_marks; $a++) {
-											$std_total += $rating_array[$a] * ($textbox_marks - $a);
-										}
-									} else {
-										$std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
-									}
-									if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
-								}
-							}
+              if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
+                if (substr($tmp_exclude, $tmp_part, 1) == '0') {
+                  if ($q_type == 'textbox') {
+                    $textbox_marks = $marks_array[$questionID][0];
+                    for ($a=0; $a<$textbox_marks; $a++) {
+                      if(isset($rating_array[$a])) {
+                        $std_total += $rating_array[$a] * ($textbox_marks - $a);
+                      }
+                    }
+                  } else {
+                    $std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
+                  }
+                  if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
+                }
+              }
               $tmp_part++;
             }
           }
@@ -198,7 +200,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $cut_marks += ($ebel_marks['HI'] + $ebel_marks['exclude_HI']) * $ebel_percents['HI'] * 100;
       $cut_marks += ($ebel_marks['HN'] + $ebel_marks['exclude_HN']) * $ebel_percents['HN'] * 100;
       $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'] + $ebel_marks['exclude_EE'] + $ebel_marks['exclude_EI'] + $ebel_marks['exclude_EN'] + $ebel_marks['exclude_ME'] + $ebel_marks['exclude_MI'] + $ebel_marks['exclude_MN'] + $ebel_marks['exclude_HE'] + $ebel_marks['exclude_HI'] + $ebel_marks['exclude_HN'];
-       
+
       $pass_score = ($total_marks == 0) ? $total_marks : ($cut_marks / ($total_marks  * 100)) * 100;
       $reviews[$i]['pass_score'] = round($pass_score, 1);
 
@@ -213,14 +215,14 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
       $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
       
-			if ($reviews[$i]['distinction_score'] > 0) {
-				$distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
+      if ($reviews[$i]['distinction_score'] > 0) {
+        $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
         $reviews[$i]['distinction_score'] = round($distinction_score, 1);
-			}
-		}
+      }
+    }
     $reviews[$i]['total_marks'] = $total_marks;
   }
-  
+
   return $reviews;
 }
 
