@@ -114,7 +114,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       if ($mandatory) {
         display_error($string['fatalerrormsg0'], $string['fatalerrorarray'], $headers);
       } else {
-        return '';
+        return null;
       }
     }
     if ($return_var) {
@@ -125,7 +125,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       if ($mandatory) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
       } else {
-        return '';
+        return null;
       }
     }
     if ($return_var) {
@@ -136,7 +136,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       if ($mandatory) {
         display_error($string['fatalerrormsg0'], $var_name, $headers);
       } else {
-        return '';
+        return null;
       }
     }
     if ($return_var) {
@@ -147,7 +147,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       if ($mandatory) {
         display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
       } else {
-        return '';
+        return null;
       }
     }
     if ($return_var) {
