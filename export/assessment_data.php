@@ -580,7 +580,7 @@ if ($student_no > 0) {
               }
               break;
             case 'blank':
-              $correct_parts = explode(',',$question['correct']);
+              $correct_parts = explode(',', strip_tags($question['correct']));
               for ($partID=1; $partID<count($correct_parts); $partID++) {
                 if (substr($tmp_exclude,$partID-1,1) == '0') {
                   if ($is_random) {

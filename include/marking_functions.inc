@@ -728,7 +728,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           // Get correct answer.
           $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
           $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
-          $answer_list = explode(',', $blank_details[$i]);
+          $answer_list = explode(',', strip_tags($blank_details[$i]));
 
           $answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
           if ($display_method == 'textboxes') {
