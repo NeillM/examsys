@@ -162,7 +162,9 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
                   if ($q_type == 'textbox') {
                     $textbox_marks = $marks_array[$questionID][0];
                     for ($a=0; $a<$textbox_marks; $a++) {
-                      $std_total += $rating_array[$a] * ($textbox_marks - $a);
+                      if(isset($rating_array[$a])) {
+                        $std_total += $rating_array[$a] * ($textbox_marks - $a);
+                      }
                     }
                   } else {
                     $std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
