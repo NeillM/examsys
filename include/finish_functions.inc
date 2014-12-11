@@ -1489,17 +1489,17 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     // Not all correct if Bonus Mark but not exact match
                     if ($rank_answers[$tmp_part_id-1] != $paper[$question]['correct'][$tmp_part_id-1]) $all_correct = false;
                   } else {                    
-										if ($rank_answers[$tmp_part_id-1] != 'u') {
-										  if ($paper[$question]['score_method'] == 'Mark per Option' or $paper[$question]['score_method'] == 'Mark per Question') {
-												echo display_response($tmp_display_students_response, 'cross');
-												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
-												$all_correct = false;
-											} elseif (($rank_answers[$tmp_part_id-1] > '0') or ($paper[$question]['score_method'] == 'Mark per Option')) {
-												echo display_response($tmp_display_students_response, 'cross');
-												$paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
-												$all_correct = false;
-											}
-										}
+                    if ($rank_answers[$tmp_part_id-1] != 'u') {
+                      if ($paper[$question]['score_method'] == 'Mark per Option' or $paper[$question]['score_method'] == 'Mark per Question') {
+                        echo display_response($tmp_display_students_response, 'cross');
+                        $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                        $all_correct = false;
+                      } elseif (($rank_answers[$tmp_part_id-1] > '0') or ($paper[$question]['score_method'] == 'Mark per Option')) {
+                        echo display_response($tmp_display_students_response, 'cross');
+                        $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                        $all_correct = false;
+                      }
+                    }
                   }
                 }
               }

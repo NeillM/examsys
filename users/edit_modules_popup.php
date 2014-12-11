@@ -30,6 +30,9 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
+$student_id = check_var('student_id', 'REQUEST', false, false, true);
+$search_surname = check_var('search_surname', 'REQUEST', false, false, true);
+$search_username = check_var('search_username', 'REQUEST', false, false, true);
 
 if (!UserUtils::userid_exists($userID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -110,7 +113,12 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
     $(function() {
-      window.opener.location.href = 'details.php?userID=<?php echo $_POST['userID']; ?>&tab=modules';
+        var user = 'userID=<?php echo $_POST['userID']; ?>';
+        var mod = '&tab=modules';
+        var student = '&student_id=<?php echo $_POST['student_id']; ?>';
+        var username = '&search_username=<?php echo $_POST['search_username']; ?>';
+        var surname = '&search_surname=<?php echo $_POST['search_surname']; ?>';
+      window.opener.location.href = 'details.php?' + user + mod + student + username + surname;
       self.close();
     });
   </script>
@@ -246,6 +254,9 @@ if (isset($_POST['submit'])) {
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" name=\"session\" value=\"$session\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"student_id\" value=\"$student_id\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"search_surname\" value=\"$search_surname\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"search_username\" value=\"$search_username\" /></div></td>\n</tr>\n";
 ?>
 
   <div class="footer" align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok'] ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" /></div>
