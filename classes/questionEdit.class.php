@@ -547,6 +547,10 @@ QUERY;
    * @param integer $paper_id
    */
   public function update_correct($new_correct, $paper_id) {
+    if ($paper_id == -1) {  // No valid Paper ID, we can't remark anything.
+      return;
+    }
+        
     $paper_type = $this->get_paper_type($paper_id);
     if ($paper_type == -1) $paper_type = 2;
 
@@ -621,7 +625,7 @@ QUERY;
     // Check all the modules that the question is on
     $moduleIds = implode(',',array_keys($this->teams));
     if ($moduleIds != '') {
-      $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking=0");
+      $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking = 0");
       $result->execute();
       $result->store_result();
       if ($result->num_rows > 0) {
@@ -699,7 +703,7 @@ QUERY;
    */
   public function get_other_summative_count($paper_id) {
     $count_query = <<< QUERY
-SELECT COUNT(pr.property_id) FROM papers pa INNER JOIN properties pr ON pa.paper=pr.property_id WHERE pr.paper_type='2' AND pa.question=? AND pr.property_id<>? GROUP BY pa.question ORDER BY count(pr.property_id) DESC;
+SELECT COUNT(pr.property_id) FROM papers pa INNER JOIN properties pr ON pa.paper = pr.property_id WHERE pr.paper_type = '2' AND pa.question = ? AND pr.property_id <> ? GROUP BY pa.question ORDER BY count(pr.property_id) DESC;
 QUERY;
     $result = $this->_mysqli->prepare($count_query);
     $result->bind_param('ii', $this->id, $paper_id);

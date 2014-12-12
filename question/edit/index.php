@@ -199,7 +199,6 @@ if ($critical_error == '') {
   $show_correction_intermediate = false;
   if ($question->requires_media() and $current_media['filename'] == '') {
     $show_media_upload = true;
-		
 
   } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['limitedsave']) {
 
@@ -268,7 +267,7 @@ if ($critical_error == '') {
 
 
       // Save metadata
-      $part_names = array('bloom', 'status', 'correct_fback');
+      $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback');
       if (!isset($_POST['teams'])) {
         $_POST['teams'] = array();
       }
@@ -286,7 +285,7 @@ if ($critical_error == '') {
       $do_save = true;
     }
   } elseif ((isset($_POST['submit']) and $_POST['submit'] == $string['save']) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
-   // Save data
+    // Save data
     if ($question->id == -1 or check_fullSave($question->id, $mysqli)) {
 
       $part_names = $question->get_editable_fields();
@@ -512,7 +511,7 @@ endif;
 ?>
   <div id="debug" class="debug"></div>
 	<div id="page-header">
-		<div><img src="../../artwork/toprightmenu.gif" id="toprightmenu_icon"></div>
+		<div><img src="../../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 		<div id="page-header-inner">
 			<h1><strong><?php
       if ($mode == 'Add') echo 'Add ';
@@ -529,7 +528,7 @@ if ($critical_error == '') {
     <div class="tab-bar">
       <div class="tab-holder">
         <p class="question-stats">
-          <strong><?php echo $string['created'] ?></strong>&nbsp;<?php echo $creation_date ?>&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo $string['modified'] ?></strong>&nbsp;<?php echo $modified_date ?>
+          <?php echo $string['created'] ?>&nbsp;<?php echo $creation_date ?>&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $string['modified'] ?>&nbsp;<?php echo $modified_date ?>
         </p>
         <ol class="tabs">
           <li class="on"><a href="#" rel="editor"><?php echo $string['editor'] ?></a></li>
@@ -696,13 +695,13 @@ echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />
       <input name="checkout_author" value="<?php echo $userObject->get_user_ID() ?>" type="hidden" />
-      <input id="calling" name="calling" value="<?php echo $calling; ?>" type="hidden" />
-      <input id="module" name="module" value="<?php echo $module; ?>" type="hidden" />
-      <input id="folder" name="folder" value="<?php echo $folder; ?>" type="hidden" />
-      <input id="scrOfY" name="scrOfY" value="<?php echo $scrofy; ?>" type="hidden" />
-      <input id="paperID" name="paperID" value="<?php echo $paper_id; ?>" type="hidden" />
-      <input id="keyword" name="keyword" value="<?php echo $ListKeyword; ?>" type="hidden" />
-      <input id="team" name="team" value="<?php echo $team; ?>" type="hidden" />
+      <input id="calling" name="calling" value="<?php echo $calling ?>" type="hidden" />
+      <input id="module" name="module" value="<?php echo $module ?>" type="hidden" />
+      <input id="folder" name="folder" value="<?php echo $folder ?>" type="hidden" />
+      <input id="scrOfY" name="scrOfY" value="<?php echo $scrofy ?>" type="hidden" />
+      <input id="paperID" name="paperID" value="<?php echo $paper_id ?>" type="hidden" />
+      <input id="keyword" name="keyword" value="<?php echo $ListKeyword ?>" type="hidden" />
+      <input id="team" name="team" value="<?php echo $team ?>" type="hidden" />
       <input id="question_id" name="question_id" value="<?php echo $question->id ?>" type="hidden" />
     </div>
   </form>
