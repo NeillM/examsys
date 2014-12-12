@@ -31,6 +31,7 @@ require '../include/staff_student_auth.inc';
 require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
+require_once '../include/std_set_shared_functions.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
@@ -864,6 +865,15 @@ function check_latex_random($q_ids, $mysqli) {
       $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $paperID);
       $result->execute();
       $result->close();
+
+      // Update standard set as marks has changed.
+      $no_reviews = 0;
+      $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
+      foreach ($reviews as $review) {
+        if ($review['method'] != 'Hofstee') {
+          updateDB($review, $mysqli);
+        }
+      }
     }
   }
 
