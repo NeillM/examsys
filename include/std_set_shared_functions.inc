@@ -1013,7 +1013,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
         if ($q_type == 'mrq' or $q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling' or $q_type == 'hotspot') {
           $current_review = (!empty($sub_reviews[$part_no - 1])) ? $sub_reviews[$part_no - 1] : '';
         } elseif ($q_type == 'textbox') {
-          $current_review = $sub_reviews[count($sub_reviews)-$part_no];
+          $current_review = (!empty($sub_reviews[count($sub_reviews)-$part_no])) ? $sub_reviews[count($sub_reviews)-$part_no] : '';
         } else {
           $current_review = (isset($prev_reviews[$q_id])) ? $prev_reviews[$q_id] : '';
         }
