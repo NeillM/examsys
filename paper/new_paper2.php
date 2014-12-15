@@ -436,7 +436,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < ($date_array['year']+21); $i++) {
-      if ($i == $target_year) {
+      if ($i == $target_year + 1) {
         echo "<option value=\"$i\" selected>$i</option>\n";
       } else {
         echo "<option value=\"$i\">$i</option>\n";
