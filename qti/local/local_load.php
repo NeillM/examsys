@@ -18,7 +18,7 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
@@ -35,29 +35,11 @@
 require_once '../include/load_config.php';
 
 class IE_Local_Load extends IE_Main {
-  var $type = "";
+  var $type = '';
   var $q_ids = array();
   var $p_ids = array();
   var $params;
   var $statuses = array();
-
-  function QuickInfo($params) {
-    /*$result['impexp_type'] = $params->type;
-
-     $db = new Database();
-     $db->SetTable('questions');
-     $db->AddField(array('q_id', 'q_type', 'theme', 'leadin'));
-     $db->AddWhere('q_id',$params->q_ids,'i','IN');
-     $db->AddOrder('q_id');
-     $rows = $db->GetMultiRow();
-
-     foreach ($rows as $row)
-     {
-     echo $row['q_id'] . " - " . $row['q_type'] . " - " . $row['theme'] . " - " . $row['leadin'] . "<br>";
-     }
-
-     return $result;*/
-  }
 
   function Load($params) {
     global $string;
@@ -97,11 +79,7 @@ class IE_Local_Load extends IE_Main {
         $question = $this->LoadQuestion($q_id);
         $result->questions[] = $question;
       }
-
-      //print_p($questions);
-      }
-
-    //print_p($result);
+    }
 
     return $result;
   }
@@ -147,7 +125,8 @@ class IE_Local_Load extends IE_Main {
 
   function LoadQuestion($q_id) {
     global $REPLACEMEuserIDold, $show_debug;
-    //echo "<div>Loading question $q_id</div>";
+
+    $userObj = UserObject::get_instance();
 
     // storage for question data
     $q_row = array();
@@ -170,9 +149,7 @@ class IE_Local_Load extends IE_Main {
 
     // determine q type and create a storage class for correct type
     $q_type = $q_row['q_type'];
-    $q_storage = "ST_Question_".$q_type;
-
-    //echo "Question type : $q_type, storage class : $q_storage\n";
+    $q_storage = 'ST_Question_' . $q_type;
 
     $store = new $q_storage;
     $store->type = $q_type;
@@ -181,20 +158,19 @@ class IE_Local_Load extends IE_Main {
     $this->LoadQuestionBase($store, $q_row, $o_rows);
 
     // populate class specific storage fields
-    $funcname = 'LoadQuestion'.$q_type;
+    $funcname = 'LoadQuestion' . $q_type;
     call_user_func(array($this, $funcname), $store, $q_row, $o_rows);
-    //call_user_func(array('IE_local_Load',$funcname),$store,$q_row,$o_rows);
 
     // display some debug data
     print_p($q_row);
     print_p($o_rows,true,100);
 
     // insert track changes record
-    if($show_debug != true) {
+    if ($show_debug != true) {
       $track = array();
       $track['type'] = "QTI Export";
       $track['typeID'] = $q_row['q_id'];
-      $track['editor'] = $userID;
+      $track['editor'] = $userObj->get_user_ID();
       $track['new'] = "Exported to QTI file";
       $track['part'] = "all";
       $track['changed'] = date("Y-m-d H:i:s");
@@ -213,7 +189,7 @@ class IE_Local_Load extends IE_Main {
     $store->leadin = $q_row['leadin'];
     $store->theme = $q_row['theme'];
     $store->notes = $q_row['notes'];
-    $store->q_group = isset($q_row['q_group'])?$q_row['q_group']:'';
+    $store->q_group = isset($q_row['q_group']) ? $q_row['q_group'] : '';
     $store->bloom = $q_row['bloom'];
     $store->score_method = $q_row['score_method'];
 
@@ -267,14 +243,12 @@ class IE_Local_Load extends IE_Main {
 
       // pull out list of options and replace segment with blankid created arlier
       $midpart = substr($q, $offset + 7, $endoffset - $offset - 7);
-      //echo "MidPart : $midpart<br>";
       $question[] = substr($q, 0, $offset);
       $question[] = $blankid;
       $q = substr($q, $endoffset + 8);
-      //echo "New Question = $q<Br>";
 
       // process the options
-      $optlist = explode(",", $midpart);
+      $optlist = explode(',', $midpart);
 
       // array to store resulting STQ_Blank_Option classes
       $options = array();
@@ -293,11 +267,11 @@ class IE_Local_Load extends IE_Main {
 
 
           // if display mode is dropdown, only first is correct answer
-          if ($store->displaymode == "dropdown") {
+          if ($store->displaymode == 'dropdown') {
             $curopt->correct = $optionno == 1 ? 1 : 0;
 
             // if textboxes, each item is a correct answer
-            } else if ($store->displaymode == "textboxes") {
+          } elseif ($store->displaymode == 'textboxes') {
             $curopt->correct = 1;
           }
           $options[] = $curopt;
@@ -305,7 +279,9 @@ class IE_Local_Load extends IE_Main {
         }
       }
       $store->options[$blankid] = array();
-      foreach ($options as $option) $store->options[$blankid][] = $option;
+      foreach ($options as $option) {
+        $store->options[$blankid][] = $option;
+      }
 
       $blankno++;
     }
@@ -320,35 +296,14 @@ class IE_Local_Load extends IE_Main {
     // fiarly sure this is ok
     $store->scenario = $q_row['scenario'];
     $store->feedback = $q_row['correct_fback'];
-    $store->q_type='enhancedcalc';
+    $store->q_type = 'enhancedcalc';
 
     $settingsdecoded=json_decode($q_row['settings'],true);
 
-    $store->marks_correct=$settingsdecoded['marks_correct'];
-    $store->marks_incorrect=$settingsdecoded['marks_incorrect'];
-    $store->marks_partial=$settingsdecoded['marks_partial'];
-
-
-/*    $store->formula = $o_rows[0]['correct'];
-
-    list($store->decimals, $store->tolerance, $store->units) = explode(",", $q_row['display_method']);
-
-    $calcvar = 0;
-    foreach ($o_rows as $o_row) {
-      $calcvarletter = chr(ord('A') + $calcvar);
-      $var = new STQ_Calc_Vars();
-      list($var->min, $var->max, $var->inc, $var->dec) = explode(",", $o_row['option_text']);
-      $store->variables[$calcvarletter] = $var;
-
-      $store->marks_correct = $o_row['marks_correct'];
-      $store->marks_incorrect = $o_row['marks_incorrect'];
-      $store->marks_partial = $o_row['marks_partial'];
-
-
-      $calcvar++;
-    }
-*/
-    $store->settings=$q_row['settings'];
+    $store->marks_correct = $settingsdecoded['marks_correct'];
+    $store->marks_incorrect = $settingsdecoded['marks_incorrect'];
+    $store->marks_partial = $settingsdecoded['marks_partial'];
+    $store->settings = $q_row['settings'];
   }
   function LoadQuestionCalculation($store, $q_row, $o_rows) {
     // fiarly sure this is ok
@@ -356,13 +311,13 @@ class IE_Local_Load extends IE_Main {
     $store->feedback = $q_row['correct_fback'];
     $store->formula = $o_rows[0]['correct'];
 
-    list($store->decimals, $store->tolerance, $store->units) = explode(",", $q_row['display_method']);
+    list($store->decimals, $store->tolerance, $store->units) = explode(',', $q_row['display_method']);
 
     $calcvar = 0;
     foreach ($o_rows as $o_row) {
       $calcvarletter = chr(ord('A') + $calcvar);
       $var = new STQ_Calc_Vars();
-      list($var->min, $var->max, $var->inc, $var->dec) = explode(",", $o_row['option_text']);
+      list($var->min, $var->max, $var->inc, $var->dec) = explode(',', $o_row['option_text']);
       $store->variables[$calcvarletter] = $var;
 
       $store->marks_correct = $o_row['marks_correct'];
@@ -415,11 +370,11 @@ class IE_Local_Load extends IE_Main {
     }
 
     // split all stuff from q_row into arrays for processing
-    $feedbacks = explode("|", $q_row['correct_fback']);
-    $medias = explode("|", $q_row['q_media']);
-    $media_widths = explode("|", $q_row['q_media_width']);
-    $media_heights = explode("|", $q_row['q_media_height']);
-    $tmp_scenarios = explode("|", $q_row['scenario']);
+    $feedbacks = explode('|', $q_row['correct_fback']);
+    $medias = explode('|', $q_row['q_media']);
+    $media_widths = explode('|', $q_row['q_media_width']);
+    $media_heights = explode('|', $q_row['q_media_height']);
+    $tmp_scenarios = explode('|', $q_row['scenario']);
     $scenarios = array();
     foreach($tmp_scenarios as $s) {
       if($s != '') {
@@ -427,7 +382,7 @@ class IE_Local_Load extends IE_Main {
       }
     }
 
-    $correct = explode("|", $o_rows[0]['correct']);
+    $correct = explode('|', $o_rows[0]['correct']);
 
     // for all the arrays made, create scenarios
     $scenariono = 1;
@@ -442,7 +397,7 @@ class IE_Local_Load extends IE_Main {
       $ems->marks_partial = $o_rows[0]['marks_partial'];
 
       $ems->feedback = (empty($feedbacks[$i])) ? '' : $feedbacks[$i];
-      $ems->correctans = explode("$", $correct[$i]);
+      $ems->correctans = explode('$', $correct[$i]);
 
       $store->scenarios[$scenariono] = $ems;
       $scenariono++;
@@ -452,7 +407,7 @@ class IE_Local_Load extends IE_Main {
   }
 
   function LoadQuestionFlash($store, $q_row, $o_rows) {
-    // no question media for this qtype
+    // No question media for this question type
     $store->media = '';
     $store->media_width = 0;
     $store->media_height = 0;
@@ -465,7 +420,9 @@ class IE_Local_Load extends IE_Main {
     $store->feedback_swf_width = $o_rows[0]['o_media_width'];
     $store->feedback_swf_height = $o_rows[0]['o_media_height'];
 
-    $store->marks = $o_rows[0]['marks'];
+    $store->marks_correct = $o_rows[0]['marks_correct'];
+    $store->marks_incorrect = $o_rows[0]['marks_incorrect'];
+    $store->marks_partial = $o_rows[0]['marks_partial'];
   }
 
   // TODO - Does this deal with multi-layered hotspot questions?
@@ -477,18 +434,18 @@ class IE_Local_Load extends IE_Main {
     $hotspots = $o_rows[0]['correct'];
 
     $store->raw_option = $hotspots;
-    $hotspots = explode("|", $hotspots);
+    $hotspots = explode('|', $hotspots);
     $spotcount = 0;
     foreach ($hotspots as $hotspot) {
-      $parts = explode("~", $hotspot);
+      $parts = explode('~', $hotspot);
       array_shift($parts);
       array_shift($parts);
       array_pop($parts);
-      $num=0;
+      $num = 0;
       for ($i = 0; $i < count($parts) -1; $i += 3) {
         $type = $parts[$i];
         $coords = $parts[$i + 1];
-        $coords = explode(",", $coords);
+        $coords = explode(',', $coords);
         $hotspot = new STQ_Hotspot_Spot();
         $hotspot->type = $type;
         foreach ($coords as $coord) {
@@ -498,7 +455,7 @@ class IE_Local_Load extends IE_Main {
         $hotspot->marks_correct = $o_rows[0]['marks_correct'];
         $hotspot->marks_incorrect = $o_rows[0]['marks_incorrect'];
         $hotspot->marks_partial = $o_rows[0]['marks_partial'];
-        if ($hotspot->type != "") {
+        if ($hotspot->type != '') {
           $store->hotspots[$spotcount][$num] = $hotspot;
         }
         $num++;
@@ -540,7 +497,7 @@ class IE_Local_Load extends IE_Main {
     $data = $o_rows[0]['correct'];
     $store->raw_option = $data;
 
-    $data = explode(";", $data);
+    $data = explode(';', $data);
 
     $store->line_color = $data[0];
     $store->line_thickness = $line_thicknesses[$data[1]];
@@ -551,13 +508,11 @@ class IE_Local_Load extends IE_Main {
     $store->height = $data[6];
     $store->label_type = $data[7];
 
-    //print_p($data);
-
     for ($i = 11; $i < count($data); $i++) {
       if (empty($data[$i])) continue;
 
       $chunk = $data[$i];
-      $data3 = explode("$", $data[$i]);
+      $data3 = explode('$', $data[$i]);
       $arrow = new STQ_Labelling_Arrow();
       $arrow->type = $data3[1];
       $arrow->coords[] = $data3[2];
@@ -568,13 +523,12 @@ class IE_Local_Load extends IE_Main {
       $store->arrows[] = $arrow;
     }
 
-    $data2 = explode("|", $data[11]);
-    //print_p($data2);
+    $data2 = explode('|', $data[11]);
+
     foreach ($data2 as $label) {
-      $label = explode("$", $label);
+      $label = explode('$', $label);
 
       if (empty($label[4])) continue;
-      //echo $label[0] . " - " .$label[1] . " - " .$label[2] . " - " .$label[3] . " - " .$label[4] . "<br>";
       $lc = new STQ_Labelling_Label();
 
       $tag = explode('~',$label[4]);
@@ -596,9 +550,7 @@ class IE_Local_Load extends IE_Main {
         $lc->top = -1;
       }
 
-
       $store->labels[$label[0]] = $lc;
-
     }
   }
 
@@ -609,13 +561,13 @@ class IE_Local_Load extends IE_Main {
     $sm = $q_row['display_method'];
 
     // extract the last part of the score method and if true has n/a
-    $store->hasna = strtolower(substr($sm, strrpos($sm, "|") + 1)) == "true" ? 1 : 0;
+    $store->hasna = strtolower(substr($sm, strrpos($sm, '|') + 1)) == 'true' ? 1 : 0;
 
     // trim off the last scoremethod as this stored has n/a
-    $sm = substr($sm, 0, strrpos($sm, "|"));
+    $sm = substr($sm, 0, strrpos($sm, '|'));
 
     // store rest of the options in scale
-    $opts = explode("|", $sm);
+    $opts = explode('|', $sm);
     $i = 1;
     $store->scale = array();
     foreach ($opts as $opt) {
@@ -625,7 +577,7 @@ class IE_Local_Load extends IE_Main {
 
   function LoadQuestionMatrix($store, $q_row, $o_rows) {
     // get list of correct values for each of the questions
-    $correctvalues = explode("|", $o_rows[0]['correct']);
+    $correctvalues = explode('|', $o_rows[0]['correct']);
 
     // build a list of the top row options
     $topvalueno = 1;
@@ -641,7 +593,7 @@ class IE_Local_Load extends IE_Main {
 
     // for all questions down left, create a STQ_Matrix_Scenario
     $scenno = 1;
-    $leftvalue = explode("|", $q_row['scenario']);
+    $leftvalue = explode('|', $q_row['scenario']);
     foreach ($leftvalue as $left) {
       if($left != '') {
         $scenario = new STQ_Matrix_Scenario();
@@ -660,7 +612,9 @@ class IE_Local_Load extends IE_Main {
     $store->scenario = $q_row['scenario'];
     $store->fb_correct = $q_row['correct_fback'];
     $store->fb_incorrect = $q_row['incorrect_fback'];
-    if (!$store->fb_incorrect) $store->fb_incorrect = $store->fb_correct;
+    if (!$store->fb_incorrect) {
+      $store->fb_incorrect = $store->fb_correct;
+    }
     $store->correct = $o_rows[0]['correct'];
 
     // for each of the options create an STQ_Mcq_Option
@@ -683,7 +637,9 @@ class IE_Local_Load extends IE_Main {
     $store->scenario = $q_row['scenario'];
     $store->fb_correct = $q_row['correct_fback'];
     $store->fb_incorrect = $q_row['incorrect_fback'];
-    if (!$store->fb_incorrect) $store->fb_incorrect = $store->fb_correct;
+    if (!$store->fb_incorrect) {
+      $store->fb_incorrect = $store->fb_correct;
+    }
     $store->correct = $o_rows[0]['correct'];
 
     // for each of the options create an STQ_Mcq_Option
@@ -707,7 +663,7 @@ class IE_Local_Load extends IE_Main {
     // score method oddness, if type is other, the include other then
     // score method gets set to "1 Mark per True Option"
     $store->score_method = $q_row['score_method'];
-    if ($store->score_method == "other") {
+    if ($store->score_method == 'other') {
       $store->include_other = true;
     }
     $store->feedback = $q_row['correct_fback'];
@@ -722,7 +678,9 @@ class IE_Local_Load extends IE_Main {
       $option->is_correct = strtolower($o_row['correct']) == 'y' ? 1 : 0;
       $option->fb_correct = $o_row['feedback_right'];
       $option->fb_incorrect = $o_row['feedback_wrong'];
-      if ($option->fb_incorrect == "") $option->fb_incorrect = $option->fb_correct;
+      if ($option->fb_incorrect == '') {
+        $option->fb_incorrect = $option->fb_correct;
+      }
 
       $option->marks_correct = $o_row['marks_correct'];
       $option->marks_incorrect = $o_row['marks_incorrect'];
@@ -746,17 +704,14 @@ class IE_Local_Load extends IE_Main {
     // get a list of options and create a STQ_Rank_Options for em
     $optionno = 1;
     foreach ($o_rows as $o_row) {
-      //if ($o_row['correct'] > 0 && $o_row['correct'] < 9990)
-      {
-        $ranking = new STQ_Rank_Options();
-        $ranking->order = $o_row['correct'];
-        $ranking->stem = $o_row['option_text'];
-        $ranking->marks_correct = $o_row['marks_correct'];
-        $ranking->marks_incorrect = $o_row['marks_incorrect'];
-        $ranking->marks_partial = $o_row['marks_partial'];
-        $store->options[$optionno] = $ranking;
-        $optionno++;
-      }
+      $ranking = new STQ_Rank_Options();
+      $ranking->order = $o_row['correct'];
+      $ranking->stem = $o_row['option_text'];
+      $ranking->marks_correct = $o_row['marks_correct'];
+      $ranking->marks_incorrect = $o_row['marks_incorrect'];
+      $ranking->marks_partial = $o_row['marks_partial'];
+      $store->options[$optionno] = $ranking;
+      $optionno++;
     }
   }
 
@@ -765,7 +720,7 @@ class IE_Local_Load extends IE_Main {
     $store->scenario = $q_row['scenario'];
 
     // size of text box stored as 100x30 in sm
-    list($store->columns, $store->rows) = explode("x", $q_row['display_method']);
+    list($store->columns, $store->rows) = explode('x', $q_row['display_method']);
 
     $store->editor = $o_rows[0]['option_text'];
     $store->marks_correct = $o_rows[0]['marks_correct'];
@@ -774,21 +729,23 @@ class IE_Local_Load extends IE_Main {
 
     // create a list of ; separated terms, stripping out any empty ones?
     // TODO: Should this happen? maybe they want to leave blank ones in?
-    $store->terms = explode_no_empty(";", $o_rows[0]['correct']);
+    $store->terms = explode_no_empty(';', $o_rows[0]['correct']);
   }
 
   function LoadQuestionRandom($store, $q_row, $o_rows) {
-    return "Error : Random questions cant be exported<br>";
+    return "Error: Random questions can't be exported.";
+  }
+
+  function LoadQuestionKeyword_based($store, $q_row, $o_rows) {
+    return "Error: Keyword-based questions can't be exported.";
   }
 
   function LoadQuestionSct($store, $q_row, $o_rows) {
-    return "Error : SCT questions cant be exported<br>";
+    return "Error: SCT questions can't be exported.";
   }
 
   function AddMedia(&$question, $media, $width = 0, $height = 0) {
-    if ($media == "") return;
-
-    //echo "Getting media $media<br>";
+    if ($media == '') return;
 
     $question->media = $media;
     $question->media_width = $width;
@@ -798,14 +755,11 @@ class IE_Local_Load extends IE_Main {
   }
 
   function GetMedia($filename) {
-    $configObject=Config::get_instance();
-    $cfg_web_root=$configObject->get('cfg_web_root');
+    $configObject = Config::get_instance();
+    $cfg_web_root = $configObject->get('cfg_web_root');
     if (file_exists($cfg_web_root.'media/'.$filename)) {
-      //echo "Copied /var/www/media/" . $filename . " to " . $this->params->base_dir . $this->params->dir."/".$filename . "<br>";
-      copy($cfg_web_root . 'media/'. $filename, $this->params->base_dir . $this->params->dir . "/" . $filename);
-    } else {
-      //echo "File $filename doesnt exist in media directory<br>";
-      }
+      copy($cfg_web_root . 'media/'. $filename, $this->params->base_dir . $this->params->dir . '/' . $filename);
+    }
   }
 
   public function setStatuses($statuses) {
