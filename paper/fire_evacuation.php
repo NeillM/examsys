@@ -141,25 +141,17 @@ if ($is_question_preview_mode == false) {
   <title>Rog&#333;</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style>
+    body {text-align:center}
+    .norun {font-weight:bold; margin-bottom:250px}
+  </style>
 </head>
 <body>
-  <form method="post" name="questions" action="start.php?id=<?php echo $_GET['id'] ?>&dont_record=true">
+  <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true">
 
-  <p style="text-align:center; font-size:200%; color:#008000"><?php echo $string['top_msg'] ?></p>
-  <p style="text-align:center; font-weight:bold"><?php echo $string['donotrun'] ?></p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p style="text-align:center"><strong><?php echo $string['bottom_msg'] ?> </strong><input type="submit" name="next" value="<?php echo $string['continue'] ?>" class="ok" /></p>
+  <p style="font-size:200%; color:#008000"><?php echo $string['top_msg'] ?></p>
+  <p class="norun"><?php echo $string['donotrun'] ?></p>
+  <p><strong><?php echo $string['bottom_msg'] ?> </strong><input type="submit" name="next" value="<?php echo $string['continue'] ?>" class="ok" /></p>
 <?php
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"" . ($_POST['current_screen'] - 1) . "\" />\n";
   if (isset($_POST['sessionid'])) {
