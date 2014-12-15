@@ -89,7 +89,6 @@ $do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_pape
 $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
-
 $attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
 $low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
 $lab_name = NULL;             //default overwritten by (check_labs)
@@ -100,8 +99,11 @@ $current_address = NetworkUtils::get_client_address();
 
 //get the module Ids for this paper
 $modIDs = array_keys(Paper_utils::get_modules($paperID, $mysqli));
+$moduleID = $propertyObj->get_modules();
 
-if ($userObject->has_role('Student')) {
+if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+  // No further security checks.
+} else {    // Treat as student with extra security checks.
 
   // Check for additional password on the paper.
   check_paper_password($propertyObj->get_password(), $string, $mysqli);

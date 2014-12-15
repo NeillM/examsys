@@ -28,12 +28,14 @@ require_once $cfg_web_root . 'classes/exclusion.class.php';
 
 $configObject = Config::get_instance();
 
-function can_display_feedback($paper_type, $userObject) {
+function can_display_feedback($paper_type, $moduleID, $userObject) {
   $show_feedback = false;
   if ($paper_type == '0') {
     $show_feedback = true;
   } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
-    if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
+    if ($userObject->has_role(array('SysAdmin', 'External Examiner'))) {
+      $show_feedback = true;
+    } elseif ($userObject->has_role(array('Staff', 'Admin')) and check_staff_modules($moduleID, $userObject)) {
       $show_feedback = true;
     } else {
       $show_feedback = false;      

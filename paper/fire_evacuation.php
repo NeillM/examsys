@@ -37,12 +37,12 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/logmetadata.class.php';
 
-check_var('id', 'GET', true, false, false);
+$id = check_var('id', 'GET', true, false, true);
 
 $userObject = UserObject::get_instance();
 
 // Get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 $property_id    = $propertyObj->get_property_id();
 $paper_type     = $propertyObj->get_paper_type();
@@ -77,9 +77,11 @@ $attempt = 1; //default attempt to 1 overwritten if the student is resit candida
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 $current_address = NetworkUtils::get_client_address();
+$moduleID = $propertyObj->get_modules();
 
-if ($userObject->has_role('Student')) {
-
+if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+  // No further security checks.
+} else {    // Treat as student with extra security checks.
   // Check for additional password on the paper
   check_paper_password($password, $string, $mysqli);
 
@@ -143,8 +145,8 @@ if ($is_question_preview_mode == false) {
 <body>
   <form method="post" name="questions" action="start.php?id=<?php echo $_GET['id'] ?>&dont_record=true">
 
-  <p style="text-align:center; font-size:200%; color:#008000"><?php echo $string['top_msg']; ?></p>
-  <p style="text-align:center; font-weight:bold"><?php echo $string['donotrun']; ?></p>
+  <p style="text-align:center; font-size:200%; color:#008000"><?php echo $string['top_msg'] ?></p>
+  <p style="text-align:center; font-weight:bold"><?php echo $string['donotrun'] ?></p>
   <p>&nbsp;</p>
   <p>&nbsp;</p>
   <p>&nbsp;</p>
@@ -157,7 +159,7 @@ if ($is_question_preview_mode == false) {
   <p>&nbsp;</p>
   <p>&nbsp;</p>
   <p>&nbsp;</p>
-  <p style="text-align:center"><strong><?php echo $string['bottom_msg']; ?> </strong><input type="submit" name="next" value="<?php echo $string['continue']; ?>" /></p>
+  <p style="text-align:center"><strong><?php echo $string['bottom_msg'] ?> </strong><input type="submit" name="next" value="<?php echo $string['continue'] ?>" class="ok" /></p>
 <?php
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"" . ($_POST['current_screen'] - 1) . "\" />\n";
   if (isset($_POST['sessionid'])) {

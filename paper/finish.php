@@ -86,7 +86,7 @@ $latex_needed               = $propertyObj->get_latex_needed();
 $password                   = $propertyObj->get_password();
 $moduleID                   = $propertyObj->get_modules();
 
-$show_feedback              = can_display_feedback($paper_type, $userObject);
+$show_feedback              = can_display_feedback($paper_type, $moduleID, $userObject);
 
 $attempt = 1; // Default attempt to 1 overwritten if the student is resit candidate
 
