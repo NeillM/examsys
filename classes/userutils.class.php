@@ -110,7 +110,7 @@ Class UserUtils {
     $configObj = Config::get_instance();
   
     $auth_settings = $configObj->get('authentication');
-    for ($i=0; $i<count($auth_settings); $i++) {
+    for ($i = 0; $i < count($auth_settings); $i++) {
       if ($auth_settings[$i][0] == 'internaldb') {
         $cfg_encrypt_salt = $auth_settings[$i][1]['encrypt_salt'];
       }
@@ -165,12 +165,35 @@ Class UserUtils {
 
     return $exists;
   }
+  
+  /**
+   * Add a new role to a user.
+   *
+   * @param string $new_role - The role to be added.
+   * @param string $userid   - The ID of the user we are dealing with.
+   * @param object $db       - Database connection.
+   */
+  static function add_role($new_role, $userid, $db) {
+    if ($new_role == '') {
+      return false;
+    }
+    
+    $has_role = UserUtils::has_user_role($userid, $new_role, $db);
+    
+    if (!$has_role) {    // If new roles does not exist, add.
+      $stmt = $db->prepare("UPDATE users SET roles = CONCAT(roles, ',', '$new_role') WHERE id = ?");
+      $stmt->bind_param('i', $userid);
+      $stmt->execute();
+      $stmt->close();
+    }
+    
+  }
 
   /**
    * Check if userID exists.
    *
-   * @param string $userid user ID
-   * @param object $db mysqli database connection
+   * @param string $userid  - User ID
+   * @param object $db      - Database connection
    *
    * @return true if exists else false
    *
@@ -188,6 +211,15 @@ Class UserUtils {
     return $exists;
   }
 
+  /**
+   * Get the username for a given user ID (if not deleted).
+   *
+   * @param string $userid  - User ID
+   * @param object $db      - Database connection
+   *
+   * @return string username of the user
+   *
+   */
   static function get_username($userid, $db) {
     $stmt = $db->prepare("SELECT username FROM users WHERE id = ? AND user_deleted IS NULL");
     $stmt->bind_param('i', $userid);
@@ -252,6 +284,14 @@ Class UserUtils {
     return $match;
   }
   
+  /**
+   * Get all the details of a user account.
+   *
+   * @param integer $userID - UserID of the user we wish to look up.
+   * @param object $db      - Database connection
+   *
+   * @return mixed - False if not found, otherwise an array with the details.
+   */
   static function get_user_details($userID, $db) {
     $stmt = $db->prepare("SELECT username, title, surname, initials, first_names, email, roles, gender, grade, yearofstudy, user_deleted FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param('i', $userID);
@@ -287,9 +327,9 @@ Class UserUtils {
   /**
    * Add a member of staff onto a team.
    *
-   * @param integer $tmp_userID UserID of the member of staff
-   * @param int $idmod the id of the team (module)
-   * @param object $db mysqli database connection
+   * @param integer $tmp_userID - UserID of the member of staff.
+   * @param int $idmod          - The id of the team (module).
+   * @param object $db          - Database connection.
    *
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
