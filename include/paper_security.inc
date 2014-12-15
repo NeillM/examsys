@@ -148,6 +148,21 @@ function check_finished($propertyObj, $userObj, $string, $db) {
   
 }
 
+function check_staff_modules($moduleID, $userObject) {
+  $on_module = false;
+  $modIDs = array_keys($moduleID);
+  
+  $staff_mods = $userObject->get_staff_accessable_modules();
+    
+  foreach ($modIDs as $modID) {
+    if (isset($staff_mods[$modID])) {
+      $on_module = true;
+      break;
+    }
+  }
+  return $on_module;
+}
+
 function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $notice = UserNotices::get_instance();
   $configObject = Config::get_instance();

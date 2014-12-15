@@ -75,4 +75,5 @@ $string['EnhancedCalcCorrectError'] = 'Błąd: Poprawna odpowiedź nie może by�
 $string['student'] = 'Student'; //cognate
 $string['started'] = 'Started';
 $string['finished'] = 'Finished';
+$string['comments'] = 'Comments:';
 ?>

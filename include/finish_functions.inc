@@ -33,10 +33,10 @@ function can_display_feedback($paper_type, $userObject) {
   if ($paper_type == '0') {
     $show_feedback = true;
   } elseif ($paper_type == '1' or $paper_type == '2' or $paper_type == '5') {
-    if ($userObject->has_role('Student')) {
-      $show_feedback = false;
-    } elseif ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
+    if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
       $show_feedback = true;
+    } else {
+      $show_feedback = false;      
     }
   }
   return $show_feedback;
@@ -2632,7 +2632,7 @@ function render_marking_data($string, $totalpos, $paperID, $question, $userID, $
 
   $html = '';
   foreach ($phases as $phase_no => $phase) {
-    $comment_html = ($phase['comments'] == '') ? '' : '<p><b>Comments:</b> ' . $phase['comments'];
+    $comment_html = ($phase['comments'] == '') ? '' : '<p><strong>' . $string['comments'] . '</strong> ' . $phase['comments'];
     $reminder_html = (count($phase['reminders']) > 0) ? '<ul>' . implode('', $phase['reminders']) . '</ul>' : '';
 
     $html .= "<div style=\"font-weight:bold\">" . $phase['marker'] . " ($phase_no)</div>";

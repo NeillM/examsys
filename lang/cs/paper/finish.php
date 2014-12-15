@@ -75,4 +75,5 @@ $string['EnhancedCalcCorrectError'] = 'CHYBA: Správná odpověď nemohla být v
 $string['student'] = 'Student';
 $string['started'] = 'Started';
 $string['finished'] = 'Finished';
+$string['comments'] = 'Comments:';
 ?>

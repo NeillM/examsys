@@ -75,4 +75,5 @@ $string['EnhancedCalcCorrectError'] = 'Error: Correct answer could not be calcul
 $string['student'] = 'Student';
 $string['started'] = 'Started';
 $string['finished'] = 'Finished';
+$string['comments'] = 'Comments:';
 ?>

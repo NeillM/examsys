@@ -115,7 +115,16 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
-if ($userObject->has_role('Student')) {
+if ($userObject->has_role(array('External Examiner'))) {
+  // No further security checks.
+  require_once '../classes/reviews.class.php';
+  if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+  }
+} elseif ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+  // No further security checks.
+} else {
   $modIDs = array_keys($moduleID);
 
   if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
@@ -355,10 +364,10 @@ require '../config/finish.inc';
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);
-    if ($userObject->has_role('Student')) {
-      $logger->record_access($userObject->get_user_ID(), 'Assessment script', $paperID);  // Students write in the paperID
-    } else {
+    if ($userObject->has_role(array('SysAdmin','Admin','Staff','External Examiner'))) {
       $logger->record_access($userObject->get_user_ID(), 'Assessment script', '/paper/finish.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
+    } else {
+      $logger->record_access($userObject->get_user_ID(), 'Assessment script', $paperID);  // Students write in the paperID
     }
   } else {
     echo '<blockquote>';
