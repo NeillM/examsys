@@ -321,7 +321,9 @@ if ($e6 == 'improved') {
     $row_no = $i + 1;
   } else {
     $master_array = array();
-    $results = shell_exec('df -k');
+    // List free disk space, ensuring one file system per line.
+    // df -P flag not used as not supported by Solaris.
+    $results = shell_exec("df -k | awk 'NF == 1 {printf($1); next}; {print}'");
     $lines = explode('<br />', nl2br($results));
     $row_no = 0;
     foreach ($lines as $individual_line) {
