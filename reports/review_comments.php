@@ -375,7 +375,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
           echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/paper/hotspot_answer.swf\" />');\n";
           echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
-          echo "write_string('<param name=\"bgcolor\" value=\"white\" />');\n";
+          echo "write_string('<param name=\"bgcolor\" value=\"" .$bgcolor . "\" />');\n";
           echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/paper/hotspot_answer.swf\" quality=\"high\" bgcolor=\"white\" width=\"" . $tmp_width . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
           echo "write_string('</object>');\n";
           echo "</script>\n";
