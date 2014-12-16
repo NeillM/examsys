@@ -1141,7 +1141,7 @@ function qh_mouseDragUp(){
 				this.hotSpots.splice(this.activeLabel,1);
 				this.activeLabel = 0;
 			}
-			if (this.buttonBox[this.buttonBoxNames['toolbar/ico_plus.png']][5] == 2) {
+			if (this.buttonBox[this.buttonBoxNames['toolbar/ico_plus.png']][5] == 2 && this.hotSpots.length < 10) {
 				i=this.hotSpots.length;
 				this.hotSpots.push(i);
 				this.hotSpots[i] = new Array ();

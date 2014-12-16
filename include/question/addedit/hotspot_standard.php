@@ -23,7 +23,7 @@
 */
 
 $media = $question->get_media();
-$plugin_height = max($media['height'] + 25, 380);
+$plugin_height = max($media['height'] + 25, 400);
 if (count($question->options) > 0) {
   $option = reset($question->options);
   $correct = $option->get_correct();
