@@ -122,7 +122,7 @@ if ($userObject->has_role(array('External Examiner'))) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
-} elseif ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+} elseif (($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) or $userObject->has_role('SysCron')) {
   // No further security checks.
 } else {
   $modIDs = array_keys($moduleID);
