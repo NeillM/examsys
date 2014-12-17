@@ -17,4 +17,5 @@
 $string['secondmark'] = 'Second Mark';
 $string['secondmarkselection'] = 'Second Mark Selection';
 $string['noattempts'] = 'This paper has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
+$string['selectall'] = 'Select all';
 ?>

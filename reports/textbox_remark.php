@@ -74,6 +74,21 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#selectall").click(function() {
+        if (this.checked) {
+          $(".check").each(function() {
+            this.checked = true;
+          });
+        } else {
+          $(".check").each(function() {
+            this.checked = false;
+          });
+        }
+      });
+    });
+  </script>
 </head>
 
 <body>
@@ -104,6 +119,7 @@ if (isset($_POST['submit'])) {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a></div>';
   ?>
   <div class="page_title"><?php echo $string['secondmarkselection'] ?></div>
+  <div style="padding-left:42px"><input type="checkbox" name="selectall" id="selectall" /> <strong><?php echo $string['selectall'] ?></strong></div>
   </div>
   
   <table>
@@ -217,9 +233,9 @@ SQL;
 		}
 		
     if (round(($total_mark/$paper_total)*100) < $pass_mark) {
-      echo "<tr style=\"color:red\"><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
+      echo "<tr style=\"color:#C00000\"><td class=\"pad\"><input type=\"checkbox\" class=\"check\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"pad\"><input type=\"checkbox\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
+      echo "<tr><td class=\"pad\"><input type=\"checkbox\" class=\"check\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark/$paper_total)*100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
     }
   }
 ?>
