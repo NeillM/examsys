@@ -163,7 +163,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log0 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -173,7 +173,7 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log1 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -188,7 +188,7 @@ SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, l.mark
 FROM (log{$paper_type} l, log_metadata lm, users u)
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
-AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -224,7 +224,7 @@ SQL;
         if (isset($primary_marks[$log_id])) {
           echo "<td class=\"primary\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td>";
         } else {
-          echo "<td class=\"primary missing\">&lt;" . $string['unmarked'] . "&gt;</td>";
+          echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
         }
         if (isset($secondary_marks[$log_id])) {
           echo "<td class=\"secondary\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /></td>";
@@ -236,9 +236,18 @@ SQL;
     } else {
       // User answer is blank.
       $override = false;
-      if (!isset($primary_marks[$log_id])) $primary_marks[$log_id] = '';
-      if (!isset($secondary_marks[$log_id])) $secondary_marks[$log_id] = '';
-      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td><td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
+      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td>";
+      if (isset($primary_marks[$log_id])) {
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td>";
+      } else {
+        echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
+      }
+      if (isset($secondary_marks[$log_id])) {
+        echo "<td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td>";
+      } else {
+        echo "<td class=\"secondary noans missing\">&nbsp;</td>";
+      }
+      echo "<td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;

@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
-    $(document).ready(function() {
+    $(function () {
       $("#selectall").click(function() {
         if (this.checked) {
           $(".check").each(function() {
@@ -151,7 +151,7 @@ if (isset($_POST['submit'])) {
 				AND log0.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND (roles = 'Student' OR roles = 'Graduate')
+				AND (roles LIKE '%Student%' OR roles = 'Graduate')
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 			UNION ALL
@@ -162,7 +162,7 @@ if (isset($_POST['submit'])) {
 				AND log1.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND (roles = 'Student' OR roles = 'Graduate')
+				AND (roles LIKE '%Student%' OR roles = 'Graduate')
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 			GROUP BY metadataID
@@ -178,7 +178,7 @@ SQL;
 				AND log$paper_type.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND (roles = 'Student' OR roles = 'Graduate')
+				AND (roles LIKE '%Student%' OR roles = 'Graduate')
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 				GROUP BY metadataID
