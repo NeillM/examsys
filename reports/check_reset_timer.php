@@ -26,10 +26,17 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/userutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $metadataID = check_var('metadataID', 'GET', true, false, true);
 $userID     = check_var('userID', 'GET', true, false, true);
 $paperID    = check_var('paperID', 'GET', true, false, true);
+
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+if ($properties->get_paper_type() != '1') {   // Only allow timer reset of Progress Test papers.
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $log_metadata = new LogMetadata($userID, $paperID, $mysqli);
 
@@ -57,18 +64,18 @@ $started = $dateObj->format($display_format);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['resettimer']; ?></title>
+  <title><?php echo $string['resettimer'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
+  <style>
+    body {background-image: url('../artwork/reset_timer_48.png')}
+  </style>
 </head>
 
 <body>
-<table>
-<tr>
-<td class="icon"><img src="../artwork/reset_timer_48.png" width="48" height="48" alt="<?php echo $string['resettimer']; ?>" /></td>
 
-<td><p><?php echo $string['msg1']; ?></p>
+<p><?php echo $string['msg1']; ?>
 <p><?php echo $name . ' - ' . $started; ?></p>
 <br />
 
@@ -77,12 +84,10 @@ $started = $dateObj->format($display_format);
 <input type="hidden" name="metadataID" value="<?php echo $metadataID; ?>" />
 <input type="hidden" name="userID" value="<?php echo $userID; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['reset']; ?>" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="ok" type="submit" name="submit" value="<?php echo $string['reset'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
+
 
 </body>
 </html>

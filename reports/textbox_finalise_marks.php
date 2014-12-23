@@ -60,7 +60,7 @@ function load_question_mark($q_id, $db) {
 }
 
 function displayMarks($id, $marks, $override, $user_mark) {
-  $html = '<select name="override' . $id . '"><option value="NULL"></option>';
+  $html = '<select name="override' . $id . '" id="override' . $id . '"><option value="NULL"></option>';
   $inc = 0.5;
   for ($i=0; $i<=$marks; $i+=$inc) {
     $display_i = $i;
@@ -124,7 +124,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $string['finalisemarks'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['finalisemarks'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -133,6 +133,26 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function() {
+      $("input:radio").click(function() {
+        str = $(this).attr('id');
+        
+        dropdownID = str.replace('mark', 'override');
+        $("#" + dropdownID).val('');        
+      });
+      
+      $("select").click(function() {
+        str = $(this).attr('id');
+        
+        radioID = str.replace('override', 'mark');
+        
+        
+        $('input:radio[name=' + radioID + ']').removeAttr('checked');
+      });
+      
+    })
+  </script>
 </head>
 
 <body>
@@ -163,7 +183,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log0 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -173,7 +193,7 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log1 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -188,7 +208,7 @@ SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, l.mark
 FROM (log{$paper_type} l, log_metadata lm, users u)
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
-AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -219,15 +239,15 @@ SQL;
       echo "<tr class=\"l\"><td class=\"ans\">" . nl2br($user_answer) . "<br />&nbsp;</td>";
 
       if (isset($secondary_marks[$log_id]) and isset($primary_marks[$log_id]) and abs($primary_marks[$log_id] - $secondary_marks[$log_id]) > 1) {
-        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
       } else {
         if (isset($primary_marks[$log_id])) {
-          echo "<td class=\"primary\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td>";
+          echo "<td class=\"primary\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td>";
         } else {
-          echo "<td class=\"primary missing\">&lt;" . $string['unmarked'] . "&gt;</td>";
+          echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
         }
         if (isset($secondary_marks[$log_id])) {
-          echo "<td class=\"secondary\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /></td>";
+          echo "<td class=\"secondary\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /></td>";
         } else {
           echo "<td class=\"secondary missing\">&nbsp;</td>";
         }
@@ -236,9 +256,18 @@ SQL;
     } else {
       // User answer is blank.
       $override = false;
-      if (!isset($primary_marks[$log_id])) $primary_marks[$log_id] = '';
-      if (!isset($secondary_marks[$log_id])) $secondary_marks[$log_id] = '';
-      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td><td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td><td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
+      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td>";
+      if (isset($primary_marks[$log_id])) {
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td>";
+      } else {
+        echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
+      }
+      if (isset($secondary_marks[$log_id])) {
+        echo "<td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td>";
+      } else {
+        echo "<td class=\"secondary noans missing\">&nbsp;</td>";
+      }
+      echo "<td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
     }
     echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
     $student_no++;

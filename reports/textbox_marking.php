@@ -89,7 +89,7 @@ HTML;
 	<link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
-	.warn_icon {width:12px; height:11px; padding-left:5px; padding-right:5px}
+  .noanswer {background-image: url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat; background-position: 2px center; background-color:#FFC0C0; padding-left:20px; padding-right:5px; color: #800000 !important}
   <?php
   if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     echo ".marked {color:#808080;display:none}\n";
@@ -122,7 +122,7 @@ echo draw_toprightmenu();
 $candidate_no = 0;
 if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
   // Get how many students took the paper.
-  $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles = 'Student' OR u.roles = 'graduate')");
+  $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
   $result->bind_param('iss', $paperID, $startdate, $enddate);
   $result->execute();
   $result->bind_result($tmp_userID);
@@ -303,7 +303,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -314,7 +314,7 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles = 'Student' OR u.roles = 'graduate')
+  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -329,7 +329,7 @@ FROM (log{$paper_type} l, log_metadata lm, users u)
 LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
-AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -352,20 +352,22 @@ SQL;
       $answer_no++;
 
       $style = '';
+      
       if (is_numeric($student_mark)) {  // Marked previously so grey out.
-        $style = ' marked';
-        $style .= ($answer_no != $out_of) ? ' hide' : '';
-        $answer_shown = true;
-      } elseif ($answer_shown) {
-        $style = ' hide';
+        $style .= ' marked';
+      }
+      
+      if ($answer_shown) {
+        $style .= ' hide';
       } else {
         $answer_shown = true;
       }
+
       echo '<div class="student-answer-block' . $style . '">';
 
       $out_of = ($phase == 2) ? count($remark_array) : $candidate_no;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
-
+      
       echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
       if (count($reminders) > 0) {
         $reminders_selected = explode('|', $reminders_selected);
@@ -399,7 +401,7 @@ SQL;
     $answer = trim($answer);
     $answer_display = '';
     if ($answer == '') {
-      $answer_display = '<img src="../artwork/small_yellow_warning_icon.gif" alt="Warning" class="warn_icon" />' . $string['noanswer'];
+      $answer_display = '<span class="noanswer">' . $string['noanswer'] . '</span>';
     }
 
     return $answer_display . $answer;

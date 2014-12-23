@@ -17,4 +17,5 @@
 $string['secondmark'] = 'Ocena wtórna';
 $string['secondmarkselection'] = 'Wybór do oceny wtórnej';  
 $string['noattempts'] = 'Ten arkusz nie był przez wybrany żadnego studenta w okresie <strong>%s &ndash; %s</strong>.';
+$string['selectall'] = 'Select all';
 ?>

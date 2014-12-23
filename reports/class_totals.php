@@ -259,7 +259,7 @@ ob_start();
   }
 
 <?php
-  if ($paper_type == '0' or $paper_type == '1') {   // Do not allow reset of timer for Summative exams.
+  if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
 ?>
   function resetTimer() {
     $('#menudiv').hide();

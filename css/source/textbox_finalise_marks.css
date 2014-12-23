@@ -35,3 +35,8 @@ body {
 input[type='radio'] {
   margin-left: 6px !important;
 }
+.unmarked {
+  background-color: #C00000;
+  color: white;
+  text-align: center;
+}
