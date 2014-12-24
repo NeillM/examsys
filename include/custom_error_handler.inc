@@ -131,7 +131,7 @@ function exceptionHandler($exception) {
   }
   $valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Error');
   if (!in_array($error_type, $valid_errors)) {
-    $error_type='Unknown';
+    $error_type = 'Unknown';
   }
 
   global $mysqli;
@@ -189,7 +189,7 @@ function error_handling($context = null) {
           if ($key != 'ROGO_PW') {
             $tmp[$key1] = $value1;
           } else {
-            $tmp[$key1] = "<HIDDEN>";
+            $tmp[$key1] = '<HIDDEN>';
           }
         }
         $context1[$key] = $tmp;
@@ -208,7 +208,7 @@ function error_handling($context = null) {
 }
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
-  global $debug_pagestart, $dbclass;
+  global $debug_pagestart, $mysqli;
 	
   $variables = '';
   $configObject = Config::get_instance();
@@ -338,11 +338,9 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 		$valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Warning', 'Application Error');
     if (!in_array($error_type, $valid_errors)) {
-      $error_type='Unknown';
+      $error_type = 'Unknown';
     }
 
-
-    global $mysqli;
     if (isset($mysqli) and is_object($mysqli)  ) {
       if ($error_type != 'Notice' and isset($mysqli->error)) {
         if (!($mysqli->error == '' or is_null($mysqli->error))) {
@@ -367,6 +365,22 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   return false;
 }
 
+/**
+ * Records details about an error in the database.
+ * @param int $userid         - ID of the current user.
+ * @param int $username       - Username of the current user.
+ * @param int $error_type     - Type of the error (e.g. Notice).
+ * @param int $errstr         - Description of the error (e.g. 'Undefined variable: property_id').
+ * @param int $errfile        - What file had the error.
+ * @param int $errline        - Line number where error occurred.
+ * @param int $paperID        - If applicable what paper ID is being used.
+ * @param int $post_data      - $_POST data.
+ * @param int $variables      - Variable data.
+ * @param int $backtrace      - Backtrace information.
+ * @param int $page           - Page (script) that encounted the error.
+ * @param int $querystring    - The query string passed to the script.
+ * @param int $requestmethod  - What request method was used.
+ */
 function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null) {
   if (is_null($backtrace)) {
     $backtrace='';
