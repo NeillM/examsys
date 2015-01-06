@@ -174,8 +174,15 @@ if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)
 }
 $metadataID = $log_metadata->get_metadata_id();
 
-// Only allow timing if ALL the modules of the paper allow
-$allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
+// Foramtive or Progressive papers that have a duration set should use the timer.
+if ($propertyObj->get_paper_type() == '0' || $propertyObj->get_paper_type() == '1') {
+    if ($propertyObj->get_exam_duration() != null) {
+        $allow_timing = true;
+    }
+// Summative exams only allow timing if ALL the modules of the paper allow it.
+} else if ($propertyObj->get_paper_type() == '2'){
+    $allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
+}
 
 /*
 * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.
