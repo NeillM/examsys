@@ -816,7 +816,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo ">$leadin</td>";
-        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
+        echo "<td><input type=\"button\" onclick=\"return clacCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
         echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";

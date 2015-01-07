@@ -16,18 +16,16 @@
 
 /**
 *
-* This script presents a list of all the unique entries (words) entered for a particular blank in
-* a fill-in-the-blank question with textboxes. The interface allows staff to tick correct alternative
-* spellings and have the system remark student scripts (only works with summative exams).
+* This script allows staff to manually override the marks for Calculation type questions.
 *
-* @author Simon Wilkinson
+* @author Rob Ingram, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
@@ -36,7 +34,7 @@ $q_id  = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 if (!$propertyObj) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -55,10 +53,10 @@ $result->close();
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles='Student' OR u.roles='graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles='Student' OR u.roles='graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
   $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles='Student' OR u.roles='graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
   $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
@@ -71,9 +69,6 @@ while ($result->fetch()) {
     $dist = $answer_obj->get_answer_distance();
     if ($dist === false) {
       $dist = 9999999;
-      //$dist = $string['na'];
-    } else {
-      //$dist = number_format($dist, 2) . '%';
     }
 
     // Don't include absolutely correct answers in the list
@@ -83,10 +78,6 @@ while ($result->fetch()) {
   }
 }
 $result->close();
-
-
-// Sort by distance
-//asort($log_answers,SORT_NUMERIC);
 
 // Get any existing overrides
 $overrides = array();
@@ -115,12 +106,12 @@ $q_marks = array_flip($marks_arr);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F1F5FB}
-    th {text-align: center; font-weight:normal; color:#001687; background-color: #CFDBEB}
+    th {text-align: center; font-weight:normal; color:white; background-color: #295AAD}
     td {text-align: center}
     .separate {border-bottom: 1px solid #CCD9EA}
     .o {text-align:right; padding-right: 10px}
@@ -142,21 +133,21 @@ $q_marks = array_flip($marks_arr);
 
 <body>
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $_GET['paperID']; ?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $paperID; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/enhancedcalc_override.gif" width="32" height="32" alt="Correct" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA; text-align: left"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
   </table>
 
-  <p class="msg"><?php echo $string['msg']; ?></p>
+  <p class="msg"><?php echo $string['msg'] ?></p>
 
-  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:0px 4px 8px 4px; font-size:90%" id="list">
+  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #295AAD; margin:0 4px 8px 4px; font-size:90%" id="list">
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
     <thead>
       <tr>
-        <th colspan="<?php echo count($q_vars) ?>"><?php echo $string['variables']?></th>
-        <th colspan="2"><?php echo $string['answers']?></th>
+        <th colspan="<?php echo count($q_vars) ?>"><?php echo $string['variables'] ?></th>
+        <th colspan="2"><?php echo $string['answers'] ?></th>
         <th>&nbsp;</th>
-        <th colspan="3"><?php echo $string['marks']?></th>
+        <th colspan="3"><?php echo $string['marks'] ?></th>
         <th colspan="2">&nbsp;</th>
       </tr>
       <tr class="separate">
@@ -167,27 +158,27 @@ foreach ($q_vars as $var => $dummy) {
 <?php
 }
 ?>
-        <th class="longcolumn separate"><?php echo $string['useranswer']; ?></th>
-        <!-- <th class="shortcolumn"><?php echo $string['units']; ?></th> -->
-        <th class="longcolumn separate"><?php echo $string['correctans']; ?></th>
-        <th class="longcolumn separate"><?php echo $string['distance']; ?></th>
-        <th class="shortcolumn separate"><?php echo $string['fullmarks']; ?></th>
-        <th class="shortcolumn separate"><?php echo $string['partialmarks']; ?></th>
-        <th class="shortcolumn separate"><?php echo $string['incorrect']; ?></th>
-        <th class="separate"><?php echo $string['reason']; ?></th>
+        <th class="longcolumn separate"><?php echo $string['useranswer'] ?></th>
+        <!-- <th class="shortcolumn"><?php echo $string['units'] ?></th> -->
+        <th class="longcolumn separate"><?php echo $string['correctans'] ?></th>
+        <th class="longcolumn separate"><?php echo $string['distance'] ?></th>
+        <th class="shortcolumn separate"><?php echo $string['fullmarks'] ?></th>
+        <th class="shortcolumn separate"><?php echo $string['partialmarks'] ?></th>
+        <th class="shortcolumn separate"><?php echo $string['incorrect'] ?></th>
+        <th class="separate"><?php echo $string['reason'] ?></th>
         <th class="separate">&nbsp;</th>
       </tr>
     </thead>
     <tbody>
 <?php
 $mark_types = array('correct', 'partial', 'incorrect');
-foreach($log_answers as $id => $ans) {
-  $dist=$ans['distance'];
-  $log_answers2[$dist][]=$id;
+foreach ($log_answers as $id => $ans) {
+  $dist = $ans['distance'];
+  $log_answers2[$dist][] = $id;
 }
 krsort($log_answers2, SORT_NUMERIC);
 
-foreach($log_answers2 as $innerans) {
+foreach ($log_answers2 as $innerans) {
   foreach ($innerans as $answerin2) {
     $answer = $log_answers[$answerin2];
     if (!isset($answer['distance'])) {
@@ -252,7 +243,7 @@ foreach($log_answers2 as $innerans) {
     </tbody>
   </table>
 </div>
-<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['done']; ?>" style="width:100px" onclick="window.close();" /></div>
+<div style="text-align:center"><input type="button" name="cancel" value="<?php echo $string['done'] ?>" style="width:100px" onclick="window.close();" /></div>
 
   <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
   <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
