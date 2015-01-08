@@ -36,9 +36,8 @@ require_once '../include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <style type="text/css">
-      #content * {margin:auto; padding:auto};
+    span.killer {float:none}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
@@ -65,11 +64,13 @@ echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /><
 echo "<div class=\"breadcrumb\">";
 $modutils = module_utils::get_instance();
 echo '<a href="../index.php">' . $string['home'] . '</a>';
-if ($module != '') {
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . $modutils->get_moduleid_from_id($module, $mysqli) . '</a>';
+if (isset($_GET['module']) and $_GET['module'] != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $modutils->get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 } elseif ($folder != '') {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
 }
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a>';
+
 echo "</div><div class=\"page_title\">" . $string['importfromqti'] . "</div>";
 echo "</div>";
 ?>
