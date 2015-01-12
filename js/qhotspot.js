@@ -297,15 +297,17 @@ function qh_test(type) {
     if (type == 'answers') {
 			if (this.qmode == 'correction') {
 				for (j=0;j<this.answers.length;j++) {        
-					this.answers[j][i][0] = '0';
-					if (typeof this.answers[j][i][1]!='undefined' && this.answers[j][i][1]!='' && this.answers[j][i][1]!='false') {
-						tx = (1*this.answers[j][i][1]+300+0.5);
-						ty = (1*this.answers[j][i][2]+25-this.yOffset);
-						timgd = this.context.getImageData(tx,ty,1,1);
-						timgp = timgd.data;
-						if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { 
-							this.answers[j][i][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
-						}			
+					if (typeof this.answers[j][i]!='undefined') {
+						this.answers[j][i][0] = '0';
+						if (typeof this.answers[j][i][1]!='undefined' && this.answers[j][i][1]!='' && this.answers[j][i][1]!='false') {
+							tx = (1*this.answers[j][i][1]+300+0.5);
+							ty = (1*this.answers[j][i][2]+25-this.yOffset);
+							timgd = this.context.getImageData(tx,ty,1,1);
+							timgp = timgd.data;
+							if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { 
+								this.answers[j][i][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
+							}			
+						}
 					}
 				}
 			}else{
@@ -1232,7 +1234,7 @@ function qh_ReturnInfo() {
 
 	if (this.qmode == 'correction') {
 		for (i=0;i<this.answers.length;i++) {
-			if (typeof(this.answers[i])!='undefined') {
+			if (typeof(this.answers[i])!='undefined' && this.answers[i][0][1]!='false') {
 				questions_result += this.answers[i][0][3]+',';
 				for (j=0;j<this.answers[i].length;j++) {
 					questions_result+=this.answers[i][j][0]+',';
