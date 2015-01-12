@@ -586,7 +586,7 @@ function qh_redraw_canvas() {
         }
         this.hotSpots[led[0]][(3+led[1]*6+2)] = this.HsCo.join(',');
       }
-			if (this.qmode!='analysis' || this.qmode == 'correction' || this.global_hotspots) {
+			if ((this.qmode!='analysis' && this.qmode != 'correction') || this.global_hotspots) {
 				for (i in this.hotSpots) {
 					if (((this.activeLabel == i) || this.show_all_hotspots) && this.display_correct_answer) {
 						var fields = (this.hotSpots[i].length-4)/6;
