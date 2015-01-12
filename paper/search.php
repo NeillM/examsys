@@ -184,7 +184,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
         echo '<div class="f">';
         echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px; text-align:center">';
         $type = $paper_type;
-        if (date("YmdHis", time()) >= $start_date) {
+        if ($start_date != '' and date("YmdHis", time()) >= $start_date) {
           $locked = '_locked';
         } else {
           $locked = '';

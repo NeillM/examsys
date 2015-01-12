@@ -34,6 +34,18 @@ require_once $cfg_web_root . 'classes/relationship.class.php';
 
 $userObject = UserObject::get_instance();
 
+$clarif_types = $configObject->get('midexam_clarification');
+
+if (!isset($properties)) {
+  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+}
+
+if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
+  $exam_clarifications = true;  
+} else {
+  $exam_clarifications = false;  
+}
+
 if (!isset($module)) {
   if (isset($_GET['module'])) {
     $module = $_GET['module'];
@@ -48,10 +60,6 @@ if (!isset($folder)) {
   } else{
     $folder = '';
   }
-}
-
-if (!isset($properties)) {
-  $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 }
 
 $moduleIDs = $properties->get_modules();
@@ -226,10 +234,12 @@ if (count($moduleIDs) > 0) {
   }
 
   function examClarification() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/exam_clarification.php?paperID=<?php echo $paperID; ?>&q_id=" + getLastID($('#questionID').val()) + "&questionNo=" + $('#questionNo').val() + "&screenNo=" + $('#screenNo').val() + "","notice","width=800,height=450,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-400,screen.height/2-225);
-    if (window.focus) {
-      notice.focus();
+    if ($('#qType').val() != 'info') {
+      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/question/exam_clarification.php?paperID=<?php echo $paperID; ?>&q_id=" + getLastID($('#questionID').val()) + "&questionNo=" + $('#questionNo').val() + "&screenNo=" + $('#screenNo').val() + "","notice","width=800,height=450,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-400,screen.height/2-225);
+      if (window.focus) {
+        notice.focus();
+      }
     }
   }
 
@@ -375,7 +385,7 @@ echo "<div id=\"menu1\">\n";
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit_grey.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon_grey.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></div>
 	<?php
-		if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
+		if ($exam_clarifications) {
 			echo "<div class=\"grey menuitem\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16_grey.png\" alt=\"\" />" . $string['midexamclarification'] . "</div>\n";
 		}
 	?>
@@ -394,8 +404,8 @@ echo "<div id=\"menu1\">\n";
 	<div class="menuitem" id="edit"><a href="#" onclick="editQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion'] ?>" /><?php echo $string['editquestion'] ?></a></div>
 	<div class="menuitem" id="information"><a href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
 	<?php
-		if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
-			echo "<div class=\"menuitem\" id=\"clarification\"><a href=\"#\" onclick=\"examClarification(); return false;\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" />" . $string['midexamclarification'] . "</a></div>\n";
+		if ($exam_clarifications) {
+			echo "<div class=\"menuitem clarification\" id=\"clarification\"><a href=\"#\" onclick=\"examClarification(); return false;\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" />" . $string['midexamclarification'] . "</a></div>\n";
 		}
 	?>
 	<div class="menuitem" id="copy"><a href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
@@ -413,8 +423,8 @@ echo "<div id=\"menu1\">\n";
 	<div class="menuitem" id="edit"><a href="#" onclick="editQuestion(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion'] ?>" /><?php echo $string['editquestion'] ?></a></div>
 	<div class="menuitem" id="information"><a href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
 	<?php
-		if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1') {
-			echo "<div class=\"menuitem\" id=\"clarification\" onclick=\"examClarification()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['midexamclarification'] . "</a></div>\n";
+		if ($exam_clarifications) {
+			echo "<div class=\"menuitem clarification\" id=\"clarification\" onclick=\"examClarification()\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/comment_16.png\" alt=\"" . $string['information'] . "\" /><a href=\"#\" onclick=\"return false\">" . $string['midexamclarification'] . "</a></div>\n";
 		}
 	?>
 	<div class="menuitem" id="copy"><a href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx'] ?>" /><?php echo $string['copyontopaperx'] ?></a></div>

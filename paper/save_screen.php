@@ -72,9 +72,11 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
+$moduleID = $propertyObj->get_modules();
 
-if ($userObject->has_role('Student')) {     // Student user, do a lot more security checks.
-
+if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+  // No further security checks.
+} else {    // Treat as student with extra security checks.
   // Get the module IDs for this paper
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
@@ -136,6 +138,6 @@ if ($ret === true) {
   // Everthing worked.
   echo $_POST['randomPageID'];
 } else {
-  echo "ERROR";
+  echo 'ERROR';
 }
 ?>

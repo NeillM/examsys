@@ -92,10 +92,10 @@ QUERY;
       $new_mark = $q_marks[$mark_type];
 
       // Update the mark mark
-      $sql = "UPDATE log{$log} SET mark = ? WHERE id = ? and q_id = ?";
+      $sql = "UPDATE log{$log} SET mark = ?, adjmark = ? WHERE id = ? AND q_id = ?";
       $result = $mysqli->prepare($sql);
       if ($result) {
-        $result->bind_param('dii', $new_mark, $log_id, $q_id);
+        $result->bind_param('ddii', $new_mark, $new_mark, $log_id, $q_id);
         $result2 = $result->execute();
         $result->store_result();
         if ($result2 == false) {

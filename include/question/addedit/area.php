@@ -138,7 +138,7 @@ endif;
         </table>
 
 <?php
-$allow_neg = $question->allow_negative_marks($module);
+$allow_neg = $question->allow_negative_marks();
 $allow_change_method = ($question->allow_change_marking_method() and $dis_class == '') ? '' : ' disabled="disabled"';
 ?>
         <table id="q-marking" class="form" summary="<?php echo $string['qeditsummary'] ?>">

@@ -46,8 +46,8 @@ require '../include/sidebar_menu.inc';
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({ 
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[0,1]] 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time') ?>',
+          sortList: [[4,1]] 
         });
       }
 

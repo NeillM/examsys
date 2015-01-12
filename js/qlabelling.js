@@ -171,7 +171,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				if (typeof(myLabelInfo[4]) == 'undefined') yes_to_add = false;
 				if (this.qmode == 'analysis' && myLabelInfo[4] == '') yes_to_add = false;
 				if (this.qmode == 'script' && myLabelInfo[4] == '') yes_to_add = false;
-				if (mli_index > 19) yes_to_add = false;				
+				if (mli_index > 20) yes_to_add = false;				
 				
 				if (yes_to_add) {
 					var mli_combo = (myLabelInfo[1]!=''?Number(myLabelInfo[1]):0); 	//combo indicator?  >0

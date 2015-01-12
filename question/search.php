@@ -423,10 +423,10 @@ if (isset($_GET['submit'])) {
       $tmp_leadin = $sct_parts[0];
     }
 
-    if ($locked == '') {
-      echo "<td class=\"unlicon\">";
+    if ($locked != '') {
+      echo '<td class="l">';
     } else {
-      echo "<td class=\"licon\">";      
+      echo '<td class="u">';      
     }
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';

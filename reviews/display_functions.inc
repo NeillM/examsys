@@ -876,7 +876,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
         echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
       }
       echo 'write_string(\'<embed src="../media/' . $question['q_media'] . '"';
-      if ($display_option['scenario'] != '') {
+      if (isset($display_option['scenario']) and $display_option['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }
       echo ' quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';

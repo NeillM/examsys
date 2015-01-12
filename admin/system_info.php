@@ -30,7 +30,7 @@ require_once '../classes/dateutils.class.php';
 /**
  * Formats space in human-readable format.
  * @param int $space - Raw bytes to be converted.
- * @param string space in human readable format.
+ * @return string space in human readable format.
  */
 function format_space($space) {
   $units = array('KB', 'MB', 'GB', 'TB');
@@ -321,7 +321,9 @@ if ($e6 == 'improved') {
     $row_no = $i + 1;
   } else {
     $master_array = array();
-    $results = shell_exec('df -B1');
+    // List free disk space, ensuring one file system per line.
+    // df -P flag not used as not supported by Solaris.
+    $results = shell_exec("df -k | awk 'NF == 1 {printf($1); next}; {print}'");
     $lines = explode('<br />', nl2br($results));
     $row_no = 0;
     foreach ($lines as $individual_line) {
@@ -356,6 +358,11 @@ if ($e6 == 'improved') {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
         }
         
+      }
+      // linux resutls are in kbyte blocks
+      if (php_uname('s') != 'Windows NT') {
+        $master_array[$i][3] = $master_array[$i][3] * 1024;
+        $master_array[$i][1] = $master_array[$i][1] * 1024;
       }
       echo '</span><span style="color:#808080">' . sprintf($string['freespace'], format_space($master_array[$i][3]), format_space($master_array[$i][1])) . '</span></td></tr>';
     }

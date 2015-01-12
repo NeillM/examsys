@@ -26,10 +26,17 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/userutils.class.php';
+require_once '../classes/paperproperties.class.php';
 
 $metadataID = check_var('metadataID', 'POST', true, false, true);
 $userID     = check_var('userID', 'POST', true, false, true);
 $paperID    = check_var('paperID', 'POST', true, false, true);
+
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+if ($properties->get_paper_type() != '1') {   // Only allow timer reset of Progress Test papers.
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 $log_metadata = new LogMetadata($userID, $paperID, $mysqli);
 
@@ -45,8 +52,6 @@ if ($user_details === false) {
 }
 
 $log_metadata->set_started_to_null();
-$log_metadata->set_completed_to_null();
-
 
 $mysqli->close();
 ?>

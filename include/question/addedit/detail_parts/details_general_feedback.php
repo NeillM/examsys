@@ -18,7 +18,7 @@
 * 
 * @author Rob Ingram
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -27,7 +27,7 @@ $label_incorrect = (isset($label_incorrect)) ? $label_incorrect : $string['fbinc
 $show_incorrect = (isset($show_incorrect)) ? $show_incorrect : false;
 $feedback_rows = (isset($feedback_rows)) ? $feedback_rows : 3;
 ?>
-        <table id="q-feedback" class="form" summary="Edit question feedback">
+        <table id="q-feedback" class="form">
           <tbody>
             <tr>
               <th><label for="correct_fback"><?php echo $label_correct ?></label></th>
@@ -41,7 +41,7 @@ if ($show_incorrect):
             <tr>
               <th><label for="incorrect_fback"><?php echo $label_incorrect ?></label></th>
               <td>
-                <textarea id="incorrect_fback" name="incorrect_fback" cols="100" rows="<?php echo $feedback_rows ?>" class="form-large<?php echo $dis_class ?>"<?php echo $dis_readonly ?>><?php echo $question->get_incorrect_fback() ?></textarea>
+                <textarea id="incorrect_fback" name="incorrect_fback" cols="100" rows="<?php echo $feedback_rows ?>" class="form-large"><?php echo $question->get_incorrect_fback() ?></textarea>
               </td>
             </tr>
 <?php

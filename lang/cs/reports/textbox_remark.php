@@ -17,4 +17,5 @@
 $string['secondmark'] = 'Druhotné hodnocení';
 $string['secondmarkselection'] = 'Výběr druhotného hodnocení';
 $string['noattempts'] = 'V daném období <strong>%s &ndash; %s</strong> zkoušku nesložil žádný student.';
+$string['selectall'] = 'Select all';
 ?>

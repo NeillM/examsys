@@ -239,14 +239,10 @@ hr {
   font-size: 80%;
   text-align: justify;
   z-index: 100;
-  background: -moz-linear-gradient(top, #FFFFFF, #E4E5F0);
-  background: -webkit-linear-gradient(top, #FFFFFF, #E4E5F0);
-  background-image: -ms-linear-gradient(top, #FFFFFF 0%, #E4E5F0 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFF', endColorstr='#E4E5F0');
-  -moz-box-shadow:    3px 3px 5px 6px #ccc;
-  -webkit-box-shadow: 3px 3px 5px 6px #ccc;
-  box-shadow:         2px 2px 4px 0px #808080;
-  border-radius: 3px;
+  -moz-box-shadow:    2px 2px 4px 5px #ccc;
+  -webkit-box-shadow: 2px 2px 4px 5px #ccc;
+  box-shadow:         1px 1px 2px 0px #808080;
+  border-radius: 2px;
 }
 
 .icon16_active {

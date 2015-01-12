@@ -216,6 +216,9 @@ HTML;
         case 3:
           $status = array('major', $string['major']);
           break;
+        default:
+          $status = array('cannot', $string['cannot']);
+          break;
       }
       $img_status = $status[0];
 

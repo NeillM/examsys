@@ -49,7 +49,7 @@ require_once '../classes/dateutils.class.php';
         $('#new_paper').subClass('errfield');
       } else {
         $('#new_paper').addClass('errfield');
-        alert("<?php echo $string['namewarning']; ?>");
+        alert("<?php echo $string['namewarning'] ?>");
       }
     });
  
@@ -58,17 +58,17 @@ require_once '../classes/dateutils.class.php';
   function checkCopyForm() {
     if ($("#paper_type").val() == '2') {
       if ($('#period').val() == '') {
-        alert ("<?php echo $string['msg7']; ?>");
+        alert ("<?php echo $string['msg7'] ?>");
         return false;
       }
       
      if ($('#duration_hours').val() == '' || $('#duration_mins').val() == '') {
-        alert ("<?php echo $string['msg8']; ?>");
+        alert ("<?php echo $string['msg8'] ?>");
         return false;
       }
       
       if ($('#cohort_size').val() == '') {
-        alert ("<?php echo $string['msg9']; ?>");
+        alert ("<?php echo $string['msg9'] ?>");
         return false;
       }
     }
@@ -82,7 +82,7 @@ require_once '../classes/dateutils.class.php';
   });
 </script>
 
-<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:340px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:346px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
@@ -98,7 +98,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?>&nbsp;</td>
-<td colspan="4"><input type="text" id="new_paper" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" required />
+<td colspan="4"><input type="text" id="new_paper" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title() ?>" size="65" required />
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 <input type="hidden" name="module" value="<?php echo $module ?>" />
 <input type="hidden" name="folder" value="<?php echo $folder ?>" />
@@ -136,8 +136,29 @@ if ($configObject->get('cfg_summative_mgmt')) {
     }
   }
 ?>
-</select></td>
-
+  </select><td><tr>
+<?php
+  $next_flag = 1;
+  echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
+  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student WHERE calendar_year != '' ORDER BY calendar_year DESC");
+  $module_details->execute();
+  $module_details->bind_result($calendar_year);
+  echo "<select name=\"session\">\n";
+  if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1') {
+    echo "<option value=\"\">N/A</option>\n";
+  }
+  while ($module_details->fetch()) {
+    if ($next_flag == 1) {
+      $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
+      $sel = (date_utils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
+      echo "<option value=\"$next_session\"$sel>$next_session</option>\n";
+      $next_flag = 0;
+    }
+    $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
+    echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
+  }
+  echo "</select></td>\n";
+?>
 </tr>
 
 <tr><td colspan="5">&nbsp;</td></tr>
@@ -149,13 +170,12 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <td>&nbsp;</td>
 </tr>
 <tr>
-<td style="width:110px" align="center">&nbsp;</td>
+<td style="width:130px" align="center">&nbsp;</td>
 <td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130" /></td>
 <td>&nbsp;&nbsp;&nbsp;</td>
 <td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130" /></td>
 <td style="width:110px" align="center">&nbsp;</td>
 </tr>
-<tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <?php
 if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
@@ -171,30 +191,21 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
 <div id="table2div" style="display:none; width:100%">
 <table cellpadding="1" cellspacing="1" border="0" style="font-size:90%; width:100%" id="table2">
 <tr>
-<td colspan="6" style="background-color:#F2B100; height:5px; padding:0px"> </td>
+<td colspan="6" style="background-color:#F2B100; height:5px; padding:0"> </td>
 </tr>
 <tr><td colspan="6">&nbsp;</td></tr>
 <tr>
 <?php
   $next_flag = 1;
-  echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
-  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
-  $module_details->execute();
-  $module_details->bind_result($calendar_year);
-  echo "<select name=\"session\">\n";
-  while ($module_details->fetch()) {
-    if ($next_flag == 1) {
-      $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
-      $sel = (date_utils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
-      echo "<option value=\"$next_session\"$sel>$next_session</option>\n";
-      $next_flag = 0;
+  echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td><select name="campus">';
+  foreach ($cfg_campus_list as $campus) {
+    if ($campus == $cfg_campus_default) {
+      echo "<option value=\"$campus\" selected>$campus</option>";
+    } else {
+      echo "<option value=\"$campus\">$campus</option>";
     }
-    $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
-    echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
   }
-  echo "</select></td>\n";
-
-  echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
+  echo '</select></td><td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
 	echo '<select name="duration_hours" id="duration_hours">';
 	echo "<option value=\"\"></option>\n";
 	for ($i=0; $i<=12; $i++) {
@@ -221,16 +232,6 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
   echo '</select></td><td style="text-align:right">' . $string['sittings'] . '</td><td><select name="sittings">';
   for ($i=1; $i<=6; $i++) {
     echo "<option value=\"$i\">$i</option>";
-  }
-  echo '</select></td></tr>';
-  
-  echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td colspan="5"><select name="campus">';
-  foreach ($cfg_campus_list as $campus) {
-    if ($campus == $cfg_campus_default) {
-      echo "<option value=\"$campus\" selected>$campus</option>";
-    } else {
-      echo "<option value=\"$campus\">$campus</option>";
-    }
   }
   echo '</select></td></tr>';
 

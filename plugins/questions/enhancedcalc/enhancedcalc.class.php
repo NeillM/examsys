@@ -688,7 +688,7 @@ class EnhancedCalc extends Question implements questionInterface {
                     $extra['tmp_display_correct_answer'] = 0;
                     $extra['tmp_display_students_response'] = '0';
                     $extra['tmp_display_feedback'] = '0';
-                    $extra['$tmp_display_question_mark'] = '0';
+                    $extra['tmp_display_question_mark'] = '0';
                 }
             }
 

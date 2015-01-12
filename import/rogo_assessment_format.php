@@ -33,6 +33,10 @@ require_once '../classes/logger.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$paper = $propertyObj->get_paper_title();
+
 if (isset($_POST['submit'])) {
 	$rafObject = new RAF($userObject, $configObject, $mysqli, $string);
 	$rafObject->import($paperID);
@@ -54,9 +58,8 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <style type="text/css">
-      #content * {margin:auto; padding:auto};
+    span.killer {float:none}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -82,11 +85,13 @@ if ($module != '') {
 } elseif ($folder != '') {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
 }
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+
 echo "</div><div class=\"page_title\">" . $string['importraf'] . "</div>";
 echo "</div>";
 ?>
-<form name="myform" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" enctype="multipart/form-data">
-<table cellspacing="0" cellpadding="0" border="0" style="margin-top:70px; width:500px; text-align:left" class="dialog_border"> 
+<form name="myform" id="myform" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" enctype="multipart/form-data">
+<table cellspacing="0" cellpadding="10" border="0" style="margin-top:70px; width:500px; text-align:left" class="dialog_border"> 
 	<tr> 
 		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/raf_file.png" width="48" height="48" /></td><td class="dialog_header" style="width:445px"><?php echo $string['importraf'] ?></td> 
 	</tr> 

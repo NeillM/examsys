@@ -210,11 +210,14 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           while ($random_data->fetch()) {
             $paper_array[] = array('q_id' => $new_q_id, 'scenario' => $scenario, 'q_type' => $q_type, 'option_text' => $option_text, 'q_media' => $q_media, 'correct' => $correct, 'display_method' => $display_method, 'settings' => $settings, 'score_method' => $score_method, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'question_no' => $tmp_question_no, 'display_pos' => $display_pos);
           }
+          /*
           if ($random_data->num_rows == 0) {
             $ex = new RandomQuestionNotFound(sprintf('Random question ID %s not found in paper %s', $used_qid, $paper_id));
             trigger_error($ex->getMessage(), E_USER_WARNING);
             throw($ex);
           }
+           * 
+           */
           $random_data->close();
 
         }
@@ -692,7 +695,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
         if ($saved_response == $correct) {
           $mark += $marks_correct;
-        } elseif ($saved_response != 'u') {
+        } elseif ($saved_response != 'u' and $saved_response != 'a') {
           $mark += $marks_incorrect;
         }
         $totalpos += $marks_correct;
@@ -725,7 +728,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           // Get correct answer.
           $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
           $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
-          $answer_list = explode(',', $blank_details[$i]);
+          $answer_list = explode(',', strip_tags($blank_details[$i]));
 
           $answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
           if ($display_method == 'textboxes') {

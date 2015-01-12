@@ -33,10 +33,17 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 // Check the paperID exists
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+$clarif_types = $configObject->get('midexam_clarification');
+if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
+  $exam_clarifications = true;  
+} else {
+  $exam_clarifications = false;  
+}
+
 // Check the paper is not set to be linear.
 // Check if paper is Summative Exam.
 // Check if paper is not live.
-if ($properties->get_bidirectional() == '0' or $properties->get_paper_type() != '2' or !$properties->is_live()) {
+if (!$exam_clarifications) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

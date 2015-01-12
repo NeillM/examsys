@@ -436,7 +436,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < ($date_array['year']+21); $i++) {
-      if ($i == $target_year) {
+      if ($i == $target_year + 1) {
         echo "<option value=\"$i\" selected>$i</option>\n";
       } else {
         echo "<option value=\"$i\">$i</option>\n";
@@ -506,7 +506,7 @@ if ($_POST['paper_type'] == 'summative') {
   echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #295AAD; border-left:1px solid #295AAD; border-right:1px solid #295AAD\">" . $string['modules'] . "</div>";
   if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
     echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
-  } else if ($_POST['paper_type'] == 'osce') {
+  } else if ($_POST['paper_type'] == 'osce' or (!$configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative')) {
     echo "<div style=\"display:block; background-color:white; height:310px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   } else {
     echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";

@@ -40,6 +40,10 @@ require_once '../classes/reviews.class.php';
 
   <title><?php echo $string['externalexaminerarea']; ?></title>
 
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
@@ -56,18 +60,19 @@ require_once '../classes/reviews.class.php';
 </head>
 
 <body>
+<?php
+require '../include/toprightmenu.inc';
 
-<table cellspacing="0" cellpadding="0" border="0" class="header">
-<tr>
-<th><div style="padding-left:15px">
-  <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
-  <div class="logo_lrg_txt">Rog&#333;</div>
-  <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
+echo draw_toprightmenu(1);
+?>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div style="padding:6px 6px 6px 16px">
+    <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
+    <div class="logo_lrg_txt">Rog&#333;</div>
+    <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
+  </div>
 </div>
-</th>
-<th style="text-align:right"><?php echo $logo_html; ?></th>
-</tr>
-</table>
   
 <div class="indent">
 <h1><?php echo $string['preexamreviewpapers'] ?></h1>

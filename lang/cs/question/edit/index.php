@@ -230,6 +230,7 @@ $string['showmore'] = 'Zobrazit více';
 $string['hidemore'] = 'Skrýt více';
 $string['minor'] = 'Nevýznamné';
 $string['major'] = 'Významné';
+$string['cannot'] = 'Cannot Comment';
 $string['pleaserank'] = 'Prosím o hodnocení těchto &hellip; počínaje &hellip; první:';
 $string['addtobank'] = 'Přidat do banky';
 $string['addtobankandpaper'] = 'Do banky &amp; dokumentu';

@@ -111,9 +111,6 @@ class ResultsCache {
     return $marks;
   }
   
-  public function get_question_marks_by_student($userID) {
-  }
-  
 	/**
 	 * Loads median marks for all questions on a given paper.
 	 * @param int $paperID - The ID of the paper you need statistics for.

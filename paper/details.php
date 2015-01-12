@@ -31,6 +31,7 @@ require '../include/staff_student_auth.inc';
 require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
+require_once '../include/std_set_shared_functions.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
@@ -400,18 +401,18 @@ function check_latex_class($candidates) {
 function check_latex_random($q_ids, $mysqli) {
   $q_ids = implode(',', $q_ids);
   $latex = 0;
-
-  $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
-  while ($result->fetch()) {
-    $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
-    if ($latex == 1) {
-      break;
+  if ($q_ids != '') {
+    $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+    while ($result->fetch()) {
+      $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+      if ($latex == 1) {
+        break;
+      }
     }
   }
-
   return $latex;
 }
 ?>
@@ -421,7 +422,7 @@ function check_latex_random($q_ids, $mysqli) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -441,8 +442,9 @@ function check_latex_random($q_ids, $mysqli) {
   <![endif]-->
   <style type="text/css">
     <?php
-      if ($_SESSION['ROGO_language'] != 'en') {
+      if ($language != 'en') {
         echo "#content td.t, td.t {width: 180px !important}\n";
+      } else {
         echo "#content td.d, td.d {width: 130px !important}\n";
       }
       echo QuestionStatus::generate_status_css($status_array);
@@ -458,7 +460,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
 <script defer="defer">
-  var paperID = '<?php echo $paperID; ?>';
+  var paperID = '<?php echo $paperID ?>';
 
   function addQID(qID, pID, clearall) {
     if (clearall) {
@@ -509,6 +511,14 @@ function check_latex_random($q_ids, $mysqli) {
       }
     }
 
+    if (qType == 'info') {
+      $('.clarification').removeClass('menuitem');
+      $('.clarification').addClass('greymenuitem');
+    } else {
+      $('.clarification').removeClass('greymenuitem');
+      $('.clarification').addClass('menuitem');
+    }
+    
     if (qType == 'random') {
       var row = '';
       for (i=1; i<=subparts; i++) {
@@ -552,7 +562,7 @@ function check_latex_random($q_ids, $mysqli) {
 	}
 ?>
 		
-    if (document.PapersMenu.questionID.value == '') {
+    if ($('#questionID').val() == '') {
       qOff();
     }
   }
@@ -680,6 +690,12 @@ function check_latex_random($q_ids, $mysqli) {
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
 
   while ($result->fetch()) {
+
+    if ($q_type == 'sct') {
+      $parts = explode('~', $leadin);
+      $leadin = $parts[0];
+    }
+
     if (!is_null($settings) and !is_array($settings)) {
       $settings = json_decode($settings, true);
     }
@@ -849,6 +865,15 @@ function check_latex_random($q_ids, $mysqli) {
       $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $paperID);
       $result->execute();
       $result->close();
+
+      // Update standard set as marks has changed.
+      $no_reviews = 0;
+      $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
+      foreach ($reviews as $review) {
+        if ($review['method'] != 'Hofstee') {
+          updateDB($review, $mysqli);
+        }
+      }
     }
   }
 

@@ -71,7 +71,7 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
   include 'options/opt_rank.php';
 }
 
-if($question->get_locked() == '') {
+if ($question->get_locked() == '') {
 ?>
           <tbody class="add-option-holder">
             <tr>

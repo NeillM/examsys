@@ -44,19 +44,19 @@ if (count($question->options) > 0) {
             <tr>
               <th><label for="columns"><?php echo $string['presentation'] ?></label></th>
               <td>
-                <select id="columns" name="columns" class="spaced-right">
+                <select id="columns" name="columns" class="spaced-right"<?php echo $disabled ?>>
 <?php
 echo ViewHelper::render_options($columns, $question->get_columns(), 3, false, '', '', " {$string['cols']}");
 ?>
                 </select>
                 <label for="rows" class="spaced-right heavy">x</label>
-                <select id="rows" name="rows" class="spaced-right-large">
+                <select id="rows" name="rows" class="spaced-right-large"<?php echo $disabled ?>>
 <?php 
 echo ViewHelper::render_options($rows, $question->get_rows(), 3, false, '', '', " {$string['rows']}");
 ?>
                 </select>
                 <label for="editor" class="heavy"><?php echo $string['editor'] ?></label>
-                <select id="editor" name="editor">
+                <select id="editor" name="editor"<?php echo $disabled ?>>
 <?php 
 echo ViewHelper::render_options($editors, $editor, 3);
 ?>

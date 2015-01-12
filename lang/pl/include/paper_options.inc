@@ -137,4 +137,5 @@ $string['insertscreenbreak'] = 'Wstaw podzielnik ekranu';//Insert screen break';
 $string['addscreenbreak'] = 'Wstaw podzielnik ekranu';  
 $string['deletescreenbreak'] = 'Usuń podzielnik ekranu';  
 $string['papers'] = 'Arkusze';
+$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>

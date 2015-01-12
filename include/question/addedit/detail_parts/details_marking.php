@@ -35,7 +35,7 @@ if ($marks_source = $question->get_marks_source()) {
   $mark_incorrect = 0;
   $mark_partial = 0;
 }
-$allow_neg = $question->allow_negative_marks($module);
+$allow_neg = $question->allow_negative_marks();
 $allow_change_method = ($question->allow_change_marking_method() and $dis_class == '') ? '' : ' disabled="disabled"';
 
 ?>

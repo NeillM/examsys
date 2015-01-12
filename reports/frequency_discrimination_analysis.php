@@ -191,7 +191,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       break;
     case 'blank':
       $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|',$answer);
+      $tmp_answer_parts = explode('|', $answer);
       $i = 0;
       foreach ($tmp_answer_parts as $tmp_individual_answer) {
         $tmp_individual_answer = strtolower(trim($tmp_individual_answer));
@@ -601,7 +601,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         break;
       case 'blank':
         echo '<br />';
-        $blank_details = explode('[blank',$options[0]);
+        $blank_details = explode('[blank', strip_tags($options[0]));
         $array_size = count($blank_details);
 
         if ($score_method == 'Mark per Question') {
@@ -643,7 +643,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
               }
             } else {
               $tmp_parts = explode(',', $blank_options);
-              echo '<strong>' . chr($blank_count+64) . '.</strong> <input type="text" size="20" value="' . $tmp_parts[0] . '" />';
+              echo ' <strong>' . chr($blank_count+64) . '.</strong> <input type="text" size="20" value="' . $tmp_parts[0] . '" />';
             }
 
             echo $remainder;
@@ -697,7 +697,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 
           }
           $t = number_format(($tmp_correct_no/$user_total)*100,0);
-
+          
           $d_no++;
           $d_total += $d;
           $html = '';
@@ -816,7 +816,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo ">$leadin</td>";
-        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
+        echo "<td><input type=\"button\" onclick=\"return clacCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
         echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";

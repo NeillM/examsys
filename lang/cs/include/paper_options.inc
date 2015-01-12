@@ -122,5 +122,5 @@ $string['exportraf'] = 'Exportovat jako Rog&#333; Assessment formát';
 $string['importraf'] = 'Importovat jako Rog&#333; Assessment formát';
 $string['importexport'] = 'Import/Export';
 $string['papers'] = 'Papers';
-
+$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>
