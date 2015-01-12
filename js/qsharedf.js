@@ -2,9 +2,9 @@ var rq = new Array(); //array of questions/canvases
 
 //main startup function
 function setUpQuestion(num, canvasId, lang, image, config, answer, extra, colour, type, mode) {
-  //preload cursors
-  $.get(cfgRootPath + '/js/images/cur_erase.cur', function() { }); 
-  $.get(cfgRootPath + '/js/images/cur_cross.cur', function() { }); 
+//preload cursors
+$.get('../js/images/cur_erase.cur', function() { }); 
+$.get('../js/images/cur_cross.cur', function() { }); 
 
 	if (typeof(mode) == 'undefined') mode = 'answer';
 	if (mode == '1') mode = 'answer';
