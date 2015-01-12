@@ -75,7 +75,8 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		}
     
 		//---------- answer, 
- 		for (i in this.hotSpots) {
+ 		if (this.qmode != 'correction')
+                    for (i in this.hotSpots) {
 			this.answers[i] = new Array(new Array(0,'false','false'));
 		}
 		
@@ -297,7 +298,6 @@ function qh_test(type) {
     if (type == 'answers') {
 			if (this.qmode == 'correction') {
 				for (j=0;j<this.answers.length;j++) {        
-					if (typeof this.answers[j][i]!='undefined') {
 						this.answers[j][i][0] = '0';
 						if (typeof this.answers[j][i][1]!='undefined' && this.answers[j][i][1]!='' && this.answers[j][i][1]!='false') {
 							tx = (1*this.answers[j][i][1]+300+0.5);
@@ -307,8 +307,7 @@ function qh_test(type) {
 							if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { 
 								this.answers[j][i][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
 							}			
-						}
-					}
+						}				
 				}
 			}else{
 				for (j=0;j<this.answers[i].length;j++) {        
@@ -443,7 +442,7 @@ function qh_redraw_canvas() {
       this.context.fillText(String.fromCharCode(65+1*i), pos_x, pan_y+27);
       //text background
       this.context.fillStyle=this.currentColours[0];
-      if ((this.is_an_answer && this.answers[i][0][1] == 'false') || this.allUnaswered == true) this.context.fillStyle=this.currentColours[3];
+      if ((this.is_an_answer && typeof(this.answers[i])!='undefined' && this.answers[i][0][1] == 'false') || this.allUnaswered == true) this.context.fillStyle=this.currentColours[3];
    		this.context.fillRect(39.5,pan_y+11.5,252-this.palico,pan_h-17);
       //label text
       this.context.fillStyle='#000000';
@@ -1234,7 +1233,7 @@ function qh_ReturnInfo() {
 
 	if (this.qmode == 'correction') {
 		for (i=0;i<this.answers.length;i++) {
-			if (typeof(this.answers[i])!='undefined' && this.answers[i][0][1]!='false') {
+			if (typeof(this.answers[i])!='undefined') {
 				questions_result += this.answers[i][0][3]+',';
 				for (j=0;j<this.answers[i].length;j++) {
 					questions_result+=this.answers[i][j][0]+',';
