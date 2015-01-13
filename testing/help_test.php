@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/sysadmin_auth.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -174,7 +174,7 @@ require '../include/staff_auth.inc';
 	echo '<h3>Missing images:</h3>';
 	echo $result1;
 	if ($result1=='') echo ' - not detected.<br />';
-	echo '<hr>';
+	echo '<hr />';
 	echo '<h3>Image dimensions\' inconsistencies:</h3>';
 	ksort($result_array_2);
 	foreach ($result_array_2 as $result2) echo $result2;
@@ -183,11 +183,13 @@ require '../include/staff_auth.inc';
 	if (count($result_array_3)==0 && count($result_array_2)==0) echo ' - not detected.<br />';
 	
 	
-	foreach ($help_img as $img_item => $img_ids) $avail_images[$img_item] = 2;
-	
+	foreach ($help_img as $img_item => $img_ids) {
+    $avail_images[$img_item] = 2;
+  }
+  
 	foreach ($avail_images as $img_item => $img_use) { 
 		$img_items = preg_replace('/_/','\\_',$img_item);
-		$sql = "SELECT id,deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_items%'; "; //COLLATE latin1_general_cs
+		$sql = "SELECT id, deleted FROM rogo.".$target."_help WHERE body LIKE '%$img_items%'; "; //COLLATE latin1_general_cs
 		$dbresult2 = $mysqli->prepare($sql);
 		$dbresult2->execute(); 
 		$dbresult2->bind_result($id,$del);
@@ -210,26 +212,40 @@ require '../include/staff_auth.inc';
 	
 	echo '<h3>Unused images:</h3>';
 	$result = '';
-	foreach ($avail_images as $img_item => $img_use) if ($img_use==1) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a></li>";
+	foreach ($avail_images as $img_item => $img_use) {
+    if ($img_use == 1) {
+      $result .= "<li><a href='../help/$target/$img_item'>$img_item</a></li>";
+      unlink("../help/$target/$img_item");
+    }
+  }
 	echo '<ol>'.$result.'</ol>';
 	if ($result=='') echo ' - not found.<br />';
 	
-	echo "<h3>files from deleted pages:</h3>";
+	echo "<h3>Files from deleted pages:</h3>";
 	$result = '';
-	foreach ($avail_images as $img_item => $img_use) if ($img_use>=2000) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-2000)."'>#".($img_use-2000)."</a></li>";
+	foreach ($avail_images as $img_item => $img_use) {
+    if ($img_use >= 2000) {
+      $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-2000)."'>#".($img_use-2000)."</a></li>";
+    }
+  }
 	echo '<ol>'.$result.'</ol>';
 	if ($result=='') echo ' - not found.<br />';	
 
 	echo "<h3>'Unusually' used files:</h3>";
 	$result = '';
-	foreach ($avail_images as $img_item => $img_use) if ($img_use>=1000 && $img_use<2000) $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-1000)."'>#".($img_use-1000)."</a></li>";
+	foreach ($avail_images as $img_item => $img_use) {
+    if ($img_use>=1000 && $img_use<2000) {
+      $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-1000)."'>#".($img_use-1000)."</a></li>";
+    }
+  }
 	echo '<ol>'.$result.'</ol>';
-	if ($result=='') echo ' - not found.<br />';	
+	if ($result == '') echo ' - not found.<br />';	
 
 	echo '<hr><h2>Help pages ids:</h2>';
 	$div_num = round(count($help_toc)/15);
 	echo '<table><tr><td><ol>';
-	$i=0;$j=1;
+	$i = 0;
+  $j = 1;
 	foreach ($help_toc as $help_item) {
 		$i++;
 		if ($i>($div_num*$j)) {

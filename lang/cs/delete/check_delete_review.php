@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmreviewdelete'] = 'Potvrdit odstranění přehledu';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['confirmmsg'] = 'Jste si skutečně jisti, že chcete tento přehled vytvořený na <strong>%s</strong> odstranit?';
-$string['deletereview'] = 'Odstranění přehledu';
-$string['recyclebin'] = 'Koš';
 ?>

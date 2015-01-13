@@ -24,88 +24,76 @@
 
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff create pages.
 require '../../include/errors.inc';
-require '../../include/help.inc';
+require_once '../../classes/helputils.class.php';
 
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 
+$id = null;
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
+
 if (isset($_POST['save_changes'])) {
-	$tmp_title = $_POST['title'];
 		
 	// Update help file record
 	$tmp_body = $_POST['edit1'];
-	$tmp_body_plain = strip_tags($tmp_body);
+	$tmp_title = $_POST['title'];
 
-	$result = $mysqli->prepare("INSERT INTO student_help VALUES (NULL, ?, ?, ?, 'page', NULL, NULL, NULL)");
-	$result->bind_param('sss', $tmp_title, $tmp_body, $tmp_body_plain);
-	$result->execute();  
-	$result->close();
+  $articleid = $help_system->create_page($tmp_title, $tmp_body);
 
-	$page_id = $mysqli->insert_id;
-	$mysqli->close();
-	?>
-	<html>
-	<head>
-	<title></title>
-	<script language="JavaScript">
-		function reloadHelp() {
-			window.top.location='index.php?id=<?php echo $page_id; ?>';
-		}
-	</script>
-	</head>
-	<body onload="reloadHelp()">
-	</body>
-	</html>
-	
-	<?php
+  $mysqli->close();
+  header("location: index.php?id=$articleid");
+  exit;
 } else {
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <title>New Help Page</title>
+  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-  <style type="text/css">
-    html {height:100%}
-    body {font-size:85%; line-height:150%; color:#484848}
-    p, div, td {text-align:justify}
-    li {text-align:justify; list-style:square inside; color:#FF9900}
-    td {font-size:85%}
-    h1 {font-size:150%; color:black; font-family:Verdana,sans-serif}
-    h2 {font-size:140%; color:#EEA752; font-family:Verdana,sans-serif}
-    .subheading {font-weight:bold; font-style:italic}
-  </style>
-
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
+  
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript">
-    $(document).ready(function() {
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
+  <script>
+    $(function () {
 		  var docHeight = $(document).height();
-			docHeight = docHeight - 100;
+			docHeight = docHeight - 135;
 		  $('#edit1').css('height', docHeight + 'px');
 		});
   </script>
 </head>
 
 <body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
   <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#295AAD; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" required /></td>
+  <td style="text-align:right"><select name="page_roles"><option value="Staff">Staff</option><option value="Admin">Admin</option><option value="SysAdmin">SysAdmin</option></select></td>
   </tr>
   </table>
   <br />
 
   <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
 
-  <div style="text-align:center; padding-top:8px""><input style="width:120px" type="submit" name="save_changes" value="Save" />&nbsp;&nbsp;<input style="width:120px" type="button" name="cancel" value="Cancel" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
+  </div>
+</div>
 </body>
 </html>
 <?php

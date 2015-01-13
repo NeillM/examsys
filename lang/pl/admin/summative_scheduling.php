@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Narzędzia administracyjne';  
 $string['summativescheduling'] = 'Planowanie egzaminu końcowego';
 $string['title'] = 'Tytuł';
 $string['month'] = 'Miesiąc';

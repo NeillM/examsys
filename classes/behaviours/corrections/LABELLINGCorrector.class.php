@@ -42,7 +42,7 @@ class LABELLINGCorrector extends Corrector {
       $mark_incorrect = $option->get_marks_incorrect();
 
       try {
-        if(!$this->_question->save()) {
+        if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log{$paper_type}'.
@@ -81,7 +81,7 @@ class LABELLINGCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $mark = 0;
             $all_correct = true;
             $correct_no = 0;
@@ -119,7 +119,7 @@ class LABELLINGCorrector extends Corrector {
             $user_split1[0] = $mark . '$' . $totalpos;
             $user_answer_new = implode(';', $user_split1);
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=?, user_answer=? WHERE id=?");
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");
             $updateLog->bind_param('disi', $mark, $totalpos, $user_answer_new, $id);
             $updateLog->execute();
             $updateLog->close();

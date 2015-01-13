@@ -351,7 +351,7 @@ class RAF {
 		if ($q['q_option_order'] == '') $q['q_option_order'] = 'display order';
 		if ($q['score_method'] == '') 	$q['score_method'] = 'Mark per Option';
 
-		$server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+		$server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
 		$guid = $server_ipaddress . uniqid('', true);
 
 		$status_string = $q['status'];
@@ -379,10 +379,10 @@ class RAF {
 		  $old_q_id = $this->getQID_GUID($q['guid']);
 		
 		  if ($old_q_id !== false) {
-				$this->logger->track_change('Copied Question', $q_id, $this->userID, $old_q_id, $q_id, 'Imported from RAF file at ' . date($date_format));		// Log as a copied file
+				$this->logger->track_change('Paper', $q_id, $this->userID, $old_q_id, $q_id, 'Add Question (from RAF)');		// Log as a copied file
 			}
 		} else {
-			$this->logger->track_change('New Question', $q_id, $this->userID, '', 'Imported from RAF file at ' . date($date_format), '');										// Log as a new file that has been imported
+			$this->logger->track_change('Paper', $q_id, $this->userID, '', $q_id, 'Add Question (from RAF)');										// Log as a new file that has been imported
 		}
 		
 		return $q_id;

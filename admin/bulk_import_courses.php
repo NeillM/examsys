@@ -42,17 +42,23 @@ ini_set("auto_detect_line_endings", true);
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    p {margin:0px; padding:0px}
+    p {margin:0; padding:0}
     h1 {font-size:120%; font-weight:bold}
     label.error {display:block; color:#f00}
     .existing {color:#808080}
     .added {color:black}
     .failed {color:#C00000}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
-    $(function () { $('#import_form').validate(); });
+  <script>
+    $(function () {
+      $('#import_form').validate();
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });
   </script>
   </head>
 
@@ -60,7 +66,7 @@ ini_set("auto_detect_line_endings", true);
 <?php
   require '../include/course_options.inc';
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <br />
 <br />
 <?php
@@ -84,7 +90,7 @@ ini_set("auto_detect_line_endings", true);
         <?php
         // Get a list of courses held by Rogo.
         $course_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT name FROM courses");
+        $result = $mysqli->prepare("SELECT DISTINCT name FROM courses WHERE deleted IS NULL");
         $result->execute();
         $result->bind_result($course_name);
         while ($result->fetch()) {
@@ -95,7 +101,7 @@ ini_set("auto_detect_line_endings", true);
         // Get a list of schools held by Rogo.
         $unknown_schoolID = 0;
         $school_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT id, school FROM schools");
+        $result = $mysqli->prepare("SELECT DISTINCT id, school FROM schools WHERE deleted IS NULL");
         $result->execute();
         $result->bind_result($school_id, $school_name);
         while ($result->fetch()) {
@@ -174,14 +180,14 @@ ini_set("auto_detect_line_endings", true);
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <blockquote>Course ID, Name, School</blockquote>
-<div style="text-align:center"><img src="../artwork/bulk_course_import_headings.png" width="361" height="60" alt="screenshot" style="border:1px solid black" /></div>
+<div style="text-align:center"><img src="../artwork/bulk_course_import_headings.png" width="334" height="59" alt="screenshot" style="border:1px solid #909090" /></div>
 <br />
 
 <div align="center">
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" id="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" /></p>
 <br />
 </form>
 </div>

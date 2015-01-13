@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Nastavení';
 $string['allschools'] = '&lt;Všechny školy&gt;';
 $string['alllabs'] = '&lt;Všechny učebny&gt;';
 $string['default'] = 'Výchozí';
@@ -36,4 +35,6 @@ $string['time_warning'] = 'Čas Zahájení a Čas ukončení je totožný!';
 $string['lab_warning'] = 'Upozornění: není nastavena žádná počítačová učebna!';
 $string['duration_warning'] = 'Není nastavena délka trvání!';
 $string['labs'] = 'Počítačové učebny';
+$string['metadata'] = 'Metadata';
+$string['extraevents'] = '<strong>SysAdmin:</strong> Pro přidání události dvakrát klikněte na kalendář.';
 ?>

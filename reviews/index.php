@@ -29,6 +29,7 @@
 require '../include/staff_auth.inc';
 require '../config/index.inc';  // Get the logo
 require_once '../classes/paperutils.class.php';
+require_once '../classes/reviews.class.php';
 
 ?>
 <!DOCTYPE html>
@@ -39,34 +40,46 @@ require_once '../classes/paperutils.class.php';
 
   <title><?php echo $string['externalexaminerarea']; ?></title>
 
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
+  
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
+  <link rel="stylesheet" type="text/css" href="../css/external_examiner.css" />
   <style type="text/css">
-    body {font-size:90%}
-    p {line-height:150%}
+    *, html {margin: 0; padding: 0}
+    body {font-size:90%; background-color: #EAEAEA}
+    p {line-height:150%; margin-bottom: 1em}
+    h1 {line-height:150%; color:#4A74B9; font-size:160%; font-weight:normal; margin-left:-25px; padding-top: 10px}
+    .datepad {padding-left: 30px}
+    .indent {margin-top: 0; padding-left: 40px; padding-right: 10px; padding-bottom: 50px; background-color: white; border-bottom: 1px solid #C0C0C0}
+    .oss {float:right; position:relative; top:-30px; border: 1px solid #C0C0C0; background-color:white; padding:4px; margin-right:10px; width: 460px; font-size: 80%; line-height:150%}
   </style>
 </head>
 
 <body>
+<?php
+require '../include/toprightmenu.inc';
 
-<table cellspacing="0" cellpadding="0" border="0" style="width:100%; background-color:#F1F5FB">
-<tr>
-<td><div style="padding-left:15px">
-  <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
-  <div class="logo_lrg_txt">Rog&#333;</div>
-  <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
+echo draw_toprightmenu(1);
+?>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div style="padding:6px 6px 6px 16px">
+    <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
+    <div class="logo_lrg_txt">Rog&#333;</div>
+    <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
+  </div>
 </div>
-</td>
-<td align="right"><?php echo $logo_html; ?></td>
-</tr>
-<tr><td colspan="2" style="height:3px"><img src="../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line" /></td></tr>
-</table>
-
-<p style="font-size:130%; font-weight:bold; margin-left:15px"><?php echo $string['instructions']; ?></p>
+  
+<div class="indent">
+<h1><?php echo $string['preexamreviewpapers'] ?></h1>
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg1']; ?></p>
 
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg2']; ?></p>
-<p style="margin-left:15px; font-weight:bold"><?php echo $string['yourpapersforreview']; ?></p>
+
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
 <?php
   $start_of_day_ts = strtotime('midnight');
@@ -79,7 +92,7 @@ require_once '../classes/paperutils.class.php';
   while ($result->fetch()) {
     $reviewed = '';
     if ($fullscreen == '') $fullscreen = 0;
-    $log_results = $mysqli->prepare("SELECT UNIX_TIMESTAMP(MAX(reviewed)) AS started FROM review_comments WHERE reviewer = ? and q_paper = ?");
+    $log_results = $mysqli->prepare("SELECT UNIX_TIMESTAMP(MAX(started)) AS started FROM review_metadata WHERE reviewerID = ? and paperID = ?");
     $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $log_results->execute();
     $log_results->store_result();
@@ -90,8 +103,8 @@ require_once '../classes/paperutils.class.php';
     $restartdate = '';
     $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
     
-    echo "<tr><td align=\"center\"><a href=\"../user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
-    echo "  <td><a href=\"../user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
+    echo "<tr><td align=\"center\"><a href=\"../paper/user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
+    echo "  <td><a href=\"../paper/user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if ($start_of_day_ts > $external_review_deadline) {
       printf($string['expired'], $configObject->get('cfg_company'));
     } else {
@@ -114,19 +127,35 @@ require_once '../classes/paperutils.class.php';
     echo "<tr><td colspan=\"2\"><p style=\"color:red\">" . $string['nopapersfound'] . "</p></td></tr>\n";
   }
   $result->close();
-  echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n<tr><td colspan=\"2\" style=\"text-align:left\"><hr noshade=\"noshade\" align=\"left\" style=\"text-align:left; background-color:#C0C0C0; color:#C0C0C0; height:1px; border:0; width:400px\" /></td>\n</tr>\n";
+  
+  echo "</table>\n";
+  
+  
+  $released_papers = ReviewUtils::get_past_papers($userObject->get_user_ID(), $mysqli);
+  echo '<h1>' . $string['postexamreviews'] . '</h1>';
+  
+  echo "<p style=\"margin-left:15px; margin-right:15px; text-align:justify\">" .  $string['msg3'] . "</p>\n";
 
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><a href=\"mailto:" . $configObject->get('support_email') . "\"><img src=\"../artwork/email_icon_48.png\" width=\"48\" height=\"48\" alt=\"" . $string['help'] . "\" /></a></td>\n</td><td><a href=\"mailto:" . $configObject->get('support_email') . "\">" . $configObject->get('support_email') . "</a><br /><span style=\"color:#808080\">" . $string['helpandsupportext'] . "</span></td></tr>\n";
+  echo "<table style=\"margin-left:15px\">\n";
+  foreach ($released_papers as $paperID=>$paper_details) {
+    echo "<tr><td><a href=\"class_totals.php?id=" . $paper_details['crypt_name'] . "\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" style=\"margin-right:5px\" />" . $paper_details['paper_title'] . "</a></td><td class=\"datepad\">" . $paper_details['start_date'] . "</td></tr>\n";
+  }
+  echo "</table>\n";
+  echo "</div>\n";
 
-  echo "<tr><td>&nbsp;</td><td style=\"font-size:80%\">&nbsp;</td></tr>\n";
-  echo "<tr><td width=\"66\" style=\"text-align:center\"><img src=\"../artwork/osi_logo.png\" width=\"56\" height=\"66\" alt=\"Open Source Initiative\" /></td>\n</td><td><span style=\"color:#808080\">" . sprintf($string['rogodetails'], $configObject->get('rogo_version')) . "</a> <a href=\"http://rogo-oss.nottingham.ac.uk\">rogo-oss.nottingham.ac.uk</a></td></tr>\n";
   $mysqli->close();
 ?>
 
-</table>
-<br />&nbsp;<br />
+<br />
 
-<div style="margin-left:10px; font-size:80%; color:#808080"><?php printf($string['copyrightmsg'], $configObject->get('cfg_company')); ?></div>
+<table class="oss">
+  <tr>
+  <td><img src="../artwork/oss_logo.png" /></td>
+  <td style="padding-left:16px"><?php echo sprintf($string['rogodetails'], $configObject->get('rogo_version')) ?></a> <strong><a href="https://bitbucket.org/rogoOOS/rog/wiki/Home">bitbucket.org/rogoOOS/rog/wiki/Home</a></strong></td>
+  </tr>
+</table>
+
+<div style="margin-left:10px; font-size:90%; color:#3F3F3F"><?php printf($string['copyrightmsg'], $configObject->get('cfg_company')); ?></div>
 
 </body>
 </html>

@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
+$string['modules'] = 'Moduly';
+$string['academicyear'] = 'Akademický rok';
 $string['schools'] ='Školy';
 $string['smsimportsummary'] = 'Přehled nahraných SMS';
 $string['smsimportson'] = 'SMS nahráno na';
@@ -24,5 +25,4 @@ $string['enrolementdetails'] = 'Detaily zápisu';
 $string['deletions'] = 'Odstraněné';
 $string['deletiondetails'] = 'Detaily odstranění';
 $string['importtype'] = 'Typ importu';
-$string['modules'] = 'Moduly';
 ?>

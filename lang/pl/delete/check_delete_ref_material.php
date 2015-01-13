@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmdelete'] = 'Potwierdź usunięcie';  
+require '../lang/' . $language . '/delete/delete.inc';
+
+$string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
 $string['msg'] = 'Czy na pewno usunąć materiał pomocniczy?';
-$string['delete'] = 'Usuń';
-$string['recyclebin'] = 'Kosz';
 ?>

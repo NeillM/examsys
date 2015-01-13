@@ -18,6 +18,9 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
  
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
+$string['usersearch'] = 'Wyszukiwanie użytkowników';
+$string['user'] = 'Użytkownik:';
+$string['edit'] = 'Edytuj';
 $string['status'] = 'Status'; //cognate //Status, Stan
 $string['student'] = 'Student'; //cognate
 $string['Students'] = 'Studenci';
@@ -33,7 +36,7 @@ $string['female'] = 'Kobieta';
 $string['year'] = 'Rok';
 $string['yearofstudy'] = 'Rok studiów';
 $string['course'] = 'Kurs';
-$string['databaseid'] = 'ID bazy danych';
+$string['userid'] = 'ID użytkownika Rog&#333;';
 $string['log'] = 'Log'; //cognate
 $string['teams'] = 'Zespoły';
 $string['team'] = 'Zespół';
@@ -68,17 +71,18 @@ $string['date'] = 'Data';
 $string['paper'] = 'Arkusz';
 $string['note'] = 'Notatka'; 
 $string['author'] = 'Autor';
-$string['createnote'] = 'Utwórz nową notatkę';
 $string['extratime'] = 'Dodatkowy czas';
 $string['fontsize'] = 'Rozmiar liter';
 $string['typeface'] = 'Czcionka';
 $string['background'] = 'Kolor tła';
 $string['foreground'] = 'Kolor';
-$string['markscolour'] = 'Kolor znaczników';
+$string['markscolour'] = 'Kolor ocen';
 $string['themecolour'] = 'Kolor nagłówków/motywu';
 $string['labelscolour'] = 'Kolor etykiet';
 $string['unanswered'] = 'Nie odpowiedziane';
 $string['dismisscolor'] = 'Kolor odrzucenia';
+$string['medical'] = 'Medyczny';
+$string['breaks'] = 'Przerwy';
 $string['default'] = 'Domyślny';
 $string['noextratime'] = 'Brak czasu dodatkowego';
 $string['angledefault'] = '&lt;domyślny&gt;';
@@ -103,6 +107,8 @@ $string['forcereset'] = 'Wymuś reset';
 $string['classifiedinfo'] = 'informacja zastrzeżona';
 $string['custom'] = 'Własna';
 $string['Access Denied']='Brak dostępu';
+$string['newnote'] = 'Nowa notatka...';
+$string['resitcandidate'] = 'Przesadź kandydata';
 
 //demo
 $string['demo1'] = 'Miasta';

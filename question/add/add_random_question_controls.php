@@ -18,7 +18,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -29,14 +29,14 @@ require '../../include/staff_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō</title>
+  <title>Rog&#333;</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <style type="text/css">
     body {margin-right:4px; margin-bottom:2px; background-color:#F0F0EA}
   </style>
 
-  <script language="JavaScript">
+  <script>
     var selected_q = Array();
 
     function in_array (needle, haystack) { 

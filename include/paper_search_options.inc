@@ -26,9 +26,9 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/paper/search.php');
+$state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/search.php');
 ?>
-<script language="JavaScript">
+<script>
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
     updateState(NameOfState, setting);
@@ -44,18 +44,17 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
     $('#icon' + ID).attr('src', icon);
     $('#icon' + ID).attr('alt', alttag);
 
-    updateState('menu' + ID, current);
+ 		updateState('menu' + ID, $('#menu' + ID).css('display'));
+
   }
 </script>
 
 <div id="left-sidebar" class="sidebar">
+<div style="padding-right:16px">
 <form name="PapersMenu" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<br />
 
-<table cellpadding="4" cellspacing="0" border="0" width="185">
-<tr><td>
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
-<table cellpadding="0" cellspacing="0" border="0">
+
 <?php
   if (isset($_POST['submit'])) {
     if (isset($_POST['formative']) and $_POST['formative'] == 1) {
@@ -104,33 +103,32 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
   }
 ?>
 
-<tr><td><input type="checkbox" name="formative" value="1"<?php echo $radio[0]; ?> /></td><td><?php echo $string['formative']; ?></td></tr>
-<tr><td><input type="checkbox" name="progress" value="1"<?php echo $radio[1]; ?> /></td><td><?php echo $string['progresstest']; ?></td></tr>
-<tr><td><input type="checkbox" name="summative" value="1"<?php echo $radio[2]; ?> /></td><td><?php echo $string['summative']; ?></td></tr>
-<tr><td><input type="checkbox" name="survey" value="1"<?php echo $radio[3]; ?> /></td><td><?php echo $string['survey']; ?></td></tr>
-<tr><td><input type="checkbox" name="osce" value="1"<?php echo $radio[4]; ?> /></td><td><?php echo $string['oscestation']; ?></td></tr>
-<tr><td><input type="checkbox" name="offline" value="1"<?php echo $radio[5]; ?> /></td><td><?php echo $string['offlinepaper']; ?></td></tr>
-<tr><td><input type="checkbox" name="peerreview" value="1"<?php echo $radio[6]; ?> /></td><td><?php echo $string['peerreview']; ?></td></tr>
-</table>
+<div><label><input type="checkbox" name="formative" id="formative" value="1"<?php echo $radio[0]; ?> /><?php echo $string['formative'] ?></label></div>
+<div><label><input type="checkbox" name="progress" id="progress" value="1"<?php echo $radio[1]; ?> /><?php echo $string['progresstest'] ?></label></div>
+<div><label><input type="checkbox" name="summative" id="summative" value="1"<?php echo $radio[2]; ?> /><?php echo $string['summative'] ?></label></div>
+<div><label><input type="checkbox" name="survey" id="survey" value="1"<?php echo $radio[3]; ?> /><?php echo $string['survey'] ?></label></div>
+<div><label><input type="checkbox" name="osce" id="osce" value="1"<?php echo $radio[4]; ?> /><?php echo $string['oscestation'] ?></label></div>
+<div><label><input type="checkbox" name="offline" id="offline" value="1"<?php echo $radio[5]; ?> /><?php echo $string['offlinepaper'] ?></label></div>
+<div><label><input type="checkbox" name="peerreview" id="peerreview" value="1"<?php echo $radio[6]; ?> /><?php echo $string['peerreview'] ?></label></div>
 
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-size:110%; font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility'] ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'block') {
-      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="9" height="9" alt="Hide" />';
+      echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
     } else {
-      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="9" height="9" alt="Show" />';
+      echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="10" height="9" alt="Show" />';
     }
   ?></a></td></tr>
   </table>
 
 <?php
   if (isset($state['menu6'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:" . $state['menu6'] . "\">\n";
+    echo "<table id=\"menu6\" style=\"margin-left:12px; display:" . $state['menu6'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu6\" style=\"display:none\">\n";
+    echo "<table id=\"menu6\" style=\"margin-left:12px; display:none\">\n";
   }
 ?>
 <tr><td><div style="margin-left:4px"><?php echo $string['date']; ?>&nbsp;</div></td><td>
@@ -169,7 +167,7 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 ?>
 </select>
 </td></tr>
-<tr><td><div style="margin-left:4px"><?php echo $string['lab']; ?>&nbsp;</div></td><td><select style="width:150px" name="lab"><option value=""><?php echo $string['anylab']; ?></option>
+<tr><td><div style="margin-left:4px"><?php echo $string['lab']; ?>&nbsp;</div></td><td><select style="width:150px" name="lab"><option value=""><?php echo $string['anylab'] ?></option>
 <?php
   $old_campus = '';
 
@@ -195,43 +193,33 @@ $state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject
 </table>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership']; ?></a></td>
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership'] ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(9);"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
-      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
+      echo "<img id=\"icon9\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
+  if (isset($_GET['module'])) {
+    $state['menu9'] = 'block';
+  }
   if (isset($state['menu9'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:" . $state['menu9'] . "\">\n";
+    echo "<div id=\"menu9\" style=\"margin-left:15px; display:" . $state['menu9'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu9\" style=\"display:none\">\n";
+    echo "<div id=\"menu9\" style=\"margin-left:15px; display:none\">\n";
   }
 ?>
-  <tr><td>
-  <div style="margin-left:4px"><?php echo $string['module']; ?> <?php search_utils::display_staff_modules_dropdown($userObject, $mysqli); ?></div>
-  <div style="margin-left:4px"><?php echo $string['owner']; ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers'); ?></div>
-</td></tr>
-</table>
+  <div style="margin-left:4px"><?php echo $string['module'] ?> <?php search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); ?></div>
+  <div style="margin-left:4px"><?php echo $string['owner'] ?> <?php search_utils::display_owners_dropdown($userObject, $mysqli, 'papers', $string, $state, 100); ?></div>
+</div>
 
 <br />
-<div style="text-align:center">
-<?php
-  if (isset($_GET['paperID'])) {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '\'"/>';
-  } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/staff/index.php\'"/>';
-  }
-?>
-&nbsp;<input style="width:80px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
-</td></tr>
-</table>
+<div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['search'] ?>" /></div>
+</div>
 
 </form>
 </div>

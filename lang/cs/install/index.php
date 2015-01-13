@@ -1,23 +1,8 @@
 <?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
 $string['company'] = 'Společnost';
 $string['companyname'] = 'Jméno společnosti';
 $string['databaseadminuser'] = 'Administrátor databáze';
-$string['server'] = 'Server'; //cognate
+$string['server'] = 'Server';
 $string['tempdirectory'] = 'Dočasný adresář';
 $string['needusername'] = 'Pro vytvoření databáze a potřebné tabulky, potřebujete uživatelské jméno a heslo od administrátora MySQL . Toto uživatelské jméno je použito pouze v instalačním skriptu a není na serveru uloženo.';
 $string['dbusername'] = 'Databázové uživatelské jméno';
@@ -33,8 +18,9 @@ $string['rdbusername'] = 'Uživatelské jméno';
 $string['rdbpassword'] = 'Heslo';
 $string['timedateformats'] = 'Čas/Datum - formáty';
 
-$string['date'] = 'Datum';
-$string['datetime'] = 'Datum/Čas';
+$string['date'] = 'Datum (%s)';
+$string['shortdatetime'] = 'Short Date/Time (%s)';
+$string['longdatetime'] = 'Long Date/Time (%s)';
 $string['longdatephp'] = 'Nezkrácené datum (%s)';
 $string['shortdatephp'] = 'Zkrácené datum (%s)';
 $string['longtimephp'] = 'Nezkrácený čas (%s)';
@@ -52,7 +38,7 @@ $string['allowlookupXML'] = 'Použít XML (Značkovací jazyk, bude potřeba př
 $string['rdbbasename'] = 'Základní část uživatelského jména';
 
 $string['useldap'] = 'Použít LDAP';
-$string['ldapserver'] = 'LDAP server'; //cognate
+$string['ldapserver'] = 'LDAP server';
 $string['searchdn'] = 'Hledat dn';
 $string['bindusername'] = 'Svázat uživatelské jméno';
 $string['bindpassword'] = 'Přiřadit heslo';
@@ -76,7 +62,7 @@ $string['name'] = 'Jméno';
 $string['number'] = 'Číslo';
 $string['install'] = 'Instalovat Rogō';
 $string['installed'] = 'Rogō je úspěšně nainstalováno.';
-$string['deleteinstall'] = 'Prosíme, odstraňte z bezpečnostních důvodů instalační adresář.';
+$string['deleteinstall'] = 'Z bezpečnostních důvodů, prosím, odstraňte instalační adresář.';
 $string['staffhomepage'] = 'Přejít na domovskou stránku určenou zaměstnancům';
 
 $string['logwarning1'] = 'Staff_help.sql nemohl být načten, nápovědu pro zaměstnance nelze nainstalovat';
@@ -108,10 +94,10 @@ $string['errors16'] = 'Rogo vyžaduje schopnost tvořit jeho konfigurační soub
 $string['installscript'] = 'Instalační skript Rogō ';
 $string['systeminstallation'] = 'Instalace systému';
 
-$string['flash'] = "Adobe Flash"; //cognate
+$string['flash'] = "Adobe Flash";
 $string['hostname'] = "Machine hostname";
 $string['webhost'] = 'WebServer host';
-$string['html5'] = "HTML5"; //cognate
+$string['html5'] = "HTML5";
 
 $string['labsecuritytype'] = "Zabezpečení učebny";
 $string['IP'] = "IP addresa";

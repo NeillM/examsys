@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['deniedlogwarnings'] = 'Upozornění na zamítnutá přihlášení';
 $string['date'] = 'Datum';
 $string['user'] = 'Uživatel';
-$string['url'] = 'URL'; //cognate
+$string['url'] = 'URL';
 $string['message'] = 'Vzkaz';
 ?>

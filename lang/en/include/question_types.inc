@@ -40,4 +40,15 @@ $string['textbox'] = 'Text Box';
 $string['true_false'] = 'True/False';
 $string['area'] = 'Area';
 $string['enhancedcalc'] = 'Calculation';
+
+$string['veryeasy'] = 'Very Easy';
+$string['easy'] = 'Easy';
+$string['moderate'] = 'Moderate';
+$string['hard'] = 'Hard';
+$string['veryhard'] = 'Very Hard';
+$string['mean'] = 'Mean';
+$string['highest'] = 'Highest';
+$string['high'] = 'High';
+$string['intermediate'] = 'Intermediate';
+$string['low'] = 'Low';
 ?>

@@ -145,6 +145,7 @@
 # /media/
 /media/*
 /media/*.*
+!/media/index.html
 
 # /qti/exports/
 /qti/exports/*
@@ -169,3 +170,9 @@
 
 /updates/stopfile*
 html5
+/nbproject/private/
+nbproject/
+artwork/pspbrwse.jbf
+help/staff/images/pspbrwse.jbf
+tools/tinymce/jscripts/tiny_mce/plugins/mee/img/pspbrwse.jbf
+tools/mee/mee/images/pspbrwse.jbf

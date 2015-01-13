@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Confirm that it is OK to proceed deleting a user.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -49,7 +51,7 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['confirmuserdelete']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -57,11 +59,7 @@ $mysqli->close();
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
-
-<td><p><strong>
+<p>
 <?php
   if ($user_no == 1) {
     echo $string['msg1'];
@@ -69,18 +67,13 @@ $mysqli->close();
     echo sprintf($string['msg2'], $user_no);
   }
 ?>
-</strong><p>
-<br />
-<br />
-<div style="text-align:right">
+<p>
+<div class="button_bar">
 <form action="do_delete_user.php" method="post">
 <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

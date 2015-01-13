@@ -83,13 +83,12 @@ class ClassTotals {
   private $recache;
   private $question_statuses;
   private $marking_overrides;
+  private $string;
 	
 	private $unmarked_enhancedcalc = false;
 	private $unmarked_textbox = false;
 
-  public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db) {
-    $userObject = UserObject::get_instance();
-
+  public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string) {
     $this->db                 = $db;
     $this->demo               = is_demo($userObject);
     $this->paperID            = $propertyObj->get_property_id();
@@ -116,6 +115,7 @@ class ClassTotals {
     $this->display_excluded   = '';
     $this->user_no            = 0;
     $this->marking_overrides  = array();
+    $this->string             = $string;
 		$unmarked_calculation			= false;
 		$unmarked_textbox					= false;
 
@@ -204,19 +204,20 @@ class ClassTotals {
 	/**
 	 * Initiates the building of the main Class Totals report.
 	 * @param bool $recache - True = will force paper caches to be updated.
+     * @param bool $review - If true we are reviewing so should not cache.
 	 */
-  public function compile_report($recache) {
+  public function compile_report($recache, $review = false) {
     $results_cache = new ResultsCache($this->db);
-    if ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent)) {
+    if (!$review and ($recache or $results_cache->should_cache($this->propertyObj, $this->percent, $this->absent))) {
       $this->recache = true;
     } else {
       $this->recache = false;
     }
-
+    
     $moduleID = Paper_utils::get_modules($this->paperID, $this->db);
     $this->moduleID_in = implode(',', array_keys($moduleID));
 
-    $this->exclusions->load();                                                                                // Get any questions to exclude.
+    $this->exclusions->load();                                                      // Get any questions to exclude.
 
     $this->load_answers();
 
@@ -224,36 +225,38 @@ class ClassTotals {
 
     $this->load_absent();
 
-    $this->find_users();                                                                                      // Get all the users on the module(s) the paper is on.
+    $this->find_users();                                                            // Get all the users on the module(s) the paper is on.
 
-    $this->load_metadata();                                                                                   // Query for metadata
+    $this->load_metadata();                                                         // Query for metadata
 
-    $this->load_overrides();																																									// Load marking overrides (e.g. Calculation question).
+    $this->load_overrides();                                                        // Load marking overrides (e.g. Calculation question).
 
-    $this->load_results();                                                                                    // Load the student data
+    $this->load_results();                                                          // Load the student data
 
-    $this->adjust_marks();                                                                                    // Scale marks (random marks or standards setting)
+    $this->adjust_marks();                                                          // Scale marks (random marks or standards setting)
 
-    $this->add_rank();                                                                                        // Add in rank data.
+    $this->add_rank();                                                              // Add in rank data.
 
-    $this->convert_moduleIDs();                                                                               // Convert Module IDs into codes
+    $this->convert_moduleIDs();                                                     // Convert Module IDs into codes
 
-    $this->flag_subpart();                                                                                    // Used to flag subsets of the cohort (i.e. top 33%)
+    $this->flag_subpart();                                                          // Used to flag subsets of the cohort (i.e. top 33%)
 
-    $this->add_absent_students();                                                                             // Add any absent students into main dataset
+    $this->add_absent_students();                                                   // Add any absent students into main dataset
 
-    $this->generate_stats();                                                                                  // Generate the main statistics
+    $this->generate_stats();                                                        // Generate the main statistics
 
-    $this->add_deciles();                                                                                     // Add in deciles per student
+    $this->add_deciles();                                                           // Add in deciles per student
 		
-    $this->sort_results();                                                                                    // Sort the whole array by the right column
-		
+    $this->sort_results();                                                          // Sort the whole array by the right column
+    
+    $this->load_special_needs();                                                    // Load which users have special needs
+    
     if ($this->recache) {
-      $results_cache->save_paper_cache($this->paperID, $this->percent, $this->absent, $this->stats);                  // Cache general paper stats
+      $results_cache->save_paper_cache($this->paperID, $this->stats);                 // Cache general paper stats
 
-      $results_cache->save_student_mark_cache($this->paperID, $this->percent, $this->absent, $this->user_results);    // Cache student/paper marks
+      $results_cache->save_student_mark_cache($this->paperID, $this->user_results);   // Cache student/paper marks
 
-      $results_cache->save_median_question_marks($this->paperID, $this->percent, $this->absent, $this->q_medians);    // Cache the question/paper medians
+      $results_cache->save_median_question_marks($this->paperID, $this->q_medians);   // Cache the question/paper medians
 			
 			// Unset the re-caching flag now we have just cached the marks.
 			$this->propertyObj->set_recache_marks(0);
@@ -399,12 +402,17 @@ class ClassTotals {
 	 */
 	 private function checkDisplayExcluded($exclude, $q_no, $q_type) {
     $subpart = '';
+    $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
 
     if ($q_type != 'mrq' and $q_type != 'rank' and strlen($exclude) > 1) {
       for ($i=0; $i<strlen($exclude); $i++) {
         if ($exclude{$i} == '1') {
           if ($subpart == '') {
-            $subpart = chr($i+97);
+            if ($q_type == 'extmatch') {
+              $subpart = $numerals[$i];              
+            } else {
+              $subpart = chr($i+97);
+            }
           } else {
             $subpart .= ', Q' . $q_no . chr($i+97);
           }
@@ -414,9 +422,9 @@ class ClassTotals {
 
     if (strpos($exclude, '1') !== false) {
       if ($this->display_excluded == '') {
-        $this->display_excluded = 'Q' . $q_no . $subpart;
+        $this->display_excluded = $q_no . $subpart;
       } else {
-        $this->display_excluded .= ', Q' . $q_no . $subpart;
+        $this->display_excluded .= ', ' . $q_no . $subpart;
       }
     }
   }
@@ -512,14 +520,6 @@ class ClassTotals {
     $this->user_results[$user_number]['marking_complete'] = $marking_comp;
     $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
 
-		if ($this->demo) {
-      $this->user_results[$user_number]['surname']     = demo_replace($this->user_results[$user_number]['surname']);
-      $this->user_results[$user_number]['initials']    = demo_replace($this->user_results[$user_number]['initials']);
-      $this->user_results[$user_number]['first_names'] = demo_replace($this->user_results[$user_number]['first_names']);
-      $this->user_results[$user_number]['email']       = demo_replace($this->user_results[$user_number]['email']);
-      $this->user_results[$user_number]['student_id']  = demo_replace_number($this->user_results[$user_number]['student_id']);
-    }
-
     // Add metadata
     $userID = $this->user_results[$user_number]['userID'];
     if (!empty($this->metadata_array['types'])) {
@@ -581,17 +581,12 @@ class ClassTotals {
       $blank_details[$i] = preg_replace("| size=\"([0-9]{1,3})\"|","",$blank_details[$i]);
       $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
       $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
+      
       $answer_list = explode(',', $blank_details[$i]);
-      $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
-      //if ($display_method == 'textboxes') {
-        foreach ($answer_list as $individual_answer) {
-          $correct[$i-1][] = html_entity_decode(trim($individual_answer));
-        }
-      //} else {
-      //  foreach ($answer_list as $tmp_answer) {
-      //    $correct[$i-1][] = html_entity_decode(trim($tmp_answer));
-      //  }
-      //}
+      $answer_list[0] = str_replace("[/blank]", '', strip_tags($answer_list[0]));
+      foreach ($answer_list as $individual_answer) {
+        $correct[$i-1][] = html_entity_decode(trim($individual_answer));
+      }
     }
 
     return $correct;
@@ -657,7 +652,7 @@ class ClassTotals {
               $exclude_on = true;
               $count_sub_paper_answers = count($sub_paper_answers);
               for ($c = 0; $c < $count_sub_paper_answers; $c++) {
-                if ($tmp_exclude{$section} == '0') {
+                if (isset($tmp_exclude{$section}) and $tmp_exclude{$section} == '0') {
                   if (!isset($sub_user_answers[$c]) or $sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                     // Do nothing
                   } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {
@@ -691,14 +686,12 @@ class ClassTotals {
         }
       } elseif ($question['q_type'] == 'blank') {
 				$user_answers = explode('|', $tmp_user_answer);
-        $count_user_awnser = count($user_answers)-1;
-        for ($a=0; $a<$count_user_awnser; $a++) {
+        $count_user_answer = count($user_answers)-1;
+        for ($a=0; $a<$count_user_answer; $a++) {
           if ($tmp_exclude{$a} == '0') {
             if ($question['display_method'] == 'dropdown') {
               $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
               $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a+1])));
-							
-							
 
               if ($student_answer == $correct_answer) {
                 $tmp_mark += $question['marks_correct'];
@@ -713,7 +706,7 @@ class ClassTotals {
               $match = false;
               if (isset($question['correct'][$a])) {
                 foreach ($question['correct'][$a] as $correct_alternative) {
-                  if (strtolower(trim($user_answers[$a+1])) == strtolower(trim($correct_alternative))) {
+                  if (strtolower(trim($user_answers[$a+1])) == strip_tags(strtolower(trim($correct_alternative)))) {
                     $match = true;
                   }
                 }
@@ -801,8 +794,8 @@ class ClassTotals {
         for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {
           if (substr($tmp_second_split[$label_no],0,1) != '|') $label_count++;
           if (substr($tmp_second_split[$label_no],0,1) != '|' and $tmp_second_split[$label_no-2] > 219) {
-            $x = $tmp_second_split[$label_no-2];
-            $y = $tmp_second_split[$label_no-1] - 25;
+            $x = round($tmp_second_split[$label_no-2]);
+            $y = round($tmp_second_split[$label_no-1]) - 25;
             $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no],'|'));
             if ($tmp_exclude{$i} == '0') {
               $placeholders++;
@@ -812,7 +805,7 @@ class ClassTotals {
             $i++;
           }
         }
-
+    
         // Strip out width and height for graphical labels.
         $i = 0;
         foreach ($correct_labels as $key=>$value) {
@@ -824,13 +817,13 @@ class ClassTotals {
         if ($tmp_user_answer != '') {
           $user_split1 = explode(';', $tmp_user_answer);
           $user_split2 = explode('$', $user_split1[1]);
-
+    
           $i = 0;
           $correct = 0;
           $count_user_split2 = count($user_split2)-3;
           for ($a=0; $a<$count_user_split2; $a+=4) {
-            $x = $user_split2[$a];
-            $y = $user_split2[$a+1];
+            $x = round($user_split2[$a]);
+            $y = round($user_split2[$a+1]);
             $index = 0;
             if (isset($correct_labels[$x . 'x' . $y])) $index = $correct_labels_pos[$x . 'x' . $y];
             if ($tmp_exclude{$index} == '0') {
@@ -892,7 +885,7 @@ class ClassTotals {
 	 * @param int $seconds - Number of seconds to be converted.
 	 * @return string  	 	 - Seconds formatted into hour, minutes and seconds.
 	 */
-	 public function formatsec($seconds) {
+	public function formatsec($seconds) {
     $diff_hour = ($seconds / 60) / 60;
     $tmp_position = strpos($diff_hour, '.');
     if ($tmp_position > 0) $diff_hour = substr($diff_hour, 0, $tmp_position);
@@ -1069,7 +1062,7 @@ class ClassTotals {
     $late_ts = strtotime($this->enddate) + 7200;
     $late_end = date('Y-m-d H:i:s', $late_ts);
 
-    $result = $this->db->prepare("SELECT DISTINCT metadataID, userID, title, surname, first_names, DATE_FORMAT(started, '" . $this->config->get('cfg_long_date_time') . "') AS display_started, started FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? ORDER BY surname, initials");
+    $result = $this->db->prepare("SELECT DISTINCT metadataID, userID, title, surname, first_names, DATE_FORMAT(started, '" . $this->config->get('cfg_long_date_time') . "') AS display_started, started FROM log_late, log_metadata, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, initials");
     $result->bind_param('iss', $this->paperID, $this->startdate, $late_end);
     $result->execute();
     $result->bind_result($metadataID, $userID, $title, $surname, $first_names, $display_started, $started);
@@ -1265,6 +1258,15 @@ class ClassTotals {
       } else {
         $room = $lab_name;
       }
+      
+      if ($this->demo) {
+        $surname     = demo_replace($surname, true, true, $surname{0});
+        $initials    = demo_replace($initials, true, true, $initials{0});
+        $first_names = demo_replace($first_names, true, true, $first_names{0});
+        $email       = demo_replace($email);
+        $student_id  = demo_replace_number($student_id);
+      }
+      
       $this->user_results[$metadataID] = array(
                                                 'metadataID'=>$metadataID, 
                                                 'userID'=>$userID, 
@@ -1396,7 +1398,7 @@ class ClassTotals {
       $this->db->autocommit(false);
 
       $log_query = $this->db->prepare("UPDATE log$paper_type SET adjmark = ? WHERE id = ?");
-      foreach($log_data as $individual_log_data) {
+      foreach ($log_data as $individual_log_data) {
         $paper_type = $individual_log_data['paper_type'];
         $adjmark = $individual_log_data['adjmark'];
         $log_id = $individual_log_data['id'];
@@ -1709,6 +1711,111 @@ class ClassTotals {
     }
 
     return $mc;
+  }
+  
+  /**
+   * Loads special needs for all users in the current cohort.
+   */
+  private function load_special_needs() {
+    // Query any student special needs for the current paper
+    $this->special_needs = array();
+    $users_in = array();
+    foreach($this->user_results as $u) {
+      $users_in[] = $u['userID'];
+    }
+    $users_in = implode(',', $users_in);
+    if ($users_in != '') {
+      $result = $this->db->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
+      $result->execute();
+      $result->bind_result($special_userID);
+      while ($result->fetch()) {
+        $this->special_needs[$special_userID] = 'y';
+      }
+      $result->close();
+    }
+  }
+  
+  /**
+   * Returns true or false if a given user has special needs.
+   */
+  public function has_special_need($userID) {
+    if (isset($this->special_needs[$userID]) and $this->special_needs[$userID] == 'y') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  /**
+   * Checks and displays if necessary a late submissions warning banner at the top of the screen.
+   */
+  public function check_late_submission_warnings() {
+    if (count($this->log_late) > 0) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0; padding-left:0"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($this->string['latesubmissionsmsg']) ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['latesubmissionsmsg'] . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $this->string['moredetails'] . '</a>)'; ?></td>
+        </tr>
+      </table>
+    <?php
+    }
+  }
+
+  /**
+   * Checks and displays if necessary an unmark textbox warning banner at the top of the screen.
+   */
+  public function check_unmarked_textbox_warnings() {
+    if ($this->unmarked_textbox()) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0; padding-left:0"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="<?php echo $this->string['warning'] ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['unmarkedtextbox'] ?></td>
+        </tr>
+      </table>
+    <?php
+    }
+  }
+
+  /**
+   * Checks and displays if necessary a numarked calculation question warning banner at the top of the screen.
+   */
+  public function check_unmarked_enhancedcalc_warnings() {
+    if ($this->unmarked_enhancedcalc()) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0; padding-left:0"><img src="../artwork/unmarked_questions_warning.png" width="32" height="32" alt="<?php echo $this->string['warning'] ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['unmarkedenhancedcalc'] ?></td>
+        </tr>
+      </table>
+    <?php
+    }
+  }
+
+  /**
+   * Checks and displays if necessary a temporary account warning banner at the top of the screen.
+   */
+  public function check_temp_account_warnings() {
+    // Check for any temporary accounts and if so display warning banner
+    $temp_user_no = 0;
+    $user_no = count($this->user_results);
+    for ($i=0; $i<$user_no; $i++) {
+      if (strpos($this->user_results[$i]['username'], 'user') === 0) {
+        $temp_user_no++;
+      }
+    }
+    if ($temp_user_no > 0) {
+    ?>
+      <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+        <tr>
+          <td class="redwarn" style="width:40px; line-height:0; padding-left:0"><img src="../artwork/temp_account_warning.png" width="32" height="32" alt="<?php echo $this->string['warning'] ?>" /></td>
+          <td class="redwarn"><?php echo $this->string['temporaryaccountswarning'] ?></td>
+        </tr>
+      </table>
+    <?php
+    }
   }
 
 }

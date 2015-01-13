@@ -65,7 +65,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     td {text-align:left}
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    .field {text-align:right; padding-right:10px}
     .form-error {
       width: 468px;
       margin: 18px auto;
@@ -76,10 +76,11 @@ $result->close();
     }
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -88,6 +89,9 @@ $result->close();
         }
       });
       $('form').removeAttr('novalidate');
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
   </script>
   </head>
@@ -98,14 +102,13 @@ $result->close();
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 
-<table class="header">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="list_schools.php"><?php echo $string['schools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['addschools']; ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_schools.php"><?php echo $string['schools'] ?></a></div>
+  <div class="page_title"><?php echo $string['addschools']; ?></div>
+</div>
 
   <br />
   <div align="center">
@@ -128,7 +131,7 @@ $result->close();
     ?>
     </select></td></tr>
     </table>
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>" /><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 </div>

@@ -92,12 +92,13 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       'name' => "$title $initials $surname");
   }
   $result->close();
-  
+ 
   $no_reviews = count($reviews);
   for ($i=0 ; $i<$no_reviews; $i++) {
     // Get any questions to exclude.
     $exclude = array();
 
+    // TODO: use exlcude class.
     $exclude_result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
     $exclude_result->bind_param('i', $paperID);
     $exclude_result->execute();
@@ -119,7 +120,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
     $angoff_review_marks = 0;
     $std_total = 0;
     $question_no = 0;
-    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0);
+    $ebel_marks = array('EE'=>0, 'EI'=>0, 'EN'=>0, 'ME'=>0, 'MI'=>0, 'MN'=>0, 'HE'=>0, 'HI'=>0, 'HN'=>0, 'EE2'=>0, 'EI2'=>0, 'EN2'=>0, 'ME2'=>0, 'MI2'=>0, 'MN2'=>0, 'HE2'=>0, 'HI2'=>0, 'HN2'=>0, 'exclude_EE'=>0, 'exclude_EI'=>0, 'exclude_EN'=>0, 'exclude_ME'=>0, 'exclude_MI'=>0, 'exclude_MN'=>0, 'exclude_HE'=>0, 'exclude_HI'=>0, 'exclude_HN'=>0);
     
     $ratings = load_question_ratings($reviews[$i]['std_setID'], $mysqli);
     $rating_no = count($ratings);
@@ -156,19 +157,21 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
           if ($reviews[$i]['method'] == 'Modified Angoff') {
             $tmp_part = 0;
             foreach ($rating_array as $individual_rating) {
-							if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
-								if (substr($tmp_exclude, $tmp_part, 1) == '0') {
-									if ($q_type == 'textbox') {
-										$textbox_marks = $marks_array[$questionID][0];
-									  for ($a=0; $a<$textbox_marks; $a++) {
-											$std_total += $rating_array[$a] * ($textbox_marks - $a);
-										}
-									} else {
-										$std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
-									}
-									if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
-								}
-							}
+              if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
+                if (substr($tmp_exclude, $tmp_part, 1) == '0') {
+                  if ($q_type == 'textbox') {
+                    $textbox_marks = $marks_array[$questionID][0];
+                    for ($a=0; $a<$textbox_marks; $a++) {
+                      if(isset($rating_array[$a])) {
+                        $std_total += $rating_array[$a] * ($textbox_marks - $a);
+                      }
+                    }
+                  } else {
+                    $std_total += $individual_rating * $marks_array[$questionID][$tmp_part];
+                  }
+                  if ($q_type != 'mrq' or $individual_rating != '') $question_no++;
+                }
+              }
               $tmp_part++;
             }
           }
@@ -187,17 +190,17 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $reviews[$i]['distinction_score'] = round($results['distinction_score'], 1);
     } elseif ($reviews[$i]['method'] == 'Ebel') {
       $cut_marks = 0.0;
-      $cut_marks += $ebel_marks['EE'] * $ebel_percents['EE'] * 100;
-      $cut_marks += $ebel_marks['EI'] * $ebel_percents['EI'] * 100;
-      $cut_marks += $ebel_marks['EN'] * $ebel_percents['EN'] * 100;
-      $cut_marks += $ebel_marks['ME'] * $ebel_percents['ME'] * 100;
-      $cut_marks += $ebel_marks['MI'] * $ebel_percents['MI'] * 100;
-      $cut_marks += $ebel_marks['MN'] * $ebel_percents['MN'] * 100;
-      $cut_marks += $ebel_marks['HE'] * $ebel_percents['HE'] * 100;
-      $cut_marks += $ebel_marks['HI'] * $ebel_percents['HI'] * 100;
-      $cut_marks += $ebel_marks['HN'] * $ebel_percents['HN'] * 100;
-      $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'];
-       
+      $cut_marks += ($ebel_marks['EE'] + $ebel_marks['exclude_EE']) * $ebel_percents['EE'] * 100;
+      $cut_marks += ($ebel_marks['EI'] + $ebel_marks['exclude_EI']) * $ebel_percents['EI'] * 100;
+      $cut_marks += ($ebel_marks['EN'] + $ebel_marks['exclude_EN']) * $ebel_percents['EN'] * 100;
+      $cut_marks += ($ebel_marks['ME'] + $ebel_marks['exclude_ME']) * $ebel_percents['ME'] * 100;
+      $cut_marks += ($ebel_marks['MI'] + $ebel_marks['exclude_MI']) * $ebel_percents['MI'] * 100;
+      $cut_marks += ($ebel_marks['MN'] + $ebel_marks['exclude_MN']) * $ebel_percents['MN'] * 100;
+      $cut_marks += ($ebel_marks['HE'] + $ebel_marks['exclude_HE']) * $ebel_percents['HE'] * 100;
+      $cut_marks += ($ebel_marks['HI'] + $ebel_marks['exclude_HI']) * $ebel_percents['HI'] * 100;
+      $cut_marks += ($ebel_marks['HN'] + $ebel_marks['exclude_HN']) * $ebel_percents['HN'] * 100;
+      $reviews[$i]['review_total'] = $ebel_marks['EE'] + $ebel_marks['EI'] + $ebel_marks['EN'] + $ebel_marks['ME'] + $ebel_marks['MI'] + $ebel_marks['MN'] + $ebel_marks['HE'] + $ebel_marks['HI'] + $ebel_marks['HN'] + $ebel_marks['exclude_EE'] + $ebel_marks['exclude_EI'] + $ebel_marks['exclude_EN'] + $ebel_marks['exclude_ME'] + $ebel_marks['exclude_MI'] + $ebel_marks['exclude_MN'] + $ebel_marks['exclude_HE'] + $ebel_marks['exclude_HI'] + $ebel_marks['exclude_HN'];
+
       $pass_score = ($total_marks == 0) ? $total_marks : ($cut_marks / ($total_marks  * 100)) * 100;
       $reviews[$i]['pass_score'] = round($pass_score, 1);
 
@@ -212,14 +215,14 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
       $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
       $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
       
-			if ($reviews[$i]['distinction_score'] > 0) {
-				$distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
+      if ($reviews[$i]['distinction_score'] > 0) {
+        $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
         $reviews[$i]['distinction_score'] = round($distinction_score, 1);
-			}
-		}
+      }
+    }
     $reviews[$i]['total_marks'] = $total_marks;
   }
-  
+
   return $reviews;
 }
 
@@ -429,15 +432,15 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       }
       echo $display_option['leadin'] . '<br />';
 			if ($configObject->get('cfg_interactive_qs') == 'html5') {
-				//<!-- ======================== HTML5 part include finf ================= -->
+				//<!-- ======================== HTML5 part ================= -->
 				echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 2) . "' height='" . ($display_option['q_media_height'] + 24) . "'></canvas>\n";
 				echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				echo "<script language='JavaScript' type='text/javascript'>\n";
+				echo "<script>\n";
 				echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $display_option['q_media'] . "', '" . $display_option['correct'] . "', '','','#FFC0C0','area','script');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->
 			} else {
-				echo "<script language='javascript'>\n";
+				echo "<script>\n";
 				echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" width=\"" . ($display_option['q_media_width'] + 2) . "\" height=\"" . ($display_option['q_media_height'] + 24) . "\" id=\"externalinterfaceq" . $question_no . "_1\" align=\"top\">');\n";
 				echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/question/edit/area.swf\" />');\n";
 				echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
@@ -536,41 +539,6 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       } else {
         $marks = $display_option['marks_correct'];
       }
-      break;
-    case 'calculation':
-      $figures = explode(',',$display_option['option_text']);
-      switch ($part_id) {
-        case 1:
-          $A = '<strong>$A</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 2:
-          $B = '<strong>$B</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 3:
-          $C = '<strong>$C</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 4:
-          $D = '<strong>$D</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 5:
-          $E = '<strong>$E</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 6:
-          $F = '<strong>$F</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 7:
-          $G = '<strong>$G</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 8:
-          $H = '<strong>$H</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 9:
-          $I = '<strong>$I</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        case 10:
-          $J = '<strong>$J</strong> <span style="color:#C00000; font-weight:bold">(' . $figures[0] . ' to ' . $figures[1] . ')</span>';
-          break;
-        }
       break;
     case 'mcq':
       if ($firstoption['display_method'] == 'vertical' or $firstoption['display_method'] == 'vertical_other') {
@@ -842,15 +810,15 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
     <div>
 		<?php
 				if ($configObject->get('cfg_interactive_qs')=='html5') {
-				  //"<!-- ======================== HTML5 part include finf ================= -->
+				  //"<!-- ======================== HTML5 part ================= -->
 				  echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 301) . "' height='" . ($display_option['q_media_height'] + 30) . "'></canvas>\n";
 				  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				  echo "<script language='JavaScript' type='text/javascript'>\n";
+				  echo "<script>\n";
 				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $display_option['q_media'] . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0','hotspot','script');\n";
 				  echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-				  echo "<script language='JavaScript'>\n";
+				  echo "<script>\n";
 				  echo "function swfLoaded" . $question_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 				  echo "setUpFlash(num, message, '" . $language . "', '" . $display_option['q_media'] . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0');}\n";
@@ -882,15 +850,15 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       echo '<div align="center">';
 			
 			if ($configObject->get('cfg_interactive_qs')=='html5') {
-				//<!-- ======================== HTML5 part include finf ================= -->
+				//<!-- ======================== HTML5 part ================= -->
 				echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 				echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				echo "<script language='JavaScript' type='text/javascript'>\n";
+				echo "<script>\n";
 				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $display_option['q_media'] . "', '" . trim($display_option['correct']) . "', '',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','script');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->
 			} else {
-				echo '<script language="JavaScript">';
+				echo '<script>';
 				echo "function swfLoaded" . $question_no . "(message) {\n";
 				echo "var num = message.substring(5,message.length);\n";
 				echo "setUpFlash(num, message, '" . $language . "', '" . $display_option['q_media'] . "', '" . trim($display_option['correct']) . "', '','','#FFC0C0');}\n";
@@ -917,7 +885,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
     case 'flash':
 ?>
 
-  <script language="JavaScript">
+  <script>
     var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
     function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
       var flash<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $question_no; ?> : document.flash<?php echo $question_no; ?>;
@@ -994,20 +962,18 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
   
   $extra = '';
   if ($excluded) {
-    $bgcolor = '#FFC0C0';
-    $fgcolor = '#800000';
+    $dropdown_class = 'dropdown_excluded';
     $extra = 'exclude_';
     $std_excluded++;
   } else {
-    $bgcolor = '#FFCEA3';
-    $fgcolor = 'black';
+    $dropdown_class = 'dropdown';
   }
 
   $qID = $q_no;
   if ($part_no != '') $qID .= '_' . $part_no;
   switch ($method) {
     case 'modified_angoff':
-      $html = "<select name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>\n";
+      $html = "<select name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"\"></option>\n";
       for ($i=0; $i<=100; $i+=5) {
         $sel = ($valid and $value !== '' and $value == $i) ? ' selected="selected"' : '';
         +$html .= "<option value=\"$i\"$sel>$i%</option>\n";
@@ -1016,7 +982,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
       $html .= $review_string;
       break;
     case 'ebel':
-      $html .= "<select onchange=\"recountCategories();\" id=\"valstd$stdID\" name=\"std$qID\" style=\"background-color:$bgcolor; color:$fgcolor\">\n<option value=\"\"></option>";
+      $html .= "<select onchange=\"recountCategories();\" id=\"valstd$stdID\" name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"\"></option>";
       $options = array('EE'=>$string['ee_full'],'EI'=>$string['ei_full'],'EN'=>$string['en_full'],'ME'=>$string['me_full'],'MI'=>$string['mi_full'],'MN'=>$string['mn_full'],'HE'=>$string['he_full'],'HI'=>$string['hi_full'],'HN'=>$string['hn_full']);
       foreach ($options as $ebel_value=>$title) {
         if ($valid and str_replace('exclude_','',$value) == $ebel_value) {
@@ -1047,7 +1013,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
         if ($q_type == 'mrq' or $q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling' or $q_type == 'hotspot') {
           $current_review = (!empty($sub_reviews[$part_no - 1])) ? $sub_reviews[$part_no - 1] : '';
         } elseif ($q_type == 'textbox') {
-          $current_review = $sub_reviews[count($sub_reviews)-$part_no];
+          $current_review = (!empty($sub_reviews[count($sub_reviews)-$part_no])) ? $sub_reviews[count($sub_reviews)-$part_no] : '';
         } else {
           $current_review = (isset($prev_reviews[$q_id])) ? $prev_reviews[$q_id] : '';
         }

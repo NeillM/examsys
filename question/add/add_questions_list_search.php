@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -28,6 +28,9 @@ require '../../include/media.inc';
 require_once '../../classes/searchutils.class.php';
 require_once '../../classes/questionutils.class.php';
 require_once '../../classes/question_status.class.php';
+require_once '../../classes/stateutils.class.php';
+
+$state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/search.php');
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
@@ -37,7 +40,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō</title>
+  <title>Rog&#333;</title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
@@ -49,10 +52,11 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../../js/state.js"></script>
-  <script language="JavaScript">
+  <script>
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;
     }
@@ -112,7 +116,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     <option value="true_false" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'true_false') echo 'selected '; ?>><?php echo $string['true_false']; ?></option>
   </select>
   <?php
-    search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', 100);
+    search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', $string, $state, 100);
   ?>
   &nbsp;<input type="submit" value=" <?php echo $string['search']; ?> " name="search" />
   </form>
@@ -192,7 +196,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
       $status_class = 'status' . $status;
       echo "<tr class=\"$status_class\"><td style=\"width:16px\">";
-      if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="' . $string['locked'] . '" />';
+      if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
       echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td><td>$status_name</td></tr>\n";
     }
     $result->close();

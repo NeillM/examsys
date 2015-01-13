@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['modules'] = 'Modules';
+$string['academicyear'] = 'Academic Year';
 $string['schools'] = 'Schools';
 $string['smsimportsummary'] = 'SMS Import Summary';
 $string['smsimportson'] = 'SMS Imports on';
 $string['moduleid'] = 'Module ID';
-$string['enrolements'] = 'Enrolements';
-$string['enrolementdetails'] = 'Enrolement Details';
+$string['enrolements'] = 'Enrolments';
+$string['enrolementdetails'] = 'Enrolment Details';
 $string['deletions'] = 'Deletions';
 $string['deletiondetails'] = 'Deletion Details';
 $string['importtype'] = 'Import Type';

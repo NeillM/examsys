@@ -33,7 +33,7 @@ class Config extends RogoStaticSingleton {
    */
   public $data;
   protected static $inst;
-  protected static $class_name='Config';
+  protected static $class_name = 'Config';
 
   /**
    *

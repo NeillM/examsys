@@ -130,6 +130,14 @@ class StringUtils {
 		$s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", 'StringUtils::fixcase_callback', $s);
 		return $s;
 	}
+  
+  public static function mb_ucfirst($string, $encoding) {
+    $strlen = mb_strlen($string, $encoding);
+    $firstChar = mb_substr($string, 0, 1, $encoding);
+    $then = mb_substr($string, 1, $strlen - 1, $encoding);
+    
+    return mb_strtoupper($firstChar, $encoding) . $then;
+  }
 
 	public static function fixcase_callback($word) {
 		$word = $word[1];
@@ -137,7 +145,7 @@ class StringUtils {
 
 		if ($word == "de") return $word;
 
-		$word = mb_ucasefirst($word);
+		$word = StringUtils::mb_ucfirst($word, 'UTF-8');
 
 		if (mb_substr($word, 1, 1, 'UTF-8') == "'") {
 			if (mb_substr($word, 0, 1, 'UTF-8') == "D") {
@@ -148,5 +156,27 @@ class StringUtils {
 			$word = mb_substr_replace($word, $next, 2, 1, 'UTF-8');
 		}
 		return $word;
-	}	
+	}
+  
+  public static function nice_duration($mins, $string) {
+    if ($mins < 60) {
+      $display_duration = $mins .  ' ' . $string['mins'];
+    } else {
+      $hours = floor($mins / 60);
+      $remainder = $mins - ($hours * 60);
+      
+
+      if ($hours == 1) {
+        $display_duration = $hours . ' ' . $string['hour'];
+      } else {
+        $display_duration = $hours . ' ' . $string['hours'];      
+      }
+      if ($remainder > 0) {
+        $display_duration .= ' ' . $remainder . ' ' . $string['mins'];
+      }
+    }
+
+    return $display_duration;
+  }
+
 }

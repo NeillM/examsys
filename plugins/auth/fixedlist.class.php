@@ -34,8 +34,8 @@ class fixedlist_auth extends outline_authentication {
   private $updatable = false;
 
   function register_callback_routines() {
-    $callbackarray[]=array(array($this, 'auth'), 'auth', $this->number, $this->name);
-    $callbackarray[]=array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
+    $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
 
 
     return $callbackarray;
@@ -57,15 +57,15 @@ class fixedlist_auth extends outline_authentication {
       return $authobj;
     }
 
-    $success=false;
-    foreach($this->settings['authusers'] as $user => $upasswd) {
-      if($user == $this->form['std']->username and $upasswd == $this->form['std']->password) {
+    $success = false;
+    foreach ($this->settings['authusers'] as $user => $upasswd) {
+      if ($user == $this->form['std']->username and $upasswd == $this->form['std']->password) {
         $success=true;
         break;
       }
     }
 
-    if($success === false) {
+    if ($success === false) {
       $this->retdata->fail($this->number);
       $this->retdata->message = 'Doesnt match list of users';
 
@@ -74,9 +74,9 @@ class fixedlist_auth extends outline_authentication {
 
     $this->retdata->username=$this->form['std']->username;
 
-    if(isset($this->settings['lookupuser_db']) and $this->settings['lookupuser_db'] === true) {
+    if (isset($this->settings['lookupuser_db']) and $this->settings['lookupuser_db'] === true) {
 
-      $sql = "SELECT $id_col as id FROM $table WHERE $username_col=?";
+      $sql = "SELECT $id_col as id FROM $table WHERE $username_col = ?";
       $result = $this->db->prepare($sql);
       $result->bind_param('s', $this->form['std']->username);
       $result->execute();
@@ -92,21 +92,20 @@ class fixedlist_auth extends outline_authentication {
 
         return $authobj;
       }
-        $result->fetch();
+      $result->fetch();
       $this->savetodebug('Successfully authenticated and lookedup user via db on this module');
 
       //sucessfull internaldb authentication
       $this->retdata->success($this->number, $id);
       $this->retdata->message = 'Fixed List Correctly Authenticated';
 
-    } elseif(isset($this->settings['lookupuser_list']) and $this->settings['lookupuser_list'] === true) {
+    } elseif (isset($this->settings['lookupuser_list']) and $this->settings['lookupuser_list'] === true) {
       $this->savetodebug('Successfully authenticated and lookedup user via list on this module');
 
       //sucessfull internaldb authentication
       $this->retdata->success($this->number, $this->settings['authuserlookup'][$this->form['std']->username]);
       $this->retdata->message = 'Fixed List Correctly Authenticated';
-    }
-    else {
+    } else {
       $this->savetodebug('Not looking up user just returning -9999 as user');
       $this->retdata->success($this->number, -9999);
       $this->retdata->message = 'Not looking up user just returning -9999 as userid';
@@ -123,6 +122,6 @@ class fixedlist_auth extends outline_authentication {
     $postauthfailreturn->exit = true;
 
     return $postauthfailreturn;
-
   }
+  
 }

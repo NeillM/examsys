@@ -27,7 +27,7 @@ require '../include/errors.inc';
 
 $identifier     = check_var('identifier', 'REQUEST', true, false, true);
 $calendar_year  = check_var('calendar_year', 'GET', true, false, true);
-$moduleID       = check_var('module', 'GET', true, false, true);
+$modID          = check_var('module', 'GET', true, false, true);
 
 if (isset($_GET['folder'])) {
   $folder = $_GET['folder'];
@@ -37,14 +37,14 @@ if (isset($_GET['folder'])) {
 
 // Get session information
 $result = $mysqli->prepare("SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year = objectives.calendar_year AND sessions.idMod = objectives.idMod WHERE sessions.idMod = ? and sessions.identifier = ? AND sessions.calendar_year = ? ORDER BY sequence");
-$result->bind_param('iis', $moduleID, $identifier, $calendar_year);
+$result->bind_param('iis', $modID, $identifier, $calendar_year);
 $result->execute();
 $result->bind_result($title, $source_url, $calendar_year, $occurrence, $obj_id, $objective);
 $sess = array();
 while ($result->fetch()) {
   if ( !isset($sess['identifier']) ) {
     $sess['identifier'] = $identifier;
-    $sess['moduleID'] = $moduleID;
+    $sess['moduleID'] = $modID;
     $sess['title'] = $title;
     $sess['source_url'] = $source_url;
     $sess['calendar_year'] = $calendar_year;
@@ -70,7 +70,7 @@ if (isset($_POST['Edit'])) {
 
   //update session
   $stmt = $mysqli->prepare("UPDATE sessions SET title = ?,source_url = ?, occurrence = ? WHERE identifier = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
-  $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $moduleID, $identifier, $calendar_year);
+  $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $modID, $identifier, $calendar_year);
   $stmt->execute();
   $stmt->close();
 
@@ -91,19 +91,19 @@ if (isset($_POST['Edit'])) {
         if ($value == '') {
           //delete objs and mappings
           $stmt = $mysqli->prepare("DELETE FROM objectives WHERE obj_id = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
-          $stmt->bind_param('iiss', $objId, $moduleID, $identifier, $calendar_year);
+          $stmt->bind_param('iiss', $objId, $modID, $identifier, $calendar_year);
           $stmt->execute();
           $stmt->close();
 
           $stmt = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
-          $stmt->bind_param('iis', $objId, $moduleID, $calendar_year);
+          $stmt->bind_param('iis', $objId, $modID, $calendar_year);
           $stmt->execute();
           $stmt->close();
         } else {
           $sequence++;
           //update obj
           $stmt = $mysqli->prepare("UPDATE objectives SET objective = ?, sequence = ? WHERE obj_id = ? AND idMod = ? AND identifier = ? AND calendar_year = ?");
-          $stmt->bind_param('sisiss', $value, $sequence, $objId, $moduleID, $identifier, $_POST['session']);
+          $stmt->bind_param('sisiss', $value, $sequence, $objId, $modID, $identifier, $_POST['session']);
           $stmt->execute();
           $stmt->close();
         }
@@ -114,7 +114,7 @@ if (isset($_POST['Edit'])) {
           $result = $mysqli->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
           $result->execute();
           $result->bind_result($largest);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $maxID = $largest + 1;
           }
         }
@@ -122,7 +122,7 @@ if (isset($_POST['Edit'])) {
           $sequence++;
           //insert new obj
           $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param('issssi', $maxID, $value, $moduleID, $identifier, $calendar_year, $sequence);
+          $stmt->bind_param('issssi', $maxID, $value, $modID, $identifier, $calendar_year, $sequence);
           $stmt->execute();
           $stmt->close();
           $maxID++;
@@ -132,10 +132,10 @@ if (isset($_POST['Edit'])) {
   }
 
   //redirect to list sessions
-  header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
+  header("Location: ./sessions_list.php?module=" . $modID . "&folder=" . $folder);
 	exit();
 } else if(isset($_POST['cancel'])) {
-  header("Location: ./sessions_list.php?module=" . $moduleID . "&folder=" . $folder);
+  header("Location: ./sessions_list.php?module=" . $modID . "&folder=" . $folder);
 	exit();
 } else {
   //display form
@@ -154,15 +154,15 @@ if (isset($_POST['Edit'])) {
     <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
     <style type="text/css">
       .editBox {width:90%}
-      .field {text-align:right; font-weight:bold}
+      .field {text-align:right}
       .note {width:90%}
     </style>
 		
     <script src="../js/staff_help.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
 		<script type="text/javascript" src="../js/toprightmenu.js"></script>
-    <script type="text/javascript">
+    <script>
       $(function () {
         $('#theform').validate({
           errorClass: 'errfield',
@@ -245,12 +245,17 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu();
 
-echo '<div id="content" class="content" style="font-size:80%">';
-echo "<table class=\"header\">\n";
-echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$moduleID&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['editsession'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-echo '</table>';
+?>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo module_utils::get_moduleid_from_id($modID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $modID . '&folder=' . $folder ?>"><?php echo $string['manageobjectives'] ?></a></div>
+  <div class="page_title"><?php echo $string['editsession'] ?></div>
+</div>
+<br />
+<?php
 
-echo "<br /><form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=$moduleID&calendar_year=$calendar_year\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
+echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=$modID&calendar_year=$calendar_year\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:85%; text-align:left\">\n";
 
 echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"" . $sess['title'] . "\" required autofocus /></td></tr>\n";
 
@@ -350,15 +355,14 @@ echo '</ul>';
 //add the save buttens
 echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
 echo '<li style="margin: 0.5em; margin-left: 0.5em; text-align: center">';
-echo '<input name="Edit"  style="height=90%; width: 120px;" type="submit" value="' . $string['save'] . '" >&nbsp;&nbsp;';
-echo '<input name="cancel" style="width: 120px;" type="submit" value="' . $string['cancel'] . '">';
+echo '<input name="Edit" class="ok" type="submit" value="' . $string['save'] . '" ><input name="cancel" class="cancel" type="submit" value="' . $string['cancel'] . '">';
 echo '</li>';
 echo "</ul>\n";
 
 echo "<input type=\"hidden\" name=\"identifier\" value=\"$identifier\" />";
 echo "</td></tr>\n</table>\n</div>\n";
 echo "</form>\n";
-echo '<script language="Javascript">updateButtons();</script>';
+echo '<script>updateButtons();</script>';
 ?>
 </div>
 </body>

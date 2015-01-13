@@ -37,6 +37,9 @@ class Exclusion {
     $this->paper_id = $paperID;  		
   }
 
+	/**
+	 * Load all exclusions for the current paper.
+	 */
   public function load() {
     $this->excluded = array();
     $result = $this->db->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ? ORDER BY q_id");
@@ -49,8 +52,10 @@ class Exclusion {
     $result->close();
   }
   
+	/**
+	 * Clear the database of any past exclusions from the current paper.
+	 */
   public function clear_all_exclusions() {
-    // Clear the database of any past exclusions from the current paper.
     if ($result = $this->db->prepare("DELETE FROM question_exclude WHERE q_paper = ?")) {
       $result->bind_param('i', $this->paper_id);
       $result->execute();
@@ -60,6 +65,9 @@ class Exclusion {
     }
   }
   
+	/**
+	 * Insert a question exclusion record into the database.
+	 */
   public function add_exclusion($q_id, $status) {
     $userObj = UserObject::get_instance();
 
@@ -72,14 +80,37 @@ class Exclusion {
     }
   }
   
+	/**
+	 * Get an exclusion for a specific question ID.
+	 * @param int $q_id	- Question ID to look up
+	 * @return string - which parts of a question have been excluded.
+	 */
   public function get_exclusions_by_qid($q_id) {
     if (!isset($this->excluded[$q_id])) {
-      return '0000000000000000000000000000000000000000';
+      return '0000000000000000000000000000000000000000';		// No exclusions set, return blank zeros.
     } else {
       return $this->excluded[$q_id];
     }
   }
+  	/**
+	 * Get an exclusion for a specific question ID and part.
+	 * @param int $q_id	- Question ID to look up
+	 * @param int $part	- Which part (character) of the exclusion string to return.
+	 * @return string - a particular part of an excluded question.
+	 */
+  public function get_exclusion_part_by_qid($q_id, $part) {
+    if (!isset($this->excluded[$q_id])) {
+      return '0';		// No exclusions set, return blank zeros.
+    } else {
+      return substr($this->excluded[$q_id], $part, 1);
+    }
+  }
   
+	/**
+	 * Works out if a question is excluded or not.
+	 * @param int $q_id	- Question ID to look up
+	 * @return bool - true or false if the question has any exclusions.
+	 */
   public function is_question_excluded($q_id) {
     if (isset($this->excluded[$q_id]) and strpos($this->excluded[$q_id], '1') !== false) {
       return true;
@@ -87,7 +118,24 @@ class Exclusion {
       return false;
     }
   }
+  	/**
+	 * Works out if aspecific part of a question is excluded or not.
+	 * @param int $q_id	- Question ID to look up
+	 * @param int $part	- The part we ant to test
+	 * @return bool - true or false if the question/part is excluded.
+	 */
+  public function is_question_part_excluded($q_id, $part) {
+    if (isset($this->excluded[$q_id]) and substr($this->excluded[$q_id], $part, 1) === '1') {
+      return true;
+    } else {
+      return false;
+    }
+  }
   
+	/**
+	 * Counts how many questions (not items) have been excluded.
+	 * @return int - count of how many questions are excluded.
+	 */
   public function get_excluded_no() {
     return count($this->excluded);
   }

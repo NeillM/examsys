@@ -55,14 +55,15 @@ $paper = $propertyObj->get_paper_title();
 $crypt_name = $propertyObj->get_crypt_name();
 
 $exclusions = new Exclusion($paperID, $mysqli);
-$exclusions->load();                                                                                  // Get any questions to exclude.
+$exclusions->load();                                                  // Get any questions to exclude.
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->load_answers();
 $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();
 
 $user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
+
 $report->set_user_results($user_results);
 $report->generate_stats();
 $user_no = $report->get_user_no();
@@ -84,8 +85,7 @@ if ($borderline_method) {
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
-
-set_classification($user_results, $passmark, $user_no, $string);
+set_classification($propertyObj->get_marking(), $user_results, $passmark, $user_no, $string);
 $report->sort_results();
 $user_results = array_csort($user_results, $sortby, $ordering);
 
@@ -105,11 +105,11 @@ $stats = $report->get_stats();                        // Generate the main stati
 
 $results_cache = new ResultsCache($mysqli);
 if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
-  $results_cache->save_paper_cache($paperID, $percent, $absent, $stats);                  // Cache general paper stats
+  $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($paperID, $percent, $absent, $user_results);    // Cache student/paper marks
+  $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($paperID, $percent, $absent, $q_medians);    // Cache the question/paper medians
+  $results_cache->save_median_question_marks($paperID, $q_medians);   // Cache the question/paper medians
 }
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);
@@ -124,39 +124,82 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">    
+  <script>    
     function setVars(metadataID, currentUserID) {
       $('#metadataID').val(metadataID);
       $('#userID').val(currentUserID);
+      
+      if (metadataID == '') {
+        $('#item1').removeClass('popup_row');
+        $('#item1').addClass('popup_row_disabled');
+        $('#item2').removeClass('popup_row');
+        $('#item2').addClass('popup_row_disabled');
+      } else {
+        $('#item1').addClass('popup_row');
+        $('#item1').removeClass('popup_row_disabled');
+        $('#item2').addClass('popup_row');
+        $('#item2').removeClass('popup_row_disabled');
+      }
     }
     
-    function viewScript() {
-      $('#menudiv').hide();
-      var winwidth = 750;
-      var winheight = screen.height-80;
-      window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-    
-    function viewFeedback() {
-      $('#menudiv').hide();
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../students/objectives_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-    
-    function viewProfile() {
-      $('#menudiv').hide();
-      window.top.location = '../users/details.php?userID=' + $('#userID').val();
-    }
-    
-    document.onmousedown = mouseSelect;
+	<?php
+		if (count($user_results) > 0) {
+	?>
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          // sort on the first column and third column, order asc 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
+          sortList: [[2,0],[3,0]] 
+        });
+      }
+     
+      $(document).click(function() {
+        $('#menudiv').hide();
+        $('#toprightmenu').hide();
+      });
+      
+      // View OSCE Script
+      $('#item1').click(function() {
+        $('#menudiv').hide();
+        if ($('#metadataID').val() != '') {
+          var winwidth = 750;
+          var winheight = screen.height-80;
+          window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        }
+      });
+      
+      // View Feedback
+      $('#item2').click(function() {
+        $('#menudiv').hide();
+        if ($('#metadataID').val() != '') {
+          var winwidth = screen.width-80;
+          var winheight = screen.height-80;
+          window.open("../students/objectives_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+        }
+      });
+      
+      // View student profile
+      $('#item3').click(function() {
+        $('#menudiv').hide();
+        window.location = '../users/details.php?userID=' + $('#userID').val();
+      });
+      
+    });
+	<?php
+		}
+	?>
+
   </script>
 </head>
 
@@ -166,45 +209,43 @@ require '../include/toprightmenu.inc';
 	
 echo draw_toprightmenu();
 
-$popup_width = 180;
-if ($language != 'en') {
-  $popup_width = 300;
-}
 ?>
-<div id="menudiv" class="popupmenu" style="width:<?php echo $popup_width; ?>px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
-  <tr><td>
-    <table cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white; width:100%">
-      <tr>
-        <td id="item1a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['oscemarksheet']; ?></td>
-      </tr>
-      <tr>
-        <td id="item2a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['feedback']; ?></td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"> </td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item3a" style="text-align:center; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></td><td id="item3b" style="padding-left:8px; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewProfile();"><?php echo $string['studentprofile']; ?></td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
+<div id="menudiv" class="popupmenu">
+  <div class="popup_row" id="item1">
+    <div class="popup_icon"><img src="../artwork/osce_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title"><?php echo $string['oscemarksheet'] ?></div>
+  </div>
+  
+  <div class="popup_row" id="item2">
+    <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
+    <div class="popup_title"><?php echo $string['feedback']; ?></div>
+  </div>
+  
+  <div class="popup_divider_row">
+    <div class="popup_icon"></div>
+    <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
+  </div>
+  
+  <div class="popup_row" id="item3">
+    <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title"><?php echo $string['studentprofile'] ?></div>
+  </div>
 </div>
 
+<div style="font-size:90%">
 <?php
   //output table heading
   if ($borderline_method) {
-    $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'grade', $string['total']=>'numeric_score', $string['rating']=>'rating', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
+    $table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['total']=>50, $string['rating']=>'rating', $string['classification']=>80, $string['starttime']=>170, $string['examiner']=>100);
   } else {
-    $table_order = array(''=>'', $string['name']=>'name', $string['studentid']=>'student_id', $string['course']=>'grade', $string['total']=>'numeric_score', $string['classification']=>'classification', $string['starttime']=>'started', $string['examiner']=>'examiner');
+    $table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['total']=>50, $string['classification']=>80, $string['starttime']=>170, $string['examiner']=>100);
   }
   $metadata_cols = array();
   if (isset($user_results[0])){
     foreach ($user_results[0] as $key => $val) {
       if (strrpos($key,'meta_') !== false) {
         $key_display = ucfirst(str_replace('meta_','',$key));
-        $table_order[$key_display] = $key;
+        $table_order[$key_display] = 150;
         $metadata_cols[$key] = $key;
       }
     }
@@ -212,100 +253,78 @@ if ($language != 'en') {
   
   $column_no = count($table_order) + count($metadata_cols);
 
-  echo "<table class=\"header\" style=\"font-size:80%\">\n";
-  echo "<tr><th class=\"h\" colspan=\"" . ($column_no - 1) . "\">";
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+  
   if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = sprintf($string['classtotalsmodule'], $_GET['repmodule']);
   } else {
     $report_title = $string['classtotals'];
   }
+  echo "<div class=\"page_title\">$report_title</div>\n";
+  echo "</div>\n";
 
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">$report_title</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-
-  if (isset($_GET['folder'])) {
-    $tmp_folder = '&folder=' . $_GET['folder'];
-  } else {
-    $tmp_folder = '';
-  }
-
-  if (isset($_GET['module'])) {
-    $tmp_module = '&module=' . $_GET['module'];
-  } else {
-    $tmp_module = '';
-  }
-  
-  // output table header
+  // Output table header
+  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+  echo "<thead>\n";
   if (isset($user_results[0])) {
-    echo "<tr style=\"font-size:110%\">\n";
-    foreach ($table_order as $display => $key) {
-      if ($key == '') {
-        echo "<th>";
-      } else {
-        echo "<th class=\"vert_div\">";
-      }
-      if ($sortby == $key and $ordering == 'asc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=desc&percent=$percent&absent=$absent\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th>";
-      } elseif ($sortby == $key and $ordering == 'desc') {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&absent=$absent\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th>";
-      } else {
-        echo "<a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $_GET['paperID'] . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . $tmp_module . $tmp_folder . "&startdate=$startdate&enddate=$enddate&sortby=$key&ordering=asc&percent=$percent&absent=$absent\">$display</a></th>";
-      }
+    echo "<tr>\n";
+    foreach ($table_order as $display => $col_width) {
+      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
     }
     echo "</tr>\n";
   }
+  echo "</thead>\n<tbody>";
+  
 	if ($user_no == 0) {
-    echo "</table>\n<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left; font-size:85%\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . sprintf($string['noattempts'], $report->nicedate($_GET['startdate']), $report->nicedate($_GET['enddate'])) . "</td></tr></table>\n<div>\n</body>\n</html>";
+    $msg = sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate));
+		echo "</tbody>\n</table>\n" . $notice->info_strip($msg) . "\n</div>\n</body>\n</html>";
     exit;
 	}
  
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
-      echo "<tr class=\"nonattend\"><td>&nbsp;</td><td>&nbsp;<a class=\"user\" href=\"../users/details.php?userID=" . $user_results[$i]['userID'] . "\">" . $user_results[$i]['display_name'] . "</a></td><td>&nbsp;" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
+      echo "<tr class=\"nonattend\" onclick=\"popMenu(3, event); setVars('', '" . $user_results[$i]['userID'] . "');\"><td>&nbsp;</td><td>" . $user_results[$i]['title'] . "</td><td>" . $user_results[$i]['surname'] . "</td><td>" . $user_results[$i]['first_names'] . "</td><td>" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
     } else {
-      echo "<tr><td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" style=\"cursor:hand\" onclick=\"ItemSelMenu('" . $user_results[$i]['userID'] . "', event);\" width=\"16\" height=\"16\" /></td>";
-      echo '<td class="greyln';
-      if ($sortby == 'name') echo ' ordered';
-      echo "\">&nbsp;<span style=\"cursor:hand\" onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['metadataID'] . "', '" . $user_results[$i]['userID'] . "');\">" . $user_results[$i]['title'] . " " . $user_results[$i]['surname'] . ", <span style=\"color:#808080\">" . $user_results[$i]['first_names'] . "</span></td>";
-      echo '<td class="greyln';
-      if ($sortby == 'student_id') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['student_id'] . "</td>";
-      echo '<td class="greyln';
-      if ($sortby == 'grade') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['grade'] . "</td>";
-      echo '<td class="greyln';
-      if ($sortby == 'numeric_score') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['mark'] . "</td>";
+      echo "<tr onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['metadataID'] . "', '" . $user_results[$i]['userID'] . "');\">\n";
+      echo "<td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" class=\"picon\" /></td>";
+      echo '<td class="greyln col">' . $user_results[$i]['title'] . '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['surname'] . '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['first_names'] . '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['student_id'] . '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['grade'] . '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['mark'] . '</td>';
             
       if ($borderline_method) {
-        echo '<td class="greyln';
-        if ($sortby == 'rating') echo ' ordered';
-        echo "\">&nbsp;" . $user_results[$i]['rating'] . "</td>\n";
+        echo '<td class="greyln col">' . $user_results[$i]['rating'] . '</td>';
       }
       
-      echo '<td class="greyln';
-      if ($sortby == 'classification') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['classification'] . "</td>";
-      echo '<td class="greyln';
-      if ($sortby == 'started') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['display_started'] . "</td>\n";
-      echo '<td class="greyln';
-      if ($sortby == 'examiner') echo ' ordered';
-      echo "\">&nbsp;" . $user_results[$i]['examiner'] . "</td></tr>\n";
+      echo '<td class="greyln col">' . $user_results[$i]['classification'];
+			if ($user_results[$i]['killer_fail'] == $string['fail']) {
+        echo '&nbsp;<img src="../artwork/skull_16.png" width=16" height="16" alt="skull" />';
+      }
+      echo '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['display_started'] . '</td>';
+      echo '<td class="greyln col">' . $user_results[$i]['examiner'] . '</td>';
+      echo "</tr>\n";
     }
   }
+  ?>
+</tbody>
+</table>
 
-  echo "<tr><td colspan=\"" . $column_no . "\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"" . $column_no . "\"><table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:80%; line-height:150%\">\n";
+<br />
+  <?php
+  echo "<table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"line-height:150%\">\n";
   echo "<tr><td align=\"right\" style=\"width:110px\">" . $string['cohortsize'] . "</td><td style=\"text-align:right; width:40px\">" . $user_no . "</td></tr>\n";
   
   if ($borderline_method) {
@@ -320,12 +339,10 @@ if ($language != 'en') {
   }
   echo "</table>\n";
   
-  echo "</td></tr>\n";
-  echo "</table>\n";
-  
   $mysqli->close();
 ?>
 <input type="hidden" id="userID" value="" />
 <input type="hidden" id="metadataID" value="" />
+</div>
 </body>
 </html>

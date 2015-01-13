@@ -14,5 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['createlink'] = 'Create Link';
+require '../../lang/' . $language . '/help/staff/index.php';
+
+$string['createlink'] = 'Vytvořit link';
+$string['msg'] = "Pointers allow extra 'pages' to be added to the table of contents which point to existing content. For example, it might be useful to add a pointer entitled 'Deleting Papers' which links to the original page 'Papers - how to delete'.";
 ?>

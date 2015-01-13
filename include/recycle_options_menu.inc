@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Sidebar menu for the recycle bin.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,7 +25,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function restoreItem() {
     document.location.href = 'restore_item.php?item_id=' + $('#itemID').val();
   }
@@ -31,16 +33,12 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="PapersMenu" action="">
-<br />
-
-<div style="font-weight:bold"><?php echo $string['recyclebintasks']; ?></div>
-
-<div style="font-size:90%" id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem']; ?></div>
+<div id="menu1a">
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></div>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
-	<div clss="menuitem" id="restore" onclick="restoreItem()"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><a onclick="return false" href="#"><?php echo $string['restorethisitem']; ?></a></div>
+<div style="display:none" id="menu1b">
+	<div class="menuitem" id="restore" onclick="restoreItem()"><a onclick="return false" href="#"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></a></div>
 </div>
 
 <input type="hidden" id="itemID" name="itemID" value="" />

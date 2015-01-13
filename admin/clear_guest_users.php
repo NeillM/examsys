@@ -35,13 +35,13 @@ require '../include/sidebar_menu.inc';
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <style type="text/css">
-    .sechead {background-color:#EAEAEA}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     .l {border-bottom:1px solid #EEEEEE}
     .loff {border-bottom:1px solid #EEEEEE; color:#808080}
   </style>
@@ -49,16 +49,19 @@ require '../include/sidebar_menu.inc';
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(243);
 ?>
 
-<div id="content" class="content">
-<table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['clearguestaccounts']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-</table>
+<div id="content">
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['clearguestaccounts'] ?></div>
+</div>  
+
 <br />
 
 <?php
@@ -88,14 +91,14 @@ require '../include/sidebar_menu.inc';
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 <blockquote>
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:100%">
-<tr><td class="sechead"><?php echo $string['clear']; ?></td><td class="sechead"><?php echo $string['user']; ?></td><td class="sechead"><?php echo $string['surname']; ?></td><td class="sechead"><?php echo $string['firstnames']; ?></td><td class="sechead"><?php echo $string['title']; ?></td><td class="sechead"><?php echo $string['studentid']; ?></td><td class="sechead"><?php echo $string['datereserved']; ?></td><td class="sechead"><?php echo $string['assessmenttaken']; ?></td></tr>
+<tr><th><?php echo $string['clear'] ?></th><th><?php echo $string['user'] ?></th><th><?php echo $string['surname'] ?></th><th><?php echo $string['firstnames'] ?></th><th><?php echo $string['title'] ?></th><th><?php echo $string['studentid'] ?></th><th><?php echo $string['datereserved'] ?></th><th><?php echo $string['assessmenttaken'] ?></th></tr>
 <?php
   $used = array();
 
   $result = $mysqli->prepare("SELECT id, first_names, surname, title, student_id, assigned_account, DATE_FORMAT(reserved,'%d/%m/%Y %H:%i:%s') FROM temp_users");
   $result->execute();
   $result->bind_result($id, $first_names, $surname, $title, $student_id, $assigned_account, $reserved);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $assigned_account = str_replace('user','',$assigned_account);
     
     $used[$assigned_account]['id'] = $id;
@@ -144,7 +147,7 @@ require '../include/sidebar_menu.inc';
   
   $mysqli->close();
 ?>
-<tr><td colspan="9" style="text-align:center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['cleanup']; ?>" /></td></tr>
+<tr><td colspan="9" style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['cleanup'] ?>" /></td></tr>
 </table>
 </blockquote>
 </form>

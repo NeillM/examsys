@@ -15,14 +15,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Changes a summative exam into a formativ quiz. Part of summative exam scheduling system.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-require '../include/staff_auth.inc';
+require '../include/admin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 
@@ -38,7 +40,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['convert']; ?></title>
+  <title><?php echo $string['convert'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -50,14 +52,14 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/formative.png" width="48" height="48" border="0" alt="" /></td>
+<td valign="top"><img src="../artwork/formative.png" width="48" height="48" alt="" /></td>
 
 <td><p><?php echo $string['msg']; ?></p>
 <br />
 <div style="text-align: right">
 <form action="do_convert_formative.php" method="post">
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
-<input type="submit" name="submit" value="<?php echo $string['convert']; ?>" style="width:150px" />&nbsp;
+<input type="submit" name="submit" value="<?php echo $string['convert']; ?>" class="ok" />&nbsp;
 <input type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
 </form>
 </div>

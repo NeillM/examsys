@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a course - SysAdmin only.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,9 +27,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
 
-check_var('courseID', 'POST', true, false, false);
-
-$tmp_courseID = $_POST['courseID'];
+$tmp_courseID = check_var('courseID', 'POST', true, false, true);
 
 $result = $mysqli->prepare("UPDATE courses SET deleted = NOW() WHERE id = ?");
 $result->bind_param('i', $tmp_courseID);
@@ -45,30 +45,26 @@ $mysqli->close();
   <title>Course Deleted</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript">
-    function updateParent() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       window.opener.location.reload();
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="Recycle Bin" /></td>
+<p>Course successfully deleted.<p>
 
-<td><p>Course successfully deleted.<p>
-
-<div style="text-align: center">
+<div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="    OK    " onclick="javascript:window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

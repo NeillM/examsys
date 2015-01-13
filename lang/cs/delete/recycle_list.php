@@ -16,9 +16,9 @@
 
 require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
+require '../lang/' . $language . '/delete/delete.inc';
 
-$string['recyclebin'] = 'Koš';
-$string['recyclebintasks'] = 'Úlohy v koši';
+$string['recyclebintasks'] = 'Správa Koše';
 $string['restorethisitem'] = 'Obnovit tuto položku';
 $string['name'] = 'Název';
 $string['datedeleted'] = 'Datum odstranění';

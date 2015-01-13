@@ -18,10 +18,11 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
+require_once '../classes/logger.class.php';
 
 function xml2array($xmlObject, $out = array()) {
   foreach ((array)$xmlObject as $index => $node) $out[$index] = (is_object($node)) ? xml2array($node) : $node;
@@ -45,7 +46,7 @@ class IE_Local_Save extends IE_Main {
 
   // main save function
   function Save($params, &$data) {
-    global $string;
+    global $mysqli, $string;
 
     echo "<h4>{$string['params']}</h4>";
     print_p($params);
@@ -59,7 +60,6 @@ class IE_Local_Save extends IE_Main {
       return;
     }
 
-    //var_dump($params,$data);
     $paperid = $params->paper;
 
     $userObj = UserObject::get_instance();
@@ -67,11 +67,9 @@ class IE_Local_Save extends IE_Main {
     $db = new Database();
     $db->SetTable('properties');
     $db->AddField('*');
-    //echo "Getting paper $paperid<br>";
     $db->AddWhere('property_id', $paperid, 'i');
     $paper_row = $db->GetSingleRow();
 
-//    $q_group = $paper_row['moduleID'];
     $ownerid = $userID;
 
     $data->ownerID = $userID;
@@ -105,7 +103,6 @@ class IE_Local_Save extends IE_Main {
     $module_id = -1;
 
     $paperutils = Paper_utils::get_instance();
-    global $mysqli;
     $module_id1 = $paperutils->get_modules($paper_row['property_id'], $mysqli);
 
     if ($module_id1 !== false) {
@@ -117,16 +114,15 @@ class IE_Local_Save extends IE_Main {
 
     if ($module_id !== false) {
 
-
       // Get a list of the team and user's keywords
       $user_keywords = array();
       if (is_array($module_id)) {
         foreach (array_keys($module_id) as $mod_id) {
-          $user_keywordsl = $this->GetExistingKeywords($mod_id, $userID);
+          $user_keywordsl = $this->GetExistingKeywords($mod_id);
           $user_keywords = array_merge($user_keywords, $user_keywordsl);
         }
       } else {
-        $user_keywords = $this->GetExistingKeywords($module_id, $userID);
+        $user_keywords = $this->GetExistingKeywords($module_id);
       }
     }
 
@@ -137,7 +133,6 @@ class IE_Local_Save extends IE_Main {
 
       // stuff from parameters
       $this->q_row['ownerID'] = $ownerid;
-   //   $this->q_row['q_group'] = $q_group;
 
       // general stuff that needs to be done for every qtype
       $this->q_row['creation_date'] = date("Y-m-d H:i:s");
@@ -199,15 +194,12 @@ class IE_Local_Save extends IE_Main {
         $this->SaveRank($question);
       } elseif ($question->type == "textbox") {
         $this->SaveTextbox($question);
-      } elseif ($question->type == "timedate") {
-        $this->SaveTimeDate($question);
       } else {
         $this->AddError("Question type " . $question->type . " not yet supported", $question->load_id);
         continue;
       }
-//var_dump($this->q_row['q_option_order']);
 
-      if(!(in_array($this->q_row['q_option_order'],array('display order','alphabetic','random')))) {
+      if (!(in_array($this->q_row['q_option_order'], array('display order','alphabetic','random')))) {
         $this->q_row['q_option_order']='display order';
         print "correcting q_option_order";
       }
@@ -299,8 +291,8 @@ class IE_Local_Save extends IE_Main {
       }
     }
 
-    //print_p($data->questions,false);
-
+    $logger = new Logger($mysqli);
+    
     if (!empty($data->papers)) {
       foreach ($data->papers as & $paper) {
         foreach ($paper->screens as & $screen) {
@@ -314,6 +306,8 @@ class IE_Local_Save extends IE_Main {
             $p_row['screen'] = $nextscreen;
             $p_row['display_pos'] = $nextid++;
             $this->db->InsertRow('papers', 'p_id', $p_row);
+            
+            $logger->track_change('Paper', $paperid, $userID, '', $q_id, 'Add Question (from QTI)');
           }
           $nextscreen++;
         }
@@ -746,7 +740,7 @@ class IE_Local_Save extends IE_Main {
     $this->o_rows[] = $o_row;
   }
 
-  function GetExistingKeywords($module_id, $userID) {
+  function GetExistingKeywords($module_id) {
     // We'll keep the keywords cached in an array and build it up as we add new keywords
     $user_keywords = array();
 
@@ -759,27 +753,9 @@ class IE_Local_Save extends IE_Main {
 
     if (count($t_kwds) > 0) {
       for ($i = 0; $i < count($t_kwds); $i++) {
-        $user_keywords[$t_kwds[$i]['keyword']][] = $t_kwds[$i]['id'];
+        $user_keywords['mod' . $module_id][$t_kwds[$i]['keyword']][] = $t_kwds[$i]['id'];
       }
     }
-/*
-    $this->db->SetTable('keywords_user');
-    $this->db->AddField('id');
-    $this->db->AddField('keyword');
-    $this->db->AddWhere('userID', $userID, 'i');
-    $this->db->AddWhere('keyword_type', 'personal', 's');
-    $u_kwds = $this->db->GetMultiRow();
-
-    if (count($u_kwds) > 0) {
-      for ($i = 0; $i < count($u_kwds); $i++) {
-        if (!isset($user_keywords[$u_kwds[$i]['keyword']])) {
-          if(!in_array($u_kwds[$i]['id'], $user_keywords[$u_kwds[$i]['keyword']]))
-          {
-            $user_keywords[$u_kwds[$i]['keyword']][] = $u_kwds[$i]['id'];
-          }
-        }
-      }
-    }*/
 
     return $user_keywords;
   }
@@ -795,15 +771,14 @@ class IE_Local_Save extends IE_Main {
    */
   function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = NULL) {
     $new_keywords = array();
-    echo "savekeywrds<br>";
-//var_dump($q_id, $q_keywords, $moduleID, $user_keywords, $user_keywords2);
-    //var_dump($user_keywords,$q_keywords);
+    echo "savekeywrds<br />";
+
     // Loop through the keywords, saving against the user and question
     for ($i = 0; $i < count($q_keywords); $i++) {
       $kw_id = -1;
 
       // Exclude existing keywords from the list that we want to save
-      if (!in_array($q_keywords[$i], array_keys($user_keywords))) {
+      if (!in_array($q_keywords[$i], array_keys($user_keywords['mod' . $moduleID]))) {
         // Add keyword to this user's list
         $ku_row = array('userID' => $moduleID, 'keyword' => $q_keywords[$i], 'keyword_type' => 'team');
         $this->db->InsertRow('keywords_user', 'id', $ku_row);
@@ -811,7 +786,7 @@ class IE_Local_Save extends IE_Main {
 
         $new_keywords[$q_keywords[$i]] = $kw_id;
       } else {
-        $kw_id = $user_keywords[$q_keywords[$i]][0];
+        $kw_id = $user_keywords['mod' . $moduleID][$q_keywords[$i]][0];
       }
 
       // Add keyword to the keyword question link table

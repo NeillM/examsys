@@ -77,7 +77,7 @@ $file_problem = false;
 if (isset($_POST['submit'])) {
   $filename = $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_keywords.txt';
   
-  if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
+  if ($_FILES['txtfile']['type'] == 'text/plain' and $_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $filename))  {
       echo uploadError($_FILES['txtfile']['error']);
       exit();
@@ -111,13 +111,13 @@ if (isset($_POST['submit'])) {
   require '../include/folder_keyword_options.inc';
 ?>
 
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 
 <table class="dialog_border" style="width:600px">
 <tr>
-<td class="dialog_header" style="width:32px;"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importkeywords']; ?></td>
+<td class="dialog_header" style="width:32px;"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header"><?php echo $string['importkeywords']; ?></td>
 </tr>
 <tr>
 <td align="left" colspan="2" class="dialog_body">
@@ -138,7 +138,7 @@ if ($file_problem) {
 
 <p><input type="file" size="50" name="txtfile" required /></p>
 
-<p><input type="submit" style="width:130px" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['loadkeywordsbtn']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

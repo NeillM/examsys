@@ -40,21 +40,28 @@ ob_start();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <script language="JavaScript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script language="JavaScript" src="../js/sidebar.js"></script>
+  <script type="text/javascript" src="../js/sidebar.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
 <body>
 
 <?php
   require '../include/admin_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content">
-<table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['clearoldlogs']; ?></div></th><th style="text-align:right; vertical-align:top; padding-top:2px; padding-right:6px"><a href="#" onclick="launchHelp(239); return false;"><img src="../artwork/small_help_icon.gif" width="16" height="16" alt="<?php echo $string['help']; ?>" border="0" /></a></th></tr>
-</table>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['clearoldlogs'] ?></div>
+</div>
 
 <?php
   ob_flush();
@@ -86,12 +93,12 @@ ob_start();
 
     if (isset($lm_count) and $lm_count > 0) {
       $logquery = $mysqli->prepare("INSERT INTO log0_deleted SELECT l.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 
       $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 
@@ -116,12 +123,12 @@ ob_start();
 
     if (isset($lm_count) and $lm_count > 0) {
       $logquery = $mysqli->prepare("INSERT INTO log1_deleted SELECT l.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 
       $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-      $logquery->bind_param('s', $user_to_delete);
+      $logquery->bind_param('i', $user_to_delete);
       $logquery->execute();
       $logquery->close();
 

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['calendar'] = 'Kalendarz';
 $string['clearguestaccounts'] = 'Oczyść konta gości';
 $string['clearoldlogs'] = 'Usuń stare logi';
@@ -27,7 +26,9 @@ $string['ebelgridtemplates'] = 'Szablony siatek metody Ebel';
 $string['faculties'] = 'Wydziały';
 $string['modules'] = 'Moduły';
 $string['optimizetables'] = 'Optymalizuj tablice';
+$string['phpinfo'] = 'phpinfo()';//cognate
 $string['questionstatuses'] = 'Statusy pytania';
+$string['savefailattempts'] = 'Zachowaj nieudane próby';
 $string['schools'] = 'Katedry';
 $string['smsimports'] = 'Importy SMS';
 $string['statistics'] = 'Statystyka';
@@ -35,7 +36,7 @@ $string['summativescheduling'] = 'Planowanie egzaminów końcowych';
 $string['systemerrors'] = 'Błędy systemowe';
 $string['systeminformation'] = 'Informacje systemowe';
 $string['testing'] = 'Testowanie';
-$string['bitbucket'] = 'Bitbucket:<br />Bug Reporting';
+$string['bitbucket'] = 'Bitbucket:<br />Raportowanie błędów';
 $string['usermanagement'] = 'Zarządzanie użytkownikami';
 $string['msg1'] = 'Czy na pewno usunąć wszystkie arkusze/pytania z modułu treningowego?';
 $string['msg2'] = 'Czy na pewno usunąć stare rejestry testów formatywnych i diagnostycznych?\n\n(rejestry egzaminów końcowych/ankiet nie będą usunięte)';

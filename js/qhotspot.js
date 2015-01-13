@@ -75,7 +75,8 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 		}
     
 		//---------- answer, 
- 		for (i in this.hotSpots) {
+ 		if (this.qmode != 'correction')
+                    for (i in this.hotSpots) {
 			this.answers[i] = new Array(new Array(0,'false','false'));
 		}
 		
@@ -297,16 +298,16 @@ function qh_test(type) {
     if (type == 'answers') {
 			if (this.qmode == 'correction') {
 				for (j=0;j<this.answers.length;j++) {        
-					this.answers[j][i][0] = '0';
-					if (typeof this.answers[j][i][1]!='undefined' && this.answers[j][i][1]!='' && this.answers[j][i][1]!='false') {
-						tx = (1*this.answers[j][i][1]+300+0.5);
-						ty = (1*this.answers[j][i][2]+25-this.yOffset);
-						timgd = this.context.getImageData(tx,ty,1,1);
-						timgp = timgd.data;
-						if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { 
-							this.answers[j][i][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
-						}			
-					}
+						this.answers[j][i][0] = '0';
+						if (typeof this.answers[j][i][1]!='undefined' && this.answers[j][i][1]!='' && this.answers[j][i][1]!='false') {
+							tx = (1*this.answers[j][i][1]+300+0.5);
+							ty = (1*this.answers[j][i][2]+25-this.yOffset);
+							timgd = this.context.getImageData(tx,ty,1,1);
+							timgp = timgd.data;
+							if (this.hexifycolour(''+((timgp[0]*256+timgp[1])*256+1*timgp[2])).toUpperCase() != '#000000' && timgp[3]>192) { 
+								this.answers[j][i][0] = '1'; //192 is 3/4 of 256 to take intoaccount antialiasing
+							}			
+						}				
 				}
 			}else{
 				for (j=0;j<this.answers[i].length;j++) {        
@@ -398,7 +399,6 @@ function qh_redraw_canvas() {
 		this.context.strokeStyle=this.currentColours[1];
 			
     //label bars
-    var textboxcolours = new Array('#6f7777','#c4cccc','#eeeeee','#d5dddd','#919999','#d5dddd','#ff0000');
     var pan_y = 25-this.yOffset;
     var pan_h = 46;
     for (i in this.hotSpots) {
@@ -417,10 +417,10 @@ function qh_redraw_canvas() {
 
       //background & border
       this.imgdata = menuImages['toolbar/back_h1.png'];
-      this.context.strokeStyle= '#b3c7d9';			
+      this.context.strokeStyle= '#c0c0c0';//'#b3c7d9';			
       if (this.activeLabel == i && this.hotSpots.length>1) {
 				this.imgdata = menuImages['toolbar/back_h2.png'];
-				this.context.strokeStyle= '#fed55f';
+				this.context.strokeStyle= '#c0c0c0';//'#fed55f';
 			}
       
 			this.context.drawImage(this.menu_img,this.imgdata.left+1,this.imgdata.top,this.imgdata.width-2,this.imgdata.height,0.5,pan_y+0.5,300,pan_h);
@@ -442,25 +442,19 @@ function qh_redraw_canvas() {
       this.context.fillText(String.fromCharCode(65+1*i), pos_x, pan_y+27);
       //text background
       this.context.fillStyle=this.currentColours[0];
-      if ((this.is_an_answer && this.answers[i][0][1] == 'false') || this.allUnaswered == true) this.context.fillStyle=this.currentColours[3];
-   		this.context.fillRect(40.5,pan_y+12.5,250-this.palico,pan_h-18);
+      if ((this.is_an_answer && typeof(this.answers[i])!='undefined' && this.answers[i][0][1] == 'false') || this.allUnaswered == true) this.context.fillStyle=this.currentColours[3];
+   		this.context.fillRect(39.5,pan_y+11.5,252-this.palico,pan_h-17);
       //label text
       this.context.fillStyle='#000000';
 			if (this.exclusions[i] == '1') {
 				this.context.fillStyle='#FF0000';
 	      this.lineDraw(this.context,'#FF0000',43.5,pan_y+22.5,243-this.palico,0);
-				}
+			}
    		this.context.font="12px Arial";
 			this.fillWrappedText(this.context,wrapped[0],45.5,pan_y+25.5);
       //text frame
-      this.lineDraw(this.context,textboxcolours[0],39,pan_y+11.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[1],39,pan_y+12.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[2],39,pan_y+pan_h-5.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[3],39,pan_y+pan_h-4.5,253-this.palico,0);
-      this.lineDraw(this.context,textboxcolours[4],39.5,pan_y+12,0,pan_h-17);
-      this.lineDraw(this.context,textboxcolours[5],40.5,pan_y+13,0,pan_h-19);
-      this.lineDraw(this.context,textboxcolours[4],39.5+252-this.palico,pan_y+12,0,pan_h-17);
-      this.lineDraw(this.context,textboxcolours[5],40.5+250-this.palico,pan_y+13,0,pan_h-19);
+      this.context.fillStyle='#C0C0C0';
+   		this.context.strokeRect(39.5,pan_y+11.5,252-this.palico,pan_h-17);
       //colour pallete button
 			if (this.qmode == 'edit') {
 				this.imgdata = menuImages['toolbar/ico_palette.png'];
@@ -475,10 +469,10 @@ function qh_redraw_canvas() {
 		if (this.qmode == 'script' && typeof(this.buttonBox[0])!='undefined') this.buttonBox[0][2] = pan_y+10;
 		
     //frames
-    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeStyle='#c0c0c0';//'#7f9db9'; 
     if (this.qmode == 'edit') this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
 
-    this.context.strokeStyle='#7f9db9';  
+    this.context.strokeStyle='#909090';//#7f9db9
     this.context.strokeRect(300.5,0.5,this.canvas.width-300,this.canvas.height-1); 
 		this.draw_limit = Array(302,27-this.yOffset,this.canvas.width-2,this.canvas.height-2);
 
@@ -592,7 +586,7 @@ function qh_redraw_canvas() {
         }
         this.hotSpots[led[0]][(3+led[1]*6+2)] = this.HsCo.join(',');
       }
-			if (this.qmode!='analysis' || this.qmode == 'correction' || this.global_hotspots) {
+			if ((this.qmode!='analysis' && this.qmode != 'correction') || this.global_hotspots) {
 				for (i in this.hotSpots) {
 					if (((this.activeLabel == i) || this.show_all_hotspots) && this.display_correct_answer) {
 						var fields = (this.hotSpots[i].length-4)/6;
@@ -671,7 +665,7 @@ function qh_redraw_canvas() {
     //drop answer baloons
     if (this.qmode == 'answer' || this.qmode == 'script') {
       for (i=0;i<this.answers.length;i++) {
-        if (this.answers[i][0][1]!='false' && this.answers[i][0][2]!='false' && this.answers[i][0][1]!='' && this.answers[i][0][2]!='') {
+        if ((this.activeLabel == i || this.show_all_hotspots) && this.answers[i][0][1]!='false' && this.answers[i][0][2]!='false' && this.answers[i][0][1]!='' && this.answers[i][0][2]!='') {
           var flipv = fliph = 0;
 					if (this.canvas.width-300-1*this.answers[i][0][1]<40) fliph = 1;
 					if (this.answers[i][0][2]<25) flipv = 1;
@@ -753,7 +747,7 @@ function qh_redraw_canvas() {
 		if (this.buttonOver!=-1) this.tooltip_draw(this.context,this.buttonBox[this.buttonOver]);
 
 		// border
-		this.context.strokeStyle='#7f9db9';  
+		this.context.strokeStyle='#909090';  //#7f9db9
 		this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1);
 		
 		//cursor blink
@@ -840,7 +834,7 @@ function qh_mouseDragMove(e){
     if (this.hotspot_over != '') this.label_elem_drag = this.hotspot_over;
 	} else { //change of cursor
     //this.drag_box_id = -1;
-		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
+		if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height) && this.canvas.style.cursor != 'wait'){
 			var over_object = false;     
       
       //test for buttons
@@ -883,7 +877,7 @@ function qh_mouseDragMove(e){
       if (this.global_edit) this.cur = 'not-allowed';
 			if (this.global_edit && this.test_result!='') this.cur = 'move';
 			if (this.global_edit && this.test_result!='' && this.test_result.indexOf('$')<this.test_result.length-1) this.cur = 'default';
-			if (this.global_erase && this.test_result!='') this.cur = 'url(/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
+			if (this.global_erase && this.test_result!='') this.cur = 'url(' + cfgRootPath +  '/js/images/cur_erase.cur) 6 5, default';//this works only in css3 browsers otherwise whole cursor is ignored
 			if (over_object) this.cur = 'pointer';
 			if (this.handle_over != -1) this.cur = 'move';
 
@@ -1148,7 +1142,7 @@ function qh_mouseDragUp(){
 				this.hotSpots.splice(this.activeLabel,1);
 				this.activeLabel = 0;
 			}
-			if (this.buttonBox[this.buttonBoxNames['toolbar/ico_plus.png']][5] == 2) {
+			if (this.buttonBox[this.buttonBoxNames['toolbar/ico_plus.png']][5] == 2 && this.hotSpots.length < 10) {
 				i=this.hotSpots.length;
 				this.hotSpots.push(i);
 				this.hotSpots[i] = new Array ();

@@ -55,7 +55,7 @@ function rgb_hex($input) {
   <style type="text/css">
     body {background-color:#F0F1F2; margin:6px}
   </style>
-  <script language="JavaScript">
+  <script>
     var currentColor;
 
     // function to generate the hex code

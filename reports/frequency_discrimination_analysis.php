@@ -56,7 +56,7 @@ $enddate    = check_var('enddate', 'GET', true, false, true);
 set_time_limit(0);
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $stop_words = array('-'=>'-','a'=>'a','about'=>'about','above'=>'above','across'=>'across','after'=>'after','again'=>'again','against'=>'against','all'=>'all','almost'=>'almost','alone'=>'alone','along'=>'along','already'=>'already','also'=>'also','although'=>'although','always'=>'always','among'=>'among','an'=>'an','and'=>'and','another'=>'another','any'=>'any','anybody'=>'anybody','anyone'=>'anyone','anything'=>'anything','anywhere'=>'anywhere','are'=>'are','area'=>'area','areas'=>'areas','around'=>'around','as'=>'as','ask'=>'ask','asked'=>'asked','asking'=>'asking','asks'=>'asks','at'=>'at','away'=>'away','b'=>'b','back'=>'back','backed'=>'backed','backing'=>'backing','backs'=>'backs','be'=>'be','became'=>'became','because'=>'because','become'=>'become','becomes'=>'becomes','been'=>'been','before'=>'before','began'=>'began','behind'=>'behind','being'=>'being','beings'=>'beings','best'=>'best','better'=>'better','between'=>'between','big'=>'big','both'=>'both','but'=>'but','by'=>'by','c'=>'c','came'=>'came','can'=>'can','cannot'=>'cannot','case'=>'case','cases'=>'cases','certain'=>'certain','certainly'=>'certainly','clear'=>'clear','clearly'=>'clearly','come'=>'come','could'=>'could','d'=>'d','did'=>'did','differ'=>'differ','different'=>'different','differently'=>'differently','do'=>'do','does'=>'does','done'=>'done','down'=>'down','downed'=>'downed','downing'=>'downing','downs'=>'downs','during'=>'during','e'=>'e','each'=>'each','early'=>'early','either'=>'either','end'=>'end','ended'=>'ended','ending'=>'ending','ends'=>'ends','enough'=>'enough','even'=>'even','evenly'=>'evenly','ever'=>'ever','every'=>'every','everybody'=>'everybody','everyone'=>'everyone','everything'=>'everything','everywhere'=>'everywhere','f'=>'f','face'=>'face','faces'=>'faces','fact'=>'fact','facts'=>'facts','far'=>'far','felt'=>'felt','few'=>'few','find'=>'find','finds'=>'finds','first'=>'first','for'=>'for','four'=>'four','from'=>'from','full'=>'full','fully'=>'fully','further'=>'further','furthered'=>'furthered','furthering'=>'furthering','furthers'=>'furthers','g'=>'g','gave'=>'gave','general'=>'general','generally'=>'generally','get'=>'get','gets'=>'gets','give'=>'give','given'=>'given','gives'=>'gives','go'=>'go','going'=>'going','good'=>'good','goods'=>'goods','got'=>'got','great'=>'great','greater'=>'greater','greatest'=>'greatest','group'=>'group','grouped'=>'grouped','grouping'=>'grouping','groups'=>'groups','h'=>'h','had'=>'had','has'=>'has','have'=>'have','having'=>'having','he'=>'he','her'=>'her','here'=>'here','herself'=>'herself','high'=>'high','higher'=>'higher','highest'=>'highest','him'=>'him','himself'=>'himself','his'=>'his','how'=>'how','however'=>'however','i'=>'i','if'=>'if','important'=>'important','in'=>'in','interest'=>'interest','interested'=>'interested','interesting'=>'interesting','interests'=>'interests','into'=>'into','is'=>'is','it'=>'it','its'=>'its','itself'=>'itself','j'=>'j','just'=>'just','k'=>'k','keep'=>'keep','keeps'=>'keeps','kind'=>'kind','knew'=>'knew','know'=>'know','known'=>'known','knows'=>'knows','l'=>'l','large'=>'large','largely'=>'largely','last'=>'last','later'=>'later','latest'=>'latest','least'=>'least','less'=>'less','let'=>'let','lets'=>'lets','like'=>'like','likely'=>'likely','long'=>'long','longer'=>'longer','longest'=>'longest','m'=>'m','made'=>'made','make'=>'make','making'=>'making','man'=>'man','many'=>'many','may'=>'may','me'=>'me','member'=>'member','members'=>'members','men'=>'men','might'=>'might','more'=>'more','most'=>'most','mostly'=>'mostly','mr'=>'mr','mrs'=>'mrs','much'=>'much','must'=>'must','my'=>'my','myself'=>'myself','n'=>'n','necessary'=>'necessary','need'=>'need','needed'=>'needed','needing'=>'needing','needs'=>'needs','never'=>'never','new'=>'new','newer'=>'newer','newest'=>'newest','next'=>'next','no'=>'no','nobody'=>'nobody','non'=>'non','noone'=>'noone','not'=>'not','nothing'=>'nothing','now'=>'now','nowhere'=>'nowhere','number'=>'number','numbers'=>'numbers','of'=>'o','of'=>'of','off'=>'off','often'=>'often','old'=>'old','older'=>'older','oldest'=>'oldest','on'=>'on','once'=>'once','one'=>'one','only'=>'only','open'=>'open','opened'=>'opened','opening'=>'opening','opens'=>'opens','or'=>'or','order'=>'order','ordered'=>'ordered','ordering'=>'ordering','orders'=>'orders','other'=>'other','others'=>'others','our'=>'our','out'=>'out','over'=>'over','p'=>'p','part'=>'part','parted'=>'parted','parting'=>'parting','parts'=>'parts','per'=>'per','perhaps'=>'perhaps','place'=>'place','places'=>'places','point'=>'point','pointed'=>'pointed','pointing'=>'pointing','points'=>'points','possible'=>'possible','present'=>'present','presented'=>'presented','presenting'=>'presenting','presents'=>'presents','problem'=>'problem','problems'=>'problems','put'=>'put','puts'=>'puts','q'=>'q','quite'=>'quite','r'=>'r','rather'=>'rather','really'=>'really','right'=>'right','room'=>'room','rooms'=>'rooms','s'=>'s','said'=>'said','same'=>'same','saw'=>'saw','say'=>'say','says'=>'says','second'=>'second','seconds'=>'seconds','see'=>'see','seem'=>'seem','seemed'=>'seemed','seeming'=>'seeming','seems'=>'seems','sees'=>'sees','several'=>'several','shall'=>'shall','she'=>'she','should'=>'should','show'=>'show','showed'=>'showed','showing'=>'showing','shows'=>'shows','side'=>'side','sides'=>'sides','since'=>'since','small'=>'small','smaller'=>'smaller','smallest'=>'smallest','so'=>'so','some'=>'some','somebody'=>'somebody','someone'=>'someone','something'=>'something','somewhere'=>'somewhere','state'=>'state','states'=>'states','still'=>'still','such'=>'such','sure'=>'sure','t'=>'t','take'=>'take','taken'=>'taken','than'=>'than','that'=>'that','the'=>'the','their'=>'their','them'=>'them','then'=>'then','there'=>'there','therefore'=>'therefore','these'=>'these','they'=>'they','thing'=>'thing','things'=>'things','think'=>'think','thinks'=>'thinks','this'=>'this','those'=>'those','though'=>'though','thought'=>'thought','thoughts'=>'thoughts','three'=>'three','through'=>'through','thus'=>'thus','to'=>'to','today'=>'today','together'=>'together','too'=>'too','took'=>'took','toward'=>'toward','turn'=>'turn','turned'=>'turned','turning'=>'turning','turns'=>'turns','two'=>'two','u'=>'u','under'=>'under','until'=>'until','up'=>'up','upon'=>'upon','us'=>'us','use'=>'use','used'=>'used','uses'=>'uses','v'=>'v','very'=>'very','w'=>'w','want'=>'want','wanted'=>'wanted','wanting'=>'wanting','wants'=>'wants','was'=>'was','way'=>'way','ways'=>'ways','we'=>'we','well'=>'well','wells'=>'wells','went'=>'went','were'=>'were','what'=>'what','when'=>'when','where'=>'where','whether'=>'whether','which'=>'which','while'=>'while','who'=>'who','whole'=>'whole','whose'=>'whose','why'=>'why','will'=>'will','with'=>'with','within'=>'within','without'=>'without','work'=>'work','worked'=>'worked','working'=>'working','works'=>'works','would'=>'would','x'=>'x','y'=>'y','year'=>'year','years'=>'years','yet'=>'yet','you'=>'you','young'=>'young','younger'=>'younger','youngest'=>'youngest','your'=>'your','yours'=>'yours','z'=>'z');
 $pstats_array = array();
@@ -191,7 +191,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       break;
     case 'blank':
       $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|',$answer);
+      $tmp_answer_parts = explode('|', $answer);
       $i = 0;
       foreach ($tmp_answer_parts as $tmp_individual_answer) {
         $tmp_individual_answer = strtolower(trim($tmp_individual_answer));
@@ -296,15 +296,23 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       }
       break;
     case 'mrq':
-      $count_answer = strlen($answer);
-      for ($i=0; $i<$count_answer; $i++) {
-        $tmp_individual_answer = $answer{$i};
-        if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
-          $log_array[$qID][$i+1][$tmp_individual_answer]++;
-        } else {
-          $log_array[$qID][$i+1][$tmp_individual_answer] = 1;
-        }
-      }
+		  if ($answer == 'a') {
+			  if (isset($log_array[$qID]['a'])) {
+					$log_array[$qID]['a']++;
+				} else {
+					$log_array[$qID]['a'] = 1;
+				}
+			} else {
+				$count_answer = strlen($answer);
+				for ($i=0; $i<$count_answer; $i++) {
+					$tmp_individual_answer = $answer{$i};
+					if (isset($log_array[$qID][$i+1][$tmp_individual_answer])) {
+						$log_array[$qID][$i+1][$tmp_individual_answer]++;
+					} else {
+						$log_array[$qID][$i+1][$tmp_individual_answer] = 1;
+					}
+				}
+			}
       $log_array[$qID]['mark'] += $mark;
       $log_array[$qID]['totalpos'] += $totalpos;
       break;
@@ -431,7 +439,7 @@ $d_no = 0;
 $d_total = 0;
 
 if (isset($_POST['submit'])) {
-  $old_exclusions = new Exclusion($_GET['paperID'], $mysqli);
+  $old_exclusions = new Exclusion($paperID, $mysqli);
   $old_exclusions->load();
 
   // Clear the database of any past exclusions from the current paper.
@@ -498,8 +506,8 @@ function count_labels($correct) {
   return $label_no;
 }
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
-  global $ex_no, $d_no, $d_total, $excluded, $user_total, $language, $string;
+function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
+  global $ex_no, $d_no, $d_total, $user_total, $language, $string;
 
 	$configObject = Config::get_instance();
 
@@ -519,8 +527,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div";
       if ((($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'hotspot') and $score_method == 'Mark per Question') or $q_type == 'flash') {
         echo ' id="q_' . ($ex_no+1) . '_1"';
-        if (isset($excluded[$q_id])) {
-           echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) {
+          echo ' class="excluded"';
         }
       }
       echo '>';
@@ -533,13 +541,19 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
 
     switch ($q_type) {
+      case 'random':
+        echo "<div class=\"q_warning\">" . $string['randomwarning'] . "</div>\n";
+        break;
+      case 'keyword_based':
+        echo "<div class=\"q_warning\">" . $string['keywordwarning'] . "</div>\n";
+        break;
       case 'area':
         echo "<div id=\"q_" . ($ex_no+1) . "_1\"";
-        if (isset($excluded[$q_id])) {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo ' class="excluded"';
         }
         echo ">$leadin\n";
-        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo excludeButton($ex_no, $q_id, '1', 1, 1);
         } else {
           echo excludeButton($ex_no, $q_id, '0', 1, 1);
@@ -586,11 +600,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1)  . "</td></tr>\n";
         break;
       case 'blank':
-        $blank_details = explode('[blank',$options[0]);
+        echo '<br />';
+        $blank_details = explode('[blank', strip_tags($options[0]));
         $array_size = count($blank_details);
 
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+          if ($exclusions->is_question_part_excluded($q_id, 0)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', ($array_size - 1)), 1, ($array_size - 1));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', ($array_size - 1)), 1, ($array_size - 1));
@@ -599,17 +614,18 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
         $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|", "", $options[0]);
         $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|", "", $options[0]);
-
+        
         $blank_count = 0;
         echo $blank_details[0];
         while ($blank_count < $array_size) {
           if (strpos($blank_details[$blank_count],'[/blank]') !== false) {
-            $end_start_tag = strpos($blank_details[$blank_count],']');
-            $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
-            $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
-            $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
-            if (isset($excluded[$q_id])) {
-              $tmp_exclude = substr($excluded[$q_id],$blank_count-1,1);
+            $end_start_tag = strpos($blank_details[$blank_count], ']');
+            $start_end_tag = strpos($blank_details[$blank_count], '[/blank]');
+            $cut_length = $start_end_tag - $end_start_tag - 1;
+            $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), $cut_length);
+            $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
+            if ($exclusions->is_question_excluded($q_id)) {
+              $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $blank_count - 1);
             } else {
               $tmp_exclude = '';
             }
@@ -627,7 +643,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               }
             } else {
               $tmp_parts = explode(',', $blank_options);
-              echo '<strong>' . chr($blank_count+64) . '.</strong> <input type="text" size="20" value="' . $tmp_parts[0] . '" />';
+              echo ' <strong>' . chr($blank_count+64) . '.</strong> <input type="text" size="20" value="' . $tmp_parts[0] . '" />';
             }
 
             echo $remainder;
@@ -639,7 +655,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         for ($i=1; $i<count($blank_details); $i++) {
           $end_start_tag = strpos($blank_details[$i],']');
           $start_end_tag = strpos($blank_details[$i],'[/blank]');
-          $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
+          $cut_length = $start_end_tag - $end_start_tag - 1;
+          $blank_options = substr($blank_details[$i], ($end_start_tag+1), $cut_length);
 
           $blank_options = explode(',', $blank_options);
 
@@ -657,9 +674,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           } else {
             $unique_blank_options = array_intersect_key($blank_options, array_unique(array_map('strtolower', $blank_options)));
             $unique_blank_options = array_map('strtolower', $unique_blank_options);
+            
+            // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
+            $new_blank_options = array();
+            foreach ($unique_blank_options as $blank_option) {
+              $new_blank_options[] = strtolower(trim($blank_option));
+            }
+            $unique_blank_options = array_unique($new_blank_options);
 
             foreach ($unique_blank_options as $blank_option) {
-              $blank_option = strtolower(trim($blank_option));
               if (isset($freq_log[$q_id][$i+1][$blank_option])) {
                 $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
               }
@@ -674,29 +697,30 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
           }
           $t = number_format(($tmp_correct_no/$user_total)*100,0);
-
+          
           $d_no++;
           $d_total += $d;
           $html = '';
 
-          $u = number_format(($tmp_top_no/$candidate_no)*100,0);
-          $l = number_format(($tmp_bottom_no/$candidate_no)*100,0);
+          $u = number_format(($tmp_top_no / $candidate_no) * 100, 0);
+          $l = number_format(($tmp_bottom_no / $candidate_no) * 100, 0);
 
           echo "<tr><td>" . chr($i+64) . ".</td>";
           if ($score_method == 'Mark per Option') {
-            if (isset($excluded[$q_id])) {
-              echo '<td>' . excludeButton($ex_no, $q_id, substr($excluded[$q_id], $i-1,1), 1, 1) . '</td>';
+            if ($exclusions->is_question_excluded($q_id)) {
+              $tmp_part = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
+              echo '<td>' . excludeButton($ex_no, $q_id, $tmp_part, 1, 1) . '</td>';
             } else {
               echo '<td>' . excludeButton($ex_no, $q_id, 0, 1, 1) . '</td>';
             }
           }
-          echo "<td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td>";
+          echo "<td>" . pStats($tmp_correct_no / $user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td>";
 
-          if (isset($tmp_std_array[$blank_count-1])) {
-            echo '<td class="std">' . $tmp_std_array[$blank_count-1] . '</td>';
+          if (isset($tmp_std_array[$i-1])) {
+            echo '<td class="std">' . $tmp_std_array[$i-1] . '</td>';
           }
           echo "<td id=\"q_" . ($ex_no) . "_1\"";
-          if (isset($excluded[$q_id]) and substr($excluded[$q_id], $i-1,1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1' and $score_method == 'Mark per Option') echo ' class="excluded"';
           echo ">";
           if ($display_method == 'dropdown') {
             $html = $blank_options[0];
@@ -712,7 +736,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><a href=\"#\" onclick=\"return blankCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
+            echo "<td><input type=\"button\" onclick=\"blankCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
           }
           echo "</tr>";
         }
@@ -720,7 +744,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         break;
       case 'dichotomous':
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', count($options)), 1, count($options));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', count($options)), 1, count($options));
@@ -740,8 +764,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if (!isset($top_log[$q_id][$i]['f'])) $top_log[$q_id][$i]['f'] = 0;
           if (!isset($tmp_std_array[$std_part])) $tmp_std_array[$std_part] = '';
 
-          if (isset($excluded[$q_id])) {
-            $tmp_exclude = substr($excluded[$q_id],$i-1,1);
+          if ($exclusions->is_question_excluded($q_id)) {
+            $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
           } else {
             $tmp_exclude = '';
           }
@@ -757,7 +781,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
           $std_part++;
           echo "<td id=\"q_" . $ex_no . "_1\"";
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
         }
         break;
@@ -782,17 +806,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         } else {
           $l = 0;
         }
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);;
         } else {
           $tmp_exclude = '';
         }
 
         echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
-        if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo ">$leadin</td>";
-        echo "<td><a href=\"#\" onclick=\"return clacCorrect($q_id, $i)\">" . $string['Correct'] . "</a></td>";
+        echo "<td><input type=\"button\" onclick=\"return clacCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
         echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
@@ -807,14 +831,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if (!isset($top_log[$q_id][1]['t'])) $top_log[$q_id][1]['t'] = 0;
         if (!isset($top_log[$q_id][1]['f'])) $top_log[$q_id][1]['f'] = 0;
 
-        if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '11', 2, 2) . "</td></tr>\n";
         } else {
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '00', 2, 2) . "</td></tr>\n";
         }
 
         echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_1\"";
-        if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo '>';
         if ($correct_buf[0] == 't') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
@@ -825,7 +849,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         echo "</td></tr>\n";
         echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_2\"";
-        if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
+        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo '>';
         if ($correct_buf[0] == 'f') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
@@ -840,7 +864,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         break;
       case 'labelling':
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id])) {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', count_labels($correct)), 1, count_labels($correct));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', count_labels($correct)), 1, count_labels($correct));
@@ -867,20 +891,18 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
         $tmp_height = $q_media_height;
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
-?>
-  <div align="center">
-<?php
+
 	require_once '../classes/configobject.class.php';
 	if ($configObject->get('cfg_interactive_qs')=='html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script language='JavaScript' type='text/javascript'>\n";
+		echo "<script>\n";
 		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
-		echo "<script language='JavaScript'>\n";
+		echo "<script>\n";
 		echo "function swfLoaded" . $q_no . "(message) {\n";
 		echo "var num = message.substring(5,message.length);\n";
 		echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '','#FFC0C0');}\n";
@@ -894,7 +916,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 		echo "</script>\n";
 	}
 	?>
-  </div>
   <br />
 <?php
 
@@ -921,12 +942,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$text_only])) ? $top_log[$q_id][$individual_coord][$text_only] : 0;
               $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$text_only])) ? $bottom_log[$q_id][$individual_coord][$text_only] : 0;
               if ($score_method == 'Mark per Option') {
-                if (isset($excluded[$q_id])) {
-                  echo "<td>" . excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
+                if ($exclusions->is_question_excluded($q_id)) {
+                  $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
+                  echo "<td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
                 } else {
                   echo "<td>" . excludeButton($ex_no, $q_id, '', 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
                 }
-                if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+                if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
               } else {
                 echo "<td></td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
               }
@@ -946,14 +968,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         break;
       case 'flash':
-        if (isset($excluded[$q_id])) {
+        if ($exclusions->is_question_excluded($q_id)) {
           echo excludeButton($ex_no, $q_id, 1, 1,1);
         } else {
           echo excludeButton($ex_no, $q_id, 0, 1, 1);
         }
         echo $leadin;
         ?>
-          <script language="JavaScript">
+          <script>
           var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
           function flash<?php echo $q_no; ?>_DoFSCommand(command, args) {
             var flash<?php echo $q_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $q_no; ?> : document.flash<?php echo $q_no; ?>;
@@ -969,7 +991,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
         </script>
         <div style="text-align:center">
-        <script language="JavaScript">
+        <script>
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $q_media_width; ?>" height="<?php echo $q_media_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
           write_string('<param name="movie" value="../media/<?php echo $q_media; ?>" />');
@@ -995,7 +1017,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $std_parts = explode(',', $std);
 
         if ($score_method == 'Mark per Question') {
-          if (isset($excluded[$q_id])) {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo excludeButton($ex_no, $q_id, str_repeat('1', count($layers)), 1, count($layers));
           } else {
             echo excludeButton($ex_no, $q_id, str_repeat('0', count($layers)), 1, count($layers));
@@ -1012,21 +1034,19 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $tmp_correct = str_replace("'", "\'", trim($correct));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-        ?>
-        <div align="center">
-				<?php
+        
 				require_once '../classes/configobject.class.php';
 				$configObject          = Config::get_instance();
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rep disc ================= -->
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-					echo "<script language='JavaScript'>\n";
+					echo "<script>\n";
 					echo "function swfLoaded" . $q_no . "(message) {\n";
 					echo "var num = message.substring(5,message.length);\n";
 					echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "','0','#FFC0C0');}\n";
@@ -1039,10 +1059,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 					echo "write_string('</object>');\n";
 					echo "</script>\n";
 				}
-				?>
-        </div>
-        <?php
-
+				
         echo "<p><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         for ($i = 1; $i <= count($layers); $i++) {
           echo "<tr><td>" . chr($i + 64) . ".</td>";
@@ -1054,9 +1071,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $tmp_correct_no = (isset($freq_log[$q_id][$i][1])) ? $freq_log[$q_id][$i][1] : 0;
           $tmp_top_no = (isset($top_log[$q_id][$i][1])) ? $top_log[$q_id][$i][1] : 0;
           $tmp_bottom_no = (isset($bottom_log[$q_id][$i][1])) ? $bottom_log[$q_id][$i][1] : 0;
-          if (isset($excluded[$q_id])) {
+          if ($exclusions->is_question_excluded($q_id)) {
             echo "<td>";
-            if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, substr($excluded[$q_id],$i-1,1), 1, 1);
+            if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, $exclusions->get_exclusion_part_by_qid($q_id, $i-1), 1, 1);
             echo "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_1\"";
           } else {
@@ -1065,7 +1082,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_1\"";
           }
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1') echo ' class="excluded"';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
           echo "><strong>$label</strong></td></tr>\n";
         }
         break;
@@ -1088,8 +1105,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "</tr>\n";
         break;
       case 'mcq':
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude =  $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
@@ -1120,7 +1137,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td>";
           }
           echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
-          if (isset($excluded[$q_id]) and $excluded[$q_id] == '1') echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">";
           if ($individual_option != '') echo "$individual_option\n";
           if (is_array($o_media[$i - 1])) {
@@ -1151,8 +1168,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($tmp_correct_no/$user_total, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'mrq':
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
@@ -1185,11 +1202,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
 
             echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td><span class=\"std\">" . $tmp_std . "</span></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
-            if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
+            if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
             $std_part++;
           } else {
             echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_" . $i . "\"";
-            if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
+            if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           }
           echo ">$individual_option";
           if (is_array($o_media[$i - 1])) {
@@ -1198,6 +1215,25 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
           echo "</td></tr>\n";
         }
+				
+				// Abstain
+        if (isset($freq_log[$q_id]['a'])) {
+					$t = number_format(($freq_log[$q_id]['a']/$user_total)*100,0);
+        } else {
+					$t = 0;
+				}
+				if (isset($top_log[$q_id]['a'])) {
+					$u = number_format(($top_log[$q_id]['a']/$candidate_no)*100,0);
+        } else {
+					$u = 0;
+				}
+        if (isset($bottom_log[$q_id]['a'])) {
+					$l = number_format(($bottom_log[$q_id]['a']/$candidate_no)*100,0);
+				} else {
+					$l = 0;
+				}
+        echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $t . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td id=\"q_" . $ex_no . "_abstain\"><span style=\"color:#C00000\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>\n";
+				
         if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
           $d = 0;
         } else {
@@ -1213,15 +1249,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($individual_correct > $rank_no and $individual_correct != 0) $rank_no = $individual_correct;
         }
         $i = 0;
-        if (isset($excluded[$q_id])) {
-          $tmp_exclude = $excluded[$q_id];
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
         } else {
           $tmp_exclude = '';
         }
         echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), count($options) + 1) . "</td></tr>\n";
         foreach ($options as $individual_option) {
           echo "<tr><td id=\"q_" . $ex_no . "_" . ($i+1) . "\" colspan=\"6\"";
-          if (isset($excluded[$q_id]) and strpos($excluded[$q_id],'1') !== false) echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
           for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
             if (isset($top_log[$q_id][$i][$rank_position])) {
@@ -1284,7 +1320,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'sct':
-        $tmp_exclude = (isset($excluded[$q_id])) ? $excluded[$q_id] : '';
+        if ($exclusions->is_question_excluded($q_id)) {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
+        } else {
+          $tmp_exclude = '';
+        }
         echo "<tr><td colspan=\"3\">" . excludeButton($ex_no, $q_id, $tmp_exclude, count($options), 1) . "</td></tr>\n";
         $i = 0;
         foreach ($options as $individual_option) {
@@ -1307,7 +1347,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $correct_class = ($correct_answer_no  == $i) ? ' correct' : '';
           echo "<tr class=\"grey{$correct_class}\"><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td></td>";
           echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
-          if ($tmp_exclude == '1') echo ' class="excluded"';
+          if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
         }
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
@@ -1323,14 +1363,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'flash') echo "</table></p>\n";
   } elseif ($q_type == 'textbox') {
-    echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><p ";
-    if (isset($excluded[$q_id]) and substr($excluded[$q_id], 0, 1) == '1') echo ' class="excluded"';
-    if (isset($excluded[$q_id])) {
-      $tmp_exclude = $excluded[$q_id];
+    echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div ";
+    if ($exclusions->is_question_excluded($q_id)) {
+      echo ' class="excluded"';
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
     } else {
       $tmp_exclude = '';
     }
-    echo "id=\"q_" . ($ex_no + 1) . "_1\">" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "&nbsp;$leadin</p>";
+    echo "id=\"q_" . ($ex_no + 1) . "_1\">" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "&nbsp;$leadin</div>";
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">";
 
     $sortby = 'used';
@@ -1384,7 +1424,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     if (isset($freq_log[$q_id]['unmarked']) and $freq_log[$q_id]['unmarked'] > 0) {
-      echo "<tr><td>p=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" /></td><td>d=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" /></td><td colspan=\"2\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"16\" height=\"16\" alt=\"Warning\" border=\"0\" />&nbsp;" . $freq_log[$q_id]['unmarked'] . " unmarked scripts</td></tr>\n";
+      echo "<tr><td>p=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" /></td><td>d=<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" /></td><td colspan=\"2\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . sprintf($string['unmarkedscripts'], $freq_log[$q_id]['unmarked']) . "</td></tr>\n";
     } else {
       if (empty($freq_log[$q_id]['totalpos'])) {
         $p = 0;
@@ -1404,14 +1444,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><div";
     if ($score_method == 'Mark per Question') {
       echo ' id="q_' . ($ex_no + 1) . '_1"';
-      if (isset($excluded[$q_id])) {
+      if ($exclusions->is_question_excluded($q_id)) {
         echo ' class="excluded"';
       }
     }
     echo ">$leadin</div>";
 
     if ($score_method == 'Mark per Question') {
-      if (isset($excluded[$q_id])) {
+      if ($exclusions->is_question_excluded($q_id)) {
         echo excludeButton($ex_no, $q_id, str_repeat('1', count($options)), 1, count($options));
       } else {
         echo excludeButton($ex_no, $q_id, str_repeat('0', count($options)), 1, count($options));
@@ -1419,7 +1459,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
 
     echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\" class=\"matrix\">\n";
-    $cols = 5;
+    $cols = 6;
     if ($score_method == 'Mark per Option') $cols++;
     $std_on = false;
     for ($i=0; $i<count($options); $i++) {
@@ -1440,8 +1480,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           if ($option_no == 1) {
             $correct_answer = $tmp_answers_array[$i-1];
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i, $correct_answer);
-            if (isset($excluded[$q_id])) {
-              $tmp_exclude = substr($excluded[$q_id],$i-1,1);
+            if ($exclusions->is_question_excluded($q_id)) {
+              $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
             } else {
               $tmp_exclude = '';
             }
@@ -1451,6 +1491,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             if ($score_method == 'Mark per Option') {
               echo '<td>' .  excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . '</td>';
             }
+            echo "<td>" . chr($i+64) . ".</td>";
             echo "<td style=\"font-weight:bold\">" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td>";
             echo "<td style=\"font-weight:bold\">" . dStats($d, $q_id, $i) . "</td>";
             echo "<td style=\"font-weight:bold\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td>";
@@ -1462,7 +1503,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
 
             echo "<td ";
-            if (isset($excluded[$q_id]) and substr($excluded[$q_id],$i-1,1) == '1' and $score_method != 'Mark per Question') echo ' class="excluded"';
+            if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1' and $score_method != 'Mark per Question') echo ' class="excluded"';
             if ($score_method == 'Mark per Option') echo "id=\"q_" . ($ex_no) . "_1\"";
             echo ">" . $tmp_ext_scenarios[$i-1] . "</td>";
           }
@@ -1500,11 +1541,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><div";
     if ($score_method == 'Mark per Question') {
       echo " id=\"q_" . ($ex_no + 1) . "_1\"";
-      if (isset($excluded[$q_id]) and substr($excluded[$q_id],0,1) == '1') echo ' class="excluded"';
+      if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
     }
     echo ">$leadin</div>\n";
     if ($score_method == 'Mark per Question') {
-      if (isset($excluded[$q_id])) {
+      if ($exclusions->is_question_excluded($q_id)) {
         echo excludeButton($ex_no, $q_id, str_repeat('1', $total_scenarios), 1, $total_scenarios);
       } else {
         echo excludeButton($ex_no, $q_id, str_repeat('0', $total_scenarios), 1, $total_scenarios);
@@ -1538,8 +1579,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $option_no++;
       }
 
-      if (isset($excluded[$q_id])) {
-        $tmp_exclude = substr($excluded[$q_id],$section,1);
+      if ($exclusions->is_question_excluded($q_id)) {
+        $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $section);
       } else {
         $tmp_exclude = '';
       }
@@ -1590,7 +1631,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             $tmp_std = '';
           }
           echo "<tr style=\"font-weight:bold\"><td>t=" . $t . "%</td><td>u=" . $u . "%</td><td>l=" . $l . "%</td><td><span class=\"std\">" . $tmp_std . "</span></td><td class=\"correct";
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' excluded';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $section) == '1') echo ' excluded';
           echo "\"";
           if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
           echo ">" . chr($option_no+64) . ". $individual_option</td></tr>\n";
@@ -1615,7 +1656,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           }
 
           echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td";
-          if ($score_method == 'Mark per Option' and isset($excluded[$q_id]) and substr($excluded[$q_id],$section,1) == '1') echo ' class="excluded"';
+          if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $section) == '1') echo ' class="excluded"';
           if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_" . $option_no . "\"";
           echo ">" . chr($option_no+64) . ". $individual_option</td></tr>\n";
         }
@@ -1636,7 +1677,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -1648,56 +1688,52 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
+<link rel="stylesheet" type="text/css" href="../css/finish.css" />
+<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
-    body {font-size:90%}
-    h1 {margin-left:15px; font-size:18pt}
-    p {margin-left:0px; margin-right:0px}
-    .figures {text-align:right}
-    .q_no {text-align:right; vertical-align:top; width:50px}
-    .grey {color:#808080}
-    .extmatch li {padding-bottom:14px; vertical-align:text-bottom; list-style-type:lower-roman}
-    .correct {color:#000; font-weight:bold}
-    .excluded {color:red; text-decoration:line-through}
-    .excluded img { border: 2px solid red}
-    .excluded img.in-exclusion {border:0}
-    td p:first-child {margin-top:0}
-    .matrix {border:1px solid #808080; border-collapse:collapse}
+    body {margin-bottom: 10px}
+    h1 {margin-left: 15px; font-size: 18pt}
+    p {margin-left: 0; margin-right: 0}
+    .figures {text-align: right}
+    .q_no {text-align: right; vertical-align: top; width: 50px}
+    .extmatch li {padding-bottom: 14px; vertical-align: text-bottom; list-style-type: lower-roman}
+    .correct {color: #000; font-weight: bold}
+    .excluded {color:red; text-decoration: line-through}
+    .excluded img {border: 2px solid red}
+    .excluded img.in-exclusion {border: 0}
+    .in-exclusion:hover {background-color: #FFE7A2}
+    td p:first-child {margin-top: 0}
+    .matrix {border:1px solid #808080; border-collapse: collapse}
     .matrix td {border:1px solid #808080}
-    .std {display:block;background-color:#f27000;color:white;width:35px;text-align:center}
-    .scr_no {margin-left:25px}
-    .screenbrk {
-      color:#15428B;
-      font-weight:bold;
-      font-size:90%;
-      height:70px;
-      width:100%;
-      border-top: 1px solid #B5C4DF;
-      background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
-    }
-    .mee {
-      display: inline;
-    }
+    .mee {display: inline}
+    .subsect_table {margin-left: 6px; margin-bottom: 10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-	<!-- HTML5 part start -->
-	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-	<script type="text/javascript" src="../js/html5.images.js"></script>
-	<script type="text/javascript" src="../js/qsharedf.js"></script>
-	<script type="text/javascript" src="../js/qlabelling.js"></script>
-	<script type="text/javascript" src="../js/qhotspot.js"></script>
-	<script type="text/javascript" src="../js/qarea.js"></script>
-	<!-- HTML5 part end -->
+<?php
+  if ($propertyObj->get_latex_needed() == 1) {
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }
+  
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+  } else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+}
 
-  <script language="JavaScript">
+?>
+
+  <script>
     function toggle(qID, parts, marks) {
       for (i=1; i<=parts; i++) {
         if ($('#status_' + qID).val().substr(0,1) == '1') {
@@ -1743,12 +1779,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 	
 	echo draw_toprightmenu(154);
 ?>
+<div id="content">
 <form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
-<table class="header" style="font-size:90%">
 <?php
   // Get some paper properties
-  $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
-
   $paper_title = $propertyObj->get_paper_title();
   $paper_type = $propertyObj->get_paper_type();
   $labelcolor = $propertyObj->get_labelcolor();
@@ -1757,17 +1791,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $pass_mark = $propertyObj->get_pass_mark();
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-
-  // Get any questions to exclude.
-  $excluded = array();
-  $result = $mysqli->prepare("SELECT q_id, parts FROM question_exclude WHERE q_paper = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($q_id, $parts);
-  while ($result->fetch()) {
-    $excluded[$q_id] = $parts;
-  }
-  $result->close();
+  
+  $exclusions = new Exclusion($paperID, $mysqli);
+  $exclusions->load();
 
   // Get the standards setting
   if ($marking{0} == '2') {
@@ -1873,19 +1899,20 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   
   if ($user_total == 0) {
     // No one has taken the paper yet.
-    echo '<tr><th>';
+    echo '<div class="head_title">';
 
-    echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+    echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if (isset($_GET['folder']) and $_GET['folder'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
     }
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-    echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-    echo "</table>\n";
-    echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['PaperNotAttempted'] . "</td></tr></table>\n";
+    echo "<div class=\"page_title\">" . $string['reporttitle'] . "</div>\n";
+    echo "</div>\n";
+		echo $notice->info_strip($string['PaperNotAttempted'], 100);
   } else {
   	// Capture the paper makeup.
     $display_header = true;
@@ -1915,28 +1942,29 @@ SQL;
     $result->store_result();
     while ($result->fetch()) {
       if ($display_header == true) {
-        echo '<tr><th>';
-        echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+        echo '<div class="head_title">';
+        echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+        echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
         if (isset($_GET['folder']) and $_GET['folder'] != '') {
-          echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+          echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
         } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-          echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+          echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
         }
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
 
-        echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string['reporttitle'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-        echo "</table>\n";
+        echo "<div class=\"page_title\">" . $string['reporttitle'] . "</div>\n";
+        echo "</div>\n";
 
         echo '<br /><div class="key">';
         echo '<table cellpadding="2" cellspacing="0" border="0">';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidatenumber'] . '</td><td style="width:500px">' . number_format($user_total) . '</td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['p_warning'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['totalcandidatenumber'] . '</td><td style="width:375px">' . number_format($user_total) . '</td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['p_warning'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right"><nobr>' . $string['groupsizes'] . '</nobr></td><td>' . $cohort_percent . '% (' . $user_no . ' ' . $string['pergroup'] . ')</td><td rowspan="7" style="vertical-align:top"><img src="../artwork/red_flag.png" width="14" height="14" alt="Warning" class="in-exclusion" /> ' . $string['warning'] . ' ' . $string['d_warning'] . '</td></tr>';
         echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">' . $string['boldstems'] . '</td><td>' . $string['correctanswers'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">p=</td><td>' . $string['p_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">d=</td><td>' . $string['d_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">t=</td><td>' . $string['t_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">u=</td><td>' . $string['u_definition'] . '</td></tr>';
-        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">l=</td><td>' . $string['l_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">p =</td><td>' . $string['p_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">d =</td><td>' . $string['d_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">t =</td><td>' . $string['t_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">u =</td><td>' . $string['u_definition'] . '</td></tr>';
+        echo '<tr><td style="margin:0px; font-weight:bold; text-align:right">l =</td><td>' . $string['l_definition'] . '</td></tr>';
         echo '</table></div><br />';
 
         echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
@@ -1952,7 +1980,7 @@ SQL;
 
         if (isset($std_set_array[$old_q_id])) $old_std = $std_set_array[$old_q_id];
 
-        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
+        displayQuestion($exclusions, $question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
         $options_buffer = array();
         $correct_buffer = array();
         $o_media_buffer = array();
@@ -2028,13 +2056,14 @@ SQL;
 
     if (isset($std_set_array[$old_q_id])) $old_std = $std_set_array[$old_q_id];
 
-    displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
+    displayQuestion($exclusions, $question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $o_media_buffer, $bottom_log_array, $top_log_array, $freq_array, $correct_buffer, $user_no, $old_score_method, $old_display_method, $old_themecolor, $old_std);
   ?>
   </table>
   <br />
 
-  <table border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td><?php echo $string['summary']; ?></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>
-
+  <div class="subsect_table"><div class="subsect_title"><?php echo $string['summary'] ?></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>
+  
+  
   <table cellpadding="0" cellspacing="0" style="width:650px; margin-left:40px">
   <tr><td colspan="2" style="padding-left:4px"><?php echo $string['msg']; ?></td></tr>
   <tr>
@@ -2046,7 +2075,11 @@ SQL;
   <tr><td><?php echo $string['moderate']; ?></td><td>0.4-0.6</td><td style="text-align:right"><?php echo $pstats['m']; ?></td><td></td></tr>
   <tr><td><?php echo $string['hard']; ?></td><td>0.2-0.4</td><td style="text-align:right"><?php echo $pstats['h']; ?></td><td></td></tr>
   <tr style="color:#C00000"><td><?php echo $string['veryhard']; ?></td><td>&lt; 0.2</td><td style="text-align:right"><?php echo $pstats['vh']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning1']; ?>" class="in-exclusion" /></td></tr>
-  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php echo number_format($pstats['total']/$pstats['no'],2); ?></td><td></td><td></td></tr>
+  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php
+  if (isset($pstats['no'])) {
+    echo number_format($pstats['total'] / $pstats['no'], 2); 
+  }
+  ?></td><td></td><td></td></tr>
   </table>
   </td>
   <td style="vertical-align:top">
@@ -2057,7 +2090,11 @@ SQL;
   <tr><td><?php echo $string['intermediate']; ?></td><td>0.15-0.25</td><td style="text-align:right"><?php echo $dstats['intermediate']; ?></td><td></td></tr>
   <tr style="color:#C00000"><td><?php echo $string['low']; ?></td><td>&lt; 0.15</td><td style="text-align:right"><?php echo $dstats['low']; ?></td><td><img src="../artwork/red_flag.png" width="14" height="14" alt="<?php echo $string['warning2']; ?>" class="in-exclusion" /></td></tr>
   <tr><td>&nbsp;</td><td></td><td></td><td></td></tr>
-  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php echo number_format($dstats['total']/$dstats['no'],2); ?></td><td></td><td></td></tr>
+  <tr><td><?php echo $string['mean']; ?></td><td style="text-align:right"><?php
+  if (isset($dstats['no'])) {
+    echo number_format($dstats['total'] / $dstats['no'], 2); 
+  }
+  ?></td><td></td><td></td></tr>
   </table>
   </td>
   </tr>
@@ -2097,85 +2134,87 @@ SQL;
       $tmp_percent = $_GET['percent'];
     }
 
-
-    // Write records into performance_main
-    //----------------------------------------------------------------------------------------------
-    $sql = '';
-    $params = '';
-    $variables = array();
-    $tmp = array();
-    foreach ($dstats_array as $qid=>$question_data) {
-      if ($sql == '') {
-        $sql = 'INSERT INTO performance_main VALUES (NULL, ?, ?, ?, ?, ?)';
-      } else {
-        $sql .= ', (NULL, ?, ?, ?, ?, ?)';
-      }
-      $params .= 'iiiis';
-      $variables[] = $qid;
-      $variables[] = $paperID;
-      $variables[] = $tmp_percent;
-      $variables[] = $user_total;
-      $variables[] = $date_started;
-    }
-
-    $record = $mysqli->prepare($sql);
-
-    array_unshift($variables, $params);
-    foreach ($variables as $key => $value) {
-      $tmp[$key] = &$variables[$key];
-    }
-    call_user_func_array(array($record,'bind_param'), $tmp);
-
-    $record->execute();
-    $record->close();
-
-    // Write records into performance_details
-    //----------------------------------------------------------------------------------------------
-    $q_rec_ids = array();
-    // First a quick query to get the IDs from performance_main to use in performance_details
-    $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?");
-    $result->bind_param('is', $paperID, $date_started);
-    $result->execute();
-    $result->bind_result($id, $tmp_q_id);
-    while ($result->fetch()) {
-      $q_rec_ids[$tmp_q_id] = $id;
-    }
-    $result->close();
-
-    $sql = '';
-    $params = '';
-    $variables = array();
-    $tmp = array();
-    foreach ($dstats_array as $qid=>$question_data) {
-      foreach ($question_data as $part_no=>$d_value) {
+    if (isset($pstats['no'])) {
+      // Write records into performance_main
+      //----------------------------------------------------------------------------------------------
+      $sql = '';
+      $params = '';
+      $variables = array();
+      $tmp = array();
+      foreach ($dstats_array as $qid=>$question_data) {
         if ($sql == '') {
-          $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
+          $sql = 'INSERT INTO performance_main VALUES (NULL, ?, ?, ?, ?, ?)';
         } else {
-          $sql .= ', (?, ?, ?, ?)';
+          $sql .= ', (NULL, ?, ?, ?, ?, ?)';
         }
-        $params .= 'iiii';
-        $variables[] = $q_rec_ids[$qid];
-        $variables[] = $part_no;
-        $variables[] = $pstats_array[$qid][$part_no];
-        $variables[] = $d_value;
+        $params .= 'iiiis';
+        $variables[] = $qid;
+        $variables[] = $paperID;
+        $variables[] = $tmp_percent;
+        $variables[] = $user_total;
+        $variables[] = $date_started;
       }
+
+      $record = $mysqli->prepare($sql);
+
+      array_unshift($variables, $params);
+      foreach ($variables as $key => $value) {
+        $tmp[$key] = &$variables[$key];
+      }
+      call_user_func_array(array($record,'bind_param'), $tmp);
+
+      $record->execute();
+      $record->close();
+
+      // Write records into performance_details
+      //----------------------------------------------------------------------------------------------
+      $q_rec_ids = array();
+      // First a quick query to get the IDs from performance_main to use in performance_details
+      $result = $mysqli->prepare("SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?");
+      $result->bind_param('is', $paperID, $date_started);
+      $result->execute();
+      $result->bind_result($id, $tmp_q_id);
+      while ($result->fetch()) {
+        $q_rec_ids[$tmp_q_id] = $id;
+      }
+      $result->close();
+
+      $sql = '';
+      $params = '';
+      $variables = array();
+      $tmp = array();
+      foreach ($dstats_array as $qid=>$question_data) {
+        foreach ($question_data as $part_no=>$d_value) {
+          if ($sql == '') {
+            $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
+          } else {
+            $sql .= ', (?, ?, ?, ?)';
+          }
+          $params .= 'iiii';
+          $variables[] = $q_rec_ids[$qid];
+          $variables[] = $part_no;
+          $variables[] = $pstats_array[$qid][$part_no];
+          $variables[] = $d_value;
+        }
+      }
+
+      $record = $mysqli->prepare($sql);
+
+      array_unshift($variables, $params);
+      foreach ($variables as $key => $value) {
+        $tmp[$key] = &$variables[$key];
+      }
+      call_user_func_array(array($record,'bind_param'), $tmp);
+
+      $record->execute();
+      $record->close();
     }
-
-    $record = $mysqli->prepare($sql);
-
-    array_unshift($variables, $params);
-    foreach ($variables as $key => $value) {
-      $tmp[$key] = &$variables[$key];
-    }
-    call_user_func_array(array($record,'bind_param'), $tmp);
-
-    $record->execute();
-    $record->close();
   ?>
 
   <input type="hidden" name="question_no" value="<?php echo $ex_no; ?>" />
-  <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:150px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back()" style="width:80px" /></div>
+  <div align="center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="history.back()" class="cancel" /></div>
   </form>
+</div>
 <?php
 }
 $mysqli->close();

@@ -16,6 +16,8 @@
 
 /**
 *
+* Report that exports responses in CSV format (raw or text).
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -35,9 +37,9 @@ $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 
-$displayDebug = false; //disable debug output in this script as it effects the output
+$displayDebug = false; // Disable debug output in this script as it effects the output
 
-//get the paper properties
+// Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $demo = is_demo($userObject);
@@ -246,11 +248,20 @@ $csv = '';
 // Get order of the class.
 $student_list = '';
 $paper_type = $propertyObj->get_paper_type();
+
+if ($_GET['studentsonly'] == '1') {
+  $userroles = " AND (users.roles LIKE '%Student%' OR users.roles = 'graduate')";
+} else {
+  $userroles = '';
+}
+
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log0, log_metadata, users WHERE log0.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? $user_sql AND (users.roles LIKE '%Student%' OR users.roles = 'graduate') GROUP BY log_metadata.userID, paperID, started) UNION ALL (SELECT log_metadata.userID, sum(mark) AS total_mark FROM log1, log_metadata, users WHERE log1.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? $user_sql AND (users.roles LIKE '%Student%' OR users.roles = 'graduate') GROUP BY log_metadata.userID, paperID, started) ORDER BY total_mark");
+  $sql = "(SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log0, log_metadata, users WHERE log0.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? $user_sql $userroles GROUP BY log_metadata.userID, paperID, started)"
+    . " UNION ALL (SELECT log_metadata.userID, sum(mark) AS total_mark FROM log1, log_metadata, users WHERE log1.metadataID = log_metadata.id AND log_metadata.userID = users.id AND paperID = ? AND started >= ? AND started <= ? $user_sql $userroles GROUP BY log_metadata.userID, paperID, started) ORDER BY total_mark";
+  $result = $mysqli->prepare($sql);
   $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
 } else {
-  $result = $mysqli->prepare("SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log$paper_type, log_metadata, users WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $user_sql AND log_metadata.userID = users.id AND (users.roles LIKE '%Student%' OR users.roles = 'graduate') GROUP BY log_metadata.userID, paperID, started ORDER BY total_mark");
+  $result = $mysqli->prepare("SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log$paper_type, log_metadata, users WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $user_sql AND log_metadata.userID = users.id $userroles GROUP BY log_metadata.userID, paperID, started ORDER BY total_mark");
   $result->bind_param('iss', $paperID, $startdate, $enddate);
 }
 $result->execute();
@@ -300,8 +311,8 @@ if ($student_no > 0) {
                                     log0.q_id = questions.q_id AND 
                                     log_metadata.userID IN ($student_list) AND 
                                     paperID = ? AND 
-                                    users.id = log_metadata.userID AND 
-                                    (users.roles='Student' OR users.roles='graduate') 
+                                    users.id = log_metadata.userID 
+                                    $userroles 
                                     $exclude AND 
                                     grade LIKE ? 
                                     AND started >= ? AND 
@@ -331,8 +342,8 @@ if ($student_no > 0) {
                                         log1.q_id = questions.q_id AND 
                                         log_metadata.userID IN ($student_list) AND 
                                         paperID = ? AND 
-                                        users.id = log_metadata.userID AND 
-                                        (users.roles='Student' OR users.roles='graduate') 
+                                        users.id = log_metadata.userID
+                                        $userroles 
                                         $exclude AND 
                                         grade LIKE ? 
                                         AND started >= ? 
@@ -344,7 +355,7 @@ if ($student_no > 0) {
                                         userID");
     $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
   } else {
-    $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen, settings FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate')$exclude AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
+    $result = $mysqli->prepare("SELECT DISTINCT sid.student_id, username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen, settings FROM (log$paper_type, log_metadata, questions, users) LEFT JOIN sid ON users.id = sid.userID WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID $userroles $exclude AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
     $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
   }
   $result->execute();
@@ -569,7 +580,7 @@ if ($student_no > 0) {
               }
               break;
             case 'blank':
-              $correct_parts = explode(',',$question['correct']);
+              $correct_parts = explode(',', strip_tags($question['correct']));
               for ($partID=1; $partID<count($correct_parts); $partID++) {
                 if (substr($tmp_exclude,$partID-1,1) == '0') {
                   if ($is_random) {
@@ -833,7 +844,7 @@ if ($student_no > 0) {
             }
             break;
           case 'blank':
-            $correct_parts = explode(',',$question['correct']);
+            $correct_parts = explode(',', $question['correct']);
             $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
             $correct_parts = explode(',',$question['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
@@ -850,8 +861,12 @@ if ($student_no > 0) {
             break;
           case 'enhancedcalc':
             if (!isset($excluded[$tmp_question_ID])) {
-              $answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
-              if (isset($answer['uans'])) {
+							if (isset($individual[$tmp_screen][$tmp_question_ID])) {		// Check for missing answers.
+								$answer = json_decode($individual[$tmp_screen][$tmp_question_ID], true);
+              } else {
+								$answer = '';
+							}
+							if (isset($answer['uans'])) {
 								$csv .= ',' . $answer['uans'];
 							} else {
 								$csv .= ',error';
@@ -862,13 +877,15 @@ if ($student_no > 0) {
 								$csv .= ',error';
 							}
               $variables = '';
-              foreach ($answer['vars'] as $var_name => $value) {
-                if ($variables == '') {
-                  $variables .= $value;
-                } else {
-                  $variables .= ',' . $value;
-                }
-              }
+							if (isset($answer['vars'])) {
+								foreach ($answer['vars'] as $var_name => $value) {
+									if ($variables == '') {
+										$variables .= $value;
+									} else {
+										$variables .= ',' . $value;
+									}
+								}
+							}
               $csv .= ',"' . $variables . '"';
             }
             break;
@@ -1181,6 +1198,4 @@ if ($student_no > 0) {
 }
 
 echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
-
-$mysqli->close();
 ?>

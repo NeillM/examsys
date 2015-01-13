@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['schools'] ='Školy';
 $string['smsimportsummary'] = 'Přehled nahraných SMS';
 $string['date'] = 'Datum';
 $string['modules'] = 'Moduly';
-$string['enroled'] = 'Zapsáno';
+$string['enroled'] = 'Zapsalo se';
 $string['deleted'] = 'Odstraněno';
 ?>

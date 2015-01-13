@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting a reference material.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -48,22 +50,15 @@ $mysqli->close();
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg']; ?></p>
 
-<td><p><?php echo $string['msg']; ?></p>
-<br />
-<div style="text-align:right">
+<div class="button_bar">
 <form action="do_delete_ref_material.php" method="post">
 <input type="hidden" name="refID" value="<?php echo $refID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

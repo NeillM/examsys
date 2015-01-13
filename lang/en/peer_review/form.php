@@ -16,6 +16,7 @@
 
 require_once '../lang/' . $language . '/include/paper_security.inc';
 
+$string['homepagelink'] = 'Back to home page';
 $string['peerreview'] = 'Peer Review';
 $string['Reviewer'] = 'Reviewer';
 $string['save'] = 'Save';

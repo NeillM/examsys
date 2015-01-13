@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['clearoldlogs'] = 'Odstranit staré záznamy';
 $string['log0deleted'] = 'Log0 záznamy odstraněny:';
 $string['log1deleted'] = 'Log1 záznamy odstraněny:';

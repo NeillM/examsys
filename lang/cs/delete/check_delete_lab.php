@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deletelab'] = 'Odstranit učebnu?';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg1'] = 'Včechny IP adresy k učebně přiřazené budou odstraněny.';
 $string['msg2'] = 'Jste si skutečně jisti, že chcete tyto IP adresy odstranit?';
-$string['delete'] = 'Odstranit';
 ?>

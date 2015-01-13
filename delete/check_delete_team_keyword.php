@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting a keyword.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -49,7 +51,7 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['deletekeyword'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['confirmdelete'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -57,11 +59,6 @@ $mysqli->close();
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
-
-<td>
 <?php
 $i = 0;
 $keywordss = '';
@@ -74,18 +71,15 @@ foreach ($keyword_names as $keyword_name) {
   $i++;
 }
 ?>
-<p><strong><?php printf($string['msg'], $keywordss); ?></strong> <p>
+<p><?php printf($string['msg'], $keywordss); ?></p>
 
-<div style="text-align:right">
+<div class="button_bar">
 <form action="do_delete_team_keyword.php" method="post">
 <input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

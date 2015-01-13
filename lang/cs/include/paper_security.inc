@@ -23,4 +23,5 @@ $string['error_time'] = 'Dokument, u kterého se pokoušíte o přístup, je k d
 $string['notregistered'] = '%s %s (%s) není registrován k <strong>%s</strong> v <strong>%s</strong>.';
 $string['error_module'] = 'Tento dokument není přiřazen k žádnému modulu.';
 $string['error_metadata'] = 'Metadata uživatele neodpovídají <strong>%s: %s</strong>';
+$string['alreadycompleted'] = 'Assessment has already been completed at <strong>%s</strong>.';
 ?>

@@ -17,7 +17,6 @@
 $string['createschool'] = 'Utwórz nową katedrę';
 $string['editschool'] = 'Edytuj katedrę';
 $string['deleteschool'] = 'Usuń katedrę';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['schools'] = 'Katedry';
 $string['school'] = 'Katedra';
 $string['name'] = 'Nazwa';

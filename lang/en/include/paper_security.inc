@@ -23,4 +23,5 @@ $string['error_time'] = 'The paper you are attempting to access is only availabl
 $string['notregistered'] = '%s %s (%s) is not registered on <strong>%s</strong> in <strong>%s</strong>.';
 $string['error_module'] = 'This paper is not on any module.';
 $string['error_metadata'] = 'User metadata does not match <strong>%s: %s</strong>';
+$string['alreadycompleted'] = 'Assessment has already been completed at <strong>%s</strong>.';
 ?>

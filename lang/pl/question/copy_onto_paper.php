@@ -26,7 +26,9 @@ $string['error3'] = "Plik <strong>'%s'</strong> nie może być skopiowany.<br />
 $string['success'] = 'Pytania przekopiowane do <strong>%s</strong>.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
 $string['cancel'] = 'Anuluj';
-$string['ok'] = 'OK'; //cognate
+$string['close'] = 'Zamknij';
+$string['gotopaper'] = 'Przejdź do arkusza';
 $string['qcopyerrorno'] = 'Błąd kopiowania pytania'; 
-$string['qcopyerror'] = 'Pytanie %d nie mogło być skopiowane'; 
+$string['qcopyerror'] = 'Pytanie %d nie mogło być skopiowane';
+$string['papernotonmodule'] = 'Nie skopiowano odwzorowania - arkusz docelowy nie znajduje się w module odwzorowywanych pytań';
 ?>

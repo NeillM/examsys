@@ -78,15 +78,8 @@ function scrollDownEnd() {
 	clearInterval(myDownInterval);
 }
 
-function menuRowOn(rowID) {
-	$('#' + rowID).css('background-color', '#FFE7A2');
-}
-
-function menuRowOff(rowID) {
-	$('#' + rowID).css('background-color', 'white');
-}
-
-function showMenu(submenuID, menuID, callingID, arrayID, urlID, e) {    
+function showMenu(submenuID, menuID, callingID, arrayID, urlID, e) { 
+  $('#popup').hide();
 	scrollLine = 0;
 
 	var limit = (scrollLine + 19);

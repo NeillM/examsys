@@ -28,117 +28,117 @@ class BLTI {
 	public $course_id = false;
 	public $resource_id = false;
 
-	function __construct($parm=false, $usesession=true, $doredirect=true) {
-			// If this request is not an LTI Launch, either
-			// give up or try to retrieve the context from session
-			if (!is_lti_request()) {
-				if ($usesession === false) return;
-				if (strlen(session_id()) > 0) {
-					$row = $_SESSION['_lti_row'];
-					if (isset($row)) $this->row = $row;
-					$context_id = $_SESSION['_lti_context_id'];
-					if (isset($context_id)) $this->context_id = $context_id;
-					$info = $_SESSION['_lti_context'];
-					if (isset($info)) {
-						$this->info = $info;
-						$this->valid = true;
-						return;
-					}
-					$this->message = "Could not find context in session";
-					return;
-				}
-				$this->message = "Session not available";
-				return;
-			}
+	function __construct($parm = false, $usesession = true, $doredirect = true) {
+    // If this request is not an LTI Launch, either
+    // give up or try to retrieve the context from session
+    if (!is_lti_request()) {
+      if ($usesession === false) return;
+      if (strlen(session_id()) > 0) {
+        $row = $_SESSION['_lti_row'];
+        if (isset($row)) $this->row = $row;
+        $context_id = $_SESSION['_lti_context_id'];
+        if (isset($context_id)) $this->context_id = $context_id;
+        $info = $_SESSION['_lti_context'];
+        if (isset($info)) {
+          $this->info = $info;
+          $this->valid = true;
+          return;
+        }
+        $this->message = "Could not find context in session";
+        return;
+      }
+      $this->message = "Session not available";
+      return;
+    }
 
-			// Insure we have a valid launch
-			if (empty($_REQUEST['oauth_consumer_key'])) {
-				$this->message = 'Missing oauth_consumer_key in request';
-				return;
-			}
-			$oauth_consumer_key = $_REQUEST['oauth_consumer_key'];
+    // Insure we have a valid launch
+    if (empty($_REQUEST['oauth_consumer_key'])) {
+      $this->message = 'Missing oauth_consumer_key in request';
+      return;
+    }
+    $oauth_consumer_key = $_REQUEST['oauth_consumer_key'];
 
-			// Find the secret - either form the parameter as a string or
-			// look it up in a database from parameters we are given
-			$secret = false;
-			$row = false;
-			if (is_string($parm)) {
-				$secret = $parm;
-			} elseif (!is_array($parm)) {
-				$this->message = 'Constructor requires a secret or database information.';
-				return;
-			} else {
-				$sql = 'SELECT * FROM '.$parm['table'].' WHERE '.
-						($parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key').
-						'='.
-						"'".mysql_real_escape_string($oauth_consumer_key)."'";
-				$result = mysql_query($sql);
-				$num_rows = mysql_num_rows($result);
-				if ($num_rows != 1) {
-					$this->message = 'Your consumer is not authorized oauth_consumer_key=' . $oauth_consumer_key;
-					return;
-				} else {
-					while ($row = mysql_fetch_assoc($result)) {
-						$secret = $row[$parms['secret_column'] ? $parms['secret_column'] : 'secret'];
-						$context_id = $row[$parms['context_column'] ? $parms['context_column'] : 'context_id'];
-						if ( $context_id ) $this->context_id = $context_id;
-						$this->row = $row;
-						break;
-					}
-					if (!is_string($secret)) {
-						$this->message = 'Could not retrieve secret oauth_consumer_key=' . $oauth_consumer_key;
-						return;
-					}
-				}
-			}
+    // Find the secret - either form the parameter as a string or
+    // look it up in a database from parameters we are given
+    $secret = false;
+    $row = false;
+    if (is_string($parm)) {
+      $secret = $parm;
+    } elseif (!is_array($parm)) {
+      $this->message = 'Constructor requires a secret or database information.';
+      return;
+    } else {
+      $sql = 'SELECT * FROM '.$parm['table'].' WHERE '.
+          ($parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key').
+          '='.
+          "'".mysql_real_escape_string($oauth_consumer_key)."'";
+      $result = mysql_query($sql);
+      $num_rows = mysql_num_rows($result);
+      if ($num_rows != 1) {
+        $this->message = 'Your consumer is not authorized oauth_consumer_key=' . $oauth_consumer_key;
+        return;
+      } else {
+        while ($row = mysql_fetch_assoc($result)) {
+          $secret = $row[$parms['secret_column'] ? $parms['secret_column'] : 'secret'];
+          $context_id = $row[$parms['context_column'] ? $parms['context_column'] : 'context_id'];
+          if ( $context_id ) $this->context_id = $context_id;
+          $this->row = $row;
+          break;
+        }
+        if (!is_string($secret)) {
+          $this->message = 'Could not retrieve secret oauth_consumer_key=' . $oauth_consumer_key;
+          return;
+        }
+      }
+    }
 
-			// Verify the message signature
-			$store = new TrivialOAuthDataStore();
-			$store->add_consumer($oauth_consumer_key, $secret);
+    // Verify the message signature
+    $store = new TrivialOAuthDataStore();
+    $store->add_consumer($oauth_consumer_key, $secret);
 
-			$server = new OAuthServer($store);
+    $server = new OAuthServer($store);
 
-			$method = new OAuthSignatureMethod_HMAC_SHA1();
-			$server->add_signature_method($method);
-			$request = OAuthRequest::from_request();
+    $method = new OAuthSignatureMethod_HMAC_SHA1();
+    $server->add_signature_method($method);
+    $request = OAuthRequest::from_request();
 
-			$this->basestring = $request->get_signature_base_string();
+    $this->basestring = $request->get_signature_base_string();
 
-			try {
-				$server->verify_request($request);
-				$this->valid = true;
-			} catch (Exception $e) {
-				$this->message = $e->getMessage();
-				return;
-			}
+    try {
+      $server->verify_request($request);
+      $this->valid = true;
+    } catch (Exception $e) {
+      $this->message = $e->getMessage();
+      return;
+    }
 
-			// Store the launch information in the session for later
-			$newinfo = array();
-			foreach($_POST as $key => $value ) {
-				if ($key == 'basiclti_submit') continue;
-				if (strpos($key, 'oauth_') === false ) {
-					$newinfo[$key] = $value;
-					continue;
-				}
-				if ($key == 'oauth_consumer_key') {
-					$newinfo[$key] = $value;
-					continue;
-				}
-			}
+    // Store the launch information in the session for later
+    $newinfo = array();
+    foreach($_POST as $key => $value) {
+      if ($key == 'basiclti_submit') continue;
+      if (strpos($key, 'oauth_') === false ) {
+        $newinfo[$key] = $value;
+        continue;
+      }
+      if ($key == 'oauth_consumer_key') {
+        $newinfo[$key] = $value;
+        continue;
+      }
+    }
 
-			$this->info = $newinfo;
-			if ($usesession == true and strlen(session_id()) > 0) {
-				$_SESSION['_lti_context'] = $this->info;
-				unset($_SESSION['_lti_row']);
-				unset($_SESSION['_lti_context_id']);
-				if ( $this->row ) $_SESSION['_lti_row'] = $this->row;
-				if ( $this->context_id ) $_SESSION['_lti_context_id'] = $this->context_id;
-			}
+    $this->info = $newinfo;
+    if ($usesession == true and strlen(session_id()) > 0) {
+      $_SESSION['_lti_context'] = $this->info;
+      unset($_SESSION['_lti_row']);
+      unset($_SESSION['_lti_context_id']);
+      if ( $this->row ) $_SESSION['_lti_row'] = $this->row;
+      if ( $this->context_id ) $_SESSION['_lti_context_id'] = $this->context_id;
+    }
 
-			if ($this->valid and $doredirect) {
-				$this->redirect();
-				$this->complete = true;
-			}
+    if ($this->valid and $doredirect) {
+      $this->redirect();
+      $this->complete = true;
+    }
 	}
 
 	function addSession($location) {
@@ -317,7 +317,7 @@ class BLTI {
 		return false;
 	}
 
-	function redirect($url=false) {
+	function redirect($url = false) {
 		if ( $url === false ) {
 			$host = $_SERVER['HTTP_HOST'];
 			$uri = $_SERVER['PHP_SELF'];
@@ -446,7 +446,7 @@ function signParameters($oldparms, $endpoint, $method, $oauth_consumer_key, $oau
 	return $parms;
 }
 
-function postLaunchHTML($newparms, $endpoint, $debug=false, $iframeattr=false) {
+function postLaunchHTML($newparms, $endpoint, $debug = false, $iframeattr = false) {
 	global $last_base_string;
 	$r = "<div id=\"ltiLaunchFormSubmitArea\">\n";
 	if ( $iframeattr ) {
@@ -459,9 +459,9 @@ function postLaunchHTML($newparms, $endpoint, $debug=false, $iframeattr=false) {
 			$key = htmlspecialchars($key);
 			$value = htmlspecialchars($value);
 			if ( $key == "ext_submit" ) {
-					$r .= "<input type=\"submit\" name=\"";
+				$r .= "<input type=\"submit\" name=\"";
 			} else {
-					$r .= "<input type=\"hidden\" name=\"";
+				$r .= "<input type=\"hidden\" name=\"";
 			}
 			$r .= $key;
 			$r .= "\" value=\"";
@@ -601,13 +601,10 @@ function getLastOAuthBodyHashInfo() {
 
 function getOAuthKeyFromHeaders() {
 	$request_headers = OAuthUtil::get_headers();
-	// print_r($request_headers);
 
 	if (@substr($request_headers['Authorization'], 0, 6) == "OAuth ") {
 		$header_parameters = OAuthUtil::split_header($request_headers['Authorization']);
 
-		// echo("HEADER PARMS=\n");
-		// print_r($header_parameters);
 		return $header_parameters['oauth_consumer_key'];
 	}
 	return false;
@@ -622,12 +619,9 @@ function handleOAuthBodyPOST($oauth_consumer_key, $oauth_consumer_secret) {
 	}
 
 	if (@substr($request_headers['Authorization'], 0, 6) == "OAuth ") {
-			$header_parameters = OAuthUtil::split_header($request_headers['Authorization']);
+		$header_parameters = OAuthUtil::split_header($request_headers['Authorization']);
 
-			// echo("HEADER PARMS=\n");
-			// print_r($header_parameters);
-			$oauth_body_hash = $header_parameters['oauth_body_hash'];
-			// echo("OBH=".$oauth_body_hash."\n");
+		$oauth_body_hash = $header_parameters['oauth_body_hash'];
 	}
 
 	if (!isset($oauth_body_hash)) {
@@ -646,7 +640,6 @@ function handleOAuthBodyPOST($oauth_consumer_key, $oauth_consumer_secret) {
 
 	global $LastOAuthBodyBaseString;
 	$LastOAuthBodyBaseString = $request->get_signature_base_string();
-	// echo($LastOAuthBodyBaseString."\n");
 
 	try {
 		$server->verify_request($request);
@@ -656,7 +649,6 @@ function handleOAuthBodyPOST($oauth_consumer_key, $oauth_consumer_secret) {
 	}
 
 	$postdata = file_get_contents('php://input');
-	// echo($postdata);
 
 	$hash = base64_encode(sha1($postdata, TRUE));
 
@@ -671,7 +663,7 @@ function handleOAuthBodyPOST($oauth_consumer_key, $oauth_consumer_secret) {
 }
 
 // From: http://php.net/manual/en/function.file-get-contents.php
-function post_socket_xml($endpoint, $data, $moreheaders=false) {
+function post_socket_xml($endpoint, $data, $moreheaders = false) {
 	$url = parse_url($endpoint);
 
 	if (!isset($url['port'])) {
@@ -693,10 +685,10 @@ function post_socket_xml($endpoint, $data, $moreheaders=false) {
   if ( isset($url['query']) and strlen($url['query']) > 0 ) $uri .= '?'.$url['query'];
   if ( isset($url['fragment']) and strlen($url['fragment']) > 0 ) $uri .= '#'.$url['fragment'];
 
-    $headers =  "POST " . $uri . " HTTP/1.0" . $eol.
-                "Host: " . $url['host'] . $hostport . $eol.
-                "Referer: " . $url['protocol'] . $url['host'] . $url['path'] . $eol.
-                "Content-Length: ".strlen($data).$eol;
+  $headers =  "POST " . $uri . " HTTP/1.0" . $eol.
+              "Host: " . $url['host'] . $hostport . $eol.
+              "Referer: " . $url['protocol'] . $url['host'] . $url['path'] . $eol.
+              "Content-Length: ".strlen($data).$eol;
   if ( is_string($moreheaders) ) $headers .= $moreheaders;
   $len = strlen($headers);
   if (substr($headers,$len-2) != $eol) {
@@ -738,7 +730,6 @@ function sendOAuthBodyPOST($method, $endpoint, $oauth_consumer_key, $oauth_consu
 	// Pass this back up "out of band" for debugging
 	global $LastOAuthBodyBaseString;
 	$LastOAuthBodyBaseString = $acc_req->get_signature_base_string();
-	// echo($LastOAuthBodyBaseString."\n");
 
 	$header = $acc_req->to_header();
 	$header = $header . "\r\nContent-Type: " . $content_type . "\r\n";
@@ -783,24 +774,12 @@ function sendXmlOverPost($url, $xml, $header) {
   curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // ask for results to be returned
-/*
-  if(CurlHelper::checkHttpsURL($url)) {
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  }
-*/
 
   // Send to remote and return data to caller.
   $result = curl_exec($ch);
   curl_close($ch);
   return $result;
 }
-
-/*  $postBody = str_replace(
-      array('SOURCEDID', 'GRADE', 'OPERATION','MESSAGE'),
-      array($sourcedid, $_REQUEST['grade'], $operation, uniqid()),
-      getPOXGradeRequest());
-*/
 
 function getPOXGradeRequest() {
     return '<?xml version = "1.0" encoding = "UTF-8"?>
@@ -829,11 +808,6 @@ function getPOXGradeRequest() {
 </imsx_POXEnvelopeRequest>';
 }
 
-/*  $postBody = str_replace(
-      array('SOURCEDID', 'OPERATION','MESSAGE'),
-      array($sourcedid, $operation, uniqid()),
-      getPOXRequest());
-*/
 function getPOXRequest() {
     return '<?xml version = "1.0" encoding = "UTF-8"?>
 <imsx_POXEnvelopeRequest xmlns = "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0">
@@ -854,9 +828,6 @@ function getPOXRequest() {
   </imsx_POXBody>
 </imsx_POXEnvelopeRequest>';
 }
-
-/*     sprintf(getPOXResponse(),uniqid(),'success', "Score read successfully",$message_ref,$body);
-*/
 
 function getPOXResponse() {
     return '<?xml version="1.0" encoding="UTF-8"?>

@@ -14,9 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmstatusdelete'] = 'Potvrdit odstranění statusu';
-$string['recyclebin'] = 'Koš';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Jste si skutečně jisti, že chcete tento status odstranit?';
-$string['delete'] = 'Odstranit';
 $string['questionassigned'] = 'Tento status nelze odstranit, jsou k němu přiřazeny úlohy.';
 ?>

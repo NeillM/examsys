@@ -15,6 +15,11 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['summativeexamfeedback'] = 'Odzew dot. egzaminu końcowego';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['statistics'] = 'Statystyka';
+$string['school'] = 'Katedra';
+$string['exams'] = 'Egzaminy';
+$string['objectivefeedback'] = 'Informacje zwrotne dot. celów';
+$string['questionfeedback'] = 'Informacje zwrotne dot. pytań';
+$string['cohortperformance'] = 'Osiągnięcia grupy';
+$string['externalexaminers'] = 'Zewnętrzni egzaminatorzy';
 ?>

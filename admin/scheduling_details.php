@@ -25,6 +25,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
+require_once '../include/demo_replace.inc';
 
 $paperid = check_var('paperID', 'GET', true, false, true);
 
@@ -76,6 +77,7 @@ while ($results->fetch()) {
 $results->close();
 
 ?>
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -92,7 +94,8 @@ $results->close();
     .f1 {background-color:#EAEAEA}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -104,14 +107,13 @@ $results->close();
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 
-<table class="header">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="summative_scheduling.php"><?php echo $string['summativescheduling']; ?></a></div><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['Paper']; ?>:</strong> <?php echo $paper_title; ?></th>
-<th style="text-align:right; vertical-align:top; padding-right:6px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_scheduling.php"><?php echo $string['summativescheduling'] ?></a></div>
+  <div class="page_title"><?php echo $string['Paper'] ?>: <span style="font-weight: normal"><?php echo $paper_title ?></span></div>
+</div>
 
 <table cellspacing="0" cellpadding="4" style="font-size:100%" class="data">
 <?php
@@ -121,7 +123,11 @@ $results->close();
     $barriers_needed = $string['No'];
   }
   $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-  $display_period = $string[$months[$period]];
+  if ($period == '') {
+    $display_period = 'unknown';
+  } else {
+    $display_period = $string[$months[$period]];
+  }
   
   if ($cohort_size == '<whole cohort>') {
     $cohort_size = 0;
@@ -135,14 +141,18 @@ $results->close();
       }
     }
   }
-  
-  $cohort_size = $string['cohortsize'];
+
   if ($cohort_size == 0) {
     $cohort_size = $string['whole cohort'];
   }
 
-  echo "<tr><td class=\"f1\">" . $string['papername'] . "</td><td>$paper_title</td></tr>\n";  
-  echo "<tr><td class=\"f1\">" . $string['paperowner'] . "</td><td>$title $first_names $surname (<a href=\"mailto:$email\">$email</a>)</td></tr>\n";  
+  echo "<tr><td class=\"f1\">" . $string['papername'] . "</td><td>$paper_title</td></tr>\n";
+  $display_name = "$title $first_names $surname";
+  if ($userObject->has_role('Demo')) {
+    $display_name = demo_replace_name(0);
+    $email = 'joe.bloggs@uni.ac.uk';
+  }
+  echo "<tr><td class=\"f1\">" . $string['paperowner'] . "</td><td>$display_name (<a href=\"mailto:$email\">$email</a>)</td></tr>\n";  
   echo "<tr><td class=\"f1\">" . $string['session'] . "</td><td>$calendar_year</td></tr>\n";
   echo "<tr><td class=\"f1\">" . $string['modules'] . "</td><td>";
 

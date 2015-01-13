@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmcoursedelete'] = 'Confirm Module Delete';
-$string['recyclebin'] = 'Recycle Bin';
-$string['msg'] = 'Are you sure you wish to delete this module?';
-$string['delete'] = 'Delete';
+require '../lang/' . $language . '/delete/delete.inc';
+
+$string['msg'] = 'Are you sure you wish to delete module \'%s\'?';
 ?>

@@ -16,8 +16,7 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamstats'] = 'Statystyki egzaminu końcowego';
-$string['administrativetools'] = 'Narzędzia administracyjne';
+$string['summativeexamstats'] = 'Egzaminy końcowe';
 $string['statistics'] = 'Statystyka';
 $string['month'] = 'Miesiąc';
 $string['papers'] = 'Arkusze';
@@ -29,4 +28,9 @@ $string['studentpapers'] = 'Studenci/Arkusze';
 $string['cohortsizes'] = 'Rozmiary grup';
 $string['uniquestudents'] = 'Studentów niepowtarzalnie = %s';//??
 $string['totals'] = 'Wszystkich';
+$string['students'] = 'Studentów';
+$string['taken'] = 'Podjęty';
+$string['unused'] = 'Wolny';
+$string['computerlab'] = 'Computer Lab';
+$string['examno'] = 'Exam No';
 ?>

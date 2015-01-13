@@ -35,8 +35,7 @@ class alreadyloggedin_auth extends outline_authentication {
 
   function register_callback_routines() {
 
-    if(isset ($this->settings['disabled']) and $this->settings['disabled']===true) {
-
+    if (isset ($this->settings['disabled']) and $this->settings['disabled'] === true) {
       return array();
     }
 
@@ -48,7 +47,7 @@ class alreadyloggedin_auth extends outline_authentication {
   }
 
   function auth($authobj) {
-    if(isset ($this->settings['disabled']) and $this->settings['disabled'] === true) {
+    if (isset($this->settings['disabled']) and $this->settings['disabled'] === true) {
       $this->retdata->fail($this->number);
       $this->savetodebug('disabling alreadyloggedin as setting has been set to do so');
       return $authobj;
@@ -57,6 +56,7 @@ class alreadyloggedin_auth extends outline_authentication {
     $this->retdata =& $authobj;
     $this->savetodebug('Authing');
     $this->savetodebug(str_replace("\n", '', trim(rtrim(var_export($this->session, true)))));
+
     if (isset($this->session['authenticationObj']['loggedin']['userid']) and ($this->session['authenticationObj']['loggedin']['userid'] > 0 or $this->session['authenticationObj']['loggedin']['userid'] < -999) and $this->session['authenticationObj']['loggedin']['userid'] != '' and $this->session['authenticationObj']['loggedin']['userid'] != 'null' and is_int($this->session['authenticationObj']['loggedin']['userid'])) {
       $this->savetodebug('userid found in session');
       if (isset($this->settings['timeout']) and $this->settings['timeout'] != 0 and (($this->session['authenticationObj']['loggedin']['time'] + $this->settings['timeout']) > time())) {
@@ -104,7 +104,6 @@ class alreadyloggedin_auth extends outline_authentication {
     list($callbacklist, $callbackregisterdatalist) = $this->get_callback('sessionstore'); //  run this when needing to store auth data to session
 
     if (is_array(($callbacklist))) {
-      //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
       foreach ($callbacklist as $number => $callback) {
 
         call_user_func_array($callback, array(&$this->lookupuserobj));

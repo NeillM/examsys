@@ -21,6 +21,8 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
+header('HTTP/1.1 503 Service Temporarily Unavailable');
+header('Status: 503 Service Temporarily Unavailable');
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,20 +32,18 @@
   
   <title>Undergoing Maintenance</title>
 
-  <link rel="stylesheet" href="../css/body.css" type="text/css" />
-  <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <style type="text/css">
-    body {font-size:90%; margin-top:10px}
-    .field {padding-top:4px; padding-left:6px; font-weight:bold}
+    body {font-family:Arial,sans-serif; font-size:100%; margin-top:20px; text-align:center; background-color:#EAEAEA}
+    h1 {color: #C00000; font-size:180%; font-weight:bold}
+    .box {width:60%; height:128px; margin-left:auto; margin-right:auto; border:2px solid #C00000; background-color:white}
   </style>
 </head>
 
 <body>
-	<div align="center">
-  	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C00000 solid">
-    	<tr style="height:70px; width:100%; color:#C00000; font-size:150%; font-weight:bold; padding-left:6px"><td style="text-align:right; width:135px"><img src="artwork/exclamation_48.png" width="48" height="48" alt="Under maintenance" /></td><td style="text-align:left">&nbsp;&nbsp;Undergoing Maintenance</td></tr>
-    	<tr><td colspan="2" style="padding-top:4px; padding-left:6px; background-color:#FFDDDD"><p>Rog&#333; is currently undergoing routine maintenance. Please try again later.</p></td></tr>
-    </table>
+	<div class="box">
+  	<img src="artwork/lrg_maintenance.png" width="128" height="128" alt="Under maintenance" style="float:left" />
+    <h1>Undergoing Maintenance</h1>
+    <div>Rog&#333; is currently undergoing routine maintenance. Please try again later.</div>
   </div>
 </body>
 </html>

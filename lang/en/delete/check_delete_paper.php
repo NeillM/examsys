@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmdelete'] = 'Confirm Paper Delete';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Deleting the paper does <em>not</em> delete the actual questions in the question bank.<br /><br /><strong>Are you sure you wish to delete this paper?</strong>';
-$string['deletepaper'] = 'Delete Paper';
-$string['recyclebin'] = 'Recycle Bin';
+$string['paperlocked'] = 'Paper Locked';
 ?>

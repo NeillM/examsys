@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmfacultydelete'] = 'Potwierdzenie usunięcia wydziału';
-$string['recyclebin'] = 'Kosz';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'Czy na pewno usunąć ten kurs?';
-$string['delete'] = 'Usuń';
 ?>

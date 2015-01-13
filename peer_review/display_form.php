@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -33,23 +32,22 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-$paper_title = $propertyObj->get_paper_title();
-$start_date = $propertyObj->get_start_date();
-$end_date = $propertyObj->get_end_date();
-$calendar_year = $propertyObj->get_calendar_year();
-$paper_bgcolor = $propertyObj->get_bgcolor();
-$paper_fgcolor = $propertyObj->get_fgcolor();
+$paper_title			= $propertyObj->get_paper_title();
+$start_date				= $propertyObj->get_start_date();
+$end_date					= $propertyObj->get_end_date();
+$calendar_year		= $propertyObj->get_calendar_year();
+$paper_bgcolor		= $propertyObj->get_bgcolor();
+$paper_fgcolor		= $propertyObj->get_fgcolor();
 $paper_themecolor = $propertyObj->get_themecolor();
 $paper_labelcolor = $propertyObj->get_labelcolor();
-$type = $propertyObj->get_rubric();
-$paper_prologue = $propertyObj->get_paper_prologue();
-$marking = $propertyObj->get_marking();
-$display_photos = $propertyObj->get_display_correct_answer();
-$labs = $propertyObj->get_labs();
-$crypt_name = $propertyObj->get_crypt_name();
-$review_type = $propertyObj->get_display_question_mark();
-
-$modules = Paper_utils::get_modules($paperID, $mysqli);
+$type							= $propertyObj->get_rubric();
+$paper_prologue		= $propertyObj->get_paper_prologue();
+$marking					= $propertyObj->get_marking();
+$display_photos		= $propertyObj->get_display_correct_answer();
+$labs							= $propertyObj->get_labs();
+$crypt_name				= $propertyObj->get_crypt_name();
+$review_type			= $propertyObj->get_display_question_mark();
+$modules					= $propertyObj->get_modules();
 
 if ($calendar_year == '') {
   display_error('Error', 'No Academic Session is set.', false, true);
@@ -151,19 +149,13 @@ $result->close();
     .mcq td.radio {width: 36px}
     .indented {margin-left: 36px; width:100%; border: 0; border-collapse: collapse}
   </style>
-
-  <script type="text/javascript">
-    function changeGroup() {
-      window.location = "form.php?id=<?php echo $crypt_name; ?>&group=" + document.getElementById('group').value;
-    }
-  </script>
 </head>
 <body>
 
 <?php
 echo "<form>\n";
 
-echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%;border-bottom:1px solid #164994;background-color:#2765AB;background-image:url(\'../artwork/title_gradient.png\');background-repeat:repeat-y;background-position:center">';
+echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
 echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['student'] . '</strong> ' . $student_title . ' ' . $student_surname . ', ' . $student_first_names . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['group'] . '</strong> ' . $group . '</div></td><td width="160"><img src="../config/logo.png" width="160" height="67" alt="Logo" /></td></tr>';
 echo '</table>';
 
@@ -176,7 +168,7 @@ if (trim($paper_prologue) != '') {
   
 // Get the other users in the same group.
 if ($review_type == '1') {
-  $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND users_metadata.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? AND value = ? AND userID != ? ORDER BY surname, initials");
+  $result = $mysqli->prepare("SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID = users.id AND users_metadata.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? AND value = ? AND userID != ? ORDER BY surname, initials");
   $result->bind_param('sssi', $calendar_year, $type, $group, $_GET['userID']);
   $result->execute();
   $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
@@ -191,7 +183,7 @@ if ($review_type == '1') {
 }
 echo "</table>\n";
 
-echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"border-top:1px solid #164994;background-color:#2765AB;background-image:url('../artwork/title_gradient.png');background-repeat:repeat-y;background-position:center; text-align:center\">";
+echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\"><tr><td style=\"background-color:#5590CF; text-align:center\">";
 echo "<input type=\"button\" name=\"close\" value=\"" . $string['close'] . "\" style=\"width:100px\" onclick=\"window.close();\" />";
 echo "</td></tr>\n";
 
@@ -207,7 +199,7 @@ function display_user($review_type, $q_type, $questions, $saved_results, $cfg_we
   echo "<tr><td class=\"phototd\" rowspan=\"$rowspan\">";
   $peer_photo = $cfg_web_root . 'users/photos/' . $member_username . '.jpg';
   if (file_exists($peer_photo) and $display_photos == '1') {
-    echo "<img class=\"photo\" src=\"../users/photos/" . $member_username . ".jpg\" width=\"90\" height=\"135\" border=\"0\" />";
+    echo "<img class=\"photo\" src=\"../users/photos/" . $member_username . ".jpg\" width=\"90\" height=\"135\" />";
   }
   $first_names = explode(' ', $member_first_names);
   echo "</td><td class=\"title\" colspan=\"" . ($columns + 1) . "\">$member_title " . $first_names[0] . " $member_surname</td></tr>\n";
@@ -220,8 +212,7 @@ function display_user($review_type, $q_type, $questions, $saved_results, $cfg_we
   }
   echo "</tr>\n";
 
-
-  foreach($questions as $questionID=>$details) {
+  foreach ($questions as $questionID=>$details) {
     $rating = (isset($saved_results[$member_userID][$questionID]['rating'])) ? $saved_results[$member_userID][$questionID]['rating'] : -99;
     if ($q_type == 'mcq') {
       render_mcq($details, $parts, $marking, $columns, $member_userID, $rating, $row_no);

@@ -37,14 +37,12 @@ require '../include/errors.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-	<style>
-	  body {font-size:90%}
-		.grey {color:#C0C0C0}
+	<style type="text/css">
 		.qtype {width:4%}
 	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -54,21 +52,16 @@ require '../include/errors.inc';
 	
 	echo draw_toprightmenu();
 ?>
-<table class="header" style="font-size:90%">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['questionsbyschool']; ?></th>
-</tr>
-</table>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
+  <div class="page_title"><?php echo $string['questionsbyschool']; ?></div>
+</div>
 
-<blockquote>
-
-<table border="0" style="width:100%; border-right: 1px solid #C0C0C0;border-bottom: 1px solid #C0C0C0" class="stats">
+<table class="stats">
 <tr>
-<th>School</th>
+<th><?php echo $string['school'] ?></th>
 <?php
 	$types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
   foreach ($types as $type) {
@@ -149,8 +142,8 @@ foreach ($master_array as $school => $data) {
 }
 ?>
 </table>
-</blockquote>
 
+</div>
 </body>
 </html>
 <?php

@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['confirmdelete'] = 'Confirm Delete';
 $string['msg'] = 'Are you sure you wish to delete this reference material?';
-$string['delete'] = 'Delete';
-$string['recyclebin'] = 'Recycle Bin';
 ?>

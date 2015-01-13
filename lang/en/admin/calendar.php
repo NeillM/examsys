@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['allschools'] = '&lt;All Schools&gt;';
 $string['alllabs'] = '&lt;All Labs&gt;';
 $string['default'] = 'Default';
@@ -37,4 +36,6 @@ $string['starttime'] = 'Start Time';
 $string['endtime'] = 'End Time';
 $string['duration'] = 'Duration';
 $string['labs'] = 'Labs';
+$string['metadata'] = 'Metadata';
+$string['extraevents'] = '<strong>SysAdmin:</strong> Double-click on the calender to add extra events.';
 ?>

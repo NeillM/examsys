@@ -16,6 +16,9 @@
 
 /**
 *
+* Displays an HTML page in a suitable way that it could be printed
+* with the intention of making a student answer booklet (i.e. only
+* questions, no answers).
 *
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
@@ -234,7 +237,7 @@ $current_screen = 1;
     }
   ?>
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/start.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
@@ -248,9 +251,10 @@ $current_screen = 1;
 	<script type="text/javascript" src="../js/qarea.js"></script>
 	<!-- HTML5 part end -->
 
+  <?php echo $configObject->get('cfg_js_root'); ?>
 
-  <script language="JavaScript">
-    $(document).ready(function() {
+  <script>
+    $(function () {
       window.print();
     });
   </script>

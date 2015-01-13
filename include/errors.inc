@@ -53,11 +53,10 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   if ($display_support_email and $support_email != '') {
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';
   }
-  $notice->display_notice($error_title, $error_description, '/artwork/bomb.png', '#C00000');
-
+	$notice->display_notice($error_title, $error_description, '/artwork/square_exclamation_48.png', '#C00000', false, false);
 
   if ($headers == false) {
-    echo "</body>\n</html>\n";
+    echo "\n</body>\n</html>\n";
   }
   if ($stop_execution == true) {
     $mysqli->close();
@@ -103,42 +102,58 @@ function uploadError($errCode) {
  * @param bool    $mandatory    If true then exit if the variable does not exist
  * @param bool    $headers      If true then output HTML header code
  * @param bool    $return_var   If true return the value of the tested variable back
+ *
+ * @return string|null If mandatory is true we return ihe variable if it exsits, it not mandatory we return null
+
  */
 function check_var($var_name, $method, $mandatory, $headers, $return_var) {
   global $string;
   
-  if ($mandatory) {
-    if (is_array($method)) {
-      if (!isset($method[$var_name]) or $method[$var_name] === '' ) {
+  if (is_array($method)) {
+    if (!isset($method[$var_name]) or $method[$var_name] === '' ) {
+      if ($mandatory) {
         display_error($string['fatalerrormsg0'], $string['fatalerrorarray'], $headers);
-      }
-      if ($return_var) {
-        return $method[$var_name];
-      }
-    } elseif ($method == 'GET') {
-      if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
-      }
-      if ($return_var) {
-        return $_GET[$var_name];
-      }
-    } elseif ($method == 'POST') {
-      if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
-        
-        display_error($string['fatalerrormsg0'], $var_name, $headers);
-      }
-      if ($return_var) {
-        return $_POST[$var_name];
-      }
-    } else {
-      if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
-      }
-      if ($return_var) {
-        return $_REQUEST[$var_name];
+      } else {
+        return null;
       }
     }
+    if ($return_var) {
+      return $method[$var_name];
+    }
+  } elseif ($method == 'GET') {
+    if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
+      if ($mandatory) {
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
+      } else {
+        return null;
+      }
+    }
+    if ($return_var) {
+      return $_GET[$var_name];
+    }
+  } elseif ($method == 'POST') {
+    if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
+      if ($mandatory) {
+        display_error($string['fatalerrormsg0'], $var_name, $headers);
+      } else {
+        return null;
+      }
+    }
+    if ($return_var) {
+      return $_POST[$var_name];
+    }
+  } else {
+    if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
+      if ($mandatory) {
+        display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
+      } else {
+        return null;
+      }
+    }
+    if ($return_var) {
+      return $_REQUEST[$var_name];
+    }
   }
-  
 }
+  
 ?>

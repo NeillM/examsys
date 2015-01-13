@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['thankyou'] = 'Dìkuji';
-$string['closewindow'] = 'Zavøít okno';
+$string['reviewcomplete'] = 'Kontrola dokončena';
+$string['deadline'] = 'Uzavírka';
+$string['generalcomments'] = 'Obecné Komentáře';
+$string['generalmsg'] = 'Obecné připomínky k celkovému testu (obtížnost, vhodnost atd.) zaznamenejte do níže uvedené oblasti.';
+$string['saveclose'] = 'Uložiz &amp; Zavřít';
+$string['savefinish'] = 'Uložit &amp; Ukončit';
 ?>

@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Displays a list of deleted papers, questions and folders.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -57,26 +59,30 @@ if (isset($_GET['folder'])) {
   <style type="text/css">
     .icon {width:20px; text-align:right; padding-right:8px}
     .f {float:left; width:375px; height:74px; padding-left:12px}
+    .h {display: block}
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
     .qline:hover {background-color:#FFE7A2}
     .qline.highlight {background-color:#B3C8E8}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     function addQID(qID, clearall) {
       if (clearall) {
-        document.PapersMenu.itemID.value = ',' + qID;
+				$('#itemID').val(',' + qID);
       } else {
-        document.PapersMenu.itemID.value = document.PapersMenu.itemID.value + ',' + qID;
+				var old_val = $('#itemID').val();
+				$('#itemID').val(old_val + ',' + qID);
       }
     }
 
     function subQID(qID) {
       var tmpq = ',' + qID;
-      document.PapersMenu.itemID.value = document.PapersMenu.itemID.value.replace(tmpq, '');
+			var replace_val = $('#itemID').val().replace(tmpq, '')
+      $('#itemID').val(replace_val);
     }
 
     function clearAll() {
@@ -87,7 +93,7 @@ if (isset($_GET['folder'])) {
       $('#menu1a').hide();
       $('#menu1b').show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#link_' + lineID).addClass('highlight');
         addQID(itemID, true);
@@ -112,22 +118,24 @@ if (isset($_GET['folder'])) {
       clearAll();
       $('#itemID').val('');
     }
+    
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
+          sortList: [[1,0]]
+        });
+      }
+    });
   </script>
 </head>
 
-<body onselectstart="return false">
+<body>
 <?php
   require '../include/recycle_options_menu.inc';
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
-?>
-<div id="content" class="content">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
-<table class="header">
-<?php
-echo '<tr onclick="qOff();"><th colspan="3"><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a></div><div style="font-size:200%; margin-left:10px; font-weight:bold">' . $string['recyclebin'] . '</div>';
-
 $recycle_bin = RecycleBin::get_recyclebin_contents($userObject, $mysqli);
 
 $mysqli->close();
@@ -142,26 +150,26 @@ if (count($recycle_bin) > 0) {
   $recycle_bin = array_csort($recycle_bin, $sortby, $ordering);
 }
 
-echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-if ($sortby == 'name') {
-  if ($ordering == 'asc') {
-    echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=desc\">" . $string['name'] . "</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=asc\">" . $string['datedeleted'] . "</a></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a></th></tr>\n";
-  } else {
-    echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=asc\">" . $string['name'] . "</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deletede&ordering=asc\">" . $string['datedeleted'] . "</a></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a></th></tr>\n";
-  }
-} elseif ($sortby == 'deleted') {
-  if ($ordering == 'asc') {
-    echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=asc\">" . $string['name'] . "</a>&nbsp;</th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=desc\">" . $string['datedeleted'] . "</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a></th></tr>\n";
-  } else {
-    echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=asc\">" . $string['name'] . "</a>&nbsp;</th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=asc\">" . $string['datedeleted'] . "</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a></th></tr>\n";
-  }
-} elseif ($sortby == 'subtype') {
-  if ($ordering == 'asc') {
-    echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=asc\">" . $string['name'] . "</a>&nbsp;</th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=asc\">" . $string['datedeleted'] . "</a></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=desc\">" . $string['type'] . "</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" /></th></tr>\n";
-  } else {
-    echo "<tr><th colspan=\"2\" class=\"col10\"><a style=\"color:black\" href=\"" . $_SERVER['PHP_SELF'] . "?sortby=name&ordering=asc\">" . $string['name'] . "</a>&nbsp;</th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=deleted&ordering=asc\">" . $string['datedeleted'] . "</a></th><th class=\"vert_div\"><a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=subtype&ordering=asc\">" . $string['type'] . "</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" /></th></tr>\n";
-  }
-}
+?>
+<div id="content">
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
+  <div class="page_title"><?php echo $string['recyclebin'] ?></div>
+</div>  
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<thead>
+  <tr>
+    <th style="width:16px"></th>
+    <th style="width:500px"><?php echo $string['name']; ?></th>
+    <th style="width:130px" class="{sorter: 'datetime'} col"><?php echo $string['datedeleted'] ?></th>
+    <th style="width:120px" class="col"><?php echo $string['type'] ?></th>
+  </tr>
+</thead>
+<tbody>
+<?php
 
 $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');
@@ -170,16 +178,17 @@ for ($item=0; $item<$list_size; $item++) {
   $split_name = explode('[deleted', $recycle_bin[$item]['name']);
   if ($recycle_bin[$item]['type'] == 'paper') {
     $temp_type = $recycle_bin[$item]['subtype'];
-    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'p" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $split_name[0] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
+    echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'p" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'folder') {
-    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $split_name[0] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string['folder'] . "</nobr></td></tr>\n";
+    echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['folder'] . "</nobr></td></tr>\n";
   } else {
-    echo "<tr class=\"qline\" id=\"link_$item\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" border=\"0\" /></td><td>" . $split_name[0] . "</td><td><nobr>&nbsp;" . dateDisplay($recycle_bin[$item]['deleted']) . "</nobr></td><td><nobr>&nbsp;" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
+    echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
   }
 }
-echo "</table>\n";
 ?>
-</form>
+</tbody>
+</table>
+
 </div>
 </body>
 </html>

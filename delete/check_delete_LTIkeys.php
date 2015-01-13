@@ -15,12 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
- * @author Simon Wilkinson
- * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
- * @package
- */
+*
+* Confirm that it is OK to proceed deleting an LTI key.
+*
+* @author Simon Wilkinson
+* @version 1.0
+* @copyright Copyright (c) 2014 The University of Nottingham
+* @package
+*/
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
@@ -38,39 +40,27 @@ if (!$lti->lti_key_exists($LTIkeysid)) {
 
 $mysqli->close();
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['confirmltidelete']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 </head>
 
 <body>
+<p><strong><?php echo $string['msg']; ?></strong></p>
 
-<table>
-  <tr>
-    <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>"/></td>
-
-    <td><p><strong><?php echo $string['msg']; ?></strong></p>
-      <br/>
-
-      <div style="text-align:right">
-        <form action="do_delete_LTIkeys.php" method="post">
-          <input type="hidden" name="LTIkeysID" value="<?php echo $_GET['LTIkeysID']; ?>"/>
-          <input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>"/>&nbsp;
-          <input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>"
-                 onclick="javascript:window.close();"/>
-        </form>
-      </div>
-    </td>
-  </tr>
-</table>
-
+<div class="button_bar">
+  <form action="do_delete_LTIkeys.php" method="post">
+    <input type="hidden" name="LTIkeysID" value="<?php echo $_GET['LTIkeysID']; ?>"/>
+    <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>"/><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();"/>
+  </form>
+</div>
+    
 </body>
 </html>

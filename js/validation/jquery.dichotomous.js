@@ -14,7 +14,11 @@ $(function() {
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
         error.insertAfter('#leadin_parent');
-        tinyMCE.getInstanceById('leadin').getWin().document.body.style.backgroundColor='#ffd6d6';
+				
+				$('#leadin_parent.defaultSkin table.mceLayout').css({'border-color' : '#C00000'});
+				$('#leadin_parent.defaultSkin table.mceLayout').css({'box-shadow' : '0 0 6px rgba(200, 0, 0, 0.85)'});
+				$('#leadin_parent.defaultSkin table.mceLayout tr.mceFirst td').css({'border-top-color' : '#C00000'});
+				$('#leadin_parent.defaultSkin table.mceLayout tr.mceLast td').css({'border-bottom-color' : '#C00000'});
       } else {
         error.insertAfter(element);
       }

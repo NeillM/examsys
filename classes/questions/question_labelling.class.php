@@ -68,8 +68,8 @@ Class QuestionLABELLING extends QuestionEdit {
   
   public function set_points1($value) {
     // Correct label locations if too far over.
-    $first_split = explode(';',$value);
-    $second_split = explode('$',$first_split[8]);
+    $first_split = explode(';', $value);
+    $second_split = explode('$', $first_split[8]);
     $tmp_coords = '';
     $a = 0;
     $b = 0;
@@ -92,6 +92,16 @@ Class QuestionLABELLING extends QuestionEdit {
       $tmp_points .= ';' . $first_split[$i];
     }
     
+    // Get labels only
+    $option_text = '';
+    $s_split = explode('|', $first_split[11]);
+    foreach ($s_split as $ind_label) {
+      $label_parts = explode('$', $ind_label);
+      if (trim($label_parts[4]) != '') {
+        $option_text .= ',' . $label_parts[4];
+      }
+    }
+    
     if ($tmp_points != $this->get_points1()) {
       $this->set_modified_field('points1', $this->points1);
       $this->points1 = $tmp_points;
@@ -100,6 +110,7 @@ Class QuestionLABELLING extends QuestionEdit {
     if (count($this->options) > 0) {
       $option = reset($this->options);
       $option->set_correct($this->points1);
+      $option->set_text($option_text);    // Save labels into option_text field for searching purposes.
     }
   }
 }

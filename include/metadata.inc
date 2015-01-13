@@ -47,13 +47,13 @@ META;
       $checked = (($curr_status == -1 and $status->get_is_default()) or $curr_status == $status->id) ? ' checked="checked"' : '';
       if ($disabled != '' and !$status->get_change_locked()) {
         $disabled_mod = ' disabled="disabled"';
-        $disabled_class = ' class="disabled"';
+        $disabled_class = ' class="grey"';
       } else {
         $disabled_mod = $disabled_class = '';
       }
 
       $html .= <<< STATUS
-                    <li><input id="status_{$status->id}" name="status" value="{$status->id}"{$checked} type="radio"{$disabled_mod} /> <label for="status_{$status->id}"{$disabled_class}>{$status->get_name()}</label></li>
+                    <li><input id="status_{$status->id}" name="status" value="{$status->id}"{$checked} type="radio"{$disabled_mod} /><label for="status_{$status->id}"{$disabled_class}>{$status->get_name()}</label></li>
 
 STATUS;
     }
@@ -146,13 +146,13 @@ META;
           }
 
           $checked = $on = '';
-          if(in_array($keyword['keyword_id'], $question_keywords)) {
+          if (in_array($keyword['keyword_id'], $question_keywords)) {
             $checked = ' checked="checked"';
             $on = ' on';
           }
           $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
-      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} /> {$enc_keyword}</label></li>
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
 
 META;
           $i++;
@@ -179,7 +179,7 @@ META;
           }
           $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
-      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} /> {$enc_keyword}</label></li>
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
 
 META;
           $i++;
@@ -229,14 +229,14 @@ HEADING;
 
       // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
       $checked = $on = '';
-      if (in_array($team_name, $current_teams) or $team_name == $module) {
+      if (in_array($team_name, $current_teams) or in_array($team_idMod, $module)) {
         $checked = ' checked="checked"';
         $on = ' on';
       }
 
       $enc_name = htmlentities($fullname, ENT_COMPAT, $configObject->get('cfg_page_charset'));
       $html .= <<< META
-                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} /> {$team_name}: {$enc_name}</label></li>
+                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} />{$team_name}: {$enc_name}</label></li>
 
 META;
 

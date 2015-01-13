@@ -18,7 +18,7 @@
 *
 * @author Rob Ingram
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -35,14 +35,14 @@ $spaced = ($index > 1) ? ' spaced-top spaced-bottom' : ' spaced-bottom';
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 
 $min_value = $variable->get_min();
-if (substr($min_value, 0, 4) == 'var$' or substr($min_value, 0, 4) == 'ans$') {
+if (substr($min_value, 0, 3) == 'var' or substr($min_value, 0, 3) == 'ans') {
   $min_link_icon = '../../artwork/variable_link_on.png';
 } else {
   $min_link_icon = '../../artwork/variable_link_off.png';
 }
 
 $max_value = $variable->get_max();
-if (substr($max_value, 0, 4) == 'var$' or substr($max_value, 0, 4) == 'ans$') {
+if (substr($max_value, 0, 3) == 'var' or substr($max_value, 0, 3) == 'ans') {
   $max_link_icon = '../../artwork/variable_link_on.png';
 } else {
   $max_link_icon = '../../artwork/variable_link_off.png';
@@ -52,7 +52,7 @@ if (substr($max_value, 0, 4) == 'var$' or substr($max_value, 0, 4) == 'ans$') {
             <tr>
               <th class="<?php echo $spaced ?>"><?php echo $variable->get_variable() ?></th>
               <td class="align-left<?php echo $spaced ?>">
-                <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
+                <label for="option_min<?php echo $index ?>" class="hide"><?php echo $string['option'] ?> <?php echo $index ?> <?php echo $string['minimum'];?></label>
                 <input type="text" id="option_min<?php echo $index ?>" name="option_min<?php echo $index ?>" value="<?php echo $variable->get_min() ?>" class="calc-min form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
                 <a href="#" class="variable-link<?php echo $dis_class ?>" rel="option_min<?php echo $index ?>"><img id="minicon<?php echo $index ?>" src="<?php echo $min_link_icon ?>" width="23" height="22" alt="Link" class="form-img" /></a>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $variable->id ?>" type="hidden" />
@@ -72,11 +72,7 @@ echo ViewHelper::render_options($decimals, $variable->get_decimals(), 3);
               </td>
               <td class=" align-left<?php echo $spaced ?>">
                 <label for="option_increment<?php echo $index ?>" class="hide"><?php echo $string['option'];?> <?php echo $index ?> <?php echo $string['increment'];?></label>
-                <select id="option_increment<?php echo $index ?>" name="option_increment<?php echo $index ?>"<?php echo $disabled ?>>
-<?php
-echo ViewHelper::render_options($increments, $variable->get_increment(), 3);
-?>
-                </select>
+                <input type="text" id="option_increment<?php echo $index ?>" name="option_increment<?php echo $index ?>" value="<?php echo $variable->get_increment() ?>" class="calc-min form-tiny<?php echo $dis_class ?>"<?php echo $dis_readonly ?> />
               </td>
             </tr>
           </tbody>

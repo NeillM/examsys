@@ -15,6 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/admin/list_modules.php';
+require '../lang/' . $language . '/admin/add_module.php';
 
 $string['entermoduleid'] = 'Please enter an Identifier for the module.';
 $string['entermoduletitle'] = 'Please enter a title for the module.';

@@ -67,24 +67,29 @@ $string['overallclass1'] = '&lt;Automatyczna&gt;';
 $string['overallclass2'] = 'Jednoznacznie niezdany | Na granicy | Jednoznacznie zdany';
 $string['overallclass3'] = 'Niezdany | Na granicy niezdania | Na granicy zdania | Zdany | Zdecydowanie zdany';
 $string['overallclass4'] = 'Jednoznacznie niezdany | Na granicy | Jednoznacznie zdany | Wyróżniająco zdany';
+$string['overallclass5'] = 'Niezdany | Zdany';
 $string['passmark'] = 'Liczba punktów na zaliczenie';
 $string['distinction'] = 'Wyróżnienie';
 $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Brak wzoru';
 $string['calculatrrandommark'] = "Oszacuj punkty na 'chybił-trafił'";
 $string['stdset'] = 'Wyznaczony standard';
+$string['borderlinemethod'] = 'Wyznaczanie niepewności';
 $string['ticks_crosses'] = 'Haczyki/Krzyżyki';
 $string['question_marks'] = 'Punktacja pytania';
 $string['hideallfeedback'] = 'Ukryj odzew<br />jeśli nie odpowiedziano';
 $string['correctanswerhighlight'] = 'Wyróżnienie poprawnej odpowiedzi';
 $string['textfeedback'] = 'Odzew tekstowy';
 $string['photos'] = 'Zdjęcia';  
-$string['ifavailable'] = 'jeśli dostępne';  
+$string['ifavailable'] = 'jeśli dostępne';
 $string['review'] = 'Recenzja';
 $string['allpeerspergroup'] = 'wszystkich członków grupy'; 
 $string['singlereview'] = 'recenzja indywidualna';
 $string['numberfrom'] = 'Numeruj od';
 $string['groupdetails'] = 'Szczegóły dot. grupy';
+$string['tooltip_random'] = 'Rog&#333; oszacuje jaką ocenę dostałby student odpowiadając na wszystkie pytania całkowicie losowo. Następnie odpowiednio skalowane są procenty.';
+$string['tooltip_calculator'] = 'Kalkulator JavaScript dostępny jest dla studentów podczas egzaminu.';
+$string['tooltip_audio'] = 'Na stronie informacyjnej egzaminu umieszczony będzie próbny klip audio, umożliwiający studentom sprawdzenie poziomu dźwięku.';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';
@@ -101,6 +106,7 @@ $string['to'] = 'do';
 $string['restricttolabs'] = 'Ogranicz do pracowni';
 $string['restricttometadata'] = 'Ogranicz do metadanych';
 $string['na'] = 'Brak';//data
+$string['tooltip_password'] = 'W wyniku tego dodane zostanie do arkusza uzupełniające hasło obok hasła stosowanego przez studenta do logowania się do Rogo. Hasło to można udostępnić studentom znajdującym sie w pracowni komputerowej.';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
@@ -127,16 +133,18 @@ $string['referenceheading'] = 'Kontrola, które materiały pomocnicze są dostę
 $string['nomaterials'] = 'Do tego arkusza nie przypisano żadnych materiałów pomocniczych dostępnych w tym module.<br /><br />Materiały pomocnicze mogą być dodane przez kliknięcie na opcję  \'Materiał pomocniczy\' na ekranie  modułu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">zobacz pomoc</a>).';
 
 // Feedback tab
-$string['feedbackheading'] = 'Odzew dostępny dla studentów'; 
-$string['feedbackwarning'] = '<strong>Uwaga:</strong> To uwolni pytania włączając w to poprawne odpowiedzi i oceny dla studentów.'; 
+$string['feedbackheading'] = 'Odzew dostępny dla studentów i egzaminatorów zewnętrznych';
+$string['feedbackwarning'] = '<strong>Uwaga:</strong> To uwolni pytania włączając w to poprawne odpowiedzi i oceny dla studentów.';
 $string['on'] = 'Wł.';
 $string['off'] = 'Wył.';
-$string['objectivesreport'] = 'Odzew dot. celów';
-$string['questionfeedback'] = 'Odzew dot. pytań';
-$string['cohortperformancefeedback'] = 'Raport postępów grupy';
+$string['objectivesreport'] = 'Odzew dot. celów (Studenci)';
+$string['questionfeedback'] = 'Odzew dot. pytań (Studenci)';
+$string['externalexaminerfeedback'] = 'Zestawienie klasy (Egzaminatoryz zewnętrzni)';
+$string['externalwarning'] = 'Od kiedy zewnętrzni będa mieli dostep do raportu zestawienia klasy dla arkusza.';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report (Studenci)';
 $string['textualfeedback'] = 'Odzew tekstowy';
 $string['above'] = 'Powyżej';
-$string['message'] = 'Wiadomość';  
+$string['message'] = 'Wiadomość';
 $string['answerscreensettings'] = 'Ustawienia ekranu odpowiedzi';
 
 // Changes tab

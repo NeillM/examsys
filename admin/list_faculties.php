@@ -36,11 +36,32 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[0,0]] 
+        });
+      }
+
+      $(".l").click(function(event) {
+        event.stopPropagation();
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        editFaculty();
+      });
+
+    });
+  </script>
 </head>
 
 <body>
@@ -50,29 +71,36 @@
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 
-<table class="header">
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['faculties'] ?></div>
+</div>
+  
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+<thead>
 <tr>
-<th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['faculties']; ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
+<th class="col10"><?php echo $string['name'] ?></th><th><?php echo $string['schoolno'] ?></th><th style="width:50%" class="vert_div"></th>
 </tr>
-<tr>
-<th class="col10"><?php echo $string['name']; ?></th><th class="vert_div"><?php echo $string['schoolno']; ?></th><th style="width:50%" class="vert_div"></th></tr>
+</thead>
+<tbody>
 <?php
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty LEFT JOIN schools ON schools.facultyID=faculty.id WHERE faculty.deleted IS NULL GROUP BY name ORDER BY name");
+$result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty LEFT JOIN schools ON schools.facultyID = faculty.id WHERE faculty.deleted IS NULL GROUP BY name");
 $result->execute();
 $result->bind_result($id, $name, $school_no);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" onclick=\"selLine($id, event)\" ondblclick=\"editFaculty()\" class=\"l\"><td><div class=\"col10\">$name</div></td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
-  $id++;
+  echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">$name</td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
 }
 $result->close();
+
 $mysqli->close();
 ?>
+</tbody>
 </table>
 </div>
 

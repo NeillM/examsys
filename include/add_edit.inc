@@ -75,18 +75,6 @@ function clearMSOtags($sHTML) {
   return $sHTML;
 }
 
-function insert_into_options($o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial) {
-  global $mysqli;
-  if ($result = $mysqli->prepare("INSERT INTO options VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)")) {
-    $result->bind_param('isssssssddd', $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-    $result->execute();
-    $result->close();
-  } else {
-    display_error("Option Add Error",$mysqli->error);
-  }
-  return $mysqli->insert_id;
-}
-
 function wysiwyg_editor($name, $replace, $content='', $width=756, $height=120) {
   global $cfg_editor_name;
 
@@ -227,6 +215,9 @@ HTML;
           break;
         case 3:
           $status = array('major', $string['major']);
+          break;
+        default:
+          $status = array('cannot', $string['cannot']);
           break;
       }
       $img_status = $status[0];

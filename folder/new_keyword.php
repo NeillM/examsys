@@ -88,10 +88,11 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   <style type="text/css">
     body {font-size:90%; background-color:#EEEEEE; padding:4px}
     h1 {font-size:120%}
+    input[type=text] {margin-bottom: 10px}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -148,7 +149,7 @@ if ($exists) {
 <?php
 }
 ?>
-<input type="submit" name="ok" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_REQUEST['module'])) echo $_REQUEST['module']; ?>" /></div>
+<input type="submit" name="ok" value="<?php echo $string['ok']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_REQUEST['module'])) echo $_REQUEST['module']; ?>" /></div>
 </form>
 
 </body>

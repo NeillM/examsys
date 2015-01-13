@@ -24,7 +24,6 @@ function testBinary($values, $type, $options = array(), $msg = '') {
 		$r->setValue($values);
 	}
 	$bin = Rserve_Parser::createBinary($r);
-	//var_dump($bin);
 	var_dump(Rserve_Parser::parseDebug($bin, 0));
 	$r2 = Rserve_Parser::parseREXP($bin, 0);
 	var_dump($r2);

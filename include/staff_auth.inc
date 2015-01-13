@@ -30,13 +30,13 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
-
+require_once $cfg_web_root . 'classes/logger.class.php';
 $userObject = UserObject::get_instance();
 
-if (!$userObject->has_role(array('Staff', 'External Examiner'))) {
-  // Current use is not Staff or External Examiner so display warning and exit.
-	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron'))) {
+  // Current user is not Staff, External Examiner or the system cron so display warning and exit.
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
 
 // Redirect External Examiners if they are straying
@@ -53,6 +53,11 @@ $external_allowed_pages = array(
                               "$cfg_root_path/reviews/index.php"=>1,
                               "$cfg_root_path/reviews/start.php"=>1,
                               "$cfg_root_path/reviews/finish.php"=>1,
+                              "$cfg_root_path/reviews/class_totals.php"=>1,
+                              "$cfg_root_path/reports/draw_distribution_chart.php"=>1,
+                              "$cfg_root_path/reports/draw_scatter_plot.php"=>1,
+                              "$cfg_root_path/ajax/reports/getNote.php"=>1,
+                              "$cfg_root_path/ajax/reports/getAccessibility.php"=>1,
                               "$cfg_root_path/osce/form.php"=>1
                             );
 if ($userObject->has_role('External Examiner')) {
@@ -61,8 +66,24 @@ if ($userObject->has_role('External Examiner')) {
   }
 }
 
+// Redirect the system cron if it is straying
+// $cron_allowed_pages is an array that contains the set of scripts that the system cron
+// CAN access all other pages should exit the cron
+$cron_allowed_pages = array("$cfg_root_path/testing/testing/class_totals_with_script_cli.php"=>1,
+                            "$cfg_root_path/reports/class_totals.php"=>1,
+                            "$cfg_root_path/reports/draw_distribution_chart.php"=>1,
+                            "$cfg_root_path/reports/draw_scatter_plot.php"=>1);
+
+if ($userObject->has_role('SysCron')) {
+  if (!isset($cron_allowed_pages[$_SERVER['PHP_SELF']])) {
+    $logger = new Logger($mysqli);
+    $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $string['crondisallowed']);
+    exit;
+  }
+}
+
 // Get teams if the user is not an External Examiner.
-if ($userObject->has_role('External Examiner')) {
+if ($userObject->has_role('External Examiner') or $userObject->has_role('SysCron')) {
   $staff_modules = array();
 } else {
   $staff_modules = $userObject->get_staff_modules();
@@ -79,12 +100,13 @@ $system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 
 if ($userObject->has_role('SysAdmin')) {
   // SysAdmin can access anything!
+} elseif ($userObject->has_role('External Examiner') or $userObject->has_role('SysCron')) {
 } else {
   // Normal users can access things they own or are on the staff_module of only.
   $on_staff_module = false;
 
   // Can the user acsess the module?
-  if (isset($_GET['module']) and $_GET['module'] != '' and !isset($_GET['paperID'])) {
+  if (isset($_GET['module']) and $_GET['module'] != '' and $_GET['module'] != '0' and !isset($_GET['paperID'])) {
     $staff_module_match = false;
     $module_list = explode(',', $_GET['module']);
     foreach ($module_list as $module) {
@@ -94,7 +116,7 @@ if ($userObject->has_role('SysAdmin')) {
     }
     if ($staff_module_match == false) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 
@@ -117,7 +139,7 @@ if ($userObject->has_role('SysAdmin')) {
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
         $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
       }
     }
   }
@@ -146,7 +168,7 @@ if ($userObject->has_role('SysAdmin')) {
         // Allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
           $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
         }
       }
     }
@@ -156,7 +178,7 @@ if ($userObject->has_role('SysAdmin')) {
   if (isset($_REQUEST['refID'])) {
     if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
       $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/page_not_found.png', '#C00000', true, true);
+      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
 }

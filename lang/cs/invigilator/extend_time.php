@@ -17,5 +17,4 @@
 $string['extendtime']   = 'Prodloužit časový limit';
 $string['extendtimeby'] = 'Prodloužit časový limit o';
 $string['minutes']      = 'minuty';
-$string['submit']       = 'Potvrdit';
-$string['close']        = 'Zavřít';
+?>

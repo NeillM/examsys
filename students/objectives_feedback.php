@@ -16,7 +16,7 @@
 
 /**
 *
-* @author Anthony Brown
+* @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -30,6 +30,7 @@ require_once '../include/errors.inc';
 require_once '../include/feedback.inc';
 require_once '../include/sort.inc';
 require_once '../include/calculate_marks.inc';
+require_once '../include/toprightmenu.inc';
 
 require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
@@ -62,13 +63,7 @@ if (isset($_GET['userID'])) {
 }
 
 // Get some paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-
-if (!$propertyObj) {
-  header("HTTP/1.0 404 Not Found");
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 // Check the feedback has been released !!!
 if ($userObject->has_role('Student')) {
@@ -140,6 +135,16 @@ $result->bind_result($tmp_username, $title, $initials, $surname);
 $result->fetch();
 $result->close();
 $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_replace($surname, $demo);
+
+$textsize = 100;
+$font = 'Arial';
+if ($userObject->is_special_needs()) {
+  // Look up special_needs data
+  $textsize = $userObject->get_textsize($textsize);
+  $font = $userObject->get_font($font);
+}
+$textsize -= 10;
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -152,35 +157,50 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <style type="text/css">
-    body {font-size:90%}
-    h1 {margin-left:5px;}
+    body {font-size:<?php echo $textsize ?>%; font-family:<?php echo $font ?>}
+    h1 {margin-left:1px; color:#295AAD; font-size:150%; margin-left:10px}
+    #objectives_list th{background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     td {font-size:100%}
     .q_no {text-align:right; vertical-align:top; cursor:pointer}
-    .divider {font-size:90%; font-weight:bold}
-    .mapping {font-size:90%;color:#FF6300;font-weight:normal}
     a {text-decoration:none}
     li {list-style:none; padding-bottom:5px}
     p {padding:5px}
-    h1 {font-size:120%; font-weight:bold; color:#1E3287}
     .r {text-align:right}
     .c {text-align:center}
     .symbol {width:24px; text-align:center}
+    .ico {width:16px; height:16px}
+    .sum_field {width:8em}
   </style>
+	
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+<?php
+	if ($userObject->has_role('Staff')) {
+		echo '  <script type="text/javascript" src="../js/staff_help.js"></script>';
+	} else {
+		echo '  <script type="text/javascript" src="../js/student_help.js"></script>';
+	}
+?>
 </head>
 <body>
-    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:90%; background-color:#FFFFEE; margin-bottom:8px; padding-left:6px; padding-right:6px">
-    <tr><td><img src="../artwork/ok_comment.png" width="16" height="16" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon']; ?></td></tr>
-    <tr><td><img src="../artwork/minor_comment.png" width="16" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon']; ?></td></tr>
-    <tr><td><img src="../artwork/major_comment.png" width="16" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon']; ?></td></tr>
+<?php
+	echo draw_toprightmenu();
+?>
+    <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFE; padding-left:6px; padding-right:6px">
+    <tr><td><img src="../artwork/ok_comment.png" class="ico" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon'] ?></td></tr>
+    <tr><td><img src="../artwork/minor_comment.png" class="ico" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon'] ?></td></tr>
+    <tr><td><img src="../artwork/major_comment.png" class="ico" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon'] ?></td></tr>
     <tr><td colspan="2"><?php echo $string['relativekey']; ?></td></tr>
     <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
     </table>
   <?php
-  echo "<div style=\"position:absolute; top:0px; left:0px; width:100%\">\n";
+  echo "<div style=\"position:absolute; top:0; left:0; width:100%\">\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th style=\"padding:10px\"><div style=\"font-size:220%; font-weight:bold\">$paper_title</div>\n";
-  echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th></tr>\n";
+  echo "<div><strong>$student_name " . $string['feedback'] . "</strong></div></th>";
+	echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
     echo "<tr><td class=\"yellowwarn\"><div style=\"margin-left:10px\">" . $string['staffmsg'] . "</div></td></tr>\n";
@@ -312,12 +332,13 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
 
   // Display the feedback
   ?>
+	<br />
   <h1><?php echo $string['learningobjectives']; ?></h1>
-  <p><?php echo $string['explanation']; ?></p>
+  <p style="line-height:150%; text-align:justify; margin-left:5%; margin-right:5%"><?php echo $string['explanation']; ?></p>
   <?php
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; line-height:150%\">\n";
-  echo "<tr><td style=\"border-top: 1px solid #D6E5F5\">&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td colspan=\"3\" style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;<nobr>" . $string['yourmark'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\">&nbsp;" . $string['relative'] . "&nbsp;</td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287\"><nobr>&nbsp;" . $string['qno'] . "&nbsp;</nobr></td><td style=\"border-top: 1px solid #D6E5F5\"><img src=\"../artwork/vertical_spacer.gif\" width=\"1\" height=\"21\" alt=\"\" /></td><td style=\"border-top: 1px solid #D6E5F5; color:#1E3287; text-align:center\">" . $string['objective'] . "</td></tr>";
+  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; line-height:150%\" id=\"objectives_list\">\n";
+  echo "<tr><th></th><th colspan=\"3\">&nbsp;<nobr>" . $string['yourmark'] . "&nbsp;</nobr></th><th>&nbsp;" . $string['relative'] . "&nbsp;</th><th><nobr>&nbsp;" . $string['qno'] . "&nbsp;</nobr></th><th style=\"text-align:center\">" . $string['objective'] . "</th></tr>";
   foreach ($objectives as $id => $obj_data) {
     $session_string = '';
     if ($obj_data['ratio'] >= 0.8) {
@@ -344,21 +365,21 @@ $student_name = $title . ' ' . demo_replace($initials, $demo) . ' ' . demo_repla
       $comparison = $comparison;
     }
 
-    echo "<tr><td class=\"symbol\"><img src=\"$img_src\" width=\"16\" height=\"16\" /></td><td></td><td class=\"r\">" . $obj_data['mark_sum'] . "</td><td>&nbsp;" . $string['outof'] . "&nbsp;</td><td>" . $obj_data['totalpos_sum'] . "</td><td></td><td class=\"r\">$comparison</td><td></td><td class=\"c\">" . $obj_data['questions'] . "</td><td></td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
+    echo "<tr><td class=\"symbol\"><img src=\"$img_src\" class=\"ico\" /></td><td class=\"r\">" . $obj_data['mark_sum'] . "</td><td>&nbsp;" . $string['outof'] . "&nbsp;</td><td>" . $obj_data['totalpos_sum'] . "</td><td class=\"r\">$comparison</td><td class=\"c\">" . $obj_data['questions'] . "</td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
   }
   echo "</table>\n";
 
-  echo "<h1>" . $string['summaryinformation'] . "</h1>";
-  echo "<table style=\"font-size:100%; margin-left:4px\">\n";
-  echo "<tr><td>" . $string['papertitle'] . "</td><td>$paper_title</td></tr>\n";
-  echo "<tr><td>" . $string['startedat'] . "</td><td>$started</td></tr>\n";
+  echo "<br /><div class=\"key\"><h1>" . $string['summaryinformation'] . "</h1>";
+  echo "<table style=\"font-size:100%; margin-left:8px\">\n";
+  echo "<tr><td class=\"sum_field\">" . $string['papertitle'] . "</td><td>$paper_title</td></tr>\n";
+  echo "<tr><td class=\"sum_field\">" . $string['startedat'] . "</td><td>$started</td></tr>\n";
 
   // Display student marks
   if ($paper_type < '3') {
-    echo "<tr><td>" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
-    echo "<tr><td>" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";
+    echo "<tr><td class=\"sum_field\">" . $string['examlength'] . "</td><td>" . formatsec($exam_duration * 60) . "</td></tr>\n";
+    echo "<tr><td class=\"sum_field\">" . $string['timespent'] . "</td><td>" . formatsec($time_spent) . "</td></tr>\n";
   }
-  echo "</table>\n</div>\n";
+  echo "</table></div>\n<br />\n</div>\n";
 
   $mysqli->close();
 ?>

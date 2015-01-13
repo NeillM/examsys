@@ -38,30 +38,28 @@ require_once '../classes/dateutils.class.php';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .sechead {background-color:#EAEAEA}
+    .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
 <body>
 <?php
-	require '../include/admin_options.inc';
 	require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
-<table class="header">
-<tr>
-<th colspan="4"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./system_info.php"><?php echo $string['System Information']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><nobr><?php echo $string['detailed_authentication_information']; ?></nobr></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./system_info.php"><?php echo $string['System Information'] ?></a></div>
+  <div class="page_title"><nobr><?php echo $string['detailed_authentication_information'] ?></nobr></div>
+</div>
 <?php
 $authinfo = $authentication->version_info();
 

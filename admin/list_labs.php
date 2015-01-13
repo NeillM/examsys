@@ -29,7 +29,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rog&#333;: <?php echo $string['computerlabs']; ?></title>
+  <title>Rog&#333;: <?php echo $string['computerlabs'] ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -37,11 +37,12 @@
     .foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
   </style>
 
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
-    function selLab(labID,labNo,evt) {
+  <script>
+    function selLab(labID, labNo, evt) {
       tmp_ID = $('#oldLabNo').val();
       if (tmp_ID != '') {
         $('#' + tmp_ID).css('background-color', 'white');
@@ -71,7 +72,7 @@
 
     }
 		
-		$(document).ready(function() {
+    $(function () {
 		  $('html').click(function() {
 			  deselLab();
       });
@@ -86,20 +87,19 @@
 	
 	echo draw_toprightmenu(231);
 ?>
-<div id="content" class="content">
+<div id="content">
 
-<table class="header">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['computerlabs']; ?></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['computerlabs'] ?></div>
+</div>
 
 <?php
 $labs = array();
 $campus_sizes = array();
 
-$lab_data = $mysqli->prepare("SELECT labs.id, name, count(address) AS pc_number, campus, building, low_bandwidth FROM (client_identifiers, labs) WHERE client_identifiers.lab=labs.id GROUP BY labs.id ORDER BY campus, name");
+$lab_data = $mysqli->prepare("SELECT labs.id, name, count(address) AS pc_number, campus, building, low_bandwidth FROM (client_identifiers, labs) WHERE client_identifiers.lab = labs.id GROUP BY labs.id ORDER BY campus, name");
 $lab_data->execute();
 $lab_data->store_result();
 $lab_data->bind_result($id, $name, $pc_number, $campus, $building, $low_bandwidth);

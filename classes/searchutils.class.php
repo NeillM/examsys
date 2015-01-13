@@ -28,15 +28,6 @@
 Class search_utils {
 
   /**
-   * Get an array with staff modules information the current user has access to.
-   * @return array of staff module information
-   */
-  static function get_staff_modules($staff_modules, $userroles, $userID, $db, $userObject) {
-    trigger_error("get_staff_modules:: Called and it has been removed", E_USER_WARNING);
-    return array();
-  }
-
-  /**
    * Get a list of personal and group keywords for the current user.
    * @param object $db database connection
    * @param array $teams teams the current user is on
@@ -69,16 +60,15 @@ Class search_utils {
 
   /**
    * Display a dropdown list of available teams for the current user.
-   * @param object the current user object
-   * @param object $db database connection
+   * @param object $userObj - the current user object
+   * @param string $string  - language translations.
+   * @param object $db      - database connection
    * @return string HTML of the dropdown menu
    */
-  static function display_staff_modules_dropdown($userObj, $db) {
-    global $string;
-
+  static function display_staff_modules_dropdown($userObj, $string, $db) {
     $staff_modules = $userObj->get_staff_accessable_modules();
 
-    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
+    echo "<select style=\"width:185px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
 
     $old_school = '';
@@ -87,7 +77,7 @@ Class search_utils {
         if ($old_school != '') echo "</optgroup>\n";
         echo "<optgroup label=\"" . $module['school'] . "\">\n";
       }
-      if ((isset($_POST['moduleid']) and $module['idMod'] == $_POST['moduleid']) or (isset($_GET['moduleID']) and $module['idMod'] == $_GET['moduleID']) or (isset($_GET['team']) and $module['idMod'] == $_GET['team']) or (isset($_POST['module']) and $module['idMod'] == $_POST['module']) or (isset($_GET['module']) and $module['idMod'] == $_GET['module']) or (isset($_GET['module']) and $module['id'] == $_GET['module'])) {
+      if ((isset($_POST['module']) and $module['idMod'] == $_POST['module']) or (isset($_GET['module']) and $module['idMod'] == $_GET['module']) or (isset($_GET['team']) and $module['idMod'] == $_GET['team']) or (isset($_POST['module']) and $module['idMod'] == $_POST['module']) or (isset($_GET['module']) and $module['idMod'] === $_GET['module']) or (isset($_GET['module']) and $module['id'] === $_GET['module'])) {
         echo "<option value=\"" . $module['idMod'] . "\" selected>" . $module['id'] . ": " . $module['fullname'] . "</option>\n";
       } else {
         echo "<option value=\"" . $module['idMod'] . "\">" . $module['id'] . ": " . $module['fullname'] . "</option>\n";
@@ -99,7 +89,6 @@ Class search_utils {
 
   /**
    * Get a list of names for people in the current user teams.
-   * @param array $teams teams the current user is on
    * @param string $userroles the role(s) of the current user
    * @param object $db database connection
    * @return array of name data
@@ -127,23 +116,24 @@ Class search_utils {
 
   /**
    * Display a dropdown list of owners in teams available for the current user.
-   * @param object the current user object
-   * @param object $db database connection
-   * @param string $type used to control wording - whether dealing with papers or questions
+   * @param object $userObj   - the current user object
+   * @param object $db        - database connection
+   * @param string $type      - used to control wording - whether dealing with papers or questions
+   * @param string $string    - language translations.
+   * @param array $state      - the store state of the interface.
+   * @param string $font_size - size of font to use.
    * @return string HTML of the dropdown menu
    */
-  static function display_owners_dropdown($userObj, $db, $type, $font_size = 90) {
-    global $string, $state;
+  static function display_owners_dropdown($userObj, $db, $type, $string, $state, $font_size = 90) {
     $owners = self::get_owners($userObj, $db);
 
-    echo "<select style=\"width:175px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
+    echo "<select style=\"width:185px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
     if ($type == 'questions') {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['myquestionsonly']. "</option>\n";
     } else {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['mypaperssonly']. "</option>\n";
     }
-    //echo "<option value=\"%\" style=\"background-color:#ECE9D8\"></option>\n";
 
     $old_letter = '';
     foreach ($owners as $ownerID=>$details) {
@@ -162,13 +152,12 @@ Class search_utils {
   }
 
   /**
-   * Display a dropdown menu of status options for a question.
-   * @param array $status_array Array of question statuses
+   * Display status options for a question.
+   * @param array $status_array - array of question statuses
+   * @param array $state        - the store state of the interface.
    * @return string HTML of the status dropdown menu
    */
-  static function display_status_dropdown($status_array) {
-    global $string, $state, $mysqli;
-
+  static function display_status($status_array, $state) {
     $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
 
     $html = '';
@@ -193,12 +182,12 @@ STATUS;
 
   /**
    * Display a dropdown menu of Bloom's Taxonomy options for a question.
+   * @param string $string  - language translations.
+   * @param array $state    - the store state of the interface.
    * @return string HTML of the Bloom's Taxonomy dropdown menu
    */
-  static function display_blooms_dropdown() {
-    global $string, $state;
-
-    echo "<select style=\"width:175px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
+  static function display_blooms_dropdown($string, $state) {
+    echo "<select style=\"width:185px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
     echo "<option value=\"%\">" . $string['alllevels'] . "</option>\n";
 
     $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');

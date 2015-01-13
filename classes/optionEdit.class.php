@@ -328,7 +328,7 @@ QUERY;
 
     $value = $this->replace_tex($value);
 
-    if($value != $this->text and !in_array('text', array_keys($this->_question->get_unified_fields()))) {
+    if ($value != $this->text and !in_array('text', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('text', $this->text, sprintf($this->_lang_strings['optiontext'], $this->_number));
     }
     $this->text = $value;

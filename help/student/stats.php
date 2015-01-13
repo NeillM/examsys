@@ -22,29 +22,32 @@
 * @package
 */
 
-  require '../../include/staff_student_auth.inc';
+require '../../include/staff_student_auth.inc';
+require_once '../../classes/helputils.class.php';
 
-  if(isset($_POST['startday'])) {
-	$start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';
-	$end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000';
-  } else {
-    $start_date = date('Ymd',time() - 31536000) . '000000';
-    $end_date = date('Ymd') . '000000';
-  }
+$id = null;
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 
+if (isset($_POST['startday'])) {
+$start_date = $_POST['startyear'] . $_POST['startmonth'] . $_POST['startday'] .  '000000';
+$end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000';
+} else {
+  $start_date = date('Ymd',time() - 31536000) . '000000';
+  $end_date = date('Ymd') . '000000';
+}
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 
-  <title>Rog&#333;: Help and Support Center<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <style type="text/css">
-    body {font-size:80%; margin:4px}
     ul {list-style-type:square; color:#FF9900}
     a:link.title {color:#0560A6; font-weight:bold}
     a:visited.title {color:#0560A6; font-weight:bold}
@@ -57,19 +60,19 @@
     .stats td {vertical-align:top; border-bottom: 1px solid #295AAD; border-right: 1px solid #295AAD}
 		th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
-
-  <script type="text/javascript">
-    function displayPage(targetID, page_no) {
-      for (page=1; page<=page_no; page++) {
-        document.getElementById('page' + page).style.display='none';
-      }
-      document.getElementById('page' + targetID).style.display='block';
-      window.scrollTo(0,0)
-    }
-  </script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
 </head>
 <body>
+<div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
 
@@ -197,7 +200,7 @@
   } else {
     echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border-left: #295AAD 1px solid\">\n";
     echo "<tr><th>" . $string['page'] . "</th><th>" . $string['hits'] . "</th></tr>\n";
-    while ($row = $search_results->fetch()) {
+    while ($search_results->fetch()) {
       echo "<tr><td class=\"txt\">$title</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
     }
     echo "</table>\n";
@@ -217,7 +220,7 @@
   } else {
     echo "<table class=\"stats\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; border-left: #295AAD 1px solid\">\n";
     echo "<tr><th>" . $string['searches'] . "</th><th>" . $string['term'] . "</th><th>" . $string['results'] . "</th></tr>\n";
-    while ($row = $search_results->fetch()) {
+    while ($search_results->fetch()) {
       if ($hits == 0) {
         echo "<tr style=\"color:#C00000\"><td class=\"num\">" . number_format($no_searches) . "</td><td class=\"txt\">$searchstring</td><td class=\"num\">" . number_format($hits) . "</td></tr>\n";
       } else {
@@ -233,5 +236,7 @@
 
   $mysqli->close();
 ?>
+  </div>
+</div>
 </body>
 </html>

@@ -34,8 +34,10 @@ class PaperProperties {
   private $paper_title;
   private $start_date;
   private $display_start_date;
+  private $display_start_time;
   private $end_date;
   private $display_end_date;
+  private $display_end_time;
   private $timezone;
   private $paper_type;
   private $paper_prologue;
@@ -101,8 +103,12 @@ class PaperProperties {
 
 
   /*
-  * static helper function to load the paper properties by property_id
-  *	return @PaperProperties
+  * Load the paper properties by property_id
+	* @param int $p_id						- The ID of the paper to load.
+	* @param object $db						- Link to MySQL db.
+	* @param array $string				- Language translations
+	* @param bool $exit_on_false	- If true then exist if the paper does not exist.
+  *	@return PaperProperties object
   */
   static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
@@ -123,27 +129,40 @@ class PaperProperties {
   }
 
   /*
-  * static helper function to load the paper properties by crypt_name
-  *	return @PaperProperties
+  * Load the paper properties by its crypt_name.
+	* @param string $crypt_name	- The crypt_name of the paper.
+	* @param object $db					- Link to MySQL db.
+	* @param array $string				- Language translations
+	* @param bool $exit_on_false	- If true then exist if the paper does not exist.
+  *	@return PaperProperties object
   */
-  static function get_paper_properties_by_crypt_name($crypt_name, $db) {
+  static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true) {
+    $configObj = Config::get_instance();
+    $notice = UserNotices::get_instance();
+
   	$paper_property = new PaperProperties($db);
   	$paper_property->set_crypt_name($crypt_name);
   	if ($paper_property->load() !== false) {
   		return $paper_property;
   	} else {
-  		return false;
+      if ($exit_on_false) {
+        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+      } else {
+        return false;
+      }
   	}
   }
 
 
   /*
-  * static helper function to load the paper properties by lab id
+  * Load the paper properties by lab ID
   * used in the invigilator screens. previously called (get_invigilator_properties)
-  *	return @array of PaperProperties
+	* @param object $lab_object - Lab object.
+	* @param object $db					- Link to MySQL db.
+  *	@return array of PaperProperties
   */
   static function get_paper_properties_by_lab($lab_object, $db) {
-
     $sql = "SELECT
     			properties.property_id,
     			paper_title,
@@ -152,22 +171,25 @@ class PaperProperties {
     			exam_duration,
     			calendar_year,
     			password,
-    			timezone
+    			timezone,
+          rubric
     		FROM
     			properties
     		WHERE
     			paper_type = '2' AND
-    			labs LIKE ? AND
+    			labs REGEXP ? AND
     			start_date < DATE_ADD( NOW(), interval 30 minute ) AND
     			end_date > NOW() AND
     			deleted IS NULL";
 
     $paper_results = $db->prepare($sql);
-    $lab_like = '%' . $lab_object->get_id() . '%'; //TODO this is how the old code work !! concatenated field not sure if this always works if a room is on many labs
-    $paper_results->bind_param('s', $lab_like);
+    // TODO get_lab_based_on_client only fetches the first lab that populates $lab_object
+    // If an ip address is on many labs we only use with the first we come across
+    $lab_regexp = "(^|,)(" . $lab_object->get_id() . ")(,|$)";
+    $paper_results->bind_param('s', $lab_regexp);
     $paper_results->execute();
     $paper_results->store_result();
-    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone);
+    $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone, $rubric);
 
     if ($paper_results->num_rows <= 0) {
       $paper_results->close();
@@ -184,9 +206,13 @@ class PaperProperties {
       $property_object->set_exam_duration($exam_duration);
       $property_object->set_calendar_year($calendar_year);
       $property_object->set_calendar_year($calendar_year);
+      $property_object->set_password($password);
       $property_object->set_timezone($timezone);
       $property_object->set_display_start_date();
+      $property_object->set_display_start_time();
       $property_object->set_display_end_date();
+      $property_object->set_display_end_time();
+      $property_object->set_rubric($rubric);
       $properties[] = $property_object;
     }
 
@@ -194,6 +220,9 @@ class PaperProperties {
     return $properties;
   }
 
+  /*
+  * Loads the properties of a paper into the paper property object.
+  */
   public function load() {
     $property_id = $this->get_property_id();
     $crypt_name = $this->get_crypt_name();
@@ -313,7 +342,9 @@ class PaperProperties {
     $paper_results->close();
 
     $this->set_display_start_date();
+    $this->set_display_start_time();
     $this->set_display_end_date();
+    $this->set_display_end_time();
 
     $this->changes = array();
 
@@ -328,7 +359,7 @@ class PaperProperties {
   public function save() {
     $configObject = Config::get_instance();
     $userObject   = UserObject::get_instance();
-
+		
     if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
       $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ?, recache_marks = ? WHERE property_id = ?");
       $result->bind_param('siissssssii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->recache_marks, $this->property_id);
@@ -336,8 +367,8 @@ class PaperProperties {
       $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ? WHERE property_id = ?");
       $result->bind_param('ssssssssssiississsssssssii', $this->paper_title, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->rubric, $this->calculator, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->property_id);
     } else {
-      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_type = ?, start_date = ?, end_date = ?, timezone = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, labs = ?, rubric = ?, calculator = ?, exam_duration = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, calendar_year = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ? WHERE property_id = ?");
-      $result->bind_param('ssssssssssssssiisssiissssssssssii', $this->paper_title, $this->paper_type, $this->raw_start_date, $this->raw_end_date, $this->timezone, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->labs, $this->rubric, $this->calculator, $this->exam_duration, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->calendar_year, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->property_id);
+      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_type = ?, start_date = ?, end_date = ?, timezone = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, labs = ?, rubric = ?, calculator = ?, exam_duration = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, calendar_year = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ?, deleted = ? WHERE property_id = ?");
+      $result->bind_param('ssssssssssssssiisssiissssssssssisi', $this->paper_title, $this->paper_type, $this->raw_start_date, $this->raw_end_date, $this->timezone, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->labs, $this->rubric, $this->calculator, $this->exam_duration, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->calendar_year, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->deleted, $this->property_id);
     }
     $result->execute();
     $result->close();
@@ -351,6 +382,10 @@ class PaperProperties {
 
   }
 
+  /*
+  * Returns true/false depending if the current date is between the start and end date/times.
+	* @return bool - True = the paper dates are live, False = the paper is not live.
+  */
   public function is_live() {
     if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->end_date !== null and date("U", time()) <= $this->end_date) {
       return true;
@@ -360,6 +395,10 @@ class PaperProperties {
 
   }
 
+  /*
+  * Returns true/false depending if the current paper is a) summative, and b) locked (e.g. paper start time is in the past).
+	* @return bool - True = the paper is locked, False = the paper is not locked.
+  */
   private function load_summative_lock() {
     if ($this->start_date !== null and date("U", time()) >= $this->start_date and $this->paper_type == '2') {
       $this->summative_lock = true;
@@ -368,6 +407,11 @@ class PaperProperties {
     }
   }
 
+  /*
+  * Load how many questions there are on the current paper.
+	* $item_no includes information blocks.
+	* $question_no does not include information blocks
+  */
   private function load_question_no() {
     $item_no = 0;
     $question_no = 0;
@@ -393,6 +437,9 @@ class PaperProperties {
     $this->max_display_pos = $max_display_pos;
   }
 	
+  /*
+  * Load the questions from the current paper into an array.
+	*/
 	private function load_questions() {
 	  $q_no = 0;
 	
@@ -410,6 +457,10 @@ class PaperProperties {
     $paper_results->close();		
 	}
 	
+  /*
+  * Return the list of questions used on the paper.
+	* @return - array of questions on the paper.
+	*/
 	public function get_questions() {
 	  if (!isset($this->questions)) {
 		  $this->load_questions();
@@ -441,13 +492,13 @@ class PaperProperties {
   private function load_externals() {
     $external_list = array();
 
-    $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'external'");
+    $result = $this->db->prepare("SELECT reviewerID, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND paperID = ? AND type = 'external'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
     $result->execute();
-    $result->bind_result($reviewerID);
+    $result->bind_result($reviewerID, $title, $initials, $surname);
     while ($result->fetch()) {
-      $external_list[] = $reviewerID;
+      $external_list[$reviewerID] = "$title $initials $surname";
     }
     $result->close();
 
@@ -457,13 +508,13 @@ class PaperProperties {
   private function load_internals() {
     $internal_list = array();
 
-    $result = $this->db->prepare("SELECT reviewerID FROM properties_reviewers WHERE paperID = ? AND type = 'internal'");
+    $result = $this->db->prepare("SELECT reviewerID, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND paperID = ? AND type = 'internal'");
     $property_id = $this->get_property_id();
     $result->bind_param('i', $property_id);
     $result->execute();
-    $result->bind_result($reviewerID);
+    $result->bind_result($reviewerID, $title, $initials, $surname);
     while ($result->fetch()) {
-      $internal_list[] = $reviewerID;
+      $internal_list[$reviewerID] = "$title $initials $surname";
     }
     $result->close();
 
@@ -578,15 +629,15 @@ class PaperProperties {
 
     // If set overwrite the default colours with the current users' special settings
     if ($userObject->is_special_needs()) {
-      $bgcolor = $userObject->get_bgcolor($bgcolor);
-      $fgcolor = $userObject->get_fgcolor($fgcolor);
-      $textsize = $userObject->get_textsize($textsize);
-      $marks_color = $userObject->get_marks_color($marks_color);
-      $themecolor = $userObject->get_themecolor($themecolor);
-      $labelcolor = $userObject->get_labelcolor($labelcolor);
-      $font = $userObject->get_font($font);
+      $bgcolor					= $userObject->get_bgcolor($bgcolor);
+      $fgcolor					= $userObject->get_fgcolor($fgcolor);
+      $textsize					= $userObject->get_textsize($textsize);
+      $marks_color			= $userObject->get_marks_color($marks_color);
+      $themecolor				= $userObject->get_themecolor($themecolor);
+      $labelcolor				= $userObject->get_labelcolor($labelcolor);
+      $font							= $userObject->get_font($font);
       $unanswered_color = $userObject->get_unanswered_color($unanswered_color);
-      $dismiss_color = $userObject->get_dismiss_color($dismiss_color);
+      $dismiss_color		= $userObject->get_dismiss_color($dismiss_color);
     }
   }
 
@@ -667,6 +718,13 @@ class PaperProperties {
   }
 
   /**
+   * @return string $display_start_time
+   */
+  public function get_display_start_time() {
+    return $this->display_start_time;
+  }
+
+  /**
    * @param string $display_start_date
    */
   public function set_display_start_date($display_start_date = '') {
@@ -679,6 +737,22 @@ class PaperProperties {
       }
     } else {
       $this->display_start_date = $display_start_date;
+    }
+  }
+
+  /**
+   * @param string $display_start_date
+   */
+  public function set_display_start_time($display_start_time = '') {
+    if ($display_start_time == '') {
+      // Summative papers may have no start date until scheduled
+      if ($this->start_date != '') {
+        $start_datetime = DateTime::createFromFormat('U', $this->start_date);
+        $start_datetime->setTimezone($this->get_date_time_zone());
+        $this->display_start_time = $start_datetime->format($this->configObject->get('cfg_long_time_php'));
+      }
+    } else {
+      $this->display_start_time = $display_start_time;
     }
   }
 
@@ -721,6 +795,13 @@ class PaperProperties {
   }
 
   /**
+   * @return string $end_date
+   */
+  public function get_display_end_time() {
+    return $this->display_end_time;
+  }
+
+  /**
    * @param string $end_date
    */
   public function set_display_end_date($display_end_date = '') {
@@ -733,6 +814,22 @@ class PaperProperties {
       }
     } else {
       $this->display_end_date = $display_end_date;
+    }
+  }
+
+  /**
+   * @param string $end_date
+   */
+  public function set_display_end_time($display_end_time = '') {
+    if ($display_end_time == '') {
+      // Summative papers may have no end date until scheduled
+      if ($this->end_date != '') {
+        $end_datetime = DateTime::createFromFormat('U', $this->end_date);
+        $end_datetime->setTimezone($this->get_date_time_zone());
+        $this->display_end_time = $end_datetime->format($this->configObject->get('cfg_long_time_php'));
+      }
+    } else {
+      $this->display_end_time = $display_end_time;
     }
   }
 
@@ -900,6 +997,9 @@ class PaperProperties {
    * @return string $fullscreen
    */
   public function get_fullscreen() {
+	  if ($this->fullscreen == '') {		// Fix old incorrect data.
+			$this->fullscreen = '1';
+		}
     return $this->fullscreen;
   }
 

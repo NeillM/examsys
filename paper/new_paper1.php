@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Initial screen of the create new paper dialog box.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,6 +25,9 @@
 */
 
 require '../include/staff_auth.inc';
+require '../classes/dateutils.class.php';
+
+$paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,9 +40,9 @@ require '../include/staff_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -46,6 +51,12 @@ require '../include/staff_auth.inc';
         }
       });
       $('form').removeAttr('novalidate');
+      
+      <?php
+      if (isset($_GET['type'])) {
+        echo "  activate('" . $paper_types[$_GET['type']] . "')\n";
+      }
+      ?>
     });
 
     function over(id) {
@@ -106,7 +117,7 @@ require '../include/staff_auth.inc';
 
 <body>
 <form id="theform" name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
-<div style="text-align:center; border:solid 1px #7F9DB9; background-color:white">
+<div style="text-align:center; border:solid 1px #295AAD; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
 <td colspan="8" class="titlebar" style="text-align:left">&nbsp;<?php echo $string['papertype']; ?></td>
@@ -129,11 +140,20 @@ require '../include/staff_auth.inc';
 <br />
 <?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="255" style="width:650px" required />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
+<?php
+if (isset($_GET['module'])) {
+  $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
+  $default_academic_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
+} else {
+  $default_academic_year = $configObject->get('cfg_academic_year_start');
+}
+?>
+<input type="hidden" name="default_academic_year" value="<?php echo $default_academic_year ?>" />
+<input type="hidden" name="folder" value="<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="" />
-<input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" />&nbsp;<input type="submit" name="submit" value="<?php echo $string['next']; ?>" style="width:100px" /></div>
+<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="margin-right:8px" /><input type="submit" name="submit" value="<?php echo $string['next']; ?>" class="ok" /></div>
 </form>
 </body>
 </html>

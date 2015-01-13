@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['confirmdelete'] = 'Potvrdit odstranění odkazu';
 $string['msg'] = 'Odstranění odkazu zajistí vymazání v dokumentu.<br /><br /> <strong>Neodstraní</strong> aktuální úlohu z banku úloh.';
-$string['msg2'] = 'You are trying to delete a question from a locked paper, this is not possible.';
-$string['delete'] = 'Odstranit odkaz';
-$string['deletes'] = 'Odstranit odkazy';
-$string['recyclebin'] = 'Koš';
+$string['msg2'] = 'Pokoušíte se vymazat úlohu ze Zamčeného testu, což není proveditelné.';
+$string['delete'] = 'Odstranit Otázka';
+$string['deletes'] = 'Odstranit Dotazy';
 ?>

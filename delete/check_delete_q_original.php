@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting a question in the bank.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -27,7 +29,7 @@ require '../include/errors.inc';
 
 check_var('q_id', 'GET', true, false, false);
 
-$icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline');
+$icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 
 ?>
 <!DOCTYPE html>
@@ -36,18 +38,13 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['deletequestion']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 </head>
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
-
-<td>
 <?php
   $qIDs = substr($_GET['q_id'], 1);
 
@@ -59,19 +56,18 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   if ($result->num_rows == 0) {
   ?>
 <p><?php echo $string['msg']; ?></p>
-<br />
-<div style="text-align:right">
+
+<div class="button_bar">
 <form action="do_delete_q_original.php" method="post">
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" />
 </form>
 </div>
     <?php
   } else {
     echo "<p>" . $string['warning1'] . "</p>\n<blockquote>\n";
     while ($result->fetch()) {
-      echo "<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"\" />&nbsp;" . $paper_title . "<br />\n";
+      echo "<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" alt=\"\" />&nbsp;" . $paper_title . "<br />\n";
     }
     echo "</blockquote>\n";
   ?>
@@ -79,7 +75,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <div style="text-align:right">
 <form action="do_delete_q_original.php" method="post">
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input style="width:90px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" />
 </form>
 </div>
     <?php
@@ -87,9 +83,6 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   $result->free_result();
   $result->close();
   $mysqli->close();
-    ?>
-</td></tr>
-</table>
-
+?>
 </body>
 </html>

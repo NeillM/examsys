@@ -128,27 +128,34 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
+  <link rel="stylesheet" type="text/css" href="../css/std_setting.css" />
   <style>
 		table {table-layout:auto}
 		#maincontent {height:auto}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-	<!-- HTML5 part start -->
-	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-	<script type="text/javascript" src="../js/html5.images.js"></script>
-	<script type="text/javascript" src="../js/qsharedf.js"></script>
-	<script type="text/javascript" src="../js/qlabelling.js"></script>
-	<script type="text/javascript" src="../js/qhotspot.js"></script>
-	<script type="text/javascript" src="../js/qarea.js"></script>
-	<!-- HTML5 part end -->
+  <?php
+    if ($propertyObj->get_latex_needed() == 1) {
+      echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+    }
+    if ($configObject->get('cfg_interactive_qs') == 'html5') {
+      echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+    } else {
+      echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+      echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+    }
+  ?>
 </head>
 <body>
 <?php
@@ -159,20 +166,19 @@ $paper_prologue = $propertyObj->get_paper_prologue();
 ?>
   <div id="maincontent">
 	<form method="post" name="questions" action="record_review.php?group=true">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td valign="top">
+ 
   <?php
-  echo "\n<table class=\"header\">\n";
-  echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">{$string['home']}</a>";
+  echo "\n<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">{$string['home']}</a>";
   if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
   } elseif ($module != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
   }
-  echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
-  echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $paper_title . '</div><div style="position:relative; left:12px; top:-3px; font-size:90%">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "</table>\n";
+  echo "<img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">$paper_title</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
+  echo '<div class="page_title">' . $string['standardssetting'] . ': ' . $string['angoffmethod'] . ' - ' . $string['groupreview'] . '</div>';
+  echo "</div>\n";
 ?>
   <br />
   <div align="center">
@@ -223,7 +229,7 @@ while ($stmt->fetch()) {
     if ($old_leadin != '') {
       if ($li_set == 1) echo "</td></tr>\n";
       $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-      display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
+      display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
       
       if ($old_screen != $screen) {
         echo '<tr><td colspan="2">';
@@ -239,7 +245,7 @@ while ($stmt->fetch()) {
       echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
     }
 
-    if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="14" height="14" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $notes . '</td></tr>';
+    if ($notes != '' and $q_type != 'likert') echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="16" height="16" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $notes . '</td></tr>';
 
     if ($scenario != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert') {
       echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
@@ -287,11 +293,10 @@ $stmt->close();
 
 // Print the options for the last question on the screen.
 $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-display_options($options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
+display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
 
-echo '</td></tr></table></td></tr>';
-echo "<tr><td colspan=\"2\" style=\"border-top:dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
-echo '</table>';
+echo '</td></tr></table>';
+echo '<br />';
 echo '<input type="hidden" name="module" value="' . $module . '" />';
 echo '<input type="hidden" name="folder" value="' . $folder . '" />';
 echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';

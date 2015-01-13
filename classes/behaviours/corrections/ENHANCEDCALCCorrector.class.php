@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Correction behaviour with no action
+ * Class for Correction behaviour for Calculation questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -42,16 +42,6 @@ class ENHANCEDCALCCorrector extends Corrector {
     $marks_correct = $this->_question->get_marks_correct();
     $marks_incorrect = $this->_question->get_marks_incorrect();
     $marks_partial = $this->_question->get_marks_partial();
-
-    /* Not currently used
-    $marks_unit = $this->_question->get_marks_unit();
-    if ($marks_unit != $new_correct['marks_unit']) {
-      $this->_question->set_marks_unit($new_correct['marks_unit']);
-      $changes = true;
-
-      $this->_question->add_unified_field_modification('marks_unit', 'marks_unit', $marks_unit, $new_correct['marks_unit'], $this->_lang_strings['postexamchange']);
-    }
-    */
 
     $tolerance_full = $this->_question->get_tolerance_full();
     if ($tolerance_full != $new_correct['tolerance_full']) {

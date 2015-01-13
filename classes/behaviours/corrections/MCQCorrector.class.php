@@ -50,7 +50,7 @@ class MCQCorrector extends Corrector {
 
     if ($changes) {
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log{$paper_type}'.
@@ -59,9 +59,9 @@ class MCQCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $new_mark = ($user_answer == $new_correct['option_correct']) ? $first->get_marks_correct() : $first->get_marks_incorrect();
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id=?");
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
             $updateLog->bind_param('iii', $new_mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();

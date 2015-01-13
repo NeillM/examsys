@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';
 $string['calendar'] = 'Calendar';
 $string['clearguestaccounts'] = 'Clear Guest Accounts';
 $string['clearoldlogs'] = 'Clear Old Logs';
@@ -27,7 +26,9 @@ $string['ebelgridtemplates'] = 'Ebel Grid Templates';
 $string['faculties'] = 'Faculties';
 $string['modules'] = 'Modules';
 $string['optimizetables'] = 'Optimize Tables';
+$string['phpinfo'] = 'phpinfo()';
 $string['questionstatuses'] = 'Question statuses';
+$string['savefailattempts'] = 'Save Fail Attempts';
 $string['schools'] = 'Schools';
 $string['smsimports'] = 'SMS Imports';
 $string['statistics'] = 'Statistics';

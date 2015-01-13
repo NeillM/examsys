@@ -106,9 +106,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $add_team_members = 0;
   }
 
+  $academic_year_start = trim($_POST['academic_year_start']);
+
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
-  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
+  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
 
   header("location: list_modules.php");
   exit();
@@ -126,14 +128,16 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    .field {text-align:right; padding-right:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
+  <script type="text/javascript" src="../js/system_tooltips.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
 <?php
   $vle_apis = $configObject->get('vle_apis');
   if (count($vle_apis) > 0) {
@@ -159,35 +163,40 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 <?php
   }
 ?>
+      $('#stdset').click(function() {
+        if ($('#stdset').prop('checked')) {
+          $('#ebelgrid').show();
+        } else {
+          $('#ebelgrid').hide();
+        }
+      });
+      $('#cancel').click(function() {
+        history.back();
+      });    
     });
-
-    function showHideGrid() {
-      if ($('#stdset').attr('checked')) {
-        $('#ebelgrid').show();
-      } else {
-        $('#ebelgrid').hide();
-      }
-    }
   </script>
   </head>
 
   <body>
   <?php
-    require '../include/module_options.inc';
+    require '../include/admin_module_options.inc';
 		require '../include/toprightmenu.inc';
 
 		echo draw_toprightmenu(233);
   ?>
-  <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['createmodule']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-  </table>
+  <div id="content">
+  <div class="head_title">
+		<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+		<div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="list_modules.php"><?php echo $string['modules'] ?></a></div>
+		<div class="page_title"><?php echo $string['createmodule']; ?></div>
+  </div>
+	
   <br />
-  <div align="center">
+
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-    <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
+    <table cellpadding="0" cellspacing="1" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" required autofocus /></td></tr>
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname']; ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname'] ?>" required /></td></tr>
 
 <?php
   $old_faculty = '';
@@ -216,6 +225,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   echo '</select></td></tr>';
 ?>
+    <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text"  name="academic_year_start" value="<?php echo $configObject->get('cfg_academic_year_start') ?>" style="width:50px" required /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_format'] ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
 <?php
   foreach ($vle_apis as $vle_name => $vle_api_data) {
@@ -223,7 +233,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       $selected = ($vle_api == $vle_name and $map_level == $api_level) ? ' selected="selected"' : '';
 
     ?>
-      <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected; ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level']; ?></option>
+      <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level'] ?></option>
     <?php
     }
   }
@@ -231,14 +241,14 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     </select>
     <div id="map_level_holder"></div>
     </td></tr>
-    <tr><td class="field"><?php echo $string['summativechecklist']; ?></td><td><input type="checkbox" name="peer" checked="checked" /> <?php echo $string['peerreview']; ?>, <input type="checkbox" name="external" checked /> <?php echo $string['externalexaminers']; ?>, <input onclick="showHideGrid()" type="checkbox" id="stdset" name="stdset" /> <?php echo $string['standardssetting']; ?>, <input type="checkbox" name="mapping" /> <?php echo $string['mapping']; ?></td></tr>
-    <tr><td class="field"><?php echo $string['active']; ?></td><td><input type="checkbox" name="active" checked /></td></tr>
-    <tr><td class="field"><?php echo $string['allowselfenrol']; ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
-    <tr><td class="field"><?php echo $string['negativemarking']; ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>
-    <tr><td class="field"><?php echo $string['timedexams']; ?></td><td><input type="checkbox" name="timed_exams" /></td></tr>
-    <tr><td class="field"><?php echo $string['questionbasedfeedback']; ?></td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
-    <tr><td class="field"><?php echo $string['addteammembers']; ?></td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
-    <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid']; ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
+    <tr><td class="field"><?php echo $string['summativechecklist'] ?></td><td><input type="checkbox" name="peer" checked="checked" /><?php echo $string['peerreview'] ?>, <input type="checkbox" name="external" checked /><?php echo $string['externalexaminers'] ?>, <input type="checkbox" id="stdset" name="stdset" /><?php echo $string['standardssetting'] ?>, <input type="checkbox" name="mapping" /><?php echo $string['mapping'] ?></td></tr>
+    <tr><td class="field"><?php echo $string['active'] ?></td><td><input type="checkbox" name="active" checked /></td></tr>
+    <tr><td class="field"><?php echo $string['allowselfenrol'] ?></td><td><input type="checkbox" name="selfenroll" /></td></tr>
+    <tr><td class="field"><?php echo $string['negativemarking'] ?></td><td><input type="checkbox" name="neg_marking" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['timedexams'] ?></td><td><input type="checkbox" name="timed_exams" /></td></tr>
+    <tr><td class="field"><?php echo $string['questionbasedfeedback'] ?></td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['addteammembers'] ?></td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
+    <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid'] ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
     $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
     $result->execute();
     $result->bind_result($id, $name);
@@ -247,11 +257,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     ?></select></td></tr>
-    </table>
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
-  </form>
-  </div>
-</div>
+
+    <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></td></tr>
+		</table>
+	</form>
+
+	</div>
 <?php
 }
 ?>

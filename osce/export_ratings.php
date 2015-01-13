@@ -16,97 +16,93 @@
 
 /**
 *
+* Export cohort ratings in CSV format.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-  require '../include/staff_auth.inc';
-  $paperID = $_GET['paperID'];
+require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 
-  // Capture the paper makeup.
-  $paper_buffer = array();
-  $question_no = 0;
+$paperID   	= check_var('paperID', 'GET', true, false, true);
+$startdate	= check_var('startdate', 'GET', true, false, true);
+$enddate		= check_var('enddate', 'GET', true, false, true);
+$repcourse	= check_var('repcourse', 'GET', true, false, true);
 
-  $result = $mysqli->prepare("SELECT paper_title, q_id FROM (papers, questions, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND q_type='likert' ORDER BY display_pos");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_title, $q_id);
-  while ($row = $result->fetch()) {
-    $paper_buffer[$question_no]['ID'] = $q_id;
-    $question_no++;
-  }
-  $result->close();
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-  header('Pragma: public');
-  header('Content-type: application/octet-stream');
-  header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
+$questions 		= $propertyObj->get_questions();
+$paper_title	= $propertyObj->get_paper_title();
 
-  $log_array = array();
-  $hits = 0;
-  $user_no = 0;
-  // Capture the log data first.
-  $sql = <<<SQL
-SELECT DISTINCT sid.student_id, users.username, title, surname, initials, grade, gender,
- started, log4.q_id, rating
-FROM (log4, log4_overall, questions, users) LEFT JOIN sid ON users.id=sid.userID
-WHERE log4.log4_overallID = log4_overall.id AND log4.q_id = questions.q_id AND q_paper=?
- AND users.id = log4_overall.userID
- AND (users.roles = 'Student' OR users.roles = 'graduate') AND grade LIKE ?
+header('Pragma: public');
+header('Content-type: application/octet-stream');
+header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
+
+$log_array = array();
+$hits = 0;
+$user_no = 0;
+// Capture the log data first.
+$sql = <<<SQL
+SELECT DISTINCT sid.student_id, student.username, student.title, student.surname, student.initials, examiner.title, examiner.surname, examiner.initials, student.grade, student.gender,
+ started, log4.q_id, rating, year, feedback, numeric_score
+FROM (log4, log4_overall, questions, users student, users examiner) LEFT JOIN sid ON student.id = sid.userID
+WHERE log4.log4_overallID = log4_overall.id AND log4.q_id = questions.q_id AND q_paper = ?
+ AND student.id = log4_overall.userID
+ AND examiner.id = log4_overall.examinerID
+ AND (student.roles = 'Student' OR student.roles = 'graduate') AND student.grade LIKE ?
  AND started >= ? AND started <= ?
 SQL;
   $result = $mysqli->prepare($sql);
-  $result->bind_param('isss', $paperID, $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
+  $result->bind_param('isss', $paperID, $repcourse, $startdate, $enddate);
   $result->execute();
-  $result->bind_result($user_ID, $username, $title, $surname, $initials, $grade, $gender, $started, $q_id, $rating);
+  $result->bind_result($user_ID, $username, $student_title, $student_surname, $student_initials, $examiner_title, $examiner_surname, $examiner_initials, $grade, $gender, $started, $q_id, $rating, $year, $feedback, $numeric_score);
   while ($result->fetch()) {
     $log_array[$user_ID]['student_id'] = $user_ID;
     $log_array[$user_ID]['username'] = $username;
     $log_array[$user_ID][$q_id] = $rating;
     $log_array[$user_ID]['course'] = $grade;
     $log_array[$user_ID]['started'] = $started;
-    $log_array[$user_ID]['title'] = $title;
-    $log_array[$user_ID]['surname'] = $surname;
-    $log_array[$user_ID]['initials'] = $initials;
+    $log_array[$user_ID]['title'] = $student_title;
+    $log_array[$user_ID]['surname'] = $student_surname;
+    $log_array[$user_ID]['initials'] = $student_initials;
     $log_array[$user_ID]['gender'] = $gender;
+    $log_array[$user_ID]['year'] = $year;
+    $log_array[$user_ID]['examiner'] = $examiner_title . ' ' .  $examiner_initials . ' ' . $examiner_surname;
+    $log_array[$user_ID]['feedback'] = $feedback;
+    $log_array[$user_ID]['numeric_score'] = $numeric_score;
     $user_no++;
   }
   $result->close();
-
-  //echo "SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examinerID=users.id AND log4_overall.userID=sid.userID AND q_paper=$paperID AND started>='" . $_GET['startdate'] . "' AND started<='" . $_GET['enddate'] . "'<br />";
-  $result = $mysqli->prepare("SELECT student_id, overall_rating, numeric_score, feedback, log4_overall.year, title, surname, initials FROM (log4_overall, sid, users) WHERE log4_overall.examinerID=users.id AND log4_overall.userID=sid.userID AND q_paper=? AND started>=? AND started<=?");
-  $result->bind_param('iss', $paperID, $_GET['startdate'], $_GET['enddate']);
-  $result->execute();
-  $result->bind_result($user_ID, $overall_rating, $numeric_score, $feedback, $year, $title, $surname, $initials);
-  while ($result->fetch()) {
-    $log_array[$user_ID]['year'] = $year;
-    $log_array[$user_ID]['examiner'] = $title . ' ' .  $initials . ' ' . $surname;
-    $log_array[$user_ID]['feedback'] = $feedback;
-    $log_array[$user_ID]['numeric_score'] = $numeric_score;
-  }
-  $result->close();
-
-
+	
   $row_written = 0;
   foreach ($log_array as $individual) {
     $tmp_user_ID = $individual['username'];
-    // Write out the headings.
-    if ($row_written == 0) {
-      // Only output personal data if assessment, do not show if survey.
+    
+    if ($row_written == 0) {			// Write out the headings.
       echo 'OSCE Station,Examiner,Gender,Title,Surname,Initials,Username,Student ID,Course,Year,Date';
-      for ($i=0; $i<$question_no; $i++) {
-        echo ',Q' . ($i+1);
+			$i = 1;
+			foreach ($questions as $question) {
+        if ($question['type'] != 'info') {
+					echo ',Q' . $i;
+					$i++;
+				}
       }
       echo ",Overall Score,Feedback\n";
     }
+		
     // Write out the raw data.
     echo $paper_title . ',' . $individual['examiner'] . ',' . $individual['gender'] . ',' . $individual['title'] . ',' . $individual['surname'] . ',' . $individual['initials'] . ',' . $individual['username'] . ',' . $individual['student_id'] . ',' . $individual['course'] . ',' . $individual['year'] . ',' . $individual['started'];
-    for ($i=0; $i<$question_no; $i++) {
-      $tmp_question_ID = $paper_buffer[$i]['ID'];
-      echo ',' . $individual[$tmp_question_ID];
-    }
-    echo ',' . $individual['numeric_score'] . ',' . $individual['feedback'];
+    foreach ($questions as $question) {
+      if ($question['type'] != 'info') {				// Skip over information block questions.
+				$tmp_question_ID = $question['q_id'];
+				echo ',' . $individual[$tmp_question_ID];
+			}
+		}
+    echo ',' . $individual['numeric_score'] . ',"' . $individual['feedback'] . '"';
     echo "\n";
     $row_written++;
   }

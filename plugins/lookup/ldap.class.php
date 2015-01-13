@@ -240,18 +240,6 @@ class ldap_lookup extends outline_lookup {
   function create_filter($ldap_attributes, $reverse_attribute, $value) {
     $filtergen = array_keys($ldap_attributes, $reverse_attribute);
 
-    /*
-        //debug
-
-        $debug=new stdClass();
-        $debug->ldap_a=$ldap_attributes;
-        $debug->rev_a=$reverse_attribute;
-        $debug->value=$value;
-        $debug->filtergen=$filtergen;
-
-        var_dump($debug);
-    */
-
     $filter = '';
     if (count($filtergen) > 1) {
 

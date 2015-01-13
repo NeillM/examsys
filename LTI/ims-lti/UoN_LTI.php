@@ -31,7 +31,7 @@ class UoN_LTI extends BLTI {
   // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
 
   static $inst;
-  static $class_name='UoN_LTI';
+  static $class_name = 'UoN_LTI';
   /**
    * Create and return the Global instance of parent::$class_name for use in
    * the Local scope.
@@ -237,7 +237,6 @@ class UoN_LTI extends BLTI {
     }
   }
 
-
   function get_lti_keys($deleted = false) {
     $dataret = array();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -250,9 +249,9 @@ class UoN_LTI extends BLTI {
           echo nl2br($e->getTraceAsString());
         }
       }
-      $extra='';
+      $extra = '';
       if (!$deleted) {
-        $extra=' WHERE deleted IS NULL ';
+        $extra = ' WHERE deleted IS NULL ';
       }
       $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
       if ($db->error) {
@@ -268,10 +267,9 @@ class UoN_LTI extends BLTI {
       $stmt->store_result();
       $stmt->bind_result($lti_keys_id, $lti_keys_key, $lti_keys_secret, $lti_keys_name, $lti_keys_context_id, $lti_keys_deleted, $lti_keys_updated_on);
 
-
       $rows = $stmt->num_rows;
       while ($stmt->fetch()) {
-        $dataret[$lti_keys_id]=array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
+        $dataret[$lti_keys_id] = array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
       }
       $stmt->close();
 
@@ -292,7 +290,6 @@ class UoN_LTI extends BLTI {
       $rows = $stmt->num_rows;
       $stmt->fetch();
       $stmt->close();
-
     }
     
     return $rows > 0;
@@ -318,7 +315,7 @@ class UoN_LTI extends BLTI {
           echo nl2br($e->getTraceAsString());
         }
       }
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name`=? WHERE id=?");
+      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name` = ? WHERE id = ?");
       $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
       $stmt->execute();
       $stmt->close();
@@ -363,7 +360,7 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -385,12 +382,12 @@ class UoN_LTI extends BLTI {
   function lookup_lti_user($lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE  lti_user_key=?");
+      $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE lti_user_key = ?");
       if ($this->db->error) {
         try {
           $a = $this->db->error;
           $b = $this->db->errno;
-          throw new Exception("0MySQL error $a <br /> Query:<br /> $query", $b);
+          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -420,7 +417,7 @@ class UoN_LTI extends BLTI {
   function add_lti_user($lti_user_equ, $lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?,?,NOW()) ON DUPLICATE KEY UPDATE updated_on=NOW()");
+      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE updated_on = NOW()");
       $result->bind_param('ss', $lti_user_key, $lti_user_equ);
       $result->execute();
       $ret = $this->db->insert_id;
@@ -437,12 +434,12 @@ class UoN_LTI extends BLTI {
   function update_lti_user($lti_user_key = false) {
     if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on=NOW() WHERE lti_user_key=? ");
+      $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on = NOW() WHERE lti_user_key = ?");
       if ($this->db->error) {
         try {
           $a = $this->db->error;
           $b = $this->db->errno;
-          throw new Exception("0MySQL error $a <br /> Query:<br /> $query", $b);
+          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
         }
         catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
@@ -490,7 +487,7 @@ class UoN_LTI extends BLTI {
   function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
     if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type,updated_on) VALUES (?, ?, ?, NOW()) ");
+      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type, updated_on) VALUES (?, ?, ?, NOW()) ");
       $result->bind_param('sss', $lti_resource_key, $internal_id, $internal_type);
       $result->execute();
       $ret = $this->db->insert_id;
@@ -564,7 +561,7 @@ class UoN_LTI extends BLTI {
       $db=$this->db;
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $db->error <br /> Query:<br /> ", $db->errno);
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
         } catch (Exception $e) {
           echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
           echo nl2br($e->getTraceAsString());

@@ -16,6 +16,8 @@
 
 /**
 *
+* Set a paper as retired.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -72,7 +74,7 @@ if (isset($_POST['questions'])) {
 }
 
 // Retire the paper itself
-$result = $mysqli->prepare("UPDATE properties SET retired=NOW() WHERE property_id = ?");
+$result = $mysqli->prepare("UPDATE properties SET retired = NOW() WHERE property_id = ?");
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->close();
@@ -91,20 +93,24 @@ $mysqli->close();
   <title><?php echo $string['paperretired'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+	<style type="text/css">
+	  body {background-color:#F1F5FB; font-size:90%}
+	</style>
 
-  <script language="JavaScript">
-    function closeWindow() {
-      // window.opener.location.reload(true);
-      // window.close();
-    }
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      window.opener.location.reload(true);
+      window.close();
+    });
   </script>
 </head>
 
-<body onload="closeWindow();" style="background-color:#F1F5FB; font-size:90%">
+<body>
 
 <table cellpadding="8" cellspacing="0" border="0" width="100%">
 <tr>
-<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" border="0" alt="<?php echo $string['paperretired']; ?>" /></td>
+<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" alt="<?php echo $string['paperretired']; ?>" /></td>
 
 <td><p><?php echo $string['msg']; ?><p>
 

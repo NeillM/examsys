@@ -15,5 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['secondmark'] = 'Druhotné hodnocení';
-$string['secondmarkselection'] = 'Výbìr druhotného hodnocení';
+$string['secondmarkselection'] = 'Výběr druhotného hodnocení';
+$string['noattempts'] = 'V daném období <strong>%s &ndash; %s</strong> zkoušku nesložil žádný student.';
+$string['selectall'] = 'Select all';
 ?>

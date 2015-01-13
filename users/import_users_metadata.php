@@ -30,6 +30,7 @@ require_once '../include/errors.inc';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
+require_once '../include/demo_replace.inc';
 
 $module = check_var('module', 'GET', true, false, true);
 set_time_limit(0);
@@ -51,27 +52,38 @@ if (!$module_details) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rogō: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="../js/sidebar.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/sidebar.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      $(document).click(function() {
+        hideMenus();
+      });
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });
+  </script>
   
   <style type="text/css">
-    p {margin:0px; padding:0px}
     h1 {font-size:120%; font-weight:bold}
     .failed {color:#C00000}
   </style>
 </head>
 
-<body onclick="hideMenus()">
+<body>
 <?php
-  require '../include/folder_options.inc';
+  require '../include/module_options.inc';
 ?>
-<div id="content" class="content" style="font-size:90%; padding-left:10px">
+<div id="content" class="content" style="font-size:90%">
 <br />
 
 <?php
@@ -168,7 +180,7 @@ if (!$module_details) {
       
       echo "</table>\n";
       
-      echo "<br />\n<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../folder/details.php?module=" . $_GET['module'] . "';\" /></div>\n<br />\n</td></tr></table>\n</body>\n</html>\n";
+      echo "<br />\n<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../module/index.php?module=" . $_GET['module'] . "';\" /></div>\n<br />\n</td></tr></table>\n</body>\n</html>\n";
 
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv");
 
@@ -189,7 +201,7 @@ if (!$module_details) {
 
 <br />
 <div style="text-align:center">
-<img src="../artwork/user_metadata_sheet.png" width="350" height="165" style="border:1px solid black" alt="" />
+<img src="../artwork/user_metadata_sheet.png" width="328" height="159" style="border:1px solid #808080" alt="" />
 <br />
 <form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?module=' . $_GET['module']; ?>" enctype="multipart/form-data">
 <table style="margin-left:auto; margin-right:auto; text-align:left">
@@ -214,7 +226,7 @@ if ($file_problem) {
 ?></td></tr>
 </table>
 <br />
-<p style="padding-bottom:10px"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" id="cancel" /></p>
 </form>
 </div>
 </td>

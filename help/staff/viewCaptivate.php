@@ -31,7 +31,7 @@ $tutorial = check_var('tutorial', 'GET', true, false, true);
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <title>Online Tutorial<?php echo " " . $configObject->get('cfg_install_type') ?></title>
   <style type="text/css">
     html, body {margin:0;	padding:0; height:100%; width:100%}

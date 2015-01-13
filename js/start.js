@@ -1,30 +1,10 @@
-
-function refreshparent() {
-  window.opener.location.reload();
-}
-
-function onoff(questionID, itemID) {
-  objID = questionID + '_' + itemID;
-  if (document.getElementById(objID).className == "act") {
-    document.getElementById(objID).className = "inact";
-    setting = '1';
-  } else {
-    document.getElementById(objID).className = "act";
-    setting = '0';
-  }
-  objID = 'dismiss' + questionID;
-  current_value = document.getElementById(objID).value;
-  new_value = current_value.slice(0,itemID-1) + setting + current_value.slice(itemID,current_value.length);
-  document.getElementById(objID).value = new_value;
-}
-
 function UpdateClock( hours, minutes, seconds) {
   KillClock();
   
-  if( hours == 0 ){
+  if ( hours == 0 ){
     hours   = '';
     minutes = ( ( minutes  < 10 ) ? "0" : "" ) + minutes;
-  }else{
+  } else {
     hours   = ( ( hours < 10 ) ? "0" : "" ) + hours;
     minutes = ( ( minutes  < 10 ) ? ":0" : ":" ) + minutes;
   }
@@ -35,7 +15,7 @@ function UpdateClock( hours, minutes, seconds) {
 
 
 //BP Performs countdown. Saves if counter has reached 0
-function UpdateTimerWithRemainingTime( remaining_time, close ) {
+function UpdateTimerWithRemainingTime(remaining_time, close) {
   
   minutes = Math.floor( remaining_time / 60 );
   minutes = Math.round( minutes );
@@ -43,7 +23,7 @@ function UpdateTimerWithRemainingTime( remaining_time, close ) {
   
   UpdateClock( 0, minutes, seconds);
   
-  if( remaining_time == 0 && close == true){
+  if (remaining_time == 0 && close == true) {
     KillClock();
     alert( 'Your time has expired and your answers have been saved' );
     forceSave();
@@ -63,40 +43,51 @@ function UpdateClockWithCurrentTime() {
   var minutes = tDate.getMinutes();
   var seconds = tDate.getSeconds();
   
-  UpdateClock( hours, minutes, seconds);
+  UpdateClock(hours, minutes, seconds);
   
-  clockID = setTimeout( "UpdateClockWithCurrentTime()", 1000);
+  clockID = setTimeout("UpdateClockWithCurrentTime()", 1000);
 }
 
-function StartTimer( remaining_time, close ){
-
-  clockID = setTimeout( "UpdateTimerWithRemainingTime(" + remaining_time + ", " + close + " )", 500);
+function StartTimer(remaining_time, close) {
+  clockID = setTimeout("UpdateTimerWithRemainingTime(" + remaining_time + ", " + close + " )", 500);
 }
 
 function StartClock() {
-  clockID = setTimeout( "UpdateClockWithCurrentTime()", 500);
+  clockID = setTimeout("UpdateClockWithCurrentTime()", 500);
 }
 
 function KillClock() {
-  if(clockID) {
+  if (clockID) {
     clearTimeout(clockID);
     clockID  = 0;
   }
 }
 
 function MRQ(questionid, part_id, options_total, selectable) {
+	var abstainExist = document.getElementById("q" + questionid + "_abstain");
+	if (abstainExist != null) {
+		$("#q" + questionid + "_abstain").prop("checked", false);
+	}
+	
   checked_total = 0;
   for (i=1; i<=options_total; i++) {
     currentid = "q" + questionid + "_" + i;
-    if (document.getElementById(currentid).checked == 1) {
+    if ($('#' + currentid).prop("checked")) {
       checked_total++;
     }
   }
   if (checked_total > selectable) {
-	alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
-    document.getElementById("q" + questionid + "_" + part_id).checked = 0;
+		alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+		$("#q" + questionid + "_" + part_id).prop("checked", false);
   }
 }
+
+function MRQabstain(questionid, options_total) {
+  for (i=1; i<=options_total; i++) {
+		$("#q" + questionid + "_" + i).prop("checked", false);
+  }
+}
+
 function rankCheck() {
   var sel = $(this).val();    
   var classlist =  '.' + $(this).attr('class').replace(' ', '.');
@@ -135,26 +126,55 @@ function multimatchingCheck(questionid, options_total, selectable) {
   }
 }
 
-function openCalc2() {
-  if (typeof(calc) == 'object' && calc.closed != true) {
-    calc.focus();
-  } else {
-    calc=window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=360,top=10,left="+(document.documentElement.clientWidth-280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    if (window.focus) {
-      calc.focus();
-    }
-  }
-}
+$(document).ready(function(){
 
-function openLink(url,name,width,height) {
-  if (typeof (doc) == 'object' && doc.closed != true) {
-    doc.focus();
-  } else {
-    doc = window.open(url, name, "width=" + width + ",height=" + height + ",top=10,left="+(document.documentElement.clientWidth-280)+",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
-    if (window.focus) {
-      doc.focus();
+  $('.calc').click(function() {
+    if (typeof(calc) == 'object' && calc.closed != true) {
+      calc.focus();
+    } else {
+      calc = window.open("../tools/calc98/jcalc98.php","calculator","width=250,height=364,top=10,left="+($(window).width() - 280)+"scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no");
+      if (window.focus) {
+        calc.focus();
+      }
     }
+  });
+  
+  $('#previous').click(function() {
+    $('#button_pressed').val('previous');
+  });
+  
+  $('#finish').click(function() {
+    $('#button_pressed').val('finish');
+  });
+  
+  $('.act').click(function() {
+    onoff($(this).attr('id'));
+  });
+
+  $('.inact').click(function() {
+    onoff($(this).attr('id'));
+  });
+
+});
+
+function onoff(objID) {
+  var parts = objID.split("_");
+  var questionID = parts[0];
+  var itemID = parts[1];
+
+  if ($('#' + objID).hasClass("act")) {
+    $('#' + objID).addClass("inact")
+    $('#' + objID).removeClass("act")
+    setting = '1';
+  } else {
+    $('#' + objID).addClass("act")
+    $('#' + objID).removeClass("inact")
+    setting = '0';
   }
+  objID = 'dismiss' + questionID;
+  current_value = $('#' + objID).val();
+  new_value = current_value.slice(0,itemID-1) + setting + current_value.slice(itemID,current_value.length);
+  $('#' + objID).val(new_value);      
 }
 
 function write_string(p_string) {

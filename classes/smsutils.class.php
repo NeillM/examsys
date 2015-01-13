@@ -16,7 +16,7 @@
 
 /**
 * 
-* Utility class for user related functions
+* Utility class for Student Management System (SMS) related functions
 * 
 * @author Anthony Brown
 * @version 1.0
@@ -27,7 +27,6 @@
 require_once ($configObject->get('cfg_web_root') . '/include/load_config.php');
 
 Abstract Class SmsUtils {
-
 
   public $errorinfo;
 
@@ -46,14 +45,14 @@ Abstract Class SmsUtils {
   }
 
   public function __construct() {
-    $this->errorinfo['usernamematch']=array();
-    $this->errorinfo['usernamematchdata']=array();
-    $this->errorinfo['unabletodetermineusername']=array();
-    $this->errorinfo['unabletodetermineusernamedata']=array();
-    $this->errorinfo['moduleerrorstate']=array();
-    $this->errorinfo['moduleerrorstatedata']=array();
-    $this->errorinfo['modulenodata']=array();
-    $this->errorinfo['modulenodatadata']=array();
+    $this->errorinfo['usernamematch']									= array();
+    $this->errorinfo['usernamematchdata']							= array();
+    $this->errorinfo['unabletodetermineusername']			= array();
+    $this->errorinfo['unabletodetermineusernamedata'] = array();
+    $this->errorinfo['moduleerrorstate']							= array();
+    $this->errorinfo['moduleerrorstatedata']					= array();
+    $this->errorinfo['modulenodata']									= array();
+    $this->errorinfo['modulenodatadata']							= array();
   }
 
   public function geterrors() {

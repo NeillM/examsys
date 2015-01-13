@@ -108,15 +108,13 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    input, textarea {line-height:140%}
-  </style>
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -136,7 +134,7 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu(231);
 ?>
-<div id="content" class="content">
+<div id="content">
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?labID=' . $_GET['labID']; ?>" method="post">
 
 <?php
@@ -147,9 +145,11 @@ if (isset($_POST['submit'])) {
   $result->bind_result($address, $low_bandwidth);
   while ($result->fetch()) {
     if ($ip_no == 0) {
-      echo "<table class=\"header\">\n";
-      echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php\">" . $string['administrativetools'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div><div style=\"font-size:220%; font-weight:bold; margin-left:10px\">Edit Lab</div></th>\n";
-      echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+      echo "<div class=\"head_title\">\n";
+      echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
+      echo "<tr><th><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php\">" . $string['administrativetools'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./list_labs.php\">" . $string['editcomputerlab'] . "</a></div>\n";
+      echo "<div class=\"page_title\">Edit Lab</div>\n";
+      echo "</div>\n";
       if (count($bad_addresses) > 0) {
         echo "<tr><td style=\"color: #f00; font-weight: bold\">\n";
         $address_list = '';
@@ -160,7 +160,6 @@ if (isset($_POST['submit'])) {
         printf($string['badaddressesmsg'], $address_list);
 ?>
 <br /><br /><a href="./lab_details.php?labID=<?php echo $lab_id ?>"><?php echo $string['backtolab'] ?></a></td></tr>
-</table>
 </body>
 </html>
 <?php

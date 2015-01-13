@@ -23,64 +23,94 @@
 */
 
 require_once '../classes/mathsutils.class.php';
+require_once '../classes/killer_question.class.php';
 
-
-function save_osce_form($paperID, $number_of_questions, $userID, $postdata, $db) {
+/**
+ * Save OSCE form data back to the database.
+ * @param int $propertyObj					- Object of the OSCE station paper.
+ * @param int $userID								- ID of the student
+ * @param mixed $postdata						- $_POST data from the form.
+ * @param object $db								- Link to MySQL database.
+ */
+function save_osce_form($propertyObj, $userID, $postdata, $db) {
     
-    $userObject = UserObject::get_instance();
-            
-    if ($postdata['userID'] != '') {
-        $result = $db->prepare("SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
-        $result->bind_param('ii', $paperID, $userID);
-        $result->execute();
-        $result->store_result();
-        $result->bind_result($insertID);
-        $result->fetch();
-        $have_record = $result->num_rows > 0;
-        $result->close();
+	$userObject = UserObject::get_instance();
+  
+  $paperID      = $propertyObj->get_property_id();
+  $marking      = $propertyObj->get_marking();
+  $number_of_qs = $propertyObj->get_question_no();
+  $pass_mark    = $propertyObj->get_pass_mark();
+	$total_mark   = $propertyObj->get_total_mark();
+  
+	if ($postdata['userID'] != '') {
+		$result = $db->prepare("SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1");
+		$result->bind_param('ii', $paperID, $userID);
+		$result->execute();
+		$result->store_result();
+		$result->bind_result($insertID);
+		$result->fetch();
+		$have_record = $result->num_rows > 0;
+		$result->close();
 
-        if ($have_record) {
-          // Delete any Log4 previous submissions for this student.
-          $result = $db->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
-          $result->bind_param('i', $insertID);
-          $result->execute();
-        } else {
-          // Write summary information into Log4_overall.
-          $started = DATE('YmdHis');
-          $result = $db->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, ?, 'electronic', ?)");
-          $result->bind_param('isisssii', $userID, $started, $paperID, $postdata['overall_val'], $postdata['fback'], $postdata['grade'], $userObject->get_user_ID(), $postdata['year']);
-          $result->execute();
-          $result->close();
+		if ($have_record) {
+			// Delete any Log4 previous submissions for this student.
+			$result = $db->prepare("DELETE FROM log4 WHERE log4_overallID = ?");
+			$result->bind_param('i', $insertID);
+			$result->execute();
+		} else {
+			// Write summary information into Log4_overall.
+			$started = DATE('YmdHis');
+			$result = $db->prepare("INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, NULL, ?, ?, ?, 'electronic', ?)");
+			$result->bind_param('isisssii', $userID, $started, $paperID, $postdata['overall_val'], $postdata['fback'], $postdata['grade'], $userObject->get_user_ID(), $postdata['year']);
+			$result->execute();
+			$result->close();
 
-          $insertID = $db->insert_id;
-        }
+			$insertID = $db->insert_id;
+		}
 
-        // Write individual ratings into Log4.
-        $numeric_score = 0;
-        for ($question = 1; $question <= $number_of_questions; $question++) {
-          $tmp_val = ($postdata['q' . $question . '_val'] - 1);
-          if (isset( $postdata[$postdata['q' . $question . '_id'] . '_parts'] )) {
-            $q_parts = $postdata[$postdata['q' . $question . '_id'] . '_parts'];
-          } else {
-            $q_parts = '';
-          }
-          $result = $db->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)");
-          $result->bind_param('issi', $postdata['q' . $question . '_id'], $tmp_val, $q_parts, $insertID);
-          $result->execute();
-          $result->close();
-          $numeric_score += ($postdata['q' . $question . '_val'] - 1);
-        }
+		// Write individual ratings into Log4.
+		$numeric_score = 0;
+		for ($question = 1; $question <= $number_of_qs; $question++) {
+			$tmp_val = ($postdata['q' . $question . '_val'] - 1);
+			if (isset( $postdata[$postdata['q' . $question . '_id'] . '_parts'] )) {
+				$q_parts = $postdata[$postdata['q' . $question . '_id'] . '_parts'];
+			} else {
+				$q_parts = '';
+			}
+			$result = $db->prepare("INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)");
+			$result->bind_param('issi', $postdata['q' . $question . '_id'], $tmp_val, $q_parts, $insertID);
+			$result->execute();
+			$result->close();
+			$numeric_score += ($postdata['q' . $question . '_val'] - 1);
+		}
 
-        // Update Log4_overall with the overall score.
-        $result = $db->prepare("UPDATE log4_overall SET numeric_score = ?, overall_rating = ?, feedback = ? WHERE id = ?");
-        $result->bind_param('issi', $numeric_score, $postdata['overall_val'], $postdata['fback'], $insertID);
-        $result->execute();
-        $result->close();
+		// Update Log4_overall with the overall score.
+    if ($marking == '5') {
+      $user_percent = ($numeric_score / $total_mark) * 100;
+      if ($user_percent >= $pass_mark) {
+        $overall_rating = 'pass';
+      } else {
+        $overall_rating = 'fail';        
+      }
+    } else {
+      $overall_rating = $postdata['overall_val'];
     }
+    $result = $db->prepare("UPDATE log4_overall SET numeric_score = ?, overall_rating = ?, feedback = ? WHERE id = ?");
+		$result->bind_param('issi', $numeric_score, $overall_rating, $postdata['fback'], $insertID);
+		$result->execute();
+		$result->close();
+	}
 }
 
-function parse_leadin_word_2003($text,$parts) {
+/**
+ * Strips out text that could cause Word 2003 to throw an error.
+ * @param string $text	- The text string to clean up.
+ * @param $parts				- Which parts have been ticked off in the database.
+ * @return string - cleaned up text.
+ */
+function parse_leadin_word_2003($text, $parts) {
   global $q_id;
+	
   $count = 0;
   $calss = 'part';
 
@@ -97,8 +127,8 @@ function parse_leadin_word_2003($text,$parts) {
 
   $starts = explode('[',$text);
   $count = count($starts);
-  if($parts == '') {
-    $value = str_pad('',$count-1,'0');
+  if ($parts == '') {
+    $value = str_pad('', $count-1, '0');
   } else {
     $value = $parts;
   }
@@ -107,8 +137,8 @@ function parse_leadin_word_2003($text,$parts) {
   if ($count > 1) {
     for($i = 0; $i < $count; $i++) {
 
-      if($i > 0) {
-        if($value{$i-1} == 1) {
+      if ($i > 0) {
+        if ($value{$i-1} == 1) {
           $tmptext .= "<w:r><w:rPr><w:color w:val=\"00B050\"/><w:u w:val=\"single\"/></w:rPr><w:t>";
         } else {
           $tmptext .= "<w:r><w:rPr></w:rPr><w:t>";
@@ -117,7 +147,7 @@ function parse_leadin_word_2003($text,$parts) {
         $tmptext .= ltrim($starts[$i]);
 
         if ($i < ($count -1)) {
-	      if (substr($starts[$i],-1) != ']' OR substr($starts[$i],-1) != 'li>') {
+	      if (substr($starts[$i],-1) != ']' or substr($starts[$i],-1) != 'li>') {
 	        $end_tags = '</w:t></w:r>';
 	        $rep_tags = '</w:t></w:r><w:r><w:t>';
 	      } else {
@@ -138,7 +168,7 @@ function parse_leadin_word_2003($text,$parts) {
       }
     }
     $x = 0;
-    $tmptext = str_replace('<li>','',$tmptext,$x);
+    $tmptext = str_replace('<li>', '', $tmptext, $x);
     if ($x > 0) {
       $tmptext = str_replace('<w:r><w:rPr><w:color w:val="00B050"/><w:u w:val="single"/></w:rPr><w:t>','<w:pPr><w:listPr><w:ilvl w:val="0"/><w:ilfo w:val="3"/><wx:t wx:val="\xE2\x80\xA2"/><wx:font wx:val="Calibri"/></w:listPr><w:spacing w:after="0" w:line="240" w:line-rule="auto"/></w:pPr><w:r><w:rPr><w:color w:val="00B050"/><w:u w:val="single"/></w:rPr><w:t>' . "\n\n",$tmptext);
       $tmptext = str_replace('<w:r><w:rPr></w:rPr><w:t>','<w:pPr><w:listPr><w:ilvl w:val="0"/><w:ilfo w:val="3"/><wx:t wx:val="\xE2\x80\xA2"/><wx:font wx:val="Calibri"/></w:listPr><w:spacing w:after="0" w:line="240" w:line-rule="auto"/></w:pPr><w:r><w:t>' . "\n\n",$tmptext);
@@ -149,26 +179,26 @@ function parse_leadin_word_2003($text,$parts) {
   } else {
     return  '<w:r><w:t>' . $text . '</w:t></w:r>';
   }
-
 }
 
 function parse_leadin($text, $parts) {
   global $q_id;
+	
   $count = 0;
   $calss = 'part';
 
   $starts = explode('[',$text);
   $count = count($starts);
-  if($parts == '') {
-    $value = str_pad('',$count-1,'0');
+  if ($parts == '') {
+    $value = str_pad('', $count-1, '0');
   } else {
     $value = $parts;
   }
   $tmptext = '';
   if ($count > 1) {
     $tmptext .= $starts[0];
-    for($i = 1; $i < $count; $i++) {
-      if($value{$i-1} == 1) {
+    for ($i = 1; $i < $count; $i++) {
+      if ($value{$i-1} == 1) {
          $class = 'part_ok';
       } else {
         $class = 'part';
@@ -186,6 +216,12 @@ function parse_leadin($text, $parts) {
   }
 }
 
+/**
+ * Determines is a rating should be used to calculate the pass mark in the borderline method.
+ * @param int $result					- The student classification.
+ * @param object $propertyObj	- Paper properties object.
+ * @return bool - true = rating should be used to determine borderline pass mark, false = is should not.
+ */
 function isBorderline($result, $propertyObj) {
   if ($propertyObj->get_marking() == 3 and $result == 2) {                          // Clear Fail | Borderline | Clear Pass
     return true;
@@ -198,6 +234,13 @@ function isBorderline($result, $propertyObj) {
   }
 }
 
+/**
+ * Calculates the pass mark when the borderline method is used.
+ * @param array $user_results	- Master array of student results.
+ * @param int $user_no				- How many students there are.
+ * @param object $propertyObj	- Paper properties object.
+ * @return int - the pass mark of the paper expressed as a percentage.
+ */
 function getBlinePassmk($user_results, $user_no, $propertyObj) {
   $passmark = 0;
   
@@ -216,7 +259,14 @@ function getBlinePassmk($user_results, $user_no, $propertyObj) {
   return $passmark;
 }
 
-// Get the students who are enrolled on the module/session.
+/**
+ * Compile a report on students who have taken an OSCE station.
+ * @param object $propertyObj	- Paper properties object.
+ * @param bool $demo					- Is the system in demo mode.
+ * @param object $configObj		- Configuration object.
+ * @param object $db					- MySQL database object.
+ * @return array - details of students who have taken the OSCE station.
+ */
 function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db) {
 
   $modIDs = implode(',', array_keys(Paper_utils::get_modules($_GET['paperID'], $db)));
@@ -265,14 +315,57 @@ function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db) {
     $user_results[$user_no]['examiner']         = $examiner_title . ' ' . $examiner_initials . ' ' . $examiner_surname;
     $user_results[$user_no]['visible']          = 1;    // Default to visible unless switched off below.
     $user_results[$user_no]['questions']        = $question_no;
+    $user_results[$user_no]['killer_fail']      = false;		// Set all users to false for killer questions.
 
     $user_no++;
   }
   $result->close();
   
-  return $user_results;
+	$killer_questions = new Killer_question($_GET['paperID'], $db);
+	$killer_questions->load();
+  
+	check_killer_answers($user_results, $killer_questions, $db);
+	
+	return $user_results;
 }
 
+function find_user_result($user_results, $target_userID) {
+  $user_no = false;
+	$user_count = count($user_results);
+	
+  for ($i=0; $i<$user_count; $i++) {
+	  if ($user_results[$i]['userID'] == $target_userID) {
+			$user_no = $i;
+			break;
+		}
+	}
+	
+	return $user_no;
+}
+
+function check_killer_answers(&$user_results, $killer_questions, $db) {
+  $result = $db->prepare("SELECT q_id, rating, userID FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND started >= ? AND started <= ? AND q_paper = ?");
+  $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
+  $result->execute();
+  $result->bind_result($q_id, $rating, $userID);
+  while ($result->fetch()) {
+	  if ($rating == 0 and $killer_questions->is_killer_question($q_id)) {
+			$target_user = find_user_result($user_results, $userID);
+			if ($target_user !== false) {
+				$user_results[$target_user]['killer_fail'] = true;
+				
+			}
+		}
+	}
+	$result->close();
+	
+}
+
+/**
+ * Load all the ratings of questions on a paper.
+ * @param object $db - MySQL database object.
+ * @return array - set of ratings for each question.
+ */
 function load_osce_medians($db) {
   $q_medians = array();
   
@@ -289,9 +382,40 @@ function load_osce_medians($db) {
   return $q_medians;
 }
 
-function set_classification(&$user_results, $passmark, $user_no, $string) {
-  for ($i=0; $i<$user_no; $i++) {
-    if ($user_results[$i]['percent'] >= $passmark) {
+/**
+ * Set pass fail classifications for all users.
+ * @param array $user_results	- Master array of student results.
+ * @param int $passmark				- Pass mark of the paper expressed as a percentage.
+ * @param int $user_no				- How many users there are in the master array.
+ * @param array $string				- Language translations.
+ */
+function set_classification($marking, &$user_results, $passmark, $user_no, $string) {
+  switch ($marking) {
+    case '3':
+      $labels = $string['marking3'];
+      break;
+    case '4':
+      $labels = $string['marking4'];
+      break;
+    case '6':
+      $labels = $string['marking6'];
+      break;
+    case '7':
+      $labels = $string['marking7'];
+      break;
+  }
+  
+  for ($i=0; $i<(int)$user_no; $i++) {
+    if ($user_results[$i]['killer_fail']) {
+      $user_results[$i]['classification'] = $string['fail'];
+    } elseif ($passmark == 'N/A') {     // Passmark is set to N/A - therefore use global rating from OSCE mark sheet
+      if (isset($user_results[$i]['rating']) and $user_results[$i]['rating'] > 0) {
+        $rating_no = ($user_results[$i]['rating'] - 1);
+        $user_results[$i]['classification'] = $labels[$rating_no];
+      } else {
+        $user_results[$i]['classification'] = '';
+      }
+    } elseif ($user_results[$i]['percent'] >= $passmark) {
       $user_results[$i]['classification'] = $string['pass'];
     } else {
       $user_results[$i]['classification'] = $string['fail'];
@@ -299,6 +423,13 @@ function set_classification(&$user_results, $passmark, $user_no, $string) {
   }
 }
 
+/**
+ * Converts a numerical overall rating for a student into a textual one (e.g. 3 = 'Clear Pass').
+ * @param array $user_results	- Master array of student results.
+ * @param int $user_no				- How many users there are in the master array.
+ * @param object $propertyObj	- Paper properties object.
+ * @param array $string				- Language translations.
+ */
 function rating_num_text(&$user_results, $user_no, $propertyObj, $string) {
   $labels = get_labels($propertyObj);
 
@@ -309,6 +440,11 @@ function rating_num_text(&$user_results, $user_no, $propertyObj, $string) {
   }
 }
 
+/**
+ * Creates an appropriate array for the marking method.
+ * @param object $propertyObj	- Paper properties object.
+ * @return array - Lookup array of numbers to textual labels.
+ */
 function get_labels($propertyObj) {
   switch ($propertyObj->get_marking()) {
     case '1':
@@ -325,6 +461,9 @@ function get_labels($propertyObj) {
       break;
     case '6':
       $labels = array(1=>'Clear FAIL', 2=>'BORDERLINE', 3=>'Clear PASS', 4=>'Honours PASS', 'ERROR'=>'ERROR');
+      break;
+    case '7':
+      $labels = array(1=>'Fail', 2=>'Pass', 'ERROR'=>'ERROR');
       break;
   }
   return $labels;

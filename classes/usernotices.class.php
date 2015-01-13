@@ -16,9 +16,9 @@
 
 /**
 * A Class to hold functions designed to display notices to users. Including  
-* access denied messages
+* access denied messages.
 *
-* @author Anthony Brown
+* @author Anthony Brown, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -46,18 +46,47 @@ Class user_notices extends RogoStaticSingleton {
   public function __construct() {}
 
   /**
+   * Displays a wide information bar with a yellow bar at the top.
+	 * Used to display to the user that no questions were found in a
+	 * search, for example.
+   *
+   * @param string $msg    - The message to convey.
+   * @param int $font-size - An optional font size to use for the message.
+	 * @return string - HTML to be echoed to the screen.
+	 *
+   */
+	public function info_strip($msg, $font_size = 85) {
+    $configObject = Config::get_instance();
+
+		$html = '<div class="info_bar" style="font-size:' . $font_size . '%">';
+		$html .= '<div class="info_bar_yellow"></div>';
+		$html .= '<img src="' . $configObject->get('cfg_root_path') . '/artwork/info_icon.gif" alt="i" />' . $msg;
+		$html .= '</div>';
+		
+		return $html;
+	}
+
+  /**
    * This function will output a message to the user 
    *
    * @param string $title       - title to display
    * @param string $msg         - string the message
    * @param string $icon        - name of the icon image file
    * @param string $title_color - color of the tile text
-   *
+   * @param bool $output_header - if true output opening HTML tags
+   * @param bool $output_footer - if true output closing HTML tags
    */
   public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
     $configObject = Config::get_instance();
-    $rp = $configObject->get('cfg_root_path');
-    $cs = $configObject->get('cfg_page_charset');
+    $root = str_replace('/classes', '/', str_replace('\\', '/', dirname(__FILE__)));
+    
+    if (file_exists($root . 'config/config.inc.php')) {
+      $rp = $configObject->get('cfg_root_path');
+      $cs = $configObject->get('cfg_page_charset');
+    } else {          // If we have not installed there is no config.inc.php file.
+      $rp = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
+      $cs = 'utf-8';
+    }
     
     if ($output_header == true) {
       echo "<html>\n";
@@ -71,7 +100,7 @@ Class user_notices extends RogoStaticSingleton {
     echo '<div class="notice">';
     echo "<div style=\"float:left; padding-left:10px;width:60px\"><img src=\"$rp" . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
     echo "<div><h1 style=\"color:$title_color\">$title</h1>\n";
-    echo "<hr />\n<p>$msg</p></div>";
+    echo "<hr style=\"width:300px\"/>\n<p>$msg</p></div>";
     echo '</div>';
 
     if ($output_footer == true) {
@@ -87,6 +116,8 @@ Class user_notices extends RogoStaticSingleton {
    * @param string $reason      - string the message displayed in the database
    * @param string $icon        - name of the icon image file
    * @param string $title_color - color of the tile text
+   * @param bool $output_header - if true output opening HTML tags
+   * @param bool $output_footer - if true output closing HTML tags
    *
    */
   public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
@@ -105,13 +136,7 @@ Class user_notices extends RogoStaticSingleton {
   }
   
   /**
-   * This function will exit php without notice; 
-   *
-   * @param string $title       - string title to display
-   * @param string $msg         - string the message
-   * @param string $icon        - name of the icon image file
-   * @param string $title_color - color of the tile text
-   *
+   * This function will exit php without notice.
    */
   public function exit_php() {
     exit;

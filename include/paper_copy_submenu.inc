@@ -25,8 +25,11 @@
 require_once '../config/campuses.inc';
 require_once '../classes/dateutils.class.php';
 ?>
+<style>
+	.cancel {margin-right:8px}
+</style>
 
-<script language="JavaScript">
+<script>
   function changeButton() {
     if ($("#paper_type").val() == '2') {
       $('#next_button').show();
@@ -38,31 +41,48 @@ require_once '../classes/dateutils.class.php';
   }
   
   function nextTable() {
-    $('#table1div').hide();
-    $('#table2div').show();
+    var paper_name = $('#new_paper').val();
+    $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data, status) {
+      if (data == 'unique') {
+        $('#table1div').hide();
+        $('#table2div').show();        
+        $('#new_paper').subClass('errfield');
+      } else {
+        $('#new_paper').addClass('errfield');
+        alert("<?php echo $string['namewarning'] ?>");
+      }
+    });
+ 
   }
   
   function checkCopyForm() {
     if ($("#paper_type").val() == '2') {
       if ($('#period').val() == '') {
-        alert ("<?php echo $string['msg7']; ?>");
+        alert ("<?php echo $string['msg7'] ?>");
         return false;
       }
       
      if ($('#duration_hours').val() == '' || $('#duration_mins').val() == '') {
-        alert ("<?php echo $string['msg8']; ?>");
+        alert ("<?php echo $string['msg8'] ?>");
         return false;
       }
       
       if ($('#cohort_size').val() == '') {
-        alert ("<?php echo $string['msg9']; ?>");
+        alert ("<?php echo $string['msg9'] ?>");
         return false;
       }
     }
   }
+	
+  $(function () {
+    $(".cancel").click(function(event) {
+      $('#copy_submenu').hide();
+      event.stopPropagation();
+    });
+  });
 </script>
 
-<div class="popup" style="z-index:20; display:none; font-size:90%; background-color:white; position:fixed; left:200px; top:100px; width:630px; height:320px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:346px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
@@ -73,27 +93,27 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <div id="table1div" style="width:100%">
 <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:100%" id="table1">
 <tr>
-<td colspan="5" style="background-color:#F2B100; height:5px; padding:0px"> </td>
+<td colspan="5" style="background-color:#F2B100; height:5px; padding:0"> </td>
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr>
 <td style="text-align:right"><?php echo $string['copyname']; ?>&nbsp;</td>
-<td colspan="4"><input type="text" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title(); ?>" size="65" required />
-<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
-<input type="hidden" name="module" value="<?php echo $module; ?>" />
-<input type="hidden" name="folder" value="<?php echo $folder; ?>" />
+<td colspan="4"><input type="text" id="new_paper" name="new_paper" maxlength="255" value="<?php echo $properties->get_paper_title() ?>" size="65" required />
+<input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
+<input type="hidden" name="module" value="<?php echo $module ?>" />
+<input type="hidden" name="folder" value="<?php echo $folder ?>" />
 </td>
 </tr>
 
 <tr>
-<td style="text-align:right"><?php echo $string['type']; ?>&nbsp;</td>
+<td style="text-align:right"><?php echo $string['type'] ?>&nbsp;</td>
 <td colspan="4"><select name="paper_type" id="paper_type" onchange="changeButton()">
 <?php
   switch ($properties->get_paper_type()) {
     case 0:
     case 1:
     case 2:
-      $types = array(0=>$string['formative quiz'], 1=>$string['progress test'], 2=>$string['summative exam']);
+      $types = array(0=>$string['formative self-assessment'], 1=>$string['progress test'], 2=>$string['summative exam']);
       break;
     case 3:
       $types = array(3=>$string['survey']);
@@ -116,53 +136,17 @@ if ($configObject->get('cfg_summative_mgmt')) {
     }
   }
 ?>
-</select></td>
-
-</tr>
-
-<tr><td colspan="5">&nbsp;</td></tr>
-<tr>
-<td>&nbsp;</td>
-<td>&nbsp;<input type="radio" name="copytype" value="paperonly" />&nbsp;<?php echo $string['paperonly']; ?></td>
-<td>&nbsp;</td>
-<td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked />&nbsp;<?php echo $string['paperandquestions']; ?></td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td style="width:110px" align="center">&nbsp;</td>
-<td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130" /></td>
-<td>&nbsp;&nbsp;&nbsp;</td>
-<td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130" /></td>
-<td style="width:110px" align="center">&nbsp;</td>
-</tr>
-<tr><td colspan="5">&nbsp;</td></tr>
-<tr>
-<?php
-if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
-  echo '<td align="center" colspan="5"><input type="button" style="width:100px; display_block" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" style="width:100px; display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
-} else {
-  echo '<td align="center" colspan="5"><input type="button" style="width:100px; display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" style="width:100px; display:block" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
-}
-?>
-</tr>
-<tr><td colspan="5">&nbsp;</td></tr>
-</table>
-</div>
-
-<div id="table2div" style="display:none; width:100%">
-<table cellpadding="1" cellspacing="1" border="0" style="font-size:90%; width:100%" id="table2">
-<tr>
-<td colspan="6" style="background-color:#F2B100; height:5px; padding:0px"> </td>
-</tr>
-<tr><td colspan="6">&nbsp;</td></tr>
-<tr>
+  </select><td><tr>
 <?php
   $next_flag = 1;
   echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
-  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
+  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student WHERE calendar_year != '' ORDER BY calendar_year DESC");
   $module_details->execute();
   $module_details->bind_result($calendar_year);
   echo "<select name=\"session\">\n";
+  if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1') {
+    echo "<option value=\"\">N/A</option>\n";
+  }
   while ($module_details->fetch()) {
     if ($next_flag == 1) {
       $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
@@ -174,8 +158,54 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
     echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
   }
   echo "</select></td>\n";
+?>
+</tr>
 
-  echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
+<tr><td colspan="5">&nbsp;</td></tr>
+<tr>
+<td>&nbsp;</td>
+<td>&nbsp;<input type="radio" name="copytype" value="paperonly" /><?php echo $string['paperonly'] ?></td>
+<td>&nbsp;</td>
+<td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked /><?php echo $string['paperandquestions'] ?></td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td style="width:130px" align="center">&nbsp;</td>
+<td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130" /></td>
+<td>&nbsp;&nbsp;&nbsp;</td>
+<td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130" /></td>
+<td style="width:110px" align="center">&nbsp;</td>
+</tr>
+<tr>
+<?php
+if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+} else {
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" onclick="checkName()" /></td>';
+}
+?>
+</tr>
+</table>
+</div>
+
+<div id="table2div" style="display:none; width:100%">
+<table cellpadding="1" cellspacing="1" border="0" style="font-size:90%; width:100%" id="table2">
+<tr>
+<td colspan="6" style="background-color:#F2B100; height:5px; padding:0"> </td>
+</tr>
+<tr><td colspan="6">&nbsp;</td></tr>
+<tr>
+<?php
+  $next_flag = 1;
+  echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td><select name="campus">';
+  foreach ($cfg_campus_list as $campus) {
+    if ($campus == $cfg_campus_default) {
+      echo "<option value=\"$campus\" selected>$campus</option>";
+    } else {
+      echo "<option value=\"$campus\">$campus</option>";
+    }
+  }
+  echo '</select></td><td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
 	echo '<select name="duration_hours" id="duration_hours">';
 	echo "<option value=\"\"></option>\n";
 	for ($i=0; $i<=12; $i++) {
@@ -204,23 +234,13 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
     echo "<option value=\"$i\">$i</option>";
   }
   echo '</select></td></tr>';
-  
-  echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td colspan="5"><select name="campus">';
-  foreach ($cfg_campus_list as $campus) {
-    if ($campus == $cfg_campus_default) {
-      echo "<option value=\"$campus\" selected>$campus</option>";
-    } else {
-      echo "<option value=\"$campus\">$campus</option>";
-    }
-  }
-  echo '</select></td></tr>';
 
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td style="text-align:right">' . $string['notes'] . '</td><td colspan="5"><textarea style="width:98%; height:77px" cols="40" rows="5" name="notes" style="text-size:90%"></textarea></td></tr>';
   
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
-  echo '<tr><td colspan="6" style="text-align:center"><input type="submit" style="width:100px" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
+  echo '<tr><td colspan="6" style="text-align:center"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" onclick="" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
 
 ?>
 </table>

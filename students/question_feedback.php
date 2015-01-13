@@ -39,13 +39,17 @@ require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/exam_announcements.class.php';
 
+//HTML5 part
+require_once '../lang/' . $language . '/paper/finish.php';
+$jstring = $string; //to pass it to JavaScript HTML5 modules
+//HTML5 part
+
 check_var('id', 'GET', true, false, false);
 
+ob_start();
+
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], true, true);     //this will exit php
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 $paperID    = $propertyObj->get_property_id();
 $paper_type = $propertyObj->get_paper_type();
@@ -86,7 +90,7 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string, true);
+  check_paper_password($propertyObj->get_password(), $string, $mysqli, true);
   
   $display_correct_answer     = 1;
   $display_question_mark      = 1;
@@ -105,7 +109,7 @@ $logger = new Logger($mysqli);
 if ($userObject->has_role('Student')) {
   $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', $paperID);  // Students write in the paperID
 } else {
-  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/paper/feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
+  $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/students/question_feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
 }
 
 require '../config/finish.inc';
@@ -153,18 +157,28 @@ require '../config/finish.inc';
   if ($css != '') {
     echo "<style type=\"text/css\">\n$css\n</style>\n";
   }
+  ?>
   
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/student_help.js"></script>
+  <?php
   if ($propertyObj->get_latex_needed() == 1) {
-    echo "<script type=\"text/javascript\" src=\"../js/jquery-1.6.1.min.js\"></script>";
-    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }  
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+  } else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
   }
 ?>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/student_help.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script language="JavaScript">
-    window.history.go(1);
-  </script>
 </head>
 <body>
 <?php
@@ -194,9 +208,26 @@ require '../config/finish.inc';
   echo $logo_html;
   echo '</table>';
   
+  // Get any marking override for the paper
+  $overrides = array();
+  $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
+          FROM marking_override m INNER JOIN users u ON m.marker_id = u.id
+          INNER JOIN log{$log_type} l ON m.log_id = l.id
+          WHERE user_id = ? AND paper_id = ?";
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('ii', $userID, $paperID);
+  $result->execute();
+  $result->store_result();
+  $result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
+  while($result->fetch()) {
+    $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
+  }
+  $result->close();
+  
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-  display_feedback($userID, $paperID, $paper_type, $log_type, $propertyObj->get_paper_title(), $propertyObj->get_paper_postscript(), $propertyObj->get_marking(), $userObject, $metadataid, $mysqli, $status_array, $preview_q_id);
+  display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
   echo "</body>\n</html>";
   $mysqli->close();
+  ob_end_flush();
 ?>

@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['administrativetools'] = 'Administrative Tools';
 $string['helpsupport'] = 'Help &amp; Support';
 $string['aboutrogo'] = 'About Rog&#333; %s';
-$string['html5warn'] = 'Rog&#333; needs HTML5 support, please upgrade your browser.';
+$string['html5warn'] = 'Rog&#333; needs HTML5 support, please upgrade your browser to a newer version.';
 $string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Page not Found';
 $string['signinmsg'] = 'The page you are trying to access requires authentication. Please sign in using your username and password:';
@@ -93,13 +94,8 @@ $string['NoFieldMetadata'] = 'No field in the metadata set for groups.';
 $string['NoGroup'] = 'No Group can be found for the current user.';
 $string['note'] = 'Note';
 $string['studentname'] = 'Student Name';
-
-$configObject = Config::get_instance();
-$cfg_web_root = $configObject->get('cfg_web_root');
-$language = LangUtils::getLang($cfg_web_root);
-
-require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
-
+$string['loggedinas'] = 'Logged in as';
+$string['crondisallowed'] = 'cron attempted to run disallowed script';
 $string['register'] = 'Register as Staff User';
 $string['register1'] = 'Register as ';
 $string['demomodule'] = 'Demo Module';

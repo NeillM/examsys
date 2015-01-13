@@ -311,14 +311,14 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
    public function testMappingByQuestionNonExistent() {
      do_staff_login($this);
 
-     $this->open("mapping/paper_mappings_by_question.php?paperID=88884096&folder=&module=3");
+     $this->open("mapping/paper_by_question.php?paperID=88884096&folder=&module=3");
      $this->assertTextPresent('Page not Found');
    }
 
    public function testMappingBySessionNonExistent() {
      do_staff_login($this);
 
-     $this->open("mapping/paper_mappings_by_session.php?paperID=88884096&module=3&folder=");
+     $this->open("mapping/paper_by_session.php?paperID=88884096&module=3&folder=");
      $this->assertTextPresent('Page not Found');
    }
 
@@ -332,7 +332,7 @@ class URLTamperingNonExistentTest extends PHPUnit_Extensions_SeleniumTestCase
   public function testPaperBlueScreenNonExistent() {
     do_student_login($this, 'teststudent10', 'jgl!34Z^');
 
-    $this->open("user_index.php?id=2607128816754214438");
+    $this->open("/paper/user_index.php?id=2607128816754214438");
     $this->assertTextPresent('Page not Found');
   }
 

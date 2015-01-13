@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';
-$string['systemerrrorreport'] = 'System Error Report';
+$string['systemerrors'] = 'System Errors';
 $string['date'] = 'Date';
 $string['type'] = 'Type';
 $string['message'] = 'Message';

@@ -23,14 +23,14 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function editTemplate() {
     document.location.href='<?php echo $configObject->get('cfg_root_path') ?>/admin/edit_ebel_grid.php?id=' + $('#lineID').val();
   }
   
   function deleteTemplate() {
-    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + $('#lineID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_ebel_template.php?gridID=" + $('#lineID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-225,screen.height/2-90);
     if (window.focus) {
       notice.focus();
     }
@@ -41,16 +41,16 @@
 <form name="myform">
 <br />
 
-<div style="font-size:90%" id="menu1a">
-	<div class="menuitem"><a href="add_ebel_grid.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="" /><?php echo $string['createnewgrid']; ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editgrid']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletegrid']; ?></div>
+<div id="menu1a">
+	<div class="menuitem"><a href="add_ebel_grid.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="" /><?php echo $string['createnewgrid'] ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editgrid'] ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletegrid'] ?></div>
 </div>
 
-<div style="display:none; font-size:90%" id="menu1b">
-	<div class="menuitem"><a href="add_ebel_grid.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="" /><?php echo $string['createnewgrid']; ?></a></div>
-	<div class="menuitem" onclick="editTemplate()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editgrid']; ?></a></div>
-	<div class="menuitem" onclick="deleteTemplate()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletegrid']; ?></a></div>
+<div style="display:none" id="menu1b">
+	<div class="menuitem"><a href="add_ebel_grid.php"><img class="sidebar_icon" src="../artwork/grid_16.gif" alt="" /><?php echo $string['createnewgrid'] ?></a></div>
+	<div class="menuitem"><a href="#" onclick="editTemplate(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editgrid'] ?></a></div>
+	<div class="menuitem"><a href="#" onclick="deleteTemplate(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletegrid'] ?></a></div>
 </div>
 
 

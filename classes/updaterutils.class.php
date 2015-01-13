@@ -33,6 +33,39 @@ Class UpdaterUtils {
     $this->mysqli  = $mysqli;
     $this->db_name = $db_name;
   }
+  
+  /**
+   * Records a fix in the sys_updates table. This is the new system
+   * instead of the old stop files.
+   * @param string $name - The name of update to be inserted.
+   */
+  public function record_update($name) {
+    $result  = $this->mysqli->prepare('INSERT INTO sys_updates VALUES (?, NOW())');
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->close();
+  }
+
+  /**
+   * Determines if an update has already been applied to the system.
+   *
+   * @param string $name - The name of update to be tested.
+   * @return bool - True = fix has been applied, False = it hasn't.
+   */
+  public function has_updated($name) {
+    $result  = $this->mysqli->prepare('SELECT name FROM sys_updates WHERE name = ?');
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->store_result();
+    $num_rows =  $result->num_rows;
+    $result->close();
+
+    if ($num_rows < 1) {
+      return false;
+    }
+
+    return true;
+  }
 
   public function count_rows($sql) {
     $result  = $this->mysqli->prepare($sql);
@@ -42,7 +75,7 @@ Class UpdaterUtils {
 
     return $num_rows;
   }
-
+  
   /**
    * Determines if a table exists in the database.
    *
@@ -59,7 +92,7 @@ Class UpdaterUtils {
 
     $result->close();
 
-    if ($num_rows < 1){
+    if ($num_rows < 1) {
       return false;
     }
 
@@ -89,6 +122,21 @@ Class UpdaterUtils {
     }
 
     return true;
+  }
+  
+  public function is_column_nullable($table_name, $column_name) {
+    $result = $this->mysqli->prepare('SELECT IS_NULLABLE FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?');
+    $result->bind_param('sss', $this->db_name, $table_name, $column_name);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($is_nullable);
+    $result->close();
+
+    if ($is_nullable == 'NO') {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   /**
@@ -216,6 +264,8 @@ Class UpdaterUtils {
    * @param bool $update_display 	- If true then echo the SQL to the screen.
    */
   public function execute_query($sql, $update_display) {
+    $insertID = false;
+    
     if ($update_display) {
       echo "<li>$sql&hellip;";
       ob_flush();
@@ -225,10 +275,11 @@ Class UpdaterUtils {
     $this->mysqli->query($sql);
 
     if ($this->mysqli->errno == 0) {
+      $insertID = $this->mysqli->insert_id;
       if ($update_display) {
         echo "Done</li>\n";
       }
-    } elseif ($this->mysqli->warning_count>0) {
+    } elseif ($this->mysqli->warning_count > 0) {
       if ($update_display) echo '</li>';
       echo '<li class="warning">WARNING: ' . $sql;
       $e = $this->mysqli->get_warnings();
@@ -253,6 +304,8 @@ Class UpdaterUtils {
 
     ob_flush();
     flush();
+    
+    return $insertID;
   }
 
   /**

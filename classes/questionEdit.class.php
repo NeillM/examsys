@@ -99,6 +99,10 @@ Class QuestionEdit extends RogoObject {
   protected $_comments = null;
   protected $_allow_partial_marks = false;
 
+  // Use with extreme caution
+  // In most cases the interface will ignore this and not let you edit optons that may have been displayed to the user
+  protected $_allow_option_edit = false;
+
   // These fields will be forced to the negative answer value. Useful for checkboxes that won't have a value posted if unset
   protected $_fields_force = array();
 
@@ -107,7 +111,7 @@ Class QuestionEdit extends RogoObject {
   protected $_unified_field_modifications = array();
 
   // These are the fields that are relevant for post-exam corrections
-  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial','correct_fback');
+  protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'correct_fback');
 
   // Map our 'nice' property names to the database fields and 'parts' in track changes
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
@@ -299,6 +303,7 @@ Class QuestionEdit extends RogoObject {
    */
   public function save($clear_checkout = true) {
 
+
     $success = false;
     if ($this->_logger == null ) $this->_logger =  new Logger($this->_mysqli);
 
@@ -325,7 +330,7 @@ Class QuestionEdit extends RogoObject {
       if ($this->id == -1) {
         $this->created = date ('Y-m-d H:i:s');
         $this->last_edited = date ('Y-m-d H:i:s');
-        $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+        $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
         $this->guid = $server_ipaddress . uniqid('', true);
         $params = array_merge(array('ssssssssssssssissssisssssss'), $this->_data);
         $query = <<< QUERY
@@ -542,11 +547,16 @@ QUERY;
    * @param integer $paper_id
    */
   public function update_correct($new_correct, $paper_id) {
+    if ($paper_id == -1) {  // No valid Paper ID, we can't remark anything.
+      return;
+    }
+        
     $paper_type = $this->get_paper_type($paper_id);
     if ($paper_type == -1) $paper_type = 2;
 
     $errors = array();
     $changes = false;
+
     foreach ($this->_correctors as $corrector) {
       $tmp_errors = $corrector->execute($new_correct, $paper_id, $changes, $paper_type);
       if (count($tmp_errors) > 0) {
@@ -598,23 +608,34 @@ QUERY;
   }
 
   /**
+   * Does this question type allow options to be edited after questions are locked
+   * Hint: This should almost NEVER happen
+   * @return boolean
+   */
+  public function allow_option_edit() {
+    return $this->_allow_option_edit;
+  }
+
+  /**
    * Does this question type allow negative marking?  Check all the modules that the question is on
    * @return boolean
    */
-  public function allow_negative_marks($module = '') {
-    if ($this->_allow_negative_marks == null) {
-      $this->_allow_negative_marks = true;
-      // Check all the modules that the question is on
-      $moduleIds = implode(',',array_keys($this->teams));
-      if ($moduleIds != '') {
-        $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking=0");
-        $result->execute();
-        $result->store_result();
-        if ($result->num_rows > 0) $this->_allow_negative_marks = false;
-        $result->close();
-      }
-    }
+  public function allow_negative_marks() {
 
+    // Check all the modules that the question is on
+    $moduleIds = implode(',',array_keys($this->teams));
+    if ($moduleIds != '') {
+      $result = $this->_mysqli->prepare("SELECT neg_marking FROM modules WHERE id IN (" . $moduleIds . ") AND neg_marking = 0");
+      $result->execute();
+      $result->store_result();
+      if ($result->num_rows > 0) {
+        $this->_allow_negative_marks = false;
+      } else {
+        $this->_allow_negative_marks = true;
+      }
+      $result->close();
+    }
+    
     return $this->_allow_negative_marks;
   }
 
@@ -629,11 +650,11 @@ QUERY;
   public function get_question_number($paper_id) {
     $number = '';
 
-    if(ctype_digit($paper_id)) {
+    if (ctype_digit($paper_id)) {
       $pos = 0;
 
       $pos_query = <<< QUERY
-SELECT p.display_pos FROM papers p WHERE p.question=? AND p.paper=? ORDER BY p.display_pos ASC;
+SELECT p.display_pos FROM papers p WHERE p.question = ? AND p.paper = ? ORDER BY p.display_pos ASC;
 QUERY;
       $result = $this->_mysqli->prepare($pos_query);
       $result->bind_param('ii', $this->id, $paper_id);
@@ -645,7 +666,7 @@ QUERY;
 
       if ($pos > 0) {
         $info_query = <<< QUERY
-SELECT count(p.p_id) AS info FROM papers p INNER JOIN questions q ON p.question=q.q_id WHERE p.paper=? AND p.display_pos<? AND q.q_type='info';
+SELECT count(p.p_id) AS info FROM papers p INNER JOIN questions q ON p.question = q.q_id WHERE p.paper = ? AND p.display_pos < ? AND q.q_type = 'info';
 QUERY;
         $result = $this->_mysqli->prepare($info_query);
         $result->bind_param('ii', $paper_id, $pos);
@@ -658,7 +679,7 @@ QUERY;
         $number = $pos - $info;
       } else {
         $num_query = <<< QUERY
-SELECT count(p.p_id) AS pos FROM papers p INNER JOIN questions q ON p.question=q.q_id WHERE p.paper=? AND q.q_type<>'info';
+SELECT count(p.p_id) AS pos FROM papers p INNER JOIN questions q ON p.question = q.q_id WHERE p.paper = ? AND q.q_type <> 'info';
 QUERY;
         $result = $this->_mysqli->prepare($num_query);
         $result->bind_param('i', $paper_id);
@@ -682,7 +703,7 @@ QUERY;
    */
   public function get_other_summative_count($paper_id) {
     $count_query = <<< QUERY
-SELECT COUNT(pr.property_id) FROM papers pa INNER JOIN properties pr ON pa.paper=pr.property_id WHERE pr.paper_type='2' AND pa.question=? AND pr.property_id<>? GROUP BY pa.question ORDER BY count(pr.property_id) DESC;
+SELECT COUNT(pr.property_id) FROM papers pa INNER JOIN properties pr ON pa.paper = pr.property_id WHERE pr.paper_type = '2' AND pa.question = ? AND pr.property_id <> ? GROUP BY pa.question ORDER BY count(pr.property_id) DESC;
 QUERY;
     $result = $this->_mysqli->prepare($count_query);
     $result->bind_param('ii', $this->id, $paper_id);
@@ -773,7 +794,7 @@ QUERY;
    * @param string $value
    */
   public function set_scenario($value) {
-    $scenario = (trim(strip_tags($value)) == '') ? '' : $value;
+    $scenario = (trim(strip_tags($value, '<img>')) == '') ? '' : $value;
     $tmp_scenario = trim($this->scenario);
     if ($scenario != $tmp_scenario) {
       $this->set_modified_field('scenario_plain', $this->get_scenario_plain());
@@ -1302,17 +1323,19 @@ QUERY;
 
       if ($paper_id != -1) {
         $query = <<< QUERY
-SELECT paper_title, review_comments.id, category, comment, reviewed, title, initials, surname, action, response, review_type
-FROM (review_comments, users) LEFT JOIN properties ON review_comments.q_paper=properties.property_id
-WHERE review_comments.reviewer=users.id AND q_id=? AND q_paper=? ORDER BY surname
+SELECT paper_title, review_comments.id, category, comment, started, title, initials, surname, action, response, review_type
+FROM (review_metadata, review_comments, users) LEFT JOIN properties ON review_metadata.paperID = properties.property_id
+WHERE review_metadata.id = review_comments.metadataID AND reviewerID = users.id AND q_id = ? AND paperID = ?
+ORDER BY surname
 QUERY;
         $result = $this->_mysqli->prepare($query);
         $result->bind_param('ii', $this->id, $paper_id);
       } else {
         $query = <<< QUERY
-SELECT paper_title, review_comments.id, category, comment, reviewed, title, initials, surname, action, response, review_type
-FROM (review_comments, users) LEFT JOIN properties ON review_comments.q_paper=properties.property_id
-WHERE review_comments.reviewer=users.id AND q_id=? ORDER BY q_paper, surname
+SELECT paper_title, review_comments.id, category, comment, started, title, initials, surname, action, response, review_type
+FROM (review_metadata, review_comments, users) LEFT JOIN properties ON review_metadata.paperID = properties.property_id
+WHERE review_metadata.id = review_comments.metadataID AND reviewerID = users.id AND q_id = ?
+ORDER BY paperID, surname
 QUERY;
         $result = $this->_mysqli->prepare($query);
         $result->bind_param('i', $this->id);
@@ -1525,7 +1548,7 @@ QUERY;
 
     // Required fields
     $missing_fields = '';
-    foreach($this->_fields_required as $req) {
+    foreach ($this->_fields_required as $req) {
       if (empty($this->$req)) $missing_fields .= $this->_pretty_names[$req] . ', ';
     }
     if ($missing_fields != '') {
@@ -1598,7 +1621,7 @@ QUERY;
 
     // Call save() on the options too if successful
     $i = 1;
-    foreach($this->options as $oid => $option) {
+    foreach ($this->options as $oid => $option) {
       $media = $option->get_media();
       if ($option->is_blank()) {
         $success = $option->delete();

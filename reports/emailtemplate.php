@@ -51,16 +51,14 @@ if (file_exists("../email_templates/" . $userObject->get_user_ID() . ".txt")) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-    body {font-size:90%; background-color:#F0F0F0; margin-top:2px}
-    .heading {background-color:#EBEADB; border-left:solid white 1px; border-right:solid #D8D2BD 1px; border-top:solid white 1px; border-bottom: solid #D8D2BD 1px}
+    body {font-size:90%; background-color:#F0F0F0; margin:4px}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_email.js"></script>
-  <script type="text/javascript">
+  <script>
     function submitValues() {
-      opener.document.theform.from.value = document.templateform.from.value;
       opener.document.theform.emailtemplate.value = tinyMCE.get('template').getContent();
       opener.document.theform.ccaddress.value = document.templateform.ccaddress.value;
       opener.document.theform.bccaddress.value = document.templateform.bccaddress.value;
@@ -78,33 +76,22 @@ if (file_exists("../email_templates/" . $userObject->get_user_ID() . ".txt")) {
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
 <tr>
-<td>&nbsp;&nbsp;<?php echo $string['cc'];?></td><td><input type="text" size="70" name="ccaddress" value="<?php echo $ccaddress; ?>" /></td>
-<td style="text-align:right" rowspan="3" valign="top"><img src="../artwork/stamp.png" width="63" height="67" alt="stamp" /></td>
+<td><?php echo $string['cc'] ?></td><td><input type="text" size="70" name="ccaddress" value="<?php echo $ccaddress ?>" /></td>
+<td style="text-align:right" rowspan="3" valign="top"><img src="../artwork/stamp.png" width="89" height="93" alt="stamp" /></td>
 </tr>
 <tr>
-<td>&nbsp;&nbsp;<?php echo $string['bcc'];?></td><td><input type="text" size="70" name="bccaddress" value="<?php echo $bccaddress; ?>" /></td>
+<td><?php echo $string['bcc'] ?></td><td><input type="text" size="70" name="bccaddress" value="<?php echo $bccaddress ?>" /></td>
 </tr>
 <tr>
-<td>&nbsp;&nbsp;<?php echo $string['subject'];?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject; ?>" /></td>
+<td><?php echo $string['subject'] ?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject ?>" /></td>
 </tr>
 <tr>
-<td colspan="3"><textarea class="mceEditor" id="template" name="template" style="width:782px; height:350px"><?php echo  htmlspecialchars($message, ENT_NOQUOTES); ?></textarea></p>
+<td colspan="3"><textarea class="mceEditor" id="template" name="template" style="width:772px; height:368px"><?php echo  htmlspecialchars($message, ENT_NOQUOTES) ?></textarea></p>
 </tr>
-<tr><td colspan="3">&nbsp;</td></tr>
 <tr>
 <td colspan="3" style="text-align: center">
-<input type="submit" style="width:120px" name="submit" value="<?php echo $string['email_class'];?>" />&nbsp;<input type="button" name="cancel" style="width: 120px" value="<?php echo $string['cancel'];?>" onclick="window.close();" />
-<?php
-  $result = $mysqli->prepare("SELECT email FROM users WHERE id = ?");
-  $result->bind_param('i',$userObject->get_user_ID());
-  $result->execute();
-  $result->bind_result($from);
-  $result->fetch();
-  $result->close();
-
-  $mysqli->close();
-?>
-<input type="hidden" name="from" value="<?php echo $from; ?>" /></td>
+<input type="submit" class="ok" name="submit" value="<?php echo $string['email_class'] ?>" /><input type="button" name="cancel" class="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" />
+</td>
 </tr>
 </table>
 </form>

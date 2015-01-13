@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['longitudinalperformance'] = 'Wyniki długoterminowe';  
+$string['longitudinalperformance'] = 'Osiągnięcia długoterminowe';  
 $string['papername'] = 'Nazwa arkusza';
 $string['calendaryear'] = 'Rok kalendarzowy';
-$string['questionno'] = 'Numer pytania';
+$string['screen'] = 'Ekran';
 $string['datetaken'] = 'Data egazminu';
 $string['cohort'] = 'Grupa';
 $string['p'] = 'P'; //cognate

@@ -40,20 +40,21 @@ $old_version = $configObject->get('rogo_version');
     <title>Rog&#333; <?php echo $configObject->get('rogo_version') ?> update creation</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
     <link rel="stylesheet" type="text/css" href="../css/updater.css"/>
 
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
   <table class="header">
     <tr>
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-          <img src="../artwork/r_logo.gif" width="56" height="60" alt="logo" style="float:left; padding-right:8px"/>
+          <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
 
-          <div style="color:#1F497D; font-size:28pt; font-weight:bold">Rog&#333;</div>
-          <div style="color:#1F497D; font-size:9pt">Update Creation Utility (<?php echo $migration_path; ?>)</div>
+          <div class="logo_lrg_txt">Rog&#333;</div>
+          <div class="logo_small_txt">Update Creation Utility (<?php echo $migration_path; ?>)</div>
       </th>
       <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" /></th>
     </tr>
@@ -61,7 +62,7 @@ $old_version = $configObject->get('rogo_version');
 <?php
 if (!isset($_POST['create'])) {
 ?>
-<script type="text/javascript">
+<script>
   $(document).ready(function () {
     $("#create_form").validate();
   });
@@ -70,7 +71,7 @@ if (!isset($_POST['create'])) {
       <p><?php echo $string['msg1']; ?></p>
       <div><label for="tag"><?php echo $string['tag']; ?></label> <input type="text" value="" id="tag" name="tag" class="required" minlength="2" /></div>
 
-      <div class="submit"><input type="submit" name="create" value="<?php echo $string['create']; ?>"/></div>
+      <div class="submit"><input type="submit" name="create" class="ok" value="<?php echo $string['create'] ?>" /></div>
   </form>
    </body>
    </html>

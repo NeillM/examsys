@@ -18,9 +18,10 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+require_once '../include/staff_auth.inc';
 ?>
 <html>
 <head>
@@ -33,11 +34,10 @@
 	<style type="text/css">
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
 		.divider {padding-left:6px; font-weight:bold}
-		a {color:black}
-		a:hover {color:blue}
 		.f {float:left; width:375px; padding-left:12px; font-size:80%}
 		.recent {color:blue; font-size:90%}
-		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
+		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd}
+    td {vertical-align:top}
 	</style>
 </head>
 
@@ -45,17 +45,15 @@
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:80%">
 <tbody>
-<tr style="background-color:#EBEADB;">
-	<td style="width:20px;">&nbsp;</td>
-	<td style="width:20px;">&nbsp;</td>
-	<td style="width:50%;"><img src="../../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0">&nbsp;Question</td>
-	<td style="width:55px;"><img src="../../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0">&nbsp;ID</td>
-	<td style="width:100px;"><img src="../../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0">&nbsp;Type</td>
-	<td><img src="../../../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0">&nbsp;Details</td>
+<tr style="background-color:#295AAD; color:white">
+	<td style="width:20px">&nbsp;</td>
+	<td style="width:20px">&nbsp;</td>
+	<td style="width:50%">Question</td>
+	<td style="width:55px">ID</td>
+	<td style="width:100px">Type</td>
+	<td>Details</td>
 </tr>
-<tr style="height:4px">
-	<td valign="top" colspan="6"><img src="../../../artwork/header_horizontal_line.gif" width="100%" height="3" alt="Line"></td>
-</tr>
+
 <?php if (isset($result['load']['data']->papers) && count($result['load']['data']->papers) > 0) : ?>
 <?php $qno = 1; ?>
 	<?php foreach ($result['load']['data']->papers as & $paper) : ?>
@@ -70,11 +68,11 @@
 				<?php $question = FindQuestion($result['load']['data']->questions, $q_id); ?>
 				<tr>
 						<td></td>
-						<td valign="top" align="right" style="padding-right:6px;"><?php echo($qno) ?>.</td>
-						<td valign="top" width="50%"><?php echo(StripForTitle($question->leadin)) ?></td>
-						<td valign="top" align="center"><?php echo($question->load_id) ?></td>
-						<td valign="top"><nobr>&nbsp;<?php echo(ConvertType($question->type)) ?>&nbsp;</nobr></td>
-						<td valign="top"><?php LogForQuestion($question->load_id) ?></td>
+						<td align="right" style="padding-right:6px;"><?php echo($qno) ?>.</td>
+						<td width="50%"><?php echo(StripForTitle($question->leadin)) ?></td>
+						<td><?php echo($question->load_id) ?></td>
+						<td><nobr><?php echo(ConvertType($question->type)) ?>&nbsp;</nobr></td>
+						<td><?php LogForQuestion($question->load_id) ?></td>
 				</tr>			
 				<?php $qno++ ?>		
 			<?php endforeach; ?>
@@ -88,11 +86,11 @@
 	<?php foreach ($result['load']['data']->questions as $question) : ?>
 	<tr>
 			<td></td>
-			<td valign="top" align="right" style="padding-right:6px;"><?php echo($qno) ?>.</td>
-			<td valign="top" width="50%"><?php echo(StripForTitle($question->leadin)) ?></td>
-			<td valign="top" align="center"><?php echo($question->save_id) ?></td>
-			<td valign="top"><nobr>&nbsp;<?php echo(ConvertType($question->type)) ?>&nbsp;</nobr></td>
-			<td valign="top"><?php LogForQuestion($question->load_id) ?></td>
+			<td align="right" style="padding-right:6px;"><?php echo($qno) ?>.</td>
+			<td width="50%"><?php echo(StripForTitle($question->leadin)) ?></td>
+			<td align="center"><?php echo($question->save_id) ?></td>
+			<td><nobr><?php echo(ConvertType($question->type)) ?>&nbsp;</nobr></td>
+			<td><?php LogForQuestion($question->load_id) ?></td>
 	</tr>
 		<?php $qno++ ?>		
 	<?php endforeach; ?>

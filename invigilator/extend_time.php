@@ -47,7 +47,7 @@ if (isset($_POST['paperID'])) {
 
 
 $student = array();
-$student['user_ID']=$student_id;
+$student['user_ID'] = $student_id;
 
 $stmt = $mysqli->prepare('SELECT title, initials, surname FROM users WHERE user_deleted IS NULL AND id = ?');
 $stmt->bind_param('i', $userID);
@@ -87,20 +87,23 @@ if (isset($_POST['submit'])) {
 $special_needs_percentage = $log_extra_time->get_extra_time_secs();
 $special_needs_percentage = $special_needs_percentage / 60;
 
-$time_range = range(0, 30, 5);
+$time_range = range(0, 30, 1);
 
 ?>
 <html>
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 <head>
-    <title><?php echo $string['extendtime'] ?></title>
-    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-    <script type="text/javascript">
-        function closeWindow() {
-            window.opener.location = window.opener.location.href;
-            window.close();
-        }
-    </script>
+  <title><?php echo $string['extendtime'] ?></title>
+  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+  <style>
+    body {font-size:90%}
+  </style>
+  <script>
+    function closeWindow() {
+      window.opener.location = window.opener.location.href;
+      window.close();
+    }
+  </script>
 </head>
 <body onload="<?php echo $onload; ?>">
 <form id="extend_time_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
@@ -125,9 +128,7 @@ $time_range = range(0, 30, 5);
       <?php echo $string['minutes'] ?>
     </div>
     <div style="text-align:center; margin-top:20px;">
-        <input type="submit" style="width:100px" name="submit" value="<?php echo $string['submit']; ?>"/>&nbsp;&nbsp;
-        <input style="width:100px" type="button" name="close" value="<?php echo $string['close']; ?>"
-               onclick="window.close();"/>
+        <input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="close" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" />
     </div>
     <input type="hidden" name="userID" value="<?php echo $student_id; ?>"/>
     <input type="hidden" name="paperID" value="<?php echo $paper_id; ?>"/>

@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Remove the link between a question an a paper.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -94,30 +96,26 @@ $mysqli->close();
   <title><?php echo $string['questiondeleted']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript">
-    function closeWindow() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       window.opener.location.href='../paper/details.php?paperID=<?php echo $_POST['paperID']; ?>&module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>&scrOfY=<?php echo $_POST['scrOfY']; ?>';
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="closeWindow();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg']; ?><p>
 
-<td><p><?php echo $string['msg']; ?><p>
-
-<div style="text-align:center">
+<div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="javascript:window.opener.location.reload();window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="window.opener.location.reload(); window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a session in the internal list of objectives.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,7 +32,7 @@ $obj_data->bind_param('dis', $_POST['identifier'], $_POST['moduleID'], $_POST['s
 $obj_data->execute();
 $obj_data->store_result();
 $obj_data->bind_result($obj_id);
-while ($row = $obj_data->fetch()) {
+while ($obj_data->fetch()) {
   // Delete from 'relationships' table.
   $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
   $result->bind_param('iis', $obj_id, $_POST['moduleID'], $_POST['session']);
@@ -62,30 +64,26 @@ $mysqli->close();
   <title>Session Deleted</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript">
-    function updateParent() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+		$(document).ready(function() {
       window.opener.location.reload();
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:80%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg']; ?></p>
 
-<td><p><?php echo $string['msg']; ?><p>
-
-<div style="text-align:center">
+<div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="    <?php echo $string['ok']; ?>    " onclick="javascript:window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

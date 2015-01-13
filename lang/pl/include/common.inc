@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['helpsupport'] = 'Pomoc i wsparcie';
 $string['aboutrogo'] = 'O programie Rog&#333; %s';
 $string['html5warn'] = 'Rog&#333; wymaga obsługi HTML5 - uaktualnij swoją przegladarkę.';
@@ -93,9 +94,8 @@ $string['NoFieldMetadata'] = 'W metadanych brakuje pola dla grup.';
 $string['NoGroup'] = 'Nie znaleziono żadnej grupy dla aktualnego użytkownika.';
 $string['note'] = 'Notatka';
 $string['studentname'] = 'Nazwisko Studenta';
-
-require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
-
+$string['loggedinas'] = 'Zalogowany jako';
+$string['crondisallowed'] = 'procedura CRON próbowała uruchomić niedozwolony skrypt';
 $string['register'] = 'Zarejestruj się jako Pracownik';
 $string['register1'] = 'Zarejestruj się jako ';
 $string['demomodule'] = 'Moduł Demonstracyjny';

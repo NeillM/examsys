@@ -36,11 +36,25 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function () {      
+      $(".l").click(function(event) {
+        event.stopPropagation();
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        editTemplate();
+      });
+
+    });
+  </script>
 </head>
 
 <body>
@@ -50,24 +64,26 @@
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 
-<table class="header">
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['ebeltemplates'] ?></div>
+</div>
+  
+<table class="header" cellpadding="2" cellspacing="0">
 <tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['ebeltemplates']; ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th><div class="col10"><?php echo $string['gridnames']; ?>&nbsp;</div></th><th>&nbsp;</th></tr>
+<th class="col10"><?php echo $string['gridnames']; ?></th><th>&nbsp;</th></tr>
 <?php
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
+$result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates");
 $result->execute();
 $result->bind_result($id, $name);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" onclick=\"selLine($id,event)\" ondblclick=\"editTemplate()\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
+  echo "<tr id=\"$id\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
   $id++;
 }
 $result->close();

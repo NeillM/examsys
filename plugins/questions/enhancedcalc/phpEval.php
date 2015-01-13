@@ -18,15 +18,13 @@
 
 /**
  *
- * php based maths functions  for calculation  questions
+ * PHP based maths functions for calculation questions.
  *
  * @author Simon Atack, Anthony Brown
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once('rserve/Connection.php');
 
 class EnhancedCalc_phpEval {
 
@@ -61,30 +59,26 @@ class EnhancedCalc_phpEval {
 
   // from php manual http://php.net/round
   function RoundSigDigs($number, $sigdigs) {
-    $i=0;
-    if($number === 0) {
+    $i = 0;
+    if ($number === 0) {
       return $number;
     }
     $multiplier = 1;
     while ($number < 0.1) {
       $number *= 10;
       $multiplier /= 10;
-   //   print "Anumb::" . $number ."  multi:" .$multiplier . '<br>';
-      if($i>30) return($number); $i++;
+      if ($i>30) return($number); $i++;
     }
-    $i=0;
+    $i = 0;
     while ($number >= 1) {
       $number /= 10;
       $multiplier *= 10;
-    // print "Bnumb::" . $number ."\<br>multi:" .$multiplier;
-      if($i>30) return($number); $i++;
+      if ($i>30) return($number); $i++;
     }
     return round($number, $sigdigs) * $multiplier;
   }
 
   function calculate_correct_ans($vars, $formula) {
-    
-
     
     $varname = array_keys($vars);
     $varvalue = array_values($vars);
@@ -147,17 +141,17 @@ class EnhancedCalc_phpEval {
     //
     // Make sure the min and max are correct tolerances on negative numbers causes problems 
     //
-    if($result[1] > $result[2]) {
-        $res['tolerance_ans'] = $result[1];
-        $res['tolerance_ansneg'] = $result[2];
+    if ($result[1] > $result[2]) {
+      $res['tolerance_ans'] = $result[1];
+      $res['tolerance_ansneg'] = $result[2];
     } else {
-        $res['tolerance_ans'] = $result[2];
-        $res['tolerance_ansneg'] = $result[1];
+      $res['tolerance_ans'] = $result[2];
+      $res['tolerance_ansneg'] = $result[1];
     }
     return $res;
   }
   
-  function calculate_tolerance_absolute($correctanswer,$value) {
+  function calculate_tolerance_absolute($correctanswer, $value) {
     
     $result[0] = $correctanswer + $value;
     $result[1] = $correctanswer - $value;
@@ -237,15 +231,15 @@ class EnhancedCalc_phpEval {
   
   function calc_dp($num) {
     $dotpos = strpos($num, '.');
-    if($dotpos === false) {
+    if ($dotpos === false) {
       return 0;
     }
     
     $epos = strpos($num, 'e');
-    if($epos !== false) {
-        $end = $epos;
+    if ($epos !== false) {
+      $end = $epos;
     } else {
-        $end = strlen($num);
+      $end = strlen($num);
     }
    
     return $end - ($dotpos + 1);
@@ -254,12 +248,12 @@ class EnhancedCalc_phpEval {
   function calc_sf($num) {
         
     $epos = strpos($num, 'e');
-    if($epos === false) {
+    if ($epos === false) {
       $epos = strlen($num);
     } 
     
-    if(strpos($num, '0.') === 0) {
-       $epos = $epos - 2;
+    if (strpos($num, '0.') === 0) {
+      $epos = $epos - 2;
     } else if(strpos($num, '.') !== false) {
       $epos = $epos - 1;
     }
@@ -268,33 +262,33 @@ class EnhancedCalc_phpEval {
   }
   
   function is_engineering_format($num) {
-      $epos = stripos($num, 'e');
-      if($epos !== false) {
-         return true;
-      }
-      return false;
+    $epos = stripos($num, 'e');
+    if ($epos !== false) {
+      return true;
+    }
+    return false;
   }
   
-  function format_number_dp($num,$dp) {
+  function format_number_dp($num, $dp) {
     return round($num,$dp);
   }
   
-  function format_number_dp_strict_zeros($num,$dp) {
-    $str="%.".$dp."f";
+  function format_number_dp_strict_zeros($num, $dp) {
+    $str = "%.".$dp."f";
     return sprintf($str,$num);
   }
   
-  function format_number_sf($num,$sf) {
-    return $this->RoundSigDigs($num,$sf);
+  function format_number_sf($num, $sf) {
+    return $this->RoundSigDigs($num, $sf);
   }
   
   function format_number_to_precision_of_other_number($roundme, $likethisone) {
-      if ($this->is_engineering_format($likethisone)) {
-        $precision = $this->calc_sf($likethisone);
-        return $this->format_number_sf($roundme,$precision);
+    if ($this->is_engineering_format($likethisone)) {
+      $precision = $this->calc_sf($likethisone);
+      return $this->format_number_sf($roundme, $precision);
     } else {
-        $precision = $this->calc_dp($likethisone);
-        return $this->format_number_dp($roundme,$precision);
+      $precision = $this->calc_dp($likethisone);
+      return $this->format_number_dp($roundme, $precision);
     }
   }
   

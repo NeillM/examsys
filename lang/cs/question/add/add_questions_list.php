@@ -22,7 +22,8 @@ $string['team'] = 'Tým';
 $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
-$string['status'] = 'Status'; //cognate
+$string['status'] = 'Status';
 $string['locked'] = 'Uzamčeno';
 $string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
+$string['bykeyword'] = 'dle Klíčového slova';
 ?>

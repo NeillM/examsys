@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a faculty - SysAdmin only.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,7 +30,7 @@ require_once '../classes/facultyutils.class.php';
 
 $facultyID = check_var('facultyID', 'POST', true, false, true);
 
-if (!FacultyUtils::facultyid_exists($facultyID, $mysqli)) {
+if (!FacultyUtils::faculty_name_by_id($facultyID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -46,30 +48,26 @@ $mysqli->close();
   <title>Faculty Deleted</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript">
-    function updateParent() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       window.opener.location.reload();
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="Recycle Bin" /></td>
+<p>Faculty successfully deleted.<p>
 
-<td><p>Faculty successfully deleted.<p>
-
-<div style="text-align: center">
+<div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="    OK    " onclick="javascript:window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

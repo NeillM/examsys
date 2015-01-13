@@ -28,6 +28,7 @@ $string['qcomments'] = 'Q%d Comments';
 $string['questionok'] = 'Question OK';
 $string['minorproblems'] = 'Minor/some problems';
 $string['majorproblems'] = 'Major/many problems';
+$string['cannotcomment'] = 'Cannot Comment';
 $string['deadlineexpired'] = 'Deadline Expired';
 $string['deadlinepassed'] = 'You may view this assessment but you cannot change your comments as the deadline has expired or the start time of the exam has passed.';
 $string['javacheck2'] = "Are you sure you wish to finish. After clicking \'OK\' you will not be able to go back.";
@@ -40,4 +41,5 @@ $string['AllItemsCorrect'] = "All items correct";
 $string['formula'] = 'Formula';
 $string['tolerancefull'] = 'Tolerance for full marks';
 $string['tolerancepartial'] = 'Tolerance for partial marks';
+$string['togglevariables'] = 'Toggle Variables';
 ?>

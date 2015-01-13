@@ -40,4 +40,15 @@ $string['textbox'] = 'Pytanie półotwarte';
 $string['true_false'] = 'Pytanie typu Prawda/Fałsz'; 
 $string['area'] = 'Pytanie na obrys obszaru';
 $string['enhancedcalc'] = 'Rozszerzone p. obliczeniowe';
+
+$string['veryeasy'] = 'Bardzo Łatwe';
+$string['easy'] = 'Łatwe';
+$string['moderate'] = 'Średnio trudne';
+$string['hard'] = 'Trudne';
+$string['veryhard'] = 'Bardzo trudne';
+$string['mean'] = 'Średnia';
+$string['highest'] = 'Największe';
+$string['high'] = 'Wysoka';
+$string['intermediate'] = 'Umiarkowane';
+$string['low'] = 'Niska';
 ?>

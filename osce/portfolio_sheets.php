@@ -34,38 +34,18 @@ $paperID      = check_var('paperID', 'GET', true, false, true);
 $startdate    = check_var('startdate', 'GET', true, false, true);
 $enddate      = check_var('enddate', 'GET', true, false, true);
 
-function load_questions($db) {
-  $q_no = 1;
-  $questions = array();
-
-  $result = $db->prepare("SELECT REPLACE(leadin,'&amp;','&') AS leadin, REPLACE(theme,'&amp;','&') AS THEME FROM papers, questions WHERE papers.question = questions.q_id AND papers.paper = ? ORDER BY display_pos");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($leadin, $theme);
-  while ($result->fetch()) {
-    $questions[$q_no]['theme']  = $theme;
-    $questions[$q_no]['leadin'] = $leadin;
-
-    $q_no++;
-  }
-  $result->close();
-
-  return $questions;
-}
-
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-$paper = $propertyObj->get_paper_title();
+$paper 				= $propertyObj->get_paper_title();
+$question_no	= $propertyObj->get_question_no();
+$marking      = $propertyObj->get_marking();
 
 if ($userObject->has_role('Demo')) {
   $demo = true;
 } else {
   $demo = false;
 }
-
-$questions = load_questions($mysqli);
-$question_no = count($questions);
 
 $user_results = load_osce_results($propertyObj, $demo, $configObject, $question_no, $mysqli);
 $user_no = count($user_results);
@@ -83,7 +63,7 @@ if ($borderline_method) {
   $passmark = 'N/A';
 }
 
-set_classification($user_results, $passmark, $user_no, $string);
+set_classification($marking, $user_results, $passmark, $user_no, $string);
 
 header('Pragma: public');
 header('Content-disposition: attachment; filename=report.xml');
@@ -117,16 +97,16 @@ SELECT log4_overall.userID, students.title, students.surname, students.first_nam
  DATE_FORMAT(log4_overall.started,"%d/%m/%Y %H:%i") AS started,
  REPLACE(feedback,'&amp;','&') AS feedback, examiners.title, examiners.surname
 FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners)
-WHERE log4.log4_overallID=log4_overall.id
- AND log4_overall.userID=students.id AND log4_overall.examinerID=examiners.id
- AND papers.question=questions.q_id AND papers.paper=? AND log4_overall.q_paper=?
- AND log4.q_id=questions.q_id AND log4_overall.started>=?
- AND log4_overall.started<=? AND (students.roles='Student' OR students.roles='graduate')
+WHERE log4.log4_overallID = log4_overall.id
+ AND log4_overall.userID = students.id AND log4_overall.examinerID = examiners.id
+ AND papers.question = questions.q_id AND papers.paper = ? AND log4_overall.q_paper = ?
+ AND log4.q_id = questions.q_id AND log4_overall.started >= ?
+ AND log4_overall.started <= ? AND (students.roles = 'Student' OR students.roles = 'graduate')
  AND log4_overall.student_grade LIKE ?
 ORDER BY students.surname, students.initials, log4_overall.userID, display_pos
 SQL;
 $result = $mysqli->prepare($sql);
-$result->bind_param('iisss', $_GET['paperID'], $_GET['paperID'], $startdate, $enddate, $_GET['repcourse']);
+$result->bind_param('iisss', $paperID, $paperID, $startdate, $enddate, $_GET['repcourse']);
 $result->execute();
 $result->bind_result($userID, $title, $surname, $first_names, $q_id, $rating, $q_parts, $leadin, $theme, $started, $feedback, $examiner_title, $examiner_surname);
 $old_userID = 0;
@@ -167,7 +147,6 @@ while ($result->fetch()) {
   $leadin = StringUtils::wordToUtf8(StringUtils::clean_and_trim(strip_tags($leadin)));
 		
   $leadin = parse_leadin_word_2003($leadin, $q_parts);
-  //$leadin = parse_leadin_word_2003(strip_tags($leadin), $q_parts);
 
   // Lead-in
   echo '<w:tr wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidTr="00A11D0F">';

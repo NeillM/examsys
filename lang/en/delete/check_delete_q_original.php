@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['deletequestion'] = 'Delete Question';
+require '../lang/' . $language . '/delete/delete.inc';
+
 $string['msg'] = 'You are attempting to delete a question from the question bank.<br /><br /><strong>Please confirm that this is your intention.';
-$string['recyclebin'] = 'Recycle Bin';
-$string['delete'] = 'Delete';
 $string['warning1'] = 'You cannot delete this question, it is used in the following papers:';
 $string['warning2'] = 'Delete all pointers to this question before deleting the original.';
 ?>

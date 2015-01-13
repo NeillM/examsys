@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/include/paper_options.inc';
+require '../lang/' . $language . '/paper/details.php';
 require 'shared.inc';
 
 $string['exporttoqti'] = 'Export to QTI';

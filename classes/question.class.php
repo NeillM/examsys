@@ -162,9 +162,53 @@ Class Question {
     }
 
     if (!is_array($this->options)) {
-      //convert to objects!
+      // Convert to objects!
     }
   }
+  
+  function save($db) {
+		if ($this->id > 0) {
+			// Update the database.          
+			$query = $db->prepare("UPDATE questions SET 
+																								theme = ?, 
+																								scenario = ?, 
+																								leadin = ?, 
+																								correct_fback = ?, 
+																								incorrect_fback = ?, 
+																								display_method = ?, 
+																								notes = ?, 
+																								q_media = ?, 
+																								q_media_width = ?, 
+																								q_media_height = ?, 
+																								last_edited = ?, 
+																								bloom = ?, 
+																								scenario_plain = ?, 
+																								leadin_plain = ?, 
+																								std = ?,
+																								status = ?, 
+																								q_option_order = ?, 
+																								score_method = ?, 
+																								settings = ?  
+																							WHERE 
+																								q_id = ?
+																					 ");
+		
+			if (is_array($this->settings)) {
+				$settings = json_encode($this->settings);
+			} else {
+				$settings = $this->settings;
+			}
+      $this->last_edited = date('Y-m-d H:i:s');
+			
+			$query->bind_param('sssssssssssssssisssi',  $this->theme, $this->scenario, $this->leadin, $this->correct_fback, $this->incorrect_fback, $this->display_method, $this->notes, 
+															$this->q_media, $this->q_media_width, $this->q_media_height, $this->last_edited, $this->bloom, $this->scenario_plain, $this->leadin_plain, 
+															$this->standards_setting, $this->status, $this->option_order, $this->score_method, $settings, $this->id);
+			$query->execute();
+			$query->close();
+		} else {
+			//insert
+			throw new Exception('Can not insert questions using this class (INSERT has not been implemented)');
+		}
+  }
 }
-
 ?>

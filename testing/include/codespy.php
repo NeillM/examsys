@@ -883,11 +883,7 @@ class patcher
 					$this->add_tokens_to_be_inserted_after($tp,'\codespy\Analyzer::$coveredlines[__FILE__][__LINE__-'.$offset.']['.($charecter_pos+1).'][]=\codespy\Analyzer::$currenttest;');
 
 				} elseif($token_name == 'T_WHITESPACE') {
-					//var_dump(ord($tokens[$tp][1]));
-					//var_dump(ord("\r"));
-					//echo ord($tokens[$tp][1]),"\n";
-					//var_dump($tokens[$tp][1]);
-					if((strpos($tokens[$tp][1],13) !==false) || (strpos($tokens[$tp][1],10) !==false)) {
+					if ((strpos($tokens[$tp][1],13) !==false) || (strpos($tokens[$tp][1],10) !==false)) {
 					$charecter_pos = 0;
 					}
 

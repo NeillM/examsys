@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['optimizetables'] = 'Optimalizovat tabulky';
 $string['tables'] = 'Tabulky:';
 $string['optimize'] = 'Optimalizovat';
-$string['finished'] = 'Hotovo';
+$string['finished'] = 'Dokončeno';
 $string['optimized'] = 'Optimalizováno.';
 ?>

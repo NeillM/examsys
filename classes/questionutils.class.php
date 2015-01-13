@@ -34,7 +34,7 @@ Class QuestionUtils {
    * @return string The leadin
    */
   static function question_exists($q_id, $db) {
-    $stmt = $db->prepare("SELECT q_id FROM questions WHERE q_id = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT q_id FROM questions WHERE q_id = ? AND deleted IS NULL LIMIT 1");
     $stmt->bind_param('i', $q_id);
     $stmt->execute();
     $stmt->store_result();
@@ -210,7 +210,7 @@ SQL;
     }
     $update->close();
 
-    //questions may be on modules the current users is not in - should we exclude these from the delete
+    // Questions may be on modules the current users is not in - should we exclude these from the delete
     $update = $db->prepare("DELETE FROM questions_modules WHERE q_id = ?");
     $update->bind_param('i', $q_id);
     $update->execute();
@@ -221,7 +221,7 @@ SQL;
   }
 
   /**
-  * updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
+  * Updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
 	* @param resource $db the database connection.
@@ -229,11 +229,12 @@ SQL;
   * @return void
   */
   static function update_modules($modules, $q_id, $db, $userObj) {
-    if ($userObj->has_role('SysAdmin')) {
-      //sysadmin
-      $user_can_delete = ''; //no restrictions
-    } else {
-      $user_can_delete = "AND idMod IN (" . implode(',', array_keys($userObj->get_staff_modules())) . ")"; //users can only remove modules if they are on the team
+    $user_can_delete = '';
+    if (!$userObj->has_role('SysAdmin')) {    // If SysAdmin no restrictions in deleting.
+      $staff_modules = $userObj->get_staff_modules();
+      if (count($staff_modules) > 0) {
+        $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; //users can only remove modules if they are on the team
+      }
     }
 
     $editProperties = $db->prepare("DELETE FROM questions_modules WHERE q_id = ? $user_can_delete");
@@ -245,7 +246,7 @@ SQL;
   }
 
   /**
-  * add modules to a question ignoring any duplicates
+  * Add modules to a question ignoring any duplicates
   * @param $modules an array of modules keyed on idMod
   * @param $q_id the id of the question
 	* @param resource $db the database connection.
@@ -293,7 +294,9 @@ SQL;
   }
 
 /**
-  * remove a question from rogo (N.B sets the deleted field we don't actuality delete the row form the questions table)
+  * remove a question from rogo
+  * Normal Questions - sets the deleted field we don't actuality delete the row form the questions table
+  * Random Questions - deletes the rows in optionsto ensure random questions cannot use the deleted question
   * @param $q_id the id of the question or property_id
 	* @param resource $db the database connection.
   * @return void
@@ -303,6 +306,19 @@ SQL;
     $delete->bind_param('i', $q_id);
     $delete->execute();
     $delete->close();
+
+    $select_random = $db->prepare("SELECT o.o_id, o.option_text FROM questions q, options o WHERE q.q_id = o.o_id AND q_type = 'random' AND o.option_text = ?");
+    $select_random->bind_param('s', $q_id);
+    $select_random->execute();
+    $select_random->store_result();
+    $select_random->bind_result($o_id, $option_text);
+    while ($select_random->fetch()) {
+      $delete_random = $db->prepare("DELETE FROM options where o_id = ? AND option_text = ?");
+      $delete_random->bind_param('is', $o_id, $option_text);
+      $delete_random->execute();
+      $delete_random->close();
+    }
+    $select_random->close();
   }
 
   static function lock_question($q_id, $db) {
@@ -327,6 +343,44 @@ SQL;
     $query->close();
 
     return $count;
+  }
+
+  /**
+   * Function to get available options text for question
+   *
+   * @param int $qid question identifier
+   * @param mysqli $db
+   * @return array option_text for supplied option
+   */
+  static function get_options_text($qid, $db) {
+    $options = $db->prepare("SELECT option_text FROM options WHERE o_id = ?");
+    $options->bind_param('i', $qid);
+    $options->execute();
+    $options->store_result();
+    $options->bind_result($optionstext);
+    $optionsarray = array();
+    while ($options->fetch()) {
+        $optionsarray[] = $optionstext;
+    }
+    $options->close();
+    return $optionsarray;
+  }
+
+  /**
+   * Function to get type of question
+   *
+   * @param int $qid question identifier
+   * @param mysqli $db
+   * @return string question type
+   */
+  static function get_question_type($qid, $db) {
+    $type = $db->prepare("SELECT q_type FROM questions WHERE q_id = ?");
+    $type->bind_param('i', $qid);
+    $type->execute();
+    $type->bind_result($qtype);
+    $type->fetch();
+    $type->close();
+    return $qtype;
   }
 }
 ?>

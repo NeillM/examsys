@@ -21,6 +21,7 @@ $string['papertasks'] = 'Paper Tasks';
 $string['testpreview'] = 'Test &amp; Preview';
 $string['addquestionspaper'] = 'Add Questions to Paper';
 $string['editproperties'] = 'Edit Properties';
+$string['emailexternals'] = 'Email Externals';
 $string['reports'] = 'Reports';
 $string['mappedobjectives'] = 'Mapped Objectives';
 $string['importmarks'] = 'Upload Marks';
@@ -37,7 +38,7 @@ $string['import'] = 'Import QTI format';
 $string['importraf'] = 'Import Rog&#333; Assessment format';
 $string['Continuous'] = 'Continuous';
 $string['Page-break per question'] = 'Page-break per question';
-$string['currentquestiontasks'] = 'Current Question Tasks';
+$string['currentquestiontasks'] = 'Question Tasks';
 $string['editquestion'] = 'Edit Question';
 $string['previewquestion'] = 'Preview Question';
 $string['information'] = 'Information';
@@ -48,6 +49,8 @@ $string['moveup'] = 'Move up';
 $string['movedown'] = 'Move down';
 $string['changescreenno'] = 'Change Screen No.';
 $string['removefrompaper'] = 'Remove from Paper';
+$string['setkillerquestion'] = 'Set Killer Question';
+$string['unsetkillerquestion'] = 'Unset Killer Question';
 
 $string['summativechecklist'] = 'Summative Checklist';
 $string['session'] = 'Session';
@@ -70,11 +73,6 @@ $string['questionsbyteam'] = 'Questions by Team';
 $string['questionsbykeyword'] = 'Questions by Keyword';
 $string['search'] = 'Search';
 $string['createnewquestion'] = 'Create new Question';
-
-$string['questions'] = 'Questions';
-$string['papers'] = 'Papers';
-$string['people'] = 'People';
-$string['studentcohort'] = 'Student Cohort of Paper';
 
 $string['dates'] = 'Dates';
 $string['to'] = 'to';
@@ -127,7 +125,9 @@ $string['incabsentcandidates'] = 'inc. absent candidates';
 $string['studentsonly'] = 'student attempts only';
 $string['completedatasets'] = 'Show complete datasets only';
 $string['anyyear'] = 'Any Year';
-
+$string['tooltip_studentattempts'] = 'Uncheck to display staff and student attempts in Class Totals.';
+$string['tooltip_daterange'] = 'Use dates to control the reporting window.';
+ 
 $string['copyname'] = 'Copy Name';
 $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';
@@ -136,4 +136,6 @@ $string['reorderinfo'] = 'You can now reorder questions and screen breaks by dra
 $string['insertscreenbreak'] = 'Insert screen break';
 $string['deletescreenbreak'] = 'Delete screen break';
 $string['addscreenbreak'] = 'Add screen break';
+$string['papers'] = 'Papers';
+$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>

@@ -28,13 +28,8 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
-$state = $stateutil->getState($userObject->get_user_ID(), $mysqli, $configObject->get('cfg_root_path') . '/users/search.php');
+$state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');
 
-if (isset($_GET['moduleID'])) {
-  $moduleID = $_GET['moduleID'];
-} else {
-  $moduleID = '';
-}
 if (isset($_GET['calendar_year'])) {
   $calendar_year = $_GET['calendar_year'];
 } else {
@@ -42,7 +37,7 @@ if (isset($_GET['calendar_year'])) {
 }
 ?>
 <script type="text/javascript" src="../js/state.js"></script>
-<script language="JavaScript">
+<script>
   function updateDropdownState(mySel, NameOfState) {
     setting = mySel.options[mySel.selectedIndex].value;
     updateState(NameOfState, setting);
@@ -58,23 +53,19 @@ if (isset($_GET['calendar_year'])) {
     $('#icon' + ID).attr('src', icon);
     $('#icon' + ID).attr('alt', alttag);
     
-		updateState('advanced', $('#menu' + ID).is(":visible"));
+    updateState('advanced', $('#menu' + ID).css('display'));
   }
   
   function checkRoles() {
-    if ($('#roles').val().search("Student") == -1) {
-      $('#performancesummary2b').css('color', '#808080');
-      $('#performancesummary2c').css('color', '#808080');
+    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate") == -1) {
+      $('#performancesummary2b').addClass('grey');
+      $('#performancesummary2c').addClass('grey');
     } else {
-      $('#performancesummary2b').css('color', '#black');
-      $('#performancesummary2c').css('color', '#black');
+      $('#performancesummary2b').removeClass('grey');
+      $('#performancesummary2c').removeClass('grey');
     }
   }
 
-  function viewProfileSingle() {
-    document.location.href='details.php?userID=' + getLastID($('#userID').val());
-  }
-  
   function viewPerformanceSummary() {
     if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
       alert("You have selected a non-student user.");
@@ -84,8 +75,8 @@ if (isset($_GET['calendar_year'])) {
   }
   
   function deleteUser() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + $('#userID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210, screen.height/2-85);
+    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + $('#userID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-225, screen.height/2-90);
     if (window.focus) {
       notice.focus();
     }
@@ -97,6 +88,66 @@ if (isset($_GET['calendar_year'])) {
 
     return id_list[last_elm];
   }
+  
+  function performanceSummary() {
+    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
+      alert("You have selected a non-student user.");
+    } else {
+      window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
+    }
+  }
+  
+  $(function () {
+    $('#performancesummary2b').click(function() {
+      performanceSummary();
+    });
+    
+    $('#performancesummary2c').click(function() {
+      performanceSummary();
+    });
+    
+    $('.viewprofile').click(function() {
+      document.location.href='details.php?userID=' + getLastID($('#userID').val());
+    });
+    
+    $('#clearlti').click(function() {
+      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_clear_lti.php?userID=" + $('#userID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      notice.moveTo(screen.width/2-225, screen.height/2-90);
+      if (window.focus) {
+        notice.focus();
+      }
+    });
+
+    $(function () {
+      $('#student_id').change(updateStaffChkBoxes);
+    });
+
+    var updateStaffChkBoxes = function () {
+      if ($(this).val !== '') {
+        $('.chkstaff').each(function() {
+          if ($(this).is(':checked')) {
+            $(this).prop('checked', false);
+            var state_name = $(this).attr('id');
+            var content = $(this).is(':checked');
+            updateState(state_name, content);
+          }
+        });
+      }
+    };
+    
+    $(function () {
+      $('.chkstaff').click(updateStudentID);
+    });
+
+    var updateStudentID = function () {
+      if ($(this).is(':checked')) {
+        if ($('#student_id').val !== '') {
+          $('#student_id').val('');
+        }
+      }
+    };
+
+  });
   </script>
 <?php
 if (isset($_GET['search_surname'])) {
@@ -124,22 +175,22 @@ if (isset($username) and $search_surname == '' and $search_username == '' and $s
 <form name="PapersMenu" action="search.php" method="get">
 <br />
 
-<table cellpadding="0" cellspacing="0" border="0" width="190">
+<table cellpadding="0" cellspacing="0" border="0" style="width:210px; font-size:110%">
 <tr><td>
-<div><strong><?php echo $string['genmsg']; ?></strong></div>
+<div><strong><?php echo $string['genmsg'] ?></strong></div>
 <div style="font-size:50%">&nbsp;</div>
-<div><?php echo $string['name']; ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname; ?>" /></div>
+<div><?php echo $string['name'] ?><br /><input type="text" name="search_surname" size="18" style="width:95%" value="<?php echo $search_surname ?>" /></div>
 
-<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%">
-<tr><td><?php echo $string['username']; ?></td><td>&nbsp;</td><td><?php echo $string['studentid']; ?></td></tr>
-<tr><td><input type="text" name="search_username" size="9" value="<?php echo $search_username; ?>" /></td><td>&nbsp;</td><td><input type="text" name="student_id" size="9" value="<?php echo $search_student_id; ?>" /></td></tr>
+<table cellpadding="0" cellspacing="0" border="0">
+<tr><td style="padding-left:0; padding-right:10px"><?php echo $string['username']; ?></td><td><?php echo $string['studentid'] ?></td></tr>
+<tr><td style="padding-left:0; padding-right:10px"><input type="text" name="search_username" size="10" value="<?php echo $search_username ?>" /></td><td><input type="text" id="student_id" name="student_id" size="10" value="<?php echo $search_student_id ?>" onchange="checkStudent(this.value);"/></td></tr>
 </table>
-<div><?php echo $string['module']; ?><br /><?php 
-search_utils::display_staff_modules_dropdown($userObject, $mysqli); 
+<div><?php echo $string['module'] ?><br /><?php 
+search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli); 
 ?></div>
 
-<div><?php echo $string['academicyear']; ?><br /><select name="calendar_year">
-<option value="%"><?php echo $string['anyyear']; ?></option>
+<div><?php echo $string['academicyear'] ?><br /><select name="calendar_year">
+<option value="%"><?php echo $string['anyyear'] ?></option>
 <?php
   $result = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
   $result->execute();
@@ -157,165 +208,139 @@ search_utils::display_staff_modules_dropdown($userObject, $mysqli);
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced']; ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(3);"><?php
+  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced'] ?></a></td>
+  <td style="text-align:right"><a href="#" onclick="updateMenu(3);"><?php
     if (isset($state['advanced']) and $state['advanced'] == 'block') {
-      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Hide\" />";
+      echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
-      echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"9\" height=\"9\" alt=\"Show\" />";
+      echo "<img id=\"icon3\" src=\"../artwork/down_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Show\" />";
     }
   ?></a></td></tr>
   </table>
 
 <?php
-  if (isset($state['advanced'])) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:" . $state['advanced'] . "\">\n";
+  if (isset($state['advanced']) and $state['advanced'] == 'block') {
+    echo "<div id=\"menu3\" style=\"margin-left:15px; width:180px; display:" . $state['advanced'] . "\">\n";
   } else {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"menu3\" style=\"display:none\">\n";
+    echo "<div id=\"menu3\" style=\"margin-left:15px; width:180px; display:none\">\n";
   }
-  echo '<tr><td>';
   if (isset($state['chkbox1']) and $state['chkbox1'] == 'false') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" /> <label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" checked /> <label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox1\" name=\"students\" checked /><label for=\"chkbox1\">" . $string['students'] . "</label></div>\n";
   }
   if (isset($state['chkbox2']) and $state['chkbox2'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" checked /> <label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" checked /><label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" /> <label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox2\" name=\"graduates\" /><label for=\"chkbox2\">" . $string['graduates'] . "</label></div>\n";
   }
   if (isset($state['chkbox3']) and $state['chkbox3'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" checked /> <label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" checked /><label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" /> <label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox3\" name=\"leavers\" /><label for=\"chkbox3\">" . $string['leavers'] . "</label></div>\n";
   }
   if (isset($state['chkbox4']) and $state['chkbox4'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" checked /> <label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" checked /><label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" /> <label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
+    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox4\" name=\"suspended\" /><label for=\"chkbox4\">" . $string['suspended'] . "</label></div>\n";
   }
   //----------------------------
-  echo "<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#95AEC8; color:#95AEC8\" />\n";
+  echo "<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#808080; color:#808080\" />\n";
   if (isset($state['chkbox5']) and $state['chkbox5'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" checked /> <label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" checked /><label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" /> <label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox5\" name=\"staff\" /><label for=\"chkbox5\">" . $string['staff'] . "</label></div>\n";
   }
   if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
     if (isset($state['chkbox6']) and $state['chkbox6'] == 'true') {
-      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /> <label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" checked /><label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
     } else {
-      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /> <label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox6\" name=\"adminstaff\" /><label for=\"chkbox6\">" . $string['staffadmin'] . "</label></div>\n";
     }
   }
   if ($userObject->has_role('SysAdmin')) {
     if (isset($state['chkbox10']) and $state['chkbox10'] == 'true') {
-      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" checked /> <label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" checked /><label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
     } else {
-      echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" /> <label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
+      echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox10\" name=\"sysadminstaff\" /><label for=\"chkbox10\">" . $string['staffsysadmin'] . "</label></div>\n";
     }
   }
   if (isset($state['chkbox7']) and $state['chkbox7'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" checked /> <label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" checked /><label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" /> <label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox7\" name=\"inactive\" /><label for=\"chkbox7\">" . $string['inactivestaff'] . "</label></div>\n";
   }
   if (isset($state['chkbox8']) and $state['chkbox8'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" checked /> <label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" checked /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" /> <label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
   }
   if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" checked /> <label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" checked /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
   } else {
-    echo "<div><input class=\"chk\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" /> <label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
   }
 ?>
-</td></tr>
-</table>
+</div>
 
 <br />
 
-<div style="text-align:center">
-<?php
-  if (isset($_GET['module'])) {
-    $module = $_GET['module'];
-  } else {
-    $module = '';
-  }
-
-  if (isset($_GET['folder'])) {
-    $folder = $_GET['folder'];
-  } else {
-    $folder = '';
-  }
-
-  if (isset($_GET['paperID'])) {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/paper/details.php?paperID=' . $_GET['paperID'] . '&module=' . $module . '&folder=' . $folder . '\'"/>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/folder/details.php?module=' . $module . '&folder=' . $folder . '\'"/>';
-  } else {
-    echo '<input style="width:90px" type="button" name="back" value="' . $string['back'] . '" onclick="window.location=\'' . $configObject->get('cfg_root_path') . '/staff/index.php\'"/>';
-  }
-?>
-&nbsp;<input style="width:90px" type="submit" name="submit" value="<?php echo $string['search']; ?>" /></div>
+<div style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['search'] ?>" /></div>
 </td></tr>
 </table>
 
 <br />
 <br />
 
-<div class="submenuheading"><?php echo $string['currentusertasks']; ?></div>
+<div class="submenuheading"><?php echo $string['usertasks'] ?></div>
 
-<div style="font-size:90%" id="menu2a">
-<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><?php echo $string['viewuserfile']; ?></div>
-<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/report_grey_16.png" alt="<?php echo $string['performsummary']; ?>" /><?php echo $string['performsummary']; ?></div>
+<div id="menu2a">
+<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
+<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/report_grey_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
     if ($userObject->has_role('SysAdmin')) {
       echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="' . $string['deleteuser'] . '" />' . $string['deleteuser'] . '</div>';
+      echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/link_grey.png" alt="' . $string['clearltilinks'] . '" />' . $string['clearltilinks'] . '</div>';
     }
+    echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+    echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
   }
 ?>
 </div>
 
-<div style="font-size:90%" id="menu2b">
-<div class="menuitem" onclick="viewProfileSingle()"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><a onclick="return false" href="#"><?php echo $string['viewuserfile']; ?></a></div>
-<div class="menuitem" onclick="viewPerformanceSummary()"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary']; ?>" /><a onclick="return false" href="#"><?php echo $string['performsummary']; ?></a></div>
+<div id="menu2b">
+<div class="menuitem viewprofile"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
+<div class="menuitem" id="performancesummary2b"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/small_user_icon_grey.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</div>';
+    echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+    echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
   }
 ?>
 </div>
 
-<div style="font-size:90%" id="menu2c">
-<div class="menuitem" onclick="viewProfileSingle()"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile']; ?>" /><a onclick="return false" href="#"><?php echo $string['viewuserfile']; ?></a></div>
-<div class="menuitem" onclick="viewPerformanceSummary()"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary']; ?>" /><a onclick="return false" href="#"><?php echo $string['performsummary']; ?></a></div>
+<div id="menu2c">
+<div class="menuitem viewprofile"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
+<div class="menuitem" id="performancesummary2c"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
   if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
   }
   if ($userObject->has_role('SysAdmin')) {
     echo '<div class="menuitem" onclick="deleteUser()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#" onclick="return false">' . $string['deleteuser'] . '</a></div>';
+    echo '<div class="menuitem" id="clearlti"><img class="sidebar_icon" src="../artwork/clear_lti_link.png" alt="' . $string['clearltilinks'] . '" /><a href="#" onclick="return false">' . $string['clearltilinks'] . '</a></div>';
+  }
+  if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+    echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
+    echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
   }
 ?>
 </div>
 
-<br />
-<?php
-if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-  echo "<div class=\"submenuheading\">{$string['cohorttasks']}</div>\n";
-
-  echo "<div style=\"font-size:90%\">\n";
-  echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
-  echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
-  echo "</div>\n";
-}
-?>
-
 <input type="hidden" id="userID" name="userID" value="" />
-<input type="hidden" id="roles" name="roles" value="<?php if (isset($tmp_roles)) echo $tmp_roles; ?>" />
+<input type="hidden" id="roles" name="roles" value="<?php if (isset($user_details['roles'])) echo $user_details['roles'] ?>" />
 </form>
 </div>

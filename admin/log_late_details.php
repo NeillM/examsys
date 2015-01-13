@@ -32,46 +32,60 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	
-  <title>Rog&#333;: <?php echo $string['loglatedetails']; ?></title>
+  <title>Rog&#333;: <?php echo $string['loglatedetails'] ?></title>
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .icon {padding-left:10px}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[1,0]] 
+        });
+      }
+    });
+  </script>
 </head>
 
 <body>
 <?php
-  include '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 
-<table class="header">
-<tr>
-<th colspan="2"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['loglatedetails']; ?></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['loglatedetails'] ?></div>
+</div>
+  
+<table class="header" id="maindata">
+<thead>
 <tr>
 <th></th>
-<th><?php echo $string['papertitle']; ?></th>
-<th style="width:50%"><?php echo $string['studentslate']; ?></th>
+<th class="col"><?php echo $string['papertitle'] ?></th>
+<th class="col" style="width:50%"><?php echo $string['studentslate'] ?></th>
 </tr>
-
+</thead>
+<tbody>
 <?php
   $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');
   $data = array();
 
-  $result = $mysqli->prepare("SELECT DISTINCT paper_type, paper_title, paperID, userID FROM log_metadata, log_late, properties, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.paperID = properties.property_id AND log_metadata.userID = users.id AND roles LIKE '%Student%' GROUP BY userID ORDER BY paper_title");
+  $result = $mysqli->prepare("SELECT DISTINCT paper_type, paper_title, paperID, userID FROM log_metadata, log_late, properties, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.paperID = properties.property_id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles LIKE '%graduate%')");
   $result->execute();
   $result->bind_result($paper_type, $paper_title, $paperID, $uID);
   while ($result->fetch()) {
@@ -81,11 +95,11 @@
   }
   $result->close();
   
-  
-  foreach ($data as $paperID=>$row) {
+  foreach ($data as $paperID => $row) {
     echo "<tr><td class=\"icon\"><a href=\"../paper/details.php?paperID=$paperID\"><img src=\"../artwork/" . $icons[$row['paper_type']] . "\" width=\"16\" height=\"16\" alt=\"\" /></a></td><td><a href=\"../paper/details.php?paperID=$paperID\">" . $row['paper_title'] . "</a></td><td>" . count($row['students']) . "</td></tr>";
   }
 ?>
+</tbody>
 </table>
 
 </div>

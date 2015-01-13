@@ -52,9 +52,9 @@ function displayReview($review, $userObj) {
   
   $html = '';
   if ($setter_id == $userObj->get_user_ID() or $userObj->has_role('SysAdmin')) {
-    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" style=\"cursor:hand\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   } else {
-    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" style=\"cursor:hand\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   }
   if ($review['distinction_score'] != 'n/a') $review['distinction_score'] .= '%';
   if ($review['group_review'] != 'No') {
@@ -66,9 +66,9 @@ function displayReview($review, $userObj) {
 		$review['distinction_score'] = 'top 20%';
 	}
   if ($review['review_total'] == $review['total_marks']) {
-    $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td>{$review['display_date']}</td><td class=\"no\">{$review['pass_score']}%&nbsp;</td><td class=\"no\">{$review['distinction_score']}&nbsp;</td><td class=\"no\">{$review['review_total']}&nbsp;</td><td class=\"no\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
   } else {
-    $html .= "</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td style=\"text-align:right\">{$review['distinction_score']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td style=\"text-align:right; color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    $html .= "</td><td>{$review['display_date']}</td><td class=\"no\">{$review['pass_score']}%&nbsp;</td><td class=\"no\">{$review['distinction_score']}&nbsp;</td><td class=\"no\" style=\"color:$text_color; background-color:$background\">{$review['review_total']}&nbsp;</td><td class=\"no\" style=\"color:$text_color; background-color:$background\">{$review['total_marks']}&nbsp;</td><td>&nbsp;{$review['method']}</td></tr>\n";
   }
   return $html;
 }
@@ -87,10 +87,12 @@ function displayReview($review, $userObj) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
+  <script>
     var groupReview;
 
     function selReview(std_setID, setterID, reviewID, methodType, menuID, group, evt) {
@@ -128,10 +130,24 @@ function displayReview($review, $userObj) {
       var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
       return result;
     }
+    
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
+          sortList: [[1,0]] 
+        });
+      }
+      
+      $(document).click(function() {
+        reviewOff();
+      });
+
+    });
   </script>
 </head>
 
-<body onclick="reviewOff()">
+<body>
 
 <?php
 	
@@ -141,25 +157,30 @@ $total_marks = 0;
 $paper_title  = $propertyObj->get_paper_title();
 $total_mark   = $propertyObj->get_total_mark();
 
-$reviews_html .= '<table class="header"><tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+$reviews_html .= '<div class="head_title"><div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
+$reviews_html .= '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if (isset($_GET['module']) and $_GET['module'] != '') {
-  $reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  $reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-$reviews_html .= '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div><div style="font-size:220%; color:black; font-weight:bold; margin-left:10px">' . $string['standardssetting'] . '</div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr></table>';
+$reviews_html .= '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&folder=' . $_GET['folder'] . '&module=' . $_GET['module'] . '">' . $paper_title . ' </a></div>';
+$reviews_html .= '<div class="page_title">' . $string['standardssetting'] . '</div>';
+$reviews_html .= '</div>';
 
 $reviews_html .= <<< TABLEHEADER
-<table class="header">
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+<thead>
 <tr>
   <th style="width:18px">&nbsp;</td>
-  <th class="vert_div" style="width:18%">{$string['standardsetter']}</th>
-  <th class="vert_div" style="width:13%">{$string['date']}</th>
-  <th class="vert_div" style="width:10%">{$string['passscore']}</th>
-  <th class="vert_div" style="width:10%">{$string['distinction']}</th>
-  <th class="vert_div" style="width:12%">{$string['reviewmarks']}</th>
-  <th class="vert_div" style="width:10%">{$string['papertotal']}</th>
-  <th class="vert_div" style="width:14%">{$string['method']}</th>
-  <th class="vert_div" width="25%">&nbsp;</th>
+  <th class="col">{$string['standardsetter']}</th>
+  <th class="{sorter: 'datetime'} col">{$string['date']}</th>
+  <th class="col">{$string['passscore']}</th>
+  <th class="col">{$string['distinction']}</th>
+  <th class="col">{$string['reviewmarks']}</th>
+  <th class="col">{$string['papertotal']}</th>
+  <th class="col">{$string['method']}</th>
 </tr>
+</thead>
+<tbody>
 TABLEHEADER;
 
 $no_reviews = 0;
@@ -176,11 +197,12 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu(97);
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <?php
 echo $reviews_html;
-echo "</table>\n";
 $mysqli->close();
 ?>
+</tbody>
+</table>
 </body>
 </html>

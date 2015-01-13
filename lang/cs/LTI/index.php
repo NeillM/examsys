@@ -17,15 +17,13 @@
 include 'lti_common.php';
 
 $string['NoPapers'] = 'K tomuto modulu nejsou dostupné žádné dokumenty';
-$string['NoPapersDesc'] = 'K tomuto modulu nejsou dostupné žádné dokumenty. Pravdìpodobnì je to zpùsobeno tím, že jste vytvoøili nový odkaz z VLE s novým modulem, a proto nemáte v souèasnosti nakonfigurované žádné dokumety.<br /><br />K vytvoøení dokumentu vyberte, prosím <a href="../" target="_blank">spustit Rogo</a>'; //zavøete prohlížeè (<strong>velice dùležité</strong>) následnì jdìte na domovskou stránku Rogo a dokument vytvoøte.
+$string['NoPapersDesc'] = 'K tomuto modulu nejsou dostupné žádné dokumenty. Pravděpodobně je to způsobeno tím, že jste vytvořili nový odkaz z VLE z nového modulu, a proto nemáte v současnosti nakonfigurované žádné dokumety.<br /><br />K vytvoření dokumentu vyberte, prosím <a href="../" target="_blank">spustit Rogo</a>'; //zavřete prohlížeč (<strong>velice dùležité</strong>) následně přejděte na domovskou stránku Rogo a dokument vytvořte.
 
-$string['NoModCreateTitle'] = 'Vytvoøení nového modulu není povoleno';
-$string['NoModCreate'] = 'Tvorba modulu z LTI není povolena v konfiguraci, proto nelze vytvoøit modul s kódem kurzu: ';
-$string['NotAddedToModuleTitle'] = 'Pøidání do týmu modulu nebylo úspìšné';
-$string['NotAddedToModule'] = 'Pøidávání do týmu modulu není v LTI konfiguraci povoleno, tato závada se vyskytla u modulu: ';
+$string['NoModCreateTitle'] = 'Vytvoření nového modulu není povoleno';
+$string['NoModCreate'] = 'Tvorba modulu z LTI není povolena v konfiguraci, proto nelze vytvořit modul s kódem kurzu: ';
+$string['NotAddedToModuleTitle'] = 'Přidání do týmu modulu nebylo úspěšné';
+$string['NotAddedToModule'] = 'Přidávání do týmu modulu není v LTI konfiguraci povoleno, tato závada se vyskytla u modulu: ';
 
-$string['NoModCreateTitle2'] = 'Vytváøení modulu nebìží';
-$string['NoModCreate2'] = 'Tvorba modulu z LTI nebìží, jelikož uživatel nevlastní oprávnìní, a proto nelze vytvoøit modul s kódem kurzu: ';
-
-$string['SELECT']='Vybrat';
+$string['NoModCreateTitle2'] = 'Vytváření modulu neběží';
+$string['NoModCreate2'] = 'Tvorba modulu z LTI neběží, jelikož uživatel nevlastní oprávnění, a proto nelze vytvořit modul s kódem kurzu: ';
 ?>

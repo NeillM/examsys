@@ -24,6 +24,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 
 $paperID    = check_var('paperID', 'POST', true, false, true);
 $userID     = check_var('userID', 'POST', true, false, true);
@@ -37,39 +38,26 @@ $log_type   = check_var('log_type', 'POST', true, false, true);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['Reassign Script to User']. ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Late Submission<?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
 
-  <script type="text/javascript">
-    function reloadClose() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function() {
       window.opener.location.href = window.opener.location.href;
       window.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="reloadClose()">
+<body>
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
-  $row_no = 0;
-  $result = $mysqli->prepare("SELECT UNIX_TIMESTAMP(end_date) FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($end_date);
-  $result->store_result();
-  $result->fetch();
-  $row_no = $result->num_rows;
-  $result->close();
-
-  if ($row_no == 0) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
-
-  if (time() < $end_date) {
-    echo "<p><strong>".$string['warning']."</strong><p><p>".$string['msg2'] ."</p>\n";
-    exit;
+  $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+  if ($propertyObj->is_live()) {
+    echo "<h1>" . $string['warning'] . "</h1><p>" . $string['msg2'] . "</p><p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\"/></p>\n</body>\n</html>\n";
+    exit();
   }
 
   // Get questions that are already in the standard log

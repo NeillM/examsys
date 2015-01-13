@@ -17,7 +17,9 @@
 $string['reviewsummary'] = 'Recenzja wewnętrzna';
 $string['Review Form'] = 'Formularz recenzji';
 $string['Student Profile'] = 'Profil Studenta';
-$string['name'] = 'Nazwa';
+$string['title'] = 'Tytuł';
+$string['surname'] = 'Nazwisko';
+$string['firstnames'] = 'Imiona';
 $string['studentid'] = 'Numer legitymacji';
 $string['reviewed'] = 'Przejrzany';
 $string['reviews'] = 'Recenzje';

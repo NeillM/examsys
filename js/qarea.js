@@ -5,6 +5,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 		this.canvas.onmouseup   = this.qa_mouseDragUp.bind(this);
 		this.canvas.onmousedown = this.qa_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.qa_mouseDragMove.bind(this);
+		document.onmousemove = this.qa_mouseDragMoveOutside.bind(this);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		if (document.addEventListener){ //FF+, IE10+, Ch+
       document.addEventListener("keydown",	qa_mouseDragMove.bind(this),false);
@@ -40,8 +41,8 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 			this.qa_redraw_canvas;
 		}  
 		this.gen_img.onload = qa_gen_img_onload.bind(this);
-		this.gen_img.src = ''+image;
-       
+ 		this.gen_img.src = ((mode == 'edit')?'../':'')+'../media/'+image;
+
 		//---------- mode 
 		this.yoffset = 25; //ofset of top edge of the image
     this.qmode = mode;
@@ -87,11 +88,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
       this.qa_redraw_canvas;
 		}
 		this.menu_img.onload = menu_img_onload.bind(this);
-		if (this.qmode == 'edit') {
-			this.menu_img.src = '../../js/images/combined.png'; 
-		} else {
-			this.menu_img.src = '../js/images/combined.png'; 
-		}
+ 		this.menu_img.src = ((this.qmode == 'edit')?'../':'')+'../js/images/combined.png';
 	}
 }
 
@@ -373,7 +370,7 @@ function qa_redraw_canvas() {
     this.menuRebuild(this.context);
 
     //frames
-    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeStyle='#c0c0c0';//'#7f9db9'; 
     this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 
     
     if (this.global_clearpnl) this.build_msgbox((this.canvas.width/2-130),(this.canvas.height/2-40),260,80,lang_string['popUp_msg'],lang_string['popUp_yes'],lang_string['popUp_no'],'');
@@ -420,7 +417,7 @@ function qa_redraw_canvas() {
       this.context.drawImage(this.menu_img,this.imgdata.left,this.imgdata.top,this.imgdata.width,this.imgdata.height,loupe_x,loupe_y-this.imgdata.height,this.imgdata.width,this.imgdata.height);
     }	
     // border
-    this.context.strokeStyle='#7f9db9'; 
+    this.context.strokeStyle='#909090';  //#7f9db9'; 
     this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1); 
 		
 		//testing the answer
@@ -434,8 +431,21 @@ function qa_redraw_canvas() {
     }		
   }
 }
+function qa_mouseDragMoveOutside(e){
+	if (this.isMouseOutsiceCanvas && this.poly_temp.length>2)  {      
+		if (this.qmode == 'edit' && this.qconfig == '' && this.poly_temp.split(',').length>3) this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+		if (this.qmode == 'answer' && this.qanswer == '' && this.poly_temp.split(',').length>3) this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
+		this.global_delpoint_avail = true; 
+		this.poly_temp = '';
+		this.poly_temp_points = new Array(0,0,0,0,0,0,0,0,0,0);
+		//this.do_the_test = true;
+		this.redraw_once = true;
+	}
+	this.isMouseOutsiceCanvas = true;
+}
 
 function qa_mouseDragMove(e){
+	this.isMouseOutsiceCanvas = false;
 	this.ev = e || window.event;
 	if (this.ev.target.id != this.canvas.id) return true;
 	this.get_char_key();
@@ -499,7 +509,7 @@ function qa_mouseDragMove(e){
 		}
 		this.key_code = 0;
 	}
-	 
+	
 	if (this.dragging){ //this.dragging
 		//new position of dragged element
     if (this.handler_sqr>-1) {
@@ -571,8 +581,8 @@ function qa_mouseDragMove(e){
         for (var n=1;n<pp.length/2;n++) {
           var ttx = (parseInt(pp[n*2].trim(), 16)-parseInt(pp[n*2-2].trim(), 16))/2+parseInt(pp[n*2-2].trim(), 16);
           var tty = (parseInt(pp[n*2+1].trim(), 16)-parseInt(pp[n*2-1].trim(), 16))/2+parseInt(pp[n*2-1].trim(), 16);
-          if (this.testWithin(this.x,this.oy,ttx-3,tty-3,7,7)) this.handler_dot = n;
-          if (this.testWithin(this.x,this.oy,parseInt(pp[n*2-2].trim(), 16)-3,parseInt(pp[n*2-1].trim(), 16)-1,7,7)) this.handler_sqr = n;					
+          if (this.testWithin(this.x,this.oy,ttx-3.5,tty-3.5,7,7)) this.handler_dot = n;
+          if (this.testWithin(this.x,this.oy,parseInt(pp[n*2-2].trim(), 16)-3.5,parseInt(pp[n*2-1].trim(), 16)-3.5,7,7)) this.handler_sqr = n;					
         }
       }
 			
@@ -689,7 +699,15 @@ function qa_mouseDragUp(){
 	this.dragging = false;
   this.button_test();
 	
-	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') window.open('/help/staff/index.php?id=305');
+  if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
+    if (this.qmode == 'answer') {
+      window.open('../help/student/index.php?id=44');
+    } else if (this.qmode == 'edit') {
+      window.open('../../help/staff/index.php?id=305');
+    } else {
+      window.open('../help/staff/index.php?id=305');
+    }
+  }
 
   if (this.qmode == 'edit' || this.qmode == 'answer') {
 		this.global_zoom = false;
@@ -725,9 +743,10 @@ function qa_mouseDragUp(){
   this.dx = this.x - this.poly_temp_points[6]; 
   this.dy = this.oy - this.poly_temp_points[7];
   this.distn = Math.sqrt(this.dx*this.dx+this.dy*this.dy);
+
   if (this.oy>0) {
     //condition for the finish
-    if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<3 && Math.abs(this.poly_temp_points[1]-this.oy)<3)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.oy)<3))  {      
+    if ((this.poly_temp.length>2 && (Math.abs(this.poly_temp_points[0]-this.x)<7 && Math.abs(this.poly_temp_points[1]-this.oy)<7)) || (Math.abs(this.poly_temp_points[8]-this.x)<3 && Math.abs(this.poly_temp_points[9]-this.oy)<3))  {      
       if (this.qmode == 'edit' && this.qconfig == '') this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
       if (this.qmode == 'answer' && this.qanswer == '') this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16)+','+Math.round(this.poly_temp_points[1]).toString(16);
 			this.global_delpoint_avail = true; 
@@ -833,6 +852,7 @@ function rqa(num) {
 	this.qa_test_calc			 			=  	qa_test_calc;
 	this.qa_redraw_canvas	 			= 	qa_redraw_canvas;
 	this.qa_mouseDragMove	 			= 	qa_mouseDragMove;
+	this.qa_mouseDragMoveOutside = 	qa_mouseDragMoveOutside;
 	this.qa_mouseDragDown	 			= 	qa_mouseDragDown;
 	this.qa_ReturnInfo	   			= 	qa_ReturnInfo;
 	this.qa_mouseDblClick	 			= 	qa_mouseDblClick;
@@ -841,6 +861,7 @@ function rqa(num) {
 	this.qa_redraw_canvas_main 	= qa_redraw_canvas_main;
 	this.get_char_key 					=	get_char_key;
 
+	this.isMouseOutsiceCanvas = false;
 	this.hexifycolour=hexifycolour;
 	this.textHeight=textHeight;
 	this.wrapText=wrapText;

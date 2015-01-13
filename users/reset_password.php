@@ -131,9 +131,9 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
     .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script>
   $(function() {
     $('#forgotten_pw').validate({
       rules: {
@@ -223,7 +223,7 @@ if($message == '') {
     						<input type="hidden" name="token" value="<?php echo $token ?>" />
     					</td>
     				</tr>
-    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['reset'] ?>"  style="width:100px" /></td></tr>
+    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['reset'] ?>"  class="ok" /></td></tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
     			</table>
     		</td>

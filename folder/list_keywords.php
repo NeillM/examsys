@@ -39,14 +39,14 @@ require_once '../classes/moduleutils.class.php';
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#eee}
-    .qline.highlight {background-color:#B3C8E8}
+    .qline:hover {background-color:#FFE7A2}
+    .qline.highlight {background-color:#FFBD69}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
+  <script>
     function getLastID(IDs) {
       var id_list = IDs.split(",");
       last_elm = id_list.length - 1;
@@ -76,7 +76,7 @@ require_once '../classes/moduleutils.class.php';
       $('#menu1a').hide();
       $('#menu1b').show();
 
-      if (evt.ctrlKey == false) {
+      if (evt.ctrlKey == false && evt.metaKey == false) {
         clearAll();
         $('#link_' + questionID).addClass('highlight');
         addKeyID(questionID, true);
@@ -141,20 +141,23 @@ require_once '../classes/moduleutils.class.php';
 
   require '../include/folder_keyword_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 
-<table class="header">
-<tr>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-    echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./details.php?module=" . $_GET['module'] . "\">" . $module_code . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . sprintf($string['modulekeywords'], $module_code) . "</th>\n";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../module/index.php?module=" . $_GET['module'] . "\">" . $module_code . "</a></div>";
+    echo "<div class=\"page_title\" style=\"font-weight:normal\">" . sprintf($string['modulekeywords'], $module_code) . "</div>\n";
   } else {
-    echo "<th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"margin-left:10px; font-size:200%\">" . $string['mypersonalkeywords'] . "</th>\n";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div>";
+    echo "<div class=\"page_title\" style=\"font-weight:normal\">" . $string['mypersonalkeywords'] . "</div>\n";
   }
 ?>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
+</div>
+  
+<table class="header">
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
   echo "<tr class=\"qline\" id=\"link_$keywordID\" onclick=\"selKey($keywordID, event)\" ondblclick=\"editKeyword($keywordID)\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";

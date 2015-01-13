@@ -67,7 +67,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 $results = array();
-$stmt = $mysqli->prepare("SELECT paper_id, status, errors FROM class_totals_test_local WHERE user_id=? ORDER BY id");
+$stmt = $mysqli->prepare("SELECT paper_id, status, errors FROM class_totals_test_local WHERE user_id = ? ORDER BY id");
 $stmt->bind_param('i', $userObject->get_user_ID());
 $stmt->execute();
 $stmt->bind_result($paper_id, $status, $errors);
@@ -84,11 +84,14 @@ $stmt->close();
 
   <title>Testing: Class Totals</title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {
-      font-size:90%;
-      font-family:Arial,sans-serif;
+      font-size: 90%;
+    }
+    #content {
+      margin: 15px;
     }
     .papers, .papers ul {
       list-style: none;
@@ -108,8 +111,9 @@ $stmt->close();
       background: transparent url('../artwork/working.gif') no-repeat left top;
     }
   </style>
-  <script src="../js/jquery-1.6.1.min.js" type="text/javascript"></script>
-  <script type="text/javascript">
+  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
     $(function () {
       setTimeout(refreshPage, 15000); // milliseconds
     });
@@ -121,7 +125,17 @@ $stmt->close();
   </script>
 </head>
 <body>
-<h1>Class Totals Internal Analysis - Status</h1>
+<?php
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
+?>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php">Administrative Tools</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../testing/index.php">Testing</a></div>
+  <div class="page_title">Summative Exam Check: <span style="font-weight:normal">Status</span></div>
+</div>
+  
 <div id="content">
 <?php
 if (count($results) == 0):
@@ -142,7 +156,7 @@ else:
   <p>Analysed <?php echo count($results) ?> out of <?php echo $papers ?> (<?php echo number_format(((count($results))/$papers * 100), 0) ?>%)</p>
   <ul class="papers">
 <?php
-  foreach ($results as $result):
+  foreach ($results as $result) {
 ?>
     <li class="<?php echo $result['status'] ?>"><a href="../paper/details.php?paperID=<?php echo $result['paper_id'] ?>">Paper ID <?php echo $result['paper_id'] ?></a>
 <?php
@@ -152,7 +166,7 @@ else:
 ?>
     </li>
 <?php
-  endforeach;
+  }
 ?>
   </ul>
 <?php
@@ -163,6 +177,7 @@ else:
   endif;
 endif;
 ?>
+</div>
 </div>
 </body>
 </html>

@@ -39,7 +39,7 @@ class internaldb_auth extends outline_authentication {
     $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
     $callbackarray[] = array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
     $callbackarray[] = array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
-    $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+    //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
     return $callbackarray;
   }
@@ -85,7 +85,7 @@ class internaldb_auth extends outline_authentication {
 
     }
     extract($this->settings);
-    $sql = "SELECT $username_col AS username, $passwd_col AS passwd, $id_col AS id FROM $table WHERE $username_col = ?";
+    $sql = "SELECT $username_col AS username, $passwd_col AS passwd, $id_col AS id FROM $table WHERE $username_col = ? AND user_deleted IS NULL";
     $result = $this->db->prepare($sql);
     $result->bind_param('s', $lookupuserobj->username);
     $result->execute();
@@ -119,7 +119,7 @@ class internaldb_auth extends outline_authentication {
       return $authobj;
     }
 
-    $sql = "SELECT $username_col AS username, $passwd_col AS passwd, $id_col AS id, password_expire FROM $table WHERE $username_col = ?";
+    $sql = "SELECT $username_col AS username, $passwd_col AS passwd, $id_col AS id, password_expire FROM $table WHERE $username_col = ? AND user_deleted IS NULL";
     $result = $this->db->prepare($sql);
     $result->bind_param('s', $this->form['std']->username);
     $result->execute();
@@ -164,7 +164,7 @@ class internaldb_auth extends outline_authentication {
 
       return $authobj;
     }
-    if(!(time() < $password_expire )) {
+    if (!(time() < $password_expire )) {
       $this->savetodebug('Password Expired');
     } else {
       $this->savetodebug('Password not matching');

@@ -34,7 +34,8 @@ $string['rdbusername'] = 'Username';
 $string['rdbpassword'] = 'Password';
 $string['timedateformats'] = 'Time/Date formats';
 $string['date'] = 'Date (%s)';
-$string['datetime'] = 'Date/Time (%s)';
+$string['shortdatetime'] = 'Short Date/Time (%s)';
+$string['longdatetime'] = 'Long Date/Time (%s)';
 $string['longdatephp'] = 'Long date (%s)';
 $string['shortdatephp'] = 'Short date (%s)';
 $string['longtimephp'] = 'Long time (%s)';
@@ -79,8 +80,8 @@ $string['installed'] = 'Rog&#333; is now successfully installed.';
 $string['deleteinstall'] = 'For security reasons please delete the install directory.';
 $string['staffhomepage'] = 'Go to staff homepage';
 
-$string['logwarning1'] = 'could not load staff_hlep.sql, could not install staff help';
-$string['logwarning2'] = 'cannot find staff_hlep.sql, could not install staff help';
+$string['logwarning1'] = 'could not load staff_help.sql, could not install staff help';
+$string['logwarning2'] = 'cannot find staff_help.sql, could not install staff help';
 $string['logwarning3'] = 'could not load student_help.sql, could not install student help';
 $string['logwarning4'] = 'cannot find student_help.sql, could not install student help';
 $string['displayerror1'] = 'The database name \'%s\' is in use please use a different one';
@@ -90,7 +91,7 @@ $string['wdatabaseuser'] = 'Database user ';
 $string['wnotcreated'] = ' could not be created';
 $string['wnotpermission'] = ' could not set permissions';
 $string['logwarning20'] = 'Unable to FLUSH PRIVILEGES';
-$string['errors1'] = 'Rog&#333; has already been installed!<ul><li>Remove/rename <tt>%s</tt> to run set up again.</li><li>or go to the <a href="/staff">staff homepage</a></li></ul>';
+$string['errors1'] = 'Rog&#333; has already been installed!<ul><li>Remove/rename <tt>%s</tt> to run set up again.</li><li>or go to the <a href="../index.php">staff homepage</a></li></ul>';
 $string['errors3'] = 'Rog&#333; requires %s to exist and be writeable to the webserver';
 $string['errors4'] = 'Rog&#333; requires %s/media to exist and be writeable to the webserver';
 $string['errors5'] = 'Rog&#333; requires %s/qti/imports to exist and be writeable to the webserver';
@@ -104,7 +105,7 @@ $string['errors12'] = 'Rog&#333; can only be accessed through https. Please upda
 $string['errors13'] = 'Error';
 $string['errors14'] = 'The following warnings were generated';
 $string['errors15'] = 'Warning';
-$string['errors16'] = 'Rog&#333; requires ability to write its config file %s/include/load_config.php, One way to fix this is you can temporarily allow write access to %s/config and change permissions once update has run.';
+$string['errors16'] = 'Rog&#333; requires ability to write its config file %s/config/config.inc.php. One way to fix this is you can temporarily allow write access to %s/config and change permissions once update has run.';
 $string['installscript'] = 'Rog&#333; Install script';
 $string['systeminstallation'] = 'System Installation';
 

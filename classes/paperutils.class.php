@@ -25,6 +25,8 @@
  */
 
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/questionutils.class.php';
+require_once $cfg_web_root . 'classes/keywordutils.class.php';
 
 Class Paper_utils extends RogoStaticSingleton {
   public static $inst = NULL;
@@ -37,6 +39,21 @@ Class Paper_utils extends RogoStaticSingleton {
 }
 
 Class PaperUtils {
+  
+  /**
+  * Records an access to a paper in recent_papers table.
+  *
+  * @param int $userID  - ID of the user accessing the paper.
+  * @param int $paperID - ID of the paper.
+  * @param object $db   - Database object.
+  */
+  public function log_hit($userID, $paperID, $db) {
+    // Log the hit in recent_papers.
+    $result = $db->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW()");
+    $result->bind_param('ii', $userID, $paperID);
+    $result->execute();
+    $result->close();    
+  }
 
   /**
   * Parses a paper title and returns the academic year if it exists within the title
@@ -45,14 +62,14 @@ Class PaperUtils {
   * @return mixed - False = no academic year found in title, string = the academic year that was found.
   */
   public function academic_year_from_title($paper_title) {
-		if (preg_match( '/\d\d\d\d\D\d\d\d\d/' , $paper_title , $matches) == 1) {
-			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-		} elseif (preg_match( '/\d\d\d\d\s\D\s\d\d\d\d/' , $paper_title , $matches) == 1) {
-			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-		} elseif (preg_match( '/\d\d\d\d\D\d\d/' , $paper_title , $matches) == 1) {
-			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0],-2);
-		} elseif (preg_match( '/\d\d\D\d\d/' , $paper_title , $matches) == 1) {
-			$tmp_match = '20' . substr($matches[0],0,2) . '/' . substr($matches[0],-2);
+		if (preg_match('/\d\d\d\d\D\d\d\d\d/', $paper_title, $matches) == 1) {
+			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0], -2);
+		} elseif (preg_match('/\d\d\d\d\s\D\s\d\d\d\d/', $paper_title, $matches) == 1) {
+			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0], -2);
+		} elseif (preg_match('/\d\d\d\d\D\d\d/', $paper_title, $matches) == 1) {
+			$tmp_match = substr($matches[0],0,4) . '/' . substr($matches[0], -2);
+		} elseif (preg_match('/\d\d\D\d\d/', $paper_title, $matches) == 1) {
+			$tmp_match = '20' . substr($matches[0],0,2) . '/' . (substr($matches[0],0,2) + 1);	
 		} else {
 			$tmp_match = false;
 		}
@@ -180,6 +197,30 @@ Class PaperUtils {
     return $modules;
   }
 
+   /**
+   * Function to count the number of un-assigned modules for a user
+   *
+   * @param int $user_id User ID
+   * @param mysqli $db Database link object
+   * @return int $count the number of unassigned modules
+   */
+  public function count_unassigned($user_id, $db) {
+    $query = $db->prepare("SELECT count(properties.property_id)"
+      . " FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id"
+      . " LEFT JOIN papers ON properties.property_id=papers.paper"
+      . " LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id"
+      . " WHERE paper_ownerID = ?"
+      . " AND idMod is NULL"
+      . " AND deleted IS NULL");
+    $query->bind_param('i', $user_id);
+    $query->execute();
+    $query->bind_result($count);
+    $query->fetch();
+    $query->close();
+
+    return $count;
+  }
+  
   public function q_feedback_enabled($moduleIDs, $db) {
     if (count($moduleIDs) == 0) {
       return false;
@@ -269,10 +310,9 @@ Class PaperUtils {
   public function update_reviewers($old_list, $new_list, $type, $paperID, $db) {
     $has_changed = false;
 
-    $old_list = array_flip($old_list);
     $new_list = array_flip($new_list);
 
-    foreach ($old_list as $oldID=>$value) {
+    foreach ($old_list as $oldID => $value) {
       if (!isset($new_list[$oldID])) {
         $editProperties = $db->prepare("DELETE FROM properties_reviewers WHERE paperID = ? AND reviewerID = ? AND type = ?");
         $editProperties->bind_param('iis', $paperID, $oldID, $type);
@@ -370,7 +410,37 @@ Class PaperUtils {
     $update->close();
   }
 
+  public function type_to_name($type, $string) {
+      switch ($type) {
+        case '0':
+          $name = $string['formative self-assessments'];
+          break;
+        case '1':
+          $name = $string['progress tests'];
+          break;
+        case '2':
+          $name = $string['summative exams'];
+          break;
+        case '3':
+          $name = $string['surveys'];
+          break;
+        case '4':
+          $name = $string['osce stations'];
+          break;
+        case '5':
+          $name = $string['offline papers'];
+          break;
+        case '6':
+          $name = $string['peer review'];
+          break;
+      }
+      
+      return $name;
+  }
+
   public function displayIcon($paper_type, $title, $initials, $surname, $locked,  $retired) {
+	  $configObj = Config::get_instance();
+
     $paper_type = strval($paper_type);
 
     if ($retired != '') {
@@ -385,34 +455,32 @@ Class PaperUtils {
 
     switch ($paper_type) {
       case '0':
-        $html = "<img src=\"../artwork/formative" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/formative" . $retired . ".png\" alt=\"$alt\" />";
         break;
       case '1':
-        $html = "<img src=\"../artwork/progress" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/progress" . $retired . ".png\" alt=\"$alt\" />";
         break;
       case '2':
-        $html = "<img src=\"../artwork/summative" . $retired . $locked . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/summative" . $retired . $locked . ".png\" alt=\"$alt\" />";
         break;
       case '3':
-        $html = "<img src=\"../artwork/survey" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/survey" . $retired . ".png\" alt=\"$alt\" />";
         break;
       case '4':
-        $html = "<img src=\"../artwork/osce" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/osce" . $retired . ".png\" alt=\"$alt\" />";
         break;
       case '5':
-        $html = "<img src=\"../artwork/offline" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/offline" . $retired . ".png\" alt=\"$alt\" />";
         break;
       case '6':
-        $html = "<img src=\"../artwork/peer_review" . $retired . ".png\" width=\"48\" height=\"48\" alt=\"$alt\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/peer_review" . $retired . ".png\" alt=\"$alt\" />";
         break;
       case 'objectives':
-        $html = "<img src=\"../artwork/feedback_release_icon.png\" width=\"48\" height=\"48\" alt=\"Objectives Feedback\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/feedback_release_icon.png\" alt=\"Objectives Feedback\" />";
         break;
       case 'questions':
-        $html = "<img src=\"../artwork/question_release_icon.png\" width=\"48\" height=\"48\" alt=\"Questions Feedback\" />";
+        $html = "<img src=\"" . $configObj->get('cfg_root_path') . "/artwork/question_release_icon.png\" alt=\"Questions Feedback\" />";
         break;
-       default:
-         var_dump($paper_type);
     }
     return $html;
   }
@@ -441,19 +509,11 @@ Class PaperUtils {
     }
 
     $paper_no = 0;
-    $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password FROM (papers, properties) WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() $exclude_sql GROUP BY paper");
-    if ($db->error) {
-      try {
-        throw new Exception("MySQL error $db->error <br /> ", $db->errno);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-        exit();
-      }
-    }
+    $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password, completed FROM (papers, properties) LEFT JOIN log_metadata ON properties.property_id = log_metadata.paperID AND userID = ? WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() $exclude_sql GROUP BY paper");
+    $paper_query->bind_param('i', $userObj->get_user_ID());
     $paper_query->execute();
     $paper_query->store_result();
-    $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password);
+    $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password, $completed);
     while ($paper_query->fetch()) {
       if ($labs != '') {
         $machineOK = false;
@@ -496,6 +556,7 @@ Class PaperUtils {
         $paper_display[$paper_no]['max_screen'] = $max_screen;
         $paper_display[$paper_no]['bidirectional'] = $bidirectional;
         $paper_display[$paper_no]['password'] = $password;
+        $paper_display[$paper_no]['completed'] = $completed;
         $paper_no++;
       }
     }
@@ -503,5 +564,78 @@ Class PaperUtils {
 
     return $paper_no;
   }
+  
+  /**
+   * Determins if there is an interactive question (e.g. image hotspot, labelling,
+   * area) on a particular screen of a paper. Speeds system up if not loading
+   * unnecessary HTML5/Flash include files.
+   * @param  array      $screen_data Array of screen/question information
+   * @param  array      $screen      The screen number to check
+   * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
+   */
+  function need_interactiveQ($screen_data, $screen, $db) {
+    $interactive = false;
+    $checktypes = array('hotspot', 'labelling', 'area');
+    if (isset($screen_data[$screen])) {
+      foreach ($screen_data[$screen] as $question_part) {
+        if (in_array($question_part[0], $checktypes)) {
+          $interactive = true;
+        } else if ($question_part[0] == 'random') {
+          $options = QuestionUtils::get_options_text($question_part[1], $db);
+          $types = array();
+          foreach ($options as $opt) {
+              $qtype = QuestionUtils::get_question_type($opt, $db);
+              $types[] = $qtype;
+          }
+          foreach ($types as $t) {
+            if (in_array($t, $checktypes)) {
+              $interactive = true;
+              break;
+            }
+          }
+        } else if ($question_part[0] == 'keyword_based') {
+          $options = QuestionUtils::get_options_text($question_part[1], $db);
+          foreach ($options as $opt) {
+            $keywords = keyword_utils::get_keyword_questions($opt, $db);
+            $types = array();
+            foreach ($keywords as $key) {
+              $qtype = QuestionUtils::get_question_type($key, $db);
+              $types[] = $qtype;
+            }
+          }
+          foreach ($types as $t) {
+            if (in_array($t, $checktypes)) {
+              $interactive = true;
+              break;
+            }
+          }
+        }
+      }
+    }
 
+    return $interactive;
+  }
+
+  /**
+   * Creates a list of the last 10 papers accessed by a member of staff.
+   * @param int $userID - ID of the user we want last 10 papers for.
+   * @param object $db  - Database connection.
+   * @return array      - List of 10 last papers keyed by paperID.
+   */
+  public function get_recent($userID, $db) {
+    $recent = array();
+
+    $result = $db->prepare("SELECT paperID, paper_title FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->bind_result($paperID, $paper_title);
+    $result->store_result();
+    while ($result->fetch()) {
+      $recent[$paperID] = $paper_title;
+    }
+    $result->close();    
+    
+    return $recent;
+  }
+  
 }

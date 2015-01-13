@@ -129,7 +129,6 @@ Class Logger {
     $page = $path . '?'. $_SERVER['QUERY_STRING'];
 
     $result = $this->_mysqli->prepare('INSERT INTO denied_log VALUES(NULL, ?, NOW(), ?, ?, ?, ?)');
-    echo $this->_mysqli->error;
     $result->bind_param('issss', $user_id, $current_address, $page, $title, $msg);
     $result->execute();
     $result->close();

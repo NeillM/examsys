@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Nastavení';
 $string['summativescheduling'] = 'Plánování sumativní zkoušky';
 $string['title'] = 'Nadpis';
 $string['month'] = 'Měsíc';

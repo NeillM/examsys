@@ -22,30 +22,27 @@
 * @package
 */
 
-  require '../include/sysadmin_auth.inc';
-  require '../include/sidebar_menu.inc';
+require '../include/sysadmin_auth.inc';
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+<title>Rog&#333;: Admin<?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
 
-<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/admin.css" />
 
 <?php echo $configObject->get('cfg_js_root') ?>
-<script src="../js/staff_help.js" type="text/javascript"></script>
-<script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
-<script language="JavaScript" src="../js/sidebar.js"></script>
+<script type="text/javascript" src="../js/staff_help.js"></script>
+<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/sidebar.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
-<script language="JavaScript">
-  $(document).ready(function() {
+<script>
+  $(function () {
     $("#clear_training_module").click(function() {
 		  var msg = '<?php echo $string['msg1']; ?>';
 			return confirm(msg);
@@ -61,9 +58,7 @@
 </head>
 
 <body>
-
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
@@ -78,6 +73,11 @@
   $sys_error_no = $results->num_rows;
   $results->close();
 
+  // How many system errors are there
+  $results = $mysqli->query("SELECT id FROM save_fail_log");
+  $save_fail_log_no = $results->num_rows;
+  $results->close();
+
   // How many announcements are there
   $results = $mysqli->query("SELECT id FROM announcements WHERE startdate <= NOW() AND enddate >= NOW() AND deleted IS NULL");
   $announcement_no = $results->num_rows;
@@ -90,15 +90,14 @@
 
   $mysqli->close();
 ?>
+<div id="content">
 
-<div id="content" class="content" style="font-size:80%">
-<table class="header">
-<tr>
-	<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['administrativetools']; ?></div></th>
-	<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
-
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
+  <div class="page_title"><?php echo $string['administrativetools'] ?></div>
+</div>
+  
 <?php
   if ($temp_account_no > 0) {
     $string['clearguestaccounts'] .= ' <span class="corners"><span class="num">' . $temp_account_no . '</span></span>';
@@ -106,6 +105,10 @@
 
   if ($sys_error_no > 0) {
     $string['systemerrors'] .= ' <span class="corners"><span class="num">' . $sys_error_no . '</span></span>';
+  }
+  
+  if ($save_fail_log_no > 0) {
+    $string['savefailattempts'] .= ' <span class="corners"><span class="num">' . $save_fail_log_no . '</span></span>';    
   }
 
   if ($announcement_no > 0) {
@@ -137,9 +140,11 @@
 	$menudata['modules']							= array('list_modules.php', 'modules_icon.png');
 	$menudata['announcments']					= array('list_announcements.php', 'news_48.png');
 	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
+	$menudata['phpinfo']              = array('phpinfo.php', 'php.png');
 	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
+	$menudata['savefailattempts']			= array('list_save_fails.php', 'save_fail_48.png');
 	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
-	$menudata['statistics']		= array('../statistics/index.php', 'pie_chart_48.png');
+	$menudata['statistics']		= array('../statistics/index.php', 'statistics.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
 		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
 	}
@@ -155,6 +160,8 @@
 	}
 
 ?>
+</div>
+  
 </div>
 
 </body>

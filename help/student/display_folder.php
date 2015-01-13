@@ -24,72 +24,47 @@
  
 require '../../include/staff_student_auth.inc';
 require '../../include/errors.inc';
+require_once '../../classes/helputils.class.php';
 
-check_var('title', 'GET', true, false, false);
+$title = check_var('title', 'GET', true, false, true);
 
+$id = null;
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   
-  <title>Rog&#333;: Help and Support Center</title>
+  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <style type="text/css">
-    body {font-size:85%; line-height:150%}
+    body {line-height:150%}
     table {font-size:100%}
     a:link {color:#0560A6}
     a:visited {color:#0560A6}
     .row {height:28px; border-bottom: 1px solid #A6CBEB}
   </style>
   
-  <script type="text/javascript">
-    function updateToolbar(pageID) {
-      parent.frames['toolbar'].document.myform.pageid.value=pageID;
-    }
-  </script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/help.js"></script>
 </head>
+<body>
+  <div id="wrapper">
+  <div id="toolbar">
+    <?php $help_system->display_toolbar($id); ?>
+  </div>
 
-<?php
-  if ((isset($_GET['id']) and $_GET['id'] != '1') or $userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-    $result = $mysqli->prepare("INSERT INTO help_log VALUES (NULL, 'student', ?, NOW(), ?)");
-    $result->bind_param('ii', $userObject->get_user_ID(), $_GET['id']);
-    $result->execute();
-    $result->close();
-    if ($mysqli->error) {
-      echo "<p>" . $mysqli->errno . " Error writing to log: $query.</p>";
-    }
-  }
-  
-  echo "<body onload=\"updateToolbar(0)\">\n";
-  
-  $t = $_GET['title'] . '/%';
-  $search_results = $mysqli->prepare("SELECT id, title, type FROM student_help WHERE title LIKE ? ORDER BY title");
-  $search_results->bind_param('s', $t);
-  $search_results->execute();
-  $search_results->store_result();
-  $search_results->bind_result($id, $title, $type);
-
-  echo "<div style=\"padding:20px; font-size:160%; font-weight:bold; margin-bottom:5px; color:#295AAD\">" . $_GET['title'] . "</div>\n";
-  
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n<tr><td style=\"width:20px\">&nbsp;</td><td>";
-  
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  echo "<tr><td style=\"background-color: #295AAD; color:white; font-weight:bold\">&nbsp;&nbsp;" . $string['topics'] . "</td><td style=\"background-color: #295AAD; color:white; text-align:right\">" . $search_results->num_rows . "&nbsp;" . $string['items'] . "&nbsp;</td></tr>";
-  echo "</table>\n";
-
-  echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%; font-size:90%\">\n";
-  $row_no = 0;
-  while ($search_results->fetch()) {
-    $row_no++;
-    echo "<tr><td style=\"width:24px\" class=\"row\"><img src=\"../single_page.png\" width=\"16\" height=\"16\" alt=\"\" /></td><td class=\"row\"><a href=\"index.php?id=$id\" target=\"_top\">" . str_replace($_GET['title'] . '/', '', $title) . "</a></td></tr>\n";
-  }
-  $search_results->close();
-  $mysqli->close();
-  echo "</table>\n</td><td style=\"width:20px\">&nbsp;</td></tr>\n</table>\n";
-?>
+  <div id="toc">
+    <?php $help_system->display_toc($id); ?>
+  </div>
+  <div id="contents">
+    <?php $help_system->display_folder($title); ?>
+  </div>
 </div>
+
 </body>
 </html>

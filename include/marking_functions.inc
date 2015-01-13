@@ -27,7 +27,6 @@ require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'classes/stringutils.class.php';
 require_once $cfg_web_root . 'classes/exceptions.inc.php';
 
-
 /**
  * This is function time_to_seconds
  *
@@ -83,10 +82,11 @@ function get_log_ids_and_lock($paper_log_type, $screen_no, $metadataID, $db) {
  *
  * @return boolean                Did the save operation succeed?
  */
-function save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $db) {
+function save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $paper_id, $db) {
+  $userObject = UserObject::get_instance();
   $save_ok = true;
 
-  //turn off auto commit and start transaction. If php exits or we call rollback the inserts/updates will be rolledback
+  // Turn off auto commit and start transaction. If PHP exits or we call rollback the inserts/updates will be rolledback.
   $db->autocommit(false);
 
   $log_ids = get_log_ids_and_lock($paper_type, $screen_no, $metadataID, $db);
@@ -102,30 +102,45 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
       $save_answers->bind_param('iddisiissidsis', $response['q_id'], $response['mark'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID, $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss']);
     }
     $res = $save_answers->execute(); // Save to the database.
-    if ($res === false or $save_answers->affected_rows == 0) {
+    //if ($res === false or $save_answers->affected_rows == 0) {
+    if ($res === false) {
       $save_ok = false;
       break;
     }
   }
+  
+  // Check for any save fails.
+  if ($paper_type == 2) {   // Only log fails on summative exams.
+    $ipaddress = NetworkUtils::get_client_address();
+    if (isset($_POST['save_failed']) and $_POST['save_failed'] != '') {
+      $failures = explode('<br />', nl2br($_POST['save_failed']));
+      foreach ($failures as $failure) {
+        $stmt = $db->prepare("INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('iiisi', $userObject->get_user_ID(), $paper_id, $screen_no, $ipaddress, $failure);
+        $stmt->execute();
+        $stmt->close();
+      }
+    }
+  }  
 
   //
-  // did the all the save to log operations succeed?
+  // Did the all the save to log operations succeed?
   //
   if ($save_ok === false) {
-    //NO - rollback
-    $db->rollback();
-  } else {
-    //YES - commit the updates to the log tables
-    $db->commit();
+    $db->rollback();			// NO - rollback
+  } else {    
+    $db->commit();				// YES - commit the updates to the log tables
   }
-  //turn auto commit back on so future queries function as befor
+  // Turn auto commit back on so future queries function as before
   $db->autocommit(true);
 
   // Close prepared queries
-  if (count($response_data) > 0) { // Could happen on a screen with just an info block
+  if (count($response_data) > 0) { 		// Could happen on a screen with just an info block
     $save_answers->close();
   }
+  
 
+  
   return $save_ok;
 }
 
@@ -177,7 +192,17 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach ($selected_q_id as &$used_qid) {
           // Look up database.
-          $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ?  ORDER BY id_num");
+          if ($q_type == 'random') {
+            $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ?  ORDER BY id_num");
+          } else {
+              // Keyword need to join to keyword_questions.
+            $random_data = $db->prepare("SELECT questions.q_id, scenario, q_type, keywords_question.q_id as option_text,"
+                . " q_media, correct, display_method, settings, score_method, marks_correct"
+                . " FROM questions LEFT JOIN options ON questions.q_id = options.o_id"
+                . " LEFT JOIN keywords_question ON options.option_text = keywords_question.keywordID"
+                . " WHERE questions.q_id = ? ORDER BY id_num");
+          }
+
           $random_data->bind_param('i', $used_qid);
           $random_data->execute();
           $random_data->store_result();
@@ -185,11 +210,14 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           while ($random_data->fetch()) {
             $paper_array[] = array('q_id' => $new_q_id, 'scenario' => $scenario, 'q_type' => $q_type, 'option_text' => $option_text, 'q_media' => $q_media, 'correct' => $correct, 'display_method' => $display_method, 'settings' => $settings, 'score_method' => $score_method, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'question_no' => $tmp_question_no, 'display_pos' => $display_pos);
           }
+          /*
           if ($random_data->num_rows == 0) {
             $ex = new RandomQuestionNotFound(sprintf('Random question ID %s not found in paper %s', $used_qid, $paper_id));
             trigger_error($ex->getMessage(), E_USER_WARNING);
             throw($ex);
           }
+           * 
+           */
           $random_data->close();
 
         }
@@ -327,108 +355,6 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $totalpos = $marks_correct;
 
         break;
-      case 'calculation':
-        $mark = 0;
-        // Log format is 'users answer', 'correct answer', 'variable values used'.
-        $settings = json_decode($old_settings, true);
-
-        $qid = 'q' . $question_no;
-        if (isset($_POST[$qid])) {
-          $saved_response = $_POST[$qid];
-        } else {
-          $saved_response = '';
-        }
-        $saved_response = trim($saved_response);
-
-        $qid = 'q' . $question_no . '_answer';
-        if (isset($_POST[$qid])) {
-          $question_variables = $_POST[$qid];
-        } else {
-          $question_variables = '';
-        }
-
-        $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-
-        $variable_array = explode(',', $question_variables);
-        $var_no = 1;
-        foreach ($variable_array as $individual_variable) {
-          switch ($var_no) {
-            case 1:
-              $A = $individual_variable;
-              break;
-            case 2:
-              $B = $individual_variable;
-              break;
-            case 3:
-              $C = $individual_variable;
-              break;
-            case 4:
-              $D = $individual_variable;
-              break;
-            case 5:
-              $E = $individual_variable;
-              break;
-            case 6:
-              $F = $individual_variable;
-              break;
-            case 7:
-              $G = $individual_variable;
-              break;
-            case 8:
-              $H = $individual_variable;
-              break;
-            case 9:
-              $I = $individual_variable;
-              break;
-            case 10:
-              $J = $individual_variable;
-              break;
-          }
-          $var_no++;
-        }
-        $answer_equation = trim($correct);
-
-        if ($answer_equation != '' and check_formula($answer_equation, $variable_array)) {
-          eval ("\$answer = $answer_equation;");
-          $decimals = ($settings['answer_decimals'] != '') ? $settings['answer_decimals'] : 0;
-          $answer = round($answer, $decimals);
-        } else {
-          $decimals = 0;
-          $answer = '';
-        }
-
-        if ($answer != '' and is_nan($answer)) { // Can't possible get Q correct if answer is not a number
-          $mark = $marks_incorrect;
-        } else {
-          if ($saved_response_clean != '') {
-            $difference = round(abs($saved_response_clean - $answer), 12);
-
-            $tolerance_full = $settings['tolerance_full'];
-            if (StringUtils::ends_with($tolerance_full, '%')) {
-              $tolerance_perc = rtrim($tolerance_full, '%');
-              $tolerance_full = abs(round($answer * ($tolerance_perc / 100), 12));
-            }
-            $tolerance_partial = $settings['tolerance_partial'];
-            if (StringUtils::ends_with($tolerance_partial, '%')) {
-              $tolerance_perc = rtrim($tolerance_partial, '%');
-              $tolerance_partial = abs(round($answer * ($tolerance_perc / 100), 12));
-            }
-
-            if ($saved_response_clean == '' . $answer) { // Want to treat $answer as a string here
-              $mark = $marks_correct;
-            } elseif ($difference > 0 and $difference <= $tolerance_full and $tolerance_full > 0) {
-              $mark = $marks_correct;
-            } elseif ($difference > 0 and $difference <= $tolerance_partial and $tolerance_partial > 0) {
-              $mark = $marks_partial;
-            } else {
-              $mark = $marks_incorrect;
-            }
-          }
-        }
-
-        $saved_response .= '|' . $answer . '|' . $question_variables;
-        $totalpos = $marks_correct;
-        break;
       case 'enhancedcalc':
         //DO NOTHING EXCEPT SAVE DATA
         require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
@@ -436,15 +362,15 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
         if (!is_array($settings)) {
           $settings = json_decode($settings, true);
-
         }
+        
         if (isset($settings['marks_correct'])) {
           $totalpos = $settings['marks_correct'];
         } else {
           $totalpos = null;
         }
+        
         $saved_response = EnhancedCalc::process_user_answer($_POST['qid'][$log_id], $_SESSION['qid'][$log_id]);
-        //unset($_SESSION['qid'][$log_id]);
         break;
       case 'dichotomous':
         $qid = 'q' . $question_no . '_' . $question_part;
@@ -577,7 +503,11 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
               $saved_response .= '|';
             }
             $qid = 'q' . $question_no . '_' . $option_no;
-            $correct_answers = explode('$', $correct_options[$option_no - 1]);
+            if (isset($correct_options[$option_no - 1])) {
+                $correct_answers = explode('$', $correct_options[$option_no - 1]);
+            } else {
+                $correct_answers = array();
+            }
             if (isset($_POST[$qid])) {
               $answer_count = count($_POST[$qid]);
               if ($score_method == 'Mark per Question' and (is_array($_POST[$qid]) or $_POST[$qid] != 'u')) {
@@ -765,7 +695,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
         if ($saved_response == $correct) {
           $mark += $marks_correct;
-        } elseif ($saved_response != 'u') {
+        } elseif ($saved_response != 'u' and $saved_response != 'a') {
           $mark += $marks_incorrect;
         }
         $totalpos += $marks_correct;
@@ -798,7 +728,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           // Get correct answer.
           $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
           $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
-          $answer_list = explode(',', $blank_details[$i]);
+          $answer_list = explode(',', strip_tags($blank_details[$i]));
 
           $answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
           if ($display_method == 'textboxes') {
@@ -837,7 +767,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           $saved_response = '';
         }
         $mark = null;
-        $totalpos += $marks_correct;
+        $totalpos = $marks_correct;
         break;
       case 'hotspot':
         $qid = 'q' . $question_no;
@@ -940,7 +870,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
   }
 
   // Save the results to the database
-  $save_ok = save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $db);
+  $save_ok = save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $paper_id, $db);
 
   return $save_ok;
 
@@ -989,7 +919,10 @@ function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $ol
 }
 
 function finalise_mrq($old_score_method, $old_display_method, $correct_rank, $old_marks_correct, $old_marks_incorrect, $question_no, $mrq_options_selected, $totalpos, &$mark, &$question_part, &$qid, &$saved_response) {
-  if ($old_score_method == 'Mark per Question') {
+	if (isset($_POST['q' . $question_no . '_abstain'])) {
+	  $mark = 0;
+		$saved_response = 'a';
+	} elseif ($old_score_method == 'Mark per Question') {
     if ($correct_rank) {
       $mark = $old_marks_correct;
     } else {

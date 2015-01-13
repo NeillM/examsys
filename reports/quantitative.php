@@ -28,26 +28,34 @@
 
   function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $candidates) {
       global $old_likert_scale, $old_score_method, $old_display_method, $table_on, $string;
+      
       if ($q_type != 'likert' and $q_type != 'textbox' and $table_on == 1) {
         echo "</table>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        $old_likert_scale = '';
       }
       if ($q_type != 'textbox') {
         if ($theme != '') {
-          echo "<tr><td colspan=\"2\"><h1 style=\"marging-left:10px\">$theme</h1></td></tr>\n";
+          $cols = substr_count($old_likert_scale, '|');
+          if ($cols > 0) {
+            $cols += 5;
+          } else {
+            $cols = 2;
+          }
+          echo "<tr><td colspan=\"$cols\"><h1 style=\"marging-left:10px\">$theme</h1></td></tr>\n";
           $old_likert_scale = '';
         }
         if ($q_type != 'likert') echo "<tr>\n";
       }
       if ($q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'textbox') {
         if ($scenario != '' and $q_type != 'likert') {
-          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$scenario</p>\n";
-          echo "<p>$leadin</p>\n";
+          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br /><br />\n";
+          echo $leadin;
           if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
             echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
           }
           if ($q_type != 'hotspot' and $q_type != 'labelling') echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         } elseif ($q_type != 'likert') {
-          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n";
+          echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
           if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
             echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
           }
@@ -149,17 +157,17 @@
             }
             break;
           case 'likert':
-            $old_size = substr_count($old_likert_scale,'|');
-            $current_properties = explode('|',$old_display_method);
+            $old_size = substr_count($old_likert_scale, '|');
+            $current_properties = explode('|', $old_display_method);
             $new_size = substr_count($old_display_method,'|');
             if ($current_properties[$new_size] == 'true') {
               $na = true;
             } else {
               $na = false;
             }
-            if ($old_likert_scale != $old_display_method  or $table_on == 0 ) {
+            if ($old_likert_scale != $old_display_method or $table_on == 0) {
               if ($table_on == 1) echo "</table>\n";
-              echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"margin-left:10px; margin-right:10px\">\n";
+              echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"margin-right:10px\">\n";
               echo '<tr><td></td><td></td>';
               if ($na == true) echo '<td style="vertical-align:bottom; text-align:center" colspan="2">' . $string['na'] . '</td>';
               for ($point=1; $point<=$new_size; $point++) {
@@ -168,7 +176,7 @@
               echo "<td style=\"vertical-align:bottom; color:#808080\" colspan=\"2\">" . $string['unanswered'] . "</td><td style=\"vertical-align:bottom\">" . $string['mean'] . "</td></tr>\n";
               $table_on = 1;
             }
-            echo "<tr><td class=\"figures\">$q_no.</td><td>$leadin</td>";
+            echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin</td>";
             $i = 0;
             $sub_total = 0;
             foreach ($options as $individual_option) {
@@ -407,16 +415,16 @@
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
-    body {font-size:90%}
-    h1 {margin-left:15px; font-size:18pt; color:#316AC5}
-    table {font-size:100%}
-    p {margin-right:15px}
-    td {vertical-align:top}
-    .figures {text-align:right; width:60px}
+    body {font-size: 90%}
+    h1 {margin-left: 15px; font-size: 18pt; color:#316AC5}
+    table {font-size: 100%}
+    p {margin-right: 15px}
+    td {vertical-align: top}
+    .figures {text-align: right; width: 60px}
     .q_no {text-align:right; width:40px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -473,13 +481,19 @@
     $result->fetch();
     $result->close();
   }
-  echo "<table class=\"header\" style=\"font-size:90%\">\n";
-  echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  if ($module != '') echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . $module_code . '</a>';
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-  echo "<span style=\"margin-left:10px; font-size:220%; color:black; font-weight:bold\">" . $string['quantitativereport'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "\n</table>\n";
+  
+  
+  
+  
+  echo "<div class=\"head_title\">\n";
+  echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
+
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+  if ($folder != '') echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  if ($module != '' and $module != 0) echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . $module_code . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo "<div class=\"page_title\">" . $string['quantitativereport'] . "</div>\n";
+  echo "</div>\n";
 
   echo '<table cellpadding="2" cellspacing="0" border="0" width="100%">';
   // Capture the paper makeup.

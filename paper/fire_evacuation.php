@@ -37,16 +37,12 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/logmetadata.class.php';
 
-check_var('id', 'GET', true, false, false);
+$id = check_var('id', 'GET', true, false, true);
 
 $userObject = UserObject::get_instance();
 
-//get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
+// Get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 $property_id    = $propertyObj->get_property_id();
 $paper_type     = $propertyObj->get_paper_type();
@@ -58,14 +54,14 @@ $password       = $propertyObj->get_password();
 
 /*
  *
- * Setup som feature related flags
+ * Setup some feature related flags
  *
  */
-//are we in a staff test and preview mode?
+// Are we in a staff test and preview mode?
 $is_preview_mode = ( $userObject->has_role(array('Staff','SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview' );
-//are we in a staff test and preview mode and on the first screen?
+// Are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ( $is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview' );
-//are we in a staff single question testmode
+// Are we in a staff single question testmode
 $is_question_preview_mode = ( isset($_GET['q_id']) );
 
 /*
@@ -81,16 +77,18 @@ $attempt = 1; //default attempt to 1 overwritten if the student is resit candida
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
 
 $current_address = NetworkUtils::get_client_address();
+$moduleID = $propertyObj->get_modules();
 
-if ($userObject->has_role('Student')) {
-
+if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+  // No further security checks.
+} else {    // Treat as student with extra security checks.
   // Check for additional password on the paper
-  check_paper_password($password, $string);
+  check_paper_password($password, $string, $mysqli);
 
   // Check time security
-  check_datetime($start_date, $end_date);
+  check_datetime($start_date, $end_date, $string, $mysqli);
 
-  //Check room security
+  // Check room security
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
                                 $propertyObj->get_labs(),
                                 $current_address,
@@ -99,14 +97,14 @@ if ($userObject->has_role('Student')) {
                                 $mysqli
                               );
 
-  //get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $calendar_year, $mysqli);
+  // Get modules if the user is a student and the paper is not formative
+  $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
 
   // Check for any metadata security restrictions
   check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 }
 
-//get lab info used in log metadata
+// Get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
@@ -117,7 +115,7 @@ if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
   $paper_type = '_late';
 }
 
-//lookup previous sessionid from log_metadata.started property_id
+// Lookup previous sessionid from log_metadata.started property_id
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 $sessionid = $log_metadata->get_session_id();
 
@@ -143,25 +141,17 @@ if ($is_question_preview_mode == false) {
   <title>Rog&#333;</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style>
+    body {text-align:center}
+    .norun {font-weight:bold; margin-bottom:250px}
+  </style>
 </head>
 <body>
-  <form method="post" name="questions" action="start.php?id=<?php echo $_GET['id'] ?>&dont_record=true">
+  <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true">
 
-  <p style="text-align:center; font-size:200%; color:#008000"><?php echo $string['top_msg']; ?></p>
-  <p style="text-align:center; font-weight:bold"><?php echo $string['donotrun']; ?></p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p style="text-align:center"><strong><?php echo $string['bottom_msg']; ?> </strong><input type="submit" name="next" value="<?php echo $string['continue']; ?>" /></p>
+  <p style="font-size:200%; color:#008000"><?php echo $string['top_msg'] ?></p>
+  <p class="norun"><?php echo $string['donotrun'] ?></p>
+  <p><strong><?php echo $string['bottom_msg'] ?> </strong><input type="submit" name="next" value="<?php echo $string['continue'] ?>" class="ok" /></p>
 <?php
   echo "<input type=\"hidden\" name=\"current_screen\" value=\"" . ($_POST['current_screen'] - 1) . "\" />\n";
   if (isset($_POST['sessionid'])) {

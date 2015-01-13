@@ -84,9 +84,11 @@ if (isset($_POST['submit']) and $course_exists == false) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -94,7 +96,12 @@ if (isset($_POST['submit']) and $course_exists == false) {
           return true;
         }
       });
+      
       $('form').removeAttr('novalidate');
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
     
     function codeWarning() {
@@ -109,14 +116,19 @@ if (isset($_POST['submit']) and $course_exists == false) {
     echo "<body>\n";
   }
   require '../include/course_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu();
   ?>
-  <div id="content" class="content" style="font-size:80%">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['editcourse']; ?></div></th></tr>
-  </table>
+  <div id="content">
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="list_courses.php"><?php echo $string['courses'] ?></a></div>
+    <div class="page_title"><?php echo $string['editcourse']; ?></div>
+  </div>
   <br />
   <div align="center">
-  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?courseID=' . $courseID; ?>">
+  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?courseID=' . $courseID ?>">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_course == false) {
@@ -152,7 +164,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
     </select></td></tr>
     </table>
     <input type="hidden" name="courseID" value="<?php echo $courseID; ?>" />
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input type="button" style="width:100px" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input type="button" class="cancel" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 <?php

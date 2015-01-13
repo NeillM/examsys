@@ -44,31 +44,26 @@ function check_fullSave($q_id, $mysqli) {
 }
 
 function redirect($userObj, $q_id, $configObj, $db) {
-  // Release the lock.
+  // Release the users lock.
   if ($_POST['checkout_author'] == $userObj->get_user_ID()) {
-    $result = $db->prepare("UPDATE questions SET checkout_time = NULL, checkout_authorID = NULL WHERE q_id = ?");
-    $result->bind_param('i', $q_id);
+    $result = $db->prepare("UPDATE questions SET checkout_time = NULL, checkout_authorID = NULL WHERE q_id = ? AND checkout_authorID = ?");
+    $result->bind_param('ii', $q_id, $userObj->get_user_ID());
     $result->execute();
     $result->close();
   }
 
-  $url_prefix = 'location: ' . $configObj->get('cfg_root_path');
+  if (isset($_SESSION['nav_page'])) {
+    $url = $_SESSION['nav_page'] . '?' . $_SESSION['nav_query'];
+    $url = preg_replace("/&scrOfY=[0-9]+/", "", $url);
 
-  if (substr($_POST['paperID'], 0, 5) == 'list:') {
-    $type = substr($_POST['paperID'], 5);
-    $url =  $url_prefix . "/question/list.php?type=$type&keyword=" . $_POST['keyword'] . "&team=" . $_POST['team'];
-  } elseif ($_POST['calling'] == 'find') {
-    $url =  $url_prefix . "/question/search.php";
-  } elseif ($_POST['calling'] == 'paper') {
-    $url =  $url_prefix . "/paper/details.php?paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
-  } elseif ($_POST['calling'] == 'external_comments') {
-    $url =  $url_prefix . "/reports/review_comments.php?type=external&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
-  } elseif ($_POST['calling'] == 'internal_comments') {
-    $url =  $url_prefix . "/reports/review_comments.php?type=internal&paperID=" . $_POST['paperID'] . "&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "&scrOfY=" . $_POST['scrOfY'];
+    if (isset($_POST['scrOfY'])) {
+      $url .= '&scrOfY=' . $_POST['scrOfY'];
+    }
+    
+    header('location: ' . $url);
   } else {
-    $url =  $url_prefix . "/staff/index.php";
+    header('location: ' . $configObj->get('cfg_root_path') . '/staff/index.php');
   }
-  header($url);
   $db->close();
   exit;   // Stop script execution after the redirect.
 }
@@ -103,9 +98,7 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $che
   global $tmp_ownerID;
   $disabled = '';
 
-  if (check_MSCAA($q_id, $dblink)) {    // Check for MSC-AA question
-    $disabled = 'mscaa';
-  } elseif ($locked != '') {            // Check if locked
+  if ($locked != '') {            // Check if locked
     $disabled = 'locked';
     $checkout_author = check_out_paper($dblink, $q_id, $userObject->get_user_ID());
   } else {                              // Check out editing rights against current user
@@ -113,22 +106,6 @@ function check_edit_rights($q_id, $checkout_authorID, $checkout_authorName, $che
   }
 
   return $disabled;
-}
-
-function check_MSCAA($q_id, $dblink) {
-  $mscaa = false;
-
-  $stmt = $dblink->prepare("SELECT id FROM questions_metadata WHERE questionID = ? AND type = 'QTI Ident' AND value LIKE 'MSC_AA%'");
-  $stmt->bind_param('i', $q_id);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($id);
-  if ($stmt->num_rows() > 0) {
-    $mscaa = true;
-  }
-  $stmt->close();
-
-  return $mscaa;
 }
 
 function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_time, &$disabled, $dblink, $questionID, $userObject) {
@@ -200,7 +177,7 @@ function hidden_edit_fields() {
   }
 
   if (isset($_GET['scrOfY'])) {
-    $html .= '<input type="hidden" name="scrOfY" value="' . $_GET['scrOfY'] . '" />';
+    $html .= '<input type="text" name="scrOfY" value="' . $_GET['scrOfY'] . '" />';
   } else {
     $html .= '<input type="hidden" name="scrOfY" value="" />';
   }
@@ -243,14 +220,11 @@ function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $check
       }
     }
 
-    $html .= <<< HTML
-      <input id="submit-save" name="{$name}" value="{$value}" type="submit" class="submit"{$save_disabled} />
-
-HTML;
+    $html .= '<input id="submit-save" name="' . $name . '" value="' . $value . '" type="submit" class="ok"' . $save_disabled . ' />';
 
     if ($allow_correct and $locked != '' and $paper_id != -1) {
       $html .= <<< HTML
-      <script type="text/javascript">
+      <script>
         var otherSummatives = $paper_count;
         var postExam = true;
         var postExamWarningShown = false;
@@ -260,29 +234,20 @@ HTML;
     }
 
   } else {
-    $html .= <<< HTML
-<input type="submit" id="addbank" name="addbank" value="{$string['addtobank']}" class="submit">
+    $html .= '<input type="submit" id="addbank" name="addbank" value="' . $string['addtobank'] . '" class="ok">';
 
-HTML;
     if ($paper_id != -1 and substr($paper_id, 0, 5) != 'list:') {
-      $html .= <<< HTML
-  <input type="submit" id="addpaper" name="addpaper" value="{$string['addtobankandpaper']}" class="submit form-small">
-
-HTML;
+      $html .= '<input type="submit" id="addpaper" name="addpaper" value="' . $string['addtobankandpaper'] . '" class="ok">';
     }
   }
 
-  $html .= <<< HTML
-      <input id="submit-cancel" name="submit-cancel" value="{$string['cancel']}" type="submit" class="submit cancel" />
-
-HTML;
+  $html .= '<input id="submit-cancel" name="submit-cancel" value="' . $string['cancel'] . '" type="submit" class="cancel" />';
 
   return $html;
 }
 
-function insert_into_papers($p_id, $q_id, $branching_question=false) {
-  global $mysqli;
-  $result = $mysqli->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper=?");
+function insert_into_papers($p_id, $q_id, $db) {
+  $result = $db->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->bind_result($screen, $display_pos);
@@ -292,41 +257,21 @@ function insert_into_papers($p_id, $q_id, $branching_question=false) {
 
   if ($screen == 0) $screen++;
 
-  if ($branching_question == true) {
-    //Get the Question ID of the source question
-    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE q_id = ?");
-    $result->bind_param('i', $q_id);
-    $result->execute();
-    $result->bind_result($scenario);
-    $result->fetch();
-    $result->close();
-
-    //Get the screen number of the source question on the paper
-    $result = $mysqli->prepare("SELECT screen FROM papers WHERE paper = ? AND question = ?");
-    $result->bind_param('ii', $p_id, $scenario);
-    $result->execute();
-    $result->bind_result($source_screen);
-    $result->fetch();
-    $result->close();
-
-    if ($source_screen == $screen) $screen++;
-  }
-
-  //force random mark to recaculate
-  $result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
+  // Force random mark to recalculate.
+  $result = $db->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
   $result->close();
 
-  if ($result = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
+  if ($result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
     $result->bind_param('iiii', $p_id, $q_id, $screen, $display_pos);
     $result->execute();
     $result->close();
   } else {
-    display_error("Papers Add Error",$mysqli->error);
+    display_error("Papers Add Error", $db->error);
   }
-  echo $mysqli->error;
-  return $mysqli->insert_id;
+  
+  return $db->insert_id;
 }
 
 function disable_locked($question, &$dis_class, &$dis_readonly) {
@@ -334,7 +279,8 @@ function disable_locked($question, &$dis_class, &$dis_readonly) {
     $dis_class = ' disabled';
     $dis_readonly = ' readonly="readonly"';
   } else {
-    $dis_class = $dis_readonly = '';
+    $dis_class = '';
+		$dis_readonly = '';
   }
 }
 

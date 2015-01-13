@@ -38,6 +38,17 @@ $string['sct'] = 'Test shody se scénářem';
 $string['sct_short'] = 'Shoda se scénářem';
 $string['textbox'] = 'Textové pole';
 $string['true_false'] = 'Pravda/Nepravda';
-$string['area'] = 'Pole';
+$string['area'] = 'Plocha';
 $string['enhancedcalc'] = 'Rozšířená početní úloha';
+
+$string['veryeasy'] = 'Velmi jednoduchá';
+$string['easy'] = 'Jednoduchá';
+$string['moderate'] = 'Průměrná';
+$string['hard'] = 'Těžká';
+$string['veryhard'] = 'Velmi těžká';
+$string['mean'] = 'Průměr';
+$string['highest'] = 'Nejvyšší';
+$string['high'] = 'Vysoká';
+$string['intermediate'] = 'Střední';
+$string['low'] = 'Nízký';
 ?>

@@ -25,35 +25,25 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/logger.class.php';
+require_once '../classes/facultyutils.class.php';
 
 $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
 
-$result = $mysqli->prepare("SELECT name FROM faculty WHERE id = ?");
-$result->bind_param('i', $facultyID);
-$result->execute();
-$result->store_result();
-$result->bind_result($name);
-$result->fetch();
-if ($result->num_rows == 0) {
-  $result->close();
+// Check the Faculty ID actually exists for editing.
+$name = FacultyUtils::faculty_name_by_id($facultyID, $mysqli);
+if (!$name) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-$result->close();
 
 $duplicate = false;
 if (isset($_POST['submit'])) {
   // Check for existing name
-
-  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name = ?");
-  $result->bind_param('s', $_POST['new_faculty']);
-  $result->execute(); 
-  $result->store_result();
-  if ($result->num_rows() > 0) {
+  
+  if (FacultyUtils::facultyname_exists($_POST['new_faculty'], $mysqli)) {
     $duplicate = true;
   }
-  $result->close();
-
+          
   if (!$duplicate) {
     $result = $mysqli->prepare("UPDATE faculty SET name = ? WHERE id = ?");
     $result->bind_param('si', $_POST['new_faculty'], $facultyID);
@@ -67,11 +57,18 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<title><?php echo $string['editfaculty']; ?></title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['editfaculty'] ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      window.opener.location.href='list_faculties.php';
+      window.close();
+    });
+  </script>
 </head>
-<body onload="window.opener.location.href='list_faculties.php'; window.close();">
+<body>
 </body>
 </html>
   <?php
@@ -87,13 +84,13 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['editfaculty']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
-  body {padding:4px; font-size:90%; background-color:#EEEEEE}
-  h1 {font-size:120%}
+    body {font-size:90%; margin:2px; background-color:#EAEAEA}
+    h1 {font-size:140%; font-weight:normal}
   </style>
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -113,14 +110,14 @@ if (isset($_POST['submit'])) {
 <?php
 if ($duplicate) {
   echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $_POST['new_faculty'] . '" maxlength="80" required autofocus />';
-  echo "<script language=\"JavaScript\">\nalert('" . $string['warning'] . "');\n</script>\n";
+  echo "<script>\nalert('" . $string['warning'] . "');\n</script>\n";
 } else {
   echo '<input type="text" style="width:99%" name="new_faculty" value="' . $name . '" maxlength="80" required autofocus />';
 }
 ?>
-<input type="hidden" name="facultyID" value="<?php echo $facultyID; ?>" />
+<input type="hidden" name="facultyID" value="<?php echo $facultyID ?>" />
 </div>
-<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:80px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
+<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
 </form>
 
 </body>

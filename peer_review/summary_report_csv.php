@@ -15,7 +15,9 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Output a summary of peer review data in CSV format.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -39,8 +41,9 @@ header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
 header("Content-Disposition: attachment; filename=data.csv");
 
-// write out headings
+// Write out headings
 echo "Title,Surname,First Names,Student ID,Reviewed,Group";
+$heading_no = count($questions);
 if ($review_type == 1) echo ",Reviews";
 for ($i=1; $i<=$heading_no; $i++) {
   echo ',Q' . $i;

@@ -32,11 +32,14 @@ require_once '../../plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.p
 
 set_time_limit(0);
 
+//header('Content-Type: text/html; charset=' + $configObject->get('cfg_page_charset'));
+
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $questions = $properties->get_questions();
+$paper_type = $properties->get_paper_type();
 
 // Get the enhanced calculation questions on the paper.
 $q_ids = array();
@@ -53,7 +56,7 @@ $server_connection = true;
 
 $statuses = array();
 foreach ($q_ids as $q_id => $setting) {
-  $data = enhancedcalc_remark('2', $paperID, $q_id, $setting, $mysqli, 'all');
+  $data = enhancedcalc_remark($paper_type, $paperID, $q_id, $setting, $mysqli, 'all');
 	if ($data[-3] > 0) {
 		$server_connection = false;
 	}
@@ -69,6 +72,7 @@ foreach($statuses as $qid => $data) {
 		$problem_questions[] = get_question_no($qid, $questions);
 	}
 }
+
 if (count($problem_questions) > 0) {
 	$return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
 

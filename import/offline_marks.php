@@ -163,10 +163,12 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
           $db->commit();
         }
 
-        $result = $db->prepare("INSERT INTO log_metadata VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, NULL, NULL)");
+        $result = $db->prepare("INSERT INTO log_metadata (userID, paperID, started, ipaddress, student_grade, year, attempt) "
+          . "VALUES (?, ?, ?, ?, ?, ?, ?)");
         $ip = '127.0.0.1';
         $attempt = 1;
-        $result->bind_param('iisssii', $students[$sid]['id'], $paperID, $paper_date, $ip, $students[$sid]['grade'], $students[$sid]['year'], $attempt);
+        $result->bind_param('iisssii', $students[$sid]['id'], $paperID, $paper_date, $ip, $students[$sid]['grade'],
+          $students[$sid]['year'], $attempt);
         $res = $result->execute();
         if ($res == false) {
           $save_ok = false;
@@ -178,7 +180,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
         if ($save_ok) {
           echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td>" . $students[$sid]['title'] . "</td><td>" . $students[$sid]['surname'] . "</td><td>" . $students[$sid]['first_names'] . "</td><td>$sid</td>";
           for ($q=1; $q<=$question_no; $q++) {
-            $result = $db->prepare("INSERT INTO log5 VALUES(NULL, ?, ?, ?, ?, ?)");
+            $result = $db->prepare("INSERT INTO log5 (q_id, mark, adjmark, totalpos, metadataID) VALUES (?, ?, ?, ?, ?)");
             $mark = trim($fields[$q]);
             if ($mark > $paper[$q]['marks_correct']) {
               $save_mark = NULL;
@@ -242,23 +244,41 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
 
   <title><?php echo $string['uploadmarks']; ?></title>
 
-  <link rel="stylesheet" href="../css/body.css" type="text/css">
-  <link rel="stylesheet" href="../css/dialog.css" type="text/css">
-  <link rel="stylesheet" href="../css/submenu.css" type="text/css">
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <style type="text/css">
     <?php
     if (isset($_POST['submit'])) echo 'td {border:1px solid #C0C0C0}';
     ?>
     .num {text-align:right}
     .failed {background-color:#FFC0C0; color:#C00000; font-weight:bold}
+    #content * {margin:auto; padding:auto};
   </style></head>
-
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <body onclick="hideMenus()">
 <?php
-  include '../include/paper_options.inc';
+  require '../include/paper_options.inc';
+  require '../include/toprightmenu.inc';
+
+  echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
 <?php
+echo "<div class=\"head_title\">\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+echo "<div class=\"breadcrumb\">";
+$modutils = module_utils::get_instance();
+echo '<a href="../index.php">' . $string['home'] . '</a>';
+if ($module != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . $modutils->get_moduleid_from_id($module, $mysqli) . '</a>';
+} elseif ($folder != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+}
+echo "</div><div class=\"page_title\">" . $string['importmarks'] . "</div>";
+echo "</div>";
 if (isset($_POST['submit']) and $_POST['submit']) {
   if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_username() . "_spotter_marks.csv"))  {

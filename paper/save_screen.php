@@ -16,7 +16,8 @@
 
 /**
 *
-* This script can only be called from start.php for ajax saving'.
+* This script can only be called from start.php for AJAX saving.
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -36,25 +37,26 @@ require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exceptions.inc.php';
 
+if ($_GET['ans_changed'] == '0') {
+  echo $_POST['randomPageID'];
+  exit();
+}
 
-$displayDebug = false; //ajax call so debug info messes up the output
+$displayDebug = false; // AJAX call so debug info messes up the output.
 
 check_var('id', 'GET', true, false, false);
 
-//calculate how long this request should be processed based on the config vars and the retry number
+// Calculate how long this request should be processed based on the config vars and the retry number.
 if ( isset($_GET['retry']) and is_numeric($_GET['retry']) and $_GET['retry'] > 0 and $_GET['retry'] <= $configObject->get('cfg_autosave_retrylimit') ) {
   $extra_time = 1 + ceil($configObject->get('cfg_autosave_backoff_factor') * intval($_GET['retry']) *  $configObject->get('cfg_autosave_settimeout'));
 } else {
   $extra_time = 1;
 }
 
-//kill this request if it is taking to long the javascript will retry if it can
+// Kill this request if it is taking to long the JavaScript will retry if it can.
 set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
 
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli);
-if ($propertyObj == false) {  // No properties found, this crypt_name
-  $notice->access_denied($mysqli, $string, $string['error_paper'], false);   // This will exit PHP.
-}
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
 $original_paper_type = $propertyObj->get_paper_type(); // Store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 
@@ -70,17 +72,19 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
   $lab_name = $lab_object->get_name();
   $lab_id = $lab_object->get_id();
 }
+$moduleID = $propertyObj->get_modules();
 
-if ($userObject->has_role('Student')) {     // Student user, do a lot more security checks.
-
+if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
+  // No further security checks.
+} else {    // Treat as student with extra security checks.
   // Get the module IDs for this paper
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string);
+  check_paper_password($propertyObj->get_password(), $string, $mysqli);
 
   // Check time security
-  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date());
+  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);
 
   // Check room security
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
@@ -92,7 +96,7 @@ if ($userObject->has_role('Student')) {     // Student user, do a lot more secur
                               );
 
   // Check modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $mysqli);
+  $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
 
   // Check for any metadata security restrictions
   check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
@@ -104,7 +108,7 @@ $is_preview = (isset($_POST['mode']) and $_POST['mode'] == 'preview');
 
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
-  $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli );
+  $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
@@ -120,6 +124,10 @@ if ($log_metadata->get_record() === false) {
 }
 $metadataid = $log_metadata->get_metadata_id();
 
+if ($_GET['submitType'] == 'userSubmit') {
+  $log_metadata->set_highest_screen($_POST['old_screen']);
+}
+
 try {
   $ret = record_marks($propertyObj->get_property_id(), $mysqli, $propertyObj->get_paper_type(), $metadataid, $preview_q_id);
 } catch (RandomQuestionNotFound $ex) {
@@ -127,9 +135,9 @@ try {
 }
 
 if ($ret === true) {
-  // Everthing worked ;-)
+  // Everthing worked.
   echo $_POST['randomPageID'];
 } else {
-  echo "ERROR";
+  echo 'ERROR';
 }
 ?>

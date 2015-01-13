@@ -60,7 +60,6 @@ $string['emailclassmarks'] = 'Email Class Marks';
 $string['title'] = 'Title';
 $string['surname'] = 'Surname';
 $string['firstnames'] = 'First Names';
-$string['name'] = 'Name';
 $string['studentid'] = 'Student ID';
 $string['username'] = 'Username';
 $string['course'] = 'Course';
@@ -108,4 +107,8 @@ $string['of'] = ' of ';
 $string['percentofcohort'] = '% of cohort';
 $string['marking'] = 'Marking...';
 $string['markingcalcquestions'] = 'Marking Calculation Questions';
+
+$string['viewstudentnote'] = 'View student note...';
+$string['viewaccessibility'] = 'View accessibility settings...';
+$string['resitcandidate'] = 'Resit candidate';
 ?>

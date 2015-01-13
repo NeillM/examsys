@@ -34,4 +34,9 @@ $string['noreviewers'] = '<strong>Uwaga:</strong> Tego arkusza jeszcze nie recen
 $string['screen'] = 'Ekran';
 $string['papernotfound'] = 'Nie odnaleziono arkusza';
 $string['furtherassistance'] = 'W celu uzyskania dalszej pomocy skontaktuj się z: <a href="mailto:%s">%s</a>';
+$string['reviewers'] = 'Recenzenci';
+$string['started'] = 'Rozpoczęte';
+$string['completed'] = 'Zakończone';
+$string['generalpapercomments'] = 'Ogólne komentarze do arkusza';
+$string['cannotcomment'] = 'Nie można komentować';
 ?>

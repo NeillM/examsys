@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['modules'] = 'Modules';
-$string['administrativetools'] = 'Administrative Tools';
 $string['moduleid'] = 'Module ID';
 $string['name'] = 'Name';
 $string['school'] = 'School';

@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['confirmcoursedelete'] = 'Potvrdit odstranění kurzu';
-$string['recyclebin'] = 'Koš';
-$string['msg'] = 'Jste si skutečně jisti, že chcete tento kurz odstranit ?';
-$string['delete'] = 'Odstranit';
+require '../lang/' . $language . '/delete/delete.inc';
+
+$string['msg'] = 'Jste si skutečně jisti, že chcete tento kurz odstranit?';
 ?>

@@ -25,4 +25,5 @@ $string['modified'] = 'Modified';
 $string['status'] = 'Status';
 $string['locked'] = 'Locked';
 $string['warningnoleadin'] = 'WARNING: no question lead-in!';
+$string['bykeyword'] = 'By Keyword';
 ?>

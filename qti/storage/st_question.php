@@ -18,7 +18,7 @@
  *
  * @author Adam Clarke
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
@@ -181,7 +181,7 @@ class ST_Question_Hotspot extends ST_Question {
   var $scenario = '';
   var $feedback = '';
   var $hotspots = array(); // array of STQ_Hotspot_Spot
-  // raw labeling option text for touchstone->qti->touchstone
+  // raw labeling option text for rogo->qti->rogo
   var $raw_option = '';
 }
 
@@ -234,7 +234,7 @@ class ST_Question_Labelling extends ST_Question {
   var $arrows = array(); // array of STQ_Labelling_Arrow
   var $labels = array();
 
-  // raw labeling option text for touchstone->qti->touchstone
+  // raw labeling option text for rogo->qti->rogo
   var $raw_option = '';
   // STORE LABELING INFO IN HERE!!!!
 }
@@ -364,6 +364,10 @@ class ST_Question_Sct extends ST_Question {
 }
 
 class ST_Question_Random extends ST_Question {
+  // NO EXTENSIONS
+}
+
+class ST_Question_keyword_based extends ST_Question {
   // NO EXTENSIONS
 }
 

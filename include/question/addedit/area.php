@@ -52,10 +52,10 @@ $mark_range = range(100, 50);
 $error_range = range(0, 50);
 ?>
 <script type="text/javascript" src="../../js/jquery.flash_q.js"></script>
-<script type="text/javascript">
+<script>
 //<![CDATA[
 $(function () {
-  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'" . $media['filename'] . "', '" . $correct . "'" ?>);
+  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
 });
 //]]>
 </script>
@@ -87,7 +87,7 @@ if ($configObject->get('cfg_interactive_qs') == 'html5') {
   //<!-- ======================== HTML5 part ================= -->
   echo '<canvas id="canvas1" width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
   echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";
-	echo '<script language="JavaScript" type="text/javascript">' . "\n";
+	echo '<script>' . "\n";
 	echo 'setUpQuestion(1, "option_correct", "' . $language . '", "' . $media['filename'] . '", "' . $correct . '", "", "", "#FFC0C0", "area", "2");' . "\n";
   echo '</script>' . "\n";
   //<!-- ==================================================== -->
@@ -138,7 +138,7 @@ endif;
         </table>
 
 <?php
-$allow_neg = $question->allow_negative_marks($module);
+$allow_neg = $question->allow_negative_marks();
 $allow_change_method = ($question->allow_change_marking_method() and $dis_class == '') ? '' : ' disabled="disabled"';
 ?>
         <table id="q-marking" class="form" summary="<?php echo $string['qeditsummary'] ?>">

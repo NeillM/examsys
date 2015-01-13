@@ -17,10 +17,10 @@
 $string['machine'] = 'Počítač';
 $string['machines'] = 'Počítače';
 $string['createnewlab'] = 'Nová učebna';
+$string['computerlabs'] = 'Počítačové učebny';
 $string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
 $string['deletelab'] = 'Odstranit učebnu';
 $string['lowbandwidth'] = 'Pomalé připojení';
-$string['administrativetools'] = 'Nastavení';
 $string['name'] = 'Název';
 $string['campus'] = 'Kampus';
 $string['building'] = 'Budova';

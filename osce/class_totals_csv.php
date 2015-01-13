@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Outputs the results of an OSCE station as in CSV format.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -54,9 +56,9 @@ $paper = $propertyObj->get_paper_title();
 $crypt_name = $propertyObj->get_crypt_name();
 
 $exclusions = new Exclusion($paperID, $mysqli);
-$exclusions->load();                                                                                  // Get any questions to exclude.
+$exclusions->load();                                        // Get any questions to exclude.
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->load_answers();
 $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();
@@ -83,7 +85,7 @@ if ($borderline_method) {
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
-set_classification($user_results, $passmark, $user_no, $string);
+set_classification($propertyObj->get_marking(), $user_results, $passmark, $user_no, $string);
 rating_num_text($user_results, $user_no, $propertyObj, $string);
 $user_results = array_csort($user_results, $sortby, $ordering);
 
@@ -91,11 +93,11 @@ $stats = $report->get_stats();                        // Generate the main stati
 
 $results_cache = new ResultsCache($mysqli);
 if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
-  $results_cache->save_paper_cache($propertyObj, $percent, $absent, $stats);                  // Cache general paper stats
+  $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($propertyObj, $percent, $absent, $user_results);    // Cache student/paper marks
+  $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($propertyObj, $percent, $absent, $q_medians);    // Cache the question/paper medians
+  $results_cache->save_median_question_marks($paperID, $q_medians);    // Cache the question/paper medians
 }
 
 header('Pragma: public');
@@ -105,7 +107,7 @@ header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $pap
 $completed_no = 0;
 $total_score = 0;
 
-//output table heading
+// Output table heading
 if ($borderline_method) {
   $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['rating'], $string['classification'], $string['starttime'], $string['examiner']);
 } else {

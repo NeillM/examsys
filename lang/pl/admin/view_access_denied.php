@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Narzędzia administracyjne';  
 $string['deniedlogwarnings'] = 'Ostrzeżenia logu odmowy';  
 $string['date'] = 'Data';
 $string['user'] = 'Użytkownik';

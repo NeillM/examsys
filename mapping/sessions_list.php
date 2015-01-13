@@ -55,9 +55,9 @@ if (!$module) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     function selSession(divID, identifier, session, VLE, evt) {
       hideSessCopyMenu(evt);
       tmp_ID = $('#oldDivID').val();
@@ -85,7 +85,7 @@ if (!$module) {
     }
 
     function editSession(identifier, calendar_year) {
-      window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $_GET['module']; ?>&calendar_year=" + calendar_year;
+      window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $modID ?>&calendar_year=" + calendar_year;
     }
 
     function highlight(lineID) {
@@ -100,7 +100,7 @@ if (!$module) {
       }
     }
 
-		$(document).ready(function() {
+    $(function () {
 		  $('html').click(function() {
 			  hideSessCopyMenu(event);
       });
@@ -115,13 +115,18 @@ if (!$module) {
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
+<div id="content">
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo $module ?></a></div>
+  <div class="page_title"><?php echo $string['manageobjectives'] ?></div>
+</div>
 <?php  
   echo "<table class=\"header\">\n";
-  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=" . $_GET['module'] . "\">$module</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['manageobjectives'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "<tr><th class=\"vert_div col10\">" . $string['date'] . "</th>\n";
-  echo "<th class=\"vert_div\">" . $string['name'] . "</th>\n";
-  echo "<th class=\"vert_div\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
+  echo "<tr><th class=\"col10\">" . $string['date'] . "</th>\n";
+  echo "<th class=\"col\">" . $string['name'] . "</th>\n";
+  echo "<th class=\"col\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
 
   $old_session = '';
   $id = 0;
@@ -147,13 +152,13 @@ if (!$module) {
         $identifier = '';
       }
       if ($session['VLE'] != '') {
-        echo "<tr style=\"cursor:pointer\" id=\"$id\" onmouseover=\"highlight($id)\" onmouseout=\"unhighlight($id)\" onclick=\"selSession('$id','$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
+        echo "<tr class=\"l\" id=\"$id\" onclick=\"selSession($id,'$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
       } else {
-        echo "<tr style=\"cursor:pointer\" id=\"$id\" onmouseover=\"highlight($id)\" onmouseout=\"unhighlight($id)\" onclick=\"selSession('$id','$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editSession('" . $session['identifier'] . "','" . $session['calendar_year'] . "');\">";
+        echo "<tr class=\"l\" id=\"$id\" onclick=\"selSession($id,'$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editSession('" . $session['identifier'] . "','" . $session['calendar_year'] . "');\">";
       }
       echo "<td class=\"indent\">" . $session['occurrance'] . "</td><td class=\"title\">" . $session['title'] . "</td>";
       if ($objectives_no == 0) {
-        echo "<td class=\"zero_obj_no\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" border=\"0\" />&nbsp;$objectives_no</td>";
+        echo "<td class=\"zero_obj_no\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;$objectives_no</td>";
       } else {
         echo "<td class=\"obj_no\">$objectives_no</td>";
       }

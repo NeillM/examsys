@@ -51,7 +51,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
       $errors[] = $string['emailaddressininstitutionaldomains'];
     } else {
       // If it is, look for the user in the database
-      $stmt = $mysqli->prepare("SELECT id, title, surname FROM users WHERE email=? ORDER BY id DESC LIMIT 1");
+      $stmt = $mysqli->prepare("SELECT id, title, surname FROM users WHERE email = ? ORDER BY id DESC LIMIT 1");
       $stmt->bind_param('s', $email);
       $stmt->execute();
       $stmt->store_result();
@@ -133,9 +133,9 @@ EMAIL;
   body {font-size:90%}
   .field {padding-top:4px; padding-left:6px; font-weight:bold}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script>
   $(function() {
     $('#forgotten_pw').validate({
       messages: {
@@ -185,7 +185,7 @@ if ($message == '') {
     					</td>
     				</tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
-    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['send'] ?>"  style="width:100px" /></td></tr>
+    				<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['send'] ?>" class="ok" /></td></tr>
     				<tr><td colspan="2">&nbsp;</td></tr>
     			</table>
     		</td>

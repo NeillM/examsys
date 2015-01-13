@@ -16,6 +16,8 @@
 
 /**
 *
+* Confirm that it is OK to proceed deleting a status.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -44,7 +46,7 @@ $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['confirmstatusdelete']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -52,46 +54,29 @@ $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
 
 <body>
 
-<table>
 <?php
 if ($q_count == 0) {
 ?>
-<tr>
-  <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
-  <td>
-    <p><strong><?php echo $string['msg']; ?></strong><p>
+    <p><?php echo $string['msg'] ?></p>
     <br />
-    <br />
-    <div style="text-align:right">
+    <div class="button_bar">
     <form action="do_delete_status.php" method="post">
       <input type="hidden" name="status_id" value="<?php echo $_GET['id']; ?>" />
-      <input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-      <input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+      <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
-  </td>
-</tr>
 <?php
 } else {
 ?>
-<tr>
-  <td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
-  <td>
-    <p><strong><?php echo $string['questionassigned']; ?></strong><p>
+    <p><?php echo $string['questionassigned'] ?></p>
     <br />
-    <br />
-    <div style="text-align:right">
+    <div class="button_bar">
     <form action="do_delete_status.php" method="post">
-      <input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+      <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
-  </td>
-</tr>
 <?php
 }
 ?>
-
-</table>
-
 </body>
 </html>

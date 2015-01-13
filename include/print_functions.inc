@@ -146,7 +146,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
       echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
-      if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
@@ -162,7 +162,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
       if ($question['q_type'] != 'hotspot') echo $question['leadin'];
     }
   }
@@ -238,7 +238,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           $na = true;
         }
         if ($question['notes'] != '') {
-          echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"14\" height=\"14\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
+          echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"Note\" />&nbsp;<strong>NOTE:</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
         }
         if ($question['scenario'] != '') {
           echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
@@ -278,7 +278,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
       if ($question['scenario'] != '') {
         echo "<tr><td class=\"question_no\">" . ($question_no + $question_offset) . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-        if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+        if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
       }
@@ -682,7 +682,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         break;
       case 'flash':
 ?>
-  <script language="JavaScript">
+  <script>
     var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
     function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
       var flash<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $question_no; ?> : document.flash<?php echo $question_no; ?>;
@@ -698,7 +698,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
   </script>
   <div align="center">
-  <script language="JavaScript">
+  <script>
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
     write_string('<param name="movie" value="../media/<?php echo $question['q_media']; ?>" />');
@@ -856,7 +856,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   }
 
   // Display possible marks for question (if not Survey)
-  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'calculation') echo '</blockquote>';
+  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'enhancedcalc') echo '</blockquote>';
   if ($paper_type < 3) {
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";

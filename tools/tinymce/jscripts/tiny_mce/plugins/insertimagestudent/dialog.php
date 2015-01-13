@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -26,7 +26,7 @@
   $path = $cfg_web_root . 'help/student/images/';
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -69,7 +69,7 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
-        <script type="text/javascript" language="javascript">
+        <script>
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
@@ -98,7 +98,7 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
 
 function showForm($error) {
 ?>
-<script type="text/javascript" language="javascript">
+<script>
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
     window.resizeTo(500, 350);
@@ -106,7 +106,7 @@ function showForm($error) {
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td class="dialog_header" style="width:56px"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" border="0" alt="Image" /></td><td class="dialog_header">Add New Image</td></tr>
+<tr><td class="dialog_header" style="width:56px; border-bottom: 1px solid #CCD9EA"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" alt="Image" /></td><td class="dialog_header" style="border-bottom: 1px solid #CCD9EA">Add New Image</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td class="note">Browse for the image file you wish to add (GIF, PNG or JPEG).</td></tr>
 <tr><td class="field">File</td><td>
@@ -116,7 +116,7 @@ function showForm($error) {
 <tr><td class="field">alt</td><td><input type="text" name="alt" value="" size="40" /></td></tr>
 <tr><td class="field">border</td><td><input type="checkbox" name="border" value="1" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" style="width:110px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:110px" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" class="ok" /><input type="button" name="cancel" value="Cancel" onclick="window.close();" class="cancel" /></td></tr>
 </table>
 </form>
 

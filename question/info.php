@@ -27,7 +27,7 @@ require '../include/errors.inc';
 require '../classes/questioninfo.class.php';
 require_once '../classes/questionutils.class.php';
 
-check_var('q_id', 'GET', true, false, false);
+$q_id = check_var('q_id', 'GET', true, false, true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,20 +41,20 @@ check_var('q_id', 'GET', true, false, false);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     body {background-color:#F1F5FB; font-size:80%}
-    th {background-color:#CFDBEB; text-align:left; font-weight:normal}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     td {vertical-align:top}
     .screen {font-size:90%; color:#808080}
     .num {text-align:right; padding-right:6px}
   </style>
   
-  <script type="text/javascript">
+  <script>
     function loadPaper(paperID) {
       window.opener.location = "../paper/details.php?paperID=" + paperID;
       window.close();
     }
     
     function loadModule(moduleID) {
-      window.opener.location = "../folder/details.php?module=" + moduleID;
+      window.opener.location = "../module/index.php?module=" + moduleID;
       window.close();
     }
     
@@ -67,7 +67,7 @@ check_var('q_id', 'GET', true, false, false);
 <body>
 
 <?php
-  echo question_info::full_question_information($_GET['q_id'], $mysqli, $userObject, $string, $notice);
+  echo question_info::full_question_information($q_id, $mysqli, $userObject, $string, $notice);
 ?>
 
 

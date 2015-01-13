@@ -23,26 +23,31 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/media.inc';
-require '../include/errors.inc';
+require_once '../include/media.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/folderutils.class.php';
 
-function saveResponseData($optID, $experts, $max_experts) {
-  global $mysqli;
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
 
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$paper_title = $properties->get_paper_title();
+
+function saveResponseData($optID, $experts, $max_experts, $db) {
   $marks = ($max_experts > 0) ? $experts / $max_experts : 0;
-  $stmt = $mysqli->prepare("UPDATE options SET correct=?, marks_correct=? WHERE id_num=?");
+  $stmt = $db->prepare("UPDATE options SET correct = ?, marks_correct = ? WHERE id_num = ?");
   $stmt->bind_param('sdi', $experts, $marks, $optID);
   $stmt->execute();
   $stmt->close();
 }
 
-function display_question($question, &$question_no, $reviews, &$string) {
+function display_question($question, &$question_no, $reviews, &$string, $db) {
   $question_no++;
 
   if ($question['scenario'] != '') {
     echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">{$string['clinicalvignette']}</td></tr>\n";
     echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-    if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+    if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
     echo $question['scenario'] . "<br />\n<br />";
     $li_set = 1;
   }
@@ -89,7 +94,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
     echo $review_no . ' ' . $string['outof'] . ' ' . $no_experts;
     echo "</td><td>$option_text</td></tr>\n";
     if (isset($_POST['submit'])) {
-      saveResponseData($optionID, $review_no, $max_experts);
+      saveResponseData($optionID, $review_no, $max_experts, $db);
     }
   }
   echo "</table>\n</blockquote>\n";
@@ -120,7 +125,6 @@ function display_question($question, &$question_no, $reviews, &$string) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
     li {margin-left:15px;margin-right:15px;font-size:100%}
-    table {font-size:90%}
     pre {font-family:Arial,sans-serif; font-size:100%}
     .q_no {width:40px; text-align:right;vertical-align:top}
     .theme {font-size:150%; padding-left:4px;font-weight:bold;color:#316AC5}
@@ -130,7 +134,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -139,39 +143,22 @@ function display_question($question, &$question_no, $reviews, &$string) {
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
-
-  $stmt = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id=?");
-  $stmt->bind_param('i',$_GET['paperID']);
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($paper_title);
-  $stmt->fetch();
-  $stmt->close();
-
-
-  $folder = '';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    $folder = $_GET['folder'];
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE id=? LIMIT 1");
-    $result->bind_param('i', $folder);
-    $result->execute();
-    $result->bind_result($folder_name);
-    $result->fetch();
-    $result->close();
-  }
-
-  echo "<table class=\"header\" style=\"font-size:90%\">\n";
-  echo "<tr><th>";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-  if ($folder != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a></div>';
-
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">SCT Responses/Reasons</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
 ?>
+<div id="content">
+
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
+<?php
+    if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
+?>
+  <div class="page_title"><?php echo $string['sctresponses'] ?></div>
+</div>
 
 <table cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <col width="40"><col>
@@ -181,7 +168,7 @@ function display_question($question, &$question_no, $reviews, &$string) {
   $reviewer_list = array();
 
   $stmt = $mysqli->prepare("SELECT reviewer_name, q_id, answer, reason FROM sct_reviews WHERE paperID = ?");
-  $stmt->bind_param('i', $_GET['paperID']);
+  $stmt->bind_param('i', $paperID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($reviewer_name, $q_id, $answer, $reason);
@@ -195,13 +182,13 @@ function display_question($question, &$question_no, $reviews, &$string) {
   }
   $stmt->close();
 
-  //build the questions_array
+  // Build the questions_array
   $old_q_id = '';
   $q_no = 0;
   $question_no = 0;
 
   $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_media, q_media_width, q_media_height, q_option_order, option_text, id_num FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
-  $stmt->bind_param('i',$_GET['paperID']);
+  $stmt->bind_param('i', $paperID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $display_method, $q_media, $q_media_width, $q_media_height, $q_option_order, $option_text, $id_num);
@@ -225,16 +212,17 @@ function display_question($question, &$question_no, $reviews, &$string) {
   }
   $stmt->close();
 
-  //display the questions
+  // Display the questions
   foreach($questions_array as &$question) {
     if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    display_question($question, $question_no, $reviewer_data, $string);
+    display_question($question, $question_no, $reviewer_data, $string, $mysqli);
   }
 ?>
 </table>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $_GET['paperID']; ?>">
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" /></div>
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>">
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" class="ok" style="width:250px" /></div>
 </form>
-<br />
+</div>
+    
 </body>
 </html>

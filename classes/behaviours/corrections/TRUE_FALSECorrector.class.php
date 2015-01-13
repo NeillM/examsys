@@ -74,7 +74,7 @@ class TRUE_FALSECorrector extends Corrector {
         $this->_question->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','),  implode(',', $new_correct_val), $this->_lang_strings['postexamchange']);
       }
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log{$paper_type}'.
@@ -85,7 +85,7 @@ class TRUE_FALSECorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $user_answers = str_split($user_answer);
             $mark = 0;
 
@@ -105,9 +105,10 @@ class TRUE_FALSECorrector extends Corrector {
             if ($score_method == 'Mark per Question') {
               $mark = ($mark == count($new_correct_val)) ? $mark_correct : $mark_incorrect;
             }
+            $totalpos = $mark_correct;
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=?");
-            $updateLog->bind_param('di', $mark, $id);
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
+            $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();
           }

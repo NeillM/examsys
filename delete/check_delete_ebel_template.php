@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting an Ebel template.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -51,7 +53,7 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['deleteebelgrid']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -59,22 +61,14 @@ $mysqli->close();
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php printf($string['msg1'], $grid_name) ?></p>
 
-<td><p><?php printf($string['msg1'], $grid_name); ?></p>
-<br />
-
-<div style="text-align:right">
+<div class="button_bar">
 <form action="do_delete_ebel_template.php" method="post">
-<input type="hidden" name="gridID" value="<?php echo $_GET['gridID']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input type="hidden" name="gridID" value="<?php echo $_GET['gridID'] ?>" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

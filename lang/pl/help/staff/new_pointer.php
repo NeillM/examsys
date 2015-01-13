@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-//require '../../lang/' . $language . '/help/staff/index.php';
+require '../../lang/' . $language . '/help/staff/index.php';
+
 $string['createlink'] = 'Utwórz łącze';
+$string['msg'] = "Wskaźniki pozwalają na dołączenie do spisu treści dodatkowych 'stron' prowadzących do istniejących już treści. Na przykład, przydatne może być dodanie wskaźnika o nazwie 'Usuwanie arkuszy', który prowadziłby do oryginalnej strony pt. 'Arkusze - jak usunąć'.";
 ?>

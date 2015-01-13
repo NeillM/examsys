@@ -15,33 +15,24 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
-* @author Simon Wilkinson
+*
+* @author Simon Wilkinson, Joseph Baxter
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
 ?>
-<script language="JavaScript">
-  function displayDetails() {
-    details = window.open("./sys_error_details.php?errorID=" + $('#lineID').val() + "","properties","width=900,height=800,left="+(screen.width/2-450)+",top="+(screen.height/2-400)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      details.focus();
-    }
-  }
-</script>
-
 <div id="left-sidebar" class="sidebar">
 
 <br />
 
-<div style="font-size:90%" id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails']; ?>" /><?php echo $string['displaydetails']; ?></div>
+<div id="menu1a">
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></div>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
-	<div class="menuitem" onclick="displayDetails()"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails']; ?>" /><a onclick="return false"><?php echo $string['displaydetails']; ?></a></div>
+<div style="display:none" id="menu1b">
+	<div id="sys_errors_menu" class="menuitem"><a href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
 </div>
 
 <form name="errorsMenu">

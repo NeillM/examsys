@@ -26,6 +26,23 @@ require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../classes/networkutils.class.php';
 require_once '../classes/dateutils.class.php';
+
+/**
+ * Formats space in human-readable format.
+ * @param int $space - Raw bytes to be converted.
+ * @return string space in human readable format.
+ */
+function format_space($space) {
+  $units = array('KB', 'MB', 'GB', 'TB');
+  $i = -1;
+  do {
+    $i++;
+    $space = $space / 1024;
+    $correct_units = $units[$i];
+  } while ($space > 1024);
+
+  return round($space, 1) . ' ' . $correct_units;
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,9 +54,8 @@ require_once '../classes/dateutils.class.php';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    .sechead {background-color:#EAEAEA}
+    .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     a {color:#215DC6}
     a.heading {color:#215DC6; font-weight:bold}
     a.heading:hover {color:#428EFF; font-weight:bold}
@@ -47,27 +63,27 @@ require_once '../classes/dateutils.class.php';
 		.off {width:30px; float:left; color:#C00000; font-weight:bold}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content">
+<div id="content">
 
-<table class="header">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['systeminformation']; ?></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-</table>
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['systeminformation'] ?></div>
+</div>
+  
 <br />
 <div align="center">
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:100%; text-align:left">
@@ -155,7 +171,7 @@ foreach ($enhancedc2 as $key => $value) {
 }
 
 $enhancedPlugininfo = "Type: $enhancedc1<br />$enhancedc3";
-
+// TODO really need a lookup plugin info section
 // Get info on error handling
 $ErrorLogSettings = '';
 $e1 = $configObject->get('display_auth_debug');
@@ -236,6 +252,7 @@ if ($e6 == 'improved') {
       }
       echo "<tr><td>" . $string['processor'] . "</td><td>$processor</td></tr>\n";
       echo "<tr><td>" . $string['cores'] . "</td><td>$core_no</td></tr>\n";
+    
     } else {
       // Try Solaris command
       $results = shell_exec('psrinfo -pv');
@@ -257,27 +274,30 @@ if ($e6 == 'improved') {
         }
       }
     }
+
     if (isset($processor_parts[0])) {
       echo "<tr><td>" . $string['processor'] . "</td><td>" . $processor_parts[0] . "($speed)</td></tr>\n";
       echo "<tr><td>" . $string['cpus'] . "</td><td>$physical ($virtual virtual)</td></tr>\n";
     }
   } else {
-    echo "<tr><td>" . $string['processor'] . "</td><td>" . php_uname('m') . "</td></tr>\n";
+    $results = shell_exec('wmic cpu get name');
+    $lines = explode('<br />', nl2br($results));
+    echo "<tr><td>" . $string['processor'] . "</td><td>" . $lines[1] . "</td></tr>\n";
   }
 
   echo "<tr><td style=\"width:90px\">" . $string['servername'] . "</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
   echo "<tr><td>" . $string['hostname'] . "</td><td>" . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
-  echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . apache_getenv("SERVER_ADDR") . "</td></tr>\n";
+  echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . NetworkUtils::get_server_address() . "</td></tr>\n";
   echo "<tr><td>" . $string['clock'] . "</td><td>" . date('d F Y H:i:s') . "</td></tr>\n";;
   echo "<tr><td>" . $string['os'] . "</td><td>" . php_uname('s') . "</td></tr>\n";;
-  echo "<tr><td>" . $string['apache'] . "</td><td>" . apache_get_version() . "</td></tr>\n";
+  echo "<tr><td>" . $string['webserver'] . "</td><td>" . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
   echo "<tr><td>" . $string['php'] . "</td><td>" . phpversion() . "</td></tr>\n";
   echo "<tr><td>" . $string['mysql'] . "</td><td>" . $mysqli->server_info . "</td></tr>\n";
 
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2" class="sechead">' . $string['clientcomputer'] . '</td></tr>';
   echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_client_address() . '</td></tr>';
-  echo '<tr><td>' . $string['clock'] . '</td><td><script language="JavaScript">the_date = new Date(); document.write(the_date.toLocaleString()); </script></td></tr>';
+  echo '<tr><td>' . $string['clock'] . '</td><td><script>the_date = new Date(); document.write(the_date.toLocaleString("' . $language . '")); </script></td></tr>';
   echo '<tr><td>' . $string['browser'] . '</td><td>' . $_SERVER['HTTP_USER_AGENT'] . '</td></tr>';
 
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
@@ -286,28 +306,30 @@ if ($e6 == 'improved') {
   echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
 
   if (php_uname('s') == 'Windows NT') {
-    $disks = `fsutil fsinfo drives`;
-    $disks = str_word_count($disks,1);
-    $i = 0;
-    foreach ($disks as $key=>$disk) {
-      if ($disk != 'Drives') {
-        $driveID = strtoupper($disk) . ':';
-        $master_array[$i][3] = round(((@disk_free_space($driveID) / 1024) / 1024) / 1024) . 'G';
-        $master_array[$i][1] = round(((@disk_total_space($driveID) / 1024) / 1024) / 1024) . 'G';
-        $master_array[$i][5] = $disk . ':';
+    $disks = array('A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
+      'J:\\', 'K:\\', 'L:\\', 'M:\\', 'N:\\', 'O:\\', 'P:\\', 'Q:\\', 'R:\\', 'S:\\', 'T:\\',
+      'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\');
+    $i = 1;
+    foreach ($disks as $disk) {
+      if (file_exists($disk)) {
+        $master_array[$i][3] = @disk_free_space($disk);
+        $master_array[$i][1] = @disk_total_space($disk);
+        $master_array[$i][5] = $disk;
+        $i++;
       }
-      $i++;
     }
     $row_no = $i + 1;
   } else {
     $master_array = array();
-    $results = shell_exec('df -h');
+    // List free disk space, ensuring one file system per line.
+    // df -P flag not used as not supported by Solaris.
+    $results = shell_exec("df -k | awk 'NF == 1 {printf($1); next}; {print}'");
     $lines = explode('<br />', nl2br($results));
     $row_no = 0;
     foreach ($lines as $individual_line) {
       if ($row_no > 0) {
         $cols = explode(' ', $individual_line);
-        foreach($cols as $individual_col) {
+        foreach ($cols as $individual_col) {
           if ($individual_col != '') {
             $master_array[$row_no][] = $individual_col;
           }
@@ -319,18 +341,30 @@ if ($e6 == 'improved') {
   for ($i=1; $i<($row_no-1);$i++) {
     if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
       echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" /></td><td>' . $master_array[$i][5] . '<br />';
-			echo '<span style="border: 1px solid #808080; display:block; height:11px; width:150px">';
-      if (intval($master_array[$i][3]) < intval($master_array[$i][1])) {
-			  $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
-        if ((intval($master_array[$i][1]) - intval($master_array[$i][3])) > (intval($master_array[$i][1]) * 0.9)) {
+      echo '<span style="border: 1px solid #808080; display:block; height:11px; background-color:#EAEAEA; width:150px">';
+
+      if ($master_array[$i][1] > 0) {
+          
+        $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
+        
+        
+        $free_percent = ($master_array[$i][3] / $master_array[$i][1]) * 100;
+        $used_percent = 100 - $free_percent;
+        $bar_width = 1.48 * $used_percent;
+
+        if ($used_percent > 90) {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#DA2626"></span>';  // Red bar
-				} else {
+        } else {
           echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
         }
-      } else {
-        echo '<img src="blank_bar.png" width="20" height="11" />';
+        
       }
-      echo '</span><span style="color:#808080">' . sprintf($string['freespace'], $master_array[$i][3], $master_array[$i][1]) . '</span></td></tr>';
+      // linux resutls are in kbyte blocks
+      if (php_uname('s') != 'Windows NT') {
+        $master_array[$i][3] = $master_array[$i][3] * 1024;
+        $master_array[$i][1] = $master_array[$i][1] * 1024;
+      }
+      echo '</span><span style="color:#808080">' . sprintf($string['freespace'], format_space($master_array[$i][3]), format_space($master_array[$i][1])) . '</span></td></tr>';
     }
   }
   echo '</table></td></tr>';

@@ -21,50 +21,32 @@
  * @copyright Copyright (c) 2011 The University of Nottingham
  * @package
  */
+
+require_once '../include/staff_auth.inc';
 ?>
 <!DOCTYPE html>
-<html onscroll="scrollXY();" onclick="hideMenus();">
+<html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
 	<title>Rog&#333;: <?php echo $string['importfromqti'] ?></title>
-	
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-	<link rel="icon" href="favicon.ico" type="image/x-icon"/>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-	<style type="text/css">
-		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-		a {color:black}
-		a:hover {color:blue}
-		.f {float:left; width:375px; padding-left:12px; font-size:80%}
-		.recent {color:blue; font-size:90%}
-		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
-    .exp_table {border-left: 1px solid #dddddd;	border-top: 1px solid #dddddd}
-    .exp_table tr td,.exp_table tr th	{border-bottom: 1px solid #dddddd; border-right: 1px solid #dddddd; padding: 1px;	font-size:80%}
-    .paper_head {font-size:140%}
-    .screen_head {font-size:120%}
-    label.error {display:block; color:#f00}
-	</style>
-  
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <style type="text/css">
+    span.killer {float:none}
+  </style>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
-    // Popup window code
-    function newPopup(url) {
-      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-    
-    $(function () { $('#file_form').validate(); });
+  <script>
+    $(function () {
+      $('#file_form').validate();
+    });
   </script>
 </head>
 
@@ -75,23 +57,22 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <?php
-echo "<table class=\"header\">\n";
-echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
-  $modutils=module_utils::get_instance();
-
-  $module=$modutils->get_moduleid_from_id($module,$mysqli);
-if ($module != '') {
-  echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module='.$module.'">'.$module.'</a>';
+echo "<div class=\"head_title\">\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+echo "<div class=\"breadcrumb\">";
+$modutils = module_utils::get_instance();
+echo '<a href="../index.php">' . $string['home'] . '</a>';
+if (isset($_GET['module']) and $_GET['module'] != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $modutils->get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 } elseif ($folder != '') {
-  echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder='.$folder.'">'.$folder_name.'</a>';
-} else {
-  echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
 }
-echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-echo "</table>";
+echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a>';
+
+echo "</div><div class=\"page_title\">" . $string['importfromqti'] . "</div>";
+echo "</div>";
 ?>
 <br/>
 <br/>
@@ -110,8 +91,8 @@ echo "</table>";
 				<table width="100%" cellspacing="0" cellpadding="10">
 					<tr>
 						<td>
-							<strong><?php echo $string['file'] ?></strong>&nbsp;<input type="file" size="40" name="file" id="file" class="required" />
-							<input type="hidden" name="paperID" id="paperID" value="<?php echo $paper ?>" />
+							<?php echo $string['file'] ?>:&nbsp;<input type="file" size="40" name="file" id="file" class="required" />
+							<input type="hidden" name="paperID" id="paperID" value="<?php echo $paperID ?>" />
               <input type="hidden" name="module" id="module" value="<?php echo $module ?>" />
 						</td>
 					</tr>
@@ -120,8 +101,7 @@ echo "</table>";
           </tr>
 					<tr>
 						<td style="text-align:center">
-							<input type="submit" name="submit" value="<?php echo $string['import2'] . ' ' . $string['file'] ?>" style="width:100px" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" style="width:100px" onclick="javascript:history.back()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<input type="button" name="help" value="<?php echo $string['help'] ?>" style="width:100px" onclick="javascript:launchHelp(224)" />
+							<input type="submit" name="submit" value="<?php echo $string['import2'] . ' ' . $string['file'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back()" />
 						</td>
 					</tr>
           <tr>
@@ -136,5 +116,4 @@ echo "</table>";
 
 </div>
 </body>
-
 </html>

@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for Multiple Choice questions
+ * Class for Textbox questions
  *
  * @author Rob Ingram
  * @version 1.0
@@ -28,16 +28,23 @@ Class QuestionTEXTBOX extends QuestionEdit {
 
   protected $columns = 80;
   protected $rows = 4;
-  public $max_options = 1;
+  protected $editor = 'plain';
+  protected $terms = '';
+  public $max_options = 10;
   protected $_allow_change_marking_method = false;
+  protected $_answer_negative = '';
 
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'bloom', 'status');
-  protected $_fields_settings = array('columns', 'rows');
+  // Textbox is a rare example of a question type that will allow option editing
+  protected $_allow_option_edit = true;
+
+
+  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status');
+  protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-    $this->_fields_unified = array('correct' => $this->_lang_strings['terms'], 'text' => $this->_lang_strings['editor'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
   }
 
 
@@ -78,6 +85,44 @@ Class QuestionTEXTBOX extends QuestionEdit {
     if ($value != $this->rows) {
       $this->set_modified_field('rows', $this->rows);
       $this->rows = $value;
+    }
+  }
+
+  /**
+   * Get the editor for the question
+   * @return string
+   */
+  public function get_editor() {
+    return $this->editor;
+  }
+
+  /**
+   * Set the editor for the question
+   * @param string $value
+   */
+  public function set_editor($value) {
+    if ($value != $this->editor) {
+      $this->set_modified_field('editor', $this->editor);
+      $this->editor = $value;
+    }
+  }
+
+  /**
+   * Get the terms for the question
+   * @return string
+   */
+  public function get_terms() {
+    return $this->terms;
+  }
+
+  /**
+   * Set the terms for the question
+   * @param string $value
+   */
+  public function set_terms($value) {
+    if ($value != $this->terms) {
+      $this->set_modified_field('terms', $this->terms);
+      $this->terms = $value;
     }
   }
 }

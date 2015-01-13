@@ -75,7 +75,7 @@ class AREACorrector extends Corrector {
 
     if ($changes) {
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           $correct_full = $this->_question->get_correct_full();
@@ -102,10 +102,11 @@ class AREACorrector extends Corrector {
             } else {
               $mark = $marks_incorrect;
             }
+            $totalpos = $marks_correct;
 
             if ($mark != $user_mark) {
-              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=? WHERE id=?");
-              $updateLog->bind_param('si', $mark, $id);
+              $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
+              $updateLog->bind_param('dii', $mark, $totalpos, $id);
               $updateLog->execute();
               $updateLog->close();
             }
@@ -119,7 +120,7 @@ class AREACorrector extends Corrector {
       if (count($errors) == 0) {
         $this->invalidate_paper_cache($paper_id);
       }
-   }
+    }
 
     return $errors;
   }

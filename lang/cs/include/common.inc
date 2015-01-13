@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+$string['administrativetools'] = 'Nastavení';
 $string['helpsupport'] = 'Nápověda a podpora';
 $string['aboutrogo'] = 'O programu Rog&#333; %s';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Stránka nebyla nalezena';
-$string['signinmsg'] = '<span style="color:#1f497d;font-weight:bold;">Vítejte v systému elektronického testování</span><br />
-	V případě zájmu o vytvoření účtu kontaktujte <a href="mailto:ovt@lf1.cuni.cz">ovt@lf1.cuni.cz</a>.<hr /><br />
-	Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
+$string['signinmsg'] = 'Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
 $string['username'] = 'Uživatelské jméno';
 $string['password'] = 'Heslo';
 $string['signin'] = 'Přihlásit';
@@ -29,7 +28,7 @@ $string['home'] = 'Domů';
 $string['help'] = 'Pomoc';
 $string['line'] = 'Řádek';
 $string['cancel'] = 'Zrušit';
-$string['ok'] = 'OK'; //cognate
+$string['ok'] = 'OK';
 $string['save'] = 'Uložit';
 $string['accessdenied'] = 'Přístup odepřen';
 $string['accessdeniedadmin'] = '<strong>Přístup odepřen</strong><br />pokoušíte se vstoupit na správcovskou stránku.';
@@ -93,12 +92,8 @@ $string['html5warn'] = 'Rog&#333; vyžaduje podporu HTML5, aktualizujte, prosím
 $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
 $string['Questions Feedback report'] = 'Komentář k otázkám';
-
-$configObject = Config::get_instance();
-$cfg_web_root = $configObject->get('cfg_web_root');
-$language = LangUtils::getLang($cfg_web_root);
-require $cfg_web_root . '/lang/' . $language . '/users/create_new_user.php';
-
+$string['loggedinas'] = 'Přihlášen jako';
+$string['crondisallowed'] = 'cron attempted to run disallowed script';
 $string['register'] = 'Registrovat jako Zaměstnance';
 $string['register1'] = 'Registrovat jako ';
 $string['demomodule'] = 'Demo Modul';

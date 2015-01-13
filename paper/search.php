@@ -28,9 +28,10 @@ require '../include/staff_auth.inc';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/paperutils.class.php';
 
-if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['summative']) and isset($_POST['survey']) and isset($_POST['osce']) and isset($_POST['offline'])) {
+if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['summative']) and isset($_POST['survey']) and isset($_POST['osce']) and isset($_POST['offline']) and isset($_POST['peerreview'])) {
   // All types are selected so don't build into query.
   $type = '';
+	$type_problem = false;
 } else {
   $type = '';
   if (isset($_POST['formative']) and $_POST['formative'] == '1') $type .= " OR paper_type='0'";
@@ -40,7 +41,13 @@ if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['s
   if (isset($_POST['osce']) and $_POST['osce'] == '1') $type .= " OR paper_type='4'";
   if (isset($_POST['offline']) and $_POST['offline'] == '1') $type .= " OR paper_type='5'";
   if (isset($_POST['peerreview']) and $_POST['peerreview'] == '1') $type .= " OR paper_type='6'";
-  if (strlen($type) > 0) $type = 'AND (' . substr($type,4) . ')';
+  if (strlen($type) > 0) {
+		$type = 'AND (' . substr($type,4) . ')';
+		$type_problem = false;
+	} else {
+		$type_problem = true;
+	}
+	
 }
 
 $params = '';
@@ -53,7 +60,7 @@ if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
   $paper = '';
 }
 if (isset($_POST['owner']) and $_POST['owner'] != '') {
-  $owner = 'AND paper_ownerID=?';
+  $owner = 'AND paper_ownerID = ?';
   $variables[] = $_POST['owner'];
   $params .= 'i';
   setcookie("papersearch[2]", $_POST['owner'], time()+60*60*24*365);
@@ -103,36 +110,54 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   </style>
 
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
+<body>
 <?php
+  require '../include/paper_search_options.inc';
+
   require '../include/toprightmenu.inc';
-
 	echo draw_toprightmenu();
+	
+	echo "<div id=\"content\" class=\"content\">\n";
+	echo "<div class=\"head_title\">\n";
 
-  if (isset($_POST['submit'])) {
-    echo "<body>\n";
-
-    require '../include/paper_search_options.inc';
-
-    echo "<div id=\"content\" class=\"content\">\n";
-    echo "<table class=\"header\">\n";
-  } else {
-    echo "<body style=\"margin:0px; background-color:white; color:black\">\n";
-
-    require '../include/paper_search_options.inc';
-
-    echo "<div id=\"content\" class=\"content\">\n";
-    echo "<table class=\"header\">\n";
-    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papersearch'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>";
-    echo "</table>\n";
+  if (!isset($_POST['submit'])) {
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+    if (isset($_REQUEST['module'])) {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+    }
+    echo "</div><div class=\"page_title\">" . $string['papersearch'] . "</div>";
+    echo "</div>\n";
   }
 
   if (isset($_POST['submit'])) {
-    $results = $mysqli->prepare("SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired FROM (properties, users, properties_modules, modules) LEFT JOIN papers ON properties.property_id = papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type AND deleted IS NULL GROUP BY paper_title");
+	  if ($type_problem) {
+      echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />";
+      if (isset($_REQUEST['module'])) {
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+      }
+      echo "</div><div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div>";
+      echo "<div class=\"page_title\">" . $string['papersearch'] . "</div>";
+      echo "</div>\n";
+
+			echo $notice->info_strip('No paper types have been selected.', 100);
+			echo "</body>\n</html>\n";
+			exit;
+		}
+    $sql = "SELECT properties.property_id, title, initials, surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_ownerID, paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired
+						FROM (properties, users, properties_modules, modules)
+						LEFT JOIN papers ON properties.property_id = papers.paper
+						WHERE properties.property_id = properties_modules.property_id
+						AND properties_modules.idMod = modules.id
+						AND properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type
+						AND deleted IS NULL
+						GROUP BY paper_title";
+		$results = $mysqli->prepare($sql);
     if (count($variables) > 0) {
 	    array_unshift($variables, $params);
 	    $vars = array();
@@ -145,15 +170,21 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
     $results->store_result();
     $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_ownerID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
 
-    echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a></div><div onclick=\"qOff()\" style=\"font-size:200%; margin-left:10px\"><strong>" . $string['papers'] . " (" . number_format($results->num_rows) . "):&nbsp;</strong>" . $_POST['searchterm'] . "</div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-    echo "</table>\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>";
+    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+    if (isset($_REQUEST['module'])) {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+    }
+    echo "</div><div class=\"page_title\">" . $string['papersearch'] . " (" . number_format($results->num_rows) . "):&nbsp;<span style=\"font-weight: normal\">'" . $_POST['searchterm'] . "'</span></div>";
+    echo "</div>\n";
+
     if ($results->num_rows > 0) {
       echo '<br />';
       while ($results->fetch()) {
         echo '<div class="f">';
         echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px; text-align:center">';
         $type = $paper_type;
-        if (date("YmdHis", time()) >= $start_date) {
+        if ($start_date != '' and date("YmdHis", time()) >= $start_date) {
           $locked = '_locked';
         } else {
           $locked = '';
@@ -171,16 +202,13 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
         echo "</div>\n";
       }
     } else {
-    ?>
-    <table cellpadding="1" cellspacing="1" border="0" style="margin: 0px auto; width:75%; border:1px solid #C0C0C0; text-align:left">
-    <tr><td colspan="2" style="background-color:#F2B100; height:3px"> </td></tr>
-    <tr><td style="width:16px; padding-top:5px; padding-bottom:5px"><img src="../artwork/information_icon.gif" width="16" height="16" alt="i" border="0" /></td><td style="padding-top:5px; padding-bottom:5px">&nbsp;<?php echo $string['nothingfound']; ?> "<?php echo $_POST['searchterm']; ?>"</td></tr>
-    </table>
-    <?php
+			$msg = $string['nothingfound'] . ' "' . $_POST['searchterm'] . '"';
+			echo $notice->info_strip($msg, 100);
     }
     $results->close();
-    $mysqli->close();
   }
+  
+  $mysqli->close();
 ?>
 </div>
 </body>

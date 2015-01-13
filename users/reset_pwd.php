@@ -38,7 +38,7 @@ $new_password = gen_password();
 
 $success = UserUtils::update_password($username, $new_password, $userid, $mysqli);
 if (!$success) {
-  display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/bomb.png', '#C00000', true, true, true);
+  display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/exclamation_red_bg.png', '#C00000', true, true, true);
 }
 $mysqli->close();
 ?>
@@ -65,7 +65,7 @@ $mysqli->close();
 <tr><td colspan="2">&nbsp;</tr>
 <tr><td colspan="2" class="msg"><?php echo $string['msg']; ?> <span class="passwd"><?php echo $new_password; ?></span></tr>
 <tr><td colspan="2">&nbsp;</tr>
-<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="window.close();" /></tr>
+<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" class="ok" onclick="window.close();" /></tr>
 </table>
 </body>
 </html>

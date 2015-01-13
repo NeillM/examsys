@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Export cohort ratings in Excel 2003 format.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -56,7 +58,7 @@ $crypt_name = $propertyObj->get_crypt_name();
 $exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();                                                                                  // Get any questions to exclude.
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->load_answers();
 $paper_buffer = $report->get_paper_buffer();
 $question_no  = $report->get_question_no();
@@ -83,7 +85,7 @@ if ($borderline_method) {
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
-set_classification($user_results, $passmark, $user_no, $string);
+set_classification($propertyObj->get_marking(), $user_results, $passmark, $user_no, $string);
 rating_num_text($user_results, $user_no, $propertyObj, $string);
 $user_results = array_csort($user_results, $sortby, $ordering);
 
@@ -266,33 +268,6 @@ echo '     <ActiveRow>1</ActiveRow>';
 echo '     <ActiveCol>2</ActiveCol>';
 echo '    </Pane>';
 echo '   </Panes>';
-echo '   <ProtectObjects>False</ProtectObjects>';
-echo '   <ProtectScenarios>False</ProtectScenarios>';
-echo '  </WorksheetOptions>';
-echo ' </Worksheet>';
-echo ' <Worksheet ss:Name="Summary">';
-if ($marking == '0') {
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="16" x:FullColumns="1" x:FullRows="1">';
-} elseif ($marking == '1') {
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="17" x:FullColumns="1" x:FullRows="1">';
-} else {
-  echo '  <Table ss:ExpandedColumnCount="2" ss:ExpandedRowCount="18" x:FullColumns="1" x:FullRows="1">';
-}
-echo '  <Column ss:AutoFitWidth="0" ss:Width="120"/>';
-
-echo '<Row>';
-echo '<Cell ss:StyleID="s23"><Data ss:Type="String">Cohort Size</Data></Cell>';
-echo '<Cell><Data ss:Type="Number">' . $user_no . '</Data></Cell>';
-echo '</Row>';
-foreach ($labels as $i => $label) {
-  //echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
-  echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string[strtolower($label)] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="Number">' . $classifications[$i] . '</Data></Cell>';
-  echo '</Row>';
-} 
-echo '  </Table>';  
-echo '  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">';
 echo '   <ProtectObjects>False</ProtectObjects>';
 echo '   <ProtectScenarios>False</ProtectScenarios>';
 echo '  </WorksheetOptions>';

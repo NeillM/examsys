@@ -1,19 +1,4 @@
-<?php
-// This file is part of Rogō
-//
-// Rogō is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Rogō is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
-
+<?php    //cz
 $string['classtotals'] = 'Celkový výkaz třídy';
 $string['classtotalsmodule'] = 'Celkový výkaz třídy (%s pouze studenti)';
 $string['name'] = 'Jméno';
@@ -29,7 +14,7 @@ $string['fail'] = 'Neuspěl:';
 $string['pass'] = 'Uspěl:';
 $string['error'] = 'CHYBA';
 $string['noattendance'] = 'Nepřítomni';
-$string['clear fail'] = 'Neuspěl';
+$string['clear fail'] = 'Nedostatečně';
 $string['borderline'] = 'Na hraně';
 $string['clear pass'] = 'Uspěl';
 $string['borderline fail'] = 'Dostatečně';
@@ -39,13 +24,18 @@ $string['honours pass'] = 'Uspěl s vyznamenáním';
 $string['oscemarksheet'] = 'OSCE známkovací formulář';
 $string['feedback'] = 'Komentář';
 $string['studentprofile'] = 'Profil studenta';
-$string['unsatisfactory'] = 'Nevyhovující:';
-$string['competent'] = 'Schopný:';
+$string['unsatisfactory'] = 'Nepostačující:';
+$string['competent'] = 'Postačující:';
 $string['passmark'] = 'Potřebná známka';
 $string['title'] = 'Nadpis';
 $string['surname'] = 'Příjmení';
 $string['firstnames'] = 'Jméno';
-$string['rating'] = 'Ohodnocení';
+$string['rating'] = 'Hodnocení';
 $string['borderlinemethod'] = 'Hraniční metoda';
-$string['noattempts'] = 'This OSCE has not been attempted by any students between <strong>%s &ndash; %s</strong>.';
+$string['noattempts'] = 'Tato OSCE nebyla v daném období <strong>%s &ndash; %s</strong> vyplněna žádným studentem.';
+$string['marking3'] = array('Neuspěl', 'Na hraně', 'Uspěl');
+$string['marking4'] = array('Nedostatečně', 'Dostatečně', 'Dobře', 'Chvalitebně', 'Výborně');
+$string['marking5'] = array('Nepostačující', 'Postačující');
+$string['marking6'] = array('NEUSPĚL', 'NA HRANĚ', 'USPĚL', 'USPĚL S VYZNAMENÁNÍM');
+$string['marking7'] = array('Neuspěl', 'Uspěl');
 ?>

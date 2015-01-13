@@ -16,12 +16,10 @@
 
 $string['username'] = 'Nazwa użytkownika';
 $string['surname'] = 'Nazwisko';
+$string['first_names'] = 'Imiona';
+$string['title'] = 'Tytuł';
 $string['lookup'] = 'Odnośnik';
 $string['nousersalert'] = 'Nie znaleziono użytkowników przez LDAP.';
-$string['title'] = 'Title';
-$string['first_names'] = 'First Names';
-$string['surname'] = 'Surname';
-$string['username'] = 'Username';
-$string['email'] = 'Email';
-$string['role'] = 'Role';
+$string['email'] = 'Email'; //cognate
+$string['role'] = 'Rola';
 ?>

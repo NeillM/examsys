@@ -23,41 +23,52 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/reviews.inc';
 require '../include/errors.inc';
+
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/reviews.class.php';
 
 check_var('id', 'GET', true, false, false);
 
-if ($stmt = $mysqli->prepare("SELECT background, foreground, textsize, marks_color, themecolor, labelcolor, font FROM special_needs WHERE userid=?")) {
-  $stmt->bind_param('i',$userObject->get_user_ID());
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font);
-  $stmt->fetch();
-}
-$stmt->close();
+// Get the paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
   
-$screen_data = array();
-$stmt = $mysqli->prepare("SELECT property_id, paper_title, start_date, end_date, bgcolor, fgcolor, themecolor, labelcolor, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, UNIX_TIMESTAMP(internal_review_deadline) AS internal_review_deadline FROM properties WHERE crypt_name=?");
-$stmt->bind_param('s', $_GET['id']);
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $external_review_deadline, $internal_review_deadline);
-$stmt->fetch();
-$stmt->close();
+/*
+* Set the default colour scheme for this paper and allow current users' special settings to override
+* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
+*/
+$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
+$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
-if ($bgcolor == 'NULL' or $bgcolor == '') $bgcolor = $paper_bgcolor;
-if ($fgcolor == 'NULL' or $fgcolor == '') $fgcolor = $paper_fgcolor;
-if ($textsize == 'NULL' or $textsize == '') $textsize = 90;
-if ($marks_color == 'NULL' or $marks_color == '') $marks_color = '#808080';
-if ($themecolor == 'NULL' or $themecolor == '') $themecolor = $paper_themecolor;
-if ($labelcolor == 'NULL' or $labelcolor == '') $labelcolor = $paper_labelcolor;
+$paperID    = $propertyObj->get_property_id();
+$paper_type	= $propertyObj->get_paper_type();
 
 if ($userObject->has_role('External Examiner')) {
   $review_type = 'External';
+	$review_deadline = strtotime($propertyObj->get_external_review_deadline());
 } else {
   $review_type = 'Internal';
-  $external_review_deadline = $internal_review_deadline; //this is to fix internal reviews did not know where else $external_review_deadline was used!!
+	$review_deadline = strtotime($propertyObj->get_internal_review_deadline());
+}
+
+$userid = $userObject->get_user_ID();
+
+$review = new Review($paperID, $userid, $review_type, $mysqli);
+
+if (isset($_POST['close'])) {
+  $review->record_general_comments($_POST['paper_comments'], false);
+  echo close_window();
+  exit();
+} elseif (isset($_POST['finish'])) {
+  $review->record_general_comments($_POST['paper_comments'], true);
+  echo close_window();
+  exit(); 
+}
+
+function close_window() {
+  $html = "<html>\n<head>\n<title>Rog&#333;</title>\n</head>\n<body onload=\"window.close();\"></body>\n</html>";
+  
+  return $html;
 }
 ?>
 <html>
@@ -67,7 +78,7 @@ if ($userObject->has_role('External Examiner')) {
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
   
-  <title>Rogō</title>
+  <title>Rog&#333;</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
@@ -78,41 +89,37 @@ if ($userObject->has_role('External Examiner')) {
   </style>
 
   <script src="../js/ie_fix.js" type="text/javascript"></script>
-  <script language="JavaScript">
+  <script>
     window.history.go(1);
-
-    function refreshparent() {
-      window.opener.location.reload();
-    }
   </script>
 </head>
 
-<body oncontextmenu="return false;" onload="refreshparent()">
+<body oncontextmenu="return false;">
+  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>?id=<?php echo $_GET['id'] ?>">
 <?php
-  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; border-bottom:1px solid #164994; background-color:#2765AB; background-image:url(\'../artwork/title_gradient.png\'); background-repeat:repeat-y; background-position:center">';
-  echo '<tr><td><div class="paper">' . $paper_title . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../artwork/uni_logo.png" width="160" height="67" alt="University Logo" border="0" /></td></tr>';
+  echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
+  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div><div style="color:white; font-weight:bold">' . $string['reviewcomplete'] . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../config/logo.png" width="160" height="67" alt="University Logo" /></td></tr>';
   echo '</table>';
 
   $configObject = Config::get_instance();
   $start_of_day_ts = strtotime('midnight');
 
-
-  if ($_POST['old_screen'] != '' and $start_of_day_ts <= $external_review_deadline) {
-    record_comments($property_id, $_POST['old_screen'], $mysqli, $userObject->get_user_ID(), $review_type);
+  if ($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline) {
+    $review->record_comments($_POST['old_screen']);
   } else {
-    echo "Deadline = " . date($configObject->get('cfg_long_date_php'), $external_review_deadline);
+    echo $string['deadline'] . ' = ' . date($configObject->get('cfg_long_date_php'), $review_deadline);
   }
-  echo '<blockquote>';
-  //if ($language == 'en') {
-    echo '<p style="font-size:450%;font-family:\'Monotype Corsiva\',Rage,\'Brush Script MT\',\'Lucida Handwriting\',sans-serif">' . $string['thankyou'] . '</p>';
-  //} else {
-    // Do not use fancy fonts for foreign lanuages due to extended character support issues.
-  //  echo '<p style="font-size:450%">' . $string['thankyou'] . '</p>';
-  //}
-  echo '</blockquote>';
-  echo '<div style="text-align:center; border: 1px black solid; padding:10px; margin-left:100px; margin-right:100px" align="center"><input type="button" name="close" value="&nbsp;' . $string['closewindow'] . '&nbsp;" onclick="window.close();" /></div>';
-
+  ?>
+  <blockquote>
+    <h1><?php echo $string['generalcomments'] ?></h1>
+    <p><?php echo $string['generalmsg'] ?></p>
+    <textarea name="paper_comments" width="80" rows="6" style="width:100%"><?php echo $review->get_paper_comments() ?></textarea>
+  
+  </blockquote>
+  <div style="text-align:center"><input type="submit" name="close" value="<?php echo $string['saveclose'] ?>" class="ok" /><input type="submit" name="finish" value="<?php echo $string['savefinish'] ?>" class="ok" /></div>
+<?php
   $mysqli->close();
 ?>
+  </form>
 </body>
 </html>

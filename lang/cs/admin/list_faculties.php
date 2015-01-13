@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['faculties'] = 'Fakulty';
-$string['administrativetools'] = 'Nastavení';
 $string['name'] = 'Název';
 $string['createfaculty'] = 'Nová fakulta';
 $string['editfaculty'] = 'Upravit fakultu';

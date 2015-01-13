@@ -38,7 +38,7 @@ if ($num_options > 0) {
 }
 
 ?>
-<script type="text/javascript">
+<script>
 //<![CDATA[
 <?php // Bit of a hack to get the flash to stay centred ?>
 $(function () {

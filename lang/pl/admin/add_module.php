@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/admin/list_modules.php';
 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['entermoduleid'] = 'Podaj identyfikator modułu.';
 $string['entermoduletitle'] = 'Podaj tytuł modułu.';
 $string['selectschool'] = 'Wybierz katedrę dla modułu.';
@@ -24,6 +23,7 @@ $string['moduleid'] = 'Identyfikator modułu';
 $string['name'] = 'Nazwa';
 $string['school'] = 'Katedra';
 $string['smsapi'] = "API SMS'ów";
+$string['academicyearstart'] = 'Początek roku akad.';
 $string['objapi'] = 'API celów';
 $string['summativechecklist'] = 'Zestawienie końcowe';
 $string['peerreview'] = 'Recenzja wewnętrzna';
@@ -50,4 +50,5 @@ $string['maplevel'] = 'Poziom mapowania';
 $string['session'] = 'Sesja';
 $string['module'] = 'Moduł'; 
 $string['level'] = 'poziom'; 
+$string['tooltip_format'] = 'Format to: MM/DD';
 ?>

@@ -52,7 +52,7 @@ $studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
 $repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
 $repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
 
-$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli);
+$report = new ClassTotals($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $mysqli, $string);
 $report->compile_report(false);
 
 $user_results = $report->get_user_results();
@@ -251,8 +251,8 @@ for ($i=0; $i<$user_no; $i++) {
   if ($user_results[$i]['visible'] == 1) {
     echo '<Row>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname'],  ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names'],  ENT_COMPAT | ENT_HTML401, 'UTF-8') . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname'], ENT_COMPAT, 'UTF-8') . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names'], ENT_COMPAT, 'UTF-8') . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['username'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_grade'] . '</Data></Cell>';
@@ -368,7 +368,7 @@ echo '<Cell ss:StyleID="s26"><Data ss:Type="Number">' . ($pass_mark / 100) . '</
 echo '</Row>';
 if ($marking == '0') {
   echo '<Row>';
-  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['averagemark'] . '</Data></Cell>';
+  echo '<Cell ss:StyleID="s23"><Data ss:Type="String">' . $string['meanmark'] . '</Data></Cell>';
   echo '<Cell><Data ss:Type="Number">' . $stats['mean_mark'] . '</Data></Cell>';
   echo '</Row>';
 } elseif ($marking == '1') {

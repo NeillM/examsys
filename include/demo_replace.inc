@@ -40,24 +40,34 @@ function is_demo($userObj) {
 * @return the string obscured as 'Abcde' for as long as the original string was
 *
 */
-function demo_replace($text, $demo_on=true, $capitalise=true) {
+function demo_replace($text, $demo_on = true, $capitalise = true, $start_on = 'a') {
   if ($demo_on) {
+    $start_on = ord(strtolower($start_on));
+        
     $new_text = '';
     if ($capitalise) {
       $upper_flag = true;
     } else {
       $upper_flag = false;
     }
+    
+    $char = 0;
     for ($i=0; $i<strlen($text); $i++) {
-      if (substr($text,$i,1) == ' ') {
+      if (($char  + $start_on) > 122) {
+        $char = 97 - $start_on;
+      }
+      
+      if ($text{$i} == ' ') {
         $new_text .= ' ';
         $upper_flag = true;
-      } elseif ($upper_flag == true) {
-        $new_text .= chr($i + 65);
+      } elseif ($upper_flag) {
+        $new_text .= strtoupper(chr($char + $start_on));
         $upper_flag = false;
       } else {
-        $new_text .= chr($i + 97);
+        $new_text .= chr($char + $start_on);
+        $upper_flag = false;
       }
+      $char++;
     }
     return $new_text;
   } else {

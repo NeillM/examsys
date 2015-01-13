@@ -33,8 +33,17 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 // Check the paperID exists
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-// Check the paper is not set to be linear
-if ($properties->get_bidirectional() == '0') {
+$clarif_types = $configObject->get('midexam_clarification');
+if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
+  $exam_clarifications = true;  
+} else {
+  $exam_clarifications = false;  
+}
+
+// Check the paper is not set to be linear.
+// Check if paper is Summative Exam.
+// Check if paper is not live.
+if (!$exam_clarifications) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -63,9 +72,9 @@ if (isset($_POST['submit'])) {
   
   <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript">
-    $(document).ready(function() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       opener.location.reload();
       window.close();
     });
@@ -103,12 +112,12 @@ exit();
   </style>
   
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script language="JavaScript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script language="JavaScript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
-  <script language="JavaScript">
-    $(document).ready(function() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
+  <script>
+    $(function () {
       var new_height = $(window).height() - 105;
       $('#msg').height(new_height);
       
@@ -130,11 +139,11 @@ exit();
 <form name="myform" id="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <h1 class="dkblue_header"><?php echo sprintf($string['questionscreen'], $questionNo, $screenNo); ?></h1>
 <textarea class="mceEditor" id="msg" name="msg" cols="80" rows="4" style="width:100%; height:340px"><?php echo htmlspecialchars($msg, ENT_NOQUOTES); ?></textarea><br />
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:140px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" style="width:80px" /></div>
-<input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
-<input type="hidden" name="q_id" value="<?php echo $q_id; ?>" />
-<input type="hidden" name="screenNo" value="<?php echo $screenNo; ?>" />
-<input type="hidden" name="questionNo" value="<?php echo $questionNo; ?>" />
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" class="cancel" /></div>
+<input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
+<input type="hidden" name="q_id" value="<?php echo $q_id ?>" />
+<input type="hidden" name="screenNo" value="<?php echo $screenNo ?>" />
+<input type="hidden" name="questionNo" value="<?php echo $questionNo ?>" />
 </form>
 
 </body>

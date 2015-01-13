@@ -34,7 +34,7 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 <?php
 $checked = ($question->get_display_method() == 'other') ? ' checked="checked"' : '';
 ?>
-                <input type="checkbox" id="display_method" name="display_method" value="other"<?php echo $checked ?> /> <label for="display_method"><?php echo $string['includeother'] ?></label>
+                <input type="checkbox" id="display_method" name="display_method" value="other"<?php echo $checked . $disabled; ?> /> <label for="display_method"><?php echo $string['includeother'] ?></label>
               </td>
             </tr>
             <tr>

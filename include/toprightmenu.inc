@@ -28,12 +28,23 @@ function draw_toprightmenu($helpID = 1) {
   global $string;
 	
   $configObject = Config::get_instance();
+  $userObject		= UserObject::get_instance();
 
   $html = '';
-  $html .= '<div id="toprightmenu">';
+	
+  if ($userObject->is_impersonated()) {
+		$impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
+		$html .= '<div id="toprightmenu" style="width:250px">';
+		$html .= '<div class="impersonate"><img src="' . $configObject->get('cfg_root_path') . '/artwork/agent.png" width="32" height="32" alt="Impersonate" style="float:left; padding-right:6px"/><div style="padding-top:1px; padding-right:1.4em">' . $string['loggedinas'] . ':<br /><strong>' . $impersonated_name . '</strong></div></div>';
+	} else {
+		$html .= '<div id="toprightmenu">';
+	}
 
-  $html .= "<div class=\"trm_div\" onclick=\"launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
-  $html .= '<div class="trm_div" id="signout">' . $string['signout'] . '</div>';
+	if ($userObject->has_role('SysAdmin')) {
+    $html .= '<div class="trm_div" id="admintools">' . $string['administrativetools'] . '</div>';
+  }
+  $html .= "<div class=\"trm_div\" onclick=\"toprightmenu_launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
+  $html .= '<div class="trm_div" id="signout" style="background-image: url(\'' . $configObject->get('cfg_root_path') . '/artwork/logout16.gif\'); background-repeat: no-repeat; background-position: 0 3px">' . $string['signout'] . '</div>';
   $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get('rogo_version')) . '</div>';
 
   $html .= '</div>';

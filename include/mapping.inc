@@ -42,7 +42,7 @@ require_once $cfg_web_root . 'classes/relationship.class.php';
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;
 
-  //get module and session from paper id
+  // Get module and session from paper ID.
   $modules_array = array();
   $query = <<<QUERY
 SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id = pm.property_id INNER JOIN modules m ON pm.idMod = m.id WHERE p.property_id = ?
@@ -80,7 +80,7 @@ QUERY;
     $idmod = $tmp[$moduleid];
 
     $html .= <<< HTML
-        <h2>{$moduleid} {$string['objectives']}</h2>
+        <div class="objheading">{$moduleid} {$string['objectives']}</div>
 
         <ul class="objectives">
 
@@ -114,7 +114,7 @@ HTML;
           }
           $obj_text = strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>');
           $html .= <<< HTML
-        				<li><input id="objective{$objcount}" name="{$idmod}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /> <label for="objective{$objcount}">{$obj_text}</label></li>
+        				<li><input id="objective{$objcount}" name="{$idmod}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /><label for="objective{$objcount}">{$obj_text}</label></li>
 
 HTML;
           $objcount++;
@@ -151,7 +151,7 @@ HTML;
   $modules_keys_string = implode(',',array_keys($modules_array));
   $nota_message = sprintf($string['noneabovemsg'], $modules_string);
   $html .= <<< HTML
-        <p class="warning"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
+        <p class="warning" style="margin-left:10px"><input value="-1" id="none_of_the_above" name="none_of_the_above" type="checkbox"{$checked} /><label for="none_of_the_above"><strong>{$string['noneabove']}</strong></label><br />{$nota_message}</p>
         <input id="objective_modules" name="objective_modules" type="hidden" value="{$modules_keys_string}" />
 
 HTML;
@@ -269,12 +269,13 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 
     if ($vle_api != '') {
       // Get objectives from the Curriculum Map via REST request
-      //if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session]) or count($objsBySession_cache[$thisModuleid][$session]) == 0) {
       if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session])) {
 				$vle = CMFactory::GetCMAPI($vle_api);
         $vle->setMappingLevel($map_level);
         $resp = $vle->getObjectives($thisModuleid, $session);
-				
+				if ($resp == 'error') {
+          return 'error';
+        }
         if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
 				}
@@ -319,7 +320,6 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
           $stmt = $db->prepare($sql);
           $stmt->bind_param('ss',$identifier,$sess['calendar_year']);
           $stmt->execute();
-          //$stmt->store_result();
           $stmt->bind_result($obj_id, $objective, $sequence);
           $i = 0;
           while ($stmt->fetch()) {
@@ -394,22 +394,23 @@ function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, 
   if (isset($objsBySession['none_of_the_above']['mapped']) and $objsBySession['none_of_the_above']['mapped'] == 1) {
     $objsByMapping['none_of_the_above']['mapped'] = 1;
   }
-
-  foreach($objsBySession as $moduleid => $session) {
-  	if (!empty($session)) {
-	    foreach ($session as $identifier => $sessionData) {
-        if (is_array($sessionData) and isset($sessionData['objectives'])) {
-          foreach ($sessionData['objectives'] as $id => $obj) {
-	          if ($obj['mapped'] != 0) {
-	            $objsByMapping[$moduleid][$id] = $obj;
-	            $objsByMapping[$moduleid][$id]['session'] = $sessionData;
-	            unset($objsByMapping[$moduleid][$id]['session']['objectives']);
-	            unset($objsByMapping[$moduleid][$id]['session']['mapped']);
-	          }
-	        }
-	      }
-	    }
-  	}
+  if ($objsBySession !== 'error') {
+    foreach($objsBySession as $moduleid => $session) {
+      if (!empty($session)) {
+        foreach ($session as $identifier => $sessionData) {
+          if (is_array($sessionData) and isset($sessionData['objectives'])) {
+            foreach ($sessionData['objectives'] as $id => $obj) {
+              if ($obj['mapped'] != 0) {
+                $objsByMapping[$moduleid][$id] = $obj;
+                $objsByMapping[$moduleid][$id]['session'] = $sessionData;
+                unset($objsByMapping[$moduleid][$id]['session']['objectives']);
+                unset($objsByMapping[$moduleid][$id]['session']['mapped']);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   return $objsByMapping;
@@ -478,6 +479,30 @@ function copyObjectives($objectives, $idMod, $module, $dest_session, $db) {
 
 		$identifier++;
 	}
+}
+
+/**
+ * Get all academic years for which there are mappings for the given modules
+ * @param  array   $moduleID    Array of id => module codes
+ * @param  mysqli  $db          Database link
+ * @return array[string]        Array of academic years
+ */
+function getYearsForModules($api_name, $moduleID, $db) {
+  $cal_years = array();
+  $id_mod_in = implode(',', array_keys($moduleID));
+
+  $sql = "SELECT distinct calendar_year FROM relationships WHERE calendar_year IS NOT NULL AND idMod IN ($id_mod_in) AND vle_api = ? ORDER BY calendar_year";
+  $result = $db->prepare($sql);
+  $result->bind_param('s', $api_name);
+  $result->execute();
+  $result->bind_result($calendar_year);
+  $result->store_result();
+  while($result->fetch()) {
+    $cal_years[] = $calendar_year;
+  }
+  $result->close();
+
+  return $cal_years;
 }
 
 ?>

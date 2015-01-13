@@ -15,8 +15,9 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['copyontopaper'] = 'Copy onto Paper';
-$string['ok'] = 'OK';
 $string['cancel'] = 'Cancel';
+$string['close'] = 'Close';
+$string['gotopaper'] = 'Goto Paper';
 $string['back'] = 'Back';
 $string['warning'] = 'Warning';
 $string['msg1'] = "A paper is currently 'active'. The current date lies between its start and end dates. This is a safety feature so active papers cannot be altered.";
@@ -29,4 +30,5 @@ $string['success'] = 'Question copied onto <strong>%s</strong>.';
 $string['duplicatename'] = "Sorry <strong>'%s'</strong> is a name already in use.";
 $string['qcopyerrorno'] = 'Question copy error';
 $string['qcopyerror'] = 'Question %d could not be copied';
+$string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 ?>

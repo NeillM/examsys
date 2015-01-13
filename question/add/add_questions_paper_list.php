@@ -18,7 +18,7 @@
 * 
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -40,43 +40,31 @@ if (isset($_GET['teamID'])) {
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../../css/tablesort.css" />
+
   <style type="text/css">
-  body {font-size:80%}
-  a:link {color:black}
-  a:visited {color:black}
-  a:hover {color:black}
-  .f {padding-left:2px; width:20px}
-  .s {padding-left:6px}
+    body {font-size:80%}
+    a:link {color:black}
+    a:visited {color:black}
+    a:hover {color:black}
+    .f {padding-left:2px; width:20px}
+    .s {padding-left:6px}
   </style>
+  
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
+  <script>
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
+          sortList: [[1,0]] 
+        });
+      }
+    });
+  </script>
 </head>
 <?php
-/**
- * Build a string for the sorting link on a table column header
- * @param $paper_type Paper type to insert into query string
- * @param $title Link text for the link
- * @param $type Field on which to sort for this link
- * @param $order Current sort order
- * @param $direction Current sort direction
- * @return string
- */
-function show_order_link($paper_type, $title, $type, $order, $direction) {
-  $html = '<a href="add_questions_paper_list.php?paper_type=' . $paper_type . '&order=' . $type . '&direction=';
-
-  $new_dir = 'asc';
-  if ($type == $order) {
-    if ($direction == 'asc') {
-      $new_dir = 'desc';
-    }
-  }
-
-  $html .= $new_dir . '">' . $title . '</a>';
-
-  if ($type == $order) {
-    $html .= '&nbsp;<img src="../../artwork/' . $new_dir . '.gif" width="9" height="7" border="0" />';
-  }
-
-  return $html;
-}
 
 $paper_type = (isset($_GET['paper_type'])) ? $_GET['paper_type'] : 0;
 
@@ -89,15 +77,18 @@ if (isset($_GET['order'])) {
 }
 ?>
 <body>
-<table class="header">
-<tr><th colspan="5"style="font-size:160%; font-weight:bold">&nbsp;<?php echo $string['bypaper'];?></th></tr>
+<div style="background-color:#EEF4FF; font-size:160%; font-weight:bold">&nbsp;<?php echo $string['bypaper'] ?></div>
+<table class="header tablesorter" id="maindata">
+<thead>
 <tr>
   <th>&nbsp;</th>
-  <th class="vert_div"><?php echo show_order_link($paper_type, $string['title'], 'paper_title', $order, $direction) ?></th>
-  <th class="vert_div"><?php echo show_order_link($paper_type, $string['module'], 'moduleID', $order, $direction) ?></th>
-  <th class="vert_div"><?php echo show_order_link($paper_type, $string['owner'], 'surname', $order, $direction) ?></th>
-  <th class="vert_div"><?php echo show_order_link($paper_type, $string['created'], 'created', $order, $direction) ?></th>
+  <th class="vert_div"><?php echo $string['title'] ?></th>
+  <th class="vert_div"><?php echo $string['module'] ?></th>
+  <th class="vert_div"><?php echo $string['owner'] ?></th>
+  <th class="vert_div"><?php echo $string['created'] ?></th>
 </tr>
+</thead>
+<tbody>
 <?php
   $user_teams = $userObject->get_staff_modules();
   $module_id_list = implode(',', array_keys($user_teams));
@@ -115,9 +106,9 @@ if (isset($_GET['order'])) {
   $paper_details = array();
   
   if (isset($_GET['paper_type'])) {
-    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_short_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
+    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $_GET['paper_type'] . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
   } else {
-    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_short_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $_GET['teamID'] . " AND deleted IS NULL AND paper_ownerID=users.id";
+    $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $_GET['teamID'] . " AND deleted IS NULL AND paper_ownerID=users.id";
   }
   $sql .= " ORDER BY {$order} " . strtoupper($direction);
   $result = $mysqli->prepare($sql);
@@ -145,6 +136,7 @@ if (isset($_GET['order'])) {
   }
   
 ?>
+</tbody>
 </table>
 </body>
 </html>

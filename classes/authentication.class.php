@@ -125,7 +125,7 @@ class Authentication {
     }
 
     if ($notfound === true) {
-      array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));
+      array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));		// Add in 'already logged in' plugin so don't re-authenticate every page.
     }
 
     // get form data here?
@@ -150,7 +150,6 @@ class Authentication {
       $name = $auth[2];
 
       //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
-      //$this->debug[] = "Loading auth #$number with Type:$authtype Settings:" . str_replace("\n", "\n", var_export($settings, true));
       $this->returndata[$number] = new authtypereturn();
       $this->authinfo[$number] = array($name => $authtype);
 
@@ -227,14 +226,15 @@ class Authentication {
 
       return false;
     }
+    
     $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+    
     if ($insert == true) {
       array_unshift($this->callbackregister[$section], $callback);
       array_unshift($this->callbackregisterdata[$section], array($number => $name));
     } else {
       $this->callbackregister[$section][] = $callback;
       $this->callbackregisterdata[$section][] = array($number => $name);
-
     }
 
     return true;
@@ -273,7 +273,7 @@ class Authentication {
   }
 
   /*
-   * Disply the standard Rogo login form
+   * Display the standard Rogo login form
 	 * @param bool $display	- True = display form after failing to log in, False = no form displayed but still runs callback routines.
    */
 	 function display_error_form($display = true) {
@@ -340,7 +340,7 @@ class Authentication {
         if ($authobj->returned === ROGO_AUTH_OBJ_SUCCESS) {
           $this->success = true;
           $this->userid = $authobj->rogoid;
-          if (isset($authobj->username) and $authobj->username!='') {
+          if (isset($authobj->username) and $authobj->username != '') {
             $this->username = $authobj->username;
           }
           $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
@@ -353,7 +353,7 @@ class Authentication {
           $lookup = Lookup::get_instance($this->configObj, $this->db);
 
           //$authobj->data contains lookup info;
-          $data=new stdClass();
+          $data = new stdClass();
           $data->lookupdata = clone $authobj->data;
           $info = $lookup->userlookup($data);
 
@@ -400,20 +400,18 @@ class Authentication {
               $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
             }
           } else {
-            //log not creating user and why
-            $username='UNKNOWN';
-            if(isset($this->form['std']->username)) {
-            $username=$this->form['std']->username;
+            // Log not creating user and why
+            $username = 'UNKNOWN';
+            if (isset($this->form['std']->username)) {
+              $username=$this->form['std']->username;
             }
-            $userid=0;
-            $errfile='Authentication';
-            $errline=0;
+            $userid = 0;
+            $errfile = 'Authentication';
+            $errline = 0;
             $errstr = 'Couldnt create user see variables for more info';
             $variables = array('lookup' => &$lookup, 'info' => &$info, 'authentication' => &$this);
-            //log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null)
             log_error($userid, $username, 'Application Warning', $errstr, $errfile, $errline, '', null, $variables, null);
           }
-
 
         }
 
@@ -452,7 +450,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -465,7 +463,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -478,7 +476,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -488,7 +486,7 @@ class Authentication {
               $notice = UserNotices::get_instance();
               $notice->exit_php();
 
-              return false; //just incase and needed for testing
+              return false; //just in case and needed for testing
             }
           }
 
@@ -564,7 +562,7 @@ class Authentication {
    * Return the username as entered by the user.
    */
   function get_username() {
-    if(isset($this->username) and $this->username != '') {
+    if (isset($this->username) and $this->username != '') {
       return $this->username;
     }
     return false;

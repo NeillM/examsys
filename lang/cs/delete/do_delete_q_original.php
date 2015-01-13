@@ -16,5 +16,5 @@
 
 $string['questiondeleted'] = 'Úloha odstraněna';
 $string['recyclebin'] = 'Koš';
-$string['msg'] = 'Úloha úspěšně z banky úloh odstraněna .';
+$string['msg'] = 'Úloha z banky úloh úspěšně odstraněna.';
 ?>

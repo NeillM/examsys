@@ -24,38 +24,13 @@
 
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
 require '../../include/errors.inc';
+require_once '../../classes/helputils.class.php';
 
-check_var('id', 'GET', true, false, false);
+$originalID = check_var('id', 'GET', true, false, true);
 
-// Is the current page real or a pointer.
-$result = $mysqli->prepare("SELECT type, body FROM staff_help WHERE id = ?");
-$result->bind_param('i', $_GET['id']);
-$result->execute();
-$result->bind_result($type, $body);
-$result->fetch();
-$result->close();
-
-if ($type == 'page') {
-  // Search for any pointers to the current page.
-  $result = $mysqli->prepare("SELECT id, body FROM staff_help WHERE type = 'pointer' AND id != ? AND body = ?");
-  $result->bind_param('ii', $_GET['id'], $_GET['id']);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($page_id, $body);
-  while ($result->fetch()) {
-    $deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted = NOW() WHERE id = ?");
-    $deleteQuery->bind_param('i',  $page_id);
-    $deleteQuery->execute();
-    $deleteQuery->close();
-  }
-  $result->close();
-}
-
-$deleteQuery = $mysqli->prepare("UPDATE staff_help SET deleted=NOW() WHERE id = ?");
-$deleteQuery->bind_param('i',  $_GET['id']);
-$deleteQuery->execute();
-$deleteQuery->close();
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
+$help_system->delete_page($originalID);
 
 $mysqli->close();
-header("location: index.php");
+header("location: index.php?id=1");
 ?>

@@ -22,8 +22,10 @@
 * @package
 */
 require_once $cfg_web_root . 'classes/paperutils.class.php';
+require_once $cfg_web_root . 'classes/textboxmarkingutils.class.php';
+
 ?>
-<script language="JavaScript">
+<script>
 <?php
   $module_list = explode(',', $module);
 
@@ -86,24 +88,25 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
   function checkAll() {
     if ($('#direction')[0].selectedIndex == 0) {
-      document.getElementById('percent').selectedIndex = 7;    
+      $("#percent").prop("selectedIndex", 7);
     }
   }
 </script>
 
-<div class="popup" style="z-index:20; display:none; position:fixed; left:200px; top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
-<table border="0" cellpadding="2" cellspacing="0" style="width:530px; border:0px solid #C0C0C0; font-size:110%">
-<tr>
-<td style="background-color:#F2B100; height:5px; padding:0px"></td>
-</tr>
-<tr>
-<td align="left">
+<div class="popup" style="top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
+<form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%">
 
-<form name="stats_menu">
-<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%">
+<div style="background-color:#F2B100; height:6px"></div>
+
+<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin:10px">
 <tr>
 
 <?php
+  $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+  $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
+
+  $date_array = getdate();
+  
   $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
   $now_time = date('U', strtotime($now_data));
   if ($properties->get_start_date() > $now_time) {
@@ -133,30 +136,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     $end_day = date('d');
     $end_month = date('m');
   }
-
-  $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-  $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
-
-  $date_array = getdate();
-
-  echo "<tr><td>" . $string['dates'] . "</td><td>";
-  // Start Day
-  echo "<select name=\"start_day\" id=\"start_day\">\n";
-  for ($i=1; $i<=31; $i++) {
-    echo "<option value=\"";
-    if ($i < 10) {
-      echo "0";
-    }
-    if ($i == intval($start_day)) {
-      echo "$i\" selected>";
-    } else {
-      echo "$i\">";
-    }   
-    if ($i < 10) echo '0';
-    echo "$i</option>\n";
-  }
-  echo "</select>";
-  // Start Month
+  
   if ($start_year > $date_array['year']) {
     $start_year = $date_array['year'];
     $start_month = $date_array['mon'];
@@ -174,76 +154,16 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     $start_min = $date_array['minutes'];
   }
   
-  echo "<select name=\"start_month\" id=\"start_month\">\n";
-
-  for ($i=0; $i<12; $i++) {
-    if ($i == (intval($start_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    }
-  }
-  echo "</select>";
-  // Start Year
-  echo "<select name=\"start_year\" id=\"start_year\">\n";
-  for ($i=2001; $i<=($date_array['year'] + 1); $i++) {
-    if ($i == intval($start_year)) {
-      echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-      echo "<option value=\"$i\">$i</option>\n";
-    }
-  }
-  echo "</select>";
-  // Start Hour
-  echo "<select name=\"start_hour\" id=\"start_hour\">\n";
-	for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
-		if ($tmp_hour < 10) {
-			$display_hour = '0' . $tmp_hour;
-		} else {
-			$display_hour = $tmp_hour;
-		}
-    if ($start_hour == $tmp_hour) {
-      echo "<option value=\"" . $display_hour . "\" selected>" . $display_hour . "</option>\n";
-    } else {
-      echo "<option value=\"" . $display_hour . "\">" . $display_hour . "</option>\n";
-    }
-  }
-  echo "</select>\n";
-  // Start Minute
-  echo "<select name=\"start_minute\" id=\"start_minute\">\n";
-	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
-		if ($tmp_minute < 10) {
-			$display_minute = '0' . $tmp_minute;
-		} else {
-			$display_minute = $tmp_minute;
-		}
-    if ($start_minute == $tmp_minute) {
-      echo "<option value=\"" . $display_minute . "\" selected>" . $display_minute . "</option>\n";
-    } else {
-      echo "<option value=\"" . $display_minute . "\">" . $display_minute . "</option>\n";
-    }
-  }
-  echo "</select>\n";
-
+  echo "<tr><td>" . $string['dates'] . "</td><td>";
+  
+  $default_start = $start_year . $start_month . $start_day . $start_hour . $start_minute . '00';
+  $start_year = 2001;
+  $end_year = ($date_array['year'] + 1);
+  echo date_utils::timedate_select('start_', date($default_start), true, $start_year, $end_year, $string);
+  
   // ---------------------------------------------------------------------------------
-  echo " ".$string['to']." ";
+  echo ' ' . $string['to'] . ' ';
   // End Day
-  echo "<select name=\"end_day\" id=\"end_day\">\n";
-  for ($i=1; $i<=31; $i++) {
-    echo "<option value=\"";
-    if ($i < 10) {
-      echo "0";
-    }
-    if ($i == intval($end_day)) {
-      echo "$i\" selected>";
-    } else {
-      echo "$i\">";
-    }   
-    if ($i < 10) echo '0';
-    echo "$i</option>\n";
-  }
-  echo "</select>";
-  // End Month
   if ($end_year > $date_array['year']) {
     $end_year = $date_array['year'];
     $end_month = $date_array['mon'];
@@ -254,56 +174,15 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   } elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
     $end_day = $date_array['mday'];
   }
-  echo "<select name=\"end_month\" id=\"end_month\">\n";
-  for ($i=0; $i<12; $i++) {
-    if ($i == (intval($end_month) - 1)) {
-      echo "<option value=\"" . $month_nos[$i] . "\" selected>" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    } else {
-      echo "<option value=\"" . $month_nos[$i] . "\">" . mb_substr($string[$month_names[$i]],0,3,'UTF-8') . "</option>\n";
-    }
-  }
-  echo "</select>";
-  // End Year
-  echo "<select name=\"end_year\" id=\"end_year\">\n";
-  for ($i=2001; $i<=($date_array['year']); $i++) {
-    if ($i == intval($end_year)) {
-      echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-      echo "<option value=\"$i\">$i</option>\n";
-    }
-  }
-  echo "</select>";
-  // End Hour
-  echo "<select name=\"end_hour\" id=\"end_hour\">\n";
-	for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
-		if ($tmp_hour < 10) {
-			$display_hour = '0' . $tmp_hour;
-		} else {
-			$display_hour = $tmp_hour;
-		}
-    if ($end_hour == $tmp_hour) {
-      echo "<option value=\"$display_hour\" selected>$display_hour</option>\n";
-    } else {
-      echo "<option value=\"$display_hour\">$display_hour</option>\n";
-    }
-  }
-  echo "</select>";
-	
-  // End Minute
-  echo "<select name=\"end_minute\" id=\"end_minute\">\n";
-	for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
-		if ($tmp_minute < 10) {
-			$display_minute = '0' . $tmp_minute;
-		} else {
-			$display_minute = $tmp_minute;
-		}
-    if ($end_minute == $tmp_minute) {
-      echo "<option value=\"$display_minute\" selected>$display_minute</option>\n";
-    } else {
-      echo "<option value=\"$display_minute\">$display_minute</option>\n";
-    }
-  }
-  echo "</select>\n</td></tr>\n";
+  if ($end_month < 10) $end_month = '0' . $end_month;
+  if ($end_day < 10)   $end_day   = '0' . $end_day;
+  
+  $default_end = $end_year . $end_month . $end_day . $end_hour . $end_minute . '00';
+  $start_year = 2001;
+  $end_year = ($date_array['year'] + 1);
+  echo date_utils::timedate_select('end_', date($default_end), true, $start_year, $end_year, $string);
+  
+  echo "&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
   
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
   echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
@@ -319,7 +198,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
   
-  //module drop down
+  // Module drop down
   if ($properties->get_paper_type() != '3') {
     echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" id=\"repmodule\" style=\"width:150px\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
@@ -346,7 +225,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     echo "</td></tr>\n";
   }
   
-  echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /></td></tr>\n";
+  echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_studentattempts'] . "\" /></td></tr>\n";
 
   if ($properties->get_paper_type() == '3') {
     echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";
@@ -389,35 +268,40 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . "\" />";
 
-  echo "<table style=\"width:100%; padding-bottom:5px\"><tr><td style=\"vertical-align:top; width:42%\">\n";
+  echo "<table style=\"width:100%; padding: 0px 10px 10px 10px\"><tr><td style=\"vertical-align:top; width:45%; padding-right:6px\">\n";
   
   if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
     // display Assessment stats options
 
-    echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['reviews'] . "</div>\n";
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
+    echo "<div class=\"reports_header\">" . $string['reviews'] . "</div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&scrOfY=0&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
 
 		if ($properties->q_type_exist('sct')) {
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_sct_answers.php?type=external&',event)\">" . $string['sctresponses'] . "</a></div>\n";
     }
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=external&',event)\">" . $string['externalexaminers'] . "</a></div>\n";
-    echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['cohortreports'] . "</div>\n";
+    echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
 
     if ($properties->get_paper_type() != '5') {
 			if ($properties->q_type_exist('textbox')) {
-        echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['textboxmarking'] . "</div>\n";
+        echo "<div class=\"reports_header\">" . $string['textboxmarking'] . "</div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_remark.php?',event)\">" . $string['selectpapersforremarking'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
+        $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
+        if (count($remark_array) > 0) {
+          echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
+        } else {
+          echo "<div class=\"greybullet\">" . $string['secondmarkbyquestion'] . "</div>\n";          
+        }
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=finalise&',event)\">" . $string['finalisemarks'] . "</a></div>\n";
       }
     }
 
     echo "</td><td style=\"vertical-align:top\">";
-    echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['itemanalysis'] . "</div>\n";
+    echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
 
     if ($properties->get_paper_type() != '5') {
 		  echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/frequency_discrimination_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
@@ -428,7 +312,7 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
     } else {
 			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/cohort_obj_perform.php?',event)\">" . $string['learningobjectiveanalysis'] . "</a></div>\n";
     }
-		echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
+		echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
     if ($properties->get_paper_type() != '5') {
 			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_data.php?',event)\">" . $string['exportresponsescsvnum'] . "</a></div>\n";
 			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_data.php?mode=text&',event)\">" . $string['exportresponsescsvtext'] . "</a></div>\n";
@@ -443,34 +327,33 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
   
   switch ($properties->get_paper_type()) {
     case '3':     // Stats menu
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['quantitativereports'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['quantitativereports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/quantitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/quantitative_xml.php?',event)\">" . $string['word2003format'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['qualitativeanalysis'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['qualitativeanalysis'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/qualitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/qualitative_xml.php?',event)\">" . $string['word2003format'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/survey_xml_data.php?',event)\">" . $string['rawdataxml'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/survey_csv_data.php?',event)\">" . $string['rawdatacsv'] . "</a></div>\n";
       break;
     case '4':     // OSCE menu
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['cohortreports'] . "</div>\n";
-      //echo "<div style=\"line-height:150%\">inc. absent candidates&nbsp;<input type=\"checkbox\" name=\"absent\" value=\"1\" /></div>\n";
+      echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['itemanalysis'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/frequency_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
       
-      echo "<div style=\"line-height:150%; margin-top:10px; font-weight:bold\">" . $string['exports'] . "</div>\n";
+      echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/portfolio_sheets.php?',event)\">" . $string['individualportfoliosheets'] . "</a></div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/export_ratings.php?',event)\">" . $string['exportratingscsv'] . "</a></div>\n";
       break;
     case '6':
-      echo "<br />\n<div style=\"line-height:150%; font-weight:bold\">Reports</div>\n";
+      echo "<br />\n<div class=\"reports_header\">Reports</div>\n";
       if ($properties->get_display_question_mark() == '1') {
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=0&',event)\">" . $string['ReviewSummary1'] . "</a></div>\n";
         echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=1&',event)\">" . $string['ReviewSummary2'] . "</a></div>\n";
@@ -484,8 +367,5 @@ require_once $cfg_web_root . 'classes/paperutils.class.php';
 ?>
 </td></tr></table>
 </form>
-</td>
-</tr>
-</table>
 
 </div>

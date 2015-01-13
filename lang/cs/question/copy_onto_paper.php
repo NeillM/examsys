@@ -15,18 +15,20 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['copyontopaper'] = 'Kopírovat do dokumentu';
-$string['ok'] = 'OK'; //cognate
 $string['cancel'] = 'Zrušit';
+$string['close'] = 'Zavřít';
+$string['gotopaper'] = 'Přejít na dokument';
 $string['back'] = 'Zpět';
 $string['warning'] = 'Varování';
-$string['msg1'] = "Dokument je v současné době "aktivní". Aktuální datum je uvedeno mezi datumem jeho zahájení a ukončení. Tento bezpečnostní prvek tedy zabraňuje úpravě aktivního dokumentu.";
+$string['msg1'] = "Dokument je v současné době \"aktivní\". Aktuální datum je uvedeno mezi datumem jeho zahájení a ukončení. Tento bezpečnostní prvek tedy zabraňuje úpravě aktivního dokumentu.";
 $string['msg2'] = 'Sumativní dokument je v současnosti uzamčen a nemohou v něm být provedeny žádné změny.';
 $string['newassessmentpaper'] = 'Nový dokument hodnocení';
 $string['error1'] = "Soubor <strong>'%s'</strong> nemůže být kopírován";
 $string['error2'] = "Soubor <strong>'%s'</strong> nemůže být kopírován.<br />Původní pojmenování bylo: %s";
 $string['error3'] = "Soubor <strong>'%s'</strong> nemůže být kopírován.<br />Soubor nenalezen.";
 $string['success'] = 'Úloha zkopírovaná do <strong>%s</strong>.';
-$string['duplicatename'] = "Promiňte <strong>'%s'</strong> jméno je již použito.";
+$string['duplicatename'] = "Promiňte, <strong>'%s'</strong> jméno je již použito.";
 $string['qcopyerrorno'] = 'Chyba při kopírování úlohy';
 $string['qcopyerror'] = 'Úloha %d nebyla zkopírována';
+$string['papernotonmodule'] = 'Mapování nelze zkopírovat - cílový test není v modulu mapovaných úloh ';
 ?>

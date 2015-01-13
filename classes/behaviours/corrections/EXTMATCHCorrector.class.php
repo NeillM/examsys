@@ -66,7 +66,7 @@ class EXTMATCHCorrector extends Corrector {
       }
 
       try {
-    	  if(!$this->_question->save()) {
+    	  if (!$this->_question->save()) {
     	    $errors[] = $this->_lang_strings['datasaveerror'];
     	  } else {
           // Remark the student's answers in 'log{$paper_type}'.
@@ -79,7 +79,7 @@ class EXTMATCHCorrector extends Corrector {
           $result->execute();
           $result->store_result();
           $result->bind_result($user_answer, $id);
-          while ($row = $result->fetch()) {
+          while ($result->fetch()) {
             $big_user_parts = explode('|',$user_answer);
             $mark = 0;
             $all_correct = true;
@@ -107,7 +107,7 @@ class EXTMATCHCorrector extends Corrector {
               }
             }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark=?, totalpos=? WHERE id = ?");
+            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
             $updateLog->bind_param('dii', $mark, $totalpos, $id);
             $updateLog->execute();
             $updateLog->close();

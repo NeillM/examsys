@@ -41,20 +41,19 @@ ini_set("auto_detect_line_endings", true);
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
-    p {margin:0px; padding:0px}
-    h1 {font-size:120%; font-weight:bold}
+    p {margin:0; padding:0}
     label.error {display:block; color:#f00}
-		td {vertical-align:top}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 </head>
 
   <body>
 <?php
   require '../include/user_search_options.inc';
 ?>
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 <br />
@@ -72,7 +71,7 @@ ini_set("auto_detect_line_endings", true);
         <br /><br /><br />
         <table class="dialog_border" style="width:600px">
         <tr>
-        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules']; ?></td>
+        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules'] ?></td>
         </tr>
         <tr>
         <td class="dialog_body">
@@ -207,16 +206,16 @@ ini_set("auto_detect_line_endings", true);
     }
   }
 ?>
-<table class="dialog_border" style="width:730px">
+<table style="width:730px" class="dialog_border">
 <tr>
-<td style="width:56px; background-color:white"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" /></td><td style="text-align:left; font-size:160%; font-weight:bold; width:90%" class="midblue_header"><?php echo $string['importmodules']; ?></span></td>
+  <td style="width:56px; background-color:white"><img src="../artwork/modules_import.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importmodules']; ?></td>
 </tr>
 <tr>
-<td align="left" style="background-color:#F1F5FB" colspan="2">
+<td class="dialog_body" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
 <br />
-<div style="text-align:center"><img src="../artwork/module_import_headings.png" width="290" height="60" alt="Headings" style="border:1px solid black" /></div>
+<div style="text-align:center"><img src="../artwork/module_import_headings.png" width="281" height="59" alt="Headings" style="border:1px solid #808080" /></div>
 <br />
 <div><?php echo $string['msg2']; ?></div>
 <br />
@@ -231,7 +230,7 @@ if ($file_problem) {
 }
 ?>
 <br />
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 <br />
 </form>
 </div>

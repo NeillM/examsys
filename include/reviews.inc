@@ -28,16 +28,47 @@ function time_to_seconds($seconds) {
   $hr = intval(substr($seconds,8,2));
   $min = intval(substr($seconds,10,2));
   $sec = intval(substr($seconds,12,2));
+	
   return ($hr * 3600) + ($min * 60) + $sec;
 }
 
+function create_metadataID($paperID, $reviewerID, $review_type, $db) {
+  $ipaddress = NetworkUtils::get_client_address();
+
+  $stmt = $db->prepare("INSERT INTO review_metadata VALUES(NULL, ?, ?, NOW(), NULL, ?, ?, NULL)");
+  $stmt->bind_param('iiss', $reviewerID, $paperID, $review_type, $ipaddress);
+  $stmt->execute();
+  $reviewID = $db->insert_id;
+  $stmt->close();
+
+  return $reviewID;
+}
+
+function get_metadataID($paperID, $reviewerID, $review_type, $db) {
+  $stmt = $db->prepare("SELECT MAX(id) FROM review_metadata WHERE paperID = ? AND reviewerID = ?");
+  $stmt->bind_param('ii', $paperID, $reviewerID);
+  $stmt->execute();
+  $stmt->bind_result($reviewID);
+  $stmt->store_result();
+  if ($stmt->num_rows < 1) {
+    $reviewID = create_metadataID($paperID, $reviewerID, $review_type, $db);
+  } else {
+    $stmt->fetch();
+  }
+  $stmt->close();
+  
+  return $reviewID;
+}
+
 function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) {
+	
   $question_no = 0;
   $old_q_id = NULL;
-  $userid = trim($userid);
   $submit_time = date("YmdHis", time());
+  
+  $metadataID = get_metadataID($paper_id, $userid, $review_type, $dblink);
 
-  $stmt = $dblink->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper=? AND screen=? AND papers.question=questions.q_id ORDER BY display_pos");
+  $stmt = $dblink->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper = ? AND screen = ? AND papers.question = questions.q_id ORDER BY display_pos");
   $stmt->bind_param('ii', $paper_id, $screen_no);
   $stmt->execute();
   $stmt->bind_result($q_id, $q_type);
@@ -48,8 +79,8 @@ function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) 
       if ($q_type != 'info') {
         $question_no++;
         
-        $result = $dblink->prepare("DELETE FROM review_comments WHERE q_paper=? AND q_id=? AND reviewer=?");
-        $result->bind_param('iis', $paper_id, $q_id, $userid);
+        $result = $dblink->prepare("DELETE FROM review_comments WHERE metadataID = ? AND q_id = ?");
+        $result->bind_param('ii', $metadataID, $q_id);
         $result->execute();  
         $result->close();
 
@@ -58,8 +89,8 @@ function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) 
         $tmp_duration += $_POST['previous_duration'];
         $extcomments = $_POST["extcomments$question_no"];
         
-        $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, ?, ?, ?, 'Not actioned', '', ?, '" . NetworkUtils::get_client_address() . "', $tmp_duration, ?)");
-        $result->bind_param('iiisissi', $paper_id, $q_id, $_POST["exttype$question_no"], $extcomments, $userid, $_POST['sessionid'], $review_type, $_POST['old_screen']);
+        $result = $dblink->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
+        $result->bind_param('iisii', $q_id, $_POST["exttype$question_no"], $extcomments, $_POST['old_screen'], $metadataID);
         $result->execute();  
         $result->close();
       }
@@ -67,5 +98,30 @@ function record_comments($paper_id, $screen_no, $dblink, $userid, $review_type) 
     $old_q_id = $q_id;
   }                    // End of while loop.
   $stmt->close();
+}
+
+function record_general_comments($paper_comment, $paper_id, $userid, $finish, $review_type, $db) {
+  $metadataID = get_metadataID($paper_id, $userid, $review_type, $db);
+
+  if ($finish) {
+    $stmt = $db->prepare("UPDATE review_metadata SET paper_comment = ? AND complete = NOW() WHERE id = ?");
+    $stmt->bind_param('si', $paper_comment, $metadataID);
+  } else {
+    $stmt = $db->prepare("UPDATE review_metadata SET paper_comment = ? WHERE id = ?");
+    $stmt->bind_param('si', $paper_comment, $metadataID);    
+  }
+  $stmt->execute();
+  $stmt->close();
+}
+
+function get_paper_comments($id) {
+  $stmt = $db->prepare("SELECT paper_comment FROM review_metadata WHERE id = ?");
+  $stmt->bind_param('i', $id);
+  $stmt->execute();
+  $stmt->bind_result($paper_comment);
+  $stmt->fetch();
+  $stmt->close();
+  
+  return $paper_comment;
 }
 ?>

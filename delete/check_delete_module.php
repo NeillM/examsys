@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting a module.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,7 +30,9 @@ require_once '../classes/moduleutils.class.php';
 
 $idMod = check_var('idMod', 'GET', true, false, true);
 
-if (!module_utils::get_moduleid_from_id($idMod, $mysqli)) {
+$moduleid = module_utils::get_moduleid_from_id($idMod, $mysqli);
+
+if (!$moduleid) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -41,7 +45,7 @@ $mysqli->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['confirmcoursedelete']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -49,22 +53,14 @@ $mysqli->close();
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo sprintf($string['msg'], $moduleid) ?></p>
 
-<td><p><strong><?php echo $string['msg']; ?></strong><p>
-<br />
-<br />
-<div style="text-align:right">
+<div class="button_bar">
 <form action="do_delete_module.php" method="post">
 <input type="hidden" name="idMod" value="<?php echo $_GET['idMod']; ?>" />
-<input style="width:140px" type="submit" name="submit" value="<?php echo $string['delete']; ?>" />&nbsp;
-<input style="width:80px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

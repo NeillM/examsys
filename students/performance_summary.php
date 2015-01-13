@@ -28,6 +28,7 @@ require '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
+require_once '../include/toprightmenu.inc';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
 
@@ -135,19 +136,27 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
   <style>
-    body {font-size:90%}
-    .subsect {margin-top:20px; font-size:80%}
-    .indent {margin-left:30px}
-    .label {position:relative; left:171px; padding:0; margin:0; width:132px; height:11px}
+    body {font-size: 90%}
+    .indent {margin-left: 30px}
+    .label {position: relative; left: 171px; padding: 0; margin: 0; width: 132px; height: 11px}
+    .subsect_table {margin-left: 8px; margin-top: 20px; margin-bottom: 6px; font-size:90%}
+    .key {position: relative; width: 300px; height: 173px; border: 2px solid #FCE699; z-index: 10; float: right; top: 30px; right: 10px; font-size: 75%; padding: 5px; line-height: 100%; background-color: #FFFFEE; color: #404040}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
 <?php
+if ($userObject->has_role('Staff')) {
+	echo '<script type="text/javascript" src="../js/staff_help.js"></script>';
+} else {
+	echo '<script type="text/javascript" src="../js/student_help.js"></script>';
+}
 if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 ?>
-  <script language="javascript">
+  <script>
     function setVars (paper_type, crypt_name, paperID, metadataID) {
       $('#paper_type').val(paper_type);
       $('#crypt_name').val(crypt_name);
@@ -188,45 +197,51 @@ if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 </head>
 
 <body>
+<?php
+	echo draw_toprightmenu();
+?>
 
-<div style="position:relative; width:300px; height:173px; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">
-<img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
-<div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
-<div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>
-<div style="top:-154px" class="label"><?php echo $string['topquartile']; ?></div>
-<div style="top:-145px" class="label"><?php echo $string['median']; ?></div>
-<div style="top:-138px" class="label"><?php echo $string['lowerquartile']; ?></div>
-<div style="top:-128px" class="label"><?php echo $string['passmark']; ?></div>
-<div style="top:-118px" class="label"><?php echo $string['minimumscore']; ?></div>
-<div style="top:-111px" class="label"><?php echo $string['examname']; ?></div>
-<div style="top:-105px" class="label"><?php echo $string['studentsmark']; ?></div>
+<div class="key">
+  <img src="../artwork/boxplot_key.png" width="170" height="173" alt="Key" />
+  <div style="top:-175px" class="label"><?php echo $string['maximumscore']; ?></div>
+  <div style="top:-163px" class="label"><?php echo $string['studentsposition']; ?></div>
+  <div style="top:-154px" class="label"><?php echo $string['topquartile']; ?></div>
+  <div style="top:-145px" class="label"><?php echo $string['median']; ?></div>
+  <div style="top:-138px" class="label"><?php echo $string['lowerquartile']; ?></div>
+  <div style="top:-128px" class="label"><?php echo $string['passmark']; ?></div>
+  <div style="top:-118px" class="label"><?php echo $string['minimumscore']; ?></div>
+  <div style="top:-111px" class="label"><?php echo $string['examname']; ?></div>
+  <div style="top:-105px" class="label"><?php echo $string['studentsmark']; ?></div>
 </div>
 
 <?php
 if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
 ?>
-<div id="menudiv" class="popupmenu" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-<table width="250" cellspacing="2" cellpadding="0" border="0" style="font-size:90%; background-color:white">
-  <tr><td>
-    <table width="250" cellspacing="0" cellpadding="1" border="0" style="font-size:100%; background-color:white">
-      <tr>
-        <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><?php echo $string['examscript']; ?></td>
-      </tr>
-      <tr>
-        <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewFeedback();"><?php echo $string['objectives']; ?></td>
-      </tr>
-      <tr>
-        <td id="item3a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px"><img src="../artwork/personal_cohort.gif" width="16" height="16" alt="" /></td><td id="item3b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('3');" onmouseout="menuRowOff('3');" onclick="viewPersonalCohort();"><?php echo $string['personalcohortperformance']; ?></td>
-      </tr>
-      <tr>
-        <td style="background-color:#F1F5FB; width:22px"></td><td style="padding-left:8px; text-align:right"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></td>
-      </tr>
-      <tr>
-        <td id="item4a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px">&nbsp;</td><td id="item4b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('4');" onmouseout="menuRowOff('4');" onclick="jumpToPaper();"><?php echo $string['jumptopaper']; ?></td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
+<div id="menudiv" class="popupmenu" style="padding:5px; width:300px">
+  <div class="popup_row" onclick="viewScript();">
+    <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item1"><?php echo $string['examscript'] ?></div>
+  </div>
+  
+  <div class="popup_row" onclick="viewFeedback();">
+    <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item2"><?php echo $string['objectives'] ?></div>
+  </div>
+  
+  <div class="popup_row" onclick="viewPersonalCohort();">
+    <div class="popup_icon"><img src="../artwork/personal_cohort.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item3"><?php echo $string['personalcohortperformance'] ?></div>
+  </div>
+  
+  <div class="popup_divider_row">
+    <div class="popup_icon"></div>
+    <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
+  </div>
+ 
+  <div class="popup_row" onclick="viewPersonalCohort();">
+    <div class="popup_icon"></div>
+    <div class="popup_title" id="item3"><?php echo $string['jumptopaper'] ?></div>
+  </div>
 </div>
 <?php
 }
@@ -240,7 +255,8 @@ $name = demo_replace($student_details['title'], $demo) . ' ' . demo_replace($stu
 <div style="position:absolute; top:0px; left:0px; width:100%">
 <?php
 echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
-echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
+echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px; padding-bottom:6px\">$name</div></th>";
+echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 echo "</table>\n<div>";
 
 $old_calendar_year = '';
@@ -259,7 +275,8 @@ foreach ($papers as $paper) {
 
   if ($display_paper) {
     if ($old_calendar_year != $paper['calendar_year']) {
-      echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+      //echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+      echo '<a name="' . $paper['calendar_year'] . '"></a><div class="subsect_table"><div class="subsect_title"><nobr>' . $paper['calendar_year'] . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
       $col = 0;
     }
   

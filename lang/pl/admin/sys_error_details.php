@@ -16,7 +16,7 @@
 
 $string['errordetails'] = 'Szczegóły błędu nr. %s';
 $string['displaydetails'] = 'Wyświetl szczegóły';
-$string['date'] = 'Dane';
+$string['date'] = 'Data';
 $string['staff'] = 'Kadra';
 $string['type'] = 'Typ';
 $string['description'] = 'Opis';

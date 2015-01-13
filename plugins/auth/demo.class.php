@@ -37,25 +37,24 @@ class demo_auth extends internaldb_auth {
   public $impliments_api_auth_version = 1;
   public $version = 1.0;
 
-    private $unique_username;
+  private $unique_username;
   private $unique_coursename;
 
-
-    private $errmess='';
+  private $errmess='';
 
  function init($object) {
     parent::init($object);
 
-     if(!isset($this->settings['school']) or $this->settings['school']='') {
-         $this->set_error('Couldnt bind to ldap server');
-         return $object;
-     }
-     if(!is_int($this->settings['school'])) {
-         $this->settings['school']=SchoolUtils::get_school_id_by_name($this->settings['school'], $this->db);
-     }
+    if (!isset($this->settings['school']) or $this->settings['school']='') {
+      $this->set_error('Couldnt bind to ldap server');
+      return $object;
+    }
+    if (!is_int($this->settings['school'])) {
+      $this->settings['school']=SchoolUtils::get_school_id_by_name($this->settings['school'], $this->db);
+    }
 
     return $object;
-}
+  }
 
   function register_callback_routines() {
     $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
@@ -65,97 +64,89 @@ class demo_auth extends internaldb_auth {
     return $callbackarray;
   }
 
-    function createaccount($preauthobj) {
-        //only run if
-        if (!(isset($this->form['std']->username) or isset($this->form['std']->username)) and isset($this->request['createnewdemoaccount'])) {
-
-            $this->savetodebug('Create Account button pressed');
-
-        }
-
-        $unique_username = true;
-        $unique_module = true;
-
-        var_dump(get_defined_vars($this));
-
-        $new_moduleid = '';
-
-        for ($a = 0; $a < strlen($this->request['new_grade2']); $a++) {
-            print "RT";
-            $b = substr($this->request['new_grade2'], $a, 1);
-            print $b;
-            if (ctype_upper($b) or ctype_digit($b)) {
-                print "i";
-                $new_moduleid = $new_moduleid . $b;
-            }
-        }
-        if($new_moduleid=='') $new_moduleid=$this->request['new_grade2'];
-
-
-//        public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0) {
-
-        module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $this->settings['school']);
-
-
-            return $preauthobj;
-
+  function createaccount($preauthobj) {
+    //only run if
+    if (!(isset($this->form['std']->username) or isset($this->form['std']->username)) and isset($this->request['createnewdemoaccount'])) {
+      $this->savetodebug('Create Account button pressed');
     }
 
-    function auth($authobj) {
-        if (isset($this->form['std']->username) or isset($this->form['std']->username)) {
-            //return not sucessfull do not try
-            $this->savetodebug('Username/Password entered');
+    $unique_username = true;
+    $unique_module = true;
 
-            $authobj->fail($this->number);
-            $authobj->message = 'username or password entered for normal login';
+    $new_moduleid = '';
 
-            return $authobj;
-        }
-
-        $this->savetodebug('Not run');
-        $authobj->fail($this->number);
-
-        return $authobj;
+    for ($a = 0; $a < strlen($this->request['new_grade2']); $a++) {
+      print "RT";
+      $b = substr($this->request['new_grade2'], $a, 1);
+      print $b;
+      if (ctype_upper($b) or ctype_digit($b)) {
+        print "i";
+        $new_moduleid = $new_moduleid . $b;
+      }
+    }
+    if ($new_moduleid == '') {
+      $new_moduleid=$this->request['new_grade2'];
     }
 
+    module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $this->settings['school']);
 
-    function my_ucwords($s) {
-        $s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", '$this->fixcase_callback', $s);
-        return $s;
+    return $preauthobj;
+
+  }
+
+  function auth($authobj) {
+    if (isset($this->form['std']->username) or isset($this->form['std']->username)) {
+      //return not sucessfull do not try
+      $this->savetodebug('Username/Password entered');
+
+      $authobj->fail($this->number);
+      $authobj->message = 'username or password entered for normal login';
+
+      return $authobj;
     }
 
-    function fixcase_callback($word) {
-        $word = $word[1];
+    $this->savetodebug('Not run');
+    $authobj->fail($this->number);
+
+    return $authobj;
+  }
+
+
+  function my_ucwords($s) {
+    $s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", '$this->fixcase_callback', $s);
+    return $s;
+  }
+
+  function fixcase_callback($word) {
+    $word = $word[1];
+    $word = mb_strtolower($word, 'UTF-8');
+
+    if ($word == "de") return $word;
+
+    $word = mb_ucasefirst($word);
+
+    if (mb_substr($word, 1, 1, 'UTF-8') == "'") {
+      if (mb_substr($word, 0, 1, 'UTF-8') == "D") {
         $word = mb_strtolower($word, 'UTF-8');
-
-        if ($word == "de") return $word;
-
-        $word = mb_ucasefirst($word);
-
-        if (mb_substr($word, 1, 1, 'UTF-8') == "'") {
-            if (mb_substr($word, 0, 1, 'UTF-8') == "D") {
-                $word = mb_strtolower($word, 'UTF-8');
-            }
-            $next = mb_substr($word, 2, 1, 'UTF-8');
-            $next = mb_strtoupper($next, 'UTF-8');
-            $word = mb_substr_replace($word, $next, 2, 1, 'UTF-8');
-        }
-        return $word;
+      }
+      $next = mb_substr($word, 2, 1, 'UTF-8');
+      $next = mb_strtoupper($next, 'UTF-8');
+      $word = mb_substr_replace($word, $next, 2, 1, 'UTF-8');
     }
+    return $word;
+  }
 
-    function demobutton($displaystdformobj) {
-        global $string;
-        global $language;
+  function demobutton($displaystdformobj) {
+    global $string, $language;
 
-        $this->savetodebug('Demo Info');
+    $this->savetodebug('Demo Info');
 
+    $this->savetodebug('Adding New Demo Button');
+    $postbuttonmessage = new displaystdformmessage();
+    $postbuttonmessage->pretext = <<<HTML
+<script>
 
-            $this->savetodebug('Adding New Demo Button');
-            $postbuttonmessage = new displaystdformmessage();
-        $postbuttonmessage->pretext = <<<HTML
-<script type="text/javascript">
-
-$(document).ready(function(){
+    $(function () {
 
         $(".slidingDiv").hide();
         $(".show_hide").show();
@@ -171,7 +162,7 @@ HTML;
         $postbuttonmessage->pretext = $postbuttonmessage->pretext . '<br><a href="#" class="show_hide">Create Demo Account</a><br/>';
             $content0 = <<<HTML
 
-    <script type="text/javascript">
+    <script>
         function checkForm() {
             if (document.newUser.new_first_names.value == "") {
                 alert("$string[reqfirstname]");
@@ -218,7 +209,7 @@ HTML;
 if($stfsel === '' and $stusel === '') $stfsel = ' checked';
 
         $content1 =<<<HTML
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 <br/>
     <form method="post" name="newUser" onsubmit="return checkForm()" action="$_SERVER[PHP_SELF]">
         <div align="center">
@@ -254,11 +245,11 @@ HTML;
 
         $content2 = '';
         if ($language != 'en') {
-            $content2 = "<option value=\"\"></option>\n";
+          $content2 = "<option value=\"\"></option>\n";
         }
         $titles = explode(',', $string['title_types']);
         foreach ($titles as $tmp_title) {
-            $content2 .= "<option value=\"$tmp_title\">$tmp_title</option>";
+          $content2 .= "<option value=\"$tmp_title\">$tmp_title</option>";
         }
 
         $first_names = '';
@@ -275,9 +266,9 @@ HTML;
 
 
         if (isset($_POST['new_password']) and $_POST['new_password']!='') {
-            $newpass = $_POST['new_password'];
+          $newpass = $_POST['new_password'];
         } else {
-            $newpass = gen_password();
+          $newpass = gen_password();
         }
         $msel = '';
         if (isset($_POST['new_gender']) and $_POST['new_gender'] == 'Male') $msel = ' selected';
@@ -286,9 +277,9 @@ HTML;
 
         $newgrade2 = '';
         if (isset($_POST['new_grade2']) and $this->unique_coursename != true) {
-            $newgradestyle = ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['new_username'] . '"';
+          $newgradestyle = ' style="background-color:#FFD9D9; color:#800000; border:1px solid #800000" value="' . $_POST['new_username'] . '"';
         } elseif( isset($_POST['new_grade2'])) {
-            $newgradestyle = 'value="' . $_POST['new_grade2'] . '"';
+          $newgradestyle = 'value="' . $_POST['new_grade2'] . '"';
         }
 
         $content3 = <<<HTML
@@ -364,18 +355,18 @@ HTML;
         </div>
 HTML;
 
-$content=$content0.$content1.$content2.$content3;
+    $content = $content0.$content1.$content2.$content3;
 
 
 
-        $newbutton = new displaystdformobjbutton();
-        $newbutton->type = 'button';
-        $newbutton->value = ' Create Demo Account ';
-        $newbutton->pretext= <<<HTML
+    $newbutton = new displaystdformobjbutton();
+    $newbutton->type = 'button';
+    $newbutton->value = ' Create Demo Account ';
+    $newbutton->pretext= <<<HTML
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js" type="text/javascript"></script>
-<script type="text/javascript">
+<script>
 
-$(document).ready(function(){
+    $(function () {
 
         $(".slidingDiv").hide();
         $(".show_hide").show();
@@ -389,17 +380,16 @@ $(document).ready(function(){
 </script>
 <br>
 HTML;
-        $newbutton->name = 'showcreatedemoaccount';
-        $newbutton->class='show_hide';
-        $newbutton->posttext='<div class="slidingDiv">'.$content.'</div>';
-        $displaystdformobj->buttons[] = $newbutton;
+    $newbutton->name = 'showcreatedemoaccount';
+    $newbutton->class = 'show_hide';
+    $newbutton->posttext = '<div class="slidingDiv">' . $content . '</div>';
+    $displaystdformobj->buttons[] = $newbutton;
 
+    return $displaystdformobj;
+  }
 
-        return $displaystdformobj;
-    }
-
-    function errordisp($displayerrformobj) {
-        global $string;
+  function errordisp($displayerrformobj) {
+    global $string;
     $cfg = Config::get_instance();
     
     $this->savetodebug('adding forgotten password link ');
@@ -407,6 +397,5 @@ HTML;
 
     return $displayerrformobj;
   }
-
 
 }

@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../include/sort.inc';
 
 ?>
 <!DOCTYPE html>
@@ -42,117 +41,85 @@ require '../include/sort.inc';
 	  th a {color:black !important}
 	</style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/list.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="javascript">
+  <script>
     function edit(moduleID) {
       document.location.href = './edit_module.php?moduleid=' + moduleID;
     }
+    
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[0,0]] 
+        });
+      }
+
+      $(".l").click(function(event) {
+        event.stopPropagation();
+        selLine($(this).attr('id'),event);
+      });
+
+      $(".l").dblclick(function() {
+        edit($(this).attr('id'));
+      });
+    
+    });
   </script>
 </head>
 
 <body>
 <?php
-  require '../include/module_options.inc';
+  require '../include/admin_module_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(233);
-?>
-<div id="content" class="content">
-
-<table class="header">
-<tr>
-<th colspan="3"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['modules']; ?></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<?php
-  if (isset($_GET['sortby'])) {
-    $sortby = $_GET['sortby'];
-    $ordering = $_GET['ordering'];
-  } else {
-    $sortby = 'moduleid';
-    $ordering = 'asc';
-  }
-
-  // output table header
-  $table_order = array($string['moduleid']=>'moduleid', $string['name']=>'name', $string['school']=>'school', $string['active']=>'active');
-  foreach ($table_order as $display => $key) {
-    if ($key == 'moduleid') {
-      echo '<th class="col10">';
-    } else {
-      echo '<th class="vert_div">';
-    }
-    if ($sortby == $key and $ordering == 'asc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=desc\">$display</a>&nbsp;<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" />&nbsp;</div>";
-    } elseif ($sortby == $key and $ordering == 'desc') {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a>&nbsp;<img src=\"../artwork/asc.gif\" width=\"9\" height=\"7\" />&nbsp;</div>";
-    } else {
-      echo "<a href=\"" . $_SERVER['PHP_SELF'] . "?sortby=$key&ordering=asc\">$display</a></div>";
-    }
-    echo "</th>\n";
-  }
-?>
-</tr>
-<?php
-$old_school = '';
-$id = 0;
-$module_no = 0;
-
-$modules = array();
-
-$result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules, schools WHERE modules.schoolid = schools.id AND mod_deleted IS NULL");
-$result->execute();
-$result->bind_result($id, $moduleid, $fullname, $school, $active);
-while ($result->fetch()) {
-  $modules[$module_no]['id'] = $id;
-  $modules[$module_no]['moduleid'] = $moduleid;
-  $modules[$module_no]['name'] = $fullname;
-  $modules[$module_no]['school'] = $school;
-  $modules[$module_no]['active'] = $active;
   
-  $module_no++;
-}
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, school, active FROM modules LEFT JOIN schools ON modules.schoolid = schools.id WHERE mod_deleted IS NULL");
+  $result->execute();
+  $result->bind_result($id, $moduleid, $fullname, $school, $active);
+  $result->store_result();
+?>
+<div id="content">
 
-$modules = array_csort($modules, $sortby, $ordering);
-$old_moduleid_letter = '';
-$old_name_letter = '';
-$old_school = '';
-$old_active = '';
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
+  <div class="page_title"><?php echo $string['modules'] ?> (<?php echo $result->num_rows; ?>)</div>
+</div>
 
-for ($i=0; $i<$module_no; $i++) {
-  if ($modules[$i]['school'] == '') $modules[$i]['school'] = '<span style="color:#808080">unknown</span>';
-  if ($modules[$i]['active'] == 1) {
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+<thead>
+<tr>
+  <th class="col" style="width:15%"><?php echo $string['moduleid'] ?></th>
+  <th class="col" style="width:30%"><?php echo $string['name'] ?></th>
+  <th class="col" style="width:30%"><?php echo $string['school'] ?></th>
+  <th class="col" style="width:15%"><?php echo $string['active'] ?></th>
+</tr>
+</thead>
+
+<tbody>
+<?php
+while ($result->fetch()) {
+  if ($school == '') $school = '<span style="color:#808080">unknown</span>';
+  if ($active == 1) {
     $tmp_active = $string['yes'];
 		$class = 'l';
   } else {
     $tmp_active = $string['no'];
 		$class = 'l grey';
   }
-  if ($sortby == 'school' and $old_school != $modules[$i]['school']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $modules[$i]['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'moduleid' and $old_moduleid_letter != mb_substr($modules[$i]['moduleid'], 0, 1)) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . mb_substr($modules[$i]['moduleid'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'name' and $old_name_letter != mb_substr($modules[$i]['name'], 0, 1)) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . mb_substr($modules[$i]['name'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'school' and $old_school != $modules[$i]['school']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . mb_substr($modules[$i]['school'], 0, 1) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  } elseif ($sortby == 'active' and $old_active != $modules[$i]['active']) {
-    echo "<tr><td colspan=\"5\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $tmp_active . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-  }
   
-	echo "<tr class=\"$class\" id=\"" . $modules[$i]['id'] . "\" onclick=\"selLine('" . $modules[$i]['id'] . "',event)\" ondblclick=\"edit('" . $modules[$i]['id'] . "')\"><td><div class=\"col30\">" . $modules[$i]['moduleid'] . "</div></td><td><div class=\"col\">" . $modules[$i]['name'] . "</div></td><td><div class=\"col\"><nobr>" . $modules[$i]['school'] . "</nobr></div></td><td><div class=\"col\">$tmp_active</div></td></tr>\n";
-  
-  $old_moduleid_letter = mb_substr($modules[$i]['moduleid'], 0, 1);
-  $old_name_letter = mb_substr($modules[$i]['name'], 0, 1);
-  $old_school = $modules[$i]['school'];
-  $old_active = $modules[$i]['active'];
+	echo "<tr class=\"$class\" id=\"$id\"><td>$moduleid</td><td>$fullname</td><td>$school</td><td>$tmp_active</td></tr>\n";
 }
 $result->close();
 $mysqli->close();
 ?>
+</tbody>
 </table>
 </div>
 

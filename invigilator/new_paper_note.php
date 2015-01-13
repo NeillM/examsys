@@ -25,8 +25,15 @@
 require '../include/invigilator_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/noteutils.class.php';
+require_once '../classes/paperutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+// Does the paper exist?
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
@@ -43,9 +50,9 @@ if (isset($_POST['submit'])) {
 
   <title><?php echo $string['note']; ?></title>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript">
-    $(document).ready(function() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       window.opener.location.reload(true);
       window.close();
     });
@@ -53,7 +60,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
   <form>
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok']; ?>" onclick="closeWindow();" /></div>
+    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok'] ?>" class="ok" onclick="closeWindow();" /></div>
   </form>
   <?php
   } else {
@@ -72,10 +79,10 @@ if (isset($_POST['submit'])) {
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script language="JavaScript">
-    $(document).ready(function() {
+  <script>
+    $(function () {
 	    var noteHeight = $(document).height() - 90;
 	    $("#note").css('height', noteHeight + 'px')
       $("#note").focus();
@@ -104,13 +111,13 @@ if (isset($_POST['submit'])) {
 <?php
   echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $paperID . "\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
-  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
+  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:99%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
 ?>
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
-<input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" /></div>
+<input type="hidden" name="note_id" value="<?php echo $note_details['note_id'] ?>" />
 </form>
 
 </body>

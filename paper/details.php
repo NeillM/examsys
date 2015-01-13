@@ -27,10 +27,11 @@
 // TODO: error handling for AJAX calls
 
 ob_start('ob_gzhandler');
-require '../include/staff_auth.inc';
+require '../include/staff_student_auth.inc';
 require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
+require_once '../include/std_set_shared_functions.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
@@ -40,13 +41,18 @@ require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/exam_announcements.class.php';
+require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+
+$_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
+$_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 // Unlock code - emergency use only!
+// Can only unlock if current user is SysAdmin!
 if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role('SysAdmin')) {
   $tmp_date = new DateTime();
   $tmp_date->modify('+28 day');
@@ -69,7 +75,46 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-$exclusions = new Exclusion($_GET['paperID'], $mysqli);
+// Redirect students to their page.
+if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
+  if ($properties->get_paper_type() == '2') {
+    // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+  } else {
+    header("location: user_index.php?id=" . $properties->get_crypt_name());
+    exit();
+  }
+}
+
+// Can the user acsess the paper?
+$paper_ownerID = Paper_utils::get_ownerID($paperID, $mysqli);
+
+$on_staff_module = false;
+if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user_ID()) {
+  $on_staff_module = true;
+} else {
+  $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+  foreach ($paper_modules as $paper_moduleID => $paper_module) {
+    if ($userObject->is_staff_user_on_module($paper_moduleID)) {
+      $on_staff_module = true;
+    }
+  }
+}
+
+if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+}
+
+if ($properties->get_paper_type() == '4') {		// OSCE
+	require_once '../classes/killer_question.class.php';
+	
+	$killer_questions = new Killer_question($paperID, $mysqli);
+	$killer_questions->load();
+}
+
+$exclusions = new Exclusion($paperID, $mysqli);
 $exclusions->load();
 
 /**
@@ -98,7 +143,7 @@ function check_duplicates($q_screens, $string) {
  * @param array $status_array		- Array of status objects
  * @param object $db						- MySQLi connection.
  */
-function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $db) {
+function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $settings, $properties, $db) {
 	$question_marks = $temp_array[$row_no]['original_marks'];
 	$status 				= $temp_array[$row_no]['status'];
 	$score_method 	= $temp_array[$row_no]['score_method'];
@@ -108,8 +153,21 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
     } elseif ($q_type == 'dichotomous') {
       if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
-    } elseif (($q_type == 'mcq' or $q_type == 'calculation') and $correct_array[0] == '') {
+    } elseif ($q_type == 'mcq' and $correct_array[0] == '') {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
+    } elseif ($q_type == 'enhancedcalc') {
+      $bkt_mismatch = false;
+      $formula = $settings['answers'];
+      foreach ($formula as $form) {
+        $opening_bkt = substr_count($form['formula'], '(');
+        $closing_bkt = substr_count($form['formula'], ')');
+        if ($opening_bkt !== $closing_bkt) {
+          $bkt_mismatch = true;
+        }
+      }
+      if ($bkt_mismatch) {
+        $temp_array[$row_no]['warnings'] = $string['mismatchbrackets'];
+      }
     } elseif ($q_type == 'mrq' and !in_array('y', $correct_array)) {
       $temp_array[$row_no]['warnings'] = $string['nocorrect'];
     } elseif ($q_type == 'textbox' and $question_marks == 0) {
@@ -145,9 +203,29 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
         $temp_array[$row_no]['warnings'] = $string['nolabels'];
       }
+    } elseif ($q_type == 'random' and $properties->get_paper_type() == '2') {
+      $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
+    } elseif ($q_type == 'keyword_based' and $properties->get_paper_type() == '2') {
+      $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other') {
       $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
+    }
+    if ($q_type == 'mcq') {  // Check duplicate options
+      $have_text = false;
+      foreach ($option_text as $option) {
+        if ($option != '') {
+          $have_text = true;
+        }
+      }
+      if ($have_text) {
+        $option_text_copy = array_map('strtolower', $option_text);
+        $unique_options = array_unique($option_text_copy);
+        if (count($option_text_copy) > count($unique_options)) {
+          $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
+        }
+      }
+      
     }
   }
 }
@@ -323,36 +401,34 @@ function check_latex_class($candidates) {
 function check_latex_random($q_ids, $mysqli) {
   $q_ids = implode(',', $q_ids);
   $latex = 0;
-
-  $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
-  while ($result->fetch()) {
-    $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
-    if ($latex == 1) {
-      break;
+  if ($q_ids != '') {
+    $result = $mysqli->prepare("SELECT leadin, scenario, option_text, score_method, correct_fback, feedback_right FROM questions INNER JOIN options ON questions.q_id = options.o_id WHERE questions.q_id IN ($q_ids)");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+    while ($result->fetch()) {
+      $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
+      if ($latex == 1) {
+        break;
+      }
     }
   }
-
   return $latex;
 }
 ?>
 <!DOCTYPE html>
-<html onscroll="scrollXY();" onclick="hideMenus(); hideAssStatsMenu(event);">
+<html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-  <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
-
   <!--[if lt IE 8]>
   <style type="text/css">
     td.ie-fullwidth {
@@ -365,18 +441,26 @@ function check_latex_random($q_ids, $mysqli) {
   </style>
   <![endif]-->
   <style type="text/css">
-<?php echo QuestionStatus::generate_status_css($status_array); ?>
+    <?php
+      if ($language != 'en') {
+        echo "#content td.t, td.t {width: 180px !important}\n";
+      } else {
+        echo "#content td.d, td.d {width: 130px !important}\n";
+      }
+      echo QuestionStatus::generate_status_css($status_array);
+    ?>
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui.1.8.16.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-<script defer="defer" type="text/javascript">
-  var paperID='<?php echo $_GET['paperID'] ?>';
+  <script type="text/javascript" src="../js/page_scroll.js"></script>
+<script defer="defer">
+  var paperID = '<?php echo $paperID ?>';
 
   function addQID(qID, pID, clearall) {
     if (clearall) {
@@ -413,7 +497,7 @@ function check_latex_random($q_ids, $mysqli) {
     $('#screenNo').val(screenNo);
     $('#current_pos').val(current_pos);
 
-    if (evt.ctrlKey == false) {
+    if (evt.ctrlKey == false && evt.metaKey == false) {
       clearAll();
       $('#link_' + lineID).addClass('highlight');
       addQID(questionID, pID, true);
@@ -427,6 +511,14 @@ function check_latex_random($q_ids, $mysqli) {
       }
     }
 
+    if (qType == 'info') {
+      $('.clarification').removeClass('menuitem');
+      $('.clarification').addClass('greymenuitem');
+    } else {
+      $('.clarification').removeClass('greymenuitem');
+      $('.clarification').addClass('menuitem');
+    }
+    
     if (qType == 'random') {
       var row = '';
       for (i=1; i<=subparts; i++) {
@@ -442,7 +534,6 @@ function check_latex_random($q_ids, $mysqli) {
 
     $('#stats_menu').hide();
     $('#copy_submenu').hide();
-    $('#change_screen_submenu').hide();
 
     if (evt != null) {
       evt.cancelBubble = true;
@@ -454,14 +545,31 @@ function check_latex_random($q_ids, $mysqli) {
       var addLink = $('#add_break');
       activateAddBreak(addLink);
     }
-
-    if (document.PapersMenu.questionID.value == '') {
+		
+<?php
+	if ($properties->get_paper_type() == '4') {			// OSCE stations
+?>
+		if ( $("#icon_" + questionNo).hasClass("info_class") ) {
+			$("span.killer").addClass('greymenuitem');
+		} else if ( $("#icon_" + questionNo).hasClass("killer_icon") ) {
+			$("span.killer").html('<?php echo $string['unsetkillerquestion']; ?>');
+			$("span.killer").removeClass('greymenuitem');
+		} else {
+			$("span.killer").html('<?php echo $string['setkillerquestion']; ?>');
+			$("span.killer").removeClass('greymenuitem');
+		}
+<?php
+	}
+?>
+		
+    if ($('#questionID').val() == '') {
       qOff();
     }
   }
 
+
   function edQ(questionNo, questionID, qType) {
-    var loc = "../question/edit/index.php?q_id=" + questionID + "&paperID=<?php echo $paperID; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if(isset($_GET['module'])) echo $_GET['module']; ?>&calling=paper&scrOfY=" + $('#scrOfY').val();
+    var loc = "../question/edit/index.php?q_id=" + questionID + "&qNo=" + questionNo + "&paperID=<?php echo $paperID; ?>&calling=paper&scrOfY=" + $('#scrOfY').val();
     if (qType == 'random' || qType == 'keyword_based') {
       loc += '&type=' + qType;
     }
@@ -476,7 +584,6 @@ function check_latex_random($q_ids, $mysqli) {
 
     $('#stats_menu').hide();
     $('#copy_submenu').hide();
-    $('#change_screen_submenu').hide();
 
     hideMenus();
 
@@ -486,19 +593,20 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
-  function scrollXY() {
-    $('#scrOfY').val($('body,html').scrollTop());
-  }
-	
-	$(document).ready(function(){
-		<?php
+  $(function () {
+    <?php
 		if (isset($_GET['scrOfY'])) {
 			echo "  window.scrollTo(0," . $_GET['scrOfY'] . ");\n";
 		}
 		?>
 	
-		$(window).scroll(function() {
-			scrollXY();
+		$('#left-sidebar').click(function() {
+			$('#copy_submenu').hide();
+		});
+
+		$(window).click(function(event) {
+			hideMenus();
+			hideAssStatsMenu(event);
 		});
 	});
 </script>
@@ -526,7 +634,8 @@ function check_latex_random($q_ids, $mysqli) {
   ?>
     <div id="left-sidebar" class="sidebar">
     </div>
-    <div id="content" class="content"><br />
+    <div id="content">
+      <br />
   <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo "<h1 style=\"color:#C00000; margin-left:70px;font-size:160%\">" . $string['paperdeleted'] . "</h1>\n";
@@ -546,10 +655,7 @@ function check_latex_random($q_ids, $mysqli) {
   }
 
   // Log the hit in recent_papers.
-  $result = $mysqli->prepare("INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW();");
-  $result->bind_param('ii', $userObject->get_user_ID(), $paperID);
-  $result->execute();
-  $result->close();
+  Paper_utils::log_hit($userObject->get_user_ID(), $paperID, $mysqli);
 
   $old_p_id           = 0;
   $row_no             = 0;
@@ -584,6 +690,12 @@ function check_latex_random($q_ids, $mysqli) {
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
 
   while ($result->fetch()) {
+
+    if ($q_type == 'sct') {
+      $parts = explode('~', $leadin);
+      $leadin = $parts[0];
+    }
+
     if (!is_null($settings) and !is_array($settings)) {
       $settings = json_decode($settings, true);
     }
@@ -638,7 +750,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $mysqli);
+        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -686,6 +798,7 @@ function check_latex_random($q_ids, $mysqli) {
     $old_q_media        = $q_media;
     $old_q_media_width  = $q_media_width;
     $old_q_media_height = $q_media_height;
+    $old_settings       = $settings;
     $old_option_text[]  = $option_text;
     if (trim($o_media != '')) {
       $old_o_media[]    = $o_media;
@@ -739,7 +852,7 @@ function check_latex_random($q_ids, $mysqli) {
     if ($properties->get_paper_type() < 3) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $mysqli);
+			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
 		}
 		
     // If we had random questions on paper need to check if they need LaTeX
@@ -749,9 +862,18 @@ function check_latex_random($q_ids, $mysqli) {
 		
     if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
       $result = $mysqli->prepare("UPDATE properties SET random_mark = ?, total_mark = ?, latex_needed = ? WHERE property_id = ?");
-      $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $_GET['paperID']);
+      $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $paperID);
       $result->execute();
       $result->close();
+
+      // Update standard set as marks has changed.
+      $no_reviews = 0;
+      $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
+      foreach ($reviews as $review) {
+        if ($review['method'] != 'Hofstee') {
+          updateDB($review, $mysqli);
+        }
+      }
     }
   }
 
@@ -760,37 +882,41 @@ function check_latex_random($q_ids, $mysqli) {
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 
 <?php
   $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
   $exam_announcements = $exam_announcementObj->get_announcements();
 
-  echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
-
-  // Blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed.
-  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
-
-  echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>";
-  if (isset( $_GET['module'] ) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $_GET['module'] . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
   } elseif (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } else {
     $paper_modules = Paper_utils::get_modules($paperID, $mysqli);  // Get the modules from paper properties
     reset($paper_modules);
     $moduleID = key($paper_modules);
     if ($moduleID != '') {
       $module_code = $paper_modules[$moduleID];
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $moduleID . '">' . $module_code . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' . $module_code . '</a>';
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
     }
   }
-  echo '</div><div onclick="qOff()" style="font-size:220%; font-weight:bold; margin-left:10px"';
+  echo '</div>';
+  $title_class = 'page_title';
   if ($properties->get_retired() != '') {
-    echo ' class="retired"';
+    $title_class .= ' retired';
   }
-  echo '>' . $properties->get_paper_title() . '</div>';
-  echo "</th><th style=\"text-align:right; vertical-align:top; padding-right:6px\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo '<div onclick="qOff()" class="' . $title_class . '">' . $properties->get_paper_title() . '</div>';
+  echo "</div>\n";
+  
+  echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
+  // Blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed.
+  echo "<tr><td class=\"icon\"></td><td class=\"q_no\"></td><td></td><td class=\"t\"></td><td class=\"m\"></td><td class=\"d\"></td></tr>";
   if ($properties->get_retired() == '') {
     echo "<tr>\n";
   } else {
@@ -822,15 +948,15 @@ function check_latex_random($q_ids, $mysqli) {
   <?php
 
   if ($properties->get_summative_lock()) {
-    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"3\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td><td style=\"text-align:right\"><div class=\"yellowwarn\"></div></td></tr>\n";
+    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
   } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
     $tmp_hour = date("G", $properties->get_start_date());
     if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['farfuturewarning'], $properties->get_display_start_date());
       echo "</td></tr>\n";
     } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
       printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
       echo "</td></tr>\n";
     }
@@ -841,7 +967,7 @@ function check_latex_random($q_ids, $mysqli) {
 		
 		if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
 			echo "<tr><td colspan=\"6\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-			echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
+			echo "<tr><td class=\"redwarn\" style=\"width:40px; line-height:0\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
 			printf($string['nomatchsession'], $tmp_match, $properties->get_calendar_year());
 			echo "</td></tr>\n</table>\n</td></tr>\n";
 		}
@@ -855,7 +981,7 @@ function check_latex_random($q_ids, $mysqli) {
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
     $status = $status_array[$temp_array[$x]['status']];
-    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
+    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and ($temp_array[$x]['q_type'] != 'textbox' or $temp_array[$x]['correct'] != 'placeholder')) $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
     if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {
@@ -864,8 +990,8 @@ function check_latex_random($q_ids, $mysqli) {
       $screen_marks = 0;
       if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
         for ($missing=1; $missing<($temp_array[$x]['screen'] - $old_screen); $missing++) {
-          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '</span></h4></td></tr>';
-          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; background-color:#FFC0C0; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
+          echo '<tr id="link_break' . ($old_screen + $missing) . '" class="breakline qline screenerror"><td colspan="6" class="ie-fullwidth"><h4><span class="opaque">' . $string['screen'] . '&nbsp' . ($old_screen + $missing) . '&nbsp;</span></h4></td></tr>';
+          echo '<tr><td colspan="6" style="height:55px; background-image:url(../artwork/no_questions_gradient.png); repeat:repeat-x; color:white; background-color:#C00000; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
         }
       }
       echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';
@@ -880,6 +1006,14 @@ function check_latex_random($q_ids, $mysqli) {
       $status_class = ' status' . $temp_array[$x]['status'];
     }
 
+		$killer = 0;
+		if (isset($killer_questions) and $killer_questions->is_killer_question($temp_array[$x]['q_id'])) {
+			$killer = 1;
+			$killer_class = ' killer_icon';
+		} else {
+			$killer_class = '';
+		}
+		
     $theme_class = '';
     $theme_str = '';
     if (trim($temp_array[$x]['theme']) != '') {
@@ -904,16 +1038,26 @@ function check_latex_random($q_ids, $mysqli) {
     }
 
     if ($properties->get_summative_lock()) {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2c'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number + 1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     } else {
-      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number+1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
+      echo "\" onclick=\"selQ(" . ($question_number+1) . ",'" . $temp_array[$x]['q_id'] . "',$x,'" . $temp_array[$x]['q_type'] . "'," . $temp_array[$x]['screen'] . "," . $temp_array[$x]['p_id'] . "," . $temp_array[$x]['display_pos'] . ",'2b'," . count($temp_array[$x]['random']) . ",event);\" ondblclick=\"edQ(" . ($question_number + 1) . "," . $temp_array[$x]['q_id'] . ",'" . $temp_array[$x]['q_type'] . "');\">";
     }
 
-    echo '<td>';
+    if ($temp_array[$x]['q_type'] == 'info') {
+			$info_class = ' info_class';
+		} else {
+			$info_class = '';
+		}
+
+    echo "<td id=\"icon_" . ($question_number+1) . "\" class=\"{$killer_class}{$info_class}\">";
     if ($temp_array[$x]['q_type'] == 'random') {
       $dice_no = rand(1, 6);
-      if ($temp_array[$x]['leadin'] == '') $temp_array[$x]['leadin'] = 'Random question block';
+      if ($temp_array[$x]['leadin'] == '') {
+        $temp_array[$x]['leadin'] = 'Random question block';
+      }
       echo '<img src="../artwork/dice' . $dice_no . '.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
+    } elseif ($temp_array[$x]['q_type'] == 'keyword_based') {
+      echo '<img src="../artwork/keyword_q.png" width="14" height="14" alt="folder" style="position:relative; left:1px;" />';
     }
     echo '</td>';
 
@@ -928,14 +1072,16 @@ function check_latex_random($q_ids, $mysqli) {
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') {
+        echo '<span class="q_warning">' . $temp_array[$x]['warnings'] . '</span>';
+      }
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
 			if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
 				echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
 			}
       if (isset($exam_announcements[$temp_array[$x]['q_id']])) echo ' <img src="../artwork/comment_14_11.png" width="14" height="11" alt="Exam Clarification" />';
-      if ($temp_array[$x]['warnings'] != '') echo '<span style="color:#C00000; font-weight:bold">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;' . $temp_array[$x]['warnings'] . '</span>';
+      if ($temp_array[$x]['warnings'] != '') echo '<div class="q_warning">' . $temp_array[$x]['warnings'] . '</div>';
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {
@@ -949,7 +1095,7 @@ function check_latex_random($q_ids, $mysqli) {
     // Display position out of sync.
     if ($x <> $temp_array[$x]['display_pos']) {
       $temp_array[$x]['display_pos'] = $x;
-      $editPaper = "UPDATE papers SET display_pos=$x WHERE p_id=" . $temp_array[$x]['p_id'];
+      $editPaper = "UPDATE papers SET display_pos = $x WHERE p_id = " . $temp_array[$x]['p_id'];
       if (!$mysqli->query($editPaper)) {
         display_error("Paper order Error","Problem with query: $editPaper");
       }
@@ -985,7 +1131,7 @@ function check_latex_random($q_ids, $mysqli) {
     if ($temp_array[$x]['q_type'] == 'random') {
       $sub_question = 1;
       foreach ($temp_array[$x]['random'] as $random_question) {
-        echo "<tr style=\"display:none\" ondblclick=\"edQ(" . ($question_number+1) . "," . $random_question['q_id'] . ",'" . $random_question['type'] . "');\" id=\"r" . $x . "_" . $sub_question . "\"><td></td><td></td><td class=\"s\">&#149&nbsp;" . $random_question['leadin'] . "</td><td class=\"t\">" . fullQuestionType($random_question['type'], $string) . "</td>";
+        echo "<tr style=\"display:none\" ondblclick=\"edQ(" . $question_number . "," . $random_question['q_id'] . ",'" . $random_question['type'] . "');\" id=\"r" . $x . "_" . $sub_question . "\"><td></td><td></td><td class=\"s\">&#149&nbsp;" . $random_question['leadin'] . "</td><td class=\"t\">" . fullQuestionType($random_question['type'], $string) . "</td>";
         if ($temp_array[$x]['marks'] == 'ERR') {
           echo "<td class=\"errmk\">" . $random_question['marks'] . "</td>";
         } else {
@@ -1049,7 +1195,7 @@ function check_latex_random($q_ids, $mysqli) {
     $startdate = $properties->get_raw_start_date();
     $enddate   = $properties->get_raw_end_date();
 ?>
-    <script language="JavaScript">
+    <script>
       $.post('../reports/recache_class_totals.php', {paperID: '<?php echo $paperID; ?>', startdate: '<?php echo $startdate; ?>', enddate: '<?php echo $enddate; ?>'});  // AJAX off to class totals to recache marks.
     </script>
 <?php

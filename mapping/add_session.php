@@ -25,9 +25,9 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-$moduleID = (int)check_var('module', 'GET', true, false, true);
+$modID = (int)check_var('module', 'GET', true, false, true);
 
-if (!module_utils::get_moduleid_from_id($moduleID, $mysqli)) {
+if (!module_utils::get_moduleid_from_id($modID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -41,7 +41,7 @@ if (isset($_POST['Save'])) {
 
   $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, ?, ?, ?)");
   $identifier = intVal($identifier);
-  $stmt->bind_param('ssssss', $identifier, $moduleID, $_POST['session_title'], $_POST['url'], $_POST['session'], $occurrence);
+  $stmt->bind_param('ssssss', $identifier, $modID, $_POST['session_title'], $_POST['url'], $_POST['session'], $occurrence);
   $stmt->execute();
   $stmt->close();
 
@@ -59,7 +59,7 @@ if (isset($_POST['Save'])) {
   while (isset($_POST["obj_$i"])) {
     if ($_POST["obj_$i"] != $string['msg1']) {
       $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-      $stmt->bind_param('issssi', $obj_id, $_POST["obj_$i"], $moduleID, $identifier, $_POST['session'], $i);
+      $stmt->bind_param('issssi', $obj_id, $_POST["obj_$i"], $modID, $identifier, $_POST['session'], $i);
       $stmt->execute();
       $stmt->close();
     }
@@ -94,15 +94,15 @@ if (isset($_POST['Save'])) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
     .editBox {width:90%}
-    .field {text-align:right; font-weight:bold}
+    .field {text-align:right}
     .note {width:90%}
   </style>
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -198,12 +198,16 @@ if (isset($_POST['Save'])) {
   } else {
     $folder = '';
   }
-  echo '<div id="content" class="content" style="font-size:80%">';
-  echo "<table class=\"header\">\n";
-  echo "<tr><th colspan=\"3\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$module\">" . module_utils::get_moduleid_from_id($module, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"sessions_list.php?module=$module&folder=$folder\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['newsession'] . "</strong></div></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo '</table><br/>';
-
-  echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:80%; text-align:left\">\n";
+?>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo module_utils::get_moduleid_from_id($modID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $modID . '&folder=' . $folder ?>"><?php echo $string['manageobjectives'] ?></a></div>
+  <div class="page_title"><?php echo $string['newsession'] ?></div>
+</div>
+<br />
+<?php
+  echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:85%; text-align:left\">\n";
   echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" required autofocus /></td></tr>\n";
 
   echo '<tr><td class="field">' . $string['session'] . '</td><td>';
@@ -300,13 +304,12 @@ if (isset($_POST['Save'])) {
     //add the save buttens
     echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
     echo '<li style="margin:0.5em; margin-left:0.5em; text-align:center">';
-    echo '<input name="Save" style="width:120px" type="submit" value="' . $string['save'] . '" />&nbsp;&nbsp;';
-    echo '<input name="cancel" style="width:120px" type="button" value="' . $string['cancel'] . '" onclick="cancelForm();" />';
+    echo '<input name="Save" class="ok" type="submit" value="' . $string['save'] . '" /><input name="cancel" class="cancel" type="button" value="' . $string['cancel'] . '" onclick="cancelForm();" />';
     echo '</li>';
     echo "</ul>\n";
 
     echo "</td></tr>\n</table>\n</div>\n</form>\n";
-    echo '<script language="Javascript">updateButtons();</script>';
+    echo '<script>updateButtons();</script>';
 ?>
     </div>
   </body>

@@ -25,13 +25,28 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
 require_once '../classes/dateutils.class.php';
 require_once '../classes/noteutils.class.php';
 
+$userID = check_var('userID', 'REQUEST', true, false, true);
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
+
+// Does the paper exist?
+if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+// Does the student exist?
+if (!UserUtils::userid_exists($userID, $mysqli)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
 if (isset($_POST['submit'])) {
 	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-		StudentNotes::add_note($_POST['userID'], $_POST['note'], $_POST['paperID'], $userObject->get_user_ID(), $mysqli);
+		StudentNotes::add_note($userID, $_POST['note'], $paperID, $userObject->get_user_ID(), $mysqli);
 	} else {
 		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
 	}
@@ -42,7 +57,7 @@ if (isset($_POST['submit'])) {
   <?php
     if ($_POST['calling'] == 'class_totals') {
   ?>
-  <script language="JavaScript">
+  <script>
     function closeWindow() {
       window.opener.location.reload();
       window.close();
@@ -52,9 +67,9 @@ if (isset($_POST['submit'])) {
   <?php
     } else {
   ?>
-  <script language="JavaScript">
+  <script>
     function closeWindow() {
-      window.opener.location = "details.php?userID=<?php echo $_POST['userID']; ?>&tab=notes";
+      window.opener.location = "details.php?userID=<?php echo $userID ?>&tab=notes";
       window.close();
     }
   </script></head>
@@ -79,14 +94,10 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
   
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script language="JavaScript">
-    $(document).ready(function() {
-	    var noteHeight = $(document).height() - 140;
-	    $("#note").css('height', noteHeight + 'px')
-      $("#note").focus();
-			
+  <script>
+    $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
         errorPlacement: function(error,element) {
@@ -94,12 +105,19 @@ if (isset($_POST['submit'])) {
         }
       });
       $('form').removeAttr('novalidate');
+      
+      resizeTextbox();      
+      $("#note").focus();
     });
 	 
 	  $(window).resize(function() {
-	    var noteHeight = $(document).height() - 140;
-	    $("#note").css('height', noteHeight + 'px')
+	    resizeTextbox();
 	  });
+    
+    function resizeTextbox() {
+	    var noteHeight = $(window).height() - 100;
+	    $("#note").css('height', noteHeight + 'px');     
+    }
    
     $('#theform').submit(function() {
       if ($("#paperID").val() == '') {
@@ -120,44 +138,51 @@ if (isset($_POST['submit'])) {
 <body>
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="theform" id="theform">
 <?php
+	$disabled = '';
 	$note_details = array('note_id'=>0, 'note'=>'');
 	
-	$student_details = UserUtils::get_user_details($_GET['userID'], $mysqli);
+	$student_details = UserUtils::get_user_details($userID, $mysqli);
   
 	if (isset($_GET['paperID'])) {
     echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $_GET['paperID'] . "\" />\n";
 		
-		$note_details = StudentNotes::get_note($_GET['paperID'], $_GET['userID'], $mysqli);
+		$note_details = StudentNotes::get_note($_GET['paperID'], $userID, $mysqli);
 		
     echo '<strong>' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['initials'] . '</strong><br />';
   } else {
-		$student_modules = UserUtils::load_student_modules($_GET['userID'], $mysqli);
+		$student_modules = UserUtils::load_student_modules($userID, $mysqli);
 		
 		$current_year = date_utils::get_current_academic_year();
 		$module_IDs = array();
-		foreach ($student_modules[$current_year] as $moduleID=>$module_code) {
-			$module_IDs[] = $moduleID;
+		if (isset($student_modules[$current_year])) {
+			foreach ($student_modules[$current_year] as $moduleID=>$module_code) {
+				$module_IDs[] = $moduleID;
+			}
 		}
 		
     echo $string['papername'] . " <select name=\"paperID\" id=\"paperID\" required>\n<option value=\"\"></option>\n";
-    $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (" . implode(',', $module_IDs) . ") AND paper_type = '2' AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title");
-		$result->execute();
-    $result->bind_result($property_id, $paper_title);
-    while ($result->fetch()) {
-      echo "<option value=\"$property_id\">$paper_title</option>\n";
-    }
-    echo "</select>\n<br />\n";
-    $result->close();
+    if (count($module_IDs) > 0) {
+			// Look up summative papers that have been live in the last 28 days.
+			$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (" . implode(',', $module_IDs) . ") AND paper_type = '2' AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title");
+			$result->execute();
+			$result->bind_result($property_id, $paper_title);
+			while ($result->fetch()) {
+				echo "<option value=\"$property_id\">$paper_title</option>\n";
+			}
+			echo "</select>\n<br />\n";
+			$result->close();
+		} else {
+			$disabled = ' disabled="disabled"';
+		}
   }
   
   echo "<br />" . $string['note'] . "<br />\n";
   echo "<div style=\"text-align:center\"><textarea name=\"note\" id=\"note\" required>" . $note_details['note'] . "</textarea></div>\n";
 ?>
-<br />
-<div style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>" />&nbsp;<input style="width:100px" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
-<input type="hidden" name="userID" value="<?php echo $_GET['userID']; ?>" />
-<input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling']; ?>" />
-<input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"<?php echo $disabled ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<input type="hidden" name="userID" value="<?php echo $userID ?>" />
+<input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling'] ?>" />
+<input type="hidden" name="note_id" value="<?php echo $note_details['note_id'] ?>" />
 </form>
 
 </body>

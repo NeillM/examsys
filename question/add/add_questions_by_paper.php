@@ -18,7 +18,7 @@
 *
 * @author Simon Wilkinson
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -57,9 +57,10 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
 
-  <script type="text/javascript" src="../../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
-  <script language="JavaScript">
+  <script>
     function Qpreview(qID) {
       parent.previewurl.location = '../view_question.php?q_id=' + qID;
     }
@@ -95,10 +96,10 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   echo "<tr><th></th><th></th><th>&nbsp;</th><th class=\"vert_div\">" . $string['question'] . "</th><th class=\"vert_div\">" . $string['type'] . "</th><th style=\"width:90px\" class=\"vert_div\">" . $string['modified'] . "</th><th class=\"vert_div\" style=\"width:90px\">" . $string['status'] . "</th></tr>\n";
 
   // Get the questions in order off the paper.
-  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, leadin_plain, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id = question_exclude.q_id WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
+  $stmt = $mysqli->prepare("SELECT questions.q_id, leadin, q_type, screen, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited, locked, parts, status FROM (papers, questions) LEFT JOIN question_exclude ON questions.q_id = question_exclude.q_id WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
   $stmt->bind_param('i', $question_paper);
   $stmt->execute();
-  $stmt->bind_result($q_id, $leadin, $leadin_plain, $q_type, $screen, $last_edited, $locked, $parts, $status);
+  $stmt->bind_result($q_id, $leadin, $q_type, $screen, $last_edited, $locked, $parts, $status);
   $old_screen = 0;
   $question_no = 0;
   while ($stmt->fetch()) {
@@ -113,7 +114,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $status_class = 'status' . $status;
     echo "<tr class=\"{$status_class}\"><td class=\"q_no\">$question_no.</td><td>";
     }
-    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="16" height="16" alt="Locked" />';
+    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="Locked" />';
     echo "</td><td style=\"width:25px\"><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" id=\"$q_id\" value=\"$q_id\" /></td>";
     if ($parts == '') {
       echo '<td onclick="Qpreview(' . $q_id . ')">';

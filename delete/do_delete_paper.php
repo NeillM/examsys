@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a paper.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,16 +25,29 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/logger.class.php';
 
-$tmp_paperID = check_var('paperID', 'POST', true, false, true);
+$paperID = check_var('paperID', 'POST', true, false, true);
 
-// Set the deleted field to now and appened the date onto the paper title.
-// This will allow someone to make a new paper with the same name as that being deleted.
-$result = $mysqli->prepare("UPDATE properties SET deleted = NOW(), paper_title = CONCAT(paper_title,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE property_id = ?");
-$result->bind_param('i', $tmp_paperID);
-$result->execute();  
-$result->close();
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+if ($properties->get_summative_lock() == 1) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['paperlocked'], $msg, $string['paperlocked'], '../artwork/padlock_48.png', '#C00000', true, true);
+}
+
+$new_title = $properties->get_paper_title() . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
+$properties->set_paper_title($new_title);
+
+$delete_date = date('YmdHis');
+$properties->set_deleted($delete_date);
+
+$properties->save();
+
+// Record the deletion.
+$logger = new Logger($mysqli);
+$logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', '', 'Paper Deleted');
 
 $mysqli->close();
 ?>
@@ -45,38 +60,34 @@ $mysqli->close();
   <title><?php echo $string['questiondeleted']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
   
-  <script language="javascript">
-    function closeWindow() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       <?php
         if ($_POST['module'] != '') {
-          echo "self.opener.location.href = '../folder/details.php?module=" . $_POST['module'] . "';\n";
+          echo "self.opener.location.href = '../module/index.php?module=" . $_POST['module'] . "';\n";
         } elseif ($_POST['folder'] != '') {
-          echo "self.opener.location.href = '../folder/details.php?folder=" . $_POST['folder'] . "';\n";
+          echo "self.opener.location.href = '../folder/index.php?folder=" . $_POST['folder'] . "';\n";
         } else {
-          echo "self.opener.location.href = '../staff/index.php';\n";
+          echo "self.opener.location.href = '../index.php';\n";
         }
       ?>
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="closeWindow();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg']; ?></p>
 
-<td><p><?php echo $string['msg']; ?><p>
-
-<div style="text-align: center">
+<div class="button_bar">
 <form action="" method="get">
-<input type="button" name="cancel" value="    <?php echo $string['ok']; ?>    " onclick="javascript:self.opener.location.href='../folder/details.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>';window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='../module/index.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>'; window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

@@ -21,6 +21,7 @@ $string['papertasks'] = 'Działania dot. arkuszy';
 $string['testpreview'] = 'Test i podgląd';
 $string['addquestionspaper'] = 'Dodaj pytania do arkusza';
 $string['editproperties'] = 'Edytuj właściwości';
+$string['emailexternals'] = 'Wyślij Email do zewnętrznych';
 $string['reports'] = 'Raporty';
 $string['mappedobjectives'] = 'Cele odwzorowane';
 $string['importmarks'] = 'Importuj punkty';//??
@@ -48,6 +49,8 @@ $string['moveup'] = 'Przesuń do góry';
 $string['movedown'] = 'Przesuń w dół';
 $string['changescreenno'] = 'Zmień numer ekranu';
 $string['removefrompaper'] = 'Usuń z arkusza';
+$string['setkillerquestion'] = 'Ustaw "zabójcze" pytanie';
+$string['unsetkillerquestion'] = 'Anuluj "zabójcze" pytanie';
 
 $string['summativechecklist'] = 'Zestawienie końcowe';
 $string['session'] = 'Sesja';
@@ -70,11 +73,6 @@ $string['questionsbyteam'] = 'Pytania wg. zespołu';
 $string['questionsbykeyword'] = 'Pytania wg. słowa klucz.';
 $string['search'] = 'Szukaj';
 $string['createnewquestion'] = 'Utwórz nowe pytanie';
-
-$string['questions'] = 'Pytania';
-$string['papers'] = 'Arkusze';
-$string['people'] = 'Osoby';
-$string['studentcohort'] = 'Grupa studentów';  // Student Cohort of Paper
 
 $string['dates'] = 'Daty'; 
 $string['to'] = 'do';
@@ -127,6 +125,8 @@ $string['incabsentcandidates'] = 'uwzgl. kandydatów nieobecnych';
 $string['studentsonly'] = 'tylko próby studenckie'; 
 $string['completedatasets'] = 'Pokaż tylko pełne zbiory danych';
 $string['anyyear'] = 'Każdy rok';
+$string['tooltip_studentattempts'] = 'Odhacz aby pokazać próby pracowników i studentów w zestawieniu klasy.';
+$string['tooltip_daterange'] = 'Użyj dat do kontroli okna raporów.';
 
 $string['copyname'] = 'Nazwa kopii';
 $string['paperonly'] = 'Tylko arkusze';
@@ -136,4 +136,6 @@ $string['reorderinfo'] = 'Możesz teraz zmienić porządek pytań i przemieści�
 $string['insertscreenbreak'] = 'Wstaw podzielnik ekranu';//Insert screen break';
 $string['addscreenbreak'] = 'Wstaw podzielnik ekranu';  
 $string['deletescreenbreak'] = 'Usuń podzielnik ekranu';  
+$string['papers'] = 'Arkusze';
+$string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>

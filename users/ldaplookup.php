@@ -27,6 +27,7 @@
 require '../include/admin_auth.inc';
 require '../include/sort.inc';
 require_once '../classes/lookup.class.php';
+require_once '../classes/stringutils.class.php';
 
 if (isset($_REQUEST['LOOKUP'])) {
   if (isset($_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']])) {
@@ -48,6 +49,10 @@ if (isset($_REQUEST['LOOKUP'])) {
 		if (!isset($output->lookupdata->gender)) {
 			$output->lookupdata->gender = '';
 		}
+    $output->lookupdata->title = StringUtils::my_ucwords($output->lookupdata->title); // Stop problems with uppercase titles.
+    if ($output->lookupdata->title == 'Prof') {
+      $output->lookupdata->title = 'Professor';
+    }
   ?>
 <!DOCTYPE html>
 <html>
@@ -55,7 +60,7 @@ if (isset($_REQUEST['LOOKUP'])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>LDAP <?php echo $string['lookup']; ?></title>
+	<title>LDAP <?php echo $string['lookup'] ?></title>
 
 	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
 	<link rel="stylesheet" type="text/css" href="../css/header.css"/>
@@ -64,18 +69,18 @@ if (isset($_REQUEST['LOOKUP'])) {
 		body {background-color: #F1F5FB; font-size: 90%}
 	</style>
 	
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title; ?>");
-			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname; ?>");
-			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname; ?>");
-			window.opener.$('#new_username').val("<?php echo $output->lookupdata->username; ?>");
-			window.opener.$('#new_email').val("<?php echo $output->lookupdata->email; ?>");
-			window.opener.$('#new_grade').val("<?php echo $output->lookupdata->coursecode; ?>");
-			window.opener.$('#new_gender').val("<?php echo $output->lookupdata->gender; ?>");
-			window.opener.$('#new_yos').val("<?php echo $output->lookupdata->yearofstudy; ?>");
-			window.opener.$('#new_studentid').val("<?php echo $output->lookupdata->studentID; ?>");
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+	<script>
+    $(function () {
+		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title ?>");
+			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname ?>");
+			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname ?>");
+			window.opener.$('#new_username').val("<?php echo $output->lookupdata->username ?>");
+			window.opener.$('#new_email').val("<?php echo $output->lookupdata->email ?>");
+			window.opener.$('#new_grade').val("<?php echo $output->lookupdata->coursecode ?>");
+			window.opener.$('#new_gender').val("<?php echo $output->lookupdata->gender ?>");
+			window.opener.$('#new_yos').val("<?php echo $output->lookupdata->yearofstudy ?>");
+			window.opener.$('#new_studentid').val("<?php echo $output->lookupdata->studentID ?>");
 			
 			window.close();
 		});
@@ -98,16 +103,22 @@ if (isset($_REQUEST['LOOKUP'])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>LDAP <?php echo $string['lookup']; ?></title>
+	<title>LDAP <?php echo $string['lookup'] ?></title>
 
 	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/header.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/screen.css"/>
+	<link rel="stylesheet" type="text/css" href="../css/list.css"/>
 	<style type="text/css">
-		body {font-size: 90%}
-		th {background-color:#CFDBEB; font-weight:normal}
+		body {font-size:90%}
+    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
 	</style>
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      $('.l').click(function() {
+        window.location = 'ldaplookup.php?LOOKUP=' + $(this).attr('id');
+      })
+    });
+  </script>
 </head>
 <body>
 <?php
@@ -156,12 +167,12 @@ if (isset($_POST['submit'])) {
 					}
 					?>
 					<tr>
-						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" style="width:100px" /></td>
+						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" /></td>
 					</tr>
 				</table>
 			</div>
     </form>
-    <script language="JavaScript">
+    <script>
       alert(<?php echo $string['nousersalert'] ?>);
     </script>
     </body>
@@ -237,16 +248,16 @@ if (isset($_POST['submit'])) {
       $_SESSION['ldaplookup'][$i] = $key;
       $_SESSION['ldaplookupdata'][$key] = $object;
 			
-      echo "<tr style=\"cursor:pointer\"><td><a href='?LOOKUP=$key'>$title</a></td><td><a href='?LOOKUP=$key'>$first_names</a></td><td><a href='?LOOKUP=$key'>$surname</a></td><td><a href='?LOOKUP=$key'>$username</a></td><td><a href='?LOOKUP=$key'>$email</a></td><td><a href='?LOOKUP=$key'>$role</a></td></tr>\n";
+      echo "<tr class=\"l\" id=\"$key\"><td>$title</td><td>$first_names</td><td>$surname</td><td>$username</td><td>$email</td><td>$role</td></tr>\n";
     }
     echo "</table>\n";
   }
+  echo "</body>\n</html>\n";
   exit();
 }
 
 ?>
 <body>
-<br/>
 
 <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 	<div style="text-align:center">
@@ -260,7 +271,7 @@ if (isset($_POST['submit'])) {
 				<td><input type="text" name="surname" size="40"/></td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup']; ?>" style="width:100px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close();" style="width:100px" />
+				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" />
 				</td>
 			</tr>
 		</table>

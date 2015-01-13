@@ -85,17 +85,22 @@ class EnhancedCalc_Rrserve {
   }
   
   function setup_R() {
-		 self::$cnx->evalString('options(digits=15); 1==1;');
-		 self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
-		 self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
-		 self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
-		 self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
+		self::$cnx->evalString('options(digits=15); 1==1;');
+		self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
+		self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
+		self::$cnx->evalString('POW <- pow <- function(a,b) { return(a^b) }');
+		self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
   }
   
   function calculate_correct_ans($vars, $formula) {
     
     if (!$this->connect()) {
       throw new Exception('Cannot Connect');
+			return false;
+		}
+		
+		if (!is_array($vars)) {
+      throw new Exception('No variables');
 			return false;
 		}
     
@@ -140,7 +145,6 @@ class EnhancedCalc_Rrserve {
     if ($useranswer == '') {
       return 'ERROR';
     }
-
 
     try {
       $res = $this->eval_string("abs(excel_round((abs($useranswer - $correctanswer)/$correctanswer * 100),3))");
@@ -194,7 +198,7 @@ class EnhancedCalc_Rrserve {
     }
     
     try {
-       $status = $this->eval_string("$useranswer <= $max & $useranswer >= $min");
+      $status = $this->eval_string("$useranswer <= $max & $useranswer >= $min");
     } catch(Exception $e) {
       // There is an error it can't be correct
       return false;
@@ -279,13 +283,13 @@ class EnhancedCalc_Rrserve {
   function calc_sf($num) {
         
     $epos = strpos($num, 'e');
-    if($epos === false) {
+    if ($epos === false) {
       $epos = strlen($num);
     } 
     
-    if(strpos($num, '0.') === 0) {
+    if (strpos($num, '0.') === 0) {
        $epos = $epos - 2;
-    } else if(strpos($num, '.') !== false) {
+    } elseif (strpos($num, '.') !== false) {
       $epos = $epos - 1;
     }
    
@@ -334,7 +338,7 @@ class EnhancedCalc_Rrserve {
       return false;
     }
     $cmd = 'c(';
-    foreach($val as $v) {
+    foreach ($val as $v) {
       $cmd .= 'toStr(' . $v . '),';
     }
     $cmd = rtrim($cmd, ',');
@@ -349,7 +353,7 @@ class EnhancedCalc_Rrserve {
     }
     
     $ret = array();
-    foreach($R_rreturn as $key => $val) {
+    foreach ($R_rreturn as $key => $val) {
       $val = trim($val);
       if ($val == '') {
         continue;

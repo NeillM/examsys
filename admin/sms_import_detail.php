@@ -53,36 +53,56 @@ function get_list($list, $db) {
 	
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
-  tr {vertical-align:top}
   .no {text-align:right}
   </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-</head>
+  <script>    
+    $(function () {
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
+          sortList: [[0,0]] 
+        });
+      }
+    });
+  </script></head>
 <body>
 <?php
-  require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu();
 ?>
 
-<div id="content" class="content" style="font-size:80%">
-<table class="header">
-<tr>
-<th colspan="5"><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./list_modules.php"><?php echo $string['modules']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
-<div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['smsimportson']; ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4); ?></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr><th class="vert_div col10"><?php echo $string['moduleid']; ?></div></th><th class="vert_div"><?php echo $string['enrolements']; ?></th><th class="vert_div"><?php echo $string['enrolementdetails']; ?></th><th class="vert_div"><?php echo $string['deletions']; ?></th><th class="vert_div"><?php echo $string['deletiondetails']; ?></th><th class="vert_div"><?php echo $string['importtype']; ?></th></tr>
+<div id="content">
+  
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
+  <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4) ?></div>
+</div>
 
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">
+  <thead>
+    <tr>
+      <th class="vert_div col10"><?php echo $string['moduleid'] ?></div></th>
+      <th class="vert_div"><?php echo $string['academicyear'] ?></th>
+      <th class="vert_div"><?php echo $string['enrolements'] ?></th>
+      <th class="vert_div"><?php echo $string['enrolementdetails'] ?></th>
+      <th class="vert_div"><?php echo $string['deletions'] ?></th>
+      <th class="vert_div"><?php echo $string['deletiondetails'] ?></th>
+      <th class="vert_div"><?php echo $string['importtype'] ?></th>
+    </tr>
+</thead>
+<tbody>
 <?php
-  $result = $mysqli->prepare("SELECT idMod, moduleid, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
+  $result = $mysqli->prepare("SELECT idMod, moduleid, academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
   $db = $mysqli;
   if ($db->error) {
     try {
@@ -96,12 +116,13 @@ function get_list($list, $db) {
   $result->bind_param('s', $_GET['day']);
   $result->execute();
   $result->store_result();
-  $result->bind_result($idMod, $moduleid, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
+  $result->bind_result($idMod, $moduleid, $academic_year, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td class=\"col10\"><a href=\"../folder/details.php?module=$idMod\">$moduleid</a></td><td class=\"no\">$enrolements</td><td class=\"col\">" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>&nbsp;" . $import_type . "</td></tr>\n";
+    echo "<tr><td class=\"col10\"><a href=\"../module/index.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>" . $import_type . "</td></tr>\n";
   }
 
 ?>
+</tbody>
 </table>
 
 </div>

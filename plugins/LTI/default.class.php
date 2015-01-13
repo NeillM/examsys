@@ -7,7 +7,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class lti_integration_extended {
+require_once $configObject->get('cfg_web_root') . 'classes/userutils.class.php';
+require_once $configObject->get('cfg_web_root') . 'classes/smsutils.class.php';
+
+class lti_integration_extended  extends lti_integration {
 
 
   static function user_add($username, $password) {

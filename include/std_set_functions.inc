@@ -32,8 +32,12 @@ function checkVariables($number) {
   return $new_number;
 }
 
-function display_options($options, $q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $tmp_reviews, $tmp_exclude, $is_group) {
-  global $marking, $question_no, $part_id, $labelcolor, $old_likert_label, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $total_marks, $old_correct_fback, $stdID, $std_excluded, $string;
+function display_options($screen, $options, $q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $tmp_reviews, $tmp_exclude, $is_group) {
+  global $marking, $question_no, $part_id, $labelcolor, $old_likert_label, $li_set, $bgcolor, $total_marks, $old_correct_fback, $stdID, $std_excluded, $string;
+  static $allanswers;
+  if (!isset($allanswers)) {
+    $allanswers = array();
+  }
 
   $display_inline = array('dichotomous', 'mrq', 'rank', 'flash');
 
@@ -160,41 +164,35 @@ function display_options($options, $q_id, $current_theme, $current_scenario, $cu
       }
       break;
     case 'enhancedcalc':
+      $question['settings'] = $options[0]['settings'];
+      $question['theme'] = $current_theme;
+      $question['leadin'] = $current_leadin;
+      $question['scenario'] = $current_scenario;      
+      $question['q_id'] = $q_id;      
+      
+      require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
+      if (!isset($configObj)) {
+        $configObj = Config::get_instance();
+      }
+      $question['object'] = new EnhancedCalc($configObj);
+      $question['object']->load($question);
+      $question['object']->load_all_user_answers($allanswers);
+
+      $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
+
+      echo '<tr><td class="q_no">' . $question_no. '.&nbsp;</td><td>';
+      $question['object']->render_paper($extra);
+
+      $allanswers[$screen][$q_id]['uans'] =  $question['object']->get_real_answer();
+
+      $marks = $question['object']->calculate_question_mark();
+
       $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-      $settings = json_decode($options[0]['settings'], true);
-
-      if ($li_set == 1) {
-        echo '<tr><td></td><td>';
-      } else {
-        echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
-      }
-      $search = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J');
-      $replace = array('<span class="fback">$A</span>', '<span class="fback">$B</span>', '<span class="fback">$C</span>', '<span class="fback">$D</span>', '<span class="fback">$E</span>', '<span class="fback">$F</span>', '<span class="fback">$G</span>', '<span class="fback">$H</span>', '<span class="fback">$I</span>', '<span class="fback">$J</span>');
-      echo "<div";
-      if (substr($tmp_exclude,0,1)) echo ' style="color:red; text-decoration:line-through"';
-      echo ">" . str_ireplace($search, $replace, $current_leadin) . "</div>\n<br />";
-
-      if ($settings['show_units']) {
-        $units = $settings['answers'][0]['units'];
-      } else {
-        $units = '';
-      }
-
-      echo "<div><input type=\"text\" style=\"text-align:right\" name=\"q" . $question_no . "\" size=\"10\" />$units</div>\n";
-      echo "<div class=\"fback\">";
-      foreach ($settings['answers'] as $answer) {
-        echo 'Formula: ' . $answer['formula'] . ', Units: ' . $answer['units'] . '<br />';
-      }
-      echo "</div>\n<br />\n";
-      echo "<div>";
-      echo reviewScale($question_no, '', $settings['marks_correct'], $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
-      echo "</div>\n";
-      $marks = $settings['marks_correct'];
+      echo "<div>" . reviewScale($question_no, '', $marks, $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group) . "</div>\n";
 
       // Negative marked?
-      if ($settings['marks_incorrect'] < 0) {
-        $neg_marking = true;
-      }
+      $neg_marking = $question['object']->is_negative_marked();
+
       break;
     case 'dichotomous':
       echo "</blockquote></table>";

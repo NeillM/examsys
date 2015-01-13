@@ -16,7 +16,7 @@
 
 /**
  *
- * @author Simon Wilkinson
+ * @author Simon Wilkinson, Simon Atack
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
@@ -53,28 +53,21 @@ function exceptionHandler($exception) {
   // alter your trace as you please, here
   $trace = $exception->getTrace();
 
-  /*
-  foreach ($trace as $key => $stackPoint) {
-    // I'm converting arguments to their type
-    // (prevents passwords from ever getting logged as anything other than 'string')
-    $trace[$key]['args'] = array_map('gettype', $trace[$key]['args']);
-  }
-*/
   // build your tracelines
   $result = array();
   foreach ($trace as $key => $stackPoint) {
 
-    if(!isset($stackPoint['file'])) {
-      $stackPoint['file']='UNKNOWN';
+    if (!isset($stackPoint['file'])) {
+      $stackPoint['file'] = 'UNKNOWN';
     }
-    if(!isset($stackPoint['line'])) {
-      $stackPoint['line']='UNKNOWN';
+    if (!isset($stackPoint['line'])) {
+      $stackPoint['line'] = 'UNKNOWN';
     }
-    if(!isset($stackPoint['function'])) {
-      $stackPoint['function']='UNKNOWN';
+    if (!isset($stackPoint['function'])) {
+      $stackPoint['function'] = 'UNKNOWN';
     }
-    if(!isset($stackPoint['args'])) {
-      $stackPoint['args']='UNKNOWN';
+    if (!isset($stackPoint['args'])) {
+      $stackPoint['args'] = 'UNKNOWN';
     }
     /*$result[] = sprintf(
       $traceline,
@@ -127,18 +120,18 @@ function exceptionHandler($exception) {
       }
     }
   }
-  $variables='exception handler: therefore unknown';
+  $variables = 'exception handler: therefore unknown';
   $error_type = "Application Error";
-  $errstr=$msg;
+  $errstr = $msg;
   $userid = 0;
   $username = 'PRE LOGIN';
   if (isset($userObject)) {
     $userid = $userObject->get_user_ID();
     $username = $userObject->get_username();
   }
-  $valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown','Application Error');
+  $valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Error');
   if (!in_array($error_type, $valid_errors)) {
-    $error_type='Unknown';
+    $error_type = 'Unknown';
   }
 
   global $mysqli;
@@ -151,13 +144,12 @@ function exceptionHandler($exception) {
   }
 
   log_error($userid, $username, $error_type, $errstr, $exception->getFile(), $exception->getLine(), $paperID, $post_data, $variables, $exception->getTraceAsString(), $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
-  //trigger_error($msg, E_USER_WARNING);
 }
 
 
 function error_handling($context = null) {
   if (is_null($context) or !isset($context)) {
-    // if no array set get currently define variables in this object
+    // If no array set get currently define variables in this object.
     return 'NOTHING PARSED TO DECODE';
   }
 
@@ -197,13 +189,13 @@ function error_handling($context = null) {
           if ($key != 'ROGO_PW') {
             $tmp[$key1] = $value1;
           } else {
-            $tmp[$key1] = "<HIDDEN>";
+            $tmp[$key1] = '<HIDDEN>';
           }
         }
         $context1[$key] = $tmp;
       } elseif (is_array($value)) {
-        //inner loop
-        $context1[$key] = error_handling($value);
+        // Just use basic error handling as this was causing endless loops when fed back recursively into this function.
+        return $context;
       } else {
         $context1[$key] = $value;
       }
@@ -216,14 +208,15 @@ function error_handling($context = null) {
 }
 
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
-  global $debug_pagestart, $dbclass;
-  $variables='';
+  global $debug_pagestart, $mysqli;
+	
+  $variables = '';
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
   $userObject = UserObject::get_instance();
 
-  $disperrors=$configObject->get('displayerrors');
-  $dispallerrors=$configObject->get('displayallerrors');
+  $disperrors = $configObject->get('displayerrors');
+  $dispallerrors = $configObject->get('displayallerrors');
 
   if ($disperrors === true) {
     error_reporting(E_ALL);
@@ -232,10 +225,9 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
   }
 
   if (isset($debug_pagestart)) {
-    //we are in a debug session do not log errors to db just display them
+    // We are in a debug session do not log errors to DB just display them.
     return false;
   }
-
 
   switch ($errno) {
     case E_NOTICE:
@@ -323,10 +315,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context) {
     }
 
     if (isset($context) and !empty($context)) {
-
-$context=error_handling($context);
-
-  //    var_dump($context);
+			$context = error_handling($context);
 
       try {
         $variables = base64_encode(serialize($context));
@@ -338,10 +327,8 @@ $context=error_handling($context);
           $context = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();
           $variables = base64_encode(serialize($context));
         }
-
       }
     }
-
 
     $userid = 0;
     $username = 'PRE LOGIN';
@@ -349,13 +336,11 @@ $context=error_handling($context);
       $userid = $userObject->get_user_ID();
       $username = $userObject->get_username();
     }
-		$valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown','Application Warning','Application Error');
+		$valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Warning', 'Application Error');
     if (!in_array($error_type, $valid_errors)) {
-      $error_type='Unknown';
+      $error_type = 'Unknown';
     }
 
-
-    global $mysqli;
     if (isset($mysqli) and is_object($mysqli)  ) {
       if ($error_type != 'Notice' and isset($mysqli->error)) {
         if (!($mysqli->error == '' or is_null($mysqli->error))) {
@@ -364,42 +349,52 @@ $context=error_handling($context);
       }
     }
 
-    //$log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
-    if(!isset($_SERVER['PHP_SELF'])) {
-      $_SERVER['PHP_SELF']='NOT RUN FROM WEBSERVER';
+    if (!isset($_SERVER['PHP_SELF'])) {
+      $_SERVER['PHP_SELF'] = 'NOT RUN FROM WEBSERVER';
     }
-    if(!isset($_SERVER['QUERY_STRING'])) {
+    if (!isset($_SERVER['QUERY_STRING'])) {
       $_SERVER['QUERY_STRING'] = 'NOT RUN FROM WEBSERVER';
     }
-    if(!isset($_SERVER['REQUEST_METHOD'])) {
+    if (!isset($_SERVER['REQUEST_METHOD'])) {
       $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
     log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID, $post_data, $variables, $backtrace, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
-
-
   }
 
   return false;
 }
 
+/**
+ * Records details about an error in the database.
+ * @param int $userid         - ID of the current user.
+ * @param int $username       - Username of the current user.
+ * @param int $error_type     - Type of the error (e.g. Notice).
+ * @param int $errstr         - Description of the error (e.g. 'Undefined variable: property_id').
+ * @param int $errfile        - What file had the error.
+ * @param int $errline        - Line number where error occurred.
+ * @param int $paperID        - If applicable what paper ID is being used.
+ * @param int $post_data      - $_POST data.
+ * @param int $variables      - Variable data.
+ * @param int $backtrace      - Backtrace information.
+ * @param int $page           - Page (script) that encounted the error.
+ * @param int $querystring    - The query string passed to the script.
+ * @param int $requestmethod  - What request method was used.
+ */
 function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null) {
-
-
-  //var_dump($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID, $post_data, $variables , $backtrace, $page , $querystring , $requestmethod );
-  if(is_null($backtrace)) {
+  if (is_null($backtrace)) {
     $backtrace='';
     $backtrace = DebugBackTraceDisplay(debug_backtrace());
     try {
       throw new Exception("New Backtrace Method:", 1);
     }
     catch (Exception $e) {
-      $string="Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-      $string=$string . nl2br($e->getTraceAsString());
-      $backtrace=$string . "\r\n<br>Old Method:\r\n<br>" . $backtrace;
+      $string = "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+      $string = $string . nl2br($e->getTraceAsString());
+      $backtrace = $string . "\r\n<br>Old Method:\r\n<br>" . $backtrace;
     }
   }
-  if(is_null($post_data)) {
+  if (is_null($post_data)) {
     $post_data = '';
     if (isset($_POST)) {
       foreach ($_POST as $key => $value) {
@@ -416,7 +411,7 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
     }
 
   }
-  if($variables!='' and !is_string($variables)) {
+  if ($variables != '' and !is_string($variables)) {
     try {
       $variables = base64_encode(serialize($variables));
     } catch (Exception $e) {
@@ -431,20 +426,20 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
     }
   }
 
-  if(is_null($page)) {
-    if(!isset($_SERVER['PHP_SELF'])) {
-      $_SERVER['PHP_SELF']='NOT RUN FROM WEBSERVER';
+  if (is_null($page)) {
+    if (!isset($_SERVER['PHP_SELF'])) {
+      $_SERVER['PHP_SELF'] = 'NOT RUN FROM WEBSERVER';
     }
     $page = $_SERVER['PHP_SELF'];
   }
-  if(is_null($querystring)) {
+  if (is_null($querystring)) {
     if(!isset($_SERVER['QUERY_STRING'])) {
       $_SERVER['QUERY_STRING'] = 'NOT RUN FROM WEBSERVER';
     }
     $querystring = $_SERVER['QUERY_STRING'];
   }
-  if(is_null($requestmethod)) {
-    if(!isset($_SERVER['REQUEST_METHOD'])) {
+  if (is_null($requestmethod)) {
+    if (!isset($_SERVER['REQUEST_METHOD'])) {
       $_SERVER['REQUEST_METHOD'] = 'GET';
     }
     $requestmethod = $_SERVER['REQUEST_METHOD'];
@@ -452,8 +447,6 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
 
   $configObject = Config::get_instance();
   $notice = UserNotices::get_instance();
-
-
 
   // Query may fail if we try to insert while another statement is open.
   // Since we don't have a handle on the original statement, create another DB link

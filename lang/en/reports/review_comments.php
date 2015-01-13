@@ -34,4 +34,9 @@ $string['noreviewers'] = '<strong>Warning:</strong> There have been no reviews o
 $string['screen'] = 'Screen';
 $string['papernotfound'] = 'Paper not Found';
 $string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
+$string['reviewers'] = 'Reviewers';
+$string['started'] = 'Started';
+$string['completed'] = 'Completed';
+$string['generalpapercomments'] = 'General Paper Comments';
+$string['cannotcomment'] = 'Cannot Comment';
 ?>

@@ -16,6 +16,7 @@
 
 /**
 *
+* Displays a 'Class Totals' like report for a peer review paper type.
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -36,11 +37,12 @@ $enddate    = check_var('enddate', 'GET', true, false, true);
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-$paper_title = $propertyObj->get_paper_title();
-$calendar_year = $propertyObj->get_calendar_year();
-$type = $propertyObj->get_rubric();
-$marking = $propertyObj->get_marking();
-$review_type = $propertyObj->get_display_question_mark();
+$paper_title		= $propertyObj->get_paper_title();
+$calendar_year	= $propertyObj->get_calendar_year();
+$type						= $propertyObj->get_rubric();
+$marking				= $propertyObj->get_marking();
+$review_type		= $propertyObj->get_display_question_mark();
+$question_no		= $propertyObj->get_question_no();
 
 require_once 'summary_report.inc';
 ?>
@@ -54,7 +56,9 @@ require_once 'summary_report.inc';
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
+  <link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
   <style type="text/css">
     td {font-size:110%}
     .fn {color:#808080}
@@ -63,28 +67,46 @@ require_once 'summary_report.inc';
     .title {padding-left:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script language="JavaScript">
-  function setVars(tmpUserID) {
-    $('#userID').val(tmpUserID);
-  }
+  <script>
+    function setVars(tmpUserID) {
+      $('#userID').val(tmpUserID);
+    }
 
-  function viewProfile() {
-    $('#menudiv').hide();
-    window.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
-  }
+    function viewProfile() {
+      $('#menudiv').hide();
+      window.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
+    }
 
-  function viewReviews() {
-    $('#menudiv').hide();
-    var winwidth = screen.width-80;
-    var winheight = screen.height-80;
-    window.open("display_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-  }
+    function viewReviews() {
+      $('#menudiv').hide();
+      var winwidth = screen.width-80;
+      var winheight = screen.height-80;
+      window.open("display_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    }
 
-  document.onmousedown = mouseSelect;
+    $(function () {
+      $('#maindata').click(function() {
+        $('#menudiv').hide();
+        $('#toprightmenu').hide();
+      });
+      
+      $('.head_title').click(function() {
+        $('#menudiv').hide();
+        $('#toprightmenu').hide();
+      })
+
+      if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({ 
+          sortList: [[2,0],[3,0]] 
+        });
+      }
+
+    });
   </script>
 </head>
 
@@ -94,37 +116,36 @@ require_once 'summary_report.inc';
 	
 	echo draw_toprightmenu();
 ?>
-  <div id="menudiv" style="background-color:white; padding:1px; font-size:80%; position:absolute; display:none; top:0px; left:0px; z-index:10000; border:1px solid #868686; -moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px" onmouseover="javascript:overpopupmenu=true;" onmouseout="javascript:overpopupmenu=false;">
-  <table width="180" cellspacing="2" cellpadding="0" border="0" style="font-size:100%; background-color:white; width:100%">
-    <tr><td>
-      <table width="160" cellspacing="0" cellpadding="1" border="0" style="font-size:90%; background-color:white">
-        <tr>
-          <td id="item1a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewScript();"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" border="0" /></td><td id="item1b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('1');" onmouseout="menuRowOff('1');" onclick="viewReviews();"><?php echo $string['Review Form'];?></td>
-        </tr>
-        <tr>
-          <td id="item2a" style="text-align:center; border-top:1px solid #F1F5FB; border-bottom:1px solid #F1F5FB; border-left:1px solid #F1F5FB; border-right:0px solid #F1F5FB; background-color:#F1F5FB; width:24px" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" border="0" /></td><td id="item2b" style="padding-left:8px; border:1px solid #FFFFFF; background-color:#FFFFFF; cursor:default" onmouseover="menuRowOn('2');" onmouseout="menuRowOff('2');" onclick="viewProfile();"><?php echo $string['Student Profile'];?></td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
+<div id="menudiv" class="popupmenu">
+  <div class="popup_row" onclick="viewReviews();">
+    <div class="popup_icon"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item1"><?php echo $string['Review Form'] ?></div>
   </div>
+  
+  <div class="popup_row" onclick="viewProfile();">
+    <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title" id="item2"><?php echo $string['Student Profile']; ?></div>
+  </div>
+</div>
+
 <?php
-  echo "<table class=\"header\" style=\"font-size:80%\">\n";
-  echo "<tr><th colspan=\"" . ($heading_no + 7) . "\"><div class=\"breadcrumb\">";
+  echo "<div style=\"font-size:80%\">\n";
+
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
   if (isset( $_GET['module'] ) and $_GET['module'] != '') {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   } elseif (isset($_GET['folder'])) {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } else {
-    echo '<a href="../staff/index.php">' . $string['home'] . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper_title . '</a>';
-  echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">" . $string['reviewsummary'] . "</div>";
-  echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
+  echo "<div class=\"page_title\">" . $string['reviewsummary'] . "</div>";
+  echo "</div>\n";
 ?>
 <?php
 
-  //work out ordring
+  // Work out ordring
   if (isset($_GET['ordering']) and $_GET['ordering'] == 'asc') {
     $ordering = 'desc';
     $ordering_img = "<img src=\"../artwork/desc.gif\" width=\"9\" height=\"7\" style=\"padding-left:5px\" />";
@@ -143,9 +164,15 @@ require_once 'summary_report.inc';
     $percent = 100;
   }
 
-  // write out headings
-  $query_string = "percent=" . $percent . "&paperID=" . $paperID . "&startdate=" . $startdate . "&enddate=" . $enddate . "&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=" . $_GET['meta1'] . "";
-  $heading = array('surname'=>$string['name'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
+	if (isset($_GET['meta1'])) {
+		$meta1 = $_GET['meta1'];
+	} else {
+		$meta1 = '';
+	}
+	
+  // Write out headings
+  $query_string = "percent=$percent&paperID=$paperID&startdate=$startdate&enddate=$enddate&repmodule=" . $_GET['repmodule'] . "&repcourse=" . $_GET['repcourse'] . "&meta1=$meta1";
+  $heading = array('title'=>$string['title'], 'surname'=>$string['surname'], 'first_names'=>$string['firstnames'], 'student_id'=>$string['studentid'], 'have_review'=>$string['reviewed'], 'group'=>$type);
   if ($review_type == 1) {
     $heading['review_no'] = $string['reviews'];
   }
@@ -155,20 +182,25 @@ require_once 'summary_report.inc';
     $i++;
   }
   $heading['overall'] = $string['overall'];
-
+  
+	if (count($user_data) == 0) {
+		echo $notice->info_strip('No students found', 80) . "</body>\n</html>\n";
+		exit;
+	}
+?>
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="0" border="0">
+  <thead>
+<?php
   echo '<tr><th></th>';
   foreach ($heading as $k => $h) {
-    echo '<th class="' . $k . '"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" />&nbsp;';
-    echo "<a style=\"color:black;text-decoration:none\" href=\"" . $_SERVER['PHP_SELF'] . '?' . $query_string . "&sortby=$k&ordering=$ordering" . "\">";
-    echo  $h;
-    if ($k == $sortby) {
-      echo $ordering_img;
-    }
-    echo "</a>";
-    echo '</th>';
+    echo '<th class="' . $k . '">&nbsp;' . $h . '</th>';
   }
   echo "<th class=\"num\">&nbsp;</th></tr>\n";
-
+?>
+  </thead>
+  
+  <tbody>
+<?php
   // Take the arrays and form one master array which can be sorted for on-screen display.
   $master_array = array();
   $user_number = 0;
@@ -215,9 +247,13 @@ require_once 'summary_report.inc';
           $q_no++;
         }
         if ($_GET['percent'] == '1') {
-          $master_array[$user_number]['overall'] = round($student['total_percent'][$questionID], 0);
+          if(array_key_exists('total_percent', $student)) {
+            $master_array[$user_number]['overall'] = round($student['total_percent'][$questionID], 0);
+          } else {
+            $master_array[$user_number]['overall'] = '';
+          }
         } else {
-          $master_array[$user_number]['overall'] = padDecimals($mean_total / $heading_no, 2);
+          $master_array[$user_number]['overall'] = padDecimals($mean_total / $question_no, 2);
         }
       } else {
         $q_no = 1;
@@ -238,21 +274,20 @@ require_once 'summary_report.inc';
   // Sort the data.
   $master_array = array_csort($master_array, $sortby, $ordering);
   
-  //var_dump($master_array);
-
   for ($i=0; $i<$user_number; $i++) {
-    //if ($student_userID > 0) {
-    if ($master_array[$i]['student_id'] > 0) {
-      echo '<tr>';
-      echo '<td class="greyln"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');" /></td>';
-      echo '<td class="greyln" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');">' . $master_array[$i]['title'] . ' ' . $master_array[$i]['surname'] . ', <span class="fn">' . $master_array[$i]['first_names'] . '</span></td>';
-      echo '<td class="greyln">' . $master_array[$i]['student_id'] . '</td>';
+    if ($master_array[$i]['student_id'] != '') {
+      echo '<tr onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');">';
+      echo '<td class="greyln col"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');" /></td>';
+      echo '<td class="greyln col">' . $master_array[$i]['title'] . '</span></td>';
+      echo '<td class="greyln col">' . $master_array[$i]['surname'] . '</span></td>';
+      echo '<td class="greyln col">' . $master_array[$i]['first_names'] . '</td>';
+      echo '<td class="greyln col">' . $master_array[$i]['student_id'] . '</td>';
       if ($master_array[$i]['have_review'] == 'Complete') {
-        echo '<td class="greyln">' . $string['Complete'] . '</td>';
+        echo '<td class="greyln col">' . $string['Complete'] . '</td>';
       } else {
-        echo '<td class="greyln" style="color:#C00000">' . $string['Missing'] . '</td>';
+        echo '<td class="greyln col" style="color:#C00000">' . $string['Missing'] . '</td>';
       }
-      echo '<td class="greyln">' . $master_array[$i]['group'] . '</td>';
+      echo '<td class="greyln col">' . $master_array[$i]['group'] . '</td>';
       if ($review_type == 1) {
         if (isset($master_array[$i]['review_no'])) {
           if ($master_array[$i]['review_no'] < $master_array[$i]['group_no']) {
@@ -285,7 +320,9 @@ require_once 'summary_report.inc';
     }
   }
 ?>
+  </tbody>
 </table>
+</div>
 
 <form>
 <input type="hidden" id="userID" value="" />

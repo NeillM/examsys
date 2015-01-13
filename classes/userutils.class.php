@@ -28,7 +28,7 @@ require_once $cfg_web_root . '/classes/courseutils.class.php';
 
 Class UserUtils {
 
-  private static $supported_years = array('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20');
+  private static $supported_years = array('2008/09', '2009/10', '2010/11', '2011/12', '2012/13', '2013/14', '2014/15', '2015/16', '2016/17', '2017/18', '2018/19', '2019/20');
 
   static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '') {
     $courseok = CourseUtils::add_course($school, $course, $coursedesc, $db);
@@ -48,29 +48,30 @@ Class UserUtils {
   }
 
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
-    if ($username == '' or  $surname == '' or $role == '') {
+    $username = trim($username);
+    $surname = trim($surname);
+    if (empty($username) or  empty($surname) or empty($role)) {
       return false;
     }
 
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
-      if (is_null($initials)) {
-        $initial = explode(' ', $forname);
-        $initials = '';
-        foreach ($initial as $name) {
-          $initials .= substr($name, 0, 1);
-        }
-        $initials = strtoupper($initials);
+      // Force re-build of initials off forenames.
+      $initial = explode(' ', $forname);
+      $initials = '';
+      foreach ($initial as $name) {
+        $initials .= substr($name, 0, 1);
       }
+      $initials = strtoupper($initials);
 
-      $surname = self::my_ucwords(trim($surname));
+      $surname = self::my_ucwords($surname);
       $title = self::my_ucwords(trim($title));
 
-      //if there is no password generate one
+      // If there is no password generate a default one.
       if ($password == '') {
         $password = gen_password();
       }
 
-      //force valid value for gender or default to NULL
+      // Force valid value for gender or default to NULL
       if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
         $gender = null;
       }
@@ -78,8 +79,8 @@ Class UserUtils {
       $salt = UserUtils::get_salt();
       $encrypt_password = encpw($salt, $username, $password);  // One way encrypt the password.
 
-      //add new users
-      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, NOW(), 0, ?, NULL, NULL)");
+      // Add new record into users table.
+      $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, 0, ?, NULL, NULL)");
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
       $result->execute();
       $result->close();
@@ -109,7 +110,7 @@ Class UserUtils {
     $configObj = Config::get_instance();
   
     $auth_settings = $configObj->get('authentication');
-    for ($i=0; $i<count($auth_settings); $i++) {
+    for ($i = 0; $i < count($auth_settings); $i++) {
       if ($auth_settings[$i][0] == 'internaldb') {
         $cfg_encrypt_salt = $auth_settings[$i][1]['encrypt_salt'];
       }
@@ -122,11 +123,11 @@ Class UserUtils {
     if ($userID == '' or $password == '') {
       return false;
     }
-    
-    $salt = UserUtils::get_salt();
+
+		$salt = UserUtils::get_salt();
     $encrypt_password = encpw($salt, $username, $password);
 
-    $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt = $db->prepare("UPDATE users SET password = ?, password_expire = NULL WHERE id = ?");
     $stmt->bind_param('si', $encrypt_password, $userID);
     if (!$stmt->execute()) {
       $success = false;
@@ -151,6 +152,7 @@ Class UserUtils {
     if ($username == '') {
       return false;
     }
+    $username = substr($username, 0, 60);
   
     $stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND user_deleted IS NULL");
     $stmt->bind_param('s', $username);
@@ -163,12 +165,35 @@ Class UserUtils {
 
     return $exists;
   }
+  
+  /**
+   * Add a new role to a user.
+   *
+   * @param string $new_role - The role to be added.
+   * @param string $userid   - The ID of the user we are dealing with.
+   * @param object $db       - Database connection.
+   */
+  static function add_role($new_role, $userid, $db) {
+    if ($new_role == '') {
+      return false;
+    }
+    
+    $has_role = UserUtils::has_user_role($userid, $new_role, $db);
+    
+    if (!$has_role) {    // If new roles does not exist, add.
+      $stmt = $db->prepare("UPDATE users SET roles = CONCAT(roles, ',', '$new_role') WHERE id = ?");
+      $stmt->bind_param('i', $userid);
+      $stmt->execute();
+      $stmt->close();
+    }
+    
+  }
 
   /**
    * Check if userID exists.
    *
-   * @param string $userid user ID
-   * @param object $db mysqli database connection
+   * @param string $userid  - User ID
+   * @param object $db      - Database connection
    *
    * @return true if exists else false
    *
@@ -186,6 +211,15 @@ Class UserUtils {
     return $exists;
   }
 
+  /**
+   * Get the username for a given user ID (if not deleted).
+   *
+   * @param string $userid  - User ID
+   * @param object $db      - Database connection
+   *
+   * @return string username of the user
+   *
+   */
   static function get_username($userid, $db) {
     $stmt = $db->prepare("SELECT username FROM users WHERE id = ? AND user_deleted IS NULL");
     $stmt->bind_param('i', $userid);
@@ -250,12 +284,20 @@ Class UserUtils {
     return $match;
   }
   
+  /**
+   * Get all the details of a user account.
+   *
+   * @param integer $userID - UserID of the user we wish to look up.
+   * @param object $db      - Database connection
+   *
+   * @return mixed - False if not found, otherwise an array with the details.
+   */
   static function get_user_details($userID, $db) {
-    $stmt = $db->prepare("SELECT username, title, surname, initials, first_names, email, roles FROM users WHERE id = ? LIMIT 1");
+    $stmt = $db->prepare("SELECT username, title, surname, initials, first_names, email, roles, gender, grade, yearofstudy, user_deleted FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param('i', $userID);
     $stmt->execute();
     $stmt->store_result();
-    $stmt->bind_result($username, $title, $surname, $initials, $first_names, $email, $roles);
+    $stmt->bind_result($username, $title, $surname, $initials, $first_names, $email, $roles, $gender, $grade, $yearofstudy, $user_deleted);
     $exists = ($stmt->num_rows > 0);
     $stmt->fetch();
     $stmt->close();
@@ -263,6 +305,9 @@ Class UserUtils {
     if (!$exists) {  // Return false if no record found for passed ID.
       return false;
     }
+    
+    $parts = explode(' ', $first_names);
+    $first_name = $parts[0];
     
     if (stripos($roles, 'Student') !== false or stripos($roles, 'Graduate') !== false) {
       $stmt = $db->prepare("SELECT student_id FROM sid WHERE userID = ? LIMIT 1");
@@ -272,9 +317,9 @@ Class UserUtils {
       $stmt->fetch();
       $stmt->close();
 
-      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id);
+      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'first_name'=>$first_name, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id, 'gender'=>$gender, 'grade'=>$grade, 'yearofstudy'=>$yearofstudy, 'user_deleted'=>$user_deleted);
     } else {
-      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'');
+      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'first_name'=>$first_name, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'', 'gender'=>$gender, 'grade'=>$grade, 'yearofstudy'=>$yearofstudy, 'user_deleted'=>$user_deleted);
     }
     
   }
@@ -282,14 +327,14 @@ Class UserUtils {
   /**
    * Add a member of staff onto a team.
    *
-   * @param integer $tmp_userID UserID of the member of staff
-   * @param int $idmod the id of the team (module)
-   * @param object $db mysqli database connection
+   * @param integer $tmp_userID - UserID of the member of staff.
+   * @param int $idmod          - The id of the team (module).
+   * @param object $db          - Database connection.
    *
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
-      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW(), 'System')");
+      $stmt = $db->prepare("INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW())");
       $stmt->bind_param('ii', $idMod, $tmp_userID);
       $stmt->execute();
       $stmt->close();
@@ -329,7 +374,7 @@ Class UserUtils {
   }
   
   /**
-   * Lists the team a user id is on (uses the user object for the curent users
+   * Lists the teams a user ID is on (uses the user object for the curent users
    * use this if we are not dealing with the logged in user)
    * 
    * @param string $userID the id of the user
@@ -343,8 +388,8 @@ Class UserUtils {
                             FROM 
                                 modules_staff, modules 
                             WHERE 
-                                modules_staff.idMod = modules.id AND 
-                                type = 'System' AND 
+                                modules_staff.idMod = modules.id AND
+                                mod_deleted IS NULL AND
                                 memberID = ?");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -424,7 +469,7 @@ Class UserUtils {
    */
   static function get_staff_modules_list_by_name($team_name, $db) {
     $team_members = array();
-    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ?");
+    $result = $db->prepare("SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ? AND mod_deleted IS NULL");
     $result->bind_param('s', $team_name);
     $result->execute();
     $result->bind_result($memberID);
@@ -477,7 +522,7 @@ Class UserUtils {
     $userObject = UserObject::get_instance();
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
-      //don't add a user to a module multiple times
+      // Don't add a user to a module multiple times.
       return true;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
@@ -621,6 +666,63 @@ Class UserUtils {
     $result->close();
 
     return $studentModules;
+  }
+	
+  /**
+   * Set a single user to be deleted. Also appends the primary key ID
+	 * to the end of username so that username is still unique if
+	 * another user with the same username is added later.
+   *
+   * @param int $userID - ID of the student.
+   * @param object $db  - database connection.
+   *
+   */
+	static function delete_userID($userID, $db) {
+    $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $userID);
+    $result->execute();  
+    $result->close();
+	}
+  
+  /**
+   * Does a search for a student photo in the /users/photos/ directory.
+   * A search is performed against JPEG, GIF and PNG file types.
+   *
+   * @param string $username  - Username of the student we wish to search for.
+   * @return bool|string      - Returns false if file not found, otherwise will return
+   *                            the username and extention (file) is has matched.
+   *
+   */
+  static function student_photo_exist($username) {
+    $found = false;
+    $configObj = Config::get_instance();
+    
+    $filename = $configObj->get('cfg_web_root') . "users/photos/" . $username;
+    if (file_exists($filename . '.jpg')) {
+      $found = $username . '.jpg';
+    } elseif (file_exists($filename . '.jpeg')) {
+      $found = $username . '.jpeg';
+    } elseif (file_exists($filename . '.gif')) {
+      $found = $username . '.gif';
+    } elseif (file_exists($filename . '.png')) {
+      $found = $username . '.png';
+    }
+    
+    return $found;
+  }
+  
+  /**
+   * Delete all the LTI records associated with a Rogo user ID.
+   *
+   * @param int $userID - ID of the Rogo user.
+   * @param object $db  - database connection.
+   *
+   */
+  static function clear_lti_user($userID, $db) {
+    $result = $db->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
+    $result->bind_param('i', $userID);
+    $result->execute();  
+    $result->close();
   }
 
 

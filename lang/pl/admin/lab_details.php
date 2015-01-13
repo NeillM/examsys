@@ -20,7 +20,6 @@ $string['createnewlab'] = 'Utwórz pracownię';
 $string['vieweditdetails'] = 'Zobacz/edytuj szczegóły';
 $string['deletelab'] = 'Usuń pracownię';
 $string['lowbandwidth'] = 'Mała przepustowość';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['name'] = 'Nazwa';
 $string['campus'] = 'Kampus';
 $string['building'] = 'Budynek';

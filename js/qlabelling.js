@@ -2,11 +2,14 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 
 	this.canvas = document.getElementById('canvas'+num);
 	this.canv_rect = this.canvas.getBoundingClientRect();
-  
+    
 	if (this.canvas && this.canvas.getContext){
 		this.canvas.onmouseup   = this.ql_mouseDragUp.bind(this);
 		this.canvas.onmousedown = this.ql_mouseDragDown.bind(this);
 		this.canvas.onmousemove = this.ql_mouseDragMove.bind(this);
+		this.canvas.addEventListener("touchstart", this.ql_mouseDragDown.bind(this), false);
+		this.canvas.addEventListener("touchmove", this.ql_mouseDragMove.bind(this), false);
+		this.canvas.addEventListener("touchend", this.ql_mouseDragUp.bind(this), false);
 		this.canvas.tabIndex 		= 1000; //force keyboard events
 		if (document.addEventListener){ 
       document.addEventListener("keydown",	ql_mouseDragMove.bind(this),false); 
@@ -84,7 +87,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 			}
 		}
 
-		this.currentColours[2]	= existingInfo[4];	                        // text colour
+  	this.currentColours[2]	= existingInfo[4];	                        // text colour
 		this.labelWidth			    = Number(existingInfo[5]);					        // text label width
 		this.labelWidthEffect   = this.labelWidth;
 		this.labelHeight			  = Number(existingInfo[6]); 					        // text label height
@@ -168,12 +171,12 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
 				if (typeof(myLabelInfo[4]) == 'undefined') yes_to_add = false;
 				if (this.qmode == 'analysis' && myLabelInfo[4] == '') yes_to_add = false;
 				if (this.qmode == 'script' && myLabelInfo[4] == '') yes_to_add = false;
-				if (mli_index > 19) yes_to_add = false;				
+				if (mli_index > 20) yes_to_add = false;				
 				
 				if (yes_to_add) {
 					var mli_combo = (myLabelInfo[1]!=''?Number(myLabelInfo[1]):0); 	//combo indicator?  >0
-					var mli_pos_xa = Number(myLabelInfo[2]);  											//pos_x
-					var mli_pos_ya = Number(myLabelInfo[3]);  											//pos_y
+					var mli_pos_xa = Math.round(Number(myLabelInfo[2]));  											//pos_x
+					var mli_pos_ya = Math.round(Number(myLabelInfo[3]));  											//pos_y
 					var mli_pos_xb = apx[mli_index-blank_count];										//pos_x
 					var mli_pos_yb = apy[mli_index-blank_count];										//pos_y
 					var mli_answr = myLabelInfo[4];                       					//answer
@@ -653,7 +656,13 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			if (i == this.active_box_id && this.qmode == 'answer') {
 				var tmp_height = this.labelHeightEffect*this.menuBox.length;
 				var tmp_trans = this.lineThickness-1;
-				if ((temp_y+tmp_height)>this.canvas.height) tmp_trans = -tmp_height-this.labelHeightEffect;
+
+				too_close = 0;
+				if ((temp_y+tmp_trans+this.labelHeightEffect+tmp_height)>this.canvas.height) too_close=2
+				if ((temp_y+tmp_trans+this.labelHeightEffect)<tmp_height) too_close++;
+				if (too_close==2) tmp_trans = -tmp_height-this.labelHeightEffect;
+				if (too_close==3) tmp_trans = this.canvas.height - tmp_height - temp_y - this.labelHeightEffect - 2;
+				
 				this.context.fillStyle='#fff';
 				this.context.fillRect(temp_x+0.5,temp_y+tmp_trans+this.labelHeightEffect+0.5,this.labelWidthEffect,tmp_height);
 				
@@ -751,6 +760,7 @@ function ql_draw_box(i,j,temp_x,temp_y) {
 			}
 		}	
 	}
+	if (this.tested_canvas_height > -1 &&	this.tested_canvas_height < temp_y) this.tested_canvas_height = temp_y;
 }
 
 function ql_redraw_box(i,j) {
@@ -947,9 +957,9 @@ function ql_redraw_canvas() {
 
     //frames
     this.context.lineWidth = 1;
-    this.context.strokeStyle='#cccccc';//'#7f9db9'; 
+    this.context.strokeStyle='#c0c0c0';//'#7f9db9'; 
     if (this.qmode == 'edit') this.context.strokeRect(0.5,0.5,this.canvas.width-1,25); 		
-    this.context.strokeStyle='#7f9db9';  
+    this.context.strokeStyle='#909090';  //'#7f9db9';  
     this.context.strokeRect(220.5,0.5,this.canvas.width-220,this.canvas.height-1); 
     
     if (this.global_move && this.active_shape_move>-1) {      
@@ -1005,13 +1015,19 @@ function ql_redraw_canvas() {
 		
       
 		//draw labels placeholders
-		var loc_width = this.imglabelWidth;
-		var loc_height = this.imglabelHeight;
+		var loc_width,loc_height;
+		
 		if (this.qmode != 'edit' && this.qType != 'menu') {
 			for (i=0;i<this.pholderBox.length;i++) {
 				if (typeof(this.pholderBox[i])!='undefined') {
 					//selecting width and height
-					if (this.pholderBox[i][1] == 'text' ) {loc_width = this.labelWidthEffect;loc_height=this.labelHeightEffect;}
+					loc_width = this.imglabelWidth;
+					loc_height = this.imglabelHeight;
+					
+					if (this.pholderBox[i][1] == 'text' ) {
+						loc_width = this.labelWidthEffect;
+						loc_height=this.labelHeightEffect;
+					}
 
 					//drawing background (unanswered)
 					this.context.fillStyle=this.currentColours[0];
@@ -1022,6 +1038,8 @@ function ql_redraw_canvas() {
 					//fill and strike background rectangle
 					if (this.qmode!='script' && this.qmode!='answer') this.context.fillRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
 					this.context.strokeRect(this.pholderBox[i][5]+1.5,this.pholderBox[i][6]+1.5,loc_width,loc_height);
+					if (this.tested_canvas_width > -1 &&	this.tested_canvas_width < (this.pholderBox[i][5]+loc_width)) this.tested_canvas_width = (this.pholderBox[i][5]+loc_width);
+
 				}
 			}
 		}
@@ -1251,7 +1269,13 @@ function ql_redraw_canvas() {
 				}
 			}
 		}
-		
+		if (this.tested_canvas_height > -1) {
+			if (this.canvas.height<this.tested_canvas_height) this.canvas.height = Math.floor(this.tested_canvas_height);
+			if (this.canvas.width<this.tested_canvas_width) this.canvas.width = Math.floor(this.tested_canvas_width)+5;
+			this.tested_canvas_height = -1;
+			this.tested_canvas_width = -1;
+			this.redraw_once = true;
+		}
 		this.context.fillStyle=this.currentColours[0]; //resetting colour
 		
 		//redraw active label to have it on top
@@ -1465,7 +1489,7 @@ function ql_redraw_canvas() {
 
     // border
     this.context.lineWidth = 1;
-    this.context.strokeStyle='#7f9db9';  
+    this.context.strokeStyle='#909090';  //'#7f9db9';  
 		this.context.strokeRect(0.5,0.5,this.canvas.width-1,this.canvas.height-1); //border
 	}
 }
@@ -1487,7 +1511,14 @@ function ql_mouseDragMove(e){
 		this.x = this.ev.clientX - this.loc_lft;
 		this.y = this.ev.clientY - this.loc_top;
 	}	
-
+	if (this.ev.type == 'touchmove') {
+		this.ev.preventDefault();
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.loc_lft = this.canv_rect.left;
+		this.loc_top = this.canv_rect.top;
+		this.x = this.ev.targetTouches[0].pageX - this.loc_lft;
+		this.y = this.ev.targetTouches[0].pageY - this.loc_top;
+	}	
 	//dragging labels handlers
 	if (typeof(this.active_box_handler)!='undefined' && this.active_box_handler!=-1) {
 		var dim = new Array(this.answerBox[this.active_box_id][this.active_box_combo][5],this.answerBox[this.active_box_id][this.active_box_combo][6],this.answerBox[this.active_box_id][this.active_box_combo][5]+this.labelWidthEffect,this.answerBox[this.active_box_id][this.active_box_combo][6]+this.labelHeightEffect);
@@ -1807,8 +1838,52 @@ function ql_mouseDragMove(e){
 }
 
 function ql_mouseDragDown(e){
-	this.x = e.clientX - this.canv_rect.left;
-	this.y = e.clientY - this.canv_rect.top;
+	this.ev = e || window.event;
+	//this.x = e.clientX - this.canv_rect.left;
+	//this.y = e.clientY - this.canv_rect.top;
+	if (this.ev.type == 'mousedown') {
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.x = this.ev.clientX - this.canv_rect.left;
+		this.y = this.ev.clientY - this.canv_rect.top;
+	}	
+	if (this.ev.type == 'touchstart') {
+		this.ev.preventDefault();
+		this.canv_rect = this.canvas.getBoundingClientRect();
+		this.x = this.ev.targetTouches[0].pageX - this.canv_rect.left;
+		this.y = this.ev.targetTouches[0].pageY - this.canv_rect.top;
+	
+		for (i=0;i<this.answerBox.length;i++) {
+			for (j=0;j<this.answerBox[i].length;j++) {
+				if (typeof(this.answerBox[i][j])!='undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4] == 0)) {
+					if (this.answerBox[i][j][1] == 'image') {
+						if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.imglabelWidth,this.imglabelHeight) == true) {
+							if (this.drag_box_id == -1 || this.answerBox[i][j][9]!='') {
+								this.drag_box_id = i;
+								this.drag_box_combo = j;
+							}
+						}
+					}
+					if (this.answerBox[i][j][1] == 'text') {
+						if (this.qType != 'menu') {
+							if (this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) {
+								if (this.drag_box_id == -1 || this.answerBox[i][j][9]!='') {
+									this.drag_box_id = i;
+									this.drag_box_combo = j;
+									}
+							}
+						} else {
+							if (typeof(this.pholderBox[i])!='undefined' && ((this.qmode == 'edit' && this.testWithin(this.x,this.y,this.answerBox[i][j][5],this.answerBox[i][j][6],this.labelWidthEffect,this.labelHeightEffect) == true) || (this.qmode!='edit' && this.pholderBox[i][5]>=220 && this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],this.labelWidthEffect,this.labelHeightEffect) == true))) {
+								this.drag_box_id = i;
+								this.drag_pho_id = i;
+								this.drag_box_combo = j;
+							}
+						}
+					}
+				}
+			}
+		}	
+	}	
+	
 	if (this.testWithin(this.x,this.y,0,0,this.canvas.width,this.canvas.height)){
 		if (this.drag_box_id>-1 && this.drag_box_combo<99) {
 			this.sub_x = this.x - this.answerBox[this.drag_box_id][this.drag_box_combo][5];
@@ -1965,7 +2040,10 @@ function ql_mouseDragUp(){
 					loc_width = this.labelWidthEffect;
 					loc_height = this.labelHeightEffect;
 				}
-				if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height) == true) dest_box = i;
+				//answer box center within pholderBox
+				if (this.testWithin(this.answerBox[this.drag_box_id][this.drag_box_combo][5]+loc_width/2,this.answerBox[this.drag_box_id][this.drag_box_combo][6]+loc_height/2,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height) == true) dest_box = i;
+				//mouse within pholderBox
+				//if (this.testWithin(this.x,this.y,this.pholderBox[i][5],this.pholderBox[i][6],loc_width,loc_height) == true) dest_box = i;
 			}
 		}
 		if (this.qType == "menu") dest_box = this.drag_box_id;
@@ -2464,4 +2542,6 @@ function rql(num) {
 	this.keypressed = false;
 	this.all_images = new Array();
 	this.imageerrordisplay = 0;
+	this.tested_canvas_width = 0;
+	this.tested_canvas_height = 0;
 }

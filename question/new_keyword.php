@@ -45,7 +45,7 @@ require '../include/errors.inc';
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   
-  <script type="text/javascript">
+  <script>
     function updateKeywords() {
       var keywordNo = parseInt(window.opener.document.getElementById('keywordno').value);
       var oldHTML = window.opener.document.getElementById('keywordarea').innerHTML;
@@ -83,7 +83,7 @@ require '../include/errors.inc';
     h1 {font-size:120%}
   </style>
 
-  <script language="JavaScript">
+  <script>
     function illegalChar(codeID) {
       if (codeID == 35) {
         alert("Character '#' illegal - please use alternative characters in keyword.");

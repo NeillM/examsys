@@ -28,13 +28,17 @@
 // type - paper or question
 // ids - comma separated list of question or paper ids (supports multiple papers as multiple qti files)
 
-global $rogo_version;
-
+require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 require_once 'include/inc.php';
 require_once 'local/local_load.php';
 require_once 'qti12/qti12_save.php';
 require_once 'qti20/qti20_save.php';
 require_once '../classes/question_status.class.php';
+
+$ids = check_var('paperID', 'GET', true, false, true);
+$dest = check_var('dest', 'GET', true, false, true);
 
 // Get question statuses
 $status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
@@ -45,35 +49,31 @@ foreach ($status_tmp as $sid => $status) {
 
 $ob = new OB();
 
-$dest = GetVar("dest");
-if ($dest == "") die("You must specify dest");
-if ($dest == "qti21") $dest = "qti20";
+if ($dest == 'qti21') $dest = 'qti20';
 
-$ids = GetVar("paperID");
-
-$show_debug = IsAdminUser($userObject->get_user_ID()); //TODO replace with userobject function?
+if (isset($_GET['debug'])) {
+  $show_debug = true;
+} else {
+  $show_debug = false;
+}
 
 // load in some paper information to display
-if ($ids != "") {
-  $type = "paper";
+if ($ids != '') {
+  $type = 'paper';
 
   // get paper properties
-  $db = new Database();
-  $db->SetTable('properties');
-  $db->AddField('*');
-  $db->AddWhere('property_id', $ids, 'i');
-  $paper_row = $db->GetSingleRow();
-
+  $properties = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+  $paper_title = $properties->get_paper_title();
 } else {
   $ids = GetVar("q_id");
-  $type = "question";
+  $type = 'question';
 
-  $paper_row['paper_title'] = "Questions";
+  $paper_title = 'Questions';
 }
 
 // set up classes
 $load_params = new stdClass();
-$load_params->source = "touchstone";
+$load_params->source = 'rogo';
 $load_params->type = $type;
 $load_params->ids = explode(",", $ids);
 $paperID = $load_params->ids[0];
@@ -110,7 +110,7 @@ $result['general']['params'] = $general_params;
 // call import with imptype and params
 $ob->ClearAndSave();
 $data = $import->Load($load_params);
-$result['load']['type'] = 'touchstone';
+$result['load']['type'] = 'rogo';
 $result['load']['params'] = $load_params;
 $result['load']['debug'] = $ob->GetContent();
 $result['load']['warnings'] = $import->warnings;

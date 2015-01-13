@@ -30,16 +30,17 @@ require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
+$student_id = check_var('student_id', 'REQUEST', false, false, true);
+$search_surname = check_var('search_surname', 'REQUEST', false, false, true);
+$search_username = check_var('search_username', 'REQUEST', false, false, true);
 
 if (!UserUtils::userid_exists($userID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-function drawTabs($current_tab) {
-  global $string;
-
-  $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
+function drawTabs($current_tab, $string) {
+  $html = '<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%; background-color:#F1F5FB"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $_GET['session'] . ':</strong></td>';
   for ($i=1; $i<=3; $i++) {
     if ($i == $current_tab) {
       $html .= "<td class=\"tabon\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
@@ -51,24 +52,24 @@ function drawTabs($current_tab) {
   return $html;
 }
 
-function list_modules($mod, $id, $student_mod) {
+function list_modules($mod, $id, $student_mod, $string) {
   $old_letter = '';
 
   if ($id == '1') {
-    echo "<div style=\"display:block; width:100%; border-bottom:10px\" id=\"list$id\">";
+    echo "<div class=\"content\" style=\"display:block\" id=\"list$id\">";
   } else {
-    echo "<div style=\"display:none; width:100%; border-bottom:10px\" id=\"list$id\">";
+    echo "<div class=\"content\" style=\"display:none\" id=\"list$id\">";
   }
 
-  echo drawTabs($id);
+  echo drawTabs($id, $string);
 
   if ($id == '1') {
-    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
+    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
   } else {
-    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; background-color:white; font-size:90%\" id=\"list$id\">";
+    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
   }
 
-  $loop=0;
+  $loop = 0;
   foreach ($mod as $idMod => $mod_info) {
     $moduleid = $mod_info['moduleid'];
     $fullname = $mod_info['fullname'];
@@ -78,9 +79,9 @@ function list_modules($mod, $id, $student_mod) {
     }
 
     if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-      echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:#B3C8E8\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+      echo "<div class=\"r2\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
     } else {
-      echo "<div style=\"text-indent:-23px; padding-left:43px; background-color:white\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+      echo "<div class=\"r1\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
     }
     $loop++;
     $old_letter = strtoupper(substr($moduleid, 0, 1));
@@ -109,14 +110,20 @@ if (isset($_POST['submit'])) {
 
   <title>Rog&#333;: <?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
 
-  <script type="text/javascript">
-    function closeWindow() {
-      window.opener.location.href = 'details.php?userID=<?php echo $_POST['userID']; ?>&tab=modules';
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function() {
+        var user = 'userID=<?php echo $_POST['userID']; ?>';
+        var mod = '&tab=modules';
+        var student = '&student_id=<?php echo $_POST['student_id']; ?>';
+        var username = '&search_username=<?php echo $_POST['search_username']; ?>';
+        var surname = '&search_surname=<?php echo $_POST['search_surname']; ?>';
+      window.opener.location.href = 'details.php?' + user + mod + student + username + surname;
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="closeWindow()">
+<body>
 </body>
 </html>
 <?php
@@ -137,17 +144,60 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <style type="text/css">
-    body {font-size:90%; background-color:#E3EFFF; margin:8px 4px 4px 4px}
-    td {font-size:90%}
+    html {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: 90%;
+      background-color: #F1F5FB;
+    }
+    .content {
+      position: absolute;
+      overflow-y: no-scroll;
+      top: 0;
+      bottom: 40px;
+      width: 100%;
+      font-size: 90%;
+      background-color: white;
+      margin-bottom: 30px;
+      width: 98%;
+      margin-left: 1%;
+      margin-right: 1%;
+    }
+    .footer {
+      height: 40px;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+    }
+		.r1 {
+			text-indent:-23px;
+			padding-left:43px;
+			background-color:white;
+		}
+		.r2 {
+			text-indent:-23px;
+			padding-left:43px;
+			background-color:#FFBD69;
+		}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript">
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
     function toggle(objectID) {
-      if ($('#' + objectID).css('background-color') == 'white') {
-        $('#' + objectID).css('background-color', '#B3C8E8');
+      if ($('#' + objectID).hasClass('r2')) {
+        $('#' + objectID).addClass('r1');
+        $('#' + objectID).removeClass('r2');
       } else {
-        $('#' + objectID).css('background-color', 'white');
+        $('#' + objectID).addClass('r2');
+        $('#' + objectID).removeClass('r1');
       }
     }
 
@@ -158,24 +208,16 @@ if (isset($_POST['submit'])) {
 
       $('#' + tabID).show();
     }
-
-    function resizeList() {
-      winH = $(window).height() - 80;
-
-      $('#list1').css('height', winH + 'px');
-      $('#list2').css('height', winH + 'px');
-      $('#list3').css('height', winH + 'px');
-    }
   </script>
 </head>
-<body onload="resizeList()" onresize="resizeList()">
+<body>
 <form name="teamform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
 <?php
   // Get existing modules for the user in passed calendar year.
   $student_modules = array();
   $result = $mysqli->prepare("SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ?");
-  $result->bind_param('is', $_GET['userID'], $session);
+  $result->bind_param('is', $userID, $session);
   $result->execute();
   $result->bind_result($idMod, $moduleid, $attempt);
   while ($result->fetch()) {
@@ -189,7 +231,8 @@ if (isset($_POST['submit'])) {
   $modules = array();
   $mod_count = 0;
 
-  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 ORDER BY moduleid");
+  // Get a list of all modules for display.
+  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND deleted IS NULL AND mod_deleted IS NULL ORDER BY moduleid");
   $result->execute();
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $fullname);
@@ -201,19 +244,22 @@ if (isset($_POST['submit'])) {
   $result->close();
 
   if ($mod_count == 0) {
-    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . $string['nomodules'] . " <strong>" . $_GET['session'] . "</strong>.</div>";
+    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . $string['nomodules'] . " <strong>" . $session . "</strong>.</div>";
   } else {
-    list_modules($modules, 1, $student_modules);
-    list_modules($modules, 2, $student_modules);
-    list_modules($modules, 3, $student_modules);
+    list_modules($modules, 1, $student_modules, $string);
+    list_modules($modules, 2, $student_modules, $string);
+    list_modules($modules, 3, $student_modules, $string);
   }
 
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"userID\" value=\"" . $_GET['userID'] . "\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"session\" value=\"" . $session . "\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"session\" value=\"$session\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"student_id\" value=\"$student_id\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"search_surname\" value=\"$search_surname\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" name=\"search_username\" value=\"$search_username\" /></div></td>\n</tr>\n";
 ?>
-<br /><br />
-<div align="center"><input style="width:120px" type="submit" name="submit" value="<?php echo $string['ok']; ?>" />&nbsp;<input style="width:120px" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+
+  <div class="footer" align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok'] ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" /></div>
 
 </form>
 </body>

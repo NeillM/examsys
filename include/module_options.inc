@@ -22,62 +22,63 @@
 * @package
 */
 
-require_once '../classes/dateutils.class.php';
-
-// Calculate what the current academic session is.
-$session = date_utils::get_current_academic_year();
 ?>
-<script language="JavaScript">
-  function editModule() {
-    window.location.href='./edit_module.php?moduleid=' + $('#lineID').val();
-  }
+<div id="left-sidebar" style="overflow:visible" class="sidebar">
+<?php
+  $add_member = false;
+  
+  if ($_GET['module'] != '0') {
 
-  function jumpToModule() {
-    window.location = '<?php echo $configObject->get('cfg_root_path'); ?>/folder/details.php?module=' + $('#lineID').val();
-  }
-
-  function studentCohort() {
-    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $session; ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
-  }
-
-  function deleteModule() {
-    notice=window.open("../delete/check_delete_module.php?idMod=" + $('#lineID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
-    if (window.focus) {
-      notice.focus();
+    if (strpos($module_details['checklist'],'mapping') !== false ) {     // Curriculum mapping switched on for the module
+      echo "<div class=\"menuitem\"><a href=\"../mapping/sessions_list.php?module=" . $module . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/module_icon_16.png\" alt=\"modules\" />" . $string['manageobjectives'] . "</a></div>\n";
     }
+    echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . "</a></div>";
+    echo "<div class=\"menuitem\"><a href=\"../module/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . "</a></div>";
+	  echo "<div class=\"menuitem cascade\"><a href=\"#\" onclick=\"showMenu('popup0','general','search',myOptions0,myURLs0,event)\" id=\"search\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/xmag.png\" alt=\"Search\" />" . $string['search'] . "</a></div>";
+
+  // Get members of current team.
+  if (!isset($_GET['type']) and $_GET['module'] != '0') {
+    $team_members = module_utils::get_staff_members($module, $mysqli);
+
+    $tmp_html = '';
+    if ($userObject->has_role('Demo')) {
+      $i = 0;
+    }
+    if (count($team_members) == 0) {
+      $tmp_html = '<br /><div>' . $string['noteammembers'] . '</div>';
+    } else {
+      $tmp_html = '<ul type="square" style="line-height:155%; margin-top:4px; margin-bottom:4px; margin-left:26px; padding-left:0">';
+    }
+    foreach ($team_members as $team_member) {
+      if ($userObject->has_role('Demo')) {
+        $tmp_html .= "<li><span style=\"color:black\">" . demo_replace_name($i) . "</span></li>\n";
+        $i++;
+      } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+        $tmp_html .= "<li><a style=\"color:black\" href=\"../users/details.php?userID=" . $team_member['userID'] . "&module=$module\">" . $team_member['surname'] . ", " . $team_member['initials'] . ". " . $team_member['title'] . "</a></li>\n";
+      } else {
+        $tmp_html .= "<li><span style=\"color:black\">" . $team_member['surname'] . ", " . $team_member['initials'] . ". " . $team_member['title'] . "</span></li>\n";
+      }
+      if ($team_member['userID'] == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
+    }
+    if (count($team_members) > 0) $tmp_html .= '</ul>';
+
+    echo '<br /><br />';
+    if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
+      echo '<div style="float:left; width:225px; font-size:170%"><div style="float:left">' . $string['teammembers'] . '</div><div style="float:right"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" id="addteammember" /></div></div>';
+    } else {
+      echo '<div style="float:left; width:225px; font-size:170%">' . $string['teammembers'] . '</div>';
+    }
+    echo '<div style="height:78%; overflow:auto; clear:left" id="list">';
+    echo "$tmp_html</div>\n";
   }
-</script>
+}
+?>
 
-<div id="left-sidebar" class="sidebar">
-<form name="myform">
-
-<div class="submenuheading" id="currentmodule"><?php echo $string['currentmodule']; ?></div>
-<div id="menu1a" style="font-size:90%">
-	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule']; ?>" /><?php echo $string['createmodule']; ?></a></div>
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="<?php echo $string['editmodule']; ?>" /><?php echo $string['editmodule']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletemodule']; ?>" /><?php echo $string['deletemodule']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['modulefolder']; ?>" /><?php echo $string['modulefolder']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/shortcut_16_grey.png" alt="<?php echo $string['studentcohort']; ?>" /><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</div>
 </div>
 
-<div style="display:none; font-size:90%" id="menu1b">
-	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule']; ?>" /><?php echo $string['createmodule']; ?></a></div>
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport']; ?></a></div>
-	<div class="menuitem" onclick="editModule()"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editmodule']; ?>" /><a href="" onclick="return false"><?php echo $string['editmodule']; ?></a></div>
-	<div class="menuitem" onclick="deleteModule()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletemodule']; ?>" /><a href="" onclick="return false"><?php echo $string['deletemodule']; ?></a></div>
-	<div class="menuitem" onclick="jumpToModule()"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['modulefolder']; ?>" /><a href="" onclick="return false"><?php echo $string['modulefolder']; ?></a></div>
-	<div class="menuitem" onclick="studentCohort()"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['studentcohort']; ?>" /><a href="" onclick="return false"><?php echo $string['studentcohort']; ?> (<?php echo $session; ?>)</a></div>
-</div>
 
-<br />
+<?php
+  makeMenu(array('Questions'=>"{$configObject->get('cfg_root_path')}/question/search.php?module=$module",'Papers'=>"{$configObject->get('cfg_root_path')}/paper/search.php?module=$module",'People'=>"{$configObject->get('cfg_root_path')}/users/search.php?module=$module"));
 
-<div class="submenuheading" id="currentmodule"><?php echo $string['moduleimports']; ?></div>
-<div style="font-size:90%" id="menu2">
-	<div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary']; ?></a></div>
-</div>
-
-<input type="hidden" name="lineID" id="lineID" value="" />
-</form>
-</div>
+  hideMenuScript($menuNo);
+?>

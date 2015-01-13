@@ -24,12 +24,13 @@
 * @package
 */
 
-  require '../include/admin_auth.inc';
-  require '../include/errors.inc';
-  require '../include/import_users.inc';
+require '../include/admin_auth.inc';
+require '../include/errors.inc';
+require '../include/import_users.inc';
+require_once '../include/demo_replace.inc';
 
-  set_time_limit(0);
-  ob_start();
+set_time_limit(0);
+ob_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,12 +40,20 @@
   
 	<title><?php echo $string['importusers'] . " " . $configObject->get('cfg_install_type') ?></title>
 	
-	<script type="text/javascript" src="/js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
+      $('#cancel').click(function() {
+        history.back();
+      });
+    });  
+  </script>
   
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     label.error {display:block; color:#f00}
   </style>
@@ -94,9 +103,9 @@
 <br />
 <br />
 
-<table style="width:730px" class="dialog_border">
+<table style="width:780px" class="dialog_border">
 <tr>
-<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%" class="midblue_header"><?php echo $string['importusers']; ?></span></td>
+<td class="dialog_header" style="width:56px"><img src="../artwork/multi_ids.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:724px"><?php echo $string['importusers']; ?></span></td>
 </tr>
 <tr>
 <td align="left" class="dialog_body" colspan="2">
@@ -105,7 +114,7 @@
 <blockquote>Type, ID, First Names, Family Name, Title, Course, Year of Study, Email</blockquote>
 <p><?php echo $string['msg2']; ?></p>
 
-<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="749" height="59" alt="Headings" style="border:1px solid black" /></div>
+<div style="text-align:center"><img src="../artwork/student_import_headings.png" width="743" height="59" alt="Headings" style="border:1px solid #808080" /></div>
 <br />
 <br />
 <div style="text-align:center">
@@ -120,7 +129,7 @@ if ($file_problem) {
 ?>
 
 <div align="center"><input type="checkbox" name="welcome" value="1" />&nbsp;<?php echo $string['sendwelcomeemail']; ?></div>
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" id="cancel" /></p>
 </form>
 </div>
 </td>

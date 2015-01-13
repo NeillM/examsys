@@ -58,16 +58,16 @@ $result->close();
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.user_answer FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.user_answer FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.user_answer FROM log0 l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%') UNION ALL (SELECT 1 AS type, l.id, l.user_answer FROM log1 l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%')");
   $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.user_answer FROM log$paper_type l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.user_answer FROM log$paper_type l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%'");
   $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
 $result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
-  $log_answers[$type][$id] = $user_answer;
+  $log_answers[$type][$id] = strtolower($user_answer);
 }
 $result->close();
 
@@ -182,22 +182,26 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  
   <title><?php echo $string['remark'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  <script type="text/javascript">
-    function reload() {
+  
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function() {
       window.opener.location = window.opener.location;
       self.close();
-    }
+    });
   </script>
 </head>
-<body onload="reload()">
+<body>
 </body>
 </html>
 
 <?php
 } else {
-  $blank_details = explode('[blank',$option_text);
+  $blank_details = explode('[blank', $option_text);
   for ($i=1; $i<count($blank_details); $i++) {
     $end_start_tag = strpos($blank_details[$i],']');
     $start_end_tag = strpos($blank_details[$i],'[/blank]');
@@ -206,6 +210,13 @@ if (isset($_POST['submit'])) {
       $blanks = explode(',', $blank_options);
     }
   }
+  
+  // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
+  $new_blanks = array();
+  foreach ($blanks as $blank) {
+    $new_blanks[] = strtolower(trim($blank));
+  }
+  $blanks = array_unique($new_blanks);
 ?>
 <!DOCTYPE html>
 <html>
@@ -223,12 +234,12 @@ if (isset($_POST['submit'])) {
     .c1 {width:65px; text-align:center}
     .c2 {width:250px}
     .r1 {background-color:white}
-    .r2 {background-color:#B3C8E8}
+    .r2 {background-color:#FFBD69}
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script language="JavaScript">
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
     function toggle(objectID) {
       if ($('#' + objectID).hasClass('r2')) {
         $('#' + objectID).addClass('r1');
@@ -244,10 +255,18 @@ if (isset($_POST['submit'])) {
 
       $('#list').css('height', winH + 'px');
     }
+    
+    $(function() {
+			resizeList();
+			
+			$(window).resize(function(){
+				resizeList();
+			});
+		});	
   </script>
 </head>
 
-<body onload="resizeList()" onresize="resizeList()">
+<body>
 
 <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate']; ?>">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
@@ -306,7 +325,7 @@ foreach ($unique_list as $word=>$occurrance) {
 </div>
 
 <input type="hidden" name="word_count" value="<?php echo $word_count; ?>" />
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:130px" />&nbsp;&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:80px" onclick="window.close();" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close();" /></div>
 
 </form>
 </body>

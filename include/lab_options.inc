@@ -23,7 +23,7 @@
 */
 
 ?>
-<script language="JavaScript">
+<script>
   function viewDetails() {
     document.location.href='./lab_details.php?labID=' + $('#labID').val();
     $('#menu1a').show();
@@ -31,8 +31,8 @@
   }
   
   function deleteLab() {
-    notice=window.open("../delete/check_delete_lab.php?labID=" + $('#labID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210,screen.height/2-85);
+    notice=window.open("../delete/check_delete_lab.php?labID=" + $('#labID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-250,screen.height/2-100);
     if (window.focus) {
       notice.focus();
     }
@@ -42,18 +42,16 @@
 
 <div id="left-sidebar" class="sidebar">
 <form name="labform">
-<br />
-
-<div style="font-size:90%" id="menu1a">
-	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['vieweditdetails']; ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletelab']; ?></div>
+<div id="menu1a">
+	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab'] ?></a></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['vieweditdetails'] ?></div>
+	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletelab'] ?></div>
 </div>
 
-<div style="font-size:90%; display:none" id="menu1b">
-	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab']; ?></a></div>
-	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['vieweditdetails']; ?></a></div>
-	<div class="menuitem" onclick="deleteLab()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletelab']; ?></a></div>
+<div style="display:none" id="menu1b">
+	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab'] ?></a></div>
+	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['vieweditdetails'] ?></a></div>
+	<div class="menuitem" onclick="deleteLab()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletelab'] ?></a></div>
 </div>
 
 <input type="hidden" name="labID" id="labID" value="" />

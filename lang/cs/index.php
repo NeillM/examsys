@@ -14,40 +14,40 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cannotfindexams'] = 'Rogō žádnou zkoušku nenalezlo';
-$string['exams'] = 'Zkouška';
-$string['staffmangscreens'] = 'Manažer';
-$string['note1'] = '<strong>Poznámka:</strong> Toto je stránka sloužící k sumativnímu testování studentů, chtěli jste vstoupit na stránku';
-$string['unknownIp'] = '(neznámá adresa)';
-$string['mostLikely'] = 'Nejpravděpodobnější příčinou je jeden nebo více bezpečnostních konfliktů s:';
-$string['IPaddress'] = 'IP adresa';
-$string['Time/Date'] = 'Čas/Datum';
-$string['yearofstudy'] = 'Rok studia';
-$string['noyear'] = 'uživatel nemá nastavený rok!';
-$string['Modules'] = 'Moduly';
-$string['nomodules'] = 'Varování: není registrován žádný modul!';
-$string['UserRoles'] = 'Uživatelské role';
-$string['try'] = 'Co si můžete vyzkoušet';
-$string['f5'] = 'Pokud je více než 15 minut před začátkem zkoušky, prosím, vyčkejte až bude do začátku zbývat 15 minut a stiskněte klávesu F5.';
-$string['RaiseYourHand '] = 'Zvedněte ruku a přihlaste se dohlížejícím.';
-$string['staff'] = 'Zaměstnanec';
-$string['student'] = 'Student'; //cognate
-$string['sysadmin'] = 'Systémový správce';
-$string['admin'] = 'Správce';
-$string['graduate'] = 'Absolvent';
-$string['inactive'] = 'Neaktivní';
-$string['multipleExams'] = 'Nalezeno více zkoušek';
-$string['selectOne'] = 'Vyberte, prosím, tu, kterou si přejete složit:';
-$string['passwordRequired'] = 'vyžadováno heslo';
+require './lang/' . $language . '/include/question_types.inc';
+require './lang/' . $language . '/include/paper_types.inc';
+
+$string['admintools'] = 'Nastavení';
+$string['calendar'] = 'Kalendář';
+$string['createfolder'] = 'Vytvořit Složku';
+$string['mypersonalkeywords'] = 'Moje klíčová slova';
+$string['reviewed'] = 'Hodnoceno';
+$string['notreviewed'] = 'Nehodnoceno';
+$string['myfolders'] = 'Moje složky';
+$string['mymodules'] = 'Moje moduly';
+$string['unassignedpapers'] = 'Nepřiřazené dokumenty';
+$string['recyclebin'] = 'Koš';
+$string['allmodules'] = 'Všechny moduly...';
+$string['allmodulesinschool'] = 'Všechny moduly ve škole...';
+$string['myrecentpapers'] = 'Moje naposledy otevřené dokumenty';
+$string['create'] = 'Vytvořit';
+$string['foldername'] = 'Název Složky';
+$string['search'] = 'Hledat';
+$string['createnewquestion'] = 'Nová úloha';
+$string['questions'] = 'Úlohy';
+$string['papers'] = 'Dokumenty';
+$string['people'] = 'Lidé';
+$string['nomodulesset'] = 'Není nastaven žádný modul';
 $string['screen'] = 'Obrazovka';
 $string['screens'] = 'Obrazovky';
-$string['Bidirectional'] = 'Obousměrná navigace';
-$string['Unidirectional'] = 'Jednosměrná navigace';
-$string['requirespassword'] = 'Tento dokument vyžaduje heslo.';
 $string['mins'] = 'minut';
-$string['summativetesting'] = 'Sumativní testování';
-$string['summativetestmsg'] = '<strong>Pouze pro zaměstnance &ndash;tato část není studentům viditelná.</strong> Jedná se o sumativní zkoušky, naplánované pro Vaše týmy a probíhající v příštích šesti týdnech.';
-$string['nodurationwarning'] = 'Varování: není nastavena délka trvání zkoušky';
-$string['startwarning'] = 'Varování: dokument začíná před %d:00';
-$string['nolabswarning'] = 'Varování: není nastavena žádná učebna';
+$string['type'] = 'Typ';
+$string['author'] = 'Autor';
+$string['duplicatefoldername'] = 'Duplicitní název složky, použijte, prosím, jiný.';
+$string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, prosím, kontaktujte:';
+$string['papersforreview'] = 'Dokumenty k rezenci';
+$string['deadline'] = 'Uzávěrka:';
+$string['recent'] = 'Nedávné';
+$string['unassigned'] = 'Nepřiřazené';
+$string['unassignedmsg'] = 'Úlohy/dokumenty nejsou v žádném modulu';
 ?>

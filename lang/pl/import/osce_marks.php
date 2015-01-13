@@ -15,6 +15,8 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/include/paper_options.inc';
+require '../lang/' . $language . '/include/months.inc';
+require '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['importoscemarks'] = 'Importuj punkty OSCE';
 $string['marksloaded'] = 'Punkty/ów załadowano.';

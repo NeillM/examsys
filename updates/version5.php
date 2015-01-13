@@ -32,7 +32,7 @@ require_once '../classes/dbutils.class.php';
 require_once '../classes/stringutils.class.php';
 require_once '../include/std_set_shared_functions.inc';
 
-$version = '5.1.3';
+$version = '6.0';
 $migration_path = 'version5';
 
 set_time_limit(0);
@@ -52,7 +52,7 @@ $old_version = $configObject->get('rogo_version');
     <link rel="stylesheet" type="text/css" href="../css/header.css"/>
     <link rel="stylesheet" type="text/css" href="../css/updater.css"/>
 
-    <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   </head>
   <body>
@@ -74,7 +74,7 @@ if (round($old_version,0) < 5) {
 }
 if (!isset($_POST['update'])) {
   ?>
-<script type="text/javascript">
+<script>
   $(document).ready(function () {
     $("#installForm").validate();
   });
@@ -132,7 +132,7 @@ if (!isset($_POST['update'])) {
       <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" value="" name="update_staff_help" checked="checked" /></div>
       <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" value="" name="update_student_help" checked="checked" /></div>
 
-      <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>"/></div>
+      <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" class="ok" /></div>
   </form>
     <?php
   }
@@ -151,7 +151,7 @@ if (!isset($_POST['update'])) {
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
   if ($mysqli->connect_error) {
-    echo "<div>Failded to contect to mysql using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
+    echo "<div>Failed to contect to MySQL using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
     echo "</body>";
     echo "</html>";
     exit;
@@ -172,16 +172,17 @@ if (!isset($_POST['update'])) {
   $cfg_use_ldap         = $configObject->get('cfg_use_ldap');
 
   $cfg_web_host         = $configObject->get('cfg_web_host');
-  if($cfg_web_host == '') {
-      $cfg_web_host = $cfg_db_host;
+  if ($cfg_web_host == '') {
+    $cfg_web_host = $cfg_db_host;
   }
 
-      error_reporting(-1);
+  error_reporting(-1);
   ob_start();
-
-  echo "<div>Starting at " . date("H:i:s") . "</div>";
-
-  echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>\n<ol>";
+  
+  echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>";
+  echo "<div>Starting at " . date("H:i:s") . "</div>\n<ol>";
+  ob_flush();
+  flush();
 
   $mysqli->autocommit(false);
   // 01/05/2013 - Update the online help files.
@@ -192,7 +193,7 @@ if (!isset($_POST['update'])) {
     $mysqli->multi_query($file);
     if ($mysqli->error) {
       try {
-        throw new Exception("MySQL error $mysqli->error <br> Query:<br> ", $mysqli->errno);
+        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
       } catch (Exception $e) {
         echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
         echo nl2br($e->getTraceAsString());
@@ -367,6 +368,10 @@ if (!isset($_POST['update'])) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
+  if (!$updater_utils->has_grant($cfg_db_external_user, 'SELECT', 'cache_paper_stats', $cfg_web_host)) {
+    $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_external_user . '\'@\'' . $cfg_web_host . '\'';
+    $updater_utils->execute_query($sql, true);    
+  }
 
   // 20/05/2013 (brzsw) - Add cache_student_paper_marks table
   if (!$updater_utils->does_table_exist('cache_student_paper_marks')) {
@@ -382,6 +387,7 @@ if (!isset($_POST['update'])) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.cache_student_paper_marks TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
   }
+
 
   // 20/05/2013 (brzsw) - Add cache_median_question_marks table
   if (!$updater_utils->does_table_exist('cache_median_question_marks')) {
@@ -654,7 +660,6 @@ if (!isset($_POST['update'])) {
     ob_flush();
     flush();
 
-    /*
 		// Call the standard_setting list page to populate the results in std_set table.
     $result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
     $result->execute();
@@ -671,7 +676,6 @@ if (!isset($_POST['update'])) {
 
     }
     $result->close();
-		*/
   }
 
   // 04/07/2013 (cczsa1) - enhanced question type config
@@ -698,11 +702,6 @@ if (!isset($_POST['update'])) {
   }
   if (!$updater_utils->does_column_exist('log3', 'errorstate')) {
     $updater_utils->execute_query("ALTER TABLE log3 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);
-  }
-
-  // 05/07/2013 (brzsw) - add new type of feedback
-  if (!$updater_utils->does_column_type_value_exist('feedback_release', 'type', "enum('objectives','questions','cohort_performance')")) {
-    $updater_utils->execute_query("ALTER TABLE feedback_release CHANGE type type enum('objectives','questions','cohort_performance') DEFAULT NULL", true);
   }
 
   // 09/07/2013 - Add hofstee default settings.
@@ -804,6 +803,27 @@ QUERY;
     $sql = 'ALTER TABLE questions MODIFY COLUMN status tinyint(3) NOT NULL';
     $updater_utils->execute_query($sql, true);
   }
+  
+  if (!$updater_utils->does_table_exist('sys_updates')) {
+    $sql = <<< QUERY
+CREATE TABLE `sys_updates` (
+  `name` varchar(255),
+  `updated` datetime NOT NULL,
+  KEY `name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=0;
+QUERY;
+    $updater_utils->execute_query($sql, true);
+    
+    $filenames = array('stopfile_convert_calc_ans_done.txt', 'stopfile_sct_fix.txt', 'stopfile_textbox_fix.txt', 'stopfile_textbox_update.txt');
+    foreach($filenames as $filename) {
+      if (file_exists($filename)) {
+        $update_name = str_replace('stopfile_', '', $filename);
+        $update_name = str_replace('.txt' ,'', $update_name);
+        $updater_utils->record_update($update_name);
+      }
+    }
+    $mysqli->commit();
+  }
 
 
   /*
@@ -822,23 +842,6 @@ QUERY;
   }
 
   $mysqli->commit();
-
-	// Call the standard_setting list page to populate the results in std_set table.
-	$result = $mysqli->prepare("SELECT DISTINCT property_id, total_mark FROM properties WHERE marking LIKE '2,%'");
-	$result->execute();
-	$result->store_result();
-	$result->bind_result($property_id, $total_mark);
-	while ($result->fetch()) {
-		$no_reviews = 0;
-		$reviews = get_reviews($mysqli, 'index', $property_id, $total_mark, $no_reviews);
-		foreach ($reviews as $review) {
-			if ($review['method'] != 'Hofstee') {
-				updateDB($review, $mysqli);
-			}
-		}
-
-	}
-	$result->close();
 
 	/*
    *****   NOW UPDATE THE INSTALLER SCRIPT   *****
@@ -859,6 +862,6 @@ QUERY;
   echo "<div>Ended at " . date("H:i:s") . "</div>";
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" value=\" " . $string['home'] . " \" onclick=\"window.location('" . $configObject->get('cfg_root_path') . "/staff/')\" /></div><blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['home'] . " \" onclick=\"window.location('" . $configObject->get('cfg_root_path') . "/')\" /></div><blockquote>\n";
 }
 ?>

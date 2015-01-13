@@ -29,7 +29,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>Rename Keyword</title>
-  <script type="text/javascript">
+  <script>
     window.opener.document.getElementById('keytext<?php echo $_POST['index']; ?>').innerHTML = '<?php echo str_replace('"','&quot;',$_POST['new_keyword']); ?>';
     window.opener.document.getElementById('renamelist').value = window.opener.document.getElementById('renamelist').value + ';<?php echo $_POST['keywordID'] . '=' . str_replace('"','&quot;',$_POST['new_keyword']); ?>';
   </script>
@@ -43,7 +43,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>Rename Keyword</title>
-  <script type="text/javascript">
+  <script>
     function illegalChar(codeID) {
       if (codeID == 35) {
         alert("Character '#' illegal - please use alternative characters in keyword.");

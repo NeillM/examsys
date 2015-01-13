@@ -28,7 +28,7 @@ $string['availablefromminute'] = 'The available from minute is greater than the 
 $string['msg1'] = 'There are no modules selected. Papers must be assigned to at least one module.';
 $string['msg2'] = 'Summative paper start and end dates must be on the same day (\'Access Rights\' tab).';
 $string['msg3'] = 'You must specify a duration for Summative exams.\nThis should be normal duration excluding any extra time for dyslexic students.';
-$string['msg4'] = 'You must specify an academic year for Summative exams (\'Access Rights\' tab).';
+$string['msg4'] = 'You must specify an academic year (see \'Security\' tab).';
 $string['msg5'] = 'OSCEs must be assigned to at least one module.';
 $string['msg6a'] = 'You have set some internal reviewers but not specified a deadline.';
 $string['msg6'] = 'You have set some external examiners but not specified a deadline.';
@@ -67,12 +67,14 @@ $string['overallclass1'] = '&lt;Automatic&gt;';
 $string['overallclass2'] = 'Clear Fail | Borderline | Clear Pass';
 $string['overallclass3'] = 'Fail | Borderline fail | Borderline pass | Pass | Good pass';
 $string['overallclass4'] = 'Clear FAIL | BORDERLINE | Clear PASS | Honours PASS';
+$string['overallclass5'] = 'Pass | Fail';
 $string['passmark'] = 'Pass Mark';
 $string['distinction'] = 'Distinction';
 $string['method'] = 'Method';
 $string['noadjustment'] = 'No Adjustment';
 $string['calculatrrandommark'] = 'Calculate Random Mark';
 $string['stdset'] = 'Std Set';
+$string['borderlinemethod'] = 'Borderline Method';
 $string['ticks_crosses'] = 'Ticks/Crosses';
 $string['question_marks'] = 'Question Marks';
 $string['hideallfeedback'] = 'Hide all feedback if<br />unanswered';
@@ -85,6 +87,9 @@ $string['allpeerspergroup'] = 'All peers per group';
 $string['singlereview'] = 'Single Review';
 $string['numberfrom'] = 'Number from';
 $string['groupdetails'] = 'Group Details';
+$string['tooltip_random'] = 'Rogo will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
+$string['tooltip_calculator'] = 'A JavaScript software calculator is available to students within the assessment.';
+$string['tooltip_audio'] = 'A test audio clip will be placed on the exam information page so students can test sound levels before starting.';
 
 // Security tab
 $string['securitytab'] = 'Security';
@@ -101,7 +106,8 @@ $string['to'] = 'to';
 $string['restricttolabs'] = 'Restrict to Labs';
 $string['restricttometadata'] = 'Restrict to Metadata';
 $string['na'] = 'N/A';
-
+$string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into Rogo with their own personal password. This password can be given out to students within the computer lab.';
+        
 // Reviewers tab
 $string['reviewerstab'] = 'Reviewers';
 $string['reviewersheading'] = 'Set internal/external reviewers and deadlines.';
@@ -127,13 +133,15 @@ $string['referenceheading'] = 'Control which reference materials are available t
 $string['nomaterials'] = 'There are no reference materials available for the module(s) assigned to this paper.<br /><br />Reference material can be added by clicking the \'Reference Material\' option from a module screen (<a href="" style="color:blue" onclick="launchHelp(296); return false;">see help</a>).';
 
 // Feedback tab
-$string['feedbackheading'] = 'Feedback available to students';
+$string['feedbackheading'] = 'Feedback available to students and external examiners';
 $string['feedbackwarning'] = '<strong>Note:</strong> This will release questions including the correct answers and marks to students.';
 $string['on'] = 'On';
 $string['off'] = 'Off';
-$string['objectivesreport'] = 'Objectives-based Feedback';
-$string['questionfeedback'] = 'Question-based Feedback';
-$string['cohortperformancefeedback'] = 'Cohort Performance Report';
+$string['objectivesreport'] = 'Objectives-based Feedback (Students)';
+$string['questionfeedback'] = 'Question-based Feedback (Students)';
+$string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
+$string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
+$string['cohortperformancefeedback'] = 'Cohort Performance Report (Students)';
 $string['textualfeedback'] = 'Textual Feedback';
 $string['above'] = 'Above';
 $string['message'] = 'Message';

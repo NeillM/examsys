@@ -16,6 +16,8 @@
 
 /**
  *
+ * Delete an LTI key - SysAdmin only.
+ *
  * @author Simon Wilkinson
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
@@ -38,8 +40,7 @@ if (!$lti->lti_key_exists($LTIkeysid)) {
 
 $lti->delete_lti_key($LTIkeysid);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -48,31 +49,26 @@ $lti->delete_lti_key($LTIkeysid);
   <title><?php echo $string['ltikeydel']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript">
-    function updateParent() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       window.opener.location.reload();
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="javascript:updateParent();" style="background-color:#F1F5FB; font-size:90%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" border="0" alt="Recycle Bin"/></td>
+<p>LTI Key successfully deleted.<p>
 
-    <td><p>LTI Key successfully deleted.<p>
-
-      <div style="text-align: center">
-        <form action="" method="get">
-          <input type="button" name="cancel" value="    OK    " onclick="javascript:window.close();"/>
-        </form>
-      </div>
-    </td>
-  </tr>
-</table>
+<div class="button_bar">
+  <form action="" method="get">
+    <input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();"/>
+  </form>
+</div>
 
 </body>
 </html>

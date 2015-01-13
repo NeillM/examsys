@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/folder/details.php';
+require_once '../lang/' . $language . '/module/index.php';
 
 $string['staffmsg'] = 'Toto je Rog&#333; úvodní stránka určená studentům. Hledali jste <a href="../staff/">stránku určenou zaměstnancům</a>?';
 $string['nopapers'] = 'V současnosti nemáte k dispozici žádné dokumenty.';

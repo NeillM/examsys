@@ -15,7 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['systeminformation'] = 'Informacje systemowe';
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['table'] = 'Tablica';
 $string['records'] = 'Rekordy';
 $string['updated'] = 'Zaktualizowane';
@@ -70,5 +69,6 @@ $string['varcapturemethod'] = 'Metoda przechwytywania zmiennej przy błędzie:';
 $string['improved'] = 'Poprawione';
 $string['basic'] = 'Podstawowe';
 $string['none'] = 'brak';
-$string['company'] = 'Company';
+$string['company'] = 'Instytucja';
+$string['webserver'] = 'Serwer stron WWW';
 ?>

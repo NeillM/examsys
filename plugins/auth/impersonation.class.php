@@ -21,7 +21,7 @@
  *
  * @author Simon Atack
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 require_once 'outline_authentication.class.php';
@@ -55,7 +55,7 @@ class impersonation_auth extends outline_authentication {
       $this->savetodebug('Changing user status to DEMO');
       $getauthobj->userObj->set_demo();
     }
-
+    
     return $getauthobj;
 
   }
@@ -70,7 +70,6 @@ class impersonation_auth extends outline_authentication {
 
   function checkwhattodo($preauthobj) {
     $this->savetodebug('Starting up impersination checking');
-//    $this->savetodebug('Check sess var:' . var_export($this->session, true));
 
     $continue = false;
     if (isset($this->form['std']->username)) {
@@ -101,6 +100,16 @@ class impersonation_auth extends outline_authentication {
       $this->form['std']->username = $usernameparts[0];
 
       if (!(isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'demo') == 0)) {
+        return $preauthobj;
+      }
+    }
+    if ((strcasecmp($usernameparts[1], 'staff') == 0) or (isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'staff') == 0)) {
+      $this->staff_mode = true;
+      $this->savetodebug('Staff log in mode detected');
+      $this->active = true;
+      $this->form['std']->username = $usernameparts[0];
+      
+      if (!(isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'staff') == 0)) {
         return $preauthobj;
       }
     }

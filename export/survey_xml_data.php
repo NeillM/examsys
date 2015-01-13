@@ -32,7 +32,7 @@ require '../include/staff_auth.inc';
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
   $result->bind_result($paper, $q_id, $q_type, $paper_type);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $paper_buffer[$question_no]['ID'] = $q_id;
     $paper_buffer[$question_no]['type'] = $q_type;
     $paper_type = $paper_type;
@@ -59,7 +59,7 @@ require '../include/staff_auth.inc';
     $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
     $result->execute();
     $result->bind_result($tmp_username, $answer_no);
-    while ($row = $result->fetch()) {
+    while ($result->fetch()) {
       if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
         $exclude .= ' AND log$paper_type.userID != "' . $tmp_username . '"';
       }
@@ -88,7 +88,7 @@ SQL;
   $result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
   $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $q_type, $user_ID);
-  while ($row = $result->fetch()) {
+  while ($result->fetch()) {
     $log_array[$user_ID][$question_ID] = $user_answer;
     $log_array[$user_ID]['username'] = $user_ID;
     $log_array[$user_ID]['course'] = $grade;

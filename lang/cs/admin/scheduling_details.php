@@ -17,7 +17,6 @@
 require '../lang/' . $language . '/include/months.inc';
 
 $string['summativeexamdetails'] = 'Detaily sumativní zkoušky';
-$string['administrativetools'] = 'Nastavení';
 $string['summativescheduling'] = 'Plánování sumativní zkoušky';
 $string['jumptopaper'] = 'Přejít na dokument';
 $string['editproperties'] = 'Upravit vlastnosti';

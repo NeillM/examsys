@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['modules'] = 'Moduły';
+$string['academicyear'] = 'Rok akademicki';
 $string['schools'] = 'Katedry';
 $string['smsimportsummary'] = 'Podsumowanie importu SMS';
 $string['smsimportson'] = 'Importowanie SMS włączone';

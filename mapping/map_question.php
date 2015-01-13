@@ -25,15 +25,18 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.inc';
 require '../include/mapping.inc';
+require '../include/errors.inc';
 require '../include/display_functions.inc';
+require '../include/media.inc';
+
+$paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
   require $cfg_web_root . "lang/$language/paper/start.php";
+  require $cfg_web_root . "lang/$language/question/edit/index.php";
 }
-require '../include/media.inc';
-$paperID = $_GET['paperID'];
 
-function display_q($target_id, $db) {
+function display_q($configObject, $target_id, $db) {
   $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
   $question_data->bind_param('i', $target_id);
   $question_data->execute();
@@ -81,8 +84,9 @@ function display_q($target_id, $db) {
 		$question['object'] = new EnhancedCalc($configObj);
 		$question['object']->load($question);
 	}
+  
+  display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered);
 
-	display_question($question, $paper_type, $question_offset, $q_type, $question_no, $user_answers, $unanswered);
   $question_nos[] = $old_q_id;
   echo "</table>\n";
 }
@@ -93,39 +97,40 @@ function display_q($target_id, $db) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['objectivemapping']; ?></title>
   <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-
+  <script>
+    $(function () {
+      $('#cancel').click(function() {
+        window.close();
+      });
+    });  
+  </script>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" href="../css/start.css" type="text/css" />
   <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
-  <style type="text/css">
-    body {font-size:90%}
-    h2 {font-size:150%; font-weight:bold; color:#316AC5; margin-left:15px; padding-top:10px}
-    p {margin-top:0px; padding-top:0px}
-    .paper {margin-left:0px; font-size:180%; color:white; font-weight:bold}
-    .q_no {width:40px; text-align:right; vertical-align:top}
-    .theme {font-size:150%; padding-left:4px; font-weight:bold; color:#316AC5}
-    .note {color:#C00000}
-    .mk {color:#808080; font-size:80%}
+  <style>
+    .objheading {font-size:150%; font-weight:bold; color:#316AC5; padding-top:10px; border-top:1px solid #C0C0C0}
   </style>
 </head>
 <body>
+  <div id="maincontent">
 <?php
 
 if (isset($_POST['submit'])) {
   // Write out curriculum mapping.
   save_objective_mappings($mysqli, $_POST['objective_modules'], $_POST['paperID'], $_POST['questionID']);
   ?>
-  <script language="JavaScript">
+  <script>
     window.opener.location = window.opener.location;
     window.close();
   </script>
   <?php
 } else {
-  display_q($_GET['q_id'], $mysqli);
+  display_q($configObject, $_GET['q_id'], $mysqli);
 
   echo "<div id=\"obj_form\">\n";
   echo "<form method=\"post\">";
@@ -133,11 +138,11 @@ if (isset($_POST['submit'])) {
   echo "<br />";
   echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
-  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" style=\"width:130px\" />&nbsp;&nbsp;";
-  echo "<input style=\"width:80px\" type=\"button\" value=\"" . $string['cancel'] . "\" onclick=\"window.close()\"/></div>";
+  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" id=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" /></div>";
 
   echo "</form>\n</div>\n";
 }
 ?>
+  </div>
 </body>
 </html>

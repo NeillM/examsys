@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['systeminformation'] = 'System Information';
-$string['administrativetools'] = 'Administrative Tools';
 $string['table'] = 'Table';
 $string['records'] = 'Records';
 $string['updated'] = 'Updated';
@@ -71,4 +70,5 @@ $string['improved'] = 'Improved';
 $string['basic'] = 'Basic';
 $string['none'] = 'none';
 $string['company'] = 'Company';
+$string['webserver'] = 'Web server';
 ?>

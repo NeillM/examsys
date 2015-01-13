@@ -41,12 +41,14 @@ Class InstallUtils {
   public static $cfg_company;
   public static $cfg_short_date;
   public static $cfg_long_date_time;
+  public static $cfg_short_date_time;
   public static $cfg_long_date_php;
   public static $cfg_short_date_php;
   public static $cfg_long_time_php;
   public static $cfg_short_time_php;
   public static $cfg_timezone;
   public static $cfg_tmpdir;
+  public static $cfg_tablesorter_date_time;
 
   //database config options
   public static $cfg_db_host;
@@ -70,6 +72,9 @@ Class InstallUtils {
   public static $cfg_db_sct_passwd;
   public static $cfg_db_inv_user;
   public static $cfg_db_inv_passwd;
+
+  public static $cfg_cron_user;
+  public static $cfg_cron_passwd;
 
   public static $cfg_db_name;
   public static $db_admin_username;
@@ -110,24 +115,21 @@ Class InstallUtils {
     global $string, $language, $timezone_array;
 
     ?>
-    <script type="text/javascript">
-      $(document).ready(function(){
-          $("#installForm").validate();
-      });
-
-      $(document).ready(function() {
+    <script type="text/javascript" src="../js/system_tooltips.js"></script>
+    <script>
+      $(function () {
+        $("#installForm").validate();
+      
         $('#useLdap').change(function() {
-            $('#ldapOptions').toggle();
-          });
-      });
-
-      $(document).ready(function() {
+          $('#ldapOptions').toggle();
+        });
+      
         $('#uselookupLdap').change(function() {
-            $('#ldaplookupOptions').toggle();
-          });
+          $('#ldaplookupOptions').toggle();
+        });
       });
     </script>
-    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
 
       <?php
         if (!defined('PHP_VERSION_ID')) {
@@ -162,16 +164,14 @@ Class InstallUtils {
 
         <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
 
-
-
-
       <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
 <?php
 $mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format';
 $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 ?>
-        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /> </div>
-        <div><label for="cfg_long_date_time"><?php echo sprintf($string['datetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /></div>
+        <div><label for="cfg_long_date_time"><?php echo sprintf($string['longdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
+        <div><label for="cfg_short_date_time"><?php echo sprintf($string['shortdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" /></div>
         <div><label for="cfg_long_date_php"><?php echo sprintf($string['longdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" /></div>
         <div><label for="cfg_short_date_php"><?php echo sprintf($string['shortdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" /></div>
         <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
@@ -191,18 +191,18 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         </select></div>
 
         <table class="h"><tr><td><nobr><?php echo $string['authentication']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from successful LTI launch" /></div><br />
-        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow authentication from internal Rogo user database" /></div><br />
-        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
-        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
+        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from successful LTI launch" /></div><br />
+        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from internal Rogo user database" /></div><br />
+        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
+        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
         <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
-        <div id="ldapOptions" style="display:none;">
+        <div id="ldapOptions" style="display:none">
           <br/>
           <div><label for="ldap_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_server" name="ldap_server" /></div>
           <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /></div>
           <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /></div>
           <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /></div>
-          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div>
 
 
@@ -216,9 +216,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
             <div><label for="ldap_lookup_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" /></div>
             <div><label for="ldap_lookup_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" /></div>
             <div><label for="ldap_lookup_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" /></div>
-            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="<?php echo $string['userprefixtip'] ?>" /></div>
+            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
         </div><br clear="all" />
-        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
+        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
 
 
         <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -247,11 +247,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
+        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
         <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /> <img src="../artwork/help_tip.png" class="tipright" width="15" height="15" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
+        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
         <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
       
       <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -264,11 +264,34 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
         <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
 
-      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" /> </div>
+      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" class="ok" /> </div>
     </form>
     <?php
   }
 
+  /**
+   * Determines if a database user already exists.
+   *
+   * @param string $username - The name of the user to be tested.
+   *
+   * @return bool - True = user exists, False = user does not exist.
+   */
+  static function does_user_exist($username) {
+    $result  = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
+    $result->bind_param('s', $username);
+    $result->execute();
+    $result->store_result();
+    $num_rows =  $result->num_rows;
+
+    $result->close();
+
+    if ($num_rows < 1) {
+      return false;
+    }
+
+    return true;    
+  }
+  
   static function processForm() {
     global $string, $cfg_encrypt_salt;
 
@@ -291,13 +314,18 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     self::$cfg_short_date = $_POST['cfg_short_date'];
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
+    self::$cfg_short_date_time = $_POST['cfg_short_date_time'];
     self::$cfg_long_date_php = $_POST['cfg_long_date_php'];
     self::$cfg_short_date_php = $_POST['cfg_short_date_php'];
     self::$cfg_long_time_php = $_POST['cfg_long_time_php'];
     self::$cfg_short_time_php = $_POST['cfg_short_time_php'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
-
+    if (self::$cfg_long_date_time == "%d/%m/%Y %H:%i") {
+      self::$cfg_tablesorter_date_time = 'uk';
+    } else {
+      self::$cfg_tablesorter_date_time = 'us';
+    }
     //Authentication
     if (isset($_POST['useLti'])) {
       self::$cfg_auth_lti = true;
@@ -362,7 +390,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_interactivequestions = $_POST['interactivequestions'];
   
     // Check we can write to the config file first if not passwords will be lost!
-    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
 
     if (file_exists($rogo_path . '/config/config.inc.php')) {
       if (!is_writable($rogo_path . '/config/config.inc.php')) {
@@ -394,6 +422,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       array('internaldb', array('table' => '', 'username_col' => '', 'passwd_col' => '', 'id_col' => '', 'sql_extra' => '', 'encrypt' => 'SHA-512', 'encrypt_salt' => $cfg_encrypt_salt), 'Internal Database')
     );
     $configObj->set('authentication', $authentication);
+    
+    InstallUtils::checkDBUsers();
+
 
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
@@ -407,7 +438,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (!is_array(self::$warnings)) {
       echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
       echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
-      echo "<p style=\"margin-left:10px\"><input type=\"button\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../staff/index.php'\" /></p>\n";
+      echo "<p style=\"margin-left:10px\"><input type=\"button\" class=\"ok\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../index.php'\" /></p>\n";
     } else {
       self::displayWarnings();
     }
@@ -570,14 +601,14 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_db_inv_user = self::$cfg_db_basename . '_inv';
     self::$cfg_db_inv_passwd = gen_password() . gen_password();
 
-
+    self::$cfg_cron_user = 'cron';
+    self::$cfg_cron_passwd = gen_password() . gen_password();
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
     self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
     if (self::$db->errno != 0) {
-      //echo "CREATE USER  '" . self::$cfg_db_username . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'" . '<br />';
-      self::logWarning(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".admin_access TO '". self::$cfg_db_username . "'@'". self::$cfg_web_host . "'";
@@ -603,10 +634,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     foreach($priv_SQL as $sql) {
       self::$db->query($sql);
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_username . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -617,7 +648,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user student user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".announcements TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
@@ -677,15 +708,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
-
+		$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".killer_questions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+		$priv_SQL[] = "GRANT INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
-        @ob_flush();
-        @flush();
+      @ob_flush();
+      @flush();
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -694,7 +726,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user external user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".help_log TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
@@ -720,6 +752,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".review_metadata TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set_questions TO '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
@@ -738,13 +771,24 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".schools TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules_student TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_exclude TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".marking_override TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sid TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_notes TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_notes TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".exam_announcements TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".relationships TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".feedback_release TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".cache_paper_stats TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_feedback TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -754,7 +798,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user staff user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".* TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
@@ -810,6 +854,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".reference_papers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".relationships TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".review_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".scheduling TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sessions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sid TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
@@ -829,6 +874,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+		$priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".killer_questions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+		$priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+		$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".toilet_breaks TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
@@ -836,7 +884,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -846,7 +894,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user SCT user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".options TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
@@ -860,10 +908,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".sct_reviews TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -873,7 +921,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user Invigilator user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".exam_announcements TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
@@ -897,14 +945,15 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".toilet_breaks TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -914,18 +963,18 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //create 'database user sysadmin user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
     if (self::$db->errno != 0) {
-      self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error));
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
-    foreach($priv_SQL as $sql) {
+    foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
         echo self::$db->error . "<br />";
-        self::logWarning(array('013'=> $string['wdatabaseuser']. self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . self::$db->error));
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -946,6 +995,20 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                             self::$db
                           );
 
+    //create cron user
+    UserUtils::create_user( self::$cfg_cron_user,
+                            self::$cfg_cron_passwd,
+                            '',
+                            '',
+                            'cron',
+                            '',
+                            '',
+                            '',
+                            '',
+                            'Staff,SysCron',
+                            '',
+                            self::$db
+                          );
 
     //create 100 guest accounts
     for ($i=1; $i<=100; $i++) {
@@ -1004,7 +1067,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 0,
                                 0,
                                 1,
-                                1
+                                1,
+																'07/01'
                              );
 
     module_utils::add_modules(  'SYSTEM',
@@ -1024,7 +1088,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
                                 0,
                                 0,
                                 1,
-                                1
+                                1,
+																'07/01'
                              );
     self::$db->commit();
 
@@ -1057,7 +1122,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   static function configFile() {
     global $string;
 
-    $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    $rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     if (file_exists($rogo_path . '/config/config.inc.php')) {
       $errors['90'] =  sprintf($string['errors1'], $rogo_path."/config/config.inc.php");
@@ -1073,16 +1138,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     $rogo_path = '';
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
-      $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/install/index.php')  !== false) {
+      $rogo_path = str_ireplace('/install/index.php','',  normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version4.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version4.php') !== false) {
+      $rogo_path = str_ireplace('/updates/version4.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version5.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version5.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version5.php') !== false) {
+      $rogo_path = str_ireplace('/updates/version5.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (is_writable($rogo_path . '/config/config.inc.php')) {
@@ -1100,16 +1165,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     $rogo_path = '';
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/install/index.php')  !== false) {
-      $rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/install/index.php')  !== false) {
+      $rogo_path = str_ireplace('/install/index.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version4.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version4.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version4.php') !== false) {
+      $rogo_path = str_ireplace('/updates/version4.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
-    if (strpos($_SERVER['SCRIPT_FILENAME'], '/updates/version5.php') !== false) {
-      $rogo_path = str_ireplace('/updates/version5.php','',$_SERVER['SCRIPT_FILENAME']);
+    if (strpos(normalise_path($_SERVER['SCRIPT_FILENAME']), '/updates/version5.php') !== false) {
+      $rogo_path = str_ireplace('/updates/version5.php','',normalise_path($_SERVER['SCRIPT_FILENAME']));
     }
 
     if (is_writable($rogo_path . '/config')) {
@@ -1126,7 +1191,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   static function checkDirPermissionsPre() {
     global $string;
 
-    self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    // This should work for both windows and UNIX style paths.
+    self::$rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     //media
     if (!is_writable(self::$rogo_path . '/media')) {
@@ -1158,7 +1224,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkDirPermissionsPost() {
     global $string;
-    self::$rogo_path = str_ireplace('/install/index.php','',$_SERVER['SCRIPT_FILENAME']);
+    self::$rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     //tmp
     if (!is_writable($_POST['tmpdir'])) {
@@ -1167,6 +1233,24 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (count($errors) > 0) {
       self::displayError($errors);
     }
+  }
+  
+  static function checkDBUsers() {
+    $errors = array();
+
+    $usernames = array('auth'=>300, 'stu'=>301, 'staff'=>302, 'ext'=>303, 'sys'=>304, 'sct'=>305, 'inv'=>306);
+    foreach ($usernames as $username=>$err_code){
+      $test_username = self::$cfg_db_basename . '_' . $username;
+      if (self::does_user_exist($test_username)) {
+        $errors[$err_code] = "User '" . $test_username . "' already exists.";
+
+      }
+    }
+    
+    if (count($errors) > 0) {
+      self::displayError($errors);
+    }
+
   }
 
   /**
@@ -1186,7 +1270,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $errors['202'] = $string['errors10'];
     }
     $phpModules = get_loaded_extensions();
-    if ( !in_array('mysqli',$phpModules) ) {
+    if ( !in_array('mysqli', $phpModules) ) {
       $errors['203'] = $string['errors11'];
     }
 
@@ -1250,7 +1334,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       echo "<h1>". $string['errors14']."</h1>";
       echo "<div class=\"warning\">\n";
       foreach(self::$warnings as $message) {
-        echo "\t<div>".$string['errors15']." $message</div>\n";
+        echo "\t<div>" . $string['errors15'] . " $message</div>\n";
       }
       echo "</div>\n";
     }
@@ -1276,32 +1360,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <link rel="stylesheet" type="text/css" href="../css/body.css" />
       <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
       <link rel="stylesheet" type="text/css" href="../css/header.css" />
-      <link rel="stylesheet" type="text/css" href="../css/tipTip.css" />
       <style type="text/css">
         body {font-size:90%}
         h1 {margin-left:16px; font-size:140%; color;#1F497D}
         .error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
         .warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
-        label {float:left; width:160px; padding-left:0em; text-align:right; padding-right:6px}
+        label {float:left; width:175px; padding-left:0em; text-align:right; padding-right:6px}
         p {clear:both}
         .submit {margin-left:42%; padding-top:2em}
         table {border:none;padding:0px}
         .h {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
         .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
         td.line {width:98%}
-        input {width:200px}
-        input[type="text"] {margin:0px}
-        select {margin:0px; padding:0px}
+        input[type=text], input[type=password] {width:200px}
         form {padding:1em}
         form div {padding-left:2em}
       </style>
 
-      <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+      <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
       <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-      <script type="text/javascript" src="../js/jquery.tipTip.minified.js"></script>
-      <script type="text/javascript">
-        $(function(){
-          $(".tipright").tipTip({defaultPosition: 'right'});
+      <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
+      <script>
+        $(function() {
+          $(document).tooltip();
         });
       </script>
     </head>
@@ -1310,8 +1391,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     <tr>
       <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
       <img class="logo_img" src="../artwork/r_logo.gif" alt="logo" />
-      <div class="logo_lrg_txt">Rog&#333;</div>
-      <div class="logo_small_txt">System Installation (<?php echo $version; ?>)</div>
+      <div class="logo_lrg_txt">Rog&#333; <?php echo $version; ?></div>
+      <div class="logo_small_txt">System Installation</div>
       </th>
       <th style="text-align:right; padding-right:10px">
       <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />
@@ -1343,7 +1424,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 *
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
+* @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
@@ -1352,7 +1433,7 @@ require \$root . '/include/path_functions.inc.php';
 
 \$rogo_version = '{rogo_version}';
 \$cfg_web_root = get_root_path() . '/';
-\$cfg_root_path = rtrim('/' . trim(str_replace(\$_SERVER['DOCUMENT_ROOT'], '', \$cfg_web_root), '/'), '/');
+\$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
@@ -1393,12 +1474,17 @@ require \$root . '/include/path_functions.inc.php';
 // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
+  \$cfg_tablesorter_date_time = '{cfg_tablesorter_date_time}';
+  \$cfg_short_date_time = '{cfg_short_date_time}';
   \$cfg_long_date_php = '{cfg_long_date_php}';
   \$cfg_short_date_php = '{cfg_short_date_php}';
   \$cfg_long_time_php = '{cfg_long_time_php}';
   \$cfg_short_time_php = '{cfg_short_time_php}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
+// cron user
+  \$cfg_cron_user = '{cfg_cron_user}';
+  \$cfg_cron_passwd = '{cfg_cron_passwd}';
 
 // Reports
   \$percent_decimals = 2;
@@ -1448,7 +1534,7 @@ require \$root . '/include/path_functions.inc.php';
 
 // Root path for JS
   \$cfg_js_root = <<< SCRIPT
-<script type="text/javascript">
+<script>
   if (typeof cfgRootPath == 'undefined') {
     var cfgRootPath = '\$cfg_root_path';
   }
@@ -1532,18 +1618,22 @@ CONFIG;
     $config = str_replace('{cfg_db_inv_user}', self::$cfg_db_inv_user, $config);
     $config = str_replace('{cfg_db_inv_passwd}', self::$cfg_db_inv_passwd, $config);
 
+    $config = str_replace('{cfg_cron_user}', self::$cfg_cron_user, $config);
+    $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
+
     $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
     $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
     $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
+    $config = str_replace('{cfg_short_date_time}', self::$cfg_short_date_time, $config);
     $config = str_replace('{cfg_long_date_php}', self::$cfg_long_date_php, $config);
     $config = str_replace('{cfg_short_date_php}', self::$cfg_short_date_php, $config);
     $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
     $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
-    
+    $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
     $config = str_replace('{labsecuritytype}', self::$cfg_labsecuritytype, $config);
     $config = str_replace('{interactivequestions}', self::$cfg_interactivequestions, $config);
 
@@ -1773,6 +1863,19 @@ QUERY;
           ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['extra_cal_dates'] = <<<QUERY
+          CREATE TABLE `extra_cal_dates` (
+            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `title` varchar(255) NOT NULL,
+            `message` text,
+            `thedate` datetime NOT NULL,
+            `duration` int(11) NOT NULL,
+            `bgcolor` varchar(16) NOT NULL,
+            `deleted` datetime DEFAULT NULL,
+            PRIMARY KEY (`id`)
+          ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,
@@ -1787,7 +1890,7 @@ QUERY;
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` mediumint(8) unsigned default NULL,
           `date` datetime NOT NULL,
-          `type` enum('objectives','questions','cohort_performance') default NULL,
+          `type` enum('objectives','questions','cohort_performance','external_examiner') default NULL,
           PRIMARY KEY  (`idfeedback_release`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1894,6 +1997,16 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['killer_questions'] = <<<QUERY
+        CREATE TABLE `killer_questions` (
+          `id` int(4) unsigned NOT NULL auto_increment,
+          `paperID` mediumint(8) unsigned NOT NULL,
+          `q_id` int(4) unsigned NOT NULL DEFAULT '0',
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['labs'] = <<<QUERY
         CREATE TABLE `labs` (
           `id` smallint(5) unsigned NOT NULL auto_increment,
@@ -1924,7 +2037,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -1962,7 +2076,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2000,7 +2115,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2020,7 +2136,8 @@ QUERY;
           `option_order` varchar(255) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
+          UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
@@ -2031,7 +2148,8 @@ QUERY;
           `rating` text,
           `q_parts` varchar(50) DEFAULT NULL,
           `log4_overallID` int(11) unsigned DEFAULT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2064,7 +2182,8 @@ QUERY;
           `totalpos` tinyint(4) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
-          UNIQUE KEY `idx_metadataID_qid` (`metadataID`,`q_id`)
+          UNIQUE KEY `idx_metadataID_qid` (`metadataID`,`q_id`),
+          KEY `q_id` (`q_id`)
        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2078,7 +2197,8 @@ QUERY;
           `q_id` int(11) default NULL,
           `rating` tinyint(4) default NULL,
           PRIMARY KEY (`id`),
-          KEY `started` (`started`)
+          KEY `started` (`started`),
+          KEY `q_id` (`q_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2140,6 +2260,7 @@ QUERY;
           `attempt` tinyint(4) default NULL,
           `completed` datetime DEFAULT NULL,
           `lab_name` varchar(255) DEFAULT NULL,
+          `highest_screen` tinyint(3) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           KEY `userID` (`userID`,`paperID`,`started`),
           KEY `idx_log_metadata_student_grade` (`student_grade`),
@@ -2153,19 +2274,20 @@ QUERY;
           `userID` int(10) unsigned DEFAULT NULL,
           `paperID` mediumint(8) unsigned DEFAULT NULL,
           `started` datetime DEFAULT NULL,
-          `ipaddress` char(15) DEFAULT NULL,
+          `ipaddress` varchar(100) DEFAULT NULL,
           `student_grade` char(25) DEFAULT NULL,
           `year` tinyint(4) DEFAULT NULL,
           `attempt` tinyint(4) DEFAULT NULL,
           `completed` datetime DEFAULT NULL,
-          `lab_name` varchar(255) DEFAULT NULL
+          `lab_name` varchar(255) DEFAULT NULL,
+          `highest_screen` tinyint(3) unsigned DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
-          `lti_context_key` VARCHAR(255) NOT NULL ,
-          `c_internal_id` VARCHAR(255) NOT NULL ,
+          `lti_context_key` VARCHAR(255) NOT NULL,
+          `c_internal_id` VARCHAR(255) NOT NULL,
           `updated_on` DATETIME NOT NULL,
           PRIMARY KEY (`lti_context_key`),
           KEY `c_internal_id` (`c_internal_id`)
@@ -2201,7 +2323,7 @@ QUERY;
     $this->tableList['lti_user'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_user` (
           `lti_user_key` varchar(255) NOT NULL,
-          `lti_user_equ` varchar(255) NOT NULL,
+          `lti_user_equ` int(10) unsigned,
           `updated_on` datetime NOT NULL,
           PRIMARY KEY (`lti_user_key`),
           KEY `lti_user_equ` (`lti_user_equ`)
@@ -2210,16 +2332,16 @@ QUERY;
 
     $this->tableList['marking_override'] = <<<QUERY
         CREATE TABLE `marking_override` (
-          `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT ,
-          `log_id` INT(11) UNSIGNED NOT NULL ,
-          `log_type` TINYINT(4) UNSIGNED NOT NULL ,
-          `user_id` INT(10) UNSIGNED NOT NULL ,
-          `q_id` INT(4) UNSIGNED NOT NULL ,
-          `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL ,
-          `marker_id` INT(10) UNSIGNED NOT NULL ,
-          `date_marked` DATETIME NOT NULL ,
-          `new_mark_type` ENUM('correct', 'partial', 'incorrect') NOT NULL ,
-          `reason` VARCHAR(255) NULL ,
+          `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+          `log_id` INT(11) UNSIGNED NOT NULL,
+          `log_type` TINYINT(4) UNSIGNED NOT NULL,
+          `user_id` INT(10) UNSIGNED NOT NULL,
+          `q_id` INT(4) UNSIGNED NOT NULL,
+          `paper_id` MEDIUMINT(8) UNSIGNED NOT NULL,
+          `marker_id` INT(10) UNSIGNED NOT NULL,
+          `date_marked` DATETIME NOT NULL,
+          `new_mark_type` ENUM('correct', 'partial', 'incorrect') NOT NULL,
+          `reason` VARCHAR(255) NULL,
           PRIMARY KEY (`id`),
           UNIQUE KEY `log_id` (`log_id`, `log_type`)
           ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2243,6 +2365,7 @@ QUERY;
           `exam_q_feedback` tinyint(4) default NULL,
           `add_team_members` tinyint(4) default NULL,
           `map_level` smallint(2) NOT NULL DEFAULT '0',
+          `academic_year_start` char(5) NOT NULL,
           PRIMARY KEY (`id`),
           KEY `guideid` (`moduleid`),
           KEY `idx_moduleid_deleted` (`moduleid`,`mod_deleted`),
@@ -2256,7 +2379,6 @@ QUERY;
           `idMod` int(11) unsigned DEFAULT NULL,
           `memberID` int(10) unsigned DEFAULT NULL,
           `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          `type` enum('System','Custom') DEFAULT NULL,
           PRIMARY KEY (`groupID`),
           KEY `name` (`idMod`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -2335,7 +2457,7 @@ QUERY;
           `note_date` datetime default NULL,
           `paper_id` mediumint(8) unsigned default NULL,
           `note_authorID` int(10) unsigned default NULL,
-          `note_workstation` char(60) default NULL,
+          `note_workstation` char(100) default NULL,
           PRIMARY KEY (`note_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -2605,21 +2727,44 @@ QUERY;
     $this->tableList['review_comments'] = <<<QUERY
         CREATE TABLE `review_comments` (
           `id` int(11) NOT NULL auto_increment,
-          `q_paper` mediumint(8) unsigned default NULL,
           `q_id` int(11) default NULL,
           `category` tinyint(4) default NULL,
           `comment` text,
-          `reviewer` int(10) unsigned default NULL,
-          `reviewed` datetime default NULL,
           `action` enum('Not actioned','Read - disagree','Read - actioned') default NULL,
           `response` text,
-          `review_type` enum('External','Internal') default NULL,
-          `ipaddress` varchar(15) default NULL,
           `duration` mediumint(9) default NULL,
           `screen` tinyint(4) default NULL,
-          PRIMARY KEY (`id`),
-          KEY `idx_q_paper` (`q_paper`)
+          `metadataID` int(11) unsigned NOT NULL DEFAULT '0',
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['review_metadata'] = <<<QUERY
+        CREATE TABLE `review_metadata` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `reviewerID` int(10) unsigned NOT NULL,
+          `paperID` mediumint(8) unsigned NOT NULL,
+          `started` datetime DEFAULT NULL,
+          `complete` datetime DEFAULT NULL,
+          `review_type` enum('External','Internal') DEFAULT NULL,
+          `ipaddress` varchar(100) DEFAULT NULL,
+          `paper_comment` text,
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['save_fail_log'] = <<<QUERY
+          CREATE TABLE `save_fail_log` (
+          `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
+          `userID` int(10) unsigned NOT NULL,
+          `paperID` mediumint(8) unsigned NOT NULL DEFAULT '0',
+          `screen` tinyint(2) unsigned NOT NULL DEFAULT '0',
+          `ipaddress` varchar(100) DEFAULT NULL,
+          `failed` int(4) unsigned NOT NULL DEFAULT '0',
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['scheduling'] = <<<QUERY
@@ -2693,7 +2838,8 @@ QUERY;
           `deletions` int(11) default NULL,
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
-          PRIMARY KEY  (`id`)
+          `academic_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2711,7 +2857,9 @@ QUERY;
           `font` varchar(50) default NULL,
           `unanswered` varchar(20) default NULL,
 					`dismiss` varchar(20) default NULL,
-          PRIMARY KEY (`special_id`),
+					`medical` text,
+					`breaks` text,
+					PRIMARY KEY (`special_id`),
           UNIQUE KEY `idx_userID` (`userID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -2719,17 +2867,22 @@ QUERY;
     $this->tableList['staff_help'] = <<<QUERY
         CREATE TABLE `staff_help` (
           `id` smallint(6) NOT NULL auto_increment,
-          `title` text,
-          `body` text,
-          `body_plain` text,
+          `title` mediumtext,
+          `body` mediumtext,
+          `body_plain` mediumtext,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
           `checkout_authorID` int(10) unsigned default NULL,
           `roles` enum('SysAdmin','Admin','Staff') default NULL,
           `deleted` datetime default NULL,
+          `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
+          `articleid` smallint(6) unsigned NOT NULL,
+          `lastupdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY  (`id`),
+          KEY `language` (`language`),
+          KEY `articleid` (`articleid`),            
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 QUERY;
 
     $this->tableList['std_set'] = <<<QUERY
@@ -2769,16 +2922,21 @@ QUERY;
     $this->tableList['student_help'] = <<<QUERY
         CREATE TABLE `student_help` (
           `id` smallint(6) NOT NULL auto_increment,
-          `title` text,
-          `body` text,
-          `body_plain` text,
+          `title` mediumtext,
+          `body` mediumtext,
+          `body_plain` mediumtext,
           `type` enum('page','pointer') default NULL,
           `checkout_time` datetime default NULL,
           `checkout_authorID` int(10) unsigned default NULL,
           `deleted` datetime default NULL,
+          `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
+          `articleid` smallint(6) unsigned NOT NULL,
+          `lastupdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
+          KEY `language` (`language`),
+          KEY `articleid` (`articleid`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 QUERY;
 
     $this->tableList['student_notes'] = <<<QUERY
@@ -2815,6 +2973,14 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['sys_updates'] = <<<QUERY
+        CREATE TABLE `sys_updates` (
+          `name` varchar(255) DEFAULT NULL,
+          `updated` datetime NOT NULL,
+          KEY `name` (`name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['temp_users'] = <<<QUERY
         CREATE TABLE `temp_users` (
           `id` int(11) NOT NULL auto_increment,
@@ -2841,6 +3007,7 @@ QUERY;
 					`phase` tinyint(4) default NULL,
 					`logtype` tinyint(4) default NULL,
 					`student_userID` int(10) unsigned default NULL,
+          `reminders` VARCHAR(255) NULL,
 					PRIMARY KEY (`id`),
 					UNIQUE KEY `idx_unique` (`phase`,`answer_id`,`logtype`),
 					KEY `paperID` (`paperID`),
@@ -2854,6 +3021,17 @@ QUERY;
           `paperID` mediumint(8) unsigned default NULL,
           `userID` int(10) unsigned default NULL,
           PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+    $this->tableList['toilet_breaks'] = <<<QUERY
+        CREATE TABLE `toilet_breaks` (
+          `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+          `userID` int(10) unsigned NOT NULL,
+          `paperID` mediumint(8) unsigned NOT NULL,
+          `break_taken` datetime NOT NULL,
+          PRIMARY KEY (`id`),
+          KEY `paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2875,24 +3053,23 @@ QUERY;
 
     $this->tableList['users'] = <<<QUERY
         CREATE TABLE `users` (
-          `password` char(90) default NULL,
+          `password` char(90) NOT NULL,
           `grade` char(30) default NULL,
-          `surname` char(35) default NULL,
+          `surname` char(35) NOT NULL,
           `initials` char(10) default NULL,
           `title` varchar(30) default NULL,
-          `username` char(15) default NULL,
+          `username` char(60) NOT NULL,
           `email` char(65) default NULL,
           `roles` char(40) default NULL,
           `id` int(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female') default NULL,
-          `last_login` datetime default NULL,
           `special_needs` tinyint(4) default '0',
           `yearofstudy` tinyint(4) default NULL,
           `user_deleted` datetime default NULL,
           `password_expire` int(11) unsigned default NULL,
           PRIMARY KEY (`id`),
-          KEY `username_index` (`username`),
+          UNIQUE KEY `username_index` (`username`),
           KEY `idx_roles` (`roles`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;

@@ -22,13 +22,8 @@
 * @package
 */
 
-$include_path = realpath( '../../../../../../include/' ) . DIRECTORY_SEPARATOR;
-
-require $include_path . 'load_config.php';
-require $include_path . 'media.inc';
-require $include_path . 'staff_auth.inc';
-
-
+require '../../../../../../include/staff_auth.inc';
+require '../../../../../../include/media.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -79,11 +74,11 @@ require $include_path . 'staff_auth.inc';
       $class = 'class="image_no_brd"';
     }
 
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="../../media/' . $destName . '" ' . $class . ' />';
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="' . $configObject->get('cfg_root_path') . '/media/' . $destName . '" ' . $class . ' />';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
-        <script type="text/javascript" language="javascript">
+        <script>
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
@@ -113,15 +108,17 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
 
 function showForm($error) {
 ?>
-<script type="text/javascript" language="javascript">
+<script>
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
     window.resizeTo(500, 350);
     window.moveTo(winx, winy);
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
+
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td class="dialog_header" style="width:56px"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" border="0" alt="Image" /></td><td class="dialog_header">Add New Image</td></tr>
+<tr><td class="dialog_header" style="width:56px; border-bottom: 1px solid #CCD9EA"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" alt="Image" /></td><td class="dialog_header" style="border-bottom: 1px solid #CCD9EA">Add New Image</td></tr>
+<tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td class="note">Browse for the image file you wish to add (GIF, PNG or JPEG).</td></tr>
 <tr><td class="field">File</td><td>
   <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="../../../../../../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
@@ -130,7 +127,7 @@ function showForm($error) {
 <tr><td class="field">alt</td><td><input type="text" name="alt" value="" size="40" /></td></tr>
 <tr><td class="field">border</td><td><input type="checkbox" name="border" value="1" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" style="width:110px" />&nbsp;&nbsp;<input type="button" name="cancel" value="Cancel" onclick="window.close();" style="width:110px" /></td></tr>
+<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Insert" onclick="document.getElementById('waitmsg').style.display='block'" class="ok" /><input type="button" name="cancel" value="Cancel" onclick="window.close();" class="cancel" /></td></tr>
 </table>
 </form>
 

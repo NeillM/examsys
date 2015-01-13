@@ -16,13 +16,12 @@
 
 $string['externalexaminerarea'] = 'domena egzaminatora zewnętrznego';//area??
 $string['expired'] = '&lt;wygasły&gt; - nadal możesz przeglądać arkusze i zapoznać się z %s działaniami/odpowiedziami na Twoje komentarze.';
-$string['instructions'] = 'Instrukcje';
 $string['externalexamineraccess'] = 'Dostęp dla egzaminatora zewnętrznego';
 $string['notreviewed'] = 'Nieprzejrzane';
 $string['reviewed'] = 'Przejrzany: %s';
 $string['msg1'] = 'Poniższa lista przedstawia arkusze wymagające recenzji. Po wybraniu tytułu arkusza, w nowym oknie przedstawiona będzie ocena. Pod każdym pytaniem znajdują się trzy przyciski pozwalające wartościować pytania: 1) <span style="background-color:#C5E0B3; color:#375623">&nbsp;Pytanie&nbsp;poprawne&nbsp;</span> (Domyślne), 2) <span style="background-color:#FFE599; color:#7F6000">&nbsp;Małe/nieliczne&nbsp;problemy&nbsp;</span> lub 3) <span style="background-color:#FF9090; color:#800000">&nbsp;Duże/liczne&nbsp;problemy&nbsp;</span>. Dostępne jest także pole tekstowe przeznaczone do odnotowania konkretnych uwag co do poprawy pytania.';
 $string['msg2'] = 'Przyciski nawigacyjne przemieszczające pomiędzy ekranami można znaleźć na dole ekranu. W niniejszym trybie recenzji dla wszystkich pytań wyświetlane są poprawne odpowiedzi (studenci otrzymają arkusze bez odpowiedzi). Arkusz można aktualizować wielokrotnie. Komentarze będą automatycznie zapisane podczas przechodzenia pomiędzy ekranami i po wybraniu \'Zakończ\'.';
-$string['yourpapersforreview'] = 'Arkusze do oceny:';
+$string['msg3'] = 'Poniżej znajduje się lista egzaminów dostępnych do recenzowania wyników grupy studentów. Pierwszy ekran przedstawia listę ocen z arkusza. Po kliknięciu na nazwisko studenta przedstawione będzie okno ze skryptem studenta pokazujacym szczegółowe odpowiedzi i oceny cząstkowe.';
 $string['nopapersfound'] = 'Nie znaleziono żadnego arkusza!';
 $string['copyrightmsg'] = 'Pytania zawarte w Rogō są chronione prawem autorskim i należą do %s.';
 $string['helpandsupport'] = 'Pomoc i wsparcie';
@@ -32,4 +31,6 @@ $string['onlinesupportsystem'] = 'System pomocy online dla studentów';
 $string['email'] = 'Email'; //cognate
 $string['deadline'] = 'Termin finalizacji:';
 $string['notset'] = '&lt;brak&gt;';
+$string['preexamreviewpapers'] = 'Arkusze przeglądu przedegzaminacyjnego';
+$string['postexamreviews'] = 'Przeglądy poegzaminacyjne';
 ?>

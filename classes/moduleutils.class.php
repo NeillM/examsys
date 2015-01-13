@@ -41,11 +41,11 @@ Class module_utils extends RogoStaticSingleton {
 
 /**
  *
- * Utility class for module related functionality
+ * Utility class for module related functionality.
  *
  * @author Anthony Brown
  * @version 1.0
- * @copyright Copyright (c) 2013 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 Class module {
@@ -54,8 +54,82 @@ Class module {
   * constructor
   */
   public function __construct() {}
+  
+  /**
+   * Gets a list of staff on a modules' team.
+   * 
+   * @param integer $idMod - The ID of the module to use.
+   * @param object $db     - MySQLi database connection.
+   * @return array - List of staff on the module.
+   */
+  public function get_staff_members($idMod, $db) {
+    $members = array();
+    
+    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? AND user_deleted IS NULL ORDER BY surname, initials");
+    $result->bind_param('i', $idMod);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($surname, $initials, $title, $userID);
+    while ($result->fetch()) {
+      $title = str_replace('Professor', 'Prof', $title);
+      $members[] = array('surname'=>$surname, 'initials'=>$initials, 'title'=>$title, 'userID'=>$userID);
+    }
+    $result->close();
+    
+    return $members;
+  }
 
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0) {
+  /**
+   * Gets a list of students on a module.
+   * 
+   * @param string $calendar_year - Which academic session to use.
+   * @param integer $idMod        - The ID of the module to use.
+   * @param object $db            - MySQLi database connection.
+   * @return array - List of students on the module.
+   */
+  public function get_student_members($calendar_year, $idMod, $db) {
+    $members = array();
+    
+    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_student, users) WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
+    $result->bind_param('si', $calendar_year, $idMod);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($surname, $initials, $title, $userID);
+    while ($result->fetch()) {
+      $members[] = array('surname'=>$surname, 'initials'=>$initials, 'title'=>$title, 'userID'=>$userID);
+    }
+    $result->close();
+    
+    return $members;
+  }
+
+  /**
+   * Creates a new module.
+   * 
+   * @param integer $moduleid           - The code of the module.
+   * @param string $fullname            - The full name of the module.
+   * @param integer $active             - Is the module active or inactive.
+   * @param integer $schoolID           - Which school the module belongs to.
+   * @param string $vle_api             - Which curriculum map or VLE to use for learning objectives.
+   * @param string $sms_api             - Which SMS system to link to.
+   * @param integer $selfEnroll         - Can students self-enrol in the module.
+   * @param bool $peer                  - Is Peer Review turned on.
+   * @param bool $external              - Is External Examiner turned on.
+   * @param bool $stdset                - Is Standard Setting turned on.
+   * @param bool $mapping               - Is mapping turned on. 
+   * @param integer $neg_marking        - Can negative marking be used in questions.
+   * @param string $ebel_grid_template  - Which Ebel grid to assign (optional).
+   * @param object $db                  - MySQLi database connection.
+   * @param integer $sms_import         - 
+   * @param integer $timed_exams        - Are timed summative exams allowed.
+   * @param integer $exam_q_feedback    - Is question-based feedback allowed for summative exams.
+   * @param integer $add_team_members   - Are team members allowed to add others.
+   * @param integer $map_level          - What level to link to in the curriculum map.
+   * @param string $academic_year_start - Day the module changes academic year.
+   * 
+   * @return boolean - True if module successfully added.
+   */
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01') {
 
     // Return false if missing madatory fields. schoolid is actually a number
     if ($moduleid == '' or $fullname == '' or $schoolID === '') {
@@ -72,10 +146,12 @@ Class module {
     if ($external == true) $checklist .= ',external';
     if ($stdset == true) $checklist .= ',stdset';
     if ($mapping == true) $checklist .= ',mapping';
-    $tmp_checklist = substr($checklist, 1);
+    if ($checklist != '') {
+      $tmp_checklist = substr($checklist, 1);
+    }
 
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)");
-    $result->bind_param('ssisssiiiiiiii', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
+    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
+    $result->bind_param('ssisssiiiiiiiis', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -94,24 +170,24 @@ Class module {
   }
   
   /**
-   * Update any part of a modules db record 
+   * Update any part of a modules DB record.
    * 
-   * @param type $moduleid - the code of the module to update
-   * @param type $updateData - an array of key value pairs to update e.g 'fullname'=>'New full Name'
-   * @param type $db
+   * @param integer $orig_moduleid  - the code of the module to update
+   * @param type $updateData        - an array of key value pairs to update e.g 'fullname'=>'New full Name'
+   * @param object $db              - MySQLi database connection.
    * @return boolean
    */
   public function update_module_by_code($orig_moduleid, $updateData, $db) {
     global $string;
     
-    if($orig_moduleid == '') {
+    if ($orig_moduleid == '') {
       return false;
     }
     
     $orig_modinfo = $modinfo = module_utils::get_full_details_by_name($orig_moduleid, $db);
     
     if ($modinfo === false) {
-      //the module must exist to update it !
+      // The module must exist to update it!
       return false;
     }
     
@@ -125,31 +201,31 @@ Class module {
         //never change the id :-)
         continue;
       }
-      if($modinfo[$key] != $val) {
+      if ($modinfo[$key] != $val) {
         $modinfo[$key] = $val;
         $changed = true;
       }
     }
     
     if (!$changed) {
-      // nothing has changed return
+      // Nothing has changed return
       return true;
     }
     
-    //check mandatory fields
+    // Check mandatory fields
     if ($modinfo['moduleid'] == '' and $modinfo['fullname'] == '') {
       return false;
     }
     
     if ($orig_school_name != $modinfo['school']) {
-      //we have updated the school so we need to get the new id from the schools table
-      if($orig_school_id != $modinfo['schoolid']) {
-        //do nothing as the id has already been updated
+      // We have updated the school so we need to get the new id from the schools table
+      if ($orig_school_id != $modinfo['schoolid']) {
+        // Do nothing as the id has already been updated
       } else {
-        //lookup the schoolID 
+        // Lookup the schoolID 
         $modinfo['schoolid'] = SchoolUtils::get_school_id_by_name($modinfo['school'], $db);
-        if($modinfo['schoolid'] === false) {
-          //school not found ERROR
+        if ($modinfo['schoolid'] === false) {
+          // School not found ERROR
           return false;
         }
       }
@@ -169,20 +245,22 @@ Class module {
                timed_exams = ?, 
                exam_q_feedback = ?, 
                add_team_members = ?,
-               map_level = ? 
+               map_level = ?,
+               academic_year_start = ?
             WHERE 
               id = ?
             LIMIT 1
             ";
     
     $result = $db->prepare($sql);
-    $result->bind_param('ssisssiiiiiiiii', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'], 
+    $result->bind_param('ssisssiiiiiiiisi', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'], 
                                         $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'], 
                                         $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'], 
-                                        $modinfo['exam_q_feedback'], $modinfo['add_team_members'],$modinfo['map_level'],$modinfo['idMod']);
+                                        $modinfo['exam_q_feedback'], $modinfo['add_team_members'], $modinfo['map_level'],
+                                        $modinfo['academic_year_start'], $modinfo['idMod']);
     $res = $result->execute();
     
-    //an array to convert db feilds to lang strings argghhh!!!!
+    // An array to convert DB fields to lang strings argghhh!!!!
     $lang_mappings = array(
                         'moduleid' => 'moduleid',
                         'fullname' => 'name',
@@ -197,18 +275,20 @@ Class module {
                         'timed_exams' => 'timedexams',
                         'exam_q_feedback' => 'questionbasedfeedback',
                         'add_team_members' => 'addteammembers',
+                        'map_level' => 'map_level',
+                        'academic_year_start' => 'academicyearstart',
                         );
     
     if ($res === true ) {
       // Log any changes
       $logger = new Logger($db);
       $userObject = UserObject::get_instance();
-      foreach($modinfo as $key => $val) {
+      foreach ($modinfo as $key => $val) {
         $key = strtolower($key);
         if ($key == 'idmod') {
           continue;
         }
-        if($orig_modinfo[$key] != $val) {
+        if ($orig_modinfo[$key] != $val) {
            
           $logger->track_change( 'Module', 
                                   $modinfo['idMod'], 
@@ -226,9 +306,9 @@ Class module {
 
   /**
    * Check if a module with the given code already exists
-   * @param  string $moduleid The Module ID (code) for the module
-   * @param  mysqli $db       Database link class
-   * @return boolean          True if there is already a module with the code
+   * @param string $moduleid - The Module ID (code) for the module
+   * @param object $db       - Database link class
+   * @return boolean - True if there is already a module with the code
    */
   public function module_exists($moduleid, $db) {
     if ($moduleid == '') {  // No ID, don't bother to check the database.
@@ -255,9 +335,9 @@ Class module {
 
   /**
    * Get the full details of a module given its module code
-   * @param  string $modID The Module ID (code) for the module
-   * @param  mysqli $db    Database link class
-   * @return array         Associative array containing the details of the module
+   * @param string $modID - The Module ID (code) for the module
+   * @param object $db    - Database link class
+   * @return array - Associative array containing the details of the module
    */
   public function get_full_details_by_name($modID, $db) {
     $moduleid = self::get_idMod($modID, $db);
@@ -270,8 +350,8 @@ Class module {
 
   /**
    * Get the full details of a module given its ID
-   * @param  integer $modID Database ID of the module
-   * @param  mysqli $db     Database link class
+   * @param integer $modID - Database ID of the module
+   * @param object $db     - Database link class
    * @return array e.g  'idMod' => int 291
    *                     'moduleid' => string '001' (length=3)
    *                     'fullname' => string 'This is a test module 22' (length=24)
@@ -307,11 +387,15 @@ Class module {
                               timed_exams, 
                               exam_q_feedback, 
                               add_team_members,
-                              map_level 
+                              map_level,
+                              academic_year_start
                             FROM 
-                              modules, schools 
-                            WHERE 
-                               modules.schoolid = schools.id AND 
+                              modules
+                            LEFT JOIN
+                              schools 
+                            ON 
+                               modules.schoolid = schools.id
+                            WHERE
                                modules.id = ? AND 
                                mod_deleted IS NULL
                             ");
@@ -327,7 +411,7 @@ Class module {
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level);
+    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
     
     $result->fetch();
     if ($result->num_rows == 0) {
@@ -336,20 +420,30 @@ Class module {
     }
     $result->close();
     
-    return array( 'idMod'=>$idMod, 'moduleid'=>$moduleid, 'fullname'=>$fullname, 
-                  'school'=>$school, 'active'=>$active, 'vle_api'=>$vle_api, 
-                  'checklist'=>$checklist, 'sms'=>$sms, 'selfenroll'=>$selfenroll, 
-                  'schoolid'=>$schoolid, 'neg_marking'=>$neg_marking, 
-                  'ebel_grid_template'=>$ebel_grid_template, 'timed_exams'=>$timed_exams, 
-                  'exam_q_feedback'=>$exam_q_feedback, 'add_team_members'=>$add_team_members,
-                  'map_level'=>$map_level);
+    return array( 'idMod' => $idMod,
+                  'moduleid' => $moduleid,
+                  'fullname' => $fullname, 
+                  'school' => $school,
+                  'active' => $active,
+                  'vle_api' => $vle_api, 
+                  'checklist' => $checklist,
+                  'sms' => $sms,
+                  'selfenroll' => $selfenroll, 
+                  'schoolid' => $schoolid,
+                  'neg_marking' => $neg_marking, 
+                  'ebel_grid_template' => $ebel_grid_template,
+                  'timed_exams' => $timed_exams, 
+                  'exam_q_feedback' => $exam_q_feedback,
+                  'add_team_members' => $add_team_members,
+                  'map_level' => $map_level,
+                  'academic_year_start' => $academic_year_start);
   }
 
   /**
    * Check if the module with the given ID is set to allow team members to add other members of staff to the team
-   * @param  string   $modID Module code of the module
-   * @param  mysqli   $db    Database link class
-   * @return boolean         Can team members add others to the team
+   * @param string $modID - Module code of the module
+   * @param object $db    - Database link class
+   * @return boolean - Can team members add others to the team
    */
   public function is_allowed_add_team_members_by_name($modID, $db) {
     $moduleid = self::get_idMod($modID, $db);
@@ -362,9 +456,9 @@ Class module {
 
   /**
    * Check if the module with the given ID is set to allow team members to add other members of staff to the team
-   * @param  integer  $modID Database ID of the module
-   * @param  mysqli   $db    Database link class
-   * @return boolean         Can team members add others to the team
+   * @param integer $modID - Database ID of the module
+   * @param object $db     - Database link class
+   * @return boolean - Can team members add others to the team
    */
   public function is_allowed_add_team_members_by_id($modID, $db) {
     $data = self::get_full_details_by_ID($modID, $db);
@@ -380,24 +474,28 @@ Class module {
 
   /**
    * The Module ID (code) of a module given its database ID
-   * @param  integer $modID Database ID of the module
-   * @param  mysqli  $db    Database link object
-   * @return string         Module ID (code) of the module or false if not found
+   * @param integer $modID - Database ID of the module
+   * @param object $db     - Database link object
+   * @return string  -  Module ID (code) of the module or false if not found
    */
   public function get_moduleid_from_id($modID, $db) {
     $modID = intval($modID);
 
-    $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
-    $result->bind_param('i', $modID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($moduleid);
-    $result->fetch();
-    if ($result->num_rows == 0) {
+    if ($modID === 0) {
+      $moduleid = 'Unassigned';
+    } else {
+      $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
+      $result->bind_param('i', $modID);
+      $result->execute();
+      $result->store_result();
+      $result->bind_result($moduleid);
+      $result->fetch();
+      if ($result->num_rows == 0) {
+        $result->close();
+        return false;
+      }
       $result->close();
-      return false;
     }
-    $result->close();
 
     return $moduleid;
   }
@@ -506,6 +604,7 @@ Class module {
   public static function get_vle_api_data($vle_apis) {
     // Set up mapping APIs
     $configObject = Config::get_instance();
+    
     if (is_array($vle_apis)) {
       foreach (array_keys($vle_apis) as $vle_api_id) {
         $classname = 'CM_' .$vle_api_id;
@@ -516,6 +615,67 @@ Class module {
       }
     }
     return $vle_apis;
+  }
+  
+  public static function paper_types($idMod, $show_retired, $db) {
+    $userObject = UserObject::get_instance();
+
+    $paper_types = array();
+    
+    if ($idMod == '0') {    // Unused papers.
+      if ($show_retired) {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties LEFT JOIN properties_modules
+             ON properties.property_id = properties_modules.property_id
+             WHERE idMod IS NULL
+             AND paper_ownerID = ?
+             AND deleted IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';
+      } else {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties LEFT JOIN properties_modules
+             ON properties.property_id = properties_modules.property_id
+             WHERE idMod IS NULL
+             AND paper_ownerID = ?
+             AND deleted IS NULL
+             AND retired IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';       
+      }
+      $result = $db->prepare($sql);
+      $result->bind_param('i', $userObject->get_user_ID());
+    } else {
+      if ($show_retired) {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties, properties_modules
+             WHERE properties.property_id = properties_modules.property_id
+             AND idMod = ?
+             AND deleted IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';
+      } else {
+        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+             FROM properties, properties_modules
+             WHERE properties.property_id = properties_modules.property_id
+             AND idMod = ?
+             AND deleted IS NULL
+             AND retired IS NULL
+             GROUP BY paper_type
+             ORDER BY paper_type';      
+      }
+      $result = $db->prepare($sql);
+      $result->bind_param('i', $idMod);
+    }    
+    
+    $result->execute();
+    $result->bind_result($type, $number);
+    while ($result->fetch()) {
+      $paper_types[$type] = $number;
+    }
+    $result->close();
+    
+    return $paper_types;
   }
 }
 ?>

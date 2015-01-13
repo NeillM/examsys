@@ -47,7 +47,7 @@ if (count($marks) == 0) {  // If there are no marks, re-cache off class totals.
   $startdate = $properties->get_raw_start_date();
   $enddate   = $properties->get_raw_end_date();
   
-  $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli);
+  $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli, $string);
   $report->compile_report(true);
 
   $marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
@@ -170,14 +170,13 @@ if (isset($_POST['submit'])) {
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
 	<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 	<style type="text/css">
-		body {font-size:100%}
 		h1 {margin-left:10px; font-size:140%}
 		input[type="text"] {border: 1px solid #C0C0C0}
 		.pass {color:#538135}
 		.fail {color:#C00000}
 	</style>
 
-	<script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -187,25 +186,25 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu();
 ?>
-<div id="maincontent" style="font-size:90%">
+<div id="content">
 <form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post">
 <?php
 	$results_cache = new ResultsCache($mysqli);
 	$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
 	$stats = array_values($results_cache->get_paper_cache($paperID));
   
-  echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
-  echo "<tr><th class=\"h\">";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset( $_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="index.php?paperID=' . $paperID . '&module=&folder=">' . $string['standardssetting'] . '</a></div>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?paperID=' . $paperID . '&module=&folder=">' . $string['standardssetting'] . '</a></div>';
 
-  echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['hofstee'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-  echo "</table>\n";
+  echo "<div class=\"page_title\">" . $string['hofstee'] . "</div>";
+  echo "</div>\n";
   
   echo "<table style=\"margin:10px\">";
   echo "<tr><td style=\"min-width:150px\">" . $string['cohortsize'] . "</td><td>" . count($marks) . "</td></tr>\n";
@@ -286,7 +285,7 @@ for ($i=0; $i<3; $i++) {
 ?>
 </div>
 <br />
-<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
+<div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></div>
 </form>
 </div>
 </body>

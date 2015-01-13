@@ -17,4 +17,5 @@
 $string['questiondeleted'] = 'Úloha odstraněna';
 $string['msg'] = 'Dokument byl úspěšně odstraněn.';
 $string['recyclebin'] = 'Koš';
+$string['paperlocked'] = 'Paper Locked';
 ?>

@@ -41,13 +41,9 @@ $current_year = check_var('calyear', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-	<style>
-	  body {font-size:90%}
-		.grey {color:#C0C0C0}
-	</style>
 	
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -57,17 +53,17 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 	
 	echo draw_toprightmenu();
 ?>
-<table class="header" style="font-size:90%">
+  <div id="content">  
+  
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics'] ?></a></div>
+  <div class="page_title"><?php echo $string['summativeexamfeedback'] ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></span></div>
+</div>
+
+<table class="header">
 <tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['summativeexamfeedback']; ?>:</strong> <?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></th>
-<th style="text-align:right; vertical-align:bottom; padding-bottom:2px; padding-right:6px"></th>
-</tr>
-<tr>
-<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1); ?></div></th>
+<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1) ?></div></th>
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
@@ -75,11 +71,12 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <blockquote>
 <table class="stats">
 <tr>
-<th>School</th>
-<th>Exams</th>
-<th>Objective Feedback</th>
-<th>Question Feedback</th>
-<th>Cohort Performance</th>
+<th><?php echo $string['school'] ?></th>
+<th><?php echo $string['exams'] ?></th>
+<th><?php echo $string['objectivefeedback'] ?></th>
+<th><?php echo $string['questionfeedback'] ?></th>
+<th><?php echo $string['cohortperformance'] ?></th>
+<th><?php echo $string['externalexaminers'] ?></th>
 </tr>
 <?php
 $master_array = array();
@@ -94,6 +91,7 @@ while ($result->fetch()) {
 	$master_array[$school]['objectives'] = 0;
 	$master_array[$school]['questions'] = 0;
 	$master_array[$school]['cohort_performance'] = 0;
+	$master_array[$school]['external_examiner'] = 0;
 }
 $result->close();
 
@@ -139,22 +137,22 @@ foreach ($master_array as $school => $data) {
 	}
 }
 
-$parts = array('exams', 'objectives', 'questions', 'cohort_performance');
+$parts = array('exams', 'objectives', 'questions', 'cohort_performance', 'external_examiner');
 
 $old_faculty = '';
-$faculty_stats = array(0, 0, 0, 0);
+$faculty_stats = array(0, 0, 0, 0, 0);
 
 foreach ($master_array as $school => $data) {
   if ($old_faculty != $data['faculty']) {
 	  if ($old_faculty != '') {
 			echo output_faculty_stats($faculty_stats);
 	  }
-		echo '<tr><td colspan="5" class="faculty">' . $data['faculty'] . '</td></tr>';
-		$faculty_stats = array(0, 0, 0, 0);
+		echo '<tr><td colspan="6" class="faculty">' . $data['faculty'] . '</td></tr>';
+		$faculty_stats = array(0, 0, 0, 0, 0);
 	}
   echo "<tr><td>" . $school . "</td>";
 	
-	for ($i=0; $i<4; $i++) {
+	for ($i=0; $i<5; $i++) {
 	  $part = $parts[$i];
 	  if ($data[$part] == 0) {
 			echo "<td class=\"n grey\">" . $data[$part] . "</td>";
@@ -174,14 +172,14 @@ foreach ($master_array as $school => $data) {
 ?>
 </table>
 </blockquote>
-
+</div>
 </body>
 </html>
 <?php
 function output_faculty_stats($stats) {
   $html = '<tr><td>&nbsp;</td>';
 	
-	for ($i=0; $i<4; $i++) {
+	for ($i=0; $i<5; $i++) {
 	  $html .= '<td class="n subtotal">' . number_format($stats[$i]) . '</td>';
 	}
 	

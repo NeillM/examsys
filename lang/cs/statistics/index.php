@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Administrative Tools';
-$string['statisticsreports'] = 'Statistics Reports';
-$string['papersbyschool'] = 'Papers by School';
-$string['summativeexamstats'] = 'Summative Exams';
+$string['statisticsreports'] = 'Statistické přehledy';
+$string['questionsbyschool'] = 'Úlohy dle Školy';
+$string['papersbyschool'] = 'Dokumenty dle Školy';
+$string['summativeexamstats'] = 'Sumativní zkoušky dle Měsíce';
+$string['summativefeedback'] = 'Komentář k Sumativní zkoušce';
 ?>

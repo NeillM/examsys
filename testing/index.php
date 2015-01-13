@@ -35,17 +35,17 @@ require '../include/sysadmin_auth.inc';
 	<title>Rog&#333;: Test Suite</title>
 
 	<style>
-		.content {font-size:90%}
-		aside, figure, footer, header, hgroup, nav, section { display: block; clear: both; }
-		article { width:50%; height: 80%; float: left }
-		ol {list-style-type:decimal}
-		li {padding-left:10px; margin-left:40px !important}
+		.content {font-size:80%}
+		li {margin-left:20px; line-height:150%}
 	</style>
 	<link rel="stylesheet" type="text/css" href="../css/body.css" />
 	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/screen.css" />
+  <style>
+    h2 {margin-left: 20px; font-size: 150%}
+    li {font-size: 110%}
+  </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -55,22 +55,32 @@ require '../include/sysadmin_auth.inc';
 
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
-	<table class="header">
-		<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:220%; font-weight:bold; margin-left:10px">Test Suite</div></th><th style="text-align:right; vertical-align:top; padding-right:6px"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-	</table>
-	<br />
+<div id="content">
+  
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a></div>
+    <div class="page_title">Testing</div>
+  </div>
+
+  <h2>Development Tests</h2>
 	<ol>
-		<li><a href="./unittest.php">Unit tests</a></li>
-		<li><a href="./selenium/README.txt">Selenium tests</a></li>
-		<li><a href="./lang_test.php">Check for missing strings in language files</a></li>
-		<li><a href="./class_totals_form.php">Check Class Totals reports between 2 different servers</a></li>
-		<li><a href="./class_totals_with_script.php">Check Class Totals against Exam Script (internal constancy)</a></li>
-		<li><a href="./database_grants.php">Database grants</a></li>
-		<li><a href="./database_indexes.php">Database indexes</a></li>
-		<li><a href="./database_structure.php">Database structure</a></li>
-    <li><a href="./checkenhancedcalc.php">Check enhancedcalc setup</a></li>
+		<li><a href="unittest.php">Unit tests</a></li>
+		<li><a href="selenium/README.txt">Selenium tests</a></li>
+		<li><a href="lang_test.php">Language translations</a></li>
+		<li><a href="database_grants.php">Database grants</a></li>
+		<li><a href="database_indexes.php">Database indexes</a></li>
+		<li><a href="database_structure.php">Database structure</a></li>
+		<li><a href="online_help_gaps.php">Online Help gaps</a></li>
 	</ol>
+  
+  <h2>Post-Installation Tests</h2>
+	<ol>
+		<li><a href="class_totals_with_script.php">Summative Exam check</a></li>
+    <li><a href="checkenhancedcalc.php">Check enhancedcalc setup</a></li>
+    <li><a href="test_email.php">Check email sending</a></li>
+	</ol>
+  
 </div>
 </body>
 </html>

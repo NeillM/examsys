@@ -28,16 +28,12 @@ $unique_course = true;
 if (isset($_POST['submit'])) {
   // Check for unique username
   $tmp_course = trim($_POST['course']);
-
-  $result = $mysqli->prepare("SELECT name FROM courses WHERE name=?");
-  $result->bind_param('s', $tmp_course);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($tmp_course);
-  $result->fetch();
-  if ($result->num_rows > 0) $unique_course = false;
-  $result->free_result();
-  $result->close();
+  
+  if (CourseUtils::course_exists($tmp_course, $mysqli)) {
+    $unique_course = false;
+  } else {
+    $unique_course = true;
+  }
 }
 
 if (isset($_POST['submit']) and $unique_course == true) {
@@ -68,9 +64,11 @@ if (isset($_POST['submit']) and $unique_course == true) {
     .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -78,7 +76,12 @@ if (isset($_POST['submit']) and $unique_course == true) {
           return true;
         }
       });
+      
       $('form').removeAttr('novalidate');
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });  
   </script>
   </head>
@@ -86,11 +89,16 @@ if (isset($_POST['submit']) and $unique_course == true) {
   <body>
   <?php
     require '../include/course_options.inc';
+    require '../include/toprightmenu.inc';
+
+    echo draw_toprightmenu();
   ?>
-  <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['createnewcourse']; ?></div></th></tr>
-  </table>
+  <div id="content">
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="list_courses.php"><?php echo $string['courses'] ?></a></div>
+    <div class="page_title"><?php echo $string['createnewcourse']; ?></div>
+  </div>
   <br />
   <div align="center">
   <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -100,15 +108,15 @@ if (isset($_POST['submit']) and $unique_course == true) {
       echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" class=\"warn\" value=\"$tmp_course\" required /></td></tr>\n";
     } else {
     ?>
-      <tr><td class="field"><?php echo $string['code']; ?></td><td><input type="text" size="10" maxlength="255"  name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" required /></td></tr>
+      <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="10" maxlength="255"  name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" required /></td></tr>
     <?php
     }
     ?>
-    <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" required /></td></tr>
-    <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" required /></td></tr>
+    <tr><td class="field"><?php echo $string['school'] ?></td><td><select name="school" required>
     <option value=""></option>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID=faculty.id AND schools.deleted IS NULL ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY name, school");
       $result->execute();
       $result->bind_result($schoolid, $school, $faculty);
 
@@ -130,7 +138,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
     ?>
     </select></td></tr>
     </table>
-    <p><input type="submit" style="width:100px" name="submit" value="<?php echo $string['add']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></p>
+    <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
 <?php

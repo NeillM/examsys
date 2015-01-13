@@ -43,30 +43,36 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/qualitative.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.qualitative.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
     var commentsStringMatches = '<?php echo $string['occurencesof'] ?>';
     var commentsString = '<?php echo $string['comments'] ?>';
   </script>
 </head>
 
 <body>
-
 <?php
+  require '../include/toprightmenu.inc';
+	echo draw_toprightmenu();
+
   $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-  echo "<form name=\"analyse\" method=\"get\" action=\"" . $_SERVER['PHP_SELF'] . "\"><table class=\"header\" style=\"font-size:90%\">\n";
-  echo "<tr><th style=\"width:75%\">";
-  echo '<div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
+  echo "<form name=\"analyse\" method=\"get\" action=\"" . $_SERVER['PHP_SELF'] . "\">";
+  echo "<table class=\"header\" style=\"font-size:90%\">\n";
+  echo "<tr><th style=\"width:75%; vertical-align: top\">";
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
   if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
   } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
   }
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $properties->get_paper_title() . '</a></div>';
-  echo "<span style=\"font-size:220%; color:black; font-weight:bold; margin-left:10px\">" . $string['qualitativeanalysis'] . "</span></td>";
-  echo "<th valign=\"top\" style=\"width:25%\"><input type=\"text\" name=\"keywords\" id=\"keywords\" size=\"20\" value=\"";
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a></div>';
+  echo '<div class="page_title">' . $string['qualitativeanalysis'] . '</div></td>';
+  echo '<th valign="top" style="width:25%">';
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo "<input type=\"text\" name=\"keywords\" id=\"keywords\" size=\"20\" value=\"";
   if (isset($_GET['keywords'])) echo $_GET['keywords'];
   echo "\" /><input type=\"button\" id=\"highlight\" value=\"" . $string['highlight'] . "\" />";
   echo "<br /><input type=\"checkbox\" name=\"collapse\" id=\"collapse\" value=\"1\" />&nbsp;<label for =\"collapse\">" . $string['collapse'] . "</label>";

@@ -79,7 +79,7 @@ Class CourseUtils {
       return false;
     }
     
-    $result = $db->prepare("DELETE FROM courses WHERE name = ? limit 1");
+    $result = $db->prepare("DELETE FROM courses WHERE name = ? AND deleted IS NULL LIMIT 1");
     $result->bind_param('s', $name);
     $result->execute();
     $result->close();
@@ -103,7 +103,7 @@ Class CourseUtils {
     // Check for unique course
     $exists = true;
 
-    $result = $db->prepare("SELECT id FROM courses WHERE name = ?");
+    $result = $db->prepare("SELECT id FROM courses WHERE name = ? AND deleted IS NULL");
     $result->bind_param('s', $name);
     $result->execute();
     $result->store_result();
@@ -117,7 +117,7 @@ Class CourseUtils {
   }
 
   static function courseid_exists($courseID, $db) {
-    $result = $db->prepare("SELECT id FROM courses WHERE id = ?");
+    $result = $db->prepare("SELECT id FROM courses WHERE id = ? AND deleted IS NULL");
     $result->bind_param('i', $courseID);
     $result->execute();
     $result->store_result();
@@ -130,6 +130,23 @@ Class CourseUtils {
     $result->close();
     
     return $exist;
+  }
+  
+  static function get_course_details_by_name($name, $db) {
+    $result = $db->prepare("SELECT description, deleted, schoolid FROM courses WHERE name = ? LIMIT 1");
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($description, $deleted, $schoolid);
+    if ($result->num_rows == 0) {
+      $details = false;
+    } else {
+      $result->fetch();
+      $details = array('description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid);
+    }
+    $result->close();
+    
+    return $details;
   }
   
 }

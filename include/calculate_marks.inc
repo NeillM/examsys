@@ -61,7 +61,6 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       }
       break;
     case 'area':
-    case 'calculation':
     case 'enhancedcalc':
     case 'flash':
     case 'textbox':
@@ -159,7 +158,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
             $sub_array = explode('$', $individual_correct);
             $correct_no = 0;
             foreach ($sub_array as $subpart) {
-              if ($tmp_exclude{$sub_part_no} == '0') {
+              if (isset($tmp_exclude{$sub_part_no}) and $tmp_exclude{$sub_part_no} == '0') {
                 $correct_no++;
                 $marks += $question_marks;
               }
@@ -316,7 +315,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
           $sub_array = explode('$', $individual_correct);
           $correct_no = 0;
           foreach ($sub_array as $subpart) {
-            if ($tmp_exclude{$sub_part_no} == '0') {
+            if (isset($tmp_exclude{$sub_part_no}) and $tmp_exclude{$sub_part_no} == '0') {
               $correct_no++;
             }
             $sub_part_no++;

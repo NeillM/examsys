@@ -59,7 +59,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
@@ -70,7 +70,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 	
 	echo draw_toprightmenu(98);
 ?>
-<div id="content" class="content" style="font-size:80%">
+<div id="content">
 	<form action="group_set_angoff.php" method="post">	
 	
 <?php
@@ -92,27 +92,27 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
   $result->close();
 }
 
-echo "\n<table class=\"header\">\n";
-echo "<tr><th><div class=\"breadcrumb\"><a href=\"../staff/index.php\">{$string['home']}</a>";
+echo "\n<div class=\"head_title\">\n";
+echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+echo "<div class=\"breadcrumb\"><a href=\"../index.php\">{$string['home']}</a>";
 if ($folder != '') {
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
 } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-  echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
-echo "&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">" . $propertyObj->get_paper_title() . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
-echo '<div style="font-size:200%; color:black; font-weight:bold; margin-left:10px">' . $string['selectreviewers'] . '</div>';
-echo "</th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-echo "</table>\n";
+echo "<img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../paper/details.php?paperID=$paperID&module=$module&folder=$folder\">" . $propertyObj->get_paper_title() . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"./index.php?paperID=$paperID&module=$module&folder=$folder\">{$string['standardssetting']}</a></div>";
+echo '<div class="page_title">' . $string['selectreviewers'] . '</div>';
+echo "</div>\n";
 
 ?>
 <table class="header">
 <tr>
 	<th style="width:18px">&nbsp;</th>
-	<th style="width:20%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['standardsetter'] ?>&nbsp;</th>
-	<th style="width:15%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['date'] ?>&nbsp;</th>
-	<th style="width:8%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['passscore'] ?></th>
-	<th><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp;<?php echo $string['method'] ?></th>
-	<th style="width:25%"><img src="../artwork/header_vertical_line.gif" width="2" height="15" alt="line" border="0" />&nbsp</th>
+	<th style="width:20%"><?php echo $string['standardsetter'] ?>&nbsp;</th>
+	<th style="width:15%"><?php echo $string['date'] ?>&nbsp;</th>
+	<th style="width:8%"><?php echo $string['passscore'] ?></th>
+	<th><?php echo $string['method'] ?></th>
+	<th style="width:25%"></th>
 </tr>
 <?php
 $reviews = get_reviews($mysqli, 'group', $paperID, $propertyObj->get_total_mark());
@@ -120,7 +120,7 @@ $line_no = 0;
 foreach ($reviews as $review) {
   $line_no++;
   if ($review['group_review'] == 'No') {
-    echo "<tr><td align=\"center\"><input type=\"checkbox\" name=\"member{$line_no}\" value=\"{$review['std_setID']}\" checked=\"checked\" /></td><td>&nbsp;{$review['name']}</td><td>&nbsp;{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td>&nbsp;{$review['method']}</td><td></td></tr>\n";
+    echo "<tr><td align=\"center\"><input type=\"checkbox\" name=\"member{$line_no}\" value=\"{$review['std_setID']}\" checked=\"checked\" /></td><td>{$review['name']}</td><td>{$review['display_date']}</td><td style=\"text-align:right\">{$review['pass_score']}%&nbsp;</td><td>{$review['method']}</td><td></td></tr>\n";
   }
 }
 $mysqli->close();

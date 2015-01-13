@@ -23,6 +23,8 @@ $string['msg2'] = '= Arkusz egzaminu końcowego jest zablokowany i nie może by�
 $string['newassessmentpaper'] = 'Nowy arkusz oceny';
 $string['success'] = 'Pytanie dodane.';
 $string['duplicatename'] = "Niestety nazwa <strong>'%s'</strong> jest już używana.";
+$string['gotopaper'] = 'Przejdź do arkusza';
 $string['cancel'] = 'Anuluj';
-$string['ok'] = 'OK'; //cognate
+$string['close'] = 'Zamknij';
+$string['papernotonmodule'] = 'Nie skopiowano odwzorowania - arkusz docelowy nie znajduje się w module odwzorowywanych pytań';
 ?>

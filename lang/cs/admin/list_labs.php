@@ -20,6 +20,5 @@ $string['createnewlab'] = 'Nová učebna';
 $string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
 $string['deletelab'] = 'Odstranit učebnu';
 $string['lowbandwidth'] = 'Pomalé připojení';
-$string['administrativetools'] = 'Nastavení';
 $string['computerlabs'] = 'Počítačová učebna';
 ?>

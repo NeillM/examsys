@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../lang/' . $language . '/std_setting/index.php';
+
 $string['selectreviewers'] = 'Výběr recenzentů';
 $string['standardssetting'] = 'Standardní nastavení';
 $string['standardsetter'] = 'Nastavení standardů';

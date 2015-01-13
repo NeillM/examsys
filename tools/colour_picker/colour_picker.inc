@@ -25,65 +25,34 @@
 * @package
 */
 ?>
-<script language="JavaScript">
+<script>
   var textBox = '';
-
-  function findPosX(obj) {
-    var curleft = 0;
-    if (obj.offsetParent) {
-        while (1) {
-            curleft+=obj.offsetLeft;
-            if (!obj.offsetParent) {
-                break;
-            }
-            obj=obj.offsetParent;
-        }
-    } else if (obj.x) {
-        curleft+=obj.x;
-    }
-    return curleft;
-  }
-
-  function findPosY(obj) {
-    var curtop = 0;
-    if (obj.offsetParent) {
-        while (1) {
-            curtop+=obj.offsetTop;
-            if (!obj.offsetParent) {
-                break;
-            }
-            obj=obj.offsetParent;
-        }
-    } else if (obj.y) {
-        curtop+=obj.y;
-    }
-    return curtop;
-  }
 
   function showPicker(pickerID, evt) {
     textBox = pickerID;
-    document.getElementById('picker').style.top = 20 + findPosY(document.getElementById('span_' + pickerID)) + 'px';
-    document.getElementById('picker').style.left = findPosX(document.getElementById('span_' + pickerID)) + 'px';
-    if (document.getElementById('picker').style.display == 'none') {
-      document.getElementById('picker').style.display = 'block';
-    } else {
-      document.getElementById('picker').style.display = 'none';
-    }
+
+    var pickerSpan = $('#span_' + pickerID);
+		var position = pickerSpan.position();    
+    
+    $('#picker').css('top', 20 + position.top + 'px');
+    $('#picker').css('left', position.left + 'px');
+    $('#picker').show();
+
     evt.cancelBubble = true;
   }
   
   function setColor(color, page) {
-    document.getElementById(textBox).value = color;
-    document.getElementById('span_' + textBox).style.backgroundColor = color;
-    document.getElementById('picker').style.display = 'none';
+    $('#' + textBox).val(color);
+    $('#span_' + textBox).css('background-color', color);
+    $('#picker').hide();
     
-    if (page == '/users/details.php') {
+    if (page == '<?php echo $configObject->get('cfg_root_path') ?>/users/details.php') {
       updateAccessDemo();
     }
   }
   
   function hidePicker() {
-    document.getElementById('picker').style.display = 'none';
+    $('#picker').hide();
   }
   
   function moreColours() {
@@ -94,7 +63,7 @@
   }
 </script>
 
-<div id="picker" style="filter: progid:DXImageTransform.Microsoft.Shadow(direction=120,color=gray,strength=3); background-color:white; border:1px solid #808080; float:left; padding:1px; position:absolute; display:none; font-size:100%">
+<div id="picker" style="background-color:white; border:1px solid #808080; float:left; padding:1px; position:absolute; display:none; font-size:100%">
 <table cellspacing="0" cellpadding="0" style=\"background-color:#FAFAFA; font-size:100%; border-collapse:collapse\">
 <?php
   // Theme colours
@@ -112,7 +81,7 @@
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
   foreach ($row[1] as $colour) {
-    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['SCRIPT_NAME'] . "')\"></td><td style=\"width:5px\"></td>";
+    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['PHP_SELF'] . "')\"></td><td style=\"width:5px\"></td>";
   }
   echo "</tr>\n";
   echo "<tr style=\"height:8px\"><td colspan=\"21\"></td></tr>";

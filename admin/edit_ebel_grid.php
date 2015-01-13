@@ -90,15 +90,15 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
-    h1 {font-size:120%; color:#1E3287}
-    .field {font-weight:bold; text-align:right; padding-right:10px}
+    h1 {font-size:120%; color:#1E3287; margin-bottom:0px}
   </style>
 
+  <?php echo $configObject->get('cfg_js_root') ?>
   <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript">
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -106,7 +106,12 @@ if (isset($_POST['submit'])) {
           return true;
         }
       });
+      
       $('form').removeAttr('novalidate');
+      
+      $('#cancel').click(function() {
+        history.back();
+      });
     });
   </script>
 </head>
@@ -118,37 +123,37 @@ if (isset($_POST['submit'])) {
 
 		echo draw_toprightmenu();
   ?>
-  <div id="content" class="content">
-  <table class="header">
-  <tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./list_ebel_grids.php"><?php echo $string['ebelgridtemplates']; ?></a></div><div style="margin-left:10px; font-size:200%; font-weight:bold"><?php echo $string['edittemplate']; ?></div></th><th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th></tr>
-  </table>
+  <div id="content">
   
+  <div class="head_title">
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_ebel_grids.php"><?php echo $string['ebelgridtemplates'] ?></a></div>
+    <div class="page_title"><?php echo $string['edittemplate']?></div>
+  </div>   
+
   <blockquote>
   <form id="theform" name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>">
  
     <table cellpadding="5" cellspacing="0" border="0">
-    <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="textbox" name="name" size="40" maxlength="255" value="<?php echo $name; ?>" required /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="text" name="name" size="40" maxlength="255" value="<?php echo $name; ?>" required /></td></tr>
     
     <tr><td colspan="4"><h1><?php echo $string['passmark']; ?></h1></td></tr>
     
-    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow']; ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['easy']; ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE', $EE, true); ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI', $EI, true); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN', $EN, true); ?></td><td style="border:0px"><input type="text" value="" name="easy_total" size="8" style="border:0px" /></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['medium']; ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME', $ME, true); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI', $MI, true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN', $MN, true); ?></td><td style="border:0px"><input type="text" value="" name="medium_total" size="8" style="border:0px" /></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', $HE, true); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', $HI, true); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', $HN, true); ?></td><td style="border:0px"><input type="text" value="" name="hard_total" size="8" style="border:0px" /></td></tr>
-    <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0px" /></td></tr>
+    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential'] ?></td><td style="width:170px; text-align:center"><?php echo $string['important'] ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow'] ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['easy'] ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE', $EE, true) ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI', $EI, true) ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN', $EN, true) ?></td><td style="border:0"><input type="text" value="" name="easy_total" size="8" style="border:0" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['medium'] ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME', $ME, true) ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI', $MI, true) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN', $MN, true) ?></td><td style="border:0"><input type="text" value="" name="medium_total" size="8" style="border:0" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['hard'] ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE', $HE, true) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI', $HI, true) ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN', $HN, true) ?></td><td style="border:0"><input type="text" value="" name="hard_total" size="8" style="border:0" /></td></tr>
+    <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0" /></td></tr>
     
-    <tr><td colspan="4">&nbsp;</td></tr>
     <tr><td colspan="4"><h1><?php echo $string['distinctionlevel']; ?></h1></td></tr>
     
-    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow']; ?></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['easy']; ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE2', $EE2); ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI2', $EI2); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN2', $EN2); ?></td><td style="border:0px"><input type="text" value="" name="easy_total" size="8" style="border:0px" /></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['medium']; ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME2', $ME2); ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI2', $MI2); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN2', $MN2); ?></td><td style="border:0px"><input type="text" value="" name="medium_total" size="8" style="border:0px" /></td></tr>
-    <tr><td style="text-align:right"><?php echo $string['hard']; ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE2', $HE2); ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI2', $HI2); ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN2', $HN2); ?></td><td style="border:0px"><input type="text" value="" name="hard_total" size="8" style="border:0px" /></td></tr>
-    <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0px" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0px" /></td></tr>
+    <tr><td>&nbsp;</td><td style="width:170px; text-align:center"><?php echo $string['essential']; ?></td><td style="width:170px; text-align:center"><?php echo $string['important']; ?></td><td style="width:170px; text-align:center"><?php echo $string['nicetoknow'] ?></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['easy'] ?></td><td style="text-align:center; background-color:#F8F8F2"><?php echo ebelDropdown('EE2', $EE2) ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('EI2', $EI2) ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('EN2', $EN2) ?></td><td style="border:0"><input type="text" value="" name="easy_total" size="8" style="border:0" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['medium'] ?></td><td style="text-align:center; background-color:#F0F0E6"><?php echo ebelDropdown('ME2', $ME2) ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('MI2', $MI2) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('MN2', $MN2) ?></td><td style="border:0"><input type="text" value="" name="medium_total" size="8" style="border:0" /></td></tr>
+    <tr><td style="text-align:right"><?php echo $string['hard'] ?></td><td style="text-align:center; background-color:#E4E4D2"><?php echo ebelDropdown('HE2', $HE2) ?></td><td style="text-align:center; background-color:#D5D5BB"><?php echo ebelDropdown('HI2', $HI2) ?></td><td style="text-align:center; background-color:#C8C8A6"><?php echo ebelDropdown('HN2', $HN2) ?></td><td style="border:0"><input type="text" value="" name="hard_total" size="8" style="border:0" /></td></tr>
+    <tr><td>&nbsp;</td><td style="text-align:center"><input type="text" value="" name="essential_total" size="8" style="text-align:center; border:0" /></td><td style="text-align:center"><input type="text" value="" name="important_total" size="8" style="text-align:center; border:0" /></td><td style="text-align:center"><input type="text" value="" name="nice_total" size="8" style="text-align:center; border:0" /></td></tr>
     
-    
-    <tr><td colspan="4">&nbsp;</td></tr>
-    <tr><td colspan="4"style="text-align:center"><input type="submit" style="width:100px" name="submit" value="<?php echo $string['save']; ?>">&nbsp;&nbsp;<input style="width:100px" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();" /></td></tr>
+    <tr><td colspan="4"style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></td></tr>
     </table>
     
     <br />

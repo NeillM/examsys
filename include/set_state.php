@@ -16,6 +16,8 @@
 
 /**
 *
+* This script saves state information to the database. Normally called via AJAX. 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,6 +25,7 @@
 */
 
 require '../include/staff_auth.inc';
+require '../classes/stateutils.class.php';
 
 $prefix = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'];
 $page = str_ireplace($prefix, '', $_REQUEST['page']);
@@ -31,7 +34,6 @@ $page = str_replace('#', '', $page);
 $parts = explode('?', $page);
 $page = $parts[0];
 
-$result = $mysqli->prepare("REPLACE INTO state (userID, state_name, content, page) VALUES (?, ?, ?, ?)");
-$result->bind_param('isss', $userObject->get_user_ID(), $_REQUEST['state_name'], $_REQUEST['content'], $page);
-$result->execute();
+$userID = $userObject->get_user_ID();
+$stateutil->setState($_REQUEST['state_name'], $_REQUEST['content'], $page);
 ?>

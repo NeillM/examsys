@@ -16,7 +16,6 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['administrativetools'] = 'Narzędzia administracyjne';
 $string['allschools'] = '&lt;Wszystkie katedry&gt;';
 $string['alllabs'] = '&lt;Wszystkie zajęcia&gt;';
 $string['default'] = 'Domyślne';
@@ -37,4 +36,6 @@ $string['starttime'] = 'Czas rozpoczęcia';
 $string['endtime'] = 'Czas zakończenia';
 $string['duration'] = 'Czas trwania';
 $string['labs'] = 'Pracownie';
+$string['metadata'] = 'Metadane';
+$string['extraevents'] = '<strong>SysAdmin:</strong> Kliknij podwójnie w kalendarzu aby dodać zdarzenie.';
 ?>

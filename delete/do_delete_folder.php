@@ -15,7 +15,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
+* Delete a personal folder.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -61,6 +63,21 @@ if ($parent != '') {
   $result->close();
 }
 
+// Delete sub dirs.
+$sub_folder_name = $name . ';%';
+$result = $mysqli->prepare("SELECT id FROM folders WHERE name LIKE ? AND ownerID = ? AND deleted IS NULL");
+$result->bind_param('si', $sub_folder_name, $userObject->get_user_ID());
+$result->execute();
+$result->store_result();
+$result->bind_result($subID);
+while ($result->fetch()) {
+  $delete = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
+  $delete->bind_param('ii', $subID, $userObject->get_user_ID());
+  $delete->execute();
+  $delete->close();
+}
+$result->close();
+
 $result = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
 $result->bind_param('ii', $folderID, $userObject->get_user_ID());
 $result->execute();
@@ -83,42 +100,38 @@ $mysqli->close();
   <title><?php echo $string['folderdeleted']; ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript">
-    function closeWindow() {
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script>
+    $(function () {
       <?php
       if ($parent == '') {
-        echo "window.opener.location.href = '../staff/index.php'\n";
+        echo "window.opener.location.href = '../index.php'\n";
       } else {
-        echo "window.opener.location.href = '../folder/details.php?folder=$parentID'\n";
+        echo "window.opener.location.href = '../folder/index.php?folder=$parentID'\n";
       }
       ?>
       self.close();
-    }
+    });
   </script>
 </head>
 
-<body onload="closeWindow();" style="background-color:#F1F5FB; font-size:80%; text-align:justifed">
+<body>
 
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg']; ?></p>
 
-<td><p><?php echo $string['msg']; ?><p>
-
-<div style="text-align:center">
+<div class="button_bar">
 <form action="" method="get">
 <?php
 if ($parent == '') {
-  echo "<input type=\"button\" name=\"cancel\" value=\"    " . $string['ok'] . "    \" onclick=\"javascript:self.opener.location.href='../index.php';window.close();\" />\n";
+  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" onclick=\"javascript:self.opener.location.href='../index.php';window.close();\" />\n";
 } else {
-  echo "<input type=\"button\" name=\"cancel\" value=\"    " . $string['ok'] . "    \" onclick=\"javascript:self.opener.location.href='../folder.php?folder=$parentID';window.close();\" />\n";
+  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" onclick=\"javascript:self.opener.location.href='../folder.php?folder=$parentID';window.close();\" />\n";
 }
 ?>
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

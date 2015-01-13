@@ -23,11 +23,11 @@
 */
 
 require_once '../include/load_config.php';
-require_once $cfg_web_root . 'classes/lang.class.php';
-require $cfg_web_root . 'include/media.inc';
-require $cfg_web_root . 'include/errors.inc';
-require $cfg_web_root . 'include/sct_review.inc';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
+require_once '../classes/lang.class.php';
+require_once '../include/media.inc';
+require_once '../include/errors.inc';
+require_once '../include/sct_review.inc';
+require_once '../classes/dbutils.class.php';
 
 // Connect to the database as the SCT user.
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_sct_user'), $configObject->get('cfg_db_sct_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
@@ -43,7 +43,7 @@ function display_question($question, &$question_no, $answers, $string) {
   if ($question['scenario'] != '') {
     echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['clinicalvignette'] . "</td></tr>\n";
     echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
-    if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="14" height="14" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
+    if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="Note" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
     echo $question['scenario'] . "<br />\n<br />";
     $li_set = 1;
   }
@@ -51,13 +51,14 @@ function display_question($question, &$question_no, $answers, $string) {
     if ($li_set == 0) {
       echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
     }
-    echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
+    echo '<p style="text-align:center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
     $li_set = 1;
   }
 
   $sct_parts = explode('~',$question['leadin']);
+  $sct_titles = array(1=>'hypothesis', 2=>'investigation', 3=>'prescription', 4=>'intervention', 5=>'treatment');
+  
   echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-  $sct_titles = array(1=>'hypothesis',2=>'investigation',3=>'prescription',4=>'intervention',5=>'treatment');
   echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string[$sct_titles[$question['display_method']]] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
   echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
   echo "</table>\n";
@@ -77,7 +78,9 @@ function display_question($question, &$question_no, $answers, $string) {
   echo "</table>\n</blockquote>\n";
 
   echo "<span style=\"color:#808080\">" . $string['briefreasonwhy'] . "</span><br /><textarea name=\"reason$question_no\" cols=\"100\" rows=\"3\" />";
-  if (isset($answers[$question['q_id']]['reason'])) echo $answers[$question['q_id']]['reason'];
+  if (isset($answers[$question['q_id']]['reason'])) {
+    echo $answers[$question['q_id']]['reason'];
+  }
   echo "</textarea>\n";
   echo "</td></tr>\n";
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -87,20 +90,19 @@ if (isset($_POST['submit'])) {
   $question_no = 1;
 
   // Clear previous ratings for current reviewer and current paper
-  $stmt = $mysqli->prepare("DELETE FROM sct_reviews WHERE paperID=? AND reviewer_name=? AND reviewer_email=?");
+  $stmt = $mysqli->prepare("DELETE FROM sct_reviews WHERE paperID=? AND reviewer_name = ? AND reviewer_email = ?");
   $stmt->bind_param('iss', $paperID, $reviewer_name, $reviewer_email);
   $stmt->execute();
   $stmt->close();
 
   // Loop through the structure of the paper
-  $stmt = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper=? AND papers.question=questions.q_id AND q_type='sct' ORDER BY display_pos");
+  $stmt = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper=? AND papers.question = questions.q_id AND q_type = 'sct' ORDER BY display_pos");
   $stmt->bind_param('i', $paperID);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($q_id);
   while ($stmt->fetch()) {
     // Store experts' reviews in sct_reviews table
-
     $update = $mysqli->prepare("INSERT INTO sct_reviews VALUES (NULL, ?, ?, ?, ?, ?, ?)");
     $update->bind_param('ssiiis', $reviewer_name, $reviewer_email, $paperID, $q_id, $_POST['q' . $question_no], $_POST['reason' . $question_no]);
     $update->execute();
@@ -117,33 +119,22 @@ require '../config/start.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['sctreview']; ?></title>
-  <script language="JavaScript" src="../js/jquery-1.6.1.min.js"></script>
+  <title><?php echo $string['sctreview'] ?></title>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <?php
     if (isset($_POST['submit'])) {
   ?>
-  <script language="JavaScript">
-     $(function() { alert('<?php echo $string['saved_msg']; ?>'); });
+  <script>
+     $(function() {
+       alert('<?php echo $string['saved_msg'] ?>');
+     });
    </script>
    <?php
     }
   ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
-  <style type="text/css">
-    .msg {
-      margin-left:auto;
-      margin-right:auto;
-      padding:20px;
-      width:90%;
-      color:black;
-      background-color:#FFFFC0;
-      background: -moz-linear-gradient(top, #FFF6BD, #FFEC82);
-      background: -webkit-linear-gradient(top, #FFF6BD, #FFEC82);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6BD', endColorstr='#FFEC82');
-      border:5px solid white;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/key.css" />
 </head>
 
 <body>
@@ -152,7 +143,7 @@ require '../config/start.inc';
 <?php
   // Get any previous answers for the current reviewer.
   $saved_data = array();
-  $stmt = $mysqli->prepare("SELECT q_id, answer, reason FROM sct_reviews WHERE paperID=? AND reviewer_name=? AND reviewer_email=?");
+  $stmt = $mysqli->prepare("SELECT q_id, answer, reason FROM sct_reviews WHERE paperID = ? AND reviewer_name = ? AND reviewer_email = ?");
   $stmt->bind_param('iss', $paperID, $reviewer_name, $reviewer_email);
   $stmt->execute();
   $stmt->bind_result($q_id, $answer, $reason);
@@ -164,13 +155,13 @@ require '../config/start.inc';
   
   // Output the top logo banner.
   echo $top_table_html;
-  echo '<tr><td><div style="margin-left:0px;font-size:180%;color:white;font-weight:bold">' . getPaperTitle($paperID, $mysqli) . '</div></td>';
+  echo '<tr><td><div style="margin-left:0;font-size:180%;color:white;font-weight:bold">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
   
   echo "<form name=\"myform\" action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\">\n";
   echo "<br />\n";
   
-  echo "<div class=\"msg\">" . $string['top_msg'] . "</div>\n<br />\n";
+  echo "<div class=\"key\">" . $string['top_msg'] . "</div>\n<br />\n";
   
   echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:99%; font-size:100%\">\n<col width=\"40\"><col>\n";
 
@@ -205,7 +196,7 @@ require '../config/start.inc';
   }
   $stmt->close();
   
-  //display the questions
+  // Display the questions
   if (count($questions_array) > 0) {
     foreach ($questions_array as &$question) {
       if ($question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -221,20 +212,16 @@ require '../config/start.inc';
 <?php
   if (count($questions_array) > 0) {
 ?>
-  <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:100px" /></div>
+  <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /></div>
 <?php
   }
 ?>
-<input type="hidden" name="id" value="<?php echo $crypt_name; ?>" />
-<input type="hidden" name="reviewer_name" value="<?php echo $reviewer_name; ?>" />
-<input type="hidden" name="reviewer_email" value="<?php echo $reviewer_email; ?>" />
+<input type="hidden" name="id" value="<?php echo $crypt_name ?>" />
+<input type="hidden" name="reviewer_name" value="<?php echo $reviewer_name ?>" />
+<input type="hidden" name="reviewer_email" value="<?php echo $reviewer_email ?>" />
 <br />
 </form>
-<?php
-  $bottom_html = str_replace('<td style="width:30px"><img src="../artwork/fire_exit.png" width="26" height="25" alt="Fire Exit" style="cursor:pointer" onclick="fire()" /></td>', '', $bottom_html);
 
-  echo $bottom_html;
-?>
 </div>
 
 </body>

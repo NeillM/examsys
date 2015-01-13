@@ -17,7 +17,9 @@
 $string['reviewsummary'] = 'Review Summary';
 $string['Review Form'] = 'Review Form';
 $string['Student Profile'] = 'Student Profile';
-$string['name'] = 'Name';
+$string['title'] = 'Title';
+$string['surname'] = 'Surame';
+$string['firstnames'] = 'First Name(s)';
 $string['studentid'] = 'Student ID';
 $string['reviewed'] = 'Reviewed';
 $string['reviews'] = 'Reviews';

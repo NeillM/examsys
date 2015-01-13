@@ -22,67 +22,15 @@
 * @package
 */
 
-function check4Images($html,&$images) {
-  if (stripos($html, '<img') !== false) {
-    $img_parts = explode('src="',$html);
-    for ($i=1; $i<count($img_parts); $i++) {
-      $quote_parts = explode('"',$img_parts[$i]);
-      $images[] = $quote_parts[0];
-    }
-  }
-}
-
-require '../../include/sysadmin_auth.inc';    // Only let staff delete pages.
+require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff delete pages.
 require '../../include/errors.inc';
+require_once '../../classes/helputils.class.php';
 
-$path = $cfg_web_root . 'student_help';
+$originalID = check_var('id', 'GET', true, false, true);
 
-header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
-$image_list = array();
-
-// Is the current page real or a pointer.
-$result = $mysqli->prepare("SELECT type, body FROM student_help WHERE id = ?");
-$result->bind_param('i', $_GET['id']);
-$result->execute();
-$result->bind_result($type, $body);
-$result->fetch();
-$result->close();
-
-if ($type == 'page') {
-  // Search for any pointers to the current page.
-  $result = $mysqli->prepare("SELECT id, body FROM student_help WHERE type = 'pointer' AND id != ? AND body = ?");
-  $result->bind_param('ii', $_GET['id'], $_GET['id']);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($page_id, $body);
-  while ($result->fetch()) {
-    $deleteQuery = $mysqli->prepare("UPDATE student_help SET deleted = NOW() WHERE id = ?");
-    $deleteQuery->bind_param('i', $page_id);
-    $deleteQuery->execute();
-    $deleteQuery->close();
-  }
-  $result->close();
-}
-
-$deleteQuery = $mysqli->prepare("UPDATE student_help SET deleted = NOW() WHERE id = ?");
-$deleteQuery->bind_param('i', $_GET['id']);
-$deleteQuery->execute();
-$deleteQuery->close();
+$help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
+$help_system->delete_page($originalID);
 
 $mysqli->close();
+header("location: index.php?id=1");
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Delete Page</title>
-  <script type="text/javascript">
-    function reloadHelp() {
-      window.top.location='index.php';
-    }
-  </script>
-</head>
-<body onload="reloadHelp()">
-
-</body>
-</html>

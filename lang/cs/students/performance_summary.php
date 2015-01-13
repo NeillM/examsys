@@ -26,9 +26,9 @@ $string['jumptopaper'] = 'Přejít na dokument';
 
 $string['maximumscore'] = 'Max skóre';
 $string['studentsposition'] = 'Pozice Studenta/ů';
-$string['topquartile'] = 'Q3'; //cognate
+$string['topquartile'] = 'Q3'; 
 $string['median'] = 'Q2 (Medián)';
-$string['lowerquartile'] = 'Q1'; //cognate
+$string['lowerquartile'] = 'Q1'; 
 $string['passmark'] = 'Potřebná známka';
 $string['minimumscore'] = 'Min skóre';
 $string['examname'] = 'Název Zkoušky';

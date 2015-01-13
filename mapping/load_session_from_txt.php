@@ -27,7 +27,7 @@ require '../include/errors.inc';
 
 ini_set("auto_detect_line_endings", true);
 
-$moduleID = check_var('module', 'REQUEST', true, false, true);
+$modID = check_var('module', 'REQUEST', true, false, true);
 if (isset($_POST['submit'])) {
   $session = $_POST['session'];
   $session_flag = false;
@@ -41,7 +41,7 @@ if (isset($_POST['submit'])) {
       $result->execute();
       $result->bind_result($largest);
       $i = 0;
-      while ($row = $result->fetch()) {
+      while ($result->fetch()) {
         $obj_id = $largest + 1;
       }
       if ($obj_id < 10) {
@@ -65,21 +65,21 @@ if (isset($_POST['submit'])) {
           $identifier++;
      
           $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
-          $stmt->bind_param('siss', $identifier, $moduleID, $title, $session);
+          $stmt->bind_param('siss', $identifier, $modID, $title, $session);
           $stmt->execute();
           $stmt->close();
           $session_flag = true;
         } else {                                   // Objective
           if ($session_flag == false) {
             $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, 'Temp Session Title', '', ?, NOW())");
-            $stmt->bind_param('sis', $identifier, $moduleID, $session);
+            $stmt->bind_param('sis', $identifier, $modID, $session);
             $stmt->execute();
             $stmt->close();
             $session_flag = true;
           }
         
           $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param('isissi', $obj_id, $separate_line, $moduleID, $identifier, $session, $obj_id);
+          $stmt->bind_param('isissi', $obj_id, $separate_line, $modID, $identifier, $session, $obj_id);
           $stmt->execute();
           $stmt->close();
           $obj_id++;
@@ -89,10 +89,10 @@ if (isset($_POST['submit'])) {
   }
   
   unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
-  header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $moduleID);
+  header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $modID);
 	exit();
 } else {
-  //display the form
+  // Display the form
 ?>
 <!DOCTYPE html>
 <html>
@@ -112,7 +112,7 @@ if (isset($_POST['submit'])) {
     .note {width:90%}
   </style>
 	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -123,12 +123,13 @@ if (isset($_POST['submit'])) {
 	
 	echo draw_toprightmenu();
 ?>
-<div id="content" class="content" style="font-size:80%">
-<?php
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<tr><td style=\"background-color:#F1F5FB\"><div class=\"breadcrumb\"><a href=\"../staff/index.php\">" . $string['home'] . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"../folder/details.php?module=$moduleID\">" . module_utils::get_moduleid_from_id($moduleID, $mysqli) . "</a>&nbsp;&nbsp;<img src=\"../artwork/breadcrumb_arrow.png\" width=\"4\" height=\"7\" alt=\"-\" />&nbsp;&nbsp;<a href=\"./sessions_list.php?module=$moduleID\">" . $string['manageobjectives'] . "</a></div><div style=\"font-size:200%; margin-left:10px\"><strong>" . $string['importfromfile'] . "</strong></div></td><td style=\"background-color:#F1F5FB; text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></td></tr>\n";
-  echo "</table>\n";
-?>
+<div id="content">
+
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo module_utils::get_moduleid_from_id($modID, $mysqli) ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sessions_list.php?module=<?php echo $modID ?>"><?php echo $string['manageobjectives'] ?></a></div>
+  <div class="page_title"><?php echo $string['importfromfile'] ?></div>
+</div>
 
 <br />
 <br />
@@ -137,7 +138,7 @@ if (isset($_POST['submit'])) {
 
 <table class="dialog_border" style="width:600px">
 <tr>
-<td align="left" style="background-color:white; width:32px"><img src="../artwork/import.gif" width="32" height="32" alt="Icon" /></td><td><span style="font-size:160%; font-weight:bold; color:#5582D2"><?php echo $string['importobjectives']; ?></span></td>
+  <td align="left" style="background-color:white; width:32px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header"><?php echo $string['importobjectives']; ?></td>
 </tr>
 <tr>
 <td align="left" class="dialog_body" colspan="2">
@@ -150,7 +151,7 @@ if (isset($_POST['submit'])) {
 <table cellpadding="3" cellspacing="0" border="0" style="text-align:left">
 <tr>
 <td style="text-align:right"><?php echo $string['objectivesfile']; ?></td><td><input type="file" size="50" name="txtfile" />
-<input type="hidden" name="module" value="<?php echo $moduleID; ?>" /></td>
+<input type="hidden" name="module" value="<?php echo $modID ?>" /></td>
 </tr>
 
 <tr>
@@ -166,9 +167,7 @@ if (isset($_POST['submit'])) {
   echo "</select></td>\n";
 ?>
 </tr>
-
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
 </form>
 </div>
 </td>

@@ -27,8 +27,11 @@
 require '../include/staff_auth.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
+
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/folderutils.class.php';
+require_once '../classes/paperproperties.class.php';
+require_once '../classes/reviews.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
@@ -41,6 +44,31 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 
 $type = check_var('type', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
+
+// Get some paper properties
+$propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+
+$_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
+$_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
+
+function list_externals($reviewer_data, $string) {
+  $html = '<table class="reviewer_list" cellspacing="0" cellpadding="4">';
+  $html .= '<thead><tr><th>' . $string['reviewers'] . '</th><th>' . $string['started'] . '</th><th>' . $string['completed'] . '</th><th style="width:60%">' . $string['generalpapercomments'] . '</th></tr></thead>';
+  foreach ($reviewer_data as $reviewer) {
+    if ($reviewer['started'] == '') $reviewer['started'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
+    if ($reviewer['complete'] == '') $reviewer['complete'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
+    
+    $html .= '<tr>';
+    $html .= '<td>' . $reviewer['title'] . ' ' . $reviewer['initials'] . ' ' . $reviewer['surname'] . '</td>';
+    $html .= '<td>' . $reviewer['started'] . '</td>';
+    $html .= '<td>' . $reviewer['complete'] . '</td>';
+    $html .= '<td>' . $reviewer['paper_comment'] . '</td>';
+    $html .= '</tr>';
+  }
+  $html .= '</table>';
+  
+  return $html;
+}
 
 function displayRank($rank_position, $string) {
   if ($rank_position == 1) {
@@ -60,41 +88,58 @@ function displayRank($rank_position, $string) {
 function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_data, $type, $string, $language) {
 
   $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" style=\"cursor:pointer\" src=\"../artwork/edit.png\" width=\"16\" height=\"16\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
+  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" class=\"pencil\" src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
   $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
   
   foreach ($reviewer_data as $reviewerID=>$rev_data) {
+    $image = '';
     $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
     $comment = '';
-    if (isset($comments_data[$questionID][$reviewerID])) {
-      $comment = nl2br($comments_data[$questionID][$reviewerID]['comment']);
     
-      $image = 'ok_comment.png';
-      $status = 'OK';
-      if ($comments_data[$questionID][$reviewerID]['category'] == 2) {
-        $image = 'minor_comment.png';
-        $status = 'Minor';
-      } elseif ($comments_data[$questionID][$reviewerID]['category'] == 3) {
-        $image = 'major_comment.png';
-        $status = 'Major';
-      }
-      if (trim($comment) == '') {
-        $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-        $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-        $response = '<span style="color:#808080">' . $string['na'] . '</span>';
-      } else {
-        $action = $string[$comments_data[$questionID][$reviewerID]['action']];
-        $response = nl2br($comments_data[$questionID][$reviewerID]['response']);
-      }
-      $extra = '';
-      $image = "<img src=\"../artwork/$image\" width=\"16\" height=\"16\" alt=\"$status\" />";
-    } else {
-      $comment = '';
-      $action = $string['notreviewed'];
-      $response = '';
-      $extra = ' notreviewed';
+    $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
+    
+    if ($comments_data[$reviewerID]->get_category($questionID) === null) {
       $image = '';
+      $status = '';
+    } else {
+      switch($comments_data[$reviewerID]->get_category($questionID)) {
+        case 1:
+          $image = 'ok_comment.png';
+          $status = 'OK';
+          break;
+        case 2:
+          $image = 'minor_comment.png';
+          $status = 'Minor';
+          break;
+        case 3:
+          $image = 'major_comment.png';
+          $status = 'Major';
+          break;
+        case 4:
+          $image = 'cannot_comment.png';
+          $status = 'Cannot Comment';
+          break;
+      }
     }
+    
+    if (trim($comment) == '') {
+      if ($comments_data[$reviewerID]->get_category($questionID) == 4) {
+        $comment = '<span style="color:#808080">' . $string['cannotcomment'] . '</span>';
+      } else {
+        $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+      }
+      $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+      $response = '<span style="color:#808080">' . $string['na'] . '</span>';
+    } else {
+      $action = $comments_data[$reviewerID]->get_action($questionID);
+      $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
+    }
+    $extra = '';
+    if ($image != '') {
+      $image = "<img src=\"../artwork/$image\" class=\"status\" alt=\"$status\" />";
+    } else {
+      $image = '';
+    }    
     
     $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
   }
@@ -104,7 +149,7 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
   return $html;
 }
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language) {
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language) {
   $configObject = Config::get_instance();
 
   $cfg_root_path = $configObject->get('cfg_root_path');
@@ -136,16 +181,16 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       ?>
       <br />
 			<?php
-					if ($configObject->get('cfg_interactive_qs') == 'html5') {
-					//<!-- ======================== HTML5 part include finf ================= -->
+				if ($configObject->get('cfg_interactive_qs') == 'html5') {
+					//<!-- ======================== HTML5 part include find ================= -->
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 2) . "' height='" . ($q_media_height + 1) . "'></canvas>\n";
 					echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script language='JavaScript' type='text/javascript'>\n";
+					echo "<script>\n";
 					echo "setUpQuestion(" . $q_no . ", 'q" . $q_no . "','" . $language . "', '" . $q_media . "', '" . $correct . "', '','','#FFC0C0','area','script');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
-        	echo "<script language='javascript'>\n";
+        	echo "<script>\n";
 					echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" width=\"" . ($q_media_width + 2) . "\" height=\"" . ($q_media_height + 1) . "\" id=\"externalinterfaceq" . $q_no . "_1\" align=\"top\">');\n";
 					echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/question/edit/area.swf\" />');\n";
 					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
@@ -283,12 +328,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script language='JavaScript' type='text/javascript'>\n";
+		echo "<script>\n";
 		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
-		echo "<script language='JavaScript'>\n";
+		echo "<script>\n";
 		echo "function swfLoaded" . $q_no . "(message) {\n";
 		echo "var num = message.substring(5,message.length);\n";
 		echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '','#FFC0C0');}\n";
@@ -311,33 +356,33 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($tmp_width < 375) $tmp_width = 375;
         $tmp_height = $q_media_height + 30;
         ?>
-            <div>
-						<?php
-						if ($configObject->get('cfg_interactive_qs') == 'html5') {
-							//"<!-- ======================== HTML5 part include finf ================= -->
-							echo "<canvas id='canvas" . $q_no . "' width='" . $tmp_width . "' height='" . $tmp_height . "'></canvas>\n";
-							echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-							echo "<script language='JavaScript' type='text/javascript'>\n";
-							echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
-							echo "</script>\n";
-							//<!-- ==================================================== -->
-						} else {
-							echo "<script language='JavaScript'>\n";
-							echo "function swfLoaded" . $q_no . "(message) {\n";
-							echo "var num = message.substring(5,message.length);\n";
-							echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '1,1,0000000000000','#FFC0C0');}\n";
-							echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $q_no . "\" width=\"" . $tmp_width . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
-							echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
-							echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/paper/hotspot_answer.swf\" />');\n";
-							echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
-							echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
-							echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/paper/hotspot_answer.swf\" quality=\"high\" bgcolor=\"white\" width=\"" . $tmp_width . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
-							echo "write_string('</object>');\n";
-							echo "</script>\n";
-						}
-						?>
-						</div>
-						<?php
+        <div>
+        <?php
+        if ($configObject->get('cfg_interactive_qs') == 'html5') {
+          //"<!-- ======================== HTML5 part include finf ================= -->
+          echo "<canvas id='canvas" . $q_no . "' width='" . $tmp_width . "' height='" . $tmp_height . "'></canvas>\n";
+          echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+          echo "<script>\n";
+          echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
+          echo "</script>\n";
+          //<!-- ==================================================== -->
+        } else {
+          echo "<script>\n";
+          echo "function swfLoaded" . $q_no . "(message) {\n";
+          echo "var num = message.substring(5,message.length);\n";
+          echo "setUpFlash(num, message, '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '1,1,0000000000000','#FFC0C0');}\n";
+          echo "write_string('<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"https://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0\" id=\"flash" . $q_no . "\" width=\"" . $tmp_width . "\" height=\"" . $tmp_height . "\" align=\"middle\">');\n";
+          echo "write_string('<param name=\"allowScriptAccess\" value=\"always\" />');\n";
+          echo "write_string('<param name=\"movie\" value=\"" . $configObject->get('cfg_root_path') . "/paper/hotspot_answer.swf\" />');\n";
+          echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
+          echo "write_string('<param name=\"bgcolor\" value=\"#ffffff\" />');\n";
+          echo "write_string('<embed src=\"" . $configObject->get('cfg_root_path') . "/paper/hotspot_answer.swf\" quality=\"high\" bgcolor=\"white\" width=\"" . $tmp_width . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $q_no . "\" name=\"flash" . $q_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+          echo "write_string('</object>');\n";
+          echo "</script>\n";
+        }
+        ?>
+        </div>
+        <?php
         break;
       case 'mcq':
         $i = 0;
@@ -395,9 +440,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         break;
       case 'textbox':
-        $correct_answers = explode(';', $correct);
-        foreach ($correct_answers as $single_answer) {
-          $answer_count[$single_answer] = 0;
+        $settings = json_decode($settings, true);
+        if (isset($settings['terms'])) {
+          $correct_answers = explode(';', $settings['terms']);
+          foreach ($correct_answers as $single_answer) {
+            $answer_count[$single_answer] = 0;
+          }
         }
         break;
     }
@@ -497,8 +545,34 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
-?>
 
+// Get some paper properties
+$paper      = $propertyObj->get_paper_title();
+$marking    = $propertyObj->get_marking();
+$paper_type = $propertyObj->get_paper_type();
+$labelcolor = $propertyObj->get_labelcolor();
+$themecolor = $propertyObj->get_themecolor();
+        
+if (!isset($paper)) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
+
+$reviewer_data = array();
+$result = $mysqli->prepare("SELECT users.id, title, initials, surname, DATE_FORMAT(started,'%d/%m/%Y %T') AS started, DATE_FORMAT(complete,'%d/%m/%Y %T') AS complete, paper_comment FROM (properties_reviewers, users) LEFT JOIN review_metadata ON properties_reviewers.reviewerID = review_metadata.reviewerID AND properties_reviewers.paperID = review_metadata.paperID WHERE properties_reviewers.reviewerID = users.id AND type = ? AND properties_reviewers.paperID = ? ORDER BY surname, initials");
+$result->bind_param('si', $type, $paperID);
+$result->execute();
+$result->bind_result($id, $title, $initials, $surname, $started, $complete, $paper_comment);
+while ($result->fetch()) {
+  $reviewer_data[$id]['title'] = $title;
+  $reviewer_data[$id]['initials'] = $initials;
+  $reviewer_data[$id]['surname'] = $surname;
+  $reviewer_data[$id]['started'] = $started;
+  $reviewer_data[$id]['complete'] = $complete;
+  $reviewer_data[$id]['paper_comment'] = $paper_comment;
+}
+$result->close();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -509,9 +583,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style type="text/css">
+    body {font-size:90%}
     table {font-size:100%;table-layout:auto}
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:0px; margin-right:15px; margin-top:0px; padding-top:0px}
@@ -522,17 +596,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     .Minor {}
     .Major {}
     .notreviewed {color:#C00000}
+    .pencil {cursor:pointer; width:16px; height:16px}
+    .status {width:16px; height:16px}
     .screenbrk {
-      color:#15428B;
-      font-weight:bold;
-      font-size:90%;
-      height:70px;
-      width:100%;
-      border-top: 1px solid #B5C4DF;
-      background: -moz-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background: -webkit-linear-gradient(top, #E4EEFC, #FFFFFF);
-      background-image: -ms-linear-gradient(top, #E4EEFC 0%, #FFFFFF 100%);
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#E4EEFC', endColorstr='#FFFFFF');
+      padding-top: 3px;
+      color: #808080;
+      font-size: 90%;
+      height: 70px;
+      width: 100%;
+      border-top: 2px solid #808080;
     }
     .reviewbar {
 		  color:white;
@@ -544,153 +616,122 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       padding:2px;
       border-bottom:solid 1px #C0C0C0;
     }
+    .reviewer_list {width: 95%; margin-left:auto; margin-right:auto; margin-bottom: 20px; border: 2px solid #FCE699; background-color: #FFFFEE}
+    .reviewer_list th {background-color: #FCE699}
+    .reviewer_list td {vertical-align:top; text-align:justify}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-	<!-- HTML5 part start -->
-	<script type='text/javascript'><?php echo "var lang_string = ".  json_encode($jstring) . ";\n";?></script>
-	<script type="text/javascript" src="../js/html5.images.js"></script>
-	<script type="text/javascript" src="../js/qsharedf.js"></script>
-	<script type="text/javascript" src="../js/qlabelling.js"></script>
-	<script type="text/javascript" src="../js/qhotspot.js"></script>
-	<script type="text/javascript" src="../js/qarea.js"></script>
-	<!-- HTML5 part end -->
+  <script type="text/javascript" src="../js/page_scroll.js"></script>
+	<?php
+  if ($propertyObj->get_latex_needed() == 1) {
+    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+  }
+  if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script>var lang_string = " .  json_encode($jstring) . ";\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+	} else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+  }
+  ?>
 
 	
-  <script language="JavaScript">
-    function getScrollXY() {
-      document.getElementById('scrOfY').value = $('body,html').scrollTop();
-    }
-
+  <script>
     function editQ(qid, qno) {
-      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + document.getElementById('scrOfY').value + '&tab=comments';
+      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + $('#scrOfY').val() + '&tab=comments';
     }
-
-    function showHideSerious() {
-      if (document.styleSheets[0].rules) {
-        document.styleSheets[0].rules.item(7).style.display = (document.styleSheets[0].rules.item(7).style.display == 'none') ? 'block' : 'none';
-      } else {
-        document.styleSheets[0].cssRules[7].style.display = (document.styleSheets[0].cssRules[7].style.display == 'none') ? 'table-row' : 'none';
-      }
+    <?php
+    if (isset($_GET['scrOfY'])) {
+    ?>
+    $(function () {
+      window.scrollTo(0,<?php echo $_GET['scrOfY'] ?>);
+    });
+    <?php
     }
+    ?>
   </script>
 </head>
 
-<body onscroll="getScrollXY()"<?php
-if (isset($_GET['scrOfY'])) {
-  if ($_GET['scrOfY'] > 0) echo ' onload="window.scrollTo(0,' . $_GET['scrOfY'] . ')"';
-}
-?>>
+<body>
 <div id="maincontent">
 <form name="theform">
-<table class="header">
+
+<div class="head_title" style="font-size:90%">
+<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+
+  echo "<div class=\"page_title\">" . $string[$type . 'report'] . "</div></div>";
+
+  if (count($reviewer_data) == 0) {
+    echo $notice->info_strip($string['noreviewers'], 100) . "\n</body>\n</html>\n";
+    exit;
+  }
+ 
   require '../include/toprightmenu.inc';
 	
 	echo draw_toprightmenu(30);
-	
-  $comments_array = array();
+?>
   
-  // Get some paper properties
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, marking, pass_mark FROM properties WHERE property_id = ?");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($paper_type, $paper, $marking, $pass_mark);
-  $result->fetch();
-  $result->close();
-  
-  if (!isset($paper)) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
-  
-  
-  $reviewer_data = array();
-  $result = $mysqli->prepare("SELECT users.id, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND type = ? AND paperID = ? ORDER BY surname, initials");
-  $result->bind_param('si', $type, $paperID);
-  $result->execute();
-  $result->bind_result($id, $title, $initials, $surname);
-  while ($result->fetch()) {
-    $reviewer_data[$id]['title'] = $title;
-    $reviewer_data[$id]['initials'] = $initials;
-    $reviewer_data[$id]['surname'] = $surname;
-  }
-  $result->close();
+<br />
+
+<?php
+  echo list_externals($reviewer_data, $string);
+?>
+<br />
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<?php
 
   // Capture reviewer comments data first.
-  $result = $mysqli->prepare("SELECT q_id, comment, category, DATE_FORMAT(reviewed,'%d/%m/%Y %T') AS reviewed, reviewer, action, response FROM review_comments WHERE review_type = ? AND q_paper = ?");
-  $result->bind_param('si', $type, $paperID);
-  $result->execute();
-  $result->bind_result($tmp_q_id, $comment, $category, $reviewed, $tmp_reviewer, $action, $response);
-  while ($result->fetch()) {
-    $comments_array[$tmp_q_id][$tmp_reviewer]['reviewed'] = $reviewed;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['comment']  = $comment;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['category'] = $category;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['action']   = $action;
-    $comments_array[$tmp_q_id][$tmp_reviewer]['response'] = $response;
+  $comments_array = array();
+  foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
+    $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
+    $comments_array[$reviewerID]->load_reviews();
   }
-  $result->close();
   
-
   // Capture the paper makeup.
-  $display_header = true;
   $question_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std);
+  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std, $settings);
   while ($result->fetch()) {
-    if ($display_header == true) {
-      echo '<tr><th><div class="breadcrumb"><a href="../staff/index.php">' . $string['home'] . '</a>';
-      if (isset($_GET['folder']) and $_GET['folder'] != '') {
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-      } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-        echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/details.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-      }
-      echo '&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
-
-      echo "<span style=\"margin-left:10px; font-size:200%; color:black; font-weight:bold\">" . $string[$type . 'report'] . "</span></th><th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"></th></tr>\n";
-      echo "</table>\n";
-      if (count($reviewer_data) == 0) {
-				echo "<table cellpadding=\"1\" cellspacing=\"1\" border=\"0\" style=\"margin: 0px auto; width:75%; border: 1px solid #C0C0C0; text-align:left\">\n<tr><td colspan=\"2\" style=\"background-color:#F2B100; height:3px\"> </td></tr>\n<tr><td style=\"width:16px; padding-top:5px; padding-bottom:5px\"><img src=\"../artwork/information_icon.gif\" width=\"16\" height=\"16\" alt=\"i\" border=\"0\" /></td><td style=\"padding-top:5px; padding-bottom:5px\">&nbsp;" . $string['noreviewers'] . "</td></tr></table>\n<div>\n</body>\n</html>";
-        exit;
-      }
-      echo '<br /><table cellpadding="0" cellspacing="0" border="0" width="100%">';
-      $display_header = false;
-    }
-    if ($question_no == 0) {
-      $old_labelcolor = $labelcolor;
-      $old_themecolor = $themecolor;
-    }
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
       $question_no++;
       if ($old_q_type == 'info') $question_no--;
-      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std, $reviewer_data, $type, $string, $language);
+      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
       $options_buffer = array();
       $correct_buffer = array();
       if ($old_screen != $screen) {
-        echo '<tr><td colspan="2">';
-        echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
-        echo '</td></tr>';
+        echo '<tr><td colspan="2"><br /><div class="screenbrk">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['screen'] . '&nbsp;' . $screen . '</div></td></tr>';
       }
     }
     if ($q_type == 'labelling') {
       $tmp_first_split = explode(';', $correct);
       $tmp_second_split = explode('$', $tmp_first_split[11]);
       for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') {
+        if (array_key_exists($label_no, $tmp_second_split) and substr($tmp_second_split[$label_no],0,1) != '|') {
           $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
           if ($tmp_second_split[$label_no-2] > 150) {
             $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
@@ -730,6 +771,7 @@ if (isset($_GET['scrOfY'])) {
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
     $old_correct = $correct;
+    $old_settings = $settings;
     $old_display_method = $display_method;
     $old_score_method = $score_method;
     $old_std = $std;
@@ -738,11 +780,11 @@ if (isset($_GET['scrOfY'])) {
   $result->close();
   $question_no++;
   if ($old_q_type == 'info') $question_no--;
-  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $old_labelcolor, $old_themecolor, $old_std, $reviewer_data, $type, $string, $language);
+  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
   $mysqli->close();
 ?>
 </table>
-<input type="hidden" name="scrOfY" id="scrOfY" value="0" />
+<input type="hidden" name="scrOfY" id="scrOfY" value="0" /><br />
 </form>
 </div>
 </body>

@@ -17,7 +17,7 @@
 
 /**
  *
- * The lti login authentication function.
+ * The LTI login authentication function.
  *
  * @author Simon Atack
  * @version 1.0
@@ -71,11 +71,11 @@ class ltilogin_auth extends outline_authentication {
     $this->savetodebug('Starting to lookup user');
     $returned = $this->lti->lookup_lti_user();
 
-    $this->savetodebug('Data returned from lti lookup was: ' . var_export($returned, true));
+    $this->savetodebug('Data returned from LTI lookup was: ' . var_export($returned, true));
 
     if ($returned !== false) {
 
-      $sql="SELECT username from users where id = ?";
+      $sql = "SELECT username FROM users WHERE id = ?";
       $result=$this->db->prepare($sql);
       $result->bind_param('i', $returned[0]);
       $result->execute();
@@ -154,7 +154,6 @@ class ltilogin_auth extends outline_authentication {
       $data->$lticonsumerkeyfield = $this->lti->getConsumerKey();
       $data->$ltiinstructorfield = $this->lti->isInstructor();
 
-
       $authobj->lookupmissing($this->number, $data);
 
       return $authobj;
@@ -196,7 +195,7 @@ class ltilogin_auth extends outline_authentication {
 
   function displaystdform($displaystdformobj) {
     global $string;
-    if (isset($this->session['authenticationobj']['ltilogin']['needsreuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {
+    if (isset($this->session['authenticationobj']['ltilogin']['needsreuserlookup']) and $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {
 
       $message = new stdClass();
       $message->pretext = '';
@@ -207,7 +206,7 @@ class ltilogin_auth extends outline_authentication {
       $displaystdformobj->replace = true;
     }
 
-    if (isset($this->session['authenticationobj']['ltilogin']['needsuserlookup']) and  $this->session['authenticationobj']['ltilogin']['needsuserlookup'] === true) {
+    if (isset($this->session['authenticationobj']['ltilogin']['needsuserlookup']) and $this->session['authenticationobj']['ltilogin']['needsuserlookup'] === true) {
 
       $message = new stdClass();
       $message->pretext = '';

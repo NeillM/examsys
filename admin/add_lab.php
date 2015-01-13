@@ -97,13 +97,12 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    input, textarea {line-height:140%}
-  </style>
 
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <?php echo $configObject->get('cfg_js_root') ?>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript">
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -119,15 +118,23 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   require '../include/lab_options.inc';
+  require '../include/toprightmenu.inc';
+	
+	echo draw_toprightmenu(233);
 ?>
-<div id="content" class="content">
+<div id="content">
 <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-<table class="header">
-<tr><th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div style="font-size:200%; margin-left:10px; font-weight:bold"><?php echo $string['createnewlab']; ?></div></th></tr>
+
+<div class="head_title">
+  <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_labs.php"><?php echo $string['computerlabs'] ?></a></div>
+  <div class="page_title"><?php echo $string['createnewlab'] ?></div>
+</div>
+
 <?php
 if (count($bad_addresses) > 0) {
 ?>
-<tr><td style="color: #f00; font-weight: bold">
+<div style="color: #f00; font-weight: bold">
 <?php
   $address_list = '';
   foreach ($bad_addresses as $bad) {
@@ -136,8 +143,7 @@ if (count($bad_addresses) > 0) {
   $address_list = rtrim($address_list, ', ');
   printf($string['badaddressesmsg'], $address_list);
 ?>
-<br /><br /><a href="./list_labs.php"><?php echo $string['backtolabs'] ?></a></td></tr>
-</table>
+<br /><br /><a href="./list_labs.php"><?php echo $string['backtolabs'] ?></a></div>
 </body>
 </html>
 <?php
@@ -146,13 +152,13 @@ if (count($bad_addresses) > 0) {
 </table>
 <br />
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin-left:10px; margin-right:10px">
-<tr><td style="vertical-align:top; width:200px"><div><strong><?php echo $string['ipaddresses']; ?></strong></div>
+<tr><td style="vertical-align:top; width:200px"><div><?php echo $string['ipaddresses'] ?></div>
 <textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses" id="addresses" required></textarea></td><td style="width:50px"></td><td style="vertical-align:top">
 
-<div><strong><?php echo $string['name']; ?></strong></div>
+<div><?php echo $string['name'] ?></div>
 <div><input type="text" size="40" maxlength="255" name="lab_name" id="lab_name" value="" required /></div>
 <?php
-  echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
+  echo "<br /><div>" . $string['campus'] . "</div>\n<div><select name=\"campus\">\n";
   foreach ($cfg_campus_list as $choice) {
 	  if ($configObject->get('cfg_campus_default')) {
 			echo "<option value=\"$choice\" selected>$choice</option>\n";
@@ -162,18 +168,18 @@ if (count($bad_addresses) > 0) {
 	}
   echo "</select></div>\n";
 ?>
-<br /><div><strong><?php echo $string['building']; ?></strong></div>
+<br /><div><?php echo $string['building'] ?></div>
 <div><input type="text" size="40" maxlength="255" name="building" value="" required /></div>
-<br /><div><strong><?php echo $string['roomnumber']; ?></strong></div>
+<br /><div><?php echo $string['roomnumber'] ?></div>
 <div><input type="text" size="10" maxlength="255" name="room_no" value="" required /></div>
-<br /><div><strong><?php echo $string['bandwidth']; ?></strong></div><div><input type="radio" name="low_bandwidth" value="1" /><?php echo $string['low']; ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="low_bandwidth" value="0" checked /><?php echo $string['high']; ?></div>
-<br /><div><strong><?php echo $string['timetabling']; ?></strong></div>
+<br /><div><?php echo $string['bandwidth'] ?></div><div><input type="radio" name="low_bandwidth" value="1" /><?php echo $string['low'] ?>&nbsp;&nbsp;&nbsp;<input type="radio" name="low_bandwidth" value="0" checked /><?php echo $string['high'] ?></div>
+<br /><div><?php echo $string['timetabling'] ?></div>
 <div><textarea name="timetabling" rows="3" cols="100"></textarea></div>
-<br /><div><strong><?php echo $string['itsupport']; ?></strong></div>
+<br /><div><?php echo $string['itsupport'] ?></div>
 <div><textarea name="it_support" rows="3" cols="100"></textarea></div>
-<br /><div><strong><?php echo $string['plagarism']; ?></strong></div>
+<br /><div><?php echo $string['plagarism'] ?></div>
 <div><textarea name="plagarism" rows="3" cols="100"></textarea></div>
-<br /><br /><input type="submit" name="submit" value="<?php echo $string['save']; ?>" style="width:120px" />
+<br /><br /><input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" />
 </td></tr></table>
 
 </form>

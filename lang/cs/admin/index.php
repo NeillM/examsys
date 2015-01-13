@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['clearguestaccounts'] = 'Vyčistit dočasné účty';
 $string['clearoldlogs'] = 'Odstranit staré přístupy';
@@ -27,18 +26,21 @@ $string['ebelgridtemplates'] = 'Šablony Ebelovy mřížky';
 $string['faculties'] = 'Fakulty';
 $string['modules'] = 'Moduly';
 $string['optimizetables'] = 'Optimalizovat tabulky';
+$string['phpinfo'] = 'phpinfo()';
 $string['schools'] ='Školy';
 $string['smsimports'] = 'Nahrát SMS ';
-$string['summativeexamstats'] = 'Statistika k sumativní zkoušce';
+$string['statistics'] = 'Statistika';
 $string['systemerrors'] = 'Systémové chyby';
 $string['summativescheduling'] = 'Plánování sumativní zkoušky';
 $string['systeminformation'] = 'Systémové informace';
-$string['bitbucket'] = 'Bitbucket:<br />Bug Reporting';
 $string['usermanagement'] = 'Nastavení uživatelů';
-$string['msg1'] = 'Jste si skutečně jisti, že chcete odstranit veškeré dokumenty/úlohy ze Cvičného modulu?';
+$string['msg1'] = 'Jste si skutečně jisti, že chcete odstranit veškeré dokumenty / úlohy ze Cvičného modulu?';
 $string['msg2'] = 'Jste si skutečně jisti, že chcete odstranit staré Přístupy k cvičným a průběžným testům?\n\n(Přístupy k sumativním zkouškám a průzkumům nebudou změněny)';
 $string['announcments'] = 'Novinky &amp; oznámení';
 $string['imslti'] = 'Klíče LTI';
-$string['questionstatuses'] = 'Statusy úlohy';
-$string['testing'] = 'Testování';
+$string['questionstatuses'] = 'Statusy úloh';
+$string['savefailattempts'] = 'Uložit nezdařené pokusy';
+$string['testing'] = 'Testování systémů';
+$string['bitbucket'] = 'Bitbucket:<br />Hlášení chyb';
+
 ?>

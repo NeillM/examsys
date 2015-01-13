@@ -15,12 +15,17 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 
+require_once '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+require_once '../classes/paperproperties.class.php';
 require_once 'include/inc.php';
 require_once 'qti/qti_load.php';
 require_once 'qti12/qti12_load.php';
 require_once 'qti20/qti20_load.php';
 require_once 'local/local_save.php';
 require_once '../classes/question_status.class.php';
+
+$paperID = check_var('paperID', 'GET', true, false, true);
 
 // Get question statuses
 $status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
@@ -35,7 +40,7 @@ foreach ($status_tmp as $sid => $status) {
 
 $max_screen = 0;
 
-$stmt = $mysqli->prepare("SELECT paper_title, moduleID, folder, paper_ownerID, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, labs, calendar_year, exam_duration, crypt_name, display_question_mark FROM properties_modules, modules, properties LEFT JOIN papers ON properties.property_id=papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.property_id=? GROUP BY paper_title");
+$stmt = $mysqli->prepare("SELECT paper_title, moduleID, folder, paper_ownerID, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date, DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, DATE_FORMAT(created,'%Y%m%d%H%i%S') AS created, MAX(screen) AS screen, fullscreen, MAX(display_pos) AS display_pos, paper_type, labs, calendar_year, exam_duration, crypt_name, display_question_mark FROM properties_modules, modules, properties LEFT JOIN papers ON properties.property_id = papers.paper WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.property_id = ? GROUP BY paper_title");
 
 $stmt->bind_param('i', $paperID);
 $stmt->execute();
@@ -56,18 +61,13 @@ while ($stmt->fetch()) {
 $stmt->close();
 $moduleID = $paper_moduleID;
 
-// get some paper details
-$paper = GetVar("paperID");
-$paperID = $paper;
-$db = new Database();
-$db->SetTable('properties');
-$db->AddField('UNIX_TIMESTAMP(start_date) AS start_date');
-$db->AddField('paper_title');
-$db->AddField('paper_type');
-$db->AddWhere('property_id', $paper, 'i');
-$paper_row = $db->GetSingleRow();
+// Get some paper details
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$paper_title = $properties->get_paper_title();
+$paper_type = $properties->get_paper_type();
+$start_date = $properties->get_start_date();
 
-if ($paper_row['paper_type'] == '2' and time() > $paper_row['start_date'] and $paper_row['start_date'] != '') {
+if ($paper_type == '2' and time() > $start_date and $start_date != '') {
   $summative_lock = 1;
   include "tmpl/import_locked.php";
   exit;
@@ -80,9 +80,13 @@ if (!array_key_exists('file', $_FILES)) {
   exit;
 }
 
-$show_debug = IsAdminUser($userObject->get_user_ID()); //todo replace with userobject function
+if (isset($_GET['debug'])) {
+  $show_debug = true;
+} else {
+  $show_debug = false;
+}
 
-// create dir for qti to save into
+// Create dir for QTI to save into
 $base_dir = $cfg_web_root.'qti/imports/';
 $dir = GetAuthorName($userObject->get_user_ID())."/".date("Y-m-d")."/".date("H.i.s"); //todo replace with userobject function
 
@@ -101,14 +105,14 @@ $ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
 $file = $base_dir.$dir."/import.".$ext;
 move_uploaded_file($_FILES["file"]["tmp_name"], $file);
 
-// set up qti load classes
+// set up QTI load classes
 $import = new IE_QTI_Load();
 $load_params->sourcefile = $file;
 $load_params->original_filename = $_FILES["file"]["name"];
 
-// setup touchstone save classes
+// setup Rogo save classes
 $export = new IE_Local_Save();
-$save_params->paper = $paper;
+$save_params->paper = $paperID;
 $save_params->sourcefile = $file;
 $save_params->original_filename = $_FILES["file"]["name"];
 $export->setStatuses(array_flip($statuses));
@@ -123,7 +127,7 @@ $result['general']['params'] = $general_params;
 $ob = new OB();
 $ob->ClearAndSave();
 $data = $import->Load($load_params);
-$result['load']['type'] = "qti12";
+$result['load']['type'] = 'qti12';
 $result['load']['params'] = $load_params;
 $result['load']['debug'] = $ob->GetContent();
 $result['load']['warnings'] = $import->warnings;
@@ -135,7 +139,7 @@ $ob->Restore();
 $ob = new OB();
 $ob->ClearAndSave();
 $export->Save($save_params, $data);
-$result['save']['type'] = 'touchstone';
+$result['save']['type'] = 'rogo';
 $result['save']['params'] = $save_params;
 $result['save']['debug'] = $ob->GetContent();
 $result['save']['warnings'] = $export->warnings;

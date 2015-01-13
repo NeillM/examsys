@@ -16,6 +16,8 @@
 
 /**
 *
+* Copies a paper (e.g. properties table) and possibly the questions on the paper.
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -53,13 +55,13 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
 
   <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
   <tr>
-  <td valign="middle" style="background-color: white"><img src="../artwork/red_warning.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
+  <td valign="middle" style="background-color: white"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['titlewarning']; ?></span></td>
   </tr>
   <tr>
   <td style="background-color:#FFC0C0">
   <p style="font-size:90%"><?php printf($string['nameused'], $_POST['new_paper']); ?></p>
 
-  <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back']; ?>" name="back" onclick="javascript: window.history.go(-1);"></div>
+  <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back'] ?>" name="back" onclick="window.history.go(-1);"></div>
   </td>
   </tr>
   </table>
@@ -71,6 +73,71 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
   </html>
   <?php
   exit;
+}
+
+/**
+ * This function compares the old and the new courses session objectives to see which can be copied.
+ * 
+ * @param array $mappings_copy_objID - objectives to map
+ * @param array $old_course - old course objective information
+ * @param array $new_course - new course objective information
+ */
+function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_course) {
+      foreach ($old_course as $module => &$sessions) {
+        foreach ($sessions as $identifier => &$session) {
+          if (!empty($session['objectives'])) {
+            foreach ($session['objectives'] as &$obj) {
+              if (isset( $obj['id'])) {
+                $old_objID = $obj['id'];
+              } else {
+                $old_objID = NULL;
+              }
+              if (isset($obj['guid'])) {
+                $old_objGUID = $obj['guid'];
+              } else {
+                $old_objGUID = NULL;
+              }
+              // VLE Objectives.
+              if (isset($new_course[$module][$identifier]['VLE']) and $new_course[$module][$identifier]['VLE'] != '') {
+                if (isset($new_course[$module][$identifier]['objectives'])){
+                    foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+                      if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
+                              or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
+                              and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
+                                      and $new_obj['content'] == $obj['content'])) {
+                        // Build a list of objectives that are still in both sessions
+                        $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                        break;
+                      }
+                    }
+                }
+              // Internal Rogo Objectives.
+              } else {
+                foreach ($new_course as $module => &$sessions) {
+                  foreach ($sessions as $identifier => &$session) {
+                      if (isset($session['objectives'])){
+                        foreach ($session['objectives'] as $new_obj) {
+                          if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
+                            // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
+                            $new_content_check = strtolower($new_obj['content']);
+                            $new_content_check = preg_replace("/[^a-z0-9]/", '', $new_content_check);
+                            $old_content_check = strtolower($obj['content']);
+                            $old_content_check = preg_replace("/[^a-z0-9]/", '', $old_content_check);
+                            if ($new_content_check == $old_content_check) {
+                                // Build a list of objectives that are still in both sessions
+                                $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                                break;
+                            }
+                          }
+                        }
+                      }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
 }
 
 $calendar_year = $new_calendar_year = '';
@@ -89,20 +156,38 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   $qids = array();
   while ($result->fetch()) {
     $qids[] = $question;
-    $addPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
-    $addPaper->bind_param('iiii', $new_paper_id, $question, $screen, $display_pos);
-    $addPaper->execute();
-    $addPaper->close();
+    
+    Paper_utils::add_question($new_paper_id, $question, $screen, $display_pos, $mysqli);
   }
   $result->close();
 
   // If we are copying in the same session we can copy the objectives
-  if ($new_calendar_year == $calendar_year and count($qids) > 0) {
+  if (count($qids) > 0) {
     $qids = implode(',', $qids);
-    $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, $new_paper_id as paper_id, question_id, obj_id, calendar_year, vle_api FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
-    $result->bind_param('i', $paperid);
-    $result->execute();
-    $result->close();
+    if ($new_calendar_year == $calendar_year) {
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, $new_paper_id as paper_id, question_id, obj_id,"
+        . " calendar_year, vle_api, map_level FROM relationships WHERE question_id IN ($qids) AND paper_id = ?)");
+      $result->bind_param('i', $paperid);
+      $result->execute();
+      $result->close();
+    } else {
+        // We are copying between sessions we need to check for changed sessions/objectives
+        $mappings_copy_objID = array();
+        $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
+        $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
+        if (count($old_course) > 0 and count($new_course) > 0) {
+            copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
+            //Copy the objectives for each session where the objective still exists
+            $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ? as paper_id, question_id, ?, ?, vle_api, map_level"
+              . " FROM relationships WHERE question_id IN ($qids) AND paper_id = ? AND obj_id = ?)");
+            foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
+                $result->bind_param('iisii', $new_paper_id, $newmapid, $new_calendar_year, $paperid, $oldmapid);
+                $result->execute();
+            }
+           $result->close();
+        }
+
+    }
   }
 } else {    // Copy the paper and the questions.
   // Copy the properties (properties table)
@@ -120,14 +205,14 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   }
 
   // Copy the question and option data (questions and options tables)
+  $old_qids = array();
+  $new_qids = array();
+  $q_no = 0;
   $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ? ORDER BY display_pos");
   $result->bind_param('i', $paperid);
   $result->execute();
   $result->store_result();
   $result->bind_result($question, $screen, $display_pos);
-  $old_qids = array();
-  $new_qids = array();
-  $q_no = 0;
   while ($result->fetch()) {
     $line = 0;
     $qData = $mysqli->prepare("SELECT * FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
@@ -153,7 +238,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
                 if (file_exists("../media/$individual_media")) {
                   if (!copy("../media/$individual_media", "../media/$new_media_name")) {
                     $error[] = sprintf($string['copyerror'], $individual_media);
-                    //if the image is missing dont put the file name in the new question
+                    // If the image is missing dont put the file name in the new question
                     $new_media_name = '';
                   }
                 } else {
@@ -210,7 +295,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
           $new_status = $status;
         }
 
-        $server_ipaddress = str_replace('.', '', apache_getenv("SERVER_ADDR"));
+        $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
         $guid = $server_ipaddress . uniqid('', true);
 
         $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
@@ -228,14 +313,11 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
         $addQuestion->execute();
         $new_qids[] = $question_id = $mysqli->insert_id;
-        if ($q_type == 'calculation') $caculation_qid_map[$q_id] = $question_id;
+        if ($q_type == 'enhancedcalc') $calculation_qid_map[$q_id] = $question_id;
         $addQuestion->close();
 
         // Add in a record to the papers table.
-        $addNewPaper = $mysqli->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)");
-        $addNewPaper->bind_param('iiii', $new_paper_id, $question_id, $screen, $display_pos);
-        $addNewPaper->execute();
-        $addNewPaper->close();
+        Paper_utils::add_question($new_paper_id, $question_id, $screen, $display_pos, $mysqli);
 
         // Create a track changes record to say where question was copied from.
         $logger = new Logger($mysqli);
@@ -257,41 +339,88 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         }
         $keyword_result->close();
       }
-
-      // Look for and fix links in linked calculation questions
-      if ($q_type == 'calculation') {
-        $options = explode(',', $option_text);
-        $new_option_text = array();
-        foreach ($options as $opt) {
-          if (stristr($opt, 'var') !== false) {
-            $old_calc_q_id = substr($opt, 4);
-            if(!isset($caculation_qid_map[$old_calc_q_id])) {
-              $error[] = sprintf($string['calculation_link_update_error'], $opt);
-              $new_option_text[] = $opt;
-            } else {
-              $new_option_text[] = substr($opt, 0, 4) . $caculation_qid_map[$old_calc_q_id];
-            }
-          } elseif (stristr($opt, 'ans') !== false){
-            $old_calc_q_id = substr($opt, 3);
-            if (!isset($caculation_qid_map[$old_calc_q_id])) {
-              $error[] = sprintf($string['calculation_link_update_error'], $opt);
-              $new_option_text[] = $opt;
-            } else {
-              $new_option_text[] = substr($opt, 0, 3) . $caculation_qid_map[$old_calc_q_id];
-            }
-          } else {
-            $new_option_text[] = $opt;
-          }
+      
+      // Look for and fix links in linked enhancedcalc questions
+      if ($q_type == 'enhancedcalc') {
+        require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+        if (!isset($configObj)) {
+                $configObj = Config::get_instance();
         }
-        $option_text = implode(',', $new_option_text);
-      }
 
-      if ($q_type != 'calculation') {  // Calculation questions have no options.
-		$addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
-		$addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
-		$addOption->execute();
-		$addOption->close();
-	  }
+        $tmp_questions_array['theme']		= trim($theme);
+        $tmp_questions_array['scenario']	= trim($scenario);
+        $tmp_questions_array['leadin']		= trim($leadin);
+        $tmp_questions_array['notes']		= trim($notes);
+        $tmp_questions_array['q_type']		= $q_type;
+        $tmp_questions_array['q_id']		= $question_id; //the newly inserted question ID!
+        $tmp_questions_array['score_method']	= $score_method;
+        $tmp_questions_array['status']		= $status;
+        $tmp_questions_array['display_method']	= $display_method;
+        $tmp_questions_array['settings']	= $settings;
+        $tmp_questions_array['q_media']		= $q_media;
+        $tmp_questions_array['q_media_width']	= $q_media_width;
+        $tmp_questions_array['q_media_height']	= $q_media_height;
+        $tmp_questions_array['q_option_order']	= $q_option_order;
+        $tmp_questions_array['dismiss']		= '';
+        $tmp_questions_array['leadin_plain']	 = trim($leadin_plain);
+        $tmp_questions_array['standards_setting'] = $std;
+
+        $q = new EnhancedCalc($configObj);
+        $q->load($tmp_questions_array);
+
+        $vars = $q->get_question_vars();
+        $questionChanged = false;
+        foreach($vars as $var_name => $var_data) {
+            $linked_q_id = 0;
+
+            if ($q->is_linked_question_var($var_data['min'])) {
+                list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['min']);
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['min'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
+            }
+
+            if ($q->is_linked_question_var($var_data['max'])) {
+                list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['max']);
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['max'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
+            }
+
+            if ($q->is_linked_ans($var_data['min'])) {
+                $linked_q_id = $q->parse_linked_ans($var_data['min']);
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['min'] = 'ans' . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
+            }
+
+            if ($q->is_linked_ans($var_data['max'])) {
+                $linked_q_id = $q->parse_linked_ans($var_data['max']);
+                if (isset($calculation_qid_map[$linked_q_id])) {
+                    $vars[$var_name]['max'] = 'ans' . $calculation_qid_map[$linked_q_id];
+                    $questionChanged = true;
+                }
+            }
+
+        }
+
+        if ($questionChanged == true) {
+            // Update the question!
+            $q->set_question_vars($vars);
+            $q->save($mysqli);
+        }
+          
+      }
+      
+      if ($q_type != 'enhancedcalc') {  // Calculation questions have no options.
+        $addOption = $mysqli->prepare("INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+        $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+        $addOption->execute();
+        $addOption->close();
+      }
       $line++;
     }
     $qData->free_result();
@@ -305,7 +434,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
     $i = 0;
     foreach ($old_qids as $old_id) {
       $new_question_id = $new_qids[$i];
-      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id, calendar_year, vle_api FROM relationships WHERE question_id = $old_id AND paper_id = ?)");
+      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, '$new_paper_id', '$new_question_id', obj_id,"
+        . " calendar_year, vle_api, map_level FROM relationships WHERE question_id = $old_id AND paper_id = ?)");
       $result->bind_param('i', $paperid);
       $result->execute();
       $result->close();
@@ -314,62 +444,44 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   } else {
     // We are copying between sessions we need to check for changed sessions/objectives
     $mappings_copy_objID = array();
-    $old_course = getObjectives($moduleIDs, $calendar_year, $_POST['paperID'], '', $mysqli);
-    $new_course = getObjectives($moduleIDs, $new_calendar_year, $_POST['paperID'], '', $mysqli);
+    $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
+    $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
     if (count($old_course) > 0 and count($new_course) > 0) {
-      foreach ($old_course as $module=>&$sessions) {
-        foreach ($sessions as $identifier=>&$session) {
-          if (!empty($session['objectives'])) {
-            foreach ($session['objectives'] as &$obj) {
-              $old_objID = $obj['id'];
-              $old_objGUID = $obj['guid'];
-                if (isset($new_course[$module][$identifier]['objectives'])){
-                  foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
-                  if (($new_obj['id'] == $old_objID or $new_obj['guid'] == $old_objGUID) and $new_obj['content'] == $obj['content']) {
-                    //build a list of objectives that are still in both sessions
-                    $mappings_copy_objID[$old_objID] = $new_obj['id'];
-                    break;
-                  }
-                }
-              }
+        copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
+
+        // Copy the objectives for each session where the objective still exists
+        $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM"
+          . " relationships WHERE question_id = ? AND paper_id = ? AND obj_id = ?)");
+        $nw_paperid = 0;
+        $nw_qid = 0;
+        $nw_mapid = 0;
+        $nw_calyr = 0;
+        $nw_oldid = 0;
+        $nw_oldpapid = 0;
+        $bw_oldoid = 0;
+        $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
+        if ($mysqli->error) {
+          $error[] = 'mysqli error ' . $mysql->error;
+        }
+        $i=0;
+        foreach ($old_qids as $old_id) {
+          foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
+            $nw_paperid		= $new_paper_id;
+            $nw_qid		= $new_qids[$i];
+            $nw_mapid		= $newmapid;
+            $nw_calyr		= $new_calendar_year;
+            $nw_oldid		= $old_id;
+            $nw_oldpapid	= $paperid;
+            $nw_oldoid		= $oldmapid;
+            $result->execute();
+            if ($mysqli->error) {
+              $error[] = 'mysqli error ' . $mysql->error;
             }
           }
+          $i++;
         }
+        $result->close();
       }
-
-      // Copy the objectives for each session where the objective still exists
-
-      $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM relationships WHERE question_id = ? AND paper_id = ? AND obj_id =?)");
-      $nw_paperid = 0;
-      $nw_qid = 0;
-      $nw_mapid = 0;
-      $nw_calyr = 0;
-      $nw_oldid = 0;
-      $nw_oldpapid = 0;
-      $bw_oldoid = 0;
-      $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
-      if ($mysqli->error) {
-        $error[] = 'mysqli error ' . $mysql->error;
-      }
-      $i=0;
-      foreach ($old_qids as $old_id) {
-        foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
-          $nw_paperid = $new_paper_id;
-          $nw_qid = $new_qids[$i];
-          $nw_mapid = $newmapid;
-          $nw_calyr = $new_calendar_year;
-          $nw_oldid = $old_id;
-          $nw_oldpapid = $paperid;
-          $nw_oldoid = $oldmapid;
-          $result->execute();
-          if ($mysqli->error) {
-            $error[] = 'mysqli error ' . $mysql->error;
-          }
-        }
-        $i++;
-      }
-      $result->close();
-    }
   }
 }
 ?>
@@ -390,7 +502,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
   } else {
 ?>
   <body onclick="hideMenus()">
-  <div id="content" class="content">
+  <div id="content">
   <br />
   <br />
   <br />
@@ -400,7 +512,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#C0C0C0; text-align:left">
     <tr>
-    <td valign="middle" style="background-color:white"><img src="../artwork/orange_alert_32.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
+    <td valign="middle" style="background-color:white"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="<?php echo $string['warning']; ?>" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['filecopywarning']; ?></span></td>
    </tr>
    <tr>
    <td style="background-color:#EAEAEA"><ul>
@@ -424,6 +536,17 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 }
 $mysqli->close();
 
+/**
+ * Copies the paper properties record.
+ *
+ * @param object $db						- Link to MySQL database
+ * @param string $calendar_year	- Looks up and updates the academic session - used with learning objectives
+ * @param string $moduleIDs			- Looks up and updates the modules the paper is on - used with learning objectives
+ * @param object $userObj				- Currently logged in user object.
+ * @param object $configObject	- Configuration settings object.
+ *
+ * @return int - ID of the newly inserted property record.
+ */
 function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj, $configObject) {
 
   $userID = $userObj->get_user_ID();
@@ -439,7 +562,6 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 
   $paper_type = $_POST['paper_type'];      // Override the paper type with what is posted.
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
-    //$tmp_exam_duration = $_POST['duration'];
 		$duration = 0;
 		if (isset($_POST['duration_hours'])) {
 			$duration += ($_POST['duration_hours'] * 60);
@@ -478,6 +600,9 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 
   if (isset($_POST['session'])) {
     $new_calendar_year = $_POST['session'];
+    if ($new_calendar_year == '') {
+      $new_calendar_year = NULL;
+    }
   } else {
 		$academic_year_title = Paper_utils::academic_year_from_title($_POST['new_paper']);
 		if ($academic_year_title !== false) {
@@ -507,7 +632,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   }
   $result2->close();
 
-  //set the modules on the new paper
+  // Set the modules on the new paper
   Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {

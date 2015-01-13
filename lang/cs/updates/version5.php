@@ -14,26 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['systemupdate'] = 'System Update';
-$string['actionrequired'] = 'Action Required';
-$string['readonly'] = "Don't forget to make the <strong>/config/config.inc.php</strong> readonly! (chmod 444)";
-$string['finished'] = 'Finished!';
-$string['couldnotwrite'] = 'Error: could not write config file!';
+$string['systemupdate'] = 'Systémová Aktualizace';
+$string['actionrequired'] = 'Požadována akce';
+$string['readonly'] = "Nezapomeňte nastavit <strong>/config/config.inc.php</strong> pouze ke čtení! (chmod 444)";
+$string['finished'] = 'Dokončeno!';
+$string['couldnotwrite'] = 'Chyba: Nelze zapsat konfigurační soubor!';
 $string['msg1'] = 'Tento skript aktualizuje databázové struktury tak, aby odpovídaly novému % s kódu. Nevadí, pokud je tento skript spuštěn vícekrát, jelikož kontroluje aktuální strukturu databáze před aplikací jakýchkoli změn.';
-$string['msg2'] = 'The update script needs the username and password of a MySQL admin user to update the database, users and tables. This username is not saved to the server and is only used by this update script.';
-$string['databaseadminuser'] = 'Database Admin User';
-$string['dbusername'] = 'DB Username';
-$string['dbpassword'] = 'DB Password';
-$string['onlinehelpsystems'] = 'Online Help Systems';
-$string['updatestaffhelp'] = 'Update Staff Help';
-$string['updatestudenthelp'] = 'Update Student Help';
-$string['startupdate'] = 'Start Update';
-$string['warning1'] = 'This update requires that /config/config.inc.php is writeable.';
+$string['msg2'] = 'Aktualizace skript potřebuje uživatelské jméno a heslo MySQL  admina k aktualizaci databáze, uživatelů a tabulek. Toto uživatelské jméno není na serveru uloženo a je použito pouze pro tuto aktualizaci skriptu.';
+$string['databaseadminuser'] = 'Databázový Administrátor';
+$string['dbusername'] = 'DB Uživatelské jméno';
+$string['dbpassword'] = 'DB Heslo';
+$string['onlinehelpsystems'] = 'Systém Online Nápovědy';
+$string['updatestaffhelp'] = 'Aktualizovat zaměstnaneckou nápovědu';
+$string['updatestudenthelp'] = 'Aktualizovat studentskou nápovědu';
+$string['startupdate'] = 'Zahájit Aktualizaci';
+$string['warning1'] = 'Tato aktualizace vyžaduje, aby /config/config.inc.php byl zapisovatelný.';
 $string['warning2'] = 'Please chown the file to the webserver and chomod it 644';
-$string['warning3'] = 'This update requires that the /config directory is writeable.';
+$string['warning3'] = 'Tato aktualizace vyžaduje, aby /config directory byl zapisovatelný.';
 $string['warning4'] = 'Please chown the file to the webserver and chomod it 744';
-$string['updatefromversion'] = 'Update from version';
-$string['home'] = 'Home';
-$string['startingupdate'] = 'Starting Update';
-$string['addinglines'] = 'Adding lines to %s file:';
+$string['updatefromversion'] = 'Aktualizace z Verze';
+$string['home'] = 'Domů';
+$string['startingupdate'] = 'Zahájení aktualizace';
+$string['addinglines'] = 'Přidání řádků do souboru %s :';
+$string['replacinglines'] = 'Nahrazení řádky v souboru %s :';
 ?>

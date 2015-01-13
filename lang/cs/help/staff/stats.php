@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require '../../lang/' . $language . '/help/staff/index.php';
 require '../../lang/' . $language . '/include/months.inc';
 
 $string['dates'] = 'Data';
@@ -28,5 +29,5 @@ $string['tutorialstats'] = 'Statistiky tutoriálu';
 $string['filter'] = 'Filtr';
 $string['nohits'] = 'Žádná zobrazení';
 $string['nosearches'] = 'Žádná vyhledání';
-$string['notutorials'] = 'Žádné tutoriály zobrazeny.';
+$string['notutorials'] = 'Žádné tutoriály';
 ?>

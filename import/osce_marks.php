@@ -250,10 +250,12 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" href="../css/body.css" type="text/css">
   <link rel="stylesheet" href="../css/dialog.css" type="text/css">
   <link rel="stylesheet" href="../css/submenu.css" type="text/css">
-	
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
+  <style>
+    span.killer {float: none}
+  </style>	
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+	<script>
+    $(function () {
 		  $('html').click(function() {
 			  hideMenus();
       });
@@ -266,7 +268,7 @@ if (isset($_POST['submit'])) {
   require '../include/paper_options.inc';
 ?>
 
-<div id="content" class="content">
+<div id="content">
 <br />
 <br />
 
@@ -290,7 +292,7 @@ if (isset($_POST['submit'])) {
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" /><br />
 <input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>
 
-<p><input type="submit" style="width:100px" value="<?php echo $string['import']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
 </div>
 </td>

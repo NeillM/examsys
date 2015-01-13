@@ -150,7 +150,7 @@ $string['typeundefined'] = 'No question type defined.';
 $string['typeinvalid'] = 'Unknown question type <em>%s</em>.';
 $string['questioninvalid'] = 'Invalid question ID.';
 $string['optioninvalid'] = 'Invalid option ID.';
-$string['mediauploaderror'] = 'Error uploading media file. Please click <a href="#" onclick="javascript: history.back();">Back</a> and try again.';
+$string['mediauploaderror'] = 'Error uploading media file. Are you sure you selected an Image? Please click <a href="#" onclick="javascript: history.back();">Back</a> and try again.';
 $string['datasaveerror'] = 'Error saving data. Please try again';
 $string['questionloaderror'] = 'Error loading question data.';
 $string['optionloaderror'] = 'Error loading option data.';
@@ -164,6 +164,7 @@ $string['oeditsummary'] = 'Edit question options';
 $string['qmetasummary'] = 'Edit basic question metadata';
 $string['qassessmentsummary'] = 'Edit question assessment data';
 $string['addoptions'] = 'Add More Options...';
+$string['addreminders'] = 'Add More Reminders...';
 $string['correctanswer'] = 'Correct Answer';
 $string['correctanswers'] = 'Correct Answers';
 $string['correctanswersmsg'] = '(Use &lt;ctrl&gt; plus mouse<br />to select several items)';
@@ -242,6 +243,7 @@ $string['showmore'] = 'Show more';
 $string['hidemore'] = 'Hide more';
 $string['minor'] = 'Minor';
 $string['major'] = 'Major';
+$string['cannot'] = 'Cannot Comment';
 $string['pleaserank'] = 'Please rank the following &hellip; starting with the &hellip; first:';
 $string['addtobank'] = 'Add to Bank';
 $string['addtobankandpaper'] = 'Add to Bank &amp; Paper';
@@ -274,3 +276,9 @@ $string['withzeros'] = 'incl. trailing zeros';
 $string['enforcedisplay'] = 'Enforce precision of student answer';
 $string['includetrailing0'] = 'Including trailing 0s';
 $string['notenforced'] = 'Not enforced';
+$string['tooltip_formula'] = 'Click link for more details in the online help.';
+// Textbox
+$string['reminders'] = 'Reminders';
+$string['reminder_no'] = 'Reminder #%d';
+
+

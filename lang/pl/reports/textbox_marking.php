@@ -28,4 +28,12 @@ $string['finalisemarks'] = 'Ocena końcowa';
 $string['candidates'] = 'kandydatów';
 $string['screen'] = 'Ekran';//ąę
 $string['note'] = 'Notatka';
+$string['comments'] = 'Komentarze';
+$string['next'] = 'Następny &gt;';
+$string['previous'] = '&lt; Poprzedni';
+$string['finish'] = 'Koniec';
+$string['mark_progress'] = 'Student %d z %d';
+$string['answer_saved'] = 'ocen zapisano';
+$string['noattempts'] = 'Ten arkusz nie był przez wybrany żadnego studenta w okresie <strong>%s &ndash; %s</strong>.';
+$string['tooltip_comments'] = 'Comments are only for staff. These cannot be viewed by students.';
 ?>

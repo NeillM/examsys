@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -14,14 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['administrativetools'] = 'Nastavení';
+require '../lang/' . $language . '/admin/list_modules.php';
+
 $string['entermoduleid'] = 'Zadejte, prosím, identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
 $string['selectschool'] = 'Přiřaďte, prosím, k modulu školu.';
 $string['moduleid'] = 'ID modulu';
 $string['name'] = 'Název';
 $string['school'] = 'Škola';
-$string['smsapi'] = 'SMS API'; //cognate
+$string['smsapi'] = 'SMS API';
+$string['academicyearstart'] = 'Začátek akademického roku';
 $string['objapi'] = 'API cílů';
 $string['summativechecklist'] = 'Sumativní kontrolní seznam';
 $string['peerreview'] = 'Recenze';
@@ -48,4 +50,5 @@ $string['session'] = 'Relace';
 $string['module'] = 'Modul';
 $string['maplevel'] = 'Úroveň mapování';
 $string['level'] = 'Úroveň';
+$string['tooltip_format'] = 'Format is MM/DD';
 ?>

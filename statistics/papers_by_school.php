@@ -41,14 +41,9 @@ $current_year = check_var('calyear', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-	<style>
-	  body {font-size:90%}
-		.grey {color:#C0C0C0}
-		.papertype {width:9%}
-	</style>
-	
+  
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.6.1.min.js"></script>
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
@@ -58,25 +53,24 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 	
 	echo draw_toprightmenu();
 ?>
+<div id="content">
+<div class="head_title">
+  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
+  <div class="page_title"><?php echo $string['papersbyschool']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></span></div>
+</div>
+
 <table class="header" style="font-size:90%">
-<tr>
-<th><div class="breadcrumb"><a href="../staff/index.php"><?php echo $string['home']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div></th>
-<th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon"></th>
-</tr>
-<tr>
-<th colspan="2"><div style="margin-left:10px; font-size:200%"><strong><?php echo $string['papersbyschool']; ?>:</strong> <?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1); ?></th>
-</tr>
 <tr>
 <th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1); ?></div></th>
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 
-<blockquote>
 <table class="stats">
 <tr>
 <th><?php echo $string['school']; ?></th>
-<th class="papertype"><?php echo $string['formative quiz']; ?></th>
+<th class="papertype"><?php echo $string['formative self-assessment']; ?></th>
 <th class="papertype"><?php echo $string['progress test']; ?></th>
 <th class="papertype"><?php echo $string['summative exam']; ?></th>
 <th class="papertype"><?php echo $string['survey']; ?></th>
@@ -164,8 +158,8 @@ foreach ($master_array as $school => $data) {
 }
 ?>
 </table>
-</blockquote>
 
+</div>
 </body>
 </html>
 <?php

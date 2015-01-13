@@ -16,6 +16,8 @@
 
 /**
 * 
+* Confirm that it is OK to proceed deleting a personal folder.
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -39,7 +41,7 @@ if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli))
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['deletefolder']; ?></title>
+  <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
@@ -47,21 +49,14 @@ if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli))
 
 <body>
 
-<table>
-<tr>
-<td class="icon"><img src="../artwork/delete_warning.png" width="48" height="48" alt="<?php echo $string['recyclebin']; ?>" /></td>
+<p><?php echo $string['msg'] ?></p>
 
-<td><p><?php echo $string['msg']; ?></p>
-
-<div style="text-align: right">
+<div class="button_bar">
 <form action="do_delete_folder.php" method="post">
 <input type="hidden" name="folderID" value="<?php echo $folderID; ?>" />
-<input type="submit" name="submit" value=" <?php echo $string['deletefolder']; ?> " />&nbsp;
-<input type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
+<input class="delete" type="submit" name="submit" value=" <?php echo $string['delete']; ?> " /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="window.close();" />
 </form>
 </div>
-</td></tr>
-</table>
 
 </body>
 </html>

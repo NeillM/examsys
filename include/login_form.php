@@ -23,24 +23,27 @@
 */
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-$cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
+$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $root), '/'), '/');
 ?>
 <!DOCTYPE html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $this->configObj->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333; - <?php echo $string['signin']; ?></title>
+  <title>Rog&#333; - <?php echo $string['signin'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/warnings.css" />
-
-  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.6.1.min.js"></script>
+  <?php
+    if (isset($_SESSION['_lti_context'])) {
+      echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n"; // Make the LTI screen blend in more.
+    }
+  ?>
+  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
 	<script>
-    $(document).ready(function() {
+    $(function () {
       $('#username').focus();
 			
 <?php
@@ -53,7 +56,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
 	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
 ?>
 			if (!isCanvasSupported()){
-			  $('#html5warn').show();
+			  $('.html5warn').fadeIn();
 			}
 <?php
 	}
@@ -79,14 +82,14 @@ $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $ro
 <?php
 	if ($this->configObj->get('cfg_interactive_qs') == 'html5') {
 ?>
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%; display:none" id="html5warn"><tr><td style="width:32px"><div class="yellowwarn"><img src="../artwork/html5_32.png" width="32" height="32" alt="HTML5" style="position:relative; left:6px; top:1px" /></div></td><td><div class="yellowwarn">&nbsp;&nbsp;<?php echo $string['html5warn']; ?></div></td></tr></table>
+<div class="html5warn"><?php echo $string['html5warn'] ?></div>
 <?php
   }
 ?>
 <form method="post" id="theform">
     <div class="mainbox">
 
-        <img src="<?php echo $cfg_root_path ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
+        <img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
         <div class="logo_lrg_txt">Rog&#333;</div>
         <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
@@ -119,11 +122,11 @@ HTML;
           <table>
               <tr>
                   <td><?php echo $string['username']; ?></td>
-                  <td><input type="text" name="ROGO_USER" id="username" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" <?php echo $required; ?> /></td>
+                  <td><input type="text" name="ROGO_USER" id="username" maxlength="60" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" <?php echo $required; ?> /></td>
               </tr>
               <tr>
                   <td><?php echo $string['password']; ?></td>
-                  <td><input type="password" name="ROGO_PW" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" <?php echo $required; ?> /></td>
+                  <td><input type="password" name="ROGO_PW" maxlength="60" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" <?php echo $required; ?> /></td>
               </tr>
 <?php
 
@@ -133,13 +136,13 @@ HTML;
 									echo '<tr>';
 									echo '<td>' . $field->description . '</td>';
 									echo '<td><select name="' . $field->name . '">';
-											foreach($field->options as $name => $value) {
-												$select='';
-												if ($value == $field->default) {
-													$select = 'selected';
-												}
-												echo "<option value=\"$value\" $select>$name</option>\n";
-											}
+									foreach($field->options as $name => $value) {
+										$select='';
+										if ($value == $field->default) {
+											$select = 'selected';
+										}
+										echo "<option value=\"$value\" $select>$name</option>\n";
+									}
 									echo '</select></td>';
 									echo '</tr>';
 								} else {
@@ -152,7 +155,7 @@ HTML;
 									} else {
 										$value='';
 									}
-									echo '<td><input type="' . $field->type . '" name="' . $field->name . '" value="' . $value . '"></td>';
+									echo '<td><input type="' . $field->type . '" name="' . $field->name . '" value="' . $value . '" style="width:240px"></td>';
 									echo '</tr>';
 								}
 							}
@@ -161,7 +164,7 @@ HTML;
           </table>
           <br/>
           </div>
-          <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" style="width:150px" />
+          <div style="text-align:center"><input type="submit" name="rogo-login-form-std" value="<?php echo $string['signin']; ?>" class="ok" />
         <?php
         if (isset($displaystdformobj->buttons)) {
           foreach ($displaystdformobj->buttons as $object) {
@@ -190,6 +193,8 @@ HTML;
         }
       }
       ?>
+        
+        <div class="versionno">Rog&#333; <?php echo $this->configObj->get('rogo_version') ?></div>
 
     </div>
 </form>

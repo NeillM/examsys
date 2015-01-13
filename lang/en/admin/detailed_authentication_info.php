@@ -22,8 +22,7 @@
  * @package Rogō
  */
 
-$string['detailed_authentication_information']='Detailed Authentication Information';
-$string['administrativetools'] = 'Administrative Tools';
+$string['detailed_authentication_information'] = 'Detailed Authentication Information';
 $string['System Information'] = 'System Information';
 $string['No'] = 'No';
 $string['Name'] = 'Name';

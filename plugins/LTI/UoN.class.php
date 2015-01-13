@@ -37,12 +37,7 @@ class lti_integration_extended extends lti_integration {
 
   //REMOVED as no longer used by lti as this is done at the authentication layer
   static function user_add($username, $password) {
-
-
   }
-
-
-
 
   static function user_time_check($time, $user = '') {
     $time1 = strtotime($time);
@@ -90,9 +85,9 @@ class lti_integration_extended extends lti_integration {
         $userid = $userObject->get_user_ID();
         $username = $userObject->get_username();
       }
-$error_type='Notice';
-      $errstr='ROGO:SMS not correctly setup';
-      $errfile='lti_integration.php';
+			$error_type = 'Notice';
+      $errstr = 'ROGO:SMS not correctly setup';
+      $errfile = 'lti_integration.php';
       if (is_null($configObject->get('cfg_db_port'))) {
         $configObject->set('cfg_db_port', 3306);
       }
@@ -104,9 +99,11 @@ $error_type='Notice';
       $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
       $log_error->execute();
       $log_error->close();
+			
       return '';
     } else {
       $SMS->set_module($data[2]);
+			
       return $SMS->url;
     }
 
@@ -217,9 +214,7 @@ $error_type='Notice';
             $data[$k][5] = "SATURN " . $data[$k][5];
           }
         }
-
       }
-
 
       if ($data[$k][1] == '') {
         self::invalid_module_code($c_internal_id, $data, 'during loop');
@@ -230,10 +225,6 @@ $error_type='Notice';
       } elseif ($v[2] == 'CN') {
         $data[$k][1] = $data[$k][1] . '_UNNC';
       }
-
-      //     $returned = lookup_module_description($v);
-      //      $data[$k] = $returned;
-
 
     }
     if (count($data) == 1 and substr($data[0][5], 0, 8) == 'MISSING:' and strlen($data[0][5]) > 9) {
@@ -259,13 +250,10 @@ $error_type='Notice';
   }
 
   static function invalid_module_code($c_internal_id, $data, $location = '') {
-$notices=UserNotices::get_instance();
+		$notices = UserNotices::get_instance();
     $notices->display_notice("Module code error", 'There is a problem with the module code as the translation code has resulted in an error.  Please contact Learning Team Support <a href="mailto:learning-team-support@nottingham.ac.uk">learning-team-support@nottingham.ac.uk</a>  Please include this debug info below:', '/artwork/access_denied.png', '#C00000');
 
     echo '<p>Incoming Module Code: ' . $c_internal_id . '</p>';
-    echo '<p><pre>';
-    var_dump($data);
-    echo '</pre></p>';
     echo "<p>At: $location</p>";
 
     exit();
