@@ -208,7 +208,7 @@ META;
     $prev_heading = '';
     $i = 0;
     foreach ($teams_array as $individual_team) {
-      $team_name = $individual_team['id'];
+      $team_id = $individual_team['id'];
       $fullname = $individual_team['fullname'];
       $team_idMod = $individual_team['idMod'];
 
@@ -229,7 +229,7 @@ HEADING;
 
       // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
       $checked = $on = '';
-      if (in_array($team_name, $current_teams) or in_array($team_idMod, $module)) {
+      if (in_array($team_id, $current_teams) or in_array($team_id, $module)) {
         $checked = ' checked="checked"';
         $on = ' on';
       }
