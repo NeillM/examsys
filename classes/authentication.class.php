@@ -498,11 +498,18 @@ class Authentication {
 
         //failed but no callbacks or callbacks finished
         $notice = UserNotices::get_instance();
+         if (!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug') == true) {
+            $msg = $string['Authentication_issue2'];
+            $reason = $string['Authentication_issue2'];
+        } else {
+            $msg = $string['Authentication_issue2nodebug'];
+            $reason = $string['Authentication_issue2nodebug'];
+        }
         $notice->display_notice_and_exit(
           $this->db,
           $string['Authentication_issue1'],
-          sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
-          sprintf($string['Authentication_issue2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($msg, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($reason, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
           '/artwork/fingerprint_48.png', '#C00000',
           true,
           true);
@@ -618,11 +625,18 @@ class Authentication {
       }
       if ($this->get_userid() < 1) {
         $notice = UserNotices::get_instance();
+        if (!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug') == true) {
+            $msg = $string['Authentication_notloggedin2'];
+            $reason = $string['Authentication_notloggedin2'];
+        } else {
+            $msg = $string['Authentication_notloggedin2nodebug'];
+            $reason = $string['Authentication_notloggedin2nodebug'];
+        }
         $notice->display_notice_and_exit(
           $this->db,
           $string['Authentication_notloggedin1'],
-          sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
-          sprintf($string['Authentication_notloggedin2'], $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($msg, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($reason, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
           '/artwork/fingerprint_48.png',
           '#C00000',
           true,
