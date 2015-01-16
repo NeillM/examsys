@@ -78,8 +78,10 @@ $string['Authentication_callback_failure1'] = 'Nie udało sie zarejestrować wyw
 $string['Authentication_callback_failure2'] = ' z funkcją';
 $string['Authentication_issue1'] = 'Problemy z uwierzytelnieniem';
 $string['Authentication_issue2'] = 'Plugin uwierzytelniania nie zdołał Ciebie zalogować i nie zaoferował żadnego formularza ani przekierowania. Naciśnij F5 aby odświerzyć, a gdy to nie przyniesie poprawy skontaktuj się z administratorem:  <a href="mailto:%s">%s</a>.<p>Załącz do swojego e-maila następujące dane techniczne:</p><div style="margin-left:100px;">%s</div>';
+$string['Authentication_issue2nodebug'] = 'Plugin uwierzytelniania nie zdołał Ciebie zalogować i nie zaoferował żadnego formularza ani przekierowania. Naciśnij F5 aby odświerzyć, a gdy to nie przyniesie poprawy skontaktuj się z administratorem:  <a href="mailto:%s">%s</a>.';
 $string['Authentication_notloggedin1'] = 'Problemy z uwierzytelnieniem';
 $string['Authentication_notloggedin2'] = 'Nie zostałeś zalogowany. Naciśnij F5 aby odświerzyć, a gdy to nie przyniesie poprawy skontaktuj się z administratorem: <a href="mailto:%s">%s</a><p>Załącz do swojego e-maila następujące dane techniczne:</p><div style="margin-left:100px;">%s</div>';
+$string['Authentication_notloggedin2nodebug'] = 'Nie zostałeś zalogowany. Naciśnij F5 aby odświerzyć, a gdy to nie przyniesie poprawy skontaktuj się z administratorem: <a href="mailto:%s">%s</a>';
 $string['NoLookupConfigured'] = 'Nie skonfigurowano odnośnika';
 $string['NoLookupConfiguredmessage'] = 'Konfiguracja odnośnika nie została wpisana do pliku konfiguracyjnego. Skontaktuj się z administratorem systemu.';
 $string['guestbutton'] = 'Logowanie gościnne';

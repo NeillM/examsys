@@ -71,8 +71,10 @@ $string['Authentication_callback_failure1'] = 'Nepodařilo se zapsat sekční zp
 $string['Authentication_callback_failure2'] = ' s funkcí';
 $string['Authentication_issue1'] = 'Problémy s ověřováním';
 $string['Authentication_issue2'] = 'Ověřovací pluginy vás nemohly přihlásit a neposkytly žádný další formulář ani přesměrování. Aktualizujte pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu : <a href="mailto:%s">%s</a>.<p>Do e-mailu, prosím uveďte následující debug:</p><div style="margin-left:100px;">%s</div>';
+$string['Authentication_issue2nodebug'] = 'Ověřovací pluginy vás nemohly přihlásit a neposkytly žádný další formulář ani přesměrování. Aktualizujte pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu : <a href="mailto:%s">%s</a>.';
 $string['Authentication_notloggedin1'] = 'Problémy s ověřováním';
 $string['Authentication_notloggedin2'] = 'Nejste přihlášen/a. Aktualizujte stránku pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu: <a href="mailto:%s">%s</a><p>Do e-mailu, prosím uveďte následující debug:</p><div style="margin-left:100px;">%s</div>';
+$string['Authentication_notloggedin2nodebug'] = 'Nejste přihlášen/a. Aktualizujte stránku pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu: <a href="mailto:%s">%s</a>';
 $string['NoLookupConfigured'] = 'Vyhledávání nenastaveno';
 $string['NoLookupConfiguredmessage'] = 'V config souboru nebylo nastaveno žádné vyhledávání. Kontaktujte, prosím, systémového správce.';
 $string['guestbutton'] = 'Dočasný účet';
