@@ -236,7 +236,7 @@ HEADING;
 
       $enc_name = htmlentities($fullname, ENT_COMPAT, $configObject->get('cfg_page_charset'));
       $html .= <<< META
-                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} />{$team_name}: {$enc_name}</label></li>
+                	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} />{$team_id}: {$enc_name}</label></li>
 
 META;
 
