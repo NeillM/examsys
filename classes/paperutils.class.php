@@ -206,7 +206,8 @@ Class PaperUtils {
    */
   public function count_unassigned_papers($user_id, $db) {
     $query = $db->prepare("SELECT count(properties.property_id)"
-      . " FROM properties LEFT JOIN users ON properties.paper_ownerID=users.id"
+      . " FROM properties"
+      . " INNER JOIN users ON properties.paper_ownerID=users.id"
       . " LEFT JOIN papers ON properties.property_id=papers.paper"
       . " LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id"
       . " WHERE paper_ownerID = ?"
@@ -230,7 +231,8 @@ Class PaperUtils {
    */
   public function count_unassigned_questions($user_id, $db) {
     $query = $db->prepare("SELECT count(questions.q_id)"
-      . " FROM questions LEFT JOIN users ON questions.ownerID=users.id"
+      . " FROM questions"
+      . " INNER JOIN users ON questions.ownerID=users.id"
       . " LEFT JOIN questions_modules ON questions.q_id=questions_modules.q_id"
       . " WHERE questions.ownerID = ?"
       . " AND questions_modules.idMod is NULL"
