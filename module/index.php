@@ -83,44 +83,20 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <?php 
+    if ($module != '0') {
+      echo "<script type=\"text/javascript\" src=\"../js/module.js\"></script>";
+    }
+    ?>
+
   <script>
-    function newPaper() {
-      notice = window.open("../paper/new_paper1.php?module=<?php echo $module ?>","paper","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-
-    function newQuestion() {
-      notice = window.open("../question/new.php?module=<?php echo $module ?>","question","width=800,height=500,left="+(screen.width/2-400)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-    
-    function resizeList() {
-      var offset = $('#list').offset();
-      winH = ($(window).height() - offset.top) - 2;
-
-      $('#list').css('height', winH + 'px');
-    }
-
     $(function () {
-      resizeList();
-      
-      $(window).resize(function(){
-				resizeList();
-			});
-
-      $(document).click(function() {
-        hideMenus();
-      });
-      
+   
       $('#addteammember').click(function() {
         notice = window.open("edit_team_popup.php?module=<?php echo $module ?>&calling=paper_list&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>","properties","width=450,height="+(screen.height-200)+",left="+(screen.width/2-325)+",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
         if (window.focus) {
-          notice.focus();
-        }        
+            notice.focus();
+         }
       });
 
     });
@@ -167,7 +143,7 @@ echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forpapers'] . "</span></div></div>\n";
 if ($module != 0) {
   // Don't want new papers created from the Unassigned folder.
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper($module); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper($module); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
 }
 // Question bank section
 echo "<br clear=\"left\">\n";
@@ -194,7 +170,7 @@ foreach ($bank_types as $type_name=>$url) {
 echo "<br clear=\"left\">\n";
 echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forquestions'] . "</span></div></div>\n";
 if ($module != 0) {   // Don't want new questions created from the Unassigned folder.
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion(); return false;\"><img src=\"../artwork/new_question.png\" alt=\"" . $string['newquestion'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion(); return false;\">" . $string['newquestion'] . "</a></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"newQuestion($module); return false;\"><img src=\"../artwork/new_question.png\" alt=\"" . $string['newquestion'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newQuestion($module); return false;\">" . $string['newquestion'] . "</a></div></div>\n";
 }
 
 // User section
