@@ -87,7 +87,7 @@
 <tbody>
 <?php
   $id = 1;
-  $result = $mysqli->prepare("SELECT DATE_FORMAT(updated,'%Y%m%d'), DATE_FORMAT(updated,'%d/%m/%Y'), COUNT(id), SUM(enrolements), SUM(deletions) FROM sms_imports GROUP BY updated ORDER BY updated DESC");
+  $result = $mysqli->prepare("SELECT DATE_FORMAT(updated,'%Y%m%d'), DATE_FORMAT(updated,'%d/%m/%Y'), COUNT(id), IFNULL(SUM(enrolements), 0), IFNULL(SUM(deletions), 0) FROM sms_imports GROUP BY updated ORDER BY updated DESC");
   $result->execute();
   $result->store_result();
   $result->bind_result($updated, $display_updated, $module_no, $enrolement_no, $deletion_no);
