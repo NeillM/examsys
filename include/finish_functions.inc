@@ -929,7 +929,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               echo '</td></tr>';
             }
           }
-          if ($paper[$question]['feedback_right'][$part_id] != '' and $tmp_display_feedback == '1') {
+          if ($paper[$question]['feedback_right'][$tmp_part_id] != '' and $tmp_display_feedback == '1') {
             echo "<tr><td></td><td></td><td></td><td class=\"fback\">" . $paper[$question]['feedback_right'][$tmp_part_id] . "</td></tr>\n";
           }
         }
