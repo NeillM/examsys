@@ -60,7 +60,7 @@
 </div>
 
 <?php
-  makeMenu(array('Questions'=>"{$configObject->get('cfg_root_path')}/question/search.php",'Papers'=>"{$configObject->get('cfg_root_path')}/paper/search.php",'People'=>"{$configObject->get('cfg_root_path')}/users/search.php"));
+  makeMenu(array($string['questions']=>"{$configObject->get('cfg_root_path')}/question/search.php",$string['papers']=>"{$configObject->get('cfg_root_path')}/paper/search.php",$string['people']=>"{$configObject->get('cfg_root_path')}/users/search.php"));
 
   hideMenuScript($menuNo);
 ?>
