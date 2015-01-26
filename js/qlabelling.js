@@ -2091,9 +2091,9 @@ function ql_mouseDragUp(){
 					}
 				}
 			}
-		for (i=this.answerBox.length-1;i>0;i--) 
-			for (j=this.answerBox[i].length-1;j>0;j--)	
-				if (this.answerBox[i][j][1] == 'erase') this.answerBox[i].splice[j];
+		for (i=this.answerBox.length-1;i>=0;i--) 
+			for (j=this.answerBox[i].length-1;j>=0;j--)	
+				if (this.answerBox[i][j][1] == 'erase') this.answerBox[i].splice(j,1);
 				
 		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && label_num_test_length<40) {		
 			next_combo_nr = this.answerBox[this.drag_box_id].length; //nr of last combo for this drag_box_id
@@ -2363,6 +2363,24 @@ function ql_ReturnInfo() {
 		questions_result += this.imglabelHeight +';';
 		questions_result += this.labelMulti +';';
 		questions_result += this.qType +';';
+
+		var label_num_test = [];
+		var label_num_test_length = 0;
+		for (i=0;i<this.answerBox.length;i++) 
+			for (j=0;j<this.answerBox[i].length;j++) {
+				if (this.answerBox[i][j][2]!='') {
+					if (typeof(label_num_test[this.answerBox[i][j][5]+'_'+this.answerBox[i][j][6]+'_'+this.answerBox[i][j][2]]) == 'undefined') {
+						label_num_test[this.answerBox[i][j][5]+'_'+this.answerBox[i][j][6]+'_'+this.answerBox[i][j][2]] = 1;
+						label_num_test_length++;
+					}else{
+						this.answerBox[i][j][1] = 'erase';
+					}
+				}
+			}
+		for (i=this.answerBox.length-1;i>=0;i--) 
+			for (j=this.answerBox[i].length-1;j>=0;j--)	
+				if (this.answerBox[i][j][1] == 'erase') 
+					this.answerBox[i].splice(j,1);
 
 		for (i=0;i<this.answerBox.length;i++) {
 			if (this.labelMulti == 'single') {
