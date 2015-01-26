@@ -188,7 +188,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
   <td align="right"><a href="#" onclick="updateMenu(6);"><?php
-    if (isset($state['menu6']) and $state['menu6'] == 'block') {
+    if (isset($state['menu6']) and $state['menu6'] == 'table') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
     } else {
       echo '<img id="icon6" src="../artwork/down_arrow_icon.gif" width="10" height="9" alt="Show" />';
