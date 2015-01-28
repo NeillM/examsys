@@ -1097,7 +1097,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 					echo "write_string('<param name=\"movie\" value=\"../paper/hotspot_question.swf\" />');\n";
 					echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
 					echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
-					echo "write_string('<embed style=\"z-index:0;\" src=\"../paper/hotspot_question.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($question['q_media_width'] + 435) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+					echo "write_string('<embed style=\"z-index:0;\" src=\"../paper/hotspot_question.swf\" wmode=\"opaque\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($question['q_media_width'] + 435) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
 					echo "write_string('</object>');\n";
 					echo "</script>\n";
 				}
@@ -1182,7 +1182,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 				echo "write_string('<param name=\"movie\" value=\"../paper/label_question.swf\" />');\n";
 				echo "write_string('<param name=\"quality\" value=\"high\" />');\n";
 				echo "write_string('<param name=\"bgcolor\" value=\"" . $bgcolor . "\" />');\n";
-				echo "write_string('<embed style=\"z-index:0;\" src=\"../paper/label_question.swf\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
+				echo "write_string('<embed style=\"z-index:0;\" src=\"../paper/label_question.swf\" wmode=\"opaque\" quality=\"high\" bgcolor=\"" . $bgcolor . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\" swliveconnect=\"true\" id=\"flash" . $question_no . "\" name=\"flash" . $question_no . "\" align=\"middle\" allowScriptAccess=\"always\" type=\"application/x-shockwave-flash\" pluginspage=\"https://www.macromedia.com/go/getflashplayer\" />');\n";
 				echo "write_string('</object>');\n";
 				echo "</script>\n";
 			}
@@ -1228,7 +1228,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       if ($question['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }
-      echo ' quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
+      echo ' wmode="opaque" quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
     ?>
     write_string('</object>');
   </script>
