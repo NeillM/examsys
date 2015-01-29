@@ -316,6 +316,13 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <?php
+
+    if ($userObject->has_role('Staff')) {
+        echo '<script type="text/javascript" src="../js/staff_help.js"></script>';
+    } else {
+        echo '<script type="text/javascript" src="../js/student_help.js"></script>';
+    }
+
     require_once '../include/toprightmenu.inc';
   ?>
 </head>
