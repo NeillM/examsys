@@ -914,7 +914,7 @@ function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $ol
     if ($correct_rank) {
       $mark = ($answered > 0) ? $old_marks_correct : 0;
     } else {
-      $mark = ($answered > 0) ?$old_marks_incorrect : 0;
+      $mark = ($answered > 0) ? $old_marks_incorrect : 0;
     }
   }
 }
