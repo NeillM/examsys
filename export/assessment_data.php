@@ -852,7 +852,7 @@ if ($student_no > 0) {
               if (substr($tmp_exclude,$partID-1,1) == '0') {
                 $csv .= ',';
                 if ($tmp_answers[$partID] != 'u') {
-                  $csv .= str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID]));
+                  $csv .= '"' . str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID])) . '"';
                 }
                 if ($is_random) {
                   $csv .= ',' . $correct_parts[$partID];
