@@ -250,7 +250,7 @@ $paper_type = $propertyObj->get_paper_type();
       $sessiontitle = '';
       if (count($objByModule) > 0) {
         if (isset($objByModule['none_of_the_above']['mapped']) and $objByModule['none_of_the_above']['mapped'] == 1) {
-          echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat\">" . $string['questiononnotmap'] . "</li></ul>\n";
+          echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat\">&nbsp;" . $string['questiononnotmap'] . "</li></ul>\n";
         } else {
           echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-top:5px\">\n";
           foreach ($objByModule as $module => $mappings) {
