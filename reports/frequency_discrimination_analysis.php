@@ -838,24 +838,26 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '00', 2, 2) . "</td></tr>\n";
         }
 
-        echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_1\"";
-        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
-        echo '>';
+        echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td>";
+        $temp_td = "<td id=\"q_" . $ex_no . "_1\"";
+        if ($exclusions->is_question_excluded($q_id)) $temp_td .= ' class="excluded"';
+        $temp_td .=  '>';
         if ($correct_buf[0] == 't') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
           $p = $freq_log[$q_id][1]['t'] / $user_total;
-          echo '<strong>' . $string['True'] . '</strong>';
+          echo '<td><span class="std">' . $std . '</span></td>' . $temp_td . '<strong>' . $string['True'] . '</strong>';
         } else {
           echo $string['True'];
         }
         echo "</td></tr>\n";
-        echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td id=\"q_" . $ex_no . "_2\"";
-        if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
-        echo '>';
+        echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td>";
+        $temp_td = "<td id=\"q_" . $ex_no . "_2\"";
+        if ($exclusions->is_question_excluded($q_id)) $temp_td .= ' class="excluded"';
+        $temp_td .= '>';
         if ($correct_buf[0] == 'f') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
           $p = $freq_log[$q_id][1]['f'] / $user_total;
-          echo '<strong>' . $string['False'] . '</strong>';
+          echo '<td><span class="std">' . $std . '</span></td>' . $temp_td . '<strong>' . $string['False'] . '</strong>';
         } else {
           echo $string['True'];
         }
