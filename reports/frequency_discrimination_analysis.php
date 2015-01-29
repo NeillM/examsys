@@ -1278,6 +1278,9 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
             if ($correct_buf[$i] == $rank_position) {
               if (isset($tmp_std_array[$i])) {
                 $tmp_std = $tmp_std_array[$i];
+              } elseif (isset($tmp_std_array[0]) and !isset($tmp_std)) {
+                // This is the first displayed option in a ranking with the Mark per question marking method.
+                $tmp_std = $tmp_std_array[0];
               } else {
                 $tmp_std = '';
               }
