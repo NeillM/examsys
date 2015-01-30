@@ -16,5 +16,6 @@
 
 require '../lang/' . $language . '/export/assessment_marks.php';
 
-$string['nodata'] = 'Do tego egzaminu nie przystąpił w wyznaczonym czasie żaden student'; 
+$string['nodata'] = 'Do tego egzaminu nie przystąpił w wyznaczonym czasie żaden student';
+$string['error_random'] = 'Answer for random question could not be found';
 ?>

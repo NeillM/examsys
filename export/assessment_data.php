@@ -1149,6 +1149,11 @@ if ($student_no > 0) {
               }
             }
             break;
+          case 'random':
+            // This should only happen if the user answered a question that the user answered has been
+            // unlinked from the random question.
+            $csv .= ',"' . $string['error_random'] . '"';
+            break;
           default:
             if (!isset($excluded[$tmp_question_ID])) {
               $correct_text_parts = explode("\t", $question['correct_text']);

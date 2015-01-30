@@ -17,4 +17,5 @@
 require '../lang/' . $language . '/export/assessment_marks.php';
 
 $string['nodata'] = 'No students took the exam in the selected date range';
+$string['error_random'] = 'Answer for random question could not be found';
 ?>
