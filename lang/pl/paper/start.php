@@ -30,6 +30,7 @@ require_once '../lang/' . $language . '/include/paper_security.inc';
 $string['survey'] = 'Ankieta';
 $string['assessment'] = 'Ocena';
 $string['finish'] = 'Zakończ';
+$string['clarificationscreen'] = 'Ekran %s z %s';
 $string['screen'] = 'Ekran';
 $string['mark'] = 'punkt';
 $string['marks'] = 'punkt/y/ów';
