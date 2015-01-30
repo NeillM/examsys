@@ -52,8 +52,6 @@ while ($result->fetch()) {
   }
   if ($obj_id != '') {
    $sess['objectives'][$obj_id] = $objective;
-   $sess['objectives'][$obj_id] = $objective;
-   $sess['objectives'][$obj_id] = $objective;
   }
 }
 $result->close();
