@@ -39,6 +39,10 @@ require_once '../classes/questionbank.class.php';
 
 $module = check_var('module', 'GET', true, false, true);
 
+if ((int)$module != $module) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 $add_member = false;
 
 if (!isset($module_details) and $_GET['module'] != '0') {
