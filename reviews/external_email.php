@@ -131,12 +131,12 @@ if (isset($_POST['submit'])) {
 
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
-    $headers .= 'From: ' . $userObject->get_email();
+    $headers .= 'From: ' . $userObject->get_email() . "\r\n";
     if (trim($_POST['ccaddress']) != '') {
-      $headers .= 'CC: ' . trim($_POST['ccaddress']);
+      $headers .= 'CC: ' . trim($_POST['ccaddress']) . "\r\n";
     }
     if (trim($_POST['bccaddress']) != '') {
-      $headers .= 'BCC: ' . trim($_POST['ccaddress']);
+      $headers .= 'BCC: ' . trim($_POST['ccaddress']) . "\r\n";
     }
 
     mail($to, $subject, $message, $headers);
