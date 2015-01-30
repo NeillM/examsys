@@ -788,7 +788,9 @@ if ($student_no > 0) {
               if (in_array($tmp_id, $screen_ids)) {
                 $rnd_found = true;
                 $question = get_random_question_details($question, $tmp_id, $mysqli);
-                if ($tmp_id != $tmp_question_ID) {
+                // The id returned will either be that of the question the user answered or the id of the random question.
+                // We are only interested if it is the id of the question the user answered.
+                if ($tmp_id == $question['ID']) {
                   $is_random = true;
                   $tmp_question_ID = $tmp_id;
                 } else {
