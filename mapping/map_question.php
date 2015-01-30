@@ -90,6 +90,19 @@ function display_q($configObject, $target_id, $db) {
   $question_nos[] = $old_q_id;
   echo "</table>\n";
 }
+
+if ($configObject->get('cfg_interactive_qs') == 'html5') {
+    echo "<script>var lang_string = " .  json_encode($jstring) . ";\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+} else {
+    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
+}
 ?>
 <html>
 <head>
