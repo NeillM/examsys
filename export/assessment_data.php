@@ -1181,7 +1181,7 @@ if ($student_no > 0) {
               $csv .= '"';
               if ($is_random) {
                 if ($mode =='numeric') {
-                $csv .= ',"' . ltrim($question['correct'], ',') . '"';
+                  $csv .= ',"' . ltrim($question['correct'], ',') . '"';
                 } else {
                   $csv .= ',"' . $correct_text_parts[ltrim($question['correct'], ',')] . '"';
                 }
