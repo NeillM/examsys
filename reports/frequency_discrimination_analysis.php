@@ -1936,7 +1936,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     $sql = <<<SQL
 SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, o_media,
  o_media_width, o_media_height, score_method, display_method, q_media, q_media_width,
- q_media_height, correct, std
+ q_media_height, correct, '' AS std
 FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id
 WHERE papers.paper = ? AND papers.question=questions.q_id $qids_instring
 ORDER BY screen, display_pos, id_num
