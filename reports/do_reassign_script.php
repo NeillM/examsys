@@ -100,7 +100,7 @@ foreach ($papers as $paper) {
   if ($mysqli->error) {
     $error = true;
   }
-  $result->bind_param('iii', $userID, $temp_userID, $paper['ID']);
+  $result->bind_param('ssi', $userID, $temp_userID, $paper['ID']);
   $result->execute();
   if ($mysqli->error) {
     $error = true;
