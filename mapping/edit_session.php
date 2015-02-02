@@ -37,7 +37,7 @@ if (isset($_GET['folder'])) {
 
 // Get session information
 $result = $mysqli->prepare("SELECT sessions.title, source_url, sessions.calendar_year, sessions.occurrence, obj_id, objective FROM sessions LEFT JOIN objectives ON sessions.identifier=objectives.identifier AND sessions.calendar_year = objectives.calendar_year AND sessions.idMod = objectives.idMod WHERE sessions.idMod = ? and sessions.identifier = ? AND sessions.calendar_year = ? ORDER BY sequence");
-$result->bind_param('iis', $modID, $identifier, $calendar_year);
+$result->bind_param('iss', $modID, $identifier, $calendar_year);
 $result->execute();
 $result->bind_result($title, $source_url, $calendar_year, $occurrence, $obj_id, $objective);
 $sess = array();
@@ -51,8 +51,6 @@ while ($result->fetch()) {
     $sess['occurrence'] = $occurrence;
   }
   if ($obj_id != '') {
-   $sess['objectives'][$obj_id] = $objective;
-   $sess['objectives'][$obj_id] = $objective;
    $sess['objectives'][$obj_id] = $objective;
   }
 }
