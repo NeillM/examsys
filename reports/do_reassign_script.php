@@ -95,6 +95,18 @@ foreach ($papers as $paper) {
   }
   $result->close();
 
+  // Transfer any student toilet break.
+  $result = $mysqli->prepare("UPDATE toilet_breaks SET userID = ? WHERE userID = ? AND paper_id = ?");
+  if ($mysqli->error) {
+    $error = true;
+  }
+  $result->bind_param('iii', $userID, $temp_userID, $paper['ID']);
+  $result->execute();
+  if ($mysqli->error) {
+    $error = true;
+  }
+  $result->close();
+
   if ($error === true) {
     break;
   }
