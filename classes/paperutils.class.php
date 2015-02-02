@@ -662,5 +662,24 @@ Class PaperUtils {
     
     return $recent;
   }
+
+  /**
+   * Returns the number of screens in a paper.
+   *
+   * @param int $paperID - id of paper.
+   * @param object $db  - Database connection.
+   * @return int - number of screens in paper.
+   */
+  public function get_num_screens($paperID, $db) {
+
+    $result = $db->prepare("SELECT MAX(screen) from papers where paper = ?");
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($maxscreen);
+    $result->fetch();
+    $result->close();
+
+    return $maxscreen;
+  }
   
 }

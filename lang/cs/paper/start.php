@@ -31,6 +31,7 @@ $string['survey'] = 'Průzkum';
 $string['assessment'] = 'Hodnocená zkouška';
 $string['finish'] = 'Konec';
 $string['screen'] = 'Obrazovka';
+$string['clarificationscreen'] = 'Obrazovka %s z %s';
 $string['mark'] = 'Hodnocení';
 $string['marks'] = 'Hodnocení';
 $string['note'] = 'Poznámka';
