@@ -73,11 +73,7 @@ function add_random_column_standard($i, $sec, &$csv, $subsec = ''){
 }
 
 function fix_correct($q_type, $correct, $old_correct, $option_text) {
-  if ($q_type == 'mcq' or $q_type == 'enhancedcalc') {
-    $old_correct = ',' . $correct;
-  } elseif ($q_type != 'extmatch' and $q_type != 'matrix') {
-    $old_correct .= ',' . $correct;
-  } elseif ($q_type == 'blank') {
+  if ($q_type === 'blank') {
     // Fill in the blank questions only ever have one entry in the option table,
     // the blanks that need to be filled in are stored in the option_text field of the table.
     $old_correct = '';
@@ -89,10 +85,16 @@ function fix_correct($q_type, $correct, $old_correct, $option_text) {
       $split2 = explode(',', substr($split1[$i],1,strpos($split1[$i],'[/blank]')-1));
       $old_correct .= ',' . $split2[0];
     }
+  } else if ($q_type == 'mcq' or $q_type == 'enhancedcalc') {
+    $old_correct = ',' . $correct;
+  } elseif ($q_type != 'extmatch' and $q_type != 'matrix') {
+    $old_correct .= ',' . $correct;
   } else {
     $old_correct = ',' . str_replace('|',",",$correct);
     // If there is a comma at the end remove it.
-    if (substr($old_correct,-1,1) == ',') $old_correct = substr($old_correct,0,strlen($old_correct)-1);
+    if (substr($old_correct, -1, 1) == ',') {
+      $old_correct = substr($old_correct, 0, strlen($old_correct) - 1);
+    }
   }
 
   return $old_correct;
@@ -829,9 +831,8 @@ if ($student_no > 0) {
             }
             break;
           case 'blank':
-            $correct_parts = explode(',', $question['correct']);
+            $correct_parts = explode(',', $question['correct_text']);
             $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
-            $correct_parts = explode(',',$question['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
               if (substr($tmp_exclude,$partID-1,1) == '0') {
                 $csv .= ',';
@@ -1188,4 +1189,3 @@ if ($student_no > 0) {
 }
 
 echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
-?>
