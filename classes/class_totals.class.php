@@ -1344,16 +1344,24 @@ class ClassTotals {
         if (isset($this->user_modules[$userID]['idMod'])) {
           $this->user_results[$metadataID]['module'] = $this->user_modules[$userID]['idMod'];
         } else {
-          $this->user_results[$old_metadataID]['module'] = '';
+          // No module details set for this user.  Perhaps it is an unassigned guest user account.
+          $this->user_results[$metadataID]['module'] = '';
         }
 
+        // Write the user results for the user that was iterated over previously using $old_metadataID
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
         $user_duration = 0;
         $marking_complete = 1;
       } else if (!$old_metadataID) {
-        $this->user_results[$metadataID]['module'] = $this->user_modules[$userID]['idMod'];
+        // This is the first record being iterated over so $old_metadataID is set to 0.
+        if (isset($this->user_modules[$userID]['idMod'])) {
+          $this->user_results[$metadataID]['module'] = $this->user_modules[$userID]['idMod'];
+        } else {
+          // No module details set for this user.  Perhaps it is an unassigned guest user account.
+          $this->user_results[$metadataID]['module'] = '';
+        }
       }
 
       $this->user_results[$metadataID]['questions']++;
