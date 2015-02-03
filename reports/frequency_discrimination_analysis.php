@@ -573,24 +573,24 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         if (!isset($bottom_log[$q_id][1]['incorrect'])) $bottom_log[$q_id][1]['incorrect'] = 0;
 
         echo "<table>\n";
-        $t = number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0);
-        $u = number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0);
-        $l = number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0);
+        $t = ($user_total != 0) ? number_format(($freq_log[$q_id][1]['correct']/$user_total)*100,0) : 0;
+        $u = ($candidate_no != 0) ? number_format(($top_log[$q_id][1]['correct']/$candidate_no)*100,0) : 0;
+        $l = ($candidate_no != 0) ? number_format(($bottom_log[$q_id][1]['correct']/$candidate_no)*100,0) : 0;
         echo "<tr style=\"font-weight:bold\"><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td><td>". $string['FullMarks'] . "</td></tr>\n";
 
-        $partial_t = number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0);
-        $partial_u = number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0);
-        $partial_l = number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0);
+        $partial_t = ($user_total != 0) ? number_format(($freq_log[$q_id][1]['partial']/$user_total)*100,0) : 0;
+        $partial_u = ($candidate_no != 0) ? number_format(($top_log[$q_id][1]['partial']/$candidate_no)*100,0) : 0;
+        $partial_l = ($candidate_no != 0) ? number_format(($bottom_log[$q_id][1]['partial']/$candidate_no)*100,0) : 0;
         echo "<tr><td>t=$partial_t%</td><td>u=$partial_u%</td><td>l=$partial_l%</td><td>". $string['PartialMarks'] . "</td></tr>\n";
 
-        $incorrect_t = number_format(($freq_log[$q_id][1]['incorrect']/$user_total)*100,0);
-        $incorrect_u = number_format(($top_log[$q_id][1]['incorrect']/$candidate_no)*100,0);
-        $incorrect_l = number_format(($bottom_log[$q_id][1]['incorrect']/$candidate_no)*100,0);
+        $incorrect_t = ($user_total != 0) ? number_format(($freq_log[$q_id][1]['incorrect']/$user_total)*100,0) : 0;
+        $incorrect_u = ($candidate_no != 0) ? number_format(($top_log[$q_id][1]['incorrect']/$candidate_no)*100,0) : 0;
+        $incorrect_l = ($candidate_no != 0) ? number_format(($bottom_log[$q_id][1]['incorrect']/$candidate_no)*100,0) : 0;
         echo "<tr><td>t=$incorrect_t%</td><td>u=$incorrect_u%</td><td>l=$incorrect_l%</td><td>". $string['Incorrect'] . "</td></tr>\n";
         echo "</table>\n";
 
         echo "<table>\n";
-        if ($freq_log[$q_id]['totalpos'] == 0) {
+        if (!isset($freq_log[$q_id]) or $freq_log[$q_id]['totalpos'] == 0) {
           $p = 0;
         } else {
           $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
@@ -697,14 +697,14 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
             $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $unique_blank_options);
 
           }
-          $t = number_format(($tmp_correct_no/$user_total)*100,0);
+          $t = ($user_total != 0) ? number_format(($tmp_correct_no/$user_total)*100,0) : 0;
           
           $d_no++;
           $d_total += $d;
           $html = '';
 
-          $u = number_format(($tmp_top_no / $candidate_no) * 100, 0);
-          $l = number_format(($tmp_bottom_no / $candidate_no) * 100, 0);
+          $u = ($candidate_no != 0) ? number_format(($tmp_top_no / $candidate_no) * 100, 0) : 0;
+          $l = ($candidate_no != 0) ? number_format(($tmp_bottom_no / $candidate_no) * 100, 0) : 0;
 
           echo "<tr><td>" . chr($i+64) . ".</td>";
           if ($score_method == 'Mark per Option') {
@@ -715,7 +715,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
               echo '<td>' . excludeButton($ex_no, $q_id, 0, 1, 1) . '</td>';
             }
           }
-          echo "<td>" . pStats($tmp_correct_no / $user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td>";
+          $p = ($user_total != 0) ? $tmp_correct_no / $user_total : 0;
+          echo "<td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=$t%</td><td>u=$u%</td><td>l=$l%</td>";
 
           if (isset($tmp_std_array[$i-1])) {
             echo '<td class="std">' . $tmp_std_array[$i-1] . '</td>';
@@ -775,11 +776,18 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           echo "</td>";
           if ($correct_buf[$i-1] == 't') {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'t');
-            echo "<td>" . pStats($freq_log[$q_id][$i]['t']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['t']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $string['True'] . "</strong></td>";
+            $p = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][$i]['t']/$user_total : 0;
+            $ptop = (isset($top_log[$q_id]) and $candidate_no != 0) ? $top_log[$q_id][$i]['t']/$candidate_no : 0;
+            $pbottom = (isset($bottom_log[$q_id]) and $candidate_no != 0) ? $bottom_log[$q_id][$i]['t']/$candidate_no : 0;
+            $text = $string['True'];
           } else {
             $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],$i,'f');
-            echo "<td>" . pStats($freq_log[$q_id][$i]['f']/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($freq_log[$q_id][$i]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][$i]['f']/$candidate_no)*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $string['False'] . "</strong></td>";
+            $p = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][$i]['f']/$user_total : 0;
+            $ptop = (isset($top_log[$q_id]) and $candidate_no != 0) ? $top_log[$q_id][$i]['f']/$candidate_no : 0;
+            $pbottom = (isset($bottom_log[$q_id]) and $candidate_no != 0) ? $bottom_log[$q_id][$i]['f']/$candidate_no : 0;
+            $text = $string['False'];
           }
+          echo "<td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format($p*100,0) . "%</td><td>u=" . number_format($ptop*100,0) . "%</td><td>l=" . number_format($pbottom*100,0) . "%</td><td><span class=\"std\">" . $tmp_std_array[$std_part] . "</span></td><td><strong>" . $text . "</strong></td>";
           $std_part++;
           echo "<td id=\"q_" . $ex_no . "_1\"";
           if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
@@ -792,17 +800,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 	
         $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
 				
-        if (isset($freq_log[$q_id][1]['correct'])) {
+        if (isset($freq_log[$q_id][1]['correct']) and $user_total != 0) {
           $t = number_format(($freq_log[$q_id][1]['correct'] / $user_total)*100, 0);
         } else {
           $t = 0;
         }
-        if (isset($top_log[$q_id][1]['correct'])) {
+        if (isset($top_log[$q_id][1]['correct']) and $candidate_no != 0) {
           $u = number_format(($top_log[$q_id][1]['correct'] / $candidate_no)*100, 0);
         } else {
           $u = 0;
         }
-        if (isset($bottom_log[$q_id][1]['correct'])) {
+        if (isset($bottom_log[$q_id][1]['correct']) and $candidate_no != 0) {
           $l = number_format(($bottom_log[$q_id][1]['correct'] / $candidate_no)*100, 0);
         } else {
           $l = 0;
@@ -820,7 +828,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "<td><input type=\"button\" onclick=\"return clacCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
-        echo "<tr><td></td><td>" . pStats($freq_log[$q_id][1]['correct']/$user_total, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
+        $p = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][1]['correct']/$user_total : 0;
+        echo "<tr><td></td><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
         break;
       case 'true_false':
         if (!isset($log[$q_id][1]['t'])) $log[$q_id][1]['t'] = 0;
@@ -838,25 +847,31 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           echo "<tr><td colspan=\"4\">" . excludeButton($ex_no, $q_id, '00', 2, 2) . "</td></tr>\n";
         }
 
-        echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['t']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['t']/$candidate_no)*100,0) . "%</td>";
+        $ptrue = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][1]['t']/$user_total : 0;
+        $ptoptrue = (isset($top_log[$q_id]) and $candidate_no != 0) ? $top_log[$q_id][1]['t']/$candidate_no : 0;
+        $pbottomtrue = (isset($bottom_log[$q_id]) and $candidate_no != 0) ? $bottom_log[$q_id][1]['t']/$candidate_no : 0;
+        echo "<tr><td>t=" . number_format($ptrue*100,0) . "%</td><td>u=" . number_format($ptoptrue*100,0) . "%</td><td>l=" . number_format($pbottomtrue*100,0) . "%</td>";
         $temp_td = "<td id=\"q_" . $ex_no . "_1\"";
         if ($exclusions->is_question_excluded($q_id)) $temp_td .= ' class="excluded"';
         $temp_td .=  '>';
         if ($correct_buf[0] == 't') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'t');
-          $p = $freq_log[$q_id][1]['t'] / $user_total;
+          $p = $ptrue;
           echo '<td><span class="std">' . $std . '</span></td>' . $temp_td . '<strong>' . $string['True'] . '</strong>';
         } else {
           echo $string['True'];
         }
         echo "</td></tr>\n";
-        echo "<tr><td>t=" . number_format(($freq_log[$q_id][1]['f']/$user_total)*100,0) . "%</td><td>u=" . number_format(($top_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($bottom_log[$q_id][1]['f']/$candidate_no)*100,0) . "%</td>";
+        $pfalse = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][1]['f']/$user_total : 0;
+        $ptopfalse = (isset($top_log[$q_id]) and $candidate_no != 0) ? $top_log[$q_id][1]['f']/$candidate_no : 0;
+        $pbottomfalse = (isset($bottom_log[$q_id]) and $candidate_no != 0) ? $bottom_log[$q_id][1]['f']/$candidate_no : 0;
+        echo "<tr><td>t=" . number_format($pfalse*100,0) . "%</td><td>u=" . number_format($ptopfalse*100,0) . "%</td><td>l=" . number_format($pbottomfalse*100,0) . "%</td>";
         $temp_td = "<td id=\"q_" . $ex_no . "_2\"";
         if ($exclusions->is_question_excluded($q_id)) $temp_td .= ' class="excluded"';
         $temp_td .= '>';
         if ($correct_buf[0] == 'f') {
           $d = calcDiscrimination($candidate_no,$top_log[$q_id],$bottom_log[$q_id],1,'f');
-          $p = $freq_log[$q_id][1]['f'] / $user_total;
+          $p = $pfalse;
           echo '<td><span class="std">' . $std . '</span></td>' . $temp_td . '<strong>' . $string['False'] . '</strong>';
         } else {
           echo $string['True'];
@@ -944,16 +959,19 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
               $tmp_correct_no = (isset($freq_log[$q_id][$individual_coord][$text_only])) ? $freq_log[$q_id][$individual_coord][$text_only] : 0;
               $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$text_only])) ? $top_log[$q_id][$individual_coord][$text_only] : 0;
               $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$text_only])) ? $bottom_log[$q_id][$individual_coord][$text_only] : 0;
+              $p = ($user_total != 0) ? $tmp_correct_no/$user_total : 0;
+              $ptop = ($candidate_no != 0) ? $tmp_top_no/$candidate_no : 0;
+              $pbottom = ($candidate_no != 0) ? $tmp_bottom_no/$candidate_no : 0;
               if ($score_method == 'Mark per Option') {
                 if ($exclusions->is_question_excluded($q_id)) {
                   $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $i-1);
-                  echo "<td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
+                  echo "<td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format($p*100,0) . "%</td><td>u=" . number_format(($ptop)*100,0) . "%</td><td>l=" . number_format($pbottom*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
                 } else {
-                  echo "<td>" . excludeButton($ex_no, $q_id, '', 1, 1) . "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
+                  echo "<td>" . excludeButton($ex_no, $q_id, '', 1, 1) . "</td><td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format($p*100,0) . "%</td><td>u=" . number_format(($ptop)*100,0) . "%</td><td>l=" . number_format($pbottom*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td id=\"q_" . $ex_no . "_1\"";
                 }
                 if ($exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
               } else {
-                echo "<td></td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
+                echo "<td></td><td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format($p*100,0) . "%</td><td>u=" . number_format(($ptop)*100,0) . "%</td><td>l=" . number_format($pbottom*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
               }
               echo ">";
               if (strpos(strtolower($individual_option),'.jpg') !== false or strpos(strtolower($individual_option),'.jpeg') !== false or strpos(strtolower($individual_option),'.gif') !== false or strpos(strtolower($individual_option),'.png') !== false) {
@@ -1074,15 +1092,18 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           $tmp_correct_no = (isset($freq_log[$q_id][$i][1])) ? $freq_log[$q_id][$i][1] : 0;
           $tmp_top_no = (isset($top_log[$q_id][$i][1])) ? $top_log[$q_id][$i][1] : 0;
           $tmp_bottom_no = (isset($bottom_log[$q_id][$i][1])) ? $bottom_log[$q_id][$i][1] : 0;
+          $p = ($user_total != 0) ? $tmp_correct_no/$user_total : 0;
+          $ptop = ($candidate_no != 0) ? $tmp_top_no/$candidate_no : 0;
+          $pbottom = ($candidate_no != 0) ? $tmp_bottom_no/$candidate_no : 0;
           if ($exclusions->is_question_excluded($q_id)) {
             echo "<td>";
             if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, $exclusions->get_exclusion_part_by_qid($q_id, $i-1), 1, 1);
-            echo "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
+            echo "</td><td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format($p*100,0) . "%</td><td>u=" . number_format($ptop*100,0) . "%</td><td>l=" . number_format($pbottom*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_1\"";
           } else {
             echo "<td>";
             if ($score_method == 'Mark per Option') echo excludeButton($ex_no, $q_id, '', 1, 1);
-            echo "</td><td>" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
+            echo "</td><td>" . pStats($p, $q_id, $i) . "</td><td>" . dStats($d, $q_id, $i) . "</td><td>t=" . number_format($p*100,0) . "%</td><td>u=" . number_format($ptop*100,0) . "%</td><td>l=" . number_format($pbottom*100,0) . "%</td><td><span class=\"std\">$std_rating</span></td><td";
             if ($score_method == 'Mark per Option') echo " id=\"q_" . $ex_no . "_1\"";
           }
           if ($score_method == 'Mark per Option' and $exclusions->is_question_excluded($q_id) and $exclusions->get_exclusion_part_by_qid($q_id, $i-1) == '1') echo ' class="excluded"';
@@ -1098,7 +1119,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "</tr>\n";
         echo "<tr>\n";
         for ($i=1; $i<count($scale); $i++) {
-          if (isset($freq_log[$q_id][1][$i])) {
+          if (isset($freq_log[$q_id][1][$i]) and $user_total != 0) {
             $t = number_format(($freq_log[$q_id][1][$i]/$user_total)*100,0);
           } else {
             $t = 0;
@@ -1117,17 +1138,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $i = 0;
         foreach ($options as $individual_option) {
           $i++;
-          if (isset($freq_log[$q_id][1][$i])) {
+          if (isset($freq_log[$q_id][1][$i]) and $user_total != 0) {
             $t = number_format(($freq_log[$q_id][1][$i]/$user_total)*100,0);
           } else {
             $t = 0;
           }
-          if (isset($top_log[$q_id][1][$i])) {
+          if (isset($top_log[$q_id][1][$i]) and $candidate_no != 0) {
             $u = number_format(($top_log[$q_id][1][$i]/$candidate_no)*100,0);
           } else {
             $u = 0;
           }
-          if (isset($bottom_log[$q_id][1][$i])) {
+          if (isset($bottom_log[$q_id][1][$i]) and $candidate_no != 0) {
             $l = number_format(($bottom_log[$q_id][1][$i]/$candidate_no)*100,0);
           } else {
             $l = 0;
@@ -1150,17 +1171,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           echo "</td></tr>\n";
         }
 				
-				if (isset($freq_log[$q_id][1]['a'])) {
+				if (isset($freq_log[$q_id][1]['a']) and $user_total != 0) {
 					$t = number_format(($freq_log[$q_id][1]['a']/$user_total)*100,0);
 				} else {
 					$t = 0;
 				}
-				if (isset($top_log[$q_id][1]['a'])) {
+				if (isset($top_log[$q_id][1]['a']) and $candidate_no != 0) {
 					$u = number_format(($top_log[$q_id][1]['a']/$candidate_no)*100,0);
 				} else {
 					$u = 0;
 				}
-				if (isset($bottom_log[$q_id][1]['a'])) {
+				if (isset($bottom_log[$q_id][1]['a']) and $candidate_no != 0) {
 					$l = number_format(($bottom_log[$q_id][1]['a']/$candidate_no)*100,0);
 				} else {
 					$l = 0;
@@ -1168,7 +1189,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 				echo "<tr><td class=\"grey\">t=" . $t . "%</td><td class=\"grey\">u=" . $u . "%</td><td class=\"grey\">l=" . $l . "%</td><td></td><td style=\"color:#C00000\">&lt;abstain&gt;</td></tr>\n";
 					
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-        echo "<tr><td>" . pStats($tmp_correct_no/$user_total, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
+        $p = ($user_total != 0) ? $tmp_correct_no/$user_total : 0;
+        echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'mrq':
         if ($exclusions->is_question_excluded($q_id)) {
@@ -1182,17 +1204,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         foreach ($options as $individual_option) {
           $i++;
           if (!isset($log[$q_id][$i]['y'])) $log[$q_id][$i]['y'] = 0;
-          if (isset($freq_log[$q_id][$i]['y'])) {
+          if (isset($freq_log[$q_id][$i]['y']) and $user_total != 0) {
             $t = number_format(($freq_log[$q_id][$i]['y']/$user_total)*100,0);
           } else {
             $t = 0;
           }
-          if (isset($top_log[$q_id][$i]['y'])) {
+          if (isset($top_log[$q_id][$i]['y']) and $candidate_no != 0) {
             $u = number_format(($top_log[$q_id][$i]['y']/$candidate_no)*100,0);
           } else {
             $u = 0;
           }
-          if (isset($bottom_log[$q_id][$i]['y'])) {
+          if (isset($bottom_log[$q_id][$i]['y']) and $candidate_no != 0) {
             $l = number_format(($bottom_log[$q_id][$i]['y']/$candidate_no)*100,0);
           } else {
             $l = 0;
@@ -1220,17 +1242,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         }
 				
 				// Abstain
-        if (isset($freq_log[$q_id]['a'])) {
+        if (isset($freq_log[$q_id]['a']) and $user_total != 0) {
 					$t = number_format(($freq_log[$q_id]['a']/$user_total)*100,0);
         } else {
 					$t = 0;
 				}
-				if (isset($top_log[$q_id]['a'])) {
+				if (isset($top_log[$q_id]['a']) and $candidate_no != 0) {
 					$u = number_format(($top_log[$q_id]['a']/$candidate_no)*100,0);
         } else {
 					$u = 0;
 				}
-        if (isset($bottom_log[$q_id]['a'])) {
+        if (isset($bottom_log[$q_id]['a']) and $candidate_no != 0) {
 					$l = number_format(($bottom_log[$q_id]['a']/$candidate_no)*100,0);
 				} else {
 					$l = 0;
@@ -1323,7 +1345,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $tmp_correct_no = (isset($top_log[$q_id]['all_correct'])) ? $top_log[$q_id]['all_correct'] : 0;
         $tmp_bottom_no = (isset($bottom_log[$q_id]['all_correct'])) ? $bottom_log[$q_id]['all_correct'] : 0;
         echo "<tr><td><strong>u=" . number_format(($tmp_correct_no/$candidate_no)*100,0) . "%</strong></td><td><strong>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</strong></td><td><span class=\"std\">" . $std_val . "</span></td><td style=\"font-weight:bold\">". $string['AllItemsCorrect'] . "</td></tr>\n";
-        echo "<tr><td>" . pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
+        $p = (isset($freq_log[$q_id]) and $freq_log[$q_id]['totalpos'] != 0) ? $freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'] : 0;
+        echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'sct':
         if ($exclusions->is_question_excluded($q_id)) {
@@ -1351,7 +1374,10 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           }
 
           $correct_class = ($correct_answer_no  == $i) ? ' correct' : '';
-          echo "<tr class=\"grey{$correct_class}\"><td>t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td><td>u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td><td>l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td><td></td>";
+          $percent_correct = ($user_total != 0) ? $tmp_correct_no/$user_total : 0;
+          $percent_top = ($candidate_no != 0) ? $tmp_top_no/$candidate_no : 0;
+          $percent_bottom = ($candidate_no != 0) ? $tmp_bottom_no/$candidate_no : 0;
+          echo "<tr class=\"grey{$correct_class}\"><td>t=" . number_format($percent_correct*100,0) . "%</td><td>u=" . number_format($percent_top*100,0) . "%</td><td>l=" . number_format($percent_bottom*100,0) . "%</td><td></td>";
           echo "<td id=\"q_" . $ex_no . "_" . $i . "\"";
           if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
           echo ">$individual_option</td></tr>\n";
@@ -1362,7 +1388,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         } else {
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
         }
-        $p = ($freq_log[$q_id]['totalpos'] > 0) ? $freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'] : 0;
+        $p = (isset($freq_log[$q_id]) and $freq_log[$q_id]['totalpos'] > 0) ? $freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'] : 0;
 
         echo "<tr><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"3\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
