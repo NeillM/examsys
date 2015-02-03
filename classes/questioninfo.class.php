@@ -120,7 +120,9 @@ Class question_info {
     $performance_array = question_info::question_performance($q_id, $db);
     
     foreach ($performance_array as $paper => $performance) {
-      echo "<tr><td><img src=\"../artwork/" . $performance['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
+      if (array_key_exists('icon', $performance)) {
+        echo "<tr><td><img src=\"../artwork/" . $performance['icon'] . "\" width=\"16\" height=\"16\" border=\"0\" alt=\"0\" /></td>";
+      }
       echo "<td><a href=\"\" onclick=\"loadPaper('$paper')\">" . $performance['title'] . "</a></td>";
       echo "<td class=\"num\">" . $performance['screen'] . "</td>";
       
