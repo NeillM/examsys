@@ -29,6 +29,9 @@ Options -Indexes
     </FilesMatch>
 </ifModule>
 
+# Redirect old paper links
+Redirect /user_index.php /paper/user_index.php
+
 ##
 ## Down for maintenance code - uncomment during upgrades
 ##
