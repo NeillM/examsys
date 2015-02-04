@@ -949,15 +949,15 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
             if ($paper[$question]['correct_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"4\">" . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
             }
           } else {
             if ($paper[$question]['incorrect_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['incorrect_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"4\">" . nl2br($paper[$question]['incorrect_fback']) . "</td></tr>\n";
             } elseif ($paper[$question]['correct_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"4\">" . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
             }
           }
         }
@@ -2577,9 +2577,8 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
     
     $dateformat = $configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php');
 
-    if (!is_null($start_date)) {
-      $html .= "<tr><td>" . $string['started'] . "</td><td style=\"text-align:right\">" . $start_date->format($dateformat) . "</td></tr>";
-    }
+    
+    $html .= "<tr><td>" . $string['started'] . "</td><td style=\"text-align:right\">" . $start_date->format($dateformat) . "</td></tr>";
     if (!is_null($finish_date)) {
       $html .= "<tr><td>" . $string['finished'] . "</td><td style=\"text-align:right\">" . $finish_date->format($dateformat) . "</td></tr>";
     }
