@@ -1048,7 +1048,11 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $layers = explode('|', $correct);
         $coords = '';
         for ($i = 1; $i <= count($layers); $i++) {
-          $coords .= $freq_log[$q_id][$i]['coords'] . '|';
+          if (isset($freq_log[$q_id][$i]['coords'])) {
+            $coords .= $freq_log[$q_id][$i]['coords'] . '|';
+          } else {
+            $coords .= '|';
+          }
         }
         $coords = rtrim($coords, '|');
 
@@ -1431,7 +1435,9 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     $bottom_words = array_csort($bottom_words,$sortby,$ordering);
 
     echo "<tr><td colspan=\"2\"><strong>" . $string['TopGroup'] . ":</strong></td><td colspan=\"2\"><strong>" . $string['BottomGroup'] . ":</strong></td></tr>\n";
-    echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
+    $mean_word_count_top = ($candidate_no != 0) ? $top_log[$q_id]['word_count'] / $candidate_no : 0;
+    $mean_word_count_bottom = ($candidate_no != 0) ? $bottom_log[$q_id]['word_count'] / $candidate_no : 0;
+    echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($mean_word_count_top) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($mean_word_count_bottom) . ")</td></tr>";
     for ($i=0; $i<40; $i++) {
       if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
         echo "<tr>";
@@ -1449,7 +1455,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
       }
     }
 
-    if ($top_log[$q_id]['totalpos'] == 0 or $bottom_log[$q_id]['totalpos'] == 0) {
+    if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
       $d = 0;
     } else {
       $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
