@@ -121,6 +121,8 @@ $string['markallquestions'] = 'Označit všechny otázky';
 $string['exportraf'] = 'Exportovat jako Rog&#333; Assessment formát';
 $string['importraf'] = 'Importovat jako Rog&#333; Assessment formát';
 $string['importexport'] = 'Import/Export';
-$string['papers'] = 'Papers';
+$string['questions'] = 'Úlohy';
+$string['papers'] = 'Dokumenty';
+$string['people'] = 'Lidé';
 $string['namewarning'] = 'This name is already being used by an existing paper!';
 ?>

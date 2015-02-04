@@ -78,7 +78,7 @@
 
 
 <?php
-  makeMenu(array('Questions'=>"{$configObject->get('cfg_root_path')}/question/search.php?module=$module",'Papers'=>"{$configObject->get('cfg_root_path')}/paper/search.php?module=$module",'People'=>"{$configObject->get('cfg_root_path')}/users/search.php?module=$module"));
+  makeMenu(array($string['questions']=>"{$configObject->get('cfg_root_path')}/question/search.php?module=$module",$string['papers']=>"{$configObject->get('cfg_root_path')}/paper/search.php?module=$module",$string['people']=>"{$configObject->get('cfg_root_path')}/users/search.php?module=$module"));
 
   hideMenuScript($menuNo);
 ?>
