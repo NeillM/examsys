@@ -58,18 +58,9 @@ function get_random_question_details($question, $rand_id, $mysqli) {
     $question['ID'] = $q_id;
     $question['type'] = $q_type;
     $question['score_method'] = $score_method;
-    $question['correct'] = fix_correct($q_type, $correct, $question['correct']);
+    $question['correct'] = fix_correct($q_type, $correct, $question['correct'], $option_text);
     $question['option_text'] = $option_text;
     $question['correct_text'] .= "\t" . $option_text;
-  }
-  if ($question['type'] == 'blank') {
-    $old_correct = '';
-    $split1 = explode('[blank', $question['option_text']);
-    for ($i=1; $i<count($split1); $i++) {
-      $split2 = explode(',', substr($split1[$i], 1, strpos($split1[$i], '[/blank]') - 1));
-      $old_correct .= ',' . $split2[0];
-    }
-    $question['correct'] = $old_correct;
   }
   $result->close();
 
@@ -81,14 +72,29 @@ function add_random_column_standard($i, $sec, &$csv, $subsec = ''){
   $csv .= ',Q' . ($i+1) . chr($sec+64) . $subsec . ':correct';
 }
 
-function fix_correct($q_type, $correct, $old_correct) {
-  if ($q_type == 'mcq' or $q_type == 'enhancedcalc') {
+function fix_correct($q_type, $correct, $old_correct, $option_text) {
+  if ($q_type === 'blank') {
+    // Fill in the blank questions only ever have one entry in the option table,
+    // the blanks that need to be filled in are stored in the option_text field of the table.
+    $old_correct = '';
+    // All of the areas a student needs to fill in are surrounded by [blank][/blank]
+    // with each option displayed to a student as a comma separated list.
+    $split1 = explode('[blank', $option_text);
+    for ($i=1; $i<count($split1); $i++) {
+      // The first entry in the comma separated list is the correct answer.
+      $split2 = explode(',', substr($split1[$i],1,strpos($split1[$i],'[/blank]')-1));
+      $old_correct .= ',' . $split2[0];
+    }
+  } else if ($q_type == 'mcq' or $q_type == 'enhancedcalc') {
     $old_correct = ',' . $correct;
   } elseif ($q_type != 'extmatch' and $q_type != 'matrix') {
     $old_correct .= ',' . $correct;
   } else {
     $old_correct = ',' . str_replace('|',",",$correct);
-    if (substr($old_correct,-1,1) == ',') $old_correct = substr($old_correct,0,strlen($old_correct)-1);
+    // If there is a comma at the end remove it.
+    if (substr($old_correct, -1, 1) == ',') {
+      $old_correct = substr($old_correct, 0, strlen($old_correct) - 1);
+    }
   }
 
   return $old_correct;
@@ -181,21 +187,11 @@ while ($result->fetch()) {
       $old_random_qids = array();
     }
     $question_no++;
-    if ($old_q_type == 'blank') {
-      $old_correct = '';
-      $split1 = explode('[blank', $old_option_text);
-      for ($i=1; $i<count($split1); $i++) {
-        $split2 = explode(',', substr($split1[$i],1,strpos($split1[$i],'[/blank]')-1));
-        $old_correct .= ',' . $split2[0];
-      }
-      $paper_buffer[$question_no-1]['correct'] = $old_correct;
-    }
-    if ($q_type != 'extmatch' and $q_type != 'matrix') {
-      $old_correct = ',' . $correct;
-    }
     $old_correct_text = '';
+    $old_correct = fix_correct($q_type, $correct, '', $option_text);
   } else {
-    $old_correct = fix_correct($q_type, $correct, $old_correct);
+    // A seperate option for the same question as the last loop.
+    $old_correct = fix_correct($q_type, $correct, $old_correct, $option_text);
   }
   $old_correct_text .= "\t" . $option_text;
 
@@ -222,18 +218,6 @@ if ($old_q_type == 'random') {
   $paper_buffer[$question_no]['rand_ids'] = $old_random_qids;
 }
 $question_no++;
-if ($old_q_type == 'blank') {
-  $old_correct = '';
-  $split1 = explode('[blank', $old_option_text);
-  for ($i=1; $i<count($split1); $i++) {
-    $split2 = explode(',', substr($split1[$i],1,strpos($split1[$i],'[/blank]')-1));
-    $old_correct .= ',' . $split2[0];
-  }
-  $paper_buffer[$question_no-1]['correct'] = $old_correct;
-}
-if ($q_type != 'extmatch' and $q_type != 'matrix') {
-  $old_correct = ',' . $correct;
-}
 $paper_title = $propertyObj->get_paper_title();
 
 header('Pragma: public');
@@ -806,7 +790,9 @@ if ($student_no > 0) {
               if (in_array($tmp_id, $screen_ids)) {
                 $rnd_found = true;
                 $question = get_random_question_details($question, $tmp_id, $mysqli);
-                if ($tmp_id != $tmp_question_ID) {
+                // The id returned will either be that of the question the user answered or the id of the random question.
+                // We are only interested if it is the id of the question the user answered.
+                if ($tmp_id == $question['ID']) {
                   $is_random = true;
                   $tmp_question_ID = $tmp_id;
                 } else {
@@ -847,12 +833,11 @@ if ($student_no > 0) {
           case 'blank':
             $correct_parts = explode(',', $question['correct']);
             $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
-            $correct_parts = explode(',',$question['correct']);
             for ($partID=1; $partID<count($correct_parts); $partID++) {
               if (substr($tmp_exclude,$partID-1,1) == '0') {
                 $csv .= ',';
                 if ($tmp_answers[$partID] != 'u') {
-                  $csv .= str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID]));
+                  $csv .= '"' . str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID])) . '"';
                 }
                 if ($is_random) {
                   $csv .= ',' . $correct_parts[$partID];
@@ -1165,6 +1150,11 @@ if ($student_no > 0) {
               }
             }
             break;
+          case 'random':
+            // This should only happen if the user answered a question that the user answered has been
+            // unlinked from the random question.
+            $csv .= ',"' . $string['error_random'] . '"';
+            break;
           default:
             if (!isset($excluded[$tmp_question_ID])) {
               $correct_text_parts = explode("\t", $question['correct_text']);
@@ -1181,7 +1171,7 @@ if ($student_no > 0) {
               $csv .= '"';
               if ($is_random) {
                 if ($mode =='numeric') {
-                $csv .= ',"' . ltrim($question['correct'], ',') . '"';
+                  $csv .= ',"' . ltrim($question['correct'], ',') . '"';
                 } else {
                   $csv .= ',"' . $correct_text_parts[ltrim($question['correct'], ',')] . '"';
                 }
@@ -1199,4 +1189,3 @@ if ($student_no > 0) {
 }
 
 echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
-?>

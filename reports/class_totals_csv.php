@@ -169,9 +169,9 @@ if ($cohort_size > 0) {
     $csv .= $string['ss'] . "," . round($report->get_ss_pass(), 2) . ",,,,,,,,,,\n";
     $csv .= $string['ssdistinction'] . "," . round($report->get_ss_hon(), 2) . ",,,,,,,,,,\n";
   }
-  $csv .= $string['meanmark'] . "," . $stats['mean_mark'] . "," . $stats['mean_percent'] . "%,,,,,,,,,\n";
-  $csv .= $string['medianmark'] . "," . $stats['median_mark'] . "," . $stats['median_percent'] . "%,,,,,,,,,\n";
-  $csv .= $string['stdevmark'] . "," . number_format($stats['stddev_mark'], 2, '.', ',') . "," . round($stats['stddev_percent'], 1) . "%,,,,,,,,,\n";
+  $csv .= $string['meanmark'] . "," . round($stats['mean_mark'], 1) . "," . MathsUtils::formatNumber($stats['mean_percent'], 1) . "%,,,,,,,,,\n";
+  $csv .= $string['medianmark'] . "," . round($stats['median_mark'], 1) . "," . MathsUtils::formatNumber($stats['median_percent'], 1) . "%,,,,,,,,,\n";
+  $csv .= $string['stdevmark'] . "," . number_format($stats['stddev_mark'], 2, '.', ',') . "," . MathsUtils::formatNumber($stats['stddev_percent'], 2) . "%,,,,,,,,,\n";
   $csv .= $string['maxmark'] . "," . $stats['max_mark'] . "," . number_format($stats['max_percent']) . "%,,,,,,,,,\n";
   $csv .= $string['maxmark'] . "," . $stats['min_mark'] . "," . number_format($stats['min_percent']) . "%,,,,,,,,,\n";
   $csv .= $string['range'] . "," . ($stats['range']) . "," . ($stats['range_percent']) . "%,,,,,,,,,\n";

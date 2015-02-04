@@ -174,9 +174,8 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
     $old_mappings = '';
     $new_mappings = '';
 
-    $relationships = array();
-
     foreach ($modules as $idMod) {
+      $relationships = array();
       if (isset($_POST[$idMod . '_session'])) {
         $session = $_POST[$idMod . '_session'];
         $old_mappings = $_POST[$idMod . '_old_mappings'];

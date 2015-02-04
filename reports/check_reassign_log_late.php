@@ -32,6 +32,26 @@ $userID     = check_var('userID', 'GET', true, false, true);
 $metadataID = check_var('metadataID', 'GET', true, false, true);
 $log_type   = check_var('log_type', 'GET', true, false, true);
 
+// Get the order of the questions on the paper.
+$row_no = 0;
+$questions = array();
+$q_no = 1;
+$result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question = questions.q_id AND paper = ? AND q_type != 'info' ORDER BY screen, display_pos");
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($question);
+$result->store_result();
+$row_no = $result->num_rows;
+while ($result->fetch()) {
+  $questions[$question] = $q_no;
+  $q_no++;
+}
+$result->close();
+
+if ($row_no == 0) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -84,27 +104,6 @@ $log_type   = check_var('log_type', 'GET', true, false, true);
   if ($propertyObj->is_live()) {
     echo "<h1>" . $string['warning'] . "</h1><p>" . $string['msg2'] . "</p><p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\"/></p>\n</body>\n</html>\n";
     exit();
-  }
-
-  // Get the order of the questions on the paper.
-  $row_no = 0;
-  $questions = array();
-  $q_no = 1;
-  $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question = questions.q_id AND paper = ? AND q_type != 'info' ORDER BY screen, display_pos");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($question);
-  $result->store_result();
-  $row_no = $result->num_rows;
-  while ($result->fetch()) {
-    $questions[$question] = $q_no;
-    $q_no++;
-  }
-  $result->close();
-
-  if ($row_no == 0) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 
   // Check for Random questions , and assign question number.

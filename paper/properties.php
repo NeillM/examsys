@@ -624,10 +624,12 @@ if (isset($_POST['Submit'])) {
     // Save any adjusted properties to the database.
     $properties->save();
 
-    if (!$locked or $userObject->has_role(array('SysAdmin'))) {
+    if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
 			$old_modules = $properties->get_modules(true);
 
-      Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      if ($userObject->has_role(array('SysAdmin'))) {
+        Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+      }
 
       $paper_modules = $properties->get_modules(true);
 			

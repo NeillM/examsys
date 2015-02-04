@@ -483,7 +483,7 @@ if ($properties->get_paper_type() == '2') {
 ?>
 <br />
 
-<table style="width:210px; background-color: #2B569A; color: white !important; margin-top:16px">
+<table style="width:210px; background-color: #2B569A; color: white !important; margin-bottom:16px">
   <tr>
     <td style="font-size:120%; font-weight:bold; padding-bottom:6px" colspan="3"><?php echo $string['summativechecklist'] ?></td>
   </tr>

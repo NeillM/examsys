@@ -909,12 +909,12 @@ function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $ol
     }
   } elseif ($old_score_method == 'Mark per Question') {
     $totalpos = $old_marks_correct;
+    // If question is unanswered, $saved_response will be a comma separated list of 'u' so check for other characters
+    $answered = preg_match('/[^u,]/', $saved_response);
     if ($correct_rank) {
-      // If question is unanswered, $saved_response will be a comma separated list of 'u' so check for other characters
-      $answered = preg_match('/[^u,]/', $saved_response);
       $mark = ($answered > 0) ? $old_marks_correct : 0;
     } else {
-      $mark = $old_marks_incorrect;
+      $mark = ($answered > 0) ? $old_marks_incorrect : 0;
     }
   }
 }

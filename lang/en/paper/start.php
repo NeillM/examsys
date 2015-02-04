@@ -31,6 +31,7 @@ $string['survey'] = 'Survey';
 $string['assessment'] = 'Assessment';
 $string['finish'] = 'Finish';
 $string['screen'] = 'Screen';
+$string['clarificationscreen'] = 'Screen %s of %s';
 $string['mark'] = 'mark';
 $string['marks'] = 'marks';
 $string['note'] = 'Note';
