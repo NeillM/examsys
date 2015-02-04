@@ -365,7 +365,7 @@ SQL;
 
       echo '<div class="student-answer-block' . $style . '">';
 
-      $out_of = ($phase == 2) ? count($remark_array) : $candidate_no;
+      $out_of = ($phase == 2) ? count($remark_array) : $result->num_rows;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
       
       echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
@@ -384,10 +384,10 @@ SQL;
       }
       echo '<label for="comment_' . $answer_no . '"><strong>' . $string['comments'] . '</strong> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_comments'] . '" /><br /><textarea name="comment' . $answer_no . '" id="comment' . $answer_no . '" rows="6" class="comment-box">' . $comments . '</textarea>' . "\n";
 
-      if ($answer_no != 1 and $answer_no <= $candidate_no) {
+      if ($answer_no != 1 and $answer_no <= $result->num_rows) {
         echo '<input type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '" value="' . $string['previous'] . '" />';
       }
-      if (($phase == 1 and $answer_no != $candidate_no) or ($phase == 2 and $answer_no != count($remark_array))) {
+      if (($phase == 1 and $answer_no != $result->num_rows) or ($phase == 2 and $answer_no != count($remark_array))) {
         echo '<input type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['next'] . '" />';
       } else {
         echo '<input type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['finish'] . '" />';
