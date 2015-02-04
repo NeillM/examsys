@@ -1955,7 +1955,135 @@ function ql_mouseDragUp(){
 	if (this.buttonOver>-1 && this.buttonBox[this.buttonOver][0] == 'toolbar/ico_help.png') {
 		window.open('/help/staff/index.php?id=60');
 	}
+        
+	//test for buttons
+	if (this.buttonBox.length>0) {
+		this.buttonClicked = -1;
+		//release buttons without set
+		for (i=0;i<this.buttonBox.length;i++) {
+			if (this.buttonBox[i][7] == '') this.buttonBox[i][5] = this.buttonBox[i][6] = 0;
+		} 
+		
+		if (this.buttonOver != -1) {
+			//testing button sets
+			var butSet = this.buttonBox[this.buttonOver][7];
+			for (i=0;i<this.buttonBox.length;i++) {
+				if (butSet == this.buttonBox[i][7]) this.buttonBox[i][5] = this.buttonBox[i][6] = 0;
+			}
+			
+			//double button?
+			var j=i=this.buttonOver;
+			if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') i=j-1;
+			if (i<this.buttonBox.length-1 && this.buttonBox[i+1][0] == 'toolbar/ico_drop.png') j=i+1;
+			this.buttonOver = i;
+			this.buttonBox[j][5] = 2;
+			this.buttonBox[this.buttonOver][5] = this.buttonBox[this.buttonOver][6] = 2;
+			this.buttonClicked = this.buttonOver;
+		}
+		
+		//drawing the line, bobble or arrow
+		if (this.global_add != '') {
+			if (this.shape_x1 == -1) {
+				this.shape_x1 = this.x;
+				this.shape_y1 = this.y;
+			} else {
+				this.shape_x2 = this.x;
+				this.shape_y2 = this.y;
+		
+				this.shapeBox.push(new Array(this.shapeBox.length,this.global_add,this.shape_x1,this.shape_y1,this.shape_x2,this.shape_y2));
+				this.buttonBox[this.buttonBoxNames['toolbar/ico_'+this.global_add+'.png']][5] = 0;
+				this.buttonBox[this.buttonBoxNames['toolbar/ico_'+this.global_add+'.png']][6] = 0;
+				this.global_add = '';
+				this.shape_x1 = this.shape_y1 = this.shape_x2 = this.shape_y2 = -1;
+			}
+		}
+		//button effects
+		this.global_erase = false;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][6] == 2) this.global_erase = true;
+		this.global_move = false;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][6] == 2) this.global_move = true;
+		
+		var old_labelMulti = this.labelMulti;
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_single.png']][6] == 2) this.labelMulti = 'single';
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][0]=='toolbar/ico_multiple.png') 
+                    this.labelMulti = 'multiple';
+		if (this.labelMulti != old_labelMulti) {
+			var n=0,m=0,o=0;
+			var tmp_unique_positions = [];
+			var tmp_unique_labels = [];
+			var tmp_clone_answerBox = this.answerBox.slice(0);
+			this.answerBox.length = 0;
+			if (this.labelMulti == 'single'){
+				j=0;
+				for (i=0;i<tmp_clone_answerBox.length;i++) {
+					if (typeof(tmp_clone_answerBox[i][j])!='undefined') {
+						if (n<20 && tmp_clone_answerBox[i][j][2]!='') {
+							var tmp_position = tmp_clone_answerBox[i][j][5]+','+tmp_clone_answerBox[i][j][6];
+							if (typeof(tmp_unique_positions[tmp_position]) == 'undefined') {
+								tmp_unique_positions[tmp_position] = n;
+								if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
+								this.answerBox[n][0] = tmp_clone_answerBox[i][j];
+								this.answerBox[n][0][0] = n;
+								this.answerBox[n][0][4] = 0;
+								this.pholderBox[n][2] = this.answerBox[n][0][2];
+								this.pholderBox[n][5] = this.answerBox[n][0][5];
+								this.pholderBox[n][6] = this.answerBox[n][0][6];
+								if (this.pholderBox[n][5]<220) this.pholderBox[n][5] = -500;
+								n++;
+							}
+						}
+					}
+				}				
+			}
+
+			if (this.labelMulti == 'multiple'){
+				j=0;
+				for (i=0;i<tmp_clone_answerBox.length;i++) {
+					if (typeof(tmp_clone_answerBox[i])!='undefined') {							
+						for (j=0;j<tmp_clone_answerBox[i].length;j++) {
+							if (typeof(tmp_clone_answerBox[i][j])!='undefined') {							
+								var tmp_label = tmp_clone_answerBox[i][j][2];
+								if (tmp_label!='' && typeof(tmp_unique_labels[tmp_label]) == 'undefined') tmp_unique_labels[tmp_label] = o++;
+								if (tmp_label!='' && typeof(tmp_unique_labels[tmp_label]) != 'undefined') {
+									n = tmp_unique_labels [tmp_label];
+									if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
+									this.answerBox[n].push(tmp_clone_answerBox[i][j]);
+									m = this.answerBox[n].length-1;
+									this.answerBox[n][m][0] = n;
+									this.answerBox[n][m][4] = m;
+								}
+							}
+						}
+					}
+				}
+			}
+			//}
+			for (n=this.answerBox.length;n<20;n++) {
+				this.answerBox[n] = new Array();
+				this.answerBox[n][0] = new Array(n,"text","","",0,5,30,5,30,"","");
+			}
+		}
+
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_label.png']][6] == 2) this.qType = 'label';
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][0] == 'toolbar/ico_menu.png') {
+			this.qType = 'menu';
+			this.labelHeightEffect = this.labelHeight = 19;
+			}
+
+		//state of drawing buttons
+		this.global_add = '';
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_line.png']][6] == 2) this.global_add = 'line';
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_bobble.png']][6] == 2) this.global_add = 'bobble';
+		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_arrow.png']][6] == 2) this.global_add = 'arrow';
+  }
 	
+  //this.panelOver
+  if (this.panelOver == 1 && this.panelOverColour!='') this.currentColours[0] = this.panelOverColour;
+  if (this.panelOver == 3 && this.panelOverColour!='') this.currentColours[1] = this.panelOverColour;
+  if (this.panelOver == 5 && this.panelOverColour!='') this.currentColours[2] = this.panelOverColour;
+  if (this.panelOver == 7) this.fontSizePos = this.panelOptionOver;
+  if (this.panelOver == 9) this.lineThickness = this.panelOptionOver+1;
+
 	//dropdown labels 
 	if (this.menu_line>-1 && this.active_box_id>-1 && this.active_box_combo>-1){
 		this.answerBox[this.active_box_id][this.active_box_combo][2] = this.menuBox[this.menu_line-1];
@@ -2085,7 +2213,8 @@ function ql_mouseDragUp(){
 	}
 	
 	//if new  - create new instance of the dragged label with new next_combo_nr 
-  if (this.drag_box_id>-1 && this.drag_box_combo<99 && this.qmode == 'edit' && this.labelMulti == 'multiple' && this.qType=='label'){
+  if (this.qmode == 'edit' && this.labelMulti == 'multiple' && this.qType=='label'){
+      //this.drag_box_id>-1 && this.drag_box_combo<99 &&
 		var label_num_test = [];
 		var label_num_test_length = 0;
 		for (i=0;i<this.answerBox.length;i++) 
@@ -2103,15 +2232,17 @@ function ql_mouseDragUp(){
 			for (j=this.answerBox[i].length-1;j>=0;j--)	
 				if (this.answerBox[i][j][1] == 'erase') this.answerBox[i].splice(j,1);
 				
-		if (this.answerBox[this.drag_box_id][this.drag_box_combo][5]>=220 && this.answerBox[this.drag_box_id][this.drag_box_combo][7]<220 && label_num_test_length<40) {		
-			next_combo_nr = this.answerBox[this.drag_box_id].length; //nr of last combo for this drag_box_id
-			var that_box = this.answerBox[this.drag_box_id][this.drag_box_combo].slice(0);
-			that_box[4] = next_combo_nr;
-			//reset copy
-			that_box[5] = this.answerBox[this.drag_box_id][this.drag_box_combo][7];
-			that_box[6] = this.answerBox[this.drag_box_id][this.drag_box_combo][8];
-			this.answerBox[this.drag_box_id][next_combo_nr] = that_box;
-		}
+                for (i=0;i<this.answerBox.length;i++) {
+                    var tmp_add = true;
+                    for (j=0;j<this.answerBox[i].length;j++) {
+                        var tmp_arr = this.answerBox[i][j].slice(0);
+                        if (tmp_arr[5]<220) tmp_add = false;
+                    }
+                    if (tmp_add) {
+                        tmp_arr[4]=tmp_arr[5]=tmp_arr[6]=tmp_arr[7]=0
+                        this.answerBox[i].push(tmp_arr);
+                    }
+                }
 	}
 
 	//renumbering ids
@@ -2168,134 +2299,7 @@ function ql_mouseDragUp(){
     }
   }
   
-	//test for buttons
-	if (this.buttonBox.length>0) {
-		this.buttonClicked = -1;
-		//release buttons without set
-		for (i=0;i<this.buttonBox.length;i++) {
-			if (this.buttonBox[i][7] == '') this.buttonBox[i][5] = this.buttonBox[i][6] = 0;
-		} 
-		
-		if (this.buttonOver != -1) {
-			//testing button sets
-			var butSet = this.buttonBox[this.buttonOver][7];
-			for (i=0;i<this.buttonBox.length;i++) {
-				if (butSet == this.buttonBox[i][7]) this.buttonBox[i][5] = this.buttonBox[i][6] = 0;
-			}
-			
-			//double button?
-			var j=i=this.buttonOver;
-			if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') i=j-1;
-			if (i<this.buttonBox.length-1 && this.buttonBox[i+1][0] == 'toolbar/ico_drop.png') j=i+1;
-			this.buttonOver = i;
-			this.buttonBox[j][5] = 2;
-			this.buttonBox[this.buttonOver][5] = this.buttonBox[this.buttonOver][6] = 2;
-			this.buttonClicked = this.buttonOver;
-		}
-		
-		//drawing the line, bobble or arrow
-		if (this.global_add != '') {
-			if (this.shape_x1 == -1) {
-				this.shape_x1 = this.x;
-				this.shape_y1 = this.y;
-			} else {
-				this.shape_x2 = this.x;
-				this.shape_y2 = this.y;
-		
-				this.shapeBox.push(new Array(this.shapeBox.length,this.global_add,this.shape_x1,this.shape_y1,this.shape_x2,this.shape_y2));
-				this.buttonBox[this.buttonBoxNames['toolbar/ico_'+this.global_add+'.png']][5] = 0;
-				this.buttonBox[this.buttonBoxNames['toolbar/ico_'+this.global_add+'.png']][6] = 0;
-				this.global_add = '';
-				this.shape_x1 = this.shape_y1 = this.shape_x2 = this.shape_y2 = -1;
-			}
-		}
-		//button effects
-		this.global_erase = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_erase.png']][6] == 2) this.global_erase = true;
-		this.global_move = false;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][6] == 2) this.global_move = true;
-		
-		var old_labelMulti = this.labelMulti;
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_single.png']][6] == 2) this.labelMulti = 'single';
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_multiple.png']][0]=='toolbar/ico_multiple.png') this.labelMulti = 'multiple';
-		if (this.labelMulti != old_labelMulti) {
-			var n=0,m=0,o=0;
-			var tmp_unique_positions = [];
-			var tmp_unique_labels = [];
-			var tmp_clone_answerBox = this.answerBox.slice(0);
-			this.answerBox.length = 0;
-			if (this.labelMulti == 'single'){
-				j=0;
-				for (i=0;i<tmp_clone_answerBox.length;i++) {
-					if (typeof(tmp_clone_answerBox[i][j])!='undefined') {
-						if (n<20 && tmp_clone_answerBox[i][j][2]!='') {
-							var tmp_position = tmp_clone_answerBox[i][j][5]+','+tmp_clone_answerBox[i][j][6];
-							if (typeof(tmp_unique_positions[tmp_position]) == 'undefined') {
-								tmp_unique_positions[tmp_position] = n;
-								if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
-								this.answerBox[n][0] = tmp_clone_answerBox[i][j];
-								this.answerBox[n][0][0] = n;
-								this.answerBox[n][0][4] = 0;
-								this.pholderBox[n][2] = this.answerBox[n][0][2];
-								this.pholderBox[n][5] = this.answerBox[n][0][5];
-								this.pholderBox[n][6] = this.answerBox[n][0][6];
-								if (this.pholderBox[n][5]<220) this.pholderBox[n][5] = -500;
-								n++;
-							}
-						}
-					}
-				}				
-			}
-
-			if (this.labelMulti == 'multiple'){
-				j=0;
-				for (i=0;i<tmp_clone_answerBox.length;i++) {
-					if (typeof(tmp_clone_answerBox[i])!='undefined') {							
-						for (j=0;j<tmp_clone_answerBox[i].length;j++) {
-							if (typeof(tmp_clone_answerBox[i][j])!='undefined') {							
-								var tmp_label = tmp_clone_answerBox[i][j][2];
-								if (tmp_label!='' && typeof(tmp_unique_labels[tmp_label]) == 'undefined') tmp_unique_labels[tmp_label] = o++;
-								if (tmp_label!='' && typeof(tmp_unique_labels[tmp_label]) != 'undefined') {
-									n = tmp_unique_labels [tmp_label];
-									if (typeof(this.answerBox[n]) == 'undefined') this.answerBox[n] = new Array();
-									this.answerBox[n].push(tmp_clone_answerBox[i][j]);
-									m = this.answerBox[n].length-1;
-									this.answerBox[n][m][0] = n;
-									this.answerBox[n][m][4] = m;
-								}
-							}
-						}
-					}
-				}
-			}
-			//}
-			for (n=this.answerBox.length;n<20;n++) {
-				this.answerBox[n] = new Array();
-				this.answerBox[n][0] = new Array(n,"text","","",0,5,30,5,30,"","");
-			}
-		}
-
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_label.png']][6] == 2) this.qType = 'label';
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][6] == 2 && this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][0] == 'toolbar/ico_menu.png') {
-			this.qType = 'menu';
-			this.labelHeightEffect = this.labelHeight = 19;
-			}
-
-		//state of drawing buttons
-		this.global_add = '';
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_line.png']][6] == 2) this.global_add = 'line';
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_bobble.png']][6] == 2) this.global_add = 'bobble';
-		if (this.buttonBox[this.buttonBoxNames['toolbar/ico_arrow.png']][6] == 2) this.global_add = 'arrow';
-  }
-	
-  //this.panelOver
-  if (this.panelOver == 1 && this.panelOverColour!='') this.currentColours[0] = this.panelOverColour;
-  if (this.panelOver == 3 && this.panelOverColour!='') this.currentColours[1] = this.panelOverColour;
-  if (this.panelOver == 5 && this.panelOverColour!='') this.currentColours[2] = this.panelOverColour;
-  if (this.panelOver == 7) this.fontSizePos = this.panelOptionOver;
-  if (this.panelOver == 9) this.lineThickness = this.panelOptionOver+1;
-
-	this.redraw_once = true;
+        this.redraw_once = true;
 	this.ql_redraw_canvas();
   this.ql_ReturnInfo();
 }
