@@ -1064,6 +1064,30 @@ class PaperProperties {
   }
 
   /**
+   * Check if marking has started for the OSCE station.
+   * @param int $paperID
+   * @param stdClass $mysqli
+   * @return boolean
+   */
+  public function get_osce_started_status($paperID, $mysqli) {
+    if ($this->paper_type <> 4) {
+      return false;
+    }
+    $result = $mysqli->prepare("SELECT COUNT(*) as count FROM (modules_student, users) JOIN log4_overall ON users.id = log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id");
+    $result->bind_param('s', $paperID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($startedcount);
+    $started = false;
+    while ($result->fetch()) {
+        if ($startedcount) {
+          $started = true;
+        }
+    }
+    return $started;
+  }
+
+  /**
    * @param int $pass_mark
    */
   public function set_pass_mark($pass_mark) {
