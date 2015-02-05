@@ -1047,7 +1047,11 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $layers = explode('|', $correct);
         $coords = '';
         for ($i = 1; $i <= count($layers); $i++) {
-          $coords .= $freq_log[$q_id][$i]['coords'] . '|';
+          if (isset($freq_log[$q_id][$i]['coords'])) {
+            $coords .= $freq_log[$q_id][$i]['coords'] . '|';
+          } else {
+            $coords .= '|';
+          }
         }
         $coords = rtrim($coords, '|');
 
@@ -1430,7 +1434,9 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     $bottom_words = array_csort($bottom_words,$sortby,$ordering);
 
     echo "<tr><td colspan=\"2\"><strong>" . $string['TopGroup'] . ":</strong></td><td colspan=\"2\"><strong>" . $string['BottomGroup'] . ":</strong></td></tr>\n";
-    echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($top_log[$q_id]['word_count'] / $candidate_no) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($bottom_log[$q_id]['word_count'] / $candidate_no) . ")</td></tr>";
+    $mean_word_count_top = ($candidate_no != 0) ? $top_log[$q_id]['word_count'] / $candidate_no : 0;
+    $mean_word_count_bottom = ($candidate_no != 0) ? $bottom_log[$q_id]['word_count'] / $candidate_no : 0;
+    echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($mean_word_count_top) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($mean_word_count_bottom) . ")</td></tr>";
     for ($i=0; $i<40; $i++) {
       if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
         echo "<tr>";
@@ -1448,7 +1454,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
       }
     }
 
-    if ($top_log[$q_id]['totalpos'] == 0 or $bottom_log[$q_id]['totalpos'] == 0) {
+    if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
       $d = 0;
     } else {
       $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
@@ -1522,12 +1528,15 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
             if ($score_method == 'Mark per Option') {
               echo '<td>' .  excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . '</td>';
             }
+            $p = ($user_total != 0) ? $tmp_correct_no / $user_total : 0;
+            $ptop = ($candidate_no != 0) ? $tmp_top_no / $candidate_no : 0;
+            $pbottom = ($candidate_no != 0) ? $tmp_bottom_no / $candidate_no : 0;
             echo "<td>" . chr($i+64) . ".</td>";
-            echo "<td style=\"font-weight:bold\">" . pStats($tmp_correct_no/$user_total, $q_id, $i) . "</td>";
+            echo "<td style=\"font-weight:bold\">" . pStats($p, $q_id, $i) . "</td>";
             echo "<td style=\"font-weight:bold\">" . dStats($d, $q_id, $i) . "</td>";
-            echo "<td style=\"font-weight:bold\">t=" . number_format(($tmp_correct_no/$user_total)*100,0) . "%</td>";
-            echo "<td style=\"font-weight:bold\">u=" . number_format(($tmp_top_no/$candidate_no)*100,0) . "%</td>";
-            echo "<td style=\"font-weight:bold\">l=" . number_format(($tmp_bottom_no/$candidate_no)*100,0) . "%</td>";
+            echo "<td style=\"font-weight:bold\">t=" . number_format($p*100,0) . "%</td>";
+            echo "<td style=\"font-weight:bold\">u=" . number_format($ptop*100,0) . "%</td>";
+            echo "<td style=\"font-weight:bold\">l=" . number_format($pbottom*100,0) . "%</td>";
 
             if (isset($tmp_std_array[$i-1])) {
               echo '<td class="std"><strong>' . $tmp_std_array[$i-1] . '</strong></td>';
@@ -1629,29 +1638,29 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           if ($option_no == $specific_answers[$x]) $answer_match = true;
         }
         if ($answer_match == true) {
-          if (isset($top_log[$q_id][$i][$option_no])) {
+          if (isset($top_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $t = $top_log[$q_id][$i][$option_no]/$candidate_no;
           } else {
             $t = 0;
           }
-          if (isset($bottom_log[$q_id][$i][$option_no])) {
+          if (isset($bottom_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $l = $bottom_log[$q_id][$i][$option_no]/$candidate_no;
           } else {
             $l = 0;
           }
           $sub_d += $t - $l;
           $sub_d_no++;
-          if (isset($freq_log[$q_id][$i][$option_no])) {
+          if (isset($freq_log[$q_id][$i][$option_no]) and $user_total != 0) {
             $t = number_format(($freq_log[$q_id][$i][$option_no]/$user_total)*100,0);
           } else {
             $t = 0;
           }
-          if (isset($top_log[$q_id][$i][$option_no])) {
+          if (isset($top_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $u = number_format(($top_log[$q_id][$i][$option_no]/$candidate_no)*100,0);
           } else {
             $u = 0;
           }
-          if (isset($bottom_log[$q_id][$i][$option_no])) {
+          if (isset($bottom_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $l = number_format(($bottom_log[$q_id][$i][$option_no]/$candidate_no)*100,0);
           } else {
             $l = 0;
@@ -1670,17 +1679,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           if (isset($freq_log[$q_id][$i][$option_no])) $tmp_correct_no += $freq_log[$q_id][$i][$option_no];
           $std_part++;
         } else {
-          if (isset($freq_log[$q_id][$i][$option_no])) {
+          if (isset($freq_log[$q_id][$i][$option_no]) and $user_total != 0) {
             $t = number_format(($freq_log[$q_id][$i][$option_no]/$user_total)*100,0);
           } else {
             $t = 0;
           }
-          if (isset($top_log[$q_id][$i][$option_no])) {
+          if (isset($top_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $u = number_format(($top_log[$q_id][$i][$option_no]/$candidate_no)*100,0);
           } else {
             $u = 0;
           }
-          if (isset($bottom_log[$q_id][$i][$option_no])) {
+          if (isset($bottom_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $l = number_format(($bottom_log[$q_id][$i][$option_no]/$candidate_no)*100,0);
           } else {
             $l = 0;
