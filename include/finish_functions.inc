@@ -948,15 +948,15 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
             if ($paper[$question]['correct_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"4\">" . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
             }
           } else {
             if ($paper[$question]['incorrect_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['incorrect_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"4\">" . nl2br($paper[$question]['incorrect_fback']) . "</td></tr>\n";
             } elseif ($paper[$question]['correct_fback'] != '') {
               echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-              echo "<tr><td class=\"fback\" colspan=\"4\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+              echo "<tr><td class=\"fback\" colspan=\"4\">" . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
             }
           }
         }

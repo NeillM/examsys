@@ -29,10 +29,10 @@ $string['labelling_desc'] = 'Student musí  přetáhnout popisky ke správným z
 $string['likert_desc'] = 'Psychometrické stupnice pro použití při Průzkumech.';
 $string['mcq_desc'] = 'Vyber jednu vyriantu z mnoha.';
 $string['mrq_desc'] = 'Vyber několik variant z mnoha.';
-$string['keyword_based_desc'] = "Tato otázka je kontejnerem pro soubor "zdrojových" úloh, závisejících na zadaném klíčovém slově, z nichž jedna bude studentovi náhodně vybrána.";
-$string['random_desc'] = "Tato otázka je kontejnerem pro soubor "zdrojových" úloh, z nichž jedna bude studentovi náhodně vybrána.";
+$string['keyword_based_desc'] = "Tato otázka je kontejnerem pro soubor \"zdrojových\" úloh, závisejících na zadaném klíčovém slově, z nichž jedna bude studentovi náhodně vybrána.";
+$string['random_desc'] = "Tato otázka je kontejnerem pro soubor \"zdrojových\" úloh, z nichž jedna bude studentovi náhodně vybrána.";
 $string['rank_desc'] = 'Ohodnoťte sadu seřazených možností.';
 $string['sct_desc'] = 'Otázky vyhodnocující dovednost interpretace klinických údajů.';
-$string['textbox_desc'] = 'Textová pole zachycují studentovi odpovědi. Mohou být použiat při výzkumech a hodnocení. Odpovědi v textových polích vyžadují ruční ohodnocení učitelem.';
+$string['textbox_desc'] = 'Textová pole zachycují studentovi odpovědi. Mohou být použita při výzkumech a hodnocení. Odpovědi v textových polích vyžadují ruční ohodnocení učitelem.';
 $string['true_false_desc'] = 'Úloha, na kterou se odpovídá ano/ne.';
 ?>
