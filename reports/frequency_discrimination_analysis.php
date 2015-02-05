@@ -858,7 +858,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           $p = $ptrue;
           echo '<td><span class="std">' . $std . '</span></td>' . $temp_td . '<strong>' . $string['True'] . '</strong>';
         } else {
-          echo $string['True'];
+          echo '<td></td>' . $temp_td . $string['True'];
         }
         echo "</td></tr>\n";
         $pfalse = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][1]['f']/$user_total : 0;
@@ -873,7 +873,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           $p = $pfalse;
           echo '<td><span class="std">' . $std . '</span></td>' . $temp_td . '<strong>' . $string['False'] . '</strong>';
         } else {
-          echo $string['True'];
+          echo '<td></td>' . $temp_td . $string['False'];
         }
         echo "</td></tr>\n";
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
