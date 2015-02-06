@@ -364,7 +364,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }
-//sl change this from echo $leadin to below
+    //sl change this from echo $leadin to below
     echo  QuestionUtils::clean_leadin($leadin) . '</td>';
 	
     echo '<td class="nobr">' . $string[$q_type] . '</td>';
