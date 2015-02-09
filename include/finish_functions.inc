@@ -514,7 +514,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
       echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> ' . $string['difficultyofthequestion'] . '</div></td>';
     }
     ?>
-    <td style="text-align:right; vertical-align:top; width:80px"><a href="window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
+    <td style="text-align:right; vertical-align:top; width:80px; cursor:pointer;"><a onclick="window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
     </tr>
     </table>
     </div>
