@@ -45,7 +45,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 $demo = is_demo($userObject);
 
 function get_random_question_details($question, $rand_id, $mysqli) {
-  $result = $mysqli->prepare("SELECT q_id, q_type, correct, option_text, score_method FROM (questions, options) WHERE questions.q_id = options.o_id AND questions.q_id = ? ORDER BY id_num");
+  $result = $mysqli->prepare("SELECT q_id, q_type, correct, option_text, score_method FROM questions LEFT JOIN options ON questions.q_id = options.o_id  WHERE questions.q_id = ? ORDER BY id_num");
   $result->bind_param('i', $rand_id);
   $result->execute();
   $result->store_result();
@@ -851,6 +851,12 @@ if ($student_no > 0) {
               } else {
 								$answer = '';
 							}
+              // Random questions display the formula as the first column.
+              if ($is_random and isset($answer['ans']['formula_used'])) {
+                $csv .= ',' . $answer['ans']['formula_used'];
+              } else if ($is_random) {
+                $csv .= ',error';
+              }
 							if (isset($answer['uans'])) {
 								$csv .= ',' . $answer['uans'];
 							} else {
