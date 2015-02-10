@@ -74,4 +74,5 @@ $string['question'] = 'Pytanie';
 $string['answer_to'] = 'odpowiedź na';
 $string['decimal_places'] = 'miejsca dziesiętne';
 $string['significant_figures'] = 'cyfry znaczące';
+$string['forcesave'] = 'Your time has expired and your answers have been saved';
 ?>

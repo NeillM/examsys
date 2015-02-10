@@ -621,9 +621,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   <?php  // Called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
   var forceSave = function() {
     stopAutoSave();
+    ajaxSave(1);
+    alert('<?php echo $string['forcesave']; ?>');
     submitType = 'forcedSubmit';
     $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
-    ajaxSave(1);
   }
 
   <?php  // Called on auto save time out ?>
