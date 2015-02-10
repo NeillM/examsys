@@ -589,7 +589,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "</table>\n";
 
         echo "<table>\n";
-        if (!isset($freq_log[$q_id]) or $freq_log[$q_id]['totalpos'] == 0) {
+        if (!isset($freq_log[$q_id]) or !isset($freq_log[$q_id]['totalpos']) or $freq_log[$q_id]['totalpos'] == 0) {
           $p = 0;
         } else {
           $p = $freq_log[$q_id]['mark'] / $freq_log[$q_id]['totalpos'];
@@ -1434,8 +1434,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     $bottom_words = array_csort($bottom_words,$sortby,$ordering);
 
     echo "<tr><td colspan=\"2\"><strong>" . $string['TopGroup'] . ":</strong></td><td colspan=\"2\"><strong>" . $string['BottomGroup'] . ":</strong></td></tr>\n";
-    $mean_word_count_top = ($candidate_no != 0) ? $top_log[$q_id]['word_count'] / $candidate_no : 0;
-    $mean_word_count_bottom = ($candidate_no != 0) ? $bottom_log[$q_id]['word_count'] / $candidate_no : 0;
+    $mean_word_count_top = (isset($top_log[$q_id]) and $candidate_no != 0) ? $top_log[$q_id]['word_count'] / $candidate_no : 0;
+    $mean_word_count_bottom = (isset($bottom_log[$q_id]) and $candidate_no != 0) ? $bottom_log[$q_id]['word_count'] / $candidate_no : 0;
     echo "<tr><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($mean_word_count_top) . ")</td><td colspan=\"2\">(" . $string['meanWordCount'] . " = " . round($mean_word_count_bottom) . ")</td></tr>";
     for ($i=0; $i<40; $i++) {
       if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
@@ -2233,7 +2233,7 @@ SQL;
           $params .= 'iiii';
           $variables[] = $q_rec_ids[$qid];
           $variables[] = $part_no;
-          $variables[] = $pstats_array[$qid][$part_no];
+          $variables[] = (isset($pstats_array[$qid][$part_no])) ? $pstats_array[$qid][$part_no] : 0;
           $variables[] = $d_value;
         }
       }
