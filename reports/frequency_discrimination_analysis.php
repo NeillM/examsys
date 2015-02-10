@@ -1268,8 +1268,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           $d = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
         }
         echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
-        $tmp_pstat = (isset($freq_log[$q_id]['mark']) and isset($freq_log[$q_id]['totalpos']) and $freq_log[$q_id]['totalpos'] > 0) ? pStats($freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'], $q_id, 1) : 'p=0.00';
-        echo "<tr><td>" . $tmp_pstat . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
+        $tmp_pstat = (isset($freq_log[$q_id]['mark']) and isset($freq_log[$q_id]['totalpos']) and $freq_log[$q_id]['totalpos'] > 0) ? $freq_log[$q_id]['mark']/$freq_log[$q_id]['totalpos'] : 0;
+        echo "<tr><td>" . pStats($tmp_pstat, $q_id, 1) . "</td><td colspan=\"2\">" . dStats($d, $q_id, 1) . "</td></tr>\n";
         break;
       case 'rank':
         $rank_no = 0;
@@ -2233,7 +2233,7 @@ SQL;
           $params .= 'iiii';
           $variables[] = $q_rec_ids[$qid];
           $variables[] = $part_no;
-          $variables[] = (isset($pstats_array[$qid][$part_no])) ? $pstats_array[$qid][$part_no] : 0;
+          $variables[] = $pstats_array[$qid][$part_no];
           $variables[] = $d_value;
         }
       }
