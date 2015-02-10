@@ -670,7 +670,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 				?>
         <br />
         <?php
-        if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\">" . $paper[$question]['correct_fback'] . "</div>\n";
+        if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
         if ($tmp_user_answer == '') {
           echo "<div style=\"color:#808080\">{$string['unanswered']}</div>\n";
         } else {
@@ -834,7 +834,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           echo "<tr><td colspan=\"3\" style=\"color:#808080\">" . $string['unanswered'] . "</td></tr>\n";
         }
         echo "</table>\n";
-        if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">{$paper[$question]['correct_fback']}</div>\n";
+        if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
         break;
       case 'info':
         echo "<tr><td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">";
@@ -1102,7 +1102,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         echo "</table>\n";
         if (!$answered) echo "<br />\n<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-          echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
+          echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
         }
         break;
       case 'sct':
@@ -1230,7 +1230,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         if ($tmp_display_feedback == '1') {
           if ($paper[$question]['correct_fback'] != '') {
             echo "<tr><td class=\"fback\" colspan=\"5\">&nbsp;</td></tr>\n";
-            echo "<tr><td class=\"fback\" colspan=\"5\">" . $paper[$question]['correct_fback'] . "</td></tr>\n";
+            echo "<tr><td class=\"fback\" colspan=\"5\">" . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
           }
         }
         echo "</table>\n";
@@ -1382,13 +1382,13 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         if ($tmp_display_feedback == '1') {
           if ($paper[$question]['mark'] > 0) {
             if ($paper[$question]['correct_fback'] != '') {
-              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
+              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
             }
           } else {
             if ($paper[$question]['incorrect_fback'] != '') {
-              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['incorrect_fback'] . "</div>\n";
+              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['incorrect_fback']) . "</div>\n";
             } elseif ($paper[$question]['correct_fback'] != '') {
-              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
+              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
             }
           }
         }
@@ -1590,10 +1590,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
         if ($tmp_display_feedback == '1') {
           if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
-            echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['incorrect_fback'] . "</div>\n";
+            echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['incorrect_fback']) . "</div>\n";
           } else {
             if ($paper[$question]['correct_fback'] != '') {
-              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . $paper[$question]['correct_fback'] . "</div>\n";
+              echo "<br /><div class=\"fback\" style=\"margin-left:17px\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
             }
           }
         }
@@ -1779,7 +1779,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           echo '</table>';
           echo '<br />';
           if (isset($matching_media_correct_fback[$i]) and $matching_media_correct_fback[$i] != '' and $tmp_display_feedback == '1') {
-            echo '<div class="fback">' . $matching_media_correct_fback[$i] . '</div>';
+            echo '<div class="fback">' . nl2br($matching_media_correct_fback[$i]) . '</div>';
           }
           echo '</li>';
           $i++;
@@ -1877,7 +1877,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback']) != '') {
-          echo "<p class=\"fback\">" . $paper[$question]['correct_fback'] . "</p>\n";
+          echo "<p class=\"fback\">" . nl2br($paper[$question]['correct_fback']) . "</p>\n";
         }
 
         if ($paper[$question]['score_method'] == 'Mark per Question') {
@@ -2078,7 +2078,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
-          echo '<div class="fback">' . $paper[$question]['correct_fback'] . "</div>\n";
+          echo '<div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
         }
 
         if ($paper[$question]['score_method'] == 'Mark per Question' and $have_answer) {
@@ -2186,7 +2186,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-          echo '<div class="fback">' . $paper[$question]['correct_fback'] . "</div>\n";
+          echo '<div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
         }
         break;
       case 'labelling':
@@ -2379,7 +2379,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-          echo '<br /><div class="fback">' . $paper[$question]['correct_fback'] . "</div>\n";
+          echo '<br /><div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
         }
         break;
       case 'flash':
