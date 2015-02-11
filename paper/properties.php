@@ -627,7 +627,7 @@ if (isset($_POST['Submit'])) {
     if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
 			$old_modules = $properties->get_modules(true);
 
-      if ($userObject->has_role(array('SysAdmin'))) {
+      if (!$locked or $userObject->has_role(array('SysAdmin'))) {
         Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
       }
 
