@@ -41,6 +41,8 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 $questions = $properties->get_questions();
 $paper_type = $properties->get_paper_type();
 
+$error = false;
+
 // Get the enhanced calculation questions on the paper.
 $q_ids = array();
 $result = $mysqli->prepare("SELECT question, settings FROM papers, questions WHERE papers.question = questions.q_id AND q_type = 'enhancedcalc' AND paper = ?");
@@ -55,6 +57,16 @@ $result->close();
 $server_connection = true;
 
 $statuses = array();
+// Should not get here but if we do throw a critical error.
+if (count($q_ids) == 0) {
+    // Critical error
+    $error = true;
+    $errline = 60;
+    $return_status = $string['noenhancedcalcdetected'];
+} else {
+    $return_status = 'Complete';
+}
+
 foreach ($q_ids as $q_id => $setting) {
   $data = enhancedcalc_remark($paper_type, $paperID, $q_id, $setting, $mysqli, 'all');
 	if ($data[-3] > 0) {
@@ -62,8 +74,6 @@ foreach ($q_ids as $q_id => $setting) {
 	}
   $statuses[$q_id] = $data;
 }
-
-$return_status = 'Complete';
 
 $problem_questions = array();
 
@@ -75,40 +85,44 @@ foreach($statuses as $qid => $data) {
 
 if (count($problem_questions) > 0) {
 	$return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
+        $errline = 84;
+	$error = true;
+}
 
-	$userid = $userObject->get_user_ID();
-	$username = $userObject->get_username();
-	$error_type = 'Application Error';
-	$errstr = $return_status;
-	$errfile = $_SERVER['PHP_SELF'];
-	$errline = 56;
-  $post_data = '';
-  if (isset($_POST)) {
-    foreach ($_POST as $key => $value) {
-      if ($key != 'ROGO_PW') {
-        if (is_array($value)) {
-          $value = var_export($value, true);
-        }
-        if ($post_data == '') {
-          $post_data = "$key=$value";
+if ($error) {
+
+    $userid = $userObject->get_user_ID();
+    $username = $userObject->get_username();
+    $error_type = 'Application Error';
+    $errstr = $return_status;
+    $errfile = $_SERVER['PHP_SELF'];
+    $post_data = '';
+    if (isset($_POST)) {
+      foreach ($_POST as $key => $value) {
+        if ($key != 'ROGO_PW') {
+          if (is_array($value)) {
+            $value = var_export($value, true);
+          }
+          if ($post_data == '') {
+            $post_data = "$key=$value";
+          } else {
+            $post_data .= ", $key=$value";
+          }
         } else {
-          $post_data .= ", $key=$value";
+          $post_data .= ", $key=<HIDDEN>";
         }
-      } else {
-        $post_data .= ", $key=<HIDDEN>";
       }
     }
-  }
-				
-	$log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)");
-	$log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
-	$log_error->execute();
-	$log_error->close();
-	
-	$support_email = $configObject->get('support_email');
-	if ($support_email != '') {
-		$return_status .= '<br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
-	}
+
+    $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)");
+    $log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
+    $log_error->execute();
+    $log_error->close();
+
+    $support_email = $configObject->get('support_email');
+    if ($support_email != '') {
+            $return_status .= '<br /><br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
+    }
 }
 
 echo $return_status;
