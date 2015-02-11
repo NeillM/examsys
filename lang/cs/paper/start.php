@@ -75,4 +75,5 @@ $string['other'] = 'Ostatní';
 $string['answer_to'] = 'odpovědět';
 $string['decimal_places'] = 'desetinná místa';
 $string['significant_figures'] = 'významná figura';
+$string['forcesave'] = 'Your time has expired and your answers have been saved';
 ?>
