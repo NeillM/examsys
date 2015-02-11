@@ -778,7 +778,7 @@ class EnhancedCalc extends Question implements questionInterface {
                 foreach ($varname as $individual_varname) {
                     $tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
                 }
-                echo "<br /><div class=\"fback\">" . $tmp_fback . "</div>\n";
+                echo "<br /><div class=\"fback\">" . nl2br($tmp_fback) . "</div>\n";
             }
 	}
 
