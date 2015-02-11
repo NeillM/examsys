@@ -90,6 +90,7 @@ $string['groupdetails'] = 'Group Details';
 $string['tooltip_random'] = 'Rogo will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
 $string['tooltip_calculator'] = 'A JavaScript software calculator is available to students within the assessment.';
 $string['tooltip_audio'] = 'A test audio clip will be placed on the exam information page so students can test sound levels before starting.';
+$string['tooltip_osceclassification'] = 'Warning: Once marking has started the overall classification is not changeable.';
 
 // Security tab
 $string['securitytab'] = 'Security';

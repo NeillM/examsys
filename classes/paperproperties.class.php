@@ -359,7 +359,7 @@ class PaperProperties {
   public function save() {
     $configObject = Config::get_instance();
     $userObject   = UserObject::get_instance();
-		
+
     if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
       $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ?, recache_marks = ? WHERE property_id = ?");
       $result->bind_param('siissssssii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->recache_marks, $this->property_id);
@@ -436,13 +436,13 @@ class PaperProperties {
     $this->max_screen = $max_screen;
     $this->max_display_pos = $max_display_pos;
   }
-	
+
   /*
   * Load the questions from the current paper into an array.
 	*/
 	private function load_questions() {
 	  $q_no = 0;
-	
+
     $paper_results = $this->db->prepare("SELECT q_id, q_type, screen FROM papers, questions WHERE papers.question = questions.q_id AND paper = ? ORDER BY screen, display_pos");
     $property_id = $this->get_property_id();
     $paper_results->bind_param('i', $property_id);
@@ -454,9 +454,9 @@ class PaperProperties {
 			}
 		  $this->questions[] = array('q_id'=>$q_id, 'q_no'=>$q_no, 'type'=>$q_type, 'screen'=>$screen);
 		}
-    $paper_results->close();		
+    $paper_results->close();
 	}
-	
+
   /*
   * Return the list of questions used on the paper.
 	* @return - array of questions on the paper.
@@ -465,7 +465,7 @@ class PaperProperties {
 	  if (!isset($this->questions)) {
 		  $this->load_questions();
 		}
-		
+
 		return $this->questions;
 	}
 
@@ -1064,6 +1064,26 @@ class PaperProperties {
   }
 
   /**
+   * Check if marking has started for the OSCE station.
+   * @param int $paperID
+   * @param stdClass $mysqli
+   * @return boolean
+   */
+  public function get_osce_started_status($paperID, $mysqli) {
+    if ($this->paper_type <> 4) {
+      return false;
+    }
+    $result = $mysqli->prepare("SELECT 1 as count FROM (modules_student, users) JOIN log4_overall ON users.id = log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id LIMIT 1");
+    $result->bind_param('s', $paperID);
+    $result->execute();
+    $result->store_result();
+    if ($result->num_rows == 1) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * @param int $pass_mark
    */
   public function set_pass_mark($pass_mark) {
@@ -1583,11 +1603,11 @@ class PaperProperties {
 
     return $this->modules;
   }
-	
+
 	private function load_modules() {
     $paperID = $this->get_property_id();
 		$this->modules = array();
-		
+
     $result = $this->db->prepare("SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -1605,22 +1625,22 @@ class PaperProperties {
     }
     return $this->_date_timezone;
   }
-	
+
 	public function unmarked_enhancedcalc() {
 	  if ($this->unmarked_enhancedcalc === null) {
 			$this->load_unmarked_enhancedcalc();
 		}
-		
+
 		return $this->unmarked_enhancedcalc;
 	}
-	
+
 	private function load_unmarked_enhancedcalc() {
 	  $this->unmarked_enhancedcalc = false;
-		
+
 		if (!isset($this->questions)) {
 		  $this->load_questions();
 		}
-		
+
 		$enhancedcalc_ids = array();
 
     if (is_array($this->questions) and count($this->questions) > 0) {
@@ -1630,10 +1650,10 @@ class PaperProperties {
         }
       }
     }
-		
+
 		if (count($enhancedcalc_ids) > 0) {
 			$paperID = $this->get_property_id();
-			
+
 			$result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL");
 			$result->bind_param('i', $paperID);
 			$result->execute();
@@ -1645,7 +1665,7 @@ class PaperProperties {
 			$result->close();
 		}
 	}
-	
+
 	public function q_type_exist($type) {
 		$paperID = $this->get_property_id();
 
@@ -1655,14 +1675,14 @@ class PaperProperties {
 		$result->bind_result($q_no);
 		$result->fetch();
 		$result->close();
-		
+
 		if ($q_no > 0) {
 		  return true;
 		} else {
 		  return false;
-		}	
+		}
 	}
-	
+
 	public function is_active() {
 	  if (date('U') > $this->start_date and date('U') < $this->end_date) {
 		  return true;
@@ -1670,5 +1690,5 @@ class PaperProperties {
 		  return false;
 		}
 	}
-	
+
 }
