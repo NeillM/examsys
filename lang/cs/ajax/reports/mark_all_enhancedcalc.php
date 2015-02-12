@@ -16,5 +16,6 @@
 
 $string['problemsdetected'] = 'Byly zjištěny problémy u následujících úloh: %s: %s';
 $string['pleasecontact'] = 'Prosím, kontaktujte:';
+$string['noenhancedcalcdetected'] = 'Critical Error: No enhanced calculation question found';
 ?>
 
