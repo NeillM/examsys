@@ -82,6 +82,7 @@ while ($keyword->fetch()) {
 }
 $keyword->close();
 
+// Find the questions used in the paper from the list of possible found from random blocks and keyword based questions.
 if (count($possible) > 0) {
     $possible_string = implode(',', array_keys($possible));
     $check_possible = $mysqli->prepare("SELECT q_id from log$paper_type, log_metadata where metadataID = log_metadata.id "
