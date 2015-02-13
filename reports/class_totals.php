@@ -91,30 +91,30 @@ if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$property
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <script>
-  $(function () {
-		// Fire off the request to mark_all_enhancedcalc.php
-   var request = $.ajax({
-      url: "../ajax/reports/mark_all_enhancedcalc.php",
-      type: "get",
-      data: {paperID: <?php echo $paperID; ?>},
-			timeout: 30000, // timeout after 30 seconds
-			dataType: "html",
-			success: function (data, textStatus, jqXHR) {
-				data = data.replace(/(\r\n|\n|\r)/gm,"");
-			  if (data == 'Complete') {
-				  window.location.reload();
-				} else {
-					$("#msg").html(data);
-				}
-			},
-			error: function (xhr, textStatus, errorThrown) {
-				$("#msg").html('Error: ' + textStatus);
-			},
-			fail: function (jqXHR, textStatus) {
-				$("#msg").html('Failed: ' + textStatus);
-			},
+    $(function () {
+        // Fire off the request to mark_all_enhancedcalc.php
+        var request = $.ajax({
+            url: "../ajax/reports/mark_all_enhancedcalc.php",
+            type: "get",
+            data: {paperID: <?php echo $paperID; ?>, startdate: <?php echo $startdate; ?>, enddate: <?php echo $enddate; ?>},
+                  timeout: 30000, // timeout after 30 seconds
+                  dataType: "html",
+                  success: function (data, textStatus, jqXHR) {
+                          data = data.replace(/(\r\n|\n|\r)/gm,"");
+                    if (data == 'Complete') {
+                            window.location.reload();
+                          } else {
+                                  $("#msg").html(data);
+                          }
+                  },
+                  error: function (xhr, textStatus, errorThrown) {
+                          $("#msg").html('Error: ' + textStatus);
+                  },
+                  fail: function (jqXHR, textStatus) {
+                          $("#msg").html('Failed: ' + textStatus);
+                  },
+        });
     });
-	});
 </script>
 </head>
 <body>

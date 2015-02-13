@@ -17,5 +17,7 @@
 $string['problemsdetected'] = 'Problems detected with the following questions: %s';
 $string['pleasecontact'] = 'Please contact:';
 $string['noenhancedcalcdetected'] = 'Critical Error: No enhanced calculation question found';
+$string['complete'] = 'Complete';
+$string['applicationerror'] = 'Application Error';
 ?>
 
