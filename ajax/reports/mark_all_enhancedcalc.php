@@ -58,29 +58,17 @@ $result->close();
 
 $possible = array();
 
-// Check random blocks for caluclation questions
-$random = $mysqli->prepare("SELECT q_id, settings FROM questions "
-    . "WHERE q_type ='enhancedcalc' AND q_id in (SELECT option_text FROM questions, options, papers "
-    . "WHERE q_id = o_id AND question = q_id AND q_type ='random' AND paper = ?)");
-$random->bind_param('i', $paperID);
+// Check random blocks / keyword based questions for calculation questions
+$random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
+    . "SELECT option_text FROM questions, options, papers WHERE q_id = o_id AND question = q_id AND q_type ='random' AND paper = ? "
+    . "UNION SELECT q_id FROM keywords_question, options, papers WHERE question = o_id AND keywordID = option_text AND paper = ?)");
+$random->bind_param('ii', $paperID, $paperID);
 $random->execute();
 $random->bind_result($random_id, $random_settings);
 while ($random->fetch()) {
     $possible[$random_id] = $random_settings;
 }
 $random->close();
-
-// Check keyword based questions for caluclation questions
-$keyword = $mysqli->prepare("SELECT q_id, settings FROM questions "
-    . "WHERE q_type ='enhancedcalc' AND q_id in (SELECT q_id FROM keywords_question, options, papers "
-    . "WHERE question = o_id AND keywordID = option_text AND paper = ?)");
-$keyword->bind_param('i', $paperID);
-$keyword->execute();
-$keyword->bind_result($keyword_id, $keyword_settings);
-while ($keyword->fetch()) {
-    $possible[$keyword_id] = $keyword_settings;
-}
-$keyword->close();
 
 // Find the questions used in the paper from the list of possible found from random blocks and keyword based questions.
 if (count($possible) > 0) {
@@ -125,7 +113,7 @@ foreach($statuses as $qid => $data) {
         // Use the is if we cannot find the number.
         // Most likely a random block / keyword based question.
         if ($q_no == '') {
-            $q_no = $qid;
+            $q_no = 'qid: ' . $qid;
         }
         $problem_questions[] = $q_no;
     }
