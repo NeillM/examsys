@@ -90,6 +90,7 @@ $string['groupdetails'] = 'Podrobnosti skupiny';
 $string['tooltip_random'] = 'Rogo vypočítá ohodnocení, jakého by student dosáhl náhodným zodpovězením úloh. Procentuální hodnocení je následně tomuto uzpůsobeno.';
 $string['tooltip_calculator'] = 'Studentům je v rámci testu k dispozici JavaScriptová kalkulačka.';
 $string['tooltip_audio'] = 'Na úvodní stránce Zkoušky bude umístěn zkušební zvukový klip, aby si studenti mohli upravit hlasitost ještě před zahájením testování.';
+$string['tooltip_osceclassification'] = 'Warning: Once marking has started the overall classification is not changeable.';
 
 // Security tab
 $string['securitytab'] = 'Bezpečnost';
