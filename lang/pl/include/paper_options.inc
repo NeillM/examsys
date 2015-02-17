@@ -140,4 +140,5 @@ $string['questions'] = 'Pytania';
 $string['papers'] = 'Arkusze';
 $string['people'] = 'Osoby';
 $string['namewarning'] = 'This name is already being used by an existing paper!';
+$string['type'] = 'Typ';
 ?>
