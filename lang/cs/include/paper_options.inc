@@ -125,4 +125,5 @@ $string['questions'] = 'Úlohy';
 $string['papers'] = 'Dokumenty';
 $string['people'] = 'Lidé';
 $string['namewarning'] = 'This name is already being used by an existing paper!';
+$string['type'] = 'Typ';
 ?>
