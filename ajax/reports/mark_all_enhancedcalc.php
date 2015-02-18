@@ -35,6 +35,8 @@ set_time_limit(0);
 //header('Content-Type: text/html; charset=' + $configObject->get('cfg_page_charset'));
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+$startdate = check_var('startdate', 'REQUEST', true, false, true);
+$enddate = check_var('enddate', 'REQUEST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
@@ -54,6 +56,34 @@ while ($result->fetch()) {
 }
 $result->close();
 
+$possible = array();
+
+// Check random blocks / keyword based questions for calculation questions
+$random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
+    . "SELECT option_text FROM questions, options, papers WHERE q_id = o_id AND question = q_id AND q_type ='random' AND paper = ? "
+    . "UNION SELECT q_id FROM keywords_question, options, papers WHERE question = o_id AND keywordID = option_text AND paper = ?)");
+$random->bind_param('ii', $paperID, $paperID);
+$random->execute();
+$random->bind_result($random_id, $random_settings);
+while ($random->fetch()) {
+    $possible[$random_id] = $random_settings;
+}
+$random->close();
+
+// Find the questions used in the paper from the list of possible found from random blocks and keyword based questions.
+if (count($possible) > 0) {
+    $possible_string = implode(',', array_keys($possible));
+    $check_possible = $mysqli->prepare("SELECT q_id from log$paper_type, log_metadata where metadataID = log_metadata.id "
+      . "AND q_id in ($possible_string) AND paperID = ? AND started BETWEEN ? AND ?");
+    $check_possible->bind_param('iss', $paperID, $startdate, $enddate);
+    $check_possible->execute();
+    $check_possible->bind_result($possible_id);
+    while ($check_possible->fetch()) {
+        $q_ids[$possible_id] = $possible[$possible_id];
+    }
+    $check_possible->close();
+}
+
 $server_connection = true;
 
 $statuses = array();
@@ -61,32 +91,38 @@ $statuses = array();
 if (count($q_ids) == 0) {
     // Critical error
     $error = true;
-    $errline = 60;
+    $errline = __LINE__ - 3;
     $return_status = $string['noenhancedcalcdetected'];
 } else {
     $return_status = 'Complete';
 }
 
 foreach ($q_ids as $q_id => $setting) {
-  $data = enhancedcalc_remark($paper_type, $paperID, $q_id, $setting, $mysqli, 'all');
-	if ($data[-3] > 0) {
-		$server_connection = false;
-	}
-  $statuses[$q_id] = $data;
+    $data = enhancedcalc_remark($paper_type, $paperID, $q_id, $setting, $mysqli, 'all');
+    if ($data[-3] > 0) {
+        $server_connection = false;
+    }
+    $statuses[$q_id] = $data;
 }
 
 $problem_questions = array();
 
 foreach($statuses as $qid => $data) {
-  if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.
-		$problem_questions[] = get_question_no($qid, $questions);
-	}
+    if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.
+        $q_no = get_question_no($qid, $questions);
+        // Use the is if we cannot find the number.
+        // Most likely a random block / keyword based question.
+        if ($q_no == '') {
+            $q_no = 'qid: ' . $qid;
+        }
+        $problem_questions[] = $q_no;
+    }
 }
 
 if (count($problem_questions) > 0) {
-	$return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
-        $errline = 84;
-	$error = true;
+    $return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
+    $errline = __LINE__ - 2;
+    $error = true;
 }
 
 if ($error) {
@@ -128,13 +164,12 @@ if ($error) {
 echo $return_status;
 
 function get_question_no($qid, $questions) {
-  foreach($questions as $question) {
-	  if ($qid == $question['q_id']) {
-		  $problem_qid = $question['q_no'];
-		}
-	}
-	
-	return $problem_qid;
+    foreach($questions as $question) {
+        if ($qid == $question['q_id']) {
+            $problem_qid = $question['q_no'];
+            return $problem_qid;
+        }
+    }
 }
 ?>
 

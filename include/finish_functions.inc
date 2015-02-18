@@ -386,6 +386,17 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             $paper[$i]['q_type'] = $q_type;
             $paper[$i]['leadin'] = $leadin;
             $paper[$i]['notes'] = $notes;
+            $paper[$i]['settings'] = $settings;
+
+            if ($q_type == 'enhancedcalc') {
+                if (!is_array($settings)) {
+                    $settings = json_decode($settings, true);
+                }
+                $marks_correct = $settings['marks_correct'];
+                $marks_incorrect = $settings['marks_incorrect'];
+                $marks_partial = $settings['marks_partial'];
+            }
+
             $paper[$i]['marks_correct'] = $marks_correct;
             $paper[$i]['marks_incorrect'] = $marks_incorrect;
             $paper[$i]['marks_partial'] = $marks_partial;
@@ -394,7 +405,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             $paper[$i]['q_media_width'] = $q_media_width;
             $paper[$i]['display_method'] = $display_method;
             $paper[$i]['score_method'] = $score_method;
-            $paper[$i]['settings'] = $settings;
             $paper[$i]['correct_fback'] = $correct_fback;
             $paper[$i]['incorrect_fback'] = $incorrect_fback;
             $paper[$i]['status'] = $status;

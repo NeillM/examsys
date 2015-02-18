@@ -191,24 +191,29 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
       if ($random_on == false and count($selected_q_id) > 0) {
         foreach ($selected_q_id as &$used_qid) {
-          // Look up database.
-          if ($q_type == 'random') {
-            $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ?  ORDER BY id_num");
-          } else {
-              // Keyword need to join to keyword_questions.
-            $random_data = $db->prepare("SELECT questions.q_id, scenario, q_type, keywords_question.q_id as option_text,"
-                . " q_media, correct, display_method, settings, score_method, marks_correct"
-                . " FROM questions LEFT JOIN options ON questions.q_id = options.o_id"
-                . " LEFT JOIN keywords_question ON options.option_text = keywords_question.keywordID"
-                . " WHERE questions.q_id = ? ORDER BY id_num");
-          }
+
+          $random_data = $db->prepare("SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, "
+              . "score_method, marks_correct, marks_incorrect, marks_partial "
+              . "FROM (questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
 
           $random_data->bind_param('i', $used_qid);
           $random_data->execute();
           $random_data->store_result();
-          $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $settings, $score_method, $marks_correct);
+          $random_data->bind_result($new_q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $settings,
+            $score_method, $marks_correct, $marks_incorrect, $marks_partial);
+          if ($q_type == 'enhancedcalc') {
+            if (!is_array($settings)) {
+                $settings = json_decode($settings, true);
+            }
+            $marks_correct = $settings['marks_correct'];
+            $marks_incorrect = $settings['marks_incorrect'];
+            $marks_partial = $settings['marks_partial'];
+          }
           while ($random_data->fetch()) {
-            $paper_array[] = array('q_id' => $new_q_id, 'scenario' => $scenario, 'q_type' => $q_type, 'option_text' => $option_text, 'q_media' => $q_media, 'correct' => $correct, 'display_method' => $display_method, 'settings' => $settings, 'score_method' => $score_method, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'question_no' => $tmp_question_no, 'display_pos' => $display_pos);
+            $paper_array[] = array('q_id' => $new_q_id, 'scenario' => $scenario, 'q_type' => $q_type, 'option_text' => $option_text,
+                'q_media' => $q_media, 'correct' => $correct, 'display_method' => $display_method, 'settings' => $settings,
+                'score_method' => $score_method, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect,
+                'marks_partial' => $marks_partial, 'question_no' => $tmp_question_no, 'display_pos' => $display_pos);
           }
           /*
           if ($random_data->num_rows == 0) {
