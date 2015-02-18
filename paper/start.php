@@ -625,6 +625,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     alert('<?php echo $string['forcesave']; ?>');
     submitType = 'forcedSubmit';
     $('#qForm').attr('action',"finish.php?id=<?php echo $_GET['id'] . $url_mod; ?>&dont_record=true");
+    $('#qForm').submit();
   }
 
   <?php  // Called on auto save time out ?>
