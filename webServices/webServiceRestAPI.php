@@ -67,7 +67,7 @@ if ($action == 'getModulePaperList') {
 } else {
   require '../include/staff_student_auth.inc';
 }
-require './restAPI.class';
+require './restAPI.class.php';
 
 Class webServiceRestAPI extends restAPI {
 
