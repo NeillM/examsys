@@ -1667,7 +1667,8 @@ class PaperProperties {
             if (count($enhancedcalc_ids) > 0) {
                 $paperID = $this->get_property_id();
 
-                $result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL");
+                $result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id "
+                  . "AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL LIMIT 1");
                 $result->bind_param('i', $paperID);
                 $result->execute();
                 $result->store_result();
