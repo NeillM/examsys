@@ -382,6 +382,48 @@ SQL;
     $type->close();
     return $qtype;
   }
+
+  /**
+    * Based on the parent random block id get the possible calculation questions.
+    *
+    * @param int $q_id question
+    * @param mysqli $db
+    * @return array $possible list of possible calculation questions
+    */
+   static function get_random_calc_question($q_id, $db) {
+       $possible = array();
+       $random = $db->prepare("SELECT q_id FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
+           . "SELECT option_text FROM questions, options WHERE q_id = o_id AND q_type ='random' AND q_id = ?)");
+       $random->bind_param('i', $q_id);
+       $random->execute();
+       $random->bind_result($random_id);
+       while ($random->fetch()) {
+           $possible[] = $random_id;
+       }
+       $random->close();
+       return $possible;
+   }
+
+   /**
+    * Based on the parent keyword block id get the possible calculation questions.
+    *
+    * @param int $q_id question
+    * @param mysqli $db
+    * @return array $possible list of possible calculation questions
+    */
+   static function get_keyword_calc_question($q_id, $db) {
+       $possible = array();
+       $random = $db->prepare("SELECT q_id FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
+           . "SELECT q_id FROM keywords_question, options WHERE keywordID = option_text AND o_id = ?)");
+       $random->bind_param('i', $q_id);
+       $random->execute();
+       $random->bind_result($random_id);
+       while ($random->fetch()) {
+           $possible[] = $random_id;
+       }
+       $random->close();
+       return $possible;
+   }
   
 }
 ?>
