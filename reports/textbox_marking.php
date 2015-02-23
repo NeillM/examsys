@@ -91,11 +91,11 @@ HTML;
   <style type="text/css">
   .noanswer {background-image: url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat; background-position: 2px center; background-color:#FFC0C0; padding-left:20px; padding-right:5px; color: #800000 !important}
   <?php
-	if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
-		echo ".marked {color:#808080;display:none}\n";
-	} else {
-		echo ".marked {color:#808080}\n";
-	}
+    if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
+            echo ".marked {color:#808080;display:none}\n";
+    } else {
+            echo ".marked {color:#808080}\n";
+    }
   ?>
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -108,12 +108,12 @@ HTML;
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
 		
     $(function () {
-		window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';
--			
--		$('#hidemarked').click(function() {
--			 $('.marked').toggle();
--		});	
-	});
+        window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';
+			
+	$('#hidemarked').click(function() {
+            $('.marked').toggle();
+        });	
+    });
   </script>
 </head>
 
@@ -213,9 +213,9 @@ if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
 echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
-echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
+echo "<div style=\"text-align:right; vertical-align:top\"><br /><input class=\"chk\" type=\"checkbox\" name=\"hidemarked\" id=\"hidemarked\" value=\"1\"";
 if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') echo ' checked';
-echo "  /> " . $string['hidemarked'] . "&nbsp;</th></tr>\n";
+echo "  /> " . $string['hidemarked'] . "&nbsp;</div>\n";
 echo '<div class="page_title">' . $phase_description . '</div>';
 echo "</div>\n";
 
