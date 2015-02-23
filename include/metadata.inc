@@ -113,6 +113,13 @@ META;
       $module = $staff_modules;
     }
 
+    $type = $question->get_type();
+    if ($type == 'keyword_based') {
+        $disabled = 'disabled = "disabled"';
+    } else {
+        $disabled = '';
+    }
+
     $html .= <<< META
           <div class="form">
             <div id="keyword-select" class="select-area">
@@ -152,7 +159,7 @@ META;
           }
           $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
-      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} $disabled/>{$enc_keyword}</label></li>
 
 META;
           $i++;
@@ -179,7 +186,7 @@ META;
           }
           $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
-      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} />{$enc_keyword}</label></li>
+      						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} $disabled/>{$enc_keyword}</label></li>
 
 META;
           $i++;
