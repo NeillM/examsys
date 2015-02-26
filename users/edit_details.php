@@ -224,6 +224,7 @@ if ($user_details['gender'] == 'Male') {
   $roles_array[] = 'Staff,Student';
   $roles_array[] = 'External Examiner';
   $roles_array[] = 'Invigilator';
+  $roles_array[] = 'Inactive Staff';
   $roles_array[] = '#Students';
   $roles_array[] = 'Student';
   $roles_array[] = 'Graduate';
