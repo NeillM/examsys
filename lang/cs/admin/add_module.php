@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/admin/list_modules.php';
 
-$string['entermoduleid'] = 'Zadejte, prosím, identifikátor modulu.';
+$string['entermoduleid'] = 'Zadejte, prosím, Identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
 $string['selectschool'] = 'Přiřaďte, prosím, k modulu školu.';
 $string['moduleid'] = 'ID modulu';
@@ -28,10 +28,10 @@ $string['objapi'] = 'API cílů';
 $string['summativechecklist'] = 'Sumativní kontrolní seznam';
 $string['peerreview'] = 'Recenze';
 $string['externalexaminers'] = 'Externí Recenzent';
-$string['standardssetting'] = 'Standardní nastavení';
+$string['standardssetting'] = 'Nastavení Standardů';
 $string['mapping'] = 'Mapování';
 $string['active'] = 'Aktivní';
-$string['allowselfenrol'] = 'Povolit zápis sebe sama';
+$string['allowselfenrol'] = 'Povolit samopřihlášení';
 $string['negativemarking'] = 'Záporné známkování';
 $string['add'] = 'Přidat';
 $string['save'] = 'Uložit';
@@ -50,5 +50,5 @@ $string['session'] = 'Relace';
 $string['module'] = 'Modul';
 $string['maplevel'] = 'Úroveň mapování';
 $string['level'] = 'Úroveň';
-$string['tooltip_format'] = 'Format is MM/DD';
+$string['tooltip_format'] = 'Ve formátu MM/DD';
 ?>

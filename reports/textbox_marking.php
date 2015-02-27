@@ -144,7 +144,7 @@ if ($phase == 2) {
 if ($paper_type == '0') {
 
   $sql = <<< SQL
-SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
+SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
   FROM (log0 l, log_metadata lm, users u)
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
@@ -155,7 +155,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
   AND lm.started <= ?
 UNION ALL
-SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
+SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
   FROM (log1 l, log_metadata lm, users u)
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
@@ -170,7 +170,7 @@ SQL;
   $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
 } else {
   $sql = <<< SQL
-SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark, comments, reminders
+SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
 FROM (log{$paper_type} l, log_metadata lm, users u)
 LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
 WHERE lm.paperID = ?
@@ -187,7 +187,7 @@ SQL;
 $answer_no = 0;
 $result->execute();
 $result->store_result();
-$result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark, $comments, $reminders_selected);
+$result->bind_result($logtype, $id, $tmp_userID, $user_answer, $student_mark, $textbox_q_id, $comments, $reminders_selected);
 
 $phase_description = '';
 if (!isset($_GET['phase'])) {
@@ -374,7 +374,7 @@ $half_marks = true;
       $out_of = ($phase == 2) ? count($remark_array) : $result->num_rows;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
       
-      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$q_id], $string) . "</div></div>\n";
+      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
       if (count($reminders) > 0) {
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';

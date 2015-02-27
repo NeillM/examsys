@@ -18,6 +18,6 @@ $string['referencematerial'] = 'Referenční materiál';
 $string['creatematerial'] = 'Nový referenční materiál';
 $string['editmaterial'] = 'Upravit referenční materiál';
 $string['deletematerial'] = 'Odstranit referenční materiál';
-$string['referencename'] = 'Název Reference';
+$string['referencename'] = 'Název materiálu';
 $string['modules'] = 'Moduly';
 ?>

@@ -16,11 +16,11 @@
 
 require '../lang/' . $language . '/admin/add_module.php';
 
-$string['entermoduleidentifier'] = 'Zadejte, prosím, identifikátor modulu.';
+$string['entermoduleidentifier'] = 'Zadejte, prosím, Identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
 $string['selectschool'] = 'Přiřaďte, prosím, k modulu školu.';
 $string['moduleidinuse'] = 'Identifikátor modulu %s již existuje. Vyberte, prosím, jiné ID.';
 $string['nolookup'] = '&lt;Vyhledat&gt;';
 $string['nle'] = 'Síťové výukové prostředí (NLE)';
-$string['uoncm'] = 'Curriculum Mapa (UoNCM)';
+$string['uoncm'] = 'Mapa Kurikula (UoNCM)';
 ?>

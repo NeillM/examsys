@@ -47,7 +47,7 @@ $string['duplicatefoldername'] = 'Duplicitní název složky, použijte, prosím
 $string['nomodules'] = 'Nejste členem žádného týmu. Pro získání pomoci, prosím, kontaktujte:';
 $string['papersforreview'] = 'Dokumenty k rezenci';
 $string['deadline'] = 'Uzávěrka:';
-$string['recent'] = 'Nedávné';
+$string['recent'] = 'Naposledy otevřené';
 $string['unassigned'] = 'Nepřiřazené';
-$string['unassignedmsg'] = 'Úlohy/dokumenty nejsou v žádném modulu';
+$string['unassignedmsg'] = 'Úlohy/dokumenty nepřiřazené do modulu';
 ?>

@@ -16,6 +16,6 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['msg'] = 'Are you sure you wish to clear the LTI links associated with this user?';
-$string['clearlti'] = 'Clear LTI';
+$string['msg'] = 'Jste si skutečně jisti, že chcete LTI odkazy přidružené k tomuto uživateli odstranit?';
+$string['clearlti'] = 'Odstranit LTI';
 ?>

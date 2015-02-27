@@ -36,7 +36,7 @@ $string['media'] = 'Mediální soubory ';
 $string['questionswf'] = 'Úloha SWF';
 $string['answerswf'] = 'Odpověď SWF';
 $string['leadin'] = 'Popis';
-$string['leadinmsg'] = '(otázka)';
+$string['leadinmsg'] = '(úloha)';
 $string['presentation'] = 'Prezentace';
 $string['includeother'] = 'zahrnout i políčko \'jiný\' <span class="note">(používáno při Průzkumech)</span>';
 $string['vertical'] = 'Přepínače umístěné svisle';

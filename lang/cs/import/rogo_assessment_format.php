@@ -20,7 +20,7 @@ require '../lang/' . $language . '/paper/new_paper2.php';
 $string['importraf'] = 'Importovat Rog&#333; Assessment Format';
 $string['file'] = 'Složka';
 $string['importfile'] = 'Importovat složku';
-$string['invalidzip'] = 'Toto je neplatný ZIP soubor.';
-$string['invalidraf'] = 'Toto je neplatný formát Rogo souboru (RAF = Rogo Assessment File).';
+$string['invalidzip'] = 'Tento ZIP soubor je neplatný.';
+$string['invalidraf'] = 'Tento RAF (Rogo Assessment File) je neplatný.';
 $string['type'] = 'Typ';
 ?>

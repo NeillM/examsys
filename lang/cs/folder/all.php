@@ -3,7 +3,7 @@ require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['allmodules'] = 'Všechny moduly';
-$string['bymodulecode'] = 'Podle kódu modulu';
+$string['bymodulecode'] = 'Moduly dle kódu';
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['usermanagement'] = 'Nastavení uživatelů';
