@@ -17,5 +17,5 @@
 require '../lang/' . $language . '/delete/delete.inc';
 
 $string['msg'] = 'Odstraněním dokumentu <em>nevymažete</em> úlohy v bance úloh.<br /><br /><strong>Jste si skutečně jisti, že chcete tento dokument odstranit?</strong>';
-$string['paperlocked'] = 'Paper Locked';
+$string['paperlocked'] = 'Test uzamčen';
 ?>

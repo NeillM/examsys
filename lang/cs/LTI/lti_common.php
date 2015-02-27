@@ -25,10 +25,10 @@ $string['ltikeys'] = 'LTI klíče ';
 $string['addltikeys'] = 'Přidat LTI klíč';
 $string['editltikeys'] = 'Upravit LTI klíč';
 $string['mandatory'] = 'Označte <strong>povinná</strong> pole, která musí být vyplněna.';
-$string['bymodulecode'] = 'Podle kódu modulu';
+$string['bymodulecode'] = 'Moduly dle kódu';
 $string['myfolders'] = 'Moje složky';
 $string['papersoncurrentmodule'] = 'Dokumenty v tomto modulu';
 $string['describemodulechoice'] = 'Vyberte, prosím, dokument k prolinkování';
 $string['missingfields'] ='Chybějící pole';
-$string['module'] = 'Module: %s';
+$string['module'] = 'Modul: %s';
 ?>

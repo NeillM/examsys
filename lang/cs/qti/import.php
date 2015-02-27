@@ -51,7 +51,7 @@ $string['nolikertfeedback'] = 'Rog&#333; Komentář k Likertově stupnici se neu
 $string['nocorrect'] = 'Nelze najít správnou odpověď';
 $string['multipleconds'] = 'Nalezeno více podmínek hodnotících úlohu, ignorovat všechny, kromě první.';
 $string['mrqnoismulti'] = 'Pokoušíte se načíst MRQ bez multisetu!';
-$string['importingtext'] = 'Import textu otázky s podmínkami hodnocení. Nebude automaticky oznámkovano. Rog&#333;';
+$string['importingtext'] = 'Import textu úlohy s podmínkami hodnocení. Nebude automaticky oznámkovano. Rog&#333;';
 $string['someneg'] = 'Několik negativit - 1 známka za každou správnou volbu s negativitou';
 $string['noneg'] = 'Žádné negativity a několik pozitivit - 1 známka za každou správnou volbu';
 

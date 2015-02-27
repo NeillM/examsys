@@ -20,12 +20,12 @@ require_once '../lang/' . $language . '/include/months.inc';
 
 $string['availability'] = 'Dostupnost';
 $string['summativeexamdetails'] = 'Detaily sumativní zkoušky';
-$string['academicsession'] = 'Akademická relace';
+$string['academicsession'] = 'Aka.rok';
 $string['timezone'] = 'Časová zóna';
 $string['from'] = 'Od';
 $string['to'] = 'Do';
 $string['modules'] = 'Modul(y)';
-$string['finish'] = 'Konec';
+$string['finish'] = 'Dokončit';
 $string['msg4'] = 'Nejsou vybrány žádné moduly. Dokument musí být přiřazen nejméně k jednomu modulu.';
 $string['msg5'] = "Název '%s' je již používán. Vyberte, prosím, jiný.";
 $string['msg6'] = 'Jedná se o uzavřenou zkoušku, tedy bez použití pomůcek. Studenti nesmí používat jiných zdrojů (včetně souseda), než kterých je užito v dokumentu. Nelze používat žádná jiná elektronická zařízení, než počítač ke zkoušce určený. Slovníky <em>nejsou</em> povoleny s jedinnou výjimkou. Ti, kteří <em>nemají</em> češtinu jako rodný jazyk, mohou používat pro překlad do češtiny slovník. Za podmínky, že ani jeden z jazyků není předmětem zkoušky. Odborné slovníky jsou zakázány. Během zkoušky a ani po jejím ukončení není dovoleno z učebny odnášet jakékoliv dokumenty a poznámky. Veškeré poznámky, které si zapíšete v průběhu zkoušky budou shromážděny Dohlížejícím a zlikvidovány.';

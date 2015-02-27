@@ -74,7 +74,7 @@ $string['method'] = 'Metoda';
 $string['noadjustment'] = 'Neupraveno';
 $string['calculatrrandommark'] = 'Vypočítat náhodnou známku';
 $string['stdset'] = 'Nastavení standardů';
-$string['borderlinemethod'] = 'Borderline Metoda';
+$string['borderlinemethod'] = 'Hraniční metoda';
 $string['ticks_crosses'] = 'Odškrtnutí/Křížky';
 $string['question_marks'] = 'Hodnocení úlohy';
 $string['hideallfeedback'] = 'Skrýt veškeré komentáře';
@@ -90,7 +90,7 @@ $string['groupdetails'] = 'Podrobnosti skupiny';
 $string['tooltip_random'] = 'Rogo vypočítá ohodnocení, jakého by student dosáhl náhodným zodpovězením úloh. Procentuální hodnocení je následně tomuto uzpůsobeno.';
 $string['tooltip_calculator'] = 'Studentům je v rámci testu k dispozici JavaScriptová kalkulačka.';
 $string['tooltip_audio'] = 'Na úvodní stránce Zkoušky bude umístěn zkušební zvukový klip, aby si studenti mohli upravit hlasitost ještě před zahájením testování.';
-$string['tooltip_osceclassification'] = 'Warning: Once marking has started the overall classification is not changeable.';
+$string['tooltip_osceclassification'] = 'Upozornění: jakmile je hodnocení zahájeno, nelze klasifikaci měnit.';
 
 // Security tab
 $string['securitytab'] = 'Bezpečnost';
@@ -130,7 +130,7 @@ $string['postscriptheading'] = "Text zobrazený po kliknutí na 'Konec'.";
 
 // Záložka Referenčního materiálu
 $string['referencematerial'] = 'Referenční materiál';
-$string['referenceheading'] = 'Určit, které referenční materiály jsou v dokumentu k dispozici.';
+$string['referenceheading'] = 'Určit, které referenční materiály budou v dokumentu k dispozici.';
 $string['nomaterials'] = 'K tomuto dokumentu nejsou dostupné žádné referenční materiály.<br /><br />Referenční materiál může být doplněn kliknutím na volbu \'Referenční materiáll\' v modulu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">viz nápověda</a>).';
 
 // Záložka zpětné vazby

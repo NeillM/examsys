@@ -16,7 +16,7 @@
 
 $string['loadkeywords'] = 'Nahrát klíčová slova';
 $string['loadkeywordsbtn'] = 'Nahrát klíčová slova';
-$string['msg1'] = 'Klíčová slova by měla být uvedena vždy na řádku po jednom (tzn. ve sloupci).';
+$string['msg1'] = 'Klíčová slova by měla být uvedena vždy po jednom na jednom řádku (tzn. ve sloupci).';
 $string['msg2'] = 'Vyberte, prosím, TXT soubor, který chcete nahrát:';
 $string['createnewkeyword'] = 'Nové klíčové slovo';
 $string['editkeyword'] = 'Upravit klíčové slovo';

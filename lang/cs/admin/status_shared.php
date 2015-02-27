@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['questionstatuses'] = 'Status Otázky';
+$string['questionstatuses'] = 'Status Úlohy';
 $string['createstatus'] = 'Nový Status';
 $string['edit'] = 'Upravit';
 $string['add'] = 'Přidat';
@@ -25,7 +25,7 @@ $string['name'] = 'Název';
 $string['excludemarking'] = 'Neznámkovat';
 $string['retired'] = 'Neplatná';
 $string['default'] = 'Standardní';
-$string['setlocked'] = 'Lze nastavit u zamknutých otázek';
+$string['setlocked'] = 'Lze nastavit u zamknutých úloh';
 $string['validate'] = 'Ověřit';
 $string['displaywarning'] = 'Zobrazit upozornění';
 $string['colour'] = 'Barva';

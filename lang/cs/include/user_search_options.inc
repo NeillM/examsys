@@ -15,13 +15,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['genmsg'] = 'Hledání podle všech, či jen vybraných kritérií.';
-$string['name'] = 'Jméno';
-$string['username'] = 'Uživatelské jméno';
+$string['name'] = 'Příjmení';
+$string['username'] = 'Uživatelské ID';
 $string['studentid'] = 'ID studenta';
 $string['module'] = 'Modul';
 $string['academicyear'] = 'Akademický rok';
 $string['advanced'] = 'Rozšířené';
-$string['students'] = 'Studenti';
+$string['students'] = 'Student';
 $string['graduates'] = 'Absolvent';
 $string['leavers'] = 'Odstupující';
 $string['leftuniversity'] = 'Opouští školu';
@@ -35,7 +35,7 @@ $string['externalexaminers'] = 'Externí recenzent';
 $string['invigilators'] = 'Dohlížející osoba';
 $string['back'] = 'Zpět';
 $string['search'] = 'Hledat';
-$string['usertasks'] = 'Úkoly uživatele';
+$string['usertasks'] = 'Možnosti uživatele';
 $string['viewuserfile'] = 'Zobrazit uživatelské soubory';
 $string['createnewuser'] = 'Nový uživatel';
 $string['emailuser'] = 'Zaslat uživateli e-mail';

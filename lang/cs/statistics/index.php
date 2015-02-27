@@ -15,8 +15,8 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['statisticsreports'] = 'Statistické přehledy';
-$string['questionsbyschool'] = 'Úlohy dle Školy';
-$string['papersbyschool'] = 'Dokumenty dle Školy';
-$string['summativeexamstats'] = 'Sumativní zkoušky dle Měsíce';
-$string['summativefeedback'] = 'Komentář k Sumativní zkoušce';
+$string['questionsbyschool'] = 'Úloh dle příslušnosti ke Škole';
+$string['papersbyschool'] = 'Dokumentů dle příslušnosti ke Škole';
+$string['summativeexamstats'] = 'Sumativních zkoušek dle měsíce';
+$string['summativefeedback'] = 'Komentářů k Sumativním zkouškám';
 ?>

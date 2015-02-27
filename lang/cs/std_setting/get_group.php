@@ -17,7 +17,7 @@
 require '../lang/' . $language . '/std_setting/index.php';
 
 $string['selectreviewers'] = 'Výběr recenzentů';
-$string['standardssetting'] = 'Standardní nastavení';
+$string['standardssetting'] = 'Nastavení Standardů';
 $string['standardsetter'] = 'Nastavení standardů';
 $string['date'] = 'Datum';
 $string['passscore'] = 'Potřebné skóre';
