@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['standardssetting'] = 'Standardní nastavení';
+$string['standardssetting'] = 'Nastavení Standardů';
 $string['mark'] = 'Hodnocení';
 $string['marks'] = 'Hodnocení';
 $string['true'] = 'Pravda';

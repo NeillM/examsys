@@ -21,5 +21,5 @@ $string['modules'] = 'Moduly';
 $string['createschool'] = 'Nová škola';
 $string['editschool'] = 'Upravit školu';
 $string['deleteschool'] = 'Zrušit školu';
-$string['musthavefaculty'] = 'Při založení školy je potřeba vytvořit alespoň jednu fakultu.';
+$string['musthavefaculty'] = 'Při založení školy je zapotřebí vytvořit alespoň jednu fakultu.';
 ?>

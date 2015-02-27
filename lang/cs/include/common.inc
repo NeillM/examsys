@@ -19,7 +19,9 @@ $string['helpsupport'] = 'Nápověda a podpora';
 $string['aboutrogo'] = 'O programu Rog&#333; %s';
 $string['furtherassistance'] = 'V případě potřeby další pomoci, prosím, kontaktujte: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Stránka nebyla nalezena';
-$string['signinmsg'] = 'Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
+$string['signinmsg'] = '<span style="color:#1f497d;font-weight:bold;">Vítejte v systému elektronického testování</span><br />
+    V případě zájmu o vytvoření účtu kontaktujte <a href="mailto:ovt@lf1.cuni.cz">ovt@lf1.cuni.cz</a>.<hr /><br />
+    Stránka, na kterou se pokoušíte vstoupit, vyžaduje ověření. Přihlaste se, prosím, pomocí svého uživatelského jména a hesla:';
 $string['username'] = 'Uživatelské jméno';
 $string['password'] = 'Heslo';
 $string['signin'] = 'Přihlásit';
@@ -71,7 +73,7 @@ $string['Authentication_callback_failure1'] = 'Nepodařilo se zapsat sekční zp
 $string['Authentication_callback_failure2'] = ' s funkcí';
 $string['Authentication_issue1'] = 'Problémy s ověřováním';
 $string['Authentication_issue2'] = 'Ověřovací pluginy vás nemohly přihlásit a neposkytly žádný další formulář ani přesměrování. Aktualizujte pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu : <a href="mailto:%s">%s</a>.<p>Do e-mailu, prosím uveďte následující debug:</p><div style="margin-left:100px;">%s</div>';
-$string['Authentication_issue2nodebug'] = 'Ověřovací pluginy vás nemohly přihlásit a neposkytly žádný další formulář ani přesměrování. Aktualizujte pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu : <a href="mailto:%s">%s</a>.';
+$string['Authentication_issue2nodebug'] = 'Ověřovací pluginy vás nemohly přihlásit a neposkytly žádný další formulář ani přesměrování. Aktualizujte pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu: <a href="mailto:%s">%s</a>.';
 $string['Authentication_notloggedin1'] = 'Problémy s ověřováním';
 $string['Authentication_notloggedin2'] = 'Nejste přihlášen/a. Aktualizujte stránku pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu: <a href="mailto:%s">%s</a><p>Do e-mailu, prosím uveďte následující debug:</p><div style="margin-left:100px;">%s</div>';
 $string['Authentication_notloggedin2nodebug'] = 'Nejste přihlášen/a. Aktualizujte stránku pomocí stisknutím klávesy F5, pokud se stále nedaří, kontaktujte podporu: <a href="mailto:%s">%s</a>';
@@ -83,7 +85,7 @@ $string['authentication_lti_reauthmessage'] = 'Přihlaste se, prosím, znovu k o
 $string['lti_not_allow_add_selfreg'] = 'Automatické přidávání studentů, do tohoto typu modulu, nebylo v configu modulu povoleno : ';
 $string['denied_role'] = 'Vaše uživatelská role %s Vám přístup neumožňuje.';
 $string['Error'] = 'Chyba';
-$string['NoAcademicSession'] = 'Není nastavena žádná akademická relace.';
+$string['NoAcademicSession'] = 'Není nastaven akademický rok.';
 $string['NoFieldMetadata'] = 'Žádná pole v metadatech skupin.';
 $string['NoGroup'] = 'K aktuálnímu uživateli nelze nalézt žádnou skupinu.';
 $string['new'] = 'Nový';
@@ -93,9 +95,9 @@ $string['studentname'] = 'Jméno studenta';
 $string['html5warn'] = 'Rog&#333; vyžaduje podporu HTML5, aktualizujte, prosím, Váš prohlížeč.';
 $string['colours'] = 'Barvy';
 $string['Objectives Feedback report'] = 'Komentář k vzdělávacích cílům';
-$string['Questions Feedback report'] = 'Komentář k otázkám';
+$string['Questions Feedback report'] = 'Komentář k úlohám';
 $string['loggedinas'] = 'Přihlášen jako';
-$string['crondisallowed'] = 'cron attempted to run disallowed script';
+$string['crondisallowed'] = 'Démonek se pokusil spustit nepovolený skript';
 $string['register'] = 'Registrovat jako Zaměstnance';
 $string['register1'] = 'Registrovat jako ';
 $string['demomodule'] = 'Demo Modul';

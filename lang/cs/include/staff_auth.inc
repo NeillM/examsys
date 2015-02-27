@@ -14,5 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$types_array = array('Cvičné sebehodnocení','Průběžné testy','Sumativní zkoušky','Průzkumy','Stanice OSCE','Offline dokumenty');
+$types_array = array('Cvičná sebehodnocení','Průběžné testy','Sumativní zkoušky','Průzkumy','Stanice OSCE','Offline dokumenty');
 ?>

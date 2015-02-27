@@ -41,14 +41,14 @@ $string['true_false'] = 'Pravda/Nepravda';
 $string['area'] = 'Plocha';
 $string['enhancedcalc'] = 'Rozšířená početní úloha';
 
-$string['veryeasy'] = 'Velmi jednoduchá';
+$string['veryeasy'] = 'Velmi snadná';
 $string['easy'] = 'Jednoduchá';
 $string['moderate'] = 'Průměrná';
-$string['hard'] = 'Těžká';
+$string['hard'] = 'Nesnadná';
 $string['veryhard'] = 'Velmi těžká';
 $string['mean'] = 'Průměr';
 $string['highest'] = 'Nejvyšší';
-$string['high'] = 'Vysoká';
+$string['high'] = 'Vysoké';
 $string['intermediate'] = 'Střední';
-$string['low'] = 'Nízký';
+$string['low'] = 'Nízké';
 ?>

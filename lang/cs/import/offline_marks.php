@@ -18,7 +18,7 @@ require '../lang/' . $language . '/paper/type.php';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
 $string['marksloaded'] = 'Známky nahrány.';
-$string['msg1'] = 'CSV soubor by měl obsahovat sloupce v následujícím pořadí: studentské_id, Otázka 1, Otázka 2...';
+$string['msg1'] = 'CSV soubor by měl obsahovat sloupce v následujícím pořadí: ID studenta, Otázka 1, Otázka 2...';
 $string['msg2'] = 'Vyberte, prosím, CVS soubor, který chcete nahrát:';
 $string['headerrow'] = 'Soubor obsahuje řádek se záhlavím.';
 $string['errorsaving'] = 'Chyba při aktualizaci loginů';

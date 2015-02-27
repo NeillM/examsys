@@ -16,8 +16,9 @@
 
 $string['problemsdetected'] = 'Byly zjištěny problémy u následujících úloh: %s: %s';
 $string['pleasecontact'] = 'Prosím, kontaktujte:';
-$string['noenhancedcalcdetected'] = 'Critical Error: No enhanced calculation question found';
-$string['complete'] = 'Complete';
-$string['applicationerror'] = 'Application Error';
+$string['noenhancedcalcdetected'] = 'Závažná chyba: Nebyla nalezena žádná rozšířená výpočetní úloha'; 
+$string['complete'] = 'Dokončit'; 
+$string['applicationerror'] = 'Chyba v aplikaci';
+
 ?>
 

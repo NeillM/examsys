@@ -1,5 +1,5 @@
 <?php
-$string['confirmunfinishexam'] = 'Confirm Unfinish Exam';
-$string['msg'] = "Are you sure you wish to set this exam to 'unfinished'?";
-$string['user'] = '<strong>User:</strong> %s';
+$string['confirmunfinishexam'] = 'Potvrdit nedokončení testu';
+$string['msg'] = "Jste si jisti, že si přejete vést tento test jako  'nedokončený'?";
+$string['user'] = '<strong>Uživatel:</strong> %s';
 ?>

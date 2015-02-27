@@ -43,6 +43,7 @@ $string['hour'] = 'hodina';
 $string['hours'] = 'hodiny';
 $string['minutes'] = 'minuty ';
 $string['mins'] = 'minut';
+$string['notset'] = 'nenastaveno';
 $string['secs'] = 'vteřin';
 $string['papernotfound'] = 'Dokument nebyl nalezen.';
 $string['requestedpaper'] = 'Požadovaný dokument nebyl nalezen.';
