@@ -871,7 +871,7 @@ echo draw_toprightmenu(30);
         $message = str_replace("{student-title}", $user_results[$i]['title'], $message);
         $message = str_replace("{student-last-name}", $user_results[$i]['surname'], $message);
         $message = str_replace("{student-mark}", $user_results[$i]['mark'], $message);
-        $message = str_replace("{student-percent}", $user_results[$i]['percent'], $message);
+        $message = str_replace("{student-percent}", number_format($user_results[$i]['percent'], 2, '.', ',') . '%', $message);
         $message = str_replace("{total-paper-mark}", $report->get_total_marks(), $message);
         $message = str_replace("{student-time}", formatsec($user_results[$i]['duration']), $message);
         $message = str_replace("{class-mean-mark}", $stats['mean_mark'], $message);
