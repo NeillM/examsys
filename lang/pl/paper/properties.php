@@ -90,6 +90,7 @@ $string['groupdetails'] = 'Szczegóły dot. grupy';
 $string['tooltip_random'] = 'Rog&#333; oszacuje jaką ocenę dostałby student odpowiadając na wszystkie pytania całkowicie losowo. Następnie odpowiednio skalowane są procenty.';
 $string['tooltip_calculator'] = 'Kalkulator JavaScript dostępny jest dla studentów podczas egzaminu.';
 $string['tooltip_audio'] = 'Na stronie informacyjnej egzaminu umieszczony będzie próbny klip audio, umożliwiający studentom sprawdzenie poziomu dźwięku.';
+$string['tooltip_osceclassification'] = 'Warning: Once marking has started the overall classification is not changeable.';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';

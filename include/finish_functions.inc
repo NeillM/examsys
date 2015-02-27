@@ -25,7 +25,6 @@
 require_once $cfg_web_root . 'classes/stringutils.class.php';
 require_once $cfg_web_root . 'classes/configobject.class.php';
 require_once $cfg_web_root . 'classes/exclusion.class.php';
-require_once $cfg_web_root . 'classes/questionutils.class.php';
 
 $configObject = Config::get_instance();
 
@@ -387,6 +386,17 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             $paper[$i]['q_type'] = $q_type;
             $paper[$i]['leadin'] = $leadin;
             $paper[$i]['notes'] = $notes;
+            $paper[$i]['settings'] = $settings;
+
+            if ($q_type == 'enhancedcalc') {
+                if (!is_array($settings)) {
+                    $settings = json_decode($settings, true);
+                }
+                $marks_correct = $settings['marks_correct'];
+                $marks_incorrect = $settings['marks_incorrect'];
+                $marks_partial = $settings['marks_partial'];
+            }
+
             $paper[$i]['marks_correct'] = $marks_correct;
             $paper[$i]['marks_incorrect'] = $marks_incorrect;
             $paper[$i]['marks_partial'] = $marks_partial;
@@ -395,7 +405,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             $paper[$i]['q_media_width'] = $q_media_width;
             $paper[$i]['display_method'] = $display_method;
             $paper[$i]['score_method'] = $score_method;
-            $paper[$i]['settings'] = $settings;
             $paper[$i]['correct_fback'] = $correct_fback;
             $paper[$i]['incorrect_fback'] = $incorrect_fback;
             $paper[$i]['status'] = $status;
@@ -515,7 +524,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
       echo '<span style="background-color:#f27000; color:white; width:35px; text-align:center">&nbsp;EE&nbsp;</span> ' . $string['difficultyofthequestion'] . '</div></td>';
     }
     ?>
-    <td style="text-align:right; vertical-align:top; width:80px"><a href="window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
+    <td style="text-align:right; vertical-align:top; width:80px; cursor:pointer;"><a onclick="window.print()"><img src="../artwork/lrg_print_icon.png" width="64" height="64" /></a></td>
     </tr>
     </table>
     </div>
@@ -1993,7 +2002,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           $answer_options = array();
           $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
           $answer_list = array();
-          $answer_list = explode(',', strip_tags($answer_options[0], QuestionUtils::get_allowed_tags()));
+          $answer_list = explode(',', $answer_options[0]);
           $exclude_mod = (substr($tmp_exclude, $blank_count-1, 1) == '1') ? ' class="exclude"' : '';
           if ($paper[$question]['display_method'] == 'textboxes') {             // Textboxes
             $correct_flag = false;

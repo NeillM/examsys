@@ -35,11 +35,15 @@ set_time_limit(0);
 //header('Content-Type: text/html; charset=' + $configObject->get('cfg_page_charset'));
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+$startdate = check_var('startdate', 'REQUEST', true, false, true);
+$enddate = check_var('enddate', 'REQUEST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $questions = $properties->get_questions();
 $paper_type = $properties->get_paper_type();
+
+$error = false;
 
 // Get the enhanced calculation questions on the paper.
 $q_ids = array();
@@ -52,75 +56,120 @@ while ($result->fetch()) {
 }
 $result->close();
 
+$possible = array();
+
+// Check random blocks / keyword based questions for calculation questions
+$random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
+    . "SELECT option_text FROM questions, options, papers WHERE q_id = o_id AND question = q_id AND q_type ='random' AND paper = ? "
+    . "UNION SELECT q_id FROM keywords_question, options, papers WHERE question = o_id AND keywordID = option_text AND paper = ?)");
+$random->bind_param('ii', $paperID, $paperID);
+$random->execute();
+$random->bind_result($random_id, $random_settings);
+while ($random->fetch()) {
+    $possible[$random_id] = $random_settings;
+}
+$random->close();
+
+// Find the questions used in the paper from the list of possible found from random blocks and keyword based questions.
+if (count($possible) > 0) {
+    $possible_string = implode(',', array_keys($possible));
+    $check_possible = $mysqli->prepare("SELECT q_id from log$paper_type, log_metadata where metadataID = log_metadata.id "
+      . "AND q_id in ($possible_string) AND paperID = ? AND started BETWEEN ? AND ?");
+    $check_possible->bind_param('iss', $paperID, $startdate, $enddate);
+    $check_possible->execute();
+    $check_possible->bind_result($possible_id);
+    while ($check_possible->fetch()) {
+        $q_ids[$possible_id] = $possible[$possible_id];
+    }
+    $check_possible->close();
+}
+
 $server_connection = true;
 
 $statuses = array();
-foreach ($q_ids as $q_id => $setting) {
-  $data = enhancedcalc_remark($paper_type, $paperID, $q_id, $setting, $mysqli, 'all');
-	if ($data[-3] > 0) {
-		$server_connection = false;
-	}
-  $statuses[$q_id] = $data;
+// Should not get here but if we do throw a critical error.
+if (count($q_ids) == 0) {
+    // Critical error
+    $error = true;
+    $errline = __LINE__ - 3;
+    $return_status = $string['noenhancedcalcdetected'];
+} else {
+    $return_status = 'Complete';
 }
 
-$return_status = 'Complete';
+foreach ($q_ids as $q_id => $setting) {
+    $data = enhancedcalc_remark($paper_type, $paperID, $q_id, $setting, $mysqli, 'all');
+    if ($data[-3] > 0) {
+        $server_connection = false;
+    }
+    $statuses[$q_id] = $data;
+}
 
 $problem_questions = array();
 
 foreach($statuses as $qid => $data) {
-  if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.
-		$problem_questions[] = get_question_no($qid, $questions);
-	}
+    if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.
+        $q_no = get_question_no($qid, $questions);
+        // Use the is if we cannot find the number.
+        // Most likely a random block / keyword based question.
+        if ($q_no == '') {
+            $q_no = 'qid: ' . $qid;
+        }
+        $problem_questions[] = $q_no;
+    }
 }
 
 if (count($problem_questions) > 0) {
-	$return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
+    $return_status = sprintf($string['problemsdetected'], implode(', ', $problem_questions));
+    $errline = __LINE__ - 2;
+    $error = true;
+}
 
-	$userid = $userObject->get_user_ID();
-	$username = $userObject->get_username();
-	$error_type = 'Application Error';
-	$errstr = $return_status;
-	$errfile = $_SERVER['PHP_SELF'];
-	$errline = 56;
-  $post_data = '';
-  if (isset($_POST)) {
-    foreach ($_POST as $key => $value) {
-      if ($key != 'ROGO_PW') {
-        if (is_array($value)) {
-          $value = var_export($value, true);
-        }
-        if ($post_data == '') {
-          $post_data = "$key=$value";
+if ($error) {
+
+    $userid = $userObject->get_user_ID();
+    $username = $userObject->get_username();
+    $error_type = 'Application Error';
+    $errstr = $return_status;
+    $errfile = $_SERVER['PHP_SELF'];
+    $post_data = '';
+    if (isset($_POST)) {
+      foreach ($_POST as $key => $value) {
+        if ($key != 'ROGO_PW') {
+          if (is_array($value)) {
+            $value = var_export($value, true);
+          }
+          if ($post_data == '') {
+            $post_data = "$key=$value";
+          } else {
+            $post_data .= ", $key=$value";
+          }
         } else {
-          $post_data .= ", $key=$value";
+          $post_data .= ", $key=<HIDDEN>";
         }
-      } else {
-        $post_data .= ", $key=<HIDDEN>";
       }
     }
-  }
-				
-	$log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)");
-	$log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
-	$log_error->execute();
-	$log_error->close();
-	
-	$support_email = $configObject->get('support_email');
-	if ($support_email != '') {
-		$return_status .= '<br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
-	}
+
+    $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)");
+    $log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
+    $log_error->execute();
+    $log_error->close();
+
+    $support_email = $configObject->get('support_email');
+    if ($support_email != '') {
+            $return_status .= '<br /><br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
+    }
 }
 
 echo $return_status;
 
 function get_question_no($qid, $questions) {
-  foreach($questions as $question) {
-	  if ($qid == $question['q_id']) {
-		  $problem_qid = $question['q_no'];
-		}
-	}
-	
-	return $problem_qid;
+    foreach($questions as $question) {
+        if ($qid == $question['q_id']) {
+            $problem_qid = $question['q_no'];
+            return $problem_qid;
+        }
+    }
 }
 ?>
 

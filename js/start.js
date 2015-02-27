@@ -25,7 +25,6 @@ function UpdateTimerWithRemainingTime(remaining_time, close) {
   
   if (remaining_time == 0 && close == true) {
     KillClock();
-    alert( 'Your time has expired and your answers have been saved' );
     forceSave();
     return;
   }

@@ -121,10 +121,22 @@ $q_id = check_var('q_id', 'GET', true, false, true);
       $row++;
       foreach ($performance_array as $paper => $performance) {
         $display_data[$row]['q_id'] = $lookup_q_id;
+        if (!array_key_exists('icon', $performance)) {
+          $performance['icon']= 'red_flag.png';
+        }
         $display_data[$row]['icon'] = $performance['icon'];
         $display_data[$row]['paperID'] = $paper;
+        if (!array_key_exists('title', $performance)) {
+          $performance['title'] = '?';
+        }
         $display_data[$row]['title'] = $performance['title'];
+        if (!array_key_exists('screen', $performance)) {
+          $performance['screen'] = '?';
+        }
         $display_data[$row]['screen'] = $performance['screen'];
+        if (!array_key_exists('calendar_year', $performance)) {
+          $performance['calendar_year'] = '?';
+        }
         $display_data[$row]['calendar_year'] = $performance['calendar_year'];
         
         if (isset($performance['performance'][1]['taken'])) {

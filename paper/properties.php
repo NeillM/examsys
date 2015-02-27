@@ -424,7 +424,7 @@ if (isset($_POST['Submit'])) {
       $_POST['timezone'] = $properties->get_timezone();
     }
 
-    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin','Admin'))) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
+    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin'))) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
@@ -627,7 +627,7 @@ if (isset($_POST['Submit'])) {
     if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
 			$old_modules = $properties->get_modules(true);
 
-      if ($userObject->has_role(array('SysAdmin'))) {
+      if (!$locked or $userObject->has_role(array('SysAdmin'))) {
         Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
       }
 
@@ -1403,19 +1403,35 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
       }
       echo "</select></td></tr>";
-      echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
-    ?>
-      <option value="5"<?php if ($properties->get_marking() == '5') echo ' selected'; ?> />N/A</option>
-      <option value="7"<?php if ($properties->get_marking() == '7') echo ' selected'; ?> /><?php echo $string['overallclass5']; ?></option>
-      <option value="3"<?php if ($properties->get_marking() == '3') echo ' selected'; ?> /><?php echo $string['overallclass2']; ?></option>
-      <option value="4"<?php if ($properties->get_marking() == '4') echo ' selected'; ?> /><?php echo $string['overallclass3']; ?></option>
-      <option value="6"<?php if ($properties->get_marking() == '6') echo ' selected'; ?> /><?php echo $string['overallclass4']; ?></option>
-      </select></td></tr>
-  <?php
-			echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-			echo "<tr><td colspan=\"4\">" . $string['markingguidance'] . "</td></tr>\n";
-			echo "<tr><td colspan=\"4\" style=\"padding: 0\"><textarea class=\"mceEditor\" id=\"osce_marking_guidance\" name=\"osce_marking_guidance\" style=\"width:100%; height:230px\">" .  htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES) . "</textarea></td></tr>";
-		
+
+      $oscestarted = $properties->get_osce_started_status($paperID, $mysqli);
+      if($oscestarted) {
+        echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . ":</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\">";
+        ?>
+          <?php if ($properties->get_marking() == '5') echo 'N/A'; ?>
+          <?php if ($properties->get_marking() == '7') echo $string['overallclass5']; ?>
+          <?php if ($properties->get_marking() == '3') echo $string['overallclass2']; ?>
+          <?php if ($properties->get_marking() == '4') echo $string['overallclass3']; ?>
+          <?php if ($properties->get_marking() == '6') echo $string['overallclass4']; ?>
+
+      <?php
+      } else {
+        echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
+        ?>
+          <option value="5"<?php if ($properties->get_marking() == '5') echo ' selected'; ?> />N/A</option>
+          <option value="7"<?php if ($properties->get_marking() == '7') echo ' selected'; ?> /><?php echo $string['overallclass5']; ?></option>
+          <option value="3"<?php if ($properties->get_marking() == '3') echo ' selected'; ?> /><?php echo $string['overallclass2']; ?></option>
+          <option value="4"<?php if ($properties->get_marking() == '4') echo ' selected'; ?> /><?php echo $string['overallclass3']; ?></option>
+          <option value="6"<?php if ($properties->get_marking() == '6') echo ' selected'; ?> /><?php echo $string['overallclass4']; ?></option>
+          </select>
+      <?php
+      }
+      echo "<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_osceclassification'] . "\" />";
+      echo '</td></tr>';
+      echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+      echo "<tr><td colspan=\"4\">" . $string['markingguidance'] . "</td></tr>\n";
+      echo "<tr><td colspan=\"4\" style=\"padding: 0\"><textarea class=\"mceEditor\" id=\"osce_marking_guidance\" name=\"osce_marking_guidance\" style=\"width:100%; height:230px\">" .  htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES) . "</textarea></td></tr>";
+
     } elseif ($properties->get_paper_type() == '6') {  // Peer Review
       $review = $properties->get_display_question_mark();
 

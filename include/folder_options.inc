@@ -39,7 +39,7 @@
   <div class="menuitem cascade"><a href="#" onclick="showMenu('popup0','general','search',myOptions0,myURLs0,event)" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
 </div>
 <?php
-  makeMenu(array('Questions'=>"{$configObject->get('cfg_root_path')}/question/search.php",'Papers'=>"{$configObject->get('cfg_root_path')}/paper/search.php",'People'=>"{$configObject->get('cfg_root_path')}/users/search.php"));
+  makeMenu(array($string['questions']=>"{$configObject->get('cfg_root_path')}/question/search.php",$string['papers']=>"{$configObject->get('cfg_root_path')}/paper/search.php",$string['people']=>"{$configObject->get('cfg_root_path')}/users/search.php"));
 
   hideMenuScript($menuNo);
 ?>
