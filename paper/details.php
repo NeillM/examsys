@@ -213,13 +213,15 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
     }
     if ($q_type == 'mcq') {  // Check duplicate options
       $have_text = false;
+      $option_text_check = array();
       foreach ($option_text as $option) {
         if ($option != '') {
           $have_text = true;
+          $option_text_check[] = $option;
         }
       }
       if ($have_text) {
-        $option_text_copy = array_map('strtolower', $option_text);
+        $option_text_copy = array_map('strtolower', $option_text_check);
         $unique_options = array_unique($option_text_copy);
         if (count($option_text_copy) > count($unique_options)) {
           $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
