@@ -963,7 +963,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 		// Check to see if variables have been previously generated if not put them in an array to be generated
 		foreach ($this->settings['vars'] as $key => $value) {
-			if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
+			if (!isset($this->useranswer['vars'][$key]) and $this->useranswer['vars'][$key] !== 'ERROR' and !$this->is_linked_ans($value['min'])) {
 				$min = $this->variable_substitution($value['min'], $this->alluseranswers);
 				if ($value['max'] == '') {
 					//value for max not set force it to min to generate a fixed value.
