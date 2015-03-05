@@ -18,15 +18,15 @@ require '../lang/' . $language . '/include/question_types.inc';
 require '../lang/' . $language . '/include/paper_types.inc';
 
 $string['allmodules'] = 'Všechny moduly';
-$string['bymodulecode'] = 'Podle kódu modulu';
+$string['bymodulecode'] = 'Moduly dle kódu';
 $string['admintools'] = 'Nastavení';
 $string['calendar'] = 'Kalendář';
 $string['usermanagement'] = 'Nastavení uživatelů';
 $string['createfolder'] = 'Vytvořit složku';
 $string['mypersonalkeywords'] = 'Moje klíčová slova';
 $string['search'] = 'Hledat';
-$string['recent'] = 'Nedávné';
-$string['questions'] = 'Úlohy';
-$string['papers'] = 'Dokumenty';
-$string['people'] = 'Lidé';
+$string['recent'] = 'Naposledy otevřené';
+$string['questions'] = 'Questions'; //todo
+$string['papers'] = 'Papers'; //todo
+$string['people'] = 'People'; //todo
 ?>

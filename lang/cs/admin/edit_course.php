@@ -24,7 +24,7 @@ $string['createcourse'] = 'Nový kurz';
 $string['bulkcourseimport'] = 'Nahrát kurz';
 $string['editcourse'] = 'Upravit kurz';
 $string['deletecourse'] = 'Odstranit kurz';
-$string['courseentercode'] = 'Zadejte, prosím, identifikátor kurzu.';
+$string['courseentercode'] = 'Zadejte, prosím, Identifikátor kurzu.';
 $string['courseentertitle'] = 'Zadejte, prosím, Nadpis kurzu.';
 $string['coursecodeinuse'] = 'Kurz s kódem %s již existuje. Zadejte, prosím, jiný kód.';
 ?>

@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['title'] = 'LTI Links Cleared';
-$string['msg'] = 'LTI links successfully cleared.';
+$string['title'] = 'LTI odstraněny';
+$string['msg'] = 'LTI byly úspěšně odstraněny.';
 ?>

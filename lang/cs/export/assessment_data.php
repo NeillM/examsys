@@ -16,6 +16,6 @@
 
 require '../lang/' . $language . '/export/assessment_marks.php';
 
-$string['nodata'] = 'V daném období zkoušku nesložil žádný student';
-$string['error_random'] = 'Answer for random question could not be found';
+$string['nodata'] = 'V daném období tuto zkoušku žádný student nesložil';
+$string['error_random'] = 'Odpověď na náhodnou úlohu nebyla nalezena';  
 ?>

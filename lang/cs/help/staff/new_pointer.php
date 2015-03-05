@@ -17,5 +17,5 @@
 require '../../lang/' . $language . '/help/staff/index.php';
 
 $string['createlink'] = 'Vytvořit link';
-$string['msg'] = "Pointers allow extra 'pages' to be added to the table of contents which point to existing content. For example, it might be useful to add a pointer entitled 'Deleting Papers' which links to the original page 'Papers - how to delete'.";
+$string['msg'] = "Ukazatele umožňují přidat do obsahu "stránku" navíc, která vede k již existujícímu obsahu. Například, může být užitečné přidat ukazatel s názvem "Odstranění dokumentů", který bude odkazovat na stávající stránku "Dokumenty - jak odstranit".";
 ?>

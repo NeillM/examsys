@@ -39,30 +39,30 @@ $string['duration'] = 'Trvání:';
 $string['mins'] = 'minut';
 $string['hour']      = 'hodina';
 $string['hours']     = 'hodiny';
-$string['papernote'] = 'Poznámky dokumentu';
+$string['papernote'] = 'Poznámky k testu';
 $string['extratime'] = 'Prodloužení';
 $string['preexam'] = 'Před zkouškou';
 $string['preexamlist'] = '<ol>
-    <li>Place log in instructions at each workstation</li>
-    <li>Place blank paper each workstation</li>
-    <li>Check all students have logged in correctly</li>
-    <li>Use \'Guest Login\' accounts for anyone not able to log in</li>
-    <li><strong>NOTE:</strong> Do not start before scheduled start time</li>
+    <li>Umístěte k počítačům přihlašovací údaje</li>
+    <li>Ke každému počítači položte prázdný papír</li>
+    <li>Zkontrolujte, že se všichni adepti správně přihlásili</li>
+    <li>Uživatelům, kterým se nepodařilo přihlásit přidělte \'Dočasný účet\'</li>
+    <li><strong>Poznámka:</strong> Nezačínejte před stanoveným časem</li>
     </ol>';
 $string['midexam'] = 'V průběhu zkoušky';
 $string['midexamlist'] = '<ol>
-    <li>For emergency support call one of the numbers show on the paper tabs</li>
-    <li>Record IT/personal problems against relevant students (click their name)</li>
-    <li>Record toilet breaks against relevant students (click their name)</li>
-    <li>Record general paper/question problems using \'Add Paper Note...\' button.</li>
+    <li>V případě jakéhokoliv nedostatku či potíží, kontaktujte, prosím, správce</li>
+    <li>Zaznamenejte IT/lidské potíže jednotlivých adeptů (klikněte na jméno adepta)</li>
+    <li>Zaznamenejte přestávky (klikněte na jméno adepta)</li>
+    <li>Zaznamenejte potíže s testem/úlohami pomocí možnosti \'Přidat poznámku...\'.</li>
     </ol>';
 $string['postexam'] = 'Po zkoušce';
 $string['postexamlist'] = '<ol>
-    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "That is the end of the exam. Please navigate to the last screen and click \'Finish\'."</li>
-    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Click \'Close Window\' and then log out of Rog&#333."</li>
-    <li>Collect up log in instructions for reuse</li>
-    <li>Collect and dispose of blank paper</li>
-    <li>Ensure <strong>all</strong> workstations are logged out</li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Tímto zkouška končí. Přejděte, prosím, na poslední stránku a klikněte na \'Dokončit\'."</li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Klikněte na \'Zavřít okno\' a následně se z  Rog&#333 odhlašte."</li>
+    <li>Posbírejte přihlašovací údaje</li>
+    <li>Posbírejte prázdné papíry</li>
+    <li>Zkontrolujte, zda jsou odhlášeny <strong>všechny</strong> počítače</li>
     </ol>';
 $string['time'] = 'Čas';
 $string['timedexam'] = 'Zkouška s časovým limitem:';
@@ -73,6 +73,6 @@ $string['midexamclarifications'] = 'Ujasnění v průběhu testování';
 $string['examchecklist'] = 'Kontrolní seznam zkoušky';
 $string['viewrubric'] = 'Přehled Rubriky';
 $string['examrubric'] = 'Rubrika zkoušky';
-$string['unknowncomputer'] = 'Unknown Computer';
-$string['unknowncomputermsg'] = 'The computer you are attempting to access Rog&#333; from is not recognised.<br />Please call one of the emergency numbers for help.';
+$string['unknowncomputer'] = 'Neznámý počítač';
+$string['unknowncomputermsg'] = 'Počítač, který používáte je pro Rog&#333; nerozpoznatelný.<br />Kontaktujte, prosím, správce.';
 ?>

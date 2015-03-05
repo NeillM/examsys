@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['questiondeleted'] = 'Úloha odstraněna';
-$string['msg'] = 'Odkaz na úlohu z dokumentu úspěšně odstraněn.';
+$string['msg'] = 'Odkaz na úlohu byl z dokumentu úspěšně odstraněn.';
 $string['updateerror'] = 'Chyba aktualizace Vlastností';
 $string['recyclebin'] = 'Koš';
 ?>

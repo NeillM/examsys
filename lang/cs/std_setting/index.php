@@ -1,6 +1,6 @@
 <?php         //cz
 $string['listsettings'] = 'Seznam nastavení';
-$string['standardssetting'] = 'Nastavení standardů';
+$string['standardssetting'] = 'Nastavení Standardů';
 $string['standardsetter'] = 'Nastavení standardů';
 $string['date'] = 'Datum';
 $string['passscore'] = 'Potřebné skóre';

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['entermoduleid'] = 'Zadejte, prosím, identifikátor modulu.';
+$string['entermoduleid'] = 'Zadejte, prosím, Identifikátor modulu.';
 $string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
 $string['moduleid'] = 'ID modulu';
 $string['createcourse'] = 'Nový kurz';

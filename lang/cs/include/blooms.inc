@@ -22,5 +22,5 @@ $string['comprehension'] = 'Pochopení';
 $string['application'] = 'Aplikace';
 $string['analysis'] = 'Analýza';
 $string['synthesis'] = 'Syntéza';
-$string['evaluation'] = 'Zhodnocení';
+$string['evaluation'] = 'Evaluace';
 ?>

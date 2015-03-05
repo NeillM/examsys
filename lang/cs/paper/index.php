@@ -50,5 +50,5 @@ $string['summativetestmsg'] = '<strong>Pouze pro zaměstnance &ndash;tato část
 $string['nodurationwarning'] = 'Varování: není nastavena délka trvání zkoušky';
 $string['startwarning'] = 'Varování: dokument začíná před %d:00';
 $string['nolabswarning'] = 'Varování: není nastavena žádná učebna';
-$string['finished'] = 'Finished';
+$string['finished'] = 'Dokončeno';
 ?>

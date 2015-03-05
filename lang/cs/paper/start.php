@@ -29,7 +29,7 @@ require_once '../lang/' . $language . '/include/paper_security.inc';
 
 $string['survey'] = 'Průzkum';
 $string['assessment'] = 'Hodnocená zkouška';
-$string['finish'] = 'Konec';
+$string['finish'] = 'Dokončit';
 $string['screen'] = 'Obrazovka';
 $string['clarificationscreen'] = 'Obrazovka %s z %s';
 $string['mark'] = 'Hodnocení';
@@ -67,7 +67,7 @@ $string['saving'] = 'Ukládání';
 $string['auto_saving'] = 'Automatické ukládání...';
 $string['auto_ok'] = 'Automatické ukládání dokončeno';
 $string['savefailed'] = 'Ukládání selhalo';
-$string['tryagain'] = 'Zkuste, prosím, znovu. Přechodem na předchozí nebo následující okno.</div>';
+$string['tryagain'] = 'Zkuste, prosím, znovu: Přechodem na předchozí nebo následující okno.</div>';
 
 $string['question'] = 'Úloha';
 $string['questionclarification'] = 'Ujasnění úlohy';
@@ -75,5 +75,5 @@ $string['other'] = 'Ostatní';
 $string['answer_to'] = 'odpovědět';
 $string['decimal_places'] = 'desetinná místa';
 $string['significant_figures'] = 'významná figura';
-$string['forcesave'] = 'Your time has expired and your answers have been saved';
+$string['forcesave'] = 'Váš čas vypršel a Vaše odpovědi byly uloženy. ';
 ?>
