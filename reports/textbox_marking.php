@@ -90,13 +90,7 @@ HTML;
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <style type="text/css">
   .noanswer {background-image: url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat; background-position: 2px center; background-color:#FFC0C0; padding-left:20px; padding-right:5px; color: #800000 !important}
-  <?php
-    if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
-            echo ".marked {color:#808080;display:none}\n";
-    } else {
-            echo ".marked {color:#808080}\n";
-    }
-  ?>
+  .marked {color:#808080}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
@@ -141,6 +135,12 @@ if ($phase == 2) {
   $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
 }
 
+if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
+    $marked = 'AND t.mark is NULL';
+} else {
+    $marked = '';
+}
+
 if ($paper_type == '0') {
 
   $sql = <<< SQL
@@ -153,7 +153,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, r
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
-  AND lm.started <= ?
+  AND lm.started <= ? $marked
 UNION ALL
 SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
   FROM (log1 l, log_metadata lm, users u)
@@ -164,7 +164,7 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, r
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
-  AND lm.started <= ?
+  AND lm.started <= ? $marked
 SQL;
   $result = $mysqli->prepare($sql);
   $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
@@ -179,7 +179,7 @@ AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
-AND lm.started <= ?;
+AND lm.started <= ? $marked
 SQL;
   $result = $mysqli->prepare($sql);
   $result->bind_param('iiiss', $phase, $paperID, $q_id, $startdate, $enddate);
