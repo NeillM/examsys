@@ -96,7 +96,6 @@ HTML;
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.textbox.js"></script>
   <script type="text/javascript" src="../js/ie_fix.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
@@ -105,8 +104,16 @@ HTML;
         window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';
 			
 	$('#hidemarked').click(function() {
-            $('.marked').toggle();
-        });	
+            var request = $.ajax({
+                url: "../include/set_state.php",
+                type: "post",
+                data: {state_name: 'hidemarked', content: $('#hidemarked').is(':checked'), page: document.URL},
+                    dataType: "html",
+                success: function (responseText) {
+                    $("#theform").submit();
+                },
+            });
+        });
     });
   </script>
 </head>
@@ -228,7 +235,7 @@ if ($candidate_no == 0) {
 
 $half_marks = true;
 ?>
-<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id'] ?>&amp;startdate=<?php echo $startdate ?>&amp;enddate=<?php echo $enddate ?>&amp;module=<?php echo $_GET['module'] ?>&amp;folder=<?php echo $_GET['folder'] ?>&amp;phase=<?php echo $phase ?>&amp;action=mark" method="post">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id'] ?>&amp;startdate=<?php echo $startdate ?>&amp;enddate=<?php echo $enddate ?>&amp;module=<?php echo $_GET['module'] ?>&amp;folder=<?php echo $_GET['folder'] ?>&amp;phase=<?php echo $phase ?>&amp;action=mark&amp;qNo=<?php echo $_GET['qNo'] ?>" method="post">
 <input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID() ?>" />
 <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
 <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
