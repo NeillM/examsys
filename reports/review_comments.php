@@ -700,8 +700,11 @@ $result->close();
   // Capture reviewer comments data first.
   $comments_array = array();
   foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
-    $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
-    $comments_array[$reviewerID]->load_reviews();
+    // Only loads reviews if they exist.
+    if ($reviewer_detail['started'] != 'NULL') {
+        $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
+        $comments_array[$reviewerID]->load_reviews();
+    }
   }
   
   // Capture the paper makeup.
