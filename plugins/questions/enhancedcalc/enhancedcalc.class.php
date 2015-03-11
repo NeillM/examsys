@@ -970,7 +970,8 @@ class EnhancedCalc extends Question implements questionInterface {
 					$value['max'] = $value['min'];
 				}
 				$max = $this->variable_substitution($value['max'], $this->alluseranswers);
-				$inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
+				// Temporary fix ROGO-1468 until we introduce proper localisation we need to be able to handle ',' decimal places.
+				$inc = $this->variable_substitution(str_replace(',', '.', $value['inc']), $this->alluseranswers);
 				$dec = (int)$value['dec'];
 
 				$this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
