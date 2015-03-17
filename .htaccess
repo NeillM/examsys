@@ -46,3 +46,7 @@ Redirect /user_index.php /paper/user_index.php
 #AuthName "My6776Protected Are337878a787878"
 #AuthUserFile c:\dev\web\rogo8080\t2\htpasswd.htpasswd
 #Require valid-user
+
+<IfModule headers_module>
+  header set X-Clacks-Overhead "GNU Terry Pratchett"
+</IfModule>
