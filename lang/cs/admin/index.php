@@ -41,6 +41,6 @@ $string['imslti'] = 'Klíče LTI';
 $string['questionstatuses'] = 'Statusy úloh';
 $string['savefailattempts'] = 'Uložit nezdařené pokusy';
 $string['testing'] = 'Testování systémů';
-$string['bitbucket'] = 'Bitbucket:<br />Hlášení chyb';
+$string['bitbucket'] = 'Hlášení chyb';
 
 ?>
