@@ -295,16 +295,6 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
                         this.answerBox[mli_index] = new Array();
                     this.answerBox[mli_index][mli_combo] = tmp_answer;
 
-                    //duplicates in edit for multi
-                    /*if (this.qmode == 'edit' && tmp_answer[2] != '') {
-                     var tmp_answer2 = tmp_answer.slice(0);
-                     tmp_answer2[5] = mli_pos_xb;
-                     tmp_answer2[6] = mli_pos_yb - this.yOffset;
-                     tmp_answer2[7] = mli_pos_xb;
-                     tmp_answer2[8] = mli_pos_yb - this.yOffset;
-                     tmp_answer2[4] = (mli_combo + 1);
-                     this.answerBox[mli_index][mli_combo + 1] = tmp_answer2;
-                     }*/
                 } else {
                     blank_count++;
                 }
