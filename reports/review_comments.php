@@ -701,7 +701,7 @@ $result->close();
   $comments_array = array();
   foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
     // Only loads reviews if they exist.
-    if (empty($reviewer_detail['started'])) {
+    if (!empty($reviewer_detail['started'])) {
         $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
         $comments_array[$reviewerID]->load_reviews();
     } else {
