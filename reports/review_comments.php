@@ -701,9 +701,12 @@ $result->close();
   $comments_array = array();
   foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
     // Only loads reviews if they exist.
-    if ($reviewer_detail['started'] != 'NULL') {
+    if (isset($reviewer_detail['started'])) {
         $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
         $comments_array[$reviewerID]->load_reviews();
+    } else {
+        // Un-set the data as the exeternal has not revied yet.
+        unset($reviewer_data[$reviewerID]);
     }
   }
   
