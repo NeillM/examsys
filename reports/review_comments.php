@@ -700,8 +700,14 @@ $result->close();
   // Capture reviewer comments data first.
   $comments_array = array();
   foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
-    $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
-    $comments_array[$reviewerID]->load_reviews();
+    // Only loads reviews if they exist.
+    if (!empty($reviewer_detail['started'])) {
+        $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
+        $comments_array[$reviewerID]->load_reviews();
+    } else {
+        // Un-set the data as the exeternal has not revied yet.
+        unset($reviewer_data[$reviewerID]);
+    }
   }
   
   // Capture the paper makeup.

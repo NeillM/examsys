@@ -489,7 +489,7 @@ var lang = {
       $('body').css('cursor','wait');
     });
     
-    $('#qForm').submit(function() {
+    $('#qForm').submit(function(e) {
       $('.commentsbox').each(function() {
         if ($(this).val() != '') {
           var commentID = $(this).attr('id');
@@ -497,7 +497,7 @@ var lang = {
           if ( $('input[name=exttype' + commentNo + ']:checked', '#qForm').val() == undefined) {
             alert("Please select one of the radio buttons for question " + commentNo);
             $('body').css('cursor','default');
-            event.preventDefault();
+            e.preventDefault();
           }
         }
       });      
