@@ -126,7 +126,7 @@ $paper = $propertyObj->get_paper_title();
   $result->bind_result($q_id, $leadin, $q_type);
   while ($result->fetch()) {
     if ($q_type == 'textbox') {
-      if (($paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
+      if (($paper_type == '0' or $paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
         // Check how many candidates are marked for this question.
         $candidates_marked = 0;
         $marked = $mysqli->prepare("SELECT mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?");

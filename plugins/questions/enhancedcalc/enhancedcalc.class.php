@@ -798,73 +798,83 @@ class EnhancedCalc extends Question implements questionInterface {
 	 */
 	function variable_substitution($inputVal, $user_answers) {
 
-		if ($this->is_linked_ans($inputVal)) {
-			//its a question reference get previous user answer
-			$uansarray = array();
-			$find_qid = $this->parse_linked_ans($inputVal);
-			$pre_user_answers = '';
+            //Question reference
+            if ($this->is_linked_ans($inputVal)) {
+                $uansarray = array();
+                // 1. List answer and associated question
+                $find_qid = $this->parse_linked_ans($inputVal);
+                // 2. Error if user answers not set.
+                if (!is_array($user_answers)) {
+                    $user_answers = array();
+                    $inputVal = 'ERROR';
+                }
+                // 3. Loop though user answers.
+                foreach ($user_answers as $screen => $answers) {
+                    // Check user answer for question exists.
+                    if (isset($answers[$find_qid])) {
+                        try {
+                            // Decode if not already an array.
+                            if (!is_array($answers[$find_qid])) {
+                                $uansarray = json_decode($answers[$find_qid], true);
+                            } else {
+                                $uansarray = $answers[$find_qid];
+                            }
+                        } catch (exception $e) {
+                            return 'ERROR';
+                        }
+                        break;
+                    }
+                }
+                // 4. Error is user answer is empty.
+                if (!isset($uansarray['uans']) or $uansarray['uans'] == '') {
+                    return 'ERROR';
+                }
+                // 5. Return the number only.
+                $return = $this->split_numb_from_unit($uansarray['uans']);
+                $inputVal = $return[0];
+            }
 
-			if (!is_array($user_answers)) {
-				$user_answers = array();
-				$inputVal = 'ERROR';
-			}
-			
-			foreach ($user_answers as $screen => $answers) {
-				if (isset($answers[$find_qid])) {
-					try {
-						if (!is_array($answers[$find_qid])) {
-							$uansarray = json_decode($answers[$find_qid], true);
-						} else {
-							$uansarray = $answers[$find_qid];
-						}
-					} catch (exception $e) {
-						return 'ERROR';
-					}
-					break;
-				}
-			}
-			if (!isset($uansarray['uans']) or $uansarray['uans'] == '') {
-				return 'ERROR';
-			}
-			$return = $this->split_numb_from_unit($uansarray['uans']);
-			$inputVal = $return[0];
-		}
-		
-		if ($this->is_linked_question_var($inputVal)) {
-			// It's a var refrance from a previous question
-			list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
-			$pre_var_val = '';
-			if (!is_array($user_answers)) {
-				$user_answers = array();
-				$inputVal = 'ERROR';
-			}
-			foreach ($user_answers as $screen => $answers) {
-				if (isset($answers[$find_qid])) {
-					if (!is_array($answers[$find_qid])) {
-						$variables = json_decode($answers[$find_qid], true);
-					} else {
-						$variables = $answers[$find_qid];
-					}
-					if (isset($variables['vars'][$find_var])) {
-						$inputVal = $variables['vars'][$find_var];
-						break;
-					} else {
-						$inputVal = 'ERROR';
-					}
-				} else {
-					$inputVal = 'ERROR';
-				}
-			}
-		}
-    
-		if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
-			$inputVal = $this->substitute_and_eval_vars($this->useranswer['vars'], $inputVal);
-			if (!is_numeric($inputVal)) {
-				 $inputVal = 'ERROR';
-			}
-		}
+            // Variable reference
+            if ($this->is_linked_question_var($inputVal)) {
+                // 1. Get variable and associated question.
+                list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
+                // 2. Error if user answers not set.
+                if (!is_array($user_answers)) {
+                    $user_answers = array();
+                    $inputVal = 'ERROR';
+                }
+                // 3. Loop though user answers.
+                foreach ($user_answers as $screen => $answers) {
+                    // Check user answer for question exists or error.
+                    if (isset($answers[$find_qid])) {
+                        // Decode if not already an array.
+                        if (!is_array($answers[$find_qid])) {
+                            $variables = json_decode($answers[$find_qid], true);
+                        } else {
+                            $variables = $answers[$find_qid];
+                        }
+                        // Set input value to variable or error.
+                        if (isset($variables['vars'][$find_var])) {
+                            $inputVal = $variables['vars'][$find_var];
+                            break;
+                        } else {
+                            $inputVal = 'ERROR';
+                        }
+                    } else {
+                        $inputVal = 'ERROR';
+                    }
+                }
+            }
 
-		return $inputVal;
+            // Substitue values.
+            if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
+                $inputVal = $this->substitute_and_eval_vars($this->useranswer['vars'], $inputVal);
+                if (!is_numeric($inputVal)) {
+                    $inputVal = 'ERROR';
+                }
+            }
+
+            return $inputVal;
 	}
 
 	/**
@@ -953,14 +963,15 @@ class EnhancedCalc extends Question implements questionInterface {
 
 		// Check to see if variables have been previously generated if not put them in an array to be generated
 		foreach ($this->settings['vars'] as $key => $value) {
-			if (!isset($this->useranswer['vars'][$key]) and !$this->is_linked_ans($value['min'])) {
+			if ((!isset($this->useranswer['vars'][$key]) or $this->useranswer['vars'][$key] === 'ERROR') and !$this->is_linked_ans($value['min'])) {
 				$min = $this->variable_substitution($value['min'], $this->alluseranswers);
 				if ($value['max'] == '') {
 					//value for max not set force it to min to generate a fixed value.
 					$value['max'] = $value['min'];
 				}
 				$max = $this->variable_substitution($value['max'], $this->alluseranswers);
-				$inc = $this->variable_substitution($value['inc'], $this->alluseranswers);
+				// Temporary fix ROGO-1468 until we introduce proper localisation we need to be able to handle ',' decimal places.
+				$inc = $this->variable_substitution(str_replace(',', '.', $value['inc']), $this->alluseranswers);
 				$dec = (int)$value['dec'];
 
 				$this->useranswer['vars'][$key] = MathsUtils::gen_random_no($min, $max, $inc, $dec);
