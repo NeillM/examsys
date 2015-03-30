@@ -153,11 +153,23 @@ require '../include/sysadmin_auth.inc';
 	$menudata['testing']							= array('../testing/', 'crash_test.png');
 	$menudata['usermanagement']				= array('../users/search.php', 'user_accounts_icon.png');
 
-	foreach($menudata as $menukey => $menuitem) {
-		$parts = explode('.php', $menuitem[0]);
-		echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
-		echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
+	
+	if ($configObject->get('cfg_setting_icons_order')) {
+		foreach($configObject->get('cfg_setting_icons_order') as $iconkey) {
+			if (($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;
+			$parts = explode('.php', $menudata[$iconkey][0]);
+			echo '<a class="blacklink" href="' . $menudata[$iconkey][0] . '" id="' . $parts[0] . '">';
+			echo '<div class="container"><img src="../artwork/' . $menudata[$iconkey][1] . '" alt="" class="icon" /><br />' . $string[$iconkey] . '</div></a>';
+		}
 	}
+	else {
+		foreach($menudata as $menukey => $menuitem) {
+			$parts = explode('.php', $menuitem[0]);
+			echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
+			echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
+		}
+	}
+	
 
 ?>
 </div>
