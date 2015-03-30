@@ -155,15 +155,8 @@ require '../include/sysadmin_auth.inc';
 
 	
 	if ($configObject->get('cfg_setting_icons_order')) {
-		/*
-		// new setting in config.inc.php allows changing the icons' order
-		$cfg_setting_icons_order = array('bitbucket', 'calendar', 'clearguestaccounts', 'clearoldlogs', 'clearorphanmedia', 
-			'cleartraining', 'courses', 'computerlabs', 'deniedlogwarnings', 'ebelgridtemplates', 'faculties', 'imslti', 'modules',
-			'announcments', 'optimizetables', 'phpinfo', 'questionstatuses', 'savefailattempts', 'schools', 'statistics',
-			'summativescheduling', 'systemerrors', 'systeminformation', 'testing', 'usermanagement');
-		*/
 		foreach($configObject->get('cfg_setting_icons_order') as $iconkey) {
-			if ($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) continue;
+			if (($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;
 			$parts = explode('.php', $menudata[$iconkey][0]);
 			echo '<a class="blacklink" href="' . $menudata[$iconkey][0] . '" id="' . $parts[0] . '">';
 			echo '<div class="container"><img src="../artwork/' . $menudata[$iconkey][1] . '" alt="" class="icon" /><br />' . $string[$iconkey] . '</div></a>';
