@@ -181,3 +181,4 @@ tools/mee/mee/images/pspbrwse.jbf
 *.phprj
 
 /vendor/
+composer.phar
