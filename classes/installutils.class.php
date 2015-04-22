@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+require_once __DIR__ . '/../include/auth.inc';
+
 /**
 *
 * @author Anthony Brown
@@ -104,6 +106,24 @@ Class InstallUtils {
   public static $cfg_support_email;
   public static $emergency_support_numbers;
 
+  /** @var bool Stores if this is a behat installation. */
+  public static $behat_install = false;
+
+  /** @var string The username of the admin account. */
+  public static $sysadmin_username;
+  /** @var string The password for the admin account. */
+  public static $sysadmin_password;
+  /** @var string The title of the admin user. */
+  public static $sysadmin_title;
+  /** @var string The first name of the admin user. */
+  public static $sysadmin_first;
+  /** @var string The last name of the admin user. */
+  public static $sysadmin_last;
+  /** @var string The e-mail address for the admin user. */
+  public static $sysadmin_email;
+
+  /** Stores if the install is being done via cli. */
+  public static $cli = false;
 
   static function displayForm() {
     global $string, $language, $timezone_array;
@@ -650,6 +670,42 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $insert->close();
     }
   }
+
+  /**
+   * This function prevents the username being set again if it has already been set one time.
+   *
+   * @param string $uservariable The name of the variable to set
+   * @param string $name The username value to set.
+   */
+  static public function generateUserName($uservariable, $name) {
+    if (empty(self::$$uservariable)) {
+      self::$$uservariable = $name;
+    }
+  }
+
+  /**
+   * Ensure that the admin details are filled in.
+   */
+  static protected function get_sysadmin_details() {
+    if (empty(self::$sysadmin_username)) {
+      self::$sysadmin_username = $_POST['SysAdmin_username'];
+    }
+    if (empty(self::$sysadmin_password)) {
+      self::$sysadmin_password = $_POST['SysAdmin_password'];
+    }
+    if (empty(self::$sysadmin_title)) {
+      self::$sysadmin_title = $_POST['SysAdmin_title'];
+    }
+    if (empty(self::$sysadmin_first)) {
+      self::$sysadmin_first = $_POST['SysAdmin_first'];
+    }
+    if (empty(self::$sysadmin_last)) {
+      self::$sysadmin_last = $_POST['SysAdmin_last'];
+    }
+    if (empty(self::$sysadmin_email)) {
+      self::$sysadmin_email = $_POST['SysAdmin_email'];
+    }
+  }
   
   /**
   * create the database and users if they do not exist
@@ -704,32 +760,31 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
    self::$db->commit();
 
-
-    self::$cfg_db_username = self::$cfg_db_basename . '_auth';
+    self::generateUserName('cfg_db_username', self::$cfg_db_basename . '_auth');
     self::$cfg_db_password = gen_password() . gen_password();
 
-    self::$cfg_db_student_user = self::$cfg_db_basename . '_stu';
+    self::generateUserName('cfg_db_student_user', self::$cfg_db_basename . '_stu');
     self::$cfg_db_student_passwd = gen_password() . gen_password();
-    self::$cfg_db_staff_user = self::$cfg_db_basename . '_staff';
+    self::generateUserName('cfg_db_staff_user', self::$cfg_db_basename . '_staff');
     self::$cfg_db_staff_passwd = gen_password() . gen_password();
-    self::$cfg_db_external_user = self::$cfg_db_basename . '_ext';
+    self::generateUserName('cfg_db_external_user', self::$cfg_db_basename . '_ext');
     self::$cfg_db_external_passwd  = gen_password() . gen_password();
-    self::$cfg_db_sysadmin_user = self::$cfg_db_basename . '_sys';
+    self::generateUserName('cfg_db_external_passwd', self::$cfg_db_basename . '_sys');
     self::$cfg_db_sysadmin_passwd = gen_password() . gen_password();
-    self::$cfg_db_webservice_user = self::$cfg_db_basename . '_web';
+    self::generateUserName('cfg_db_webservice_user', self::$cfg_db_basename . '_web');
     self::$cfg_db_webservice_passwd = gen_password() . gen_password();
-    self::$cfg_db_sct_user = self::$cfg_db_basename . '_sct';
+    self::generateUserName('cfg_db_sct_user', self::$cfg_db_basename . '_sct');
     self::$cfg_db_sct_passwd = gen_password() . gen_password();
-    self::$cfg_db_inv_user = self::$cfg_db_basename . '_inv';
+    self::generateUserName('cfg_db_inv_user', self::$cfg_db_basename . '_inv');
     self::$cfg_db_inv_passwd = gen_password() . gen_password();
 
-    self::$cfg_cron_user = 'cron';
+    self::generateUserName('cfg_cron_user', 'cron');
     self::$cfg_cron_passwd = gen_password() . gen_password();
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
     self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
@@ -769,7 +824,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user student user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
@@ -848,7 +903,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user external user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
@@ -923,7 +978,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user staff user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
@@ -1020,7 +1075,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user SCT user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
@@ -1047,7 +1102,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user Invigilator user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
@@ -1090,14 +1145,14 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user sysadmin user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     //create 'database user webservice user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
-    if (self::$db->errno != 0) {
+    if (self::$db->errno != 0 && !self::$behat_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".* TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
@@ -1124,12 +1179,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$db->commit();
 
     //create sysadmin user
-    UserUtils::create_user( $_POST['SysAdmin_username'],
-                            $_POST['SysAdmin_password'],
-                            $_POST['SysAdmin_title'],
-                            $_POST['SysAdmin_first'],
-                            $_POST['SysAdmin_last'],
-                            $_POST['SysAdmin_email'],
+    self::get_sysadmin_details();
+    UserUtils::create_user( self::$sysadmin_username,
+                            self::$sysadmin_password,
+                            self::$sysadmin_title,
+                            self::$sysadmin_first,
+                            self::$sysadmin_last,
+                            self::$sysadmin_email,
                             'University Lecturer',
                             '',
                             '1',
@@ -1155,8 +1211,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     //create 100 guest accounts
     for ($i=1; $i<=100; $i++) {
+      // In the behat site guest users should have a password that matches their username.
+      // If it is live site install the guest should have a random password generated.
+      $guestpassword = (self::$behat_install) ? 'user' . $i : '';
       UserUtils::create_user( 'user' . $i,
-                              '', //blank password will be generated
+                              $guestpassword,
                               'Dr',
                               'A',
                               'User' . $i,
@@ -1481,14 +1540,22 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   static function displayError($error = '') {
     global $string;
 
-    echo "<div class=\"error\">\n";
+    if (!self::$cli) {
+      echo "<div class=\"error\">\n";
+    }
     if (is_array($error)) {
       foreach($error as $errCode => $message) {
-        echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> <strong>" . $string['errors13'] . " $errCode:</strong> $message</div>\n";
+        if (self::$cli) {
+          cli_utils::prompt($string['errors13'] . "$errCode: $message");
+        } else {
+          echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> <strong>" . $string['errors13'] . " $errCode:</strong> $message</div>\n";
+        }
       }
     }
-    echo "</div>\n";
-    self::displayFooter();
+    if (!self::$cli) {
+      echo "</div>\n";
+      self::displayFooter();
+    }
     exit;
   }
 

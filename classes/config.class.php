@@ -37,6 +37,12 @@ class Config extends RogoStaticSingleton {
   protected static $class_name = 'Config';
   /** @var mysqli The mysqli database object */
   public $db;
+  
+  /** @var bool Stores if the config object has been setup for behat. */
+  protected $behatsetup = false;
+
+  /** The path to the behat config file relative to the root Rogo directory. */
+  const BEHAT_CONFIG_FILE = '/config/behat.xml';
 
   /**
    *
@@ -71,6 +77,113 @@ class Config extends RogoStaticSingleton {
       include $conf_file;
     }
     $this->data = get_defined_vars();
+
+    $this->load_behat_config();
+
+    if ($this->is_behat_configured() && $this->is_behat_site()) {
+      $this->use_behat_site();
+    }
+  }
+
+  /**
+   * Loads the behat configuration for Rogo.
+   *
+   * @return void
+   */
+  protected function load_behat_config() {
+    $file = __DIR__ . '/..' . self::BEHAT_CONFIG_FILE;
+    if (!file_exists($file)) {
+      return;
+    }
+    $data = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
+    foreach($data as $setting) {
+      $this->data['cfg_behat_' . $setting->getName()] = (string)$setting;
+    }
+  }
+
+  /**
+   * Checks if all the required behat configuration settings are present.
+   * 
+   * @return boolean
+   */
+  public function is_behat_configured() {
+    // Has the behat access url been configured?
+    $behatwebsite = $this->get('cfg_behat_website');
+    if (empty($behatwebsite)) {
+      return false;
+    }
+    // Has the behat database been configured, and is it different to the live database?
+    $behatdatabase = $this->get('cfg_behat_db_database');
+    if (empty($behatdatabase) or $behatdatabase === $this->get('cfg_db_database')) {
+      return false;
+    }
+    // Has a behat data directory been configured?
+    $behatdatadir = $this->get('cfg_behat_data');
+    if (empty($behatdatadir) or $behatdatadir === $this->get('cfg_rogo_data')) {
+      return false;
+    }
+    // We got this far everything is good.
+    return true;
+  }
+
+  /**
+   * Test if Rogo is being accessed as a behat website.
+   *
+   * @return boolean
+   */
+  protected function is_behat_site() {
+    $behaturl = $this->get('cfg_behat_website');
+
+    $parsedurl = parse_url($behaturl . '/');
+    $parsedurl['port'] = isset($parsedurl['port']) ? $parsedurl['port'] : 80;
+    $parsedurl['path'] = rtrim($parsedurl['path'], '/');
+
+    $pos = strpos($_SERVER['HTTP_HOST'], ':');
+    if ($pos !== false) {
+      $requestedhost = substr($_SERVER['HTTP_HOST'], 0, $pos);
+    } else {
+      $requestedhost = $_SERVER['HTTP_HOST'];
+    }
+
+    // The path should also match.
+    if (empty($parsedurl['path'])) {
+      $matchespath = true;
+    } else if (strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
+      $matchespath = true;
+    }
+
+    // The host and the port should match
+    if ($parsedurl['host'] == $requestedhost && $parsedurl['port'] == $_SERVER['SERVER_PORT'] && !empty($matchespath)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Setup Rogo site to use the the behat database.
+   *
+   * @return void
+   */
+  public function use_behat_site() {
+    if ($this->behatsetup) {
+      // We do not want to run this code twice.
+      return;
+    }
+    // Store the original database name, it is used during behat site installs.
+    $this->set('base_database', $this->get('cfg_db_database'));
+    $this->set('cfg_db_database', $this->get('cfg_behat_db_database'));
+    // Behat may not be able to use a secure connection.
+    $this->set('cfg_secure_connection', false);
+    // Do not share sessions with the live site.
+    if ($this->get('cfg_session_name') !== 'ROGOBEHAT') {
+      $this->set('cfg_session_name', 'ROGOBEHAT');
+    } else {
+      $this->set('cfg_session_name', 'ROGOBEHATactual');
+    }
+    // Use the correct user data directory.
+    $this->set('cfg_rogo_data', $this->get('cfg_behat_data'));
+    $this->behatsetup = true;
   }
 
   /**
