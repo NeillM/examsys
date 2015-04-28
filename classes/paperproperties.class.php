@@ -1648,6 +1648,7 @@ class PaperProperties {
             $paperID = $this->get_property_id();
 
             $excluded = new Exclusion($paperID, $this->db);
+            $excluded->load();
 
             if (is_array($this->questions) and count($this->questions) > 0) {
                 // Skip excluded questions.
@@ -1657,7 +1658,7 @@ class PaperProperties {
                         switch ($question['type']) {
                             case 'random':
                                 foreach (QuestionUtils::get_random_calc_question($question['q_id'], $this->db) as $possible) {
-                                        $enhancedcalc_ids[] = $possible;
+                                    $enhancedcalc_ids[] = $possible;
                                 }
                                 break;
                             case 'keyword_based':
