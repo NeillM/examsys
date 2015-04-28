@@ -25,6 +25,7 @@
 
 require_once 'logger.class.php';
 require_once 'questionutils.class.php';
+require_once 'exclusion.class.php';
 
 class PaperProperties {
 
@@ -1644,43 +1645,38 @@ class PaperProperties {
 
             $enhancedcalc_ids = array();
 
+            $paperID = $this->get_property_id();
+
+            $excluded = new Exclusion($paperID, $this->db);
+
             if (is_array($this->questions) and count($this->questions) > 0) {
-                // Calculation questions may be hidden in random blocks of keyword baed questions so we have to check all possibilities.
-                foreach ($this->questions as $question) {
-                    switch ($question['type']) {
-                        case 'random':
-                            foreach (QuestionUtils::get_random_calc_question($question['q_id'], $this->db) as $possible) {
-                                $enhancedcalc_ids[] = $possible;
-                            }
-                            break;
-                        case 'keyword_based':
-                            foreach (QuestionUtils::get_keyword_calc_question($question['q_id'], $this->db) as $possible) {
-                                $enhancedcalc_ids[] = $possible;
-                            }
-                            break;
-                        case 'enhancedcalc':
-                            $enhancedcalc_ids[] = $question['q_id'];
-                            break;
-                        default:
-                            break;
+                // Skip excluded questions.
+                if (!$excluded->is_question_excluded($question['q_id'])) {
+                    // Calculation questions may be hidden in random blocks of keyword baed questions so we have to check all possibilities.
+                    foreach ($this->questions as $question) {
+                        switch ($question['type']) {
+                            case 'random':
+                                foreach (QuestionUtils::get_random_calc_question($question['q_id'], $this->db) as $possible) {
+                                        $enhancedcalc_ids[] = $possible;
+                                }
+                                break;
+                            case 'keyword_based':
+                                foreach (QuestionUtils::get_keyword_calc_question($question['q_id'], $this->db) as $possible) {
+                                    $enhancedcalc_ids[] = $possible;
+                                }
+                                break;
+                            case 'enhancedcalc':
+                                $enhancedcalc_ids[] = $question['q_id'];
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
 
-            // Remove excluded questions.
-            $excluded = $this->db->prepare("SELECT q_id FROM question_exclude WHERE q_paper = ? AND q_id IN ("
-                    . implode(',', $enhancedcalc_ids) . ")");
-            $excluded->bind_param('i', $paperID);
-            $excluded->execute();
-            $excluded->bind_result($id);
-            while ($paper_results->fetch()) {
-                $enhancedcalc_ids = array_diff($enhancedcalc_ids, array($id));
-            }
-            $excluded->close();
-
             // Find unmarked questions.
             if (count($enhancedcalc_ids) > 0) {
-                $paperID = $this->get_property_id();
 
                 $result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id "
                   . "AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL LIMIT 1");
