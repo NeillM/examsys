@@ -1672,7 +1672,6 @@ class PaperProperties {
                     . implode(',', $enhancedcalc_ids) . ")");
             $excluded->bind_param('i', $paperID);
             $excluded->execute();
-            $excluded->store_result();
             $excluded->bind_result($id);
             while ($paper_results->fetch()) {
                 $enhancedcalc_ids = array_diff($enhancedcalc_ids, array($id));
