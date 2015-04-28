@@ -1667,6 +1667,19 @@ class PaperProperties {
                 }
             }
 
+            // Remove excluded questions.
+            $excluded = $this->db->prepare("SELECT q_id FROM question_exclude WHERE q_paper = ? AND q_id IN ("
+                    . implode(',', $enhancedcalc_ids) . ")");
+            $excluded->bind_param('i', $paperID);
+            $excluded->execute();
+            $excluded->store_result();
+            $excluded->bind_result($id);
+            while ($paper_results->fetch()) {
+                $enhancedcalc_ids = array_diff($enhancedcalc_ids, array($id));
+            }
+            $excluded->close();
+
+            // Find unmarked questions.
             if (count($enhancedcalc_ids) > 0) {
                 $paperID = $this->get_property_id();
 
