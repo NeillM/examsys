@@ -1651,10 +1651,10 @@ class PaperProperties {
             $excluded->load();
 
             if (is_array($this->questions) and count($this->questions) > 0) {
-                // Skip excluded questions.
-                if (!$excluded->is_question_excluded($question['q_id'])) {
-                    // Calculation questions may be hidden in random blocks of keyword baed questions so we have to check all possibilities.
-                    foreach ($this->questions as $question) {
+                // Calculation questions may be hidden in random blocks of keyword baed questions so we have to check all possibilities.
+                foreach ($this->questions as $question) {
+                    // Skip excluded questions.
+                    if (!$excluded->is_question_excluded($question['q_id'])) {
                         switch ($question['type']) {
                             case 'random':
                                 foreach (QuestionUtils::get_random_calc_question($question['q_id'], $this->db) as $possible) {
