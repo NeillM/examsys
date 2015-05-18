@@ -1646,7 +1646,7 @@ class PaperProperties {
             $enhancedcalc_ids = array();
 
             $paperID = $this->get_property_id();
-
+            $paperType = $this->get_paper_type();
             $excluded = new Exclusion($paperID, $this->db);
             $excluded->load();
 
@@ -1679,8 +1679,13 @@ class PaperProperties {
             // Find unmarked questions.
             if (count($enhancedcalc_ids) > 0) {
 
-                $result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id "
-                  . "AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL LIMIT 1");
+                // Some error states are fatal we should skip over these to avoid an infitie loop trying to mark them,
+                // Affected questions will be flagged to the staff member marking.
+                $skiperrorstates = array(-5);
+
+                $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata WHERE log$paperType.metadataID = log_metadata.id "
+                  . "AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL and errorstate not in ("
+                  . implode(',', $skiperrorstates) . ") LIMIT 1");
                 $result->bind_param('i', $paperID);
                 $result->execute();
                 $result->store_result();
