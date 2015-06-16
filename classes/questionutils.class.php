@@ -425,5 +425,44 @@ SQL;
        return $possible;
    }
   
+    /**
+     * Is the question in a random block
+     * @param int $q_id question
+     * @param mysqli $db
+     * @return array of random blocks the question appears in
+     */
+    static function is_in_random_block($q_id, $db) {
+        $questions = array();
+        $query = $db->prepare("SELECT question FROM questions, options, papers WHERE question = q_id AND "
+          . "q_id = o_id AND q_type ='random' AND option_text = ?");
+        $query->bind_param('i', $q_id);
+        $query->execute();
+        $query->bind_result($question);
+        while ($query->fetch()) {
+            $questions[] = $question;
+        }
+        $query->close();
+        return $questions;
+    }
+
+    /**
+     * Is the question in a keyword block
+     * @param int $q_id question
+     * @param mysqli $db
+     * @return array of keyword blocks the question appears in
+     */
+    static function is_in_keyword_block($q_id, $db) {
+        $questions = array();
+        $query = $db->prepare("SELECT question FROM keywords_question, options, papers WHERE question = o_id AND "
+          . "keywordID = option_text AND q_id = ?");
+        $query->bind_param('i',$q_id);
+        $query->execute();
+        $query->bind_result($question);
+        while ($query->fetch()) {
+            $questions[] = $question;
+        }
+        $query->close();
+        return $questions;
+    }
 }
 ?>
