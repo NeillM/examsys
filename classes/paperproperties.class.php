@@ -1722,8 +1722,9 @@ class PaperProperties {
             if ($result->num_rows > 0) {
                 if ($studentsonly) {
                     $this->unmarked_student_enhancedcalc = true;
+                } else {
+                    $this->unmarked_enhancedcalc = true;
                 }
-                $this->unmarked_enhancedcalc = true;
             }
             $result->close();
         }
