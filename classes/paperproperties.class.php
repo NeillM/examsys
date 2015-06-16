@@ -1659,9 +1659,10 @@ class PaperProperties {
     private function load_unmarked_enhancedcalc($studentsonly = 0) {
         if ($studentsonly) {
             $this->unmarked_student_enhancedcalc = false;
+        } else {
+            $this->unmarked_enhancedcalc = false;
         }
-        $this->unmarked_enhancedcalc = false;
-
+        
         if (!isset($this->questions)) {
             $this->load_questions();
         }
