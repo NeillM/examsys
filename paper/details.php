@@ -709,7 +709,11 @@ function check_latex_random($q_ids, $mysqli) {
     }
     if ($latex == 0) {
       if ($q_type == 'random') {
-        $rnd_q_ids[] = $option_text;
+        // Skip if random question not defined.
+        // No options defined message will be displayed to user.
+        if ($option_text != '') {
+          $rnd_q_ids[] = $option_text;
+        }
       } else {
         $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
       }
