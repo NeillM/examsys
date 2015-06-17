@@ -429,7 +429,7 @@ SQL;
      * Is the question in a random block
      * @param int $q_id question
      * @param mysqli $db
-     * @return array of random blocks the question appears in
+     * @return array the random blocks the question appears in
      */
     static function is_in_random_block($q_id, $db) {
         $questions = array();
@@ -449,7 +449,7 @@ SQL;
      * Is the question in a keyword block
      * @param int $q_id question
      * @param mysqli $db
-     * @return array of keyword blocks the question appears in
+     * @return array the keyword blocks the question appears in
      */
     static function is_in_keyword_block($q_id, $db) {
         $questions = array();
