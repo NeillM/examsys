@@ -73,7 +73,10 @@ $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
 
-if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) or ($paper_type == '1' and $report->unmarked_enhancedcalc())) {
+// Check for unmarked calculation questions against the cohort subset selected by the user.
+$unmarked = $propertyObj->unmarked_enhancedcalc($studentsonly);
+
+if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or ($paper_type == '1' and $unmarked)) {
 // Only mark calculation questions when the exam is not active.
 ?>
 <!DOCTYPE html>
