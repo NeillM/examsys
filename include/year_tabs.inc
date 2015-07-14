@@ -22,29 +22,37 @@
 * @package
 */
 
-function drawTabs($current_tab, $type, $start_offset, $end_offset, $extra = '') {
-  $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
-  
-  $start_year = (intval(date("Y")) - $start_offset);
-	
-  for ($tmp_year=$start_year; $tmp_year < $start_year + $start_offset + $end_offset; $tmp_year++) {
-	  if ($type == 'academic') {
-		  $inc_year = (substr($tmp_year,-2) + 1);
-			if ($inc_year < 10) $inc_year = '0' . $inc_year;
-		
-		  $tab_year = $tmp_year . '/' . $inc_year;
-		} else {
-		  $tab_year = $tmp_year;
-		}
-		
-    if ($tmp_year == $current_tab) {
-      $html .= "<td class=\"tabon\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra . "'\">" . $tab_year . "</td>";
+require_once $cfg_web_root . '/classes/yearutils.class.php';
+
+function drawTabs($current_tab, $type, $extra = '') {
+
+    global $mysqli;
+
+    $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
+
+    if ($type == "calendar") {
+        $supported_years = YearUtils::get_calendar_supported_years($mysqli);
     } else {
-      $html .= "<td class=\"taboff\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $tmp_year . $extra ."'\">" . $tab_year . "</td>";
+        $supported_years = YearUtils::get_statistics_supported_years($mysqli);
     }
-  }
-  $html .= "</tr></table>";
+
+    foreach ($supported_years as $calendar => $academic) {
+        if ($type == "academic") {
+            $tab_year = $academic;
+        } else {
+            $tab_year = $calendar;
+        }
+
+        if ($calendar == $current_tab) {
+            $html .= "<td class=\"tabon\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $calendar . $extra . "'\">" . $tab_year . "</td>";
+        } else {
+            $html .= "<td class=\"taboff\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $calendar . $extra ."'\">" . $tab_year . "</td>";
+        }
+
+    }
+
+    $html .= "</tr></table>";
   
-  return $html;
+    return $html;
 }
 ?>

@@ -92,7 +92,7 @@ $month_end[8] = ($current_year + 1) . '0901000000';
 
 <table class="header" style="font-size:90%">
 <tr>
-<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', 6, 1, '&month=' . $current_month); ?></div></th>
+<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', '&month=' . $current_month); ?></div></th>
 </tr>
 <tr><td colspan="2" style="border:0; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
