@@ -19,11 +19,11 @@ Class YearUtils {
     static function get_calendar_supported_years($db) {
 
         $supported_years = array();
-        $result = $db->prepare("SELECT id, display_year FROM academic_year where cal_status = 1");
+        $result = $db->prepare("SELECT calendar_year, academic_year FROM academic_year where cal_status = 1");
         $result->execute();
-        $result->bind_result($id, $display_year);
+        $result->bind_result($calendar_year, $academic_year);
         while ($result->fetch()) {
-            $supported_years[$id] = $display_year;
+            $supported_years[$calendar_year] = $academic_year;
         }
         $result->close();
         return $supported_years;
@@ -32,11 +32,11 @@ Class YearUtils {
     static function get_statistics_supported_years($db) {
 
         $supported_years = array();
-        $result = $db->prepare("SELECT id, display_year FROM academic_year where stat_status = 1");
+        $result = $db->prepare("SELECT calendar_year, academic_year FROM academic_year where stat_status = 1");
         $result->execute();
-        $result->bind_result($id, $display_year);
+        $result->bind_result($calendar_year, $academic_year);
         while ($result->fetch()) {
-            $supported_years[$id] = $display_year;
+            $supported_years[$calendar_year] = $academic_year;
         }
         $result->close();
         return $supported_years;

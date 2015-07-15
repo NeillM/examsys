@@ -34,17 +34,17 @@ $module_id_list = implode(',', array_keys($paper_modules));
 
 // Get data about the paper which needs scheduling
 $results = $mysqli->prepare("SELECT "
-  . "property_id, paper_title, academic_year.id, display_year, period, barriers_needed, cohort_size, notes, sittings, campus, title, first_names, "
+  . "property_id, paper_title, academic_year.calendar_year, academic_year, period, barriers_needed, cohort_size, notes, sittings, campus, title, first_names, "
   . "surname, email, exam_duration "
   . "FROM (properties, scheduling, users, academic_year) "
   . "WHERE property_id = ? "
   . "AND properties.property_id = scheduling.paperID "
   . "AND properties.paper_ownerID = users.id "
-  . "AND properties.calendar_year = academic_year.id");
+  . "AND properties.calendar_year = academic_year.calendar_year");
 $results->bind_param('i', $paperid);
 $results->execute();
 $results->store_result();
-$results->bind_result($property_id, $paper_title, $calendar_year, $display_year, $period, $barriers_needed, $cohort_size, $notes, $sittings, $campus, $title, $first_names, $surname, $email, $exam_duration);
+$results->bind_result($property_id, $paper_title, $calendar_year, $academic_year, $period, $barriers_needed, $cohort_size, $notes, $sittings, $campus, $title, $first_names, $surname, $email, $exam_duration);
 $results->fetch();
 if ($results->num_rows == 0) {
   $results->close();
@@ -160,7 +160,7 @@ $results->close();
     $email = 'joe.bloggs@uni.ac.uk';
   }
   echo "<tr><td class=\"f1\">" . $string['paperowner'] . "</td><td>$display_name (<a href=\"mailto:$email\">$email</a>)</td></tr>\n";  
-  echo "<tr><td class=\"f1\">" . $string['session'] . "</td><td>$display_year</td></tr>\n";
+  echo "<tr><td class=\"f1\">" . $string['session'] . "</td><td>$academic_year</td></tr>\n";
   echo "<tr><td class=\"f1\">" . $string['modules'] . "</td><td>";
 
   foreach ($paper_modules as $module_id=>$module_name) {
