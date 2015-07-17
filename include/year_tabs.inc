@@ -28,12 +28,14 @@ function drawTabs($current_tab, $type, $extra = '') {
 
     global $mysqli;
 
+    $yearutils = new YearUtils($mysqli);
+
     $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
 
     if ($type == "calendar") {
-        $supported_years = YearUtils::get_calendar_supported_years($mysqli);
+        $supported_years = $yearutils->get_supported_years("CAL");
     } else {
-        $supported_years = YearUtils::get_statistics_supported_years($mysqli);
+        $supported_years = $yearutils->get_supported_years("STAT");
     }
 
     foreach ($supported_years as $calendar => $academic) {

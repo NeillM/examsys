@@ -492,7 +492,8 @@ Class UserUtils {
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
 
-    if (!in_array($session, YearUtils::get_calendar_supported_years($db)) or $idMod == '' or $tmp_userID == '') {
+    $yearutils = new YearUtils($db);
+    if (!in_array($session, $yearutils->get_supported_years("CAL")) or $idMod == '' or $tmp_userID == '') {
       return false;
     }
 
@@ -513,8 +514,9 @@ Class UserUtils {
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
-  
-    if (!in_array($session, YearUtils::get_calendar_supported_years($db)) or $idMod == '' or $tmp_userID == '') {
+
+    $yearutils = new YearUtils($db);
+    if (!in_array($session, $yearutils->get_supported_years("CAL")) or $idMod == '' or $tmp_userID == '') {
       return false;
     }
 
