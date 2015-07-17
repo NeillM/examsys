@@ -14,13 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Utility class for academic years supported by system.
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ */
 class YearUtils {
 
     private $mysqli;
 
     /**
-     *
-     * @param type $mysqli
+     * Constructor
+     * @param rogo db $mysqli
      */
     function __construct($mysqli) {
         $this->mysqli = $mysqli;
@@ -28,9 +33,11 @@ class YearUtils {
 
 
     /**
+     * Get years supported by the system.
      *
-     * @param type $state
-     * @return type
+     * @param string $state filter which years to retrieve - ALL, CAL (active calendar years), STAT (active statistical years),
+     *        BOTH (active calendar and statistical years)
+     * @return array associative array of calendar and academic years
      */
     public function get_supported_years($state = "ALL") {
 
@@ -55,6 +62,14 @@ class YearUtils {
         return $supported_years;
     }
 
+    /**
+     * Create options list for a drop down menu of sessions.
+     *
+     * @param char $paper_type type of paper
+     * @param string $calendar_year current calendar year
+     * @param array $string languae sting array
+     * @return string options list
+     */
     public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string) {
         $list = "";
         if ($paper_type != '2' and $paper_type != '4') {
