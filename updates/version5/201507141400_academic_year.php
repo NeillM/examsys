@@ -67,7 +67,7 @@ if (!$updater_utils->has_updated('rogo1481alter_users_metadata')) {
 // 2. sms_imports
 
 if (!$updater_utils->has_updated('rogo1481alter_sms_imports')) {
-    $altersql = "ALTER TABLE sms_imports CHANGE academic_year academic_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE sms_imports CHANGE academic_year academic_year INT(4) DEFAULT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE sms_imports SET academic_year = 2002 WHERE academic_year = 1";

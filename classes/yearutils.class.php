@@ -19,25 +19,34 @@
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  */
-class YearUtils {
+class year_utils {
 
     private $mysqli;
+    private $academic_year_start;
 
     /**
      * Constructor
      * @param rogo db $mysqli
      */
     function __construct($mysqli) {
+        global $configObject;
+
         $this->mysqli = $mysqli;
+        // Start of academic year (mm/dd)
+        if ($configObject->get('cfg_academic_year_start') != '') {
+            $this->academic_year_start = $configObject->get('cfg_academic_year_start');
+        } else {
+            $this->academic_year_start = '07/01';
+        }
     }
 
 
     /**
      * Get years supported by the system.
      *
-     * @param string $state filter which years to retrieve - ALL, CAL (active calendar years), STAT (active statistical years),
+     * @param string $state - filter which years to retrieve - ALL, CAL (active calendar years), STAT (active statistical years),
      *        BOTH (active calendar and statistical years)
-     * @return array associative array of calendar and academic years
+     * @return array - associative array of calendar and academic years
      */
     public function get_supported_years($state = "ALL") {
 
@@ -66,9 +75,9 @@ class YearUtils {
      * Create options list for a drop down menu of sessions.
      *
      * @param char $paper_type type of paper
-     * @param string $calendar_year current calendar year
-     * @param array $string languae sting array
-     * @return string options list
+     * @param string $calendar_year - current calendar year
+     * @param array $string - language sting array
+     * @return string - options list
      */
     public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string) {
         $list = "";
@@ -86,5 +95,109 @@ class YearUtils {
             $list .= ">" . $academic . "</option>\n";
         }
         return $list;
+    }
+
+    /**
+     * Create options list for a drop down menu of academic sessions.
+     *
+     * @param string $table table we are referencing to get session data
+     * @param char $paper_type type of paper
+     * @param string $calendar_year - current calendar year
+     * @param array $string - language sting array
+     * @return string - options list
+     */
+    public function get_academic_year_dropdown_options($table, $paper_type, $string) {
+        $list = "";
+        if ($paper_type == '0' or $paper_type == '1') {
+            $list = "<option value=\"\">" . $string['na'] .  "</option>\n";
+        }
+
+        $next_flag = 1;
+        $next_session = $this->get_academic_session($this->get_next_session());
+        $current_session = $this->get_academic_session($this->get_current_session());
+        $sql = $this->mysqli->prepare("SELECT "
+            . "DISTINCT academic_year "
+            . "FROM $table, academic_year "
+            . "WHERE $table.calendar_year = academic_year.calendar_year "
+            . "ORDER BY academic_year DESC");
+        $sql->execute();
+        $sql->bind_result($academic_year);
+
+        
+        while ($sql->fetch()) {
+            if ($next_flag == 1)  {
+                $sel = ($academic_year == $next_session) ? ' selected="selected"' : '';
+                $list .= "<option value=\"$next_session\"$sel>$next_session</option>\n";
+                $next_flag = 0;
+            }
+            $sel = ($current_session == $academic_year) ? ' selected="selected"' : '';
+            $list .= "<option value=\"$academic_year\"$sel>$academic_year</option>\n";
+        }
+
+        $sql->close();
+        return $list;
+    }
+
+    /**
+     * Get the current academic session
+     * @param string - $specific_year_start - Academic year start for the specifc module.
+     * @return string - The current academic year.
+     */
+    public function get_current_session($specific_year_start = '') {
+
+        $date_as_time = strtotime(date('Y/m/d'));
+        if ($specific_year_start != '') {
+            $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
+        } else {
+            $start_this_year = strtotime(date('Y') . '/' . $this->academic_year_start);
+        }
+
+        if ($date_as_time < $start_this_year) {
+            $session = date('Y') - 1;
+        } else {
+            $session = date('Y');
+        }
+
+        return $session;
+    }
+
+    /**
+     * Get the next academic session
+     * @param string - $specific_year_start - Academic year start for the specifc module.
+     * @return string - The next academic year.
+     */
+    public function get_next_session($specific_year_start = '') {
+
+        $date_as_time = strtotime(date('Y/m/d'));
+        if ($specific_year_start != '') {
+            $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
+        } else {
+            $start_this_year = strtotime(date('Y') . '/' . $this->academic_year_start);
+        }
+
+        if ($date_as_time < $start_this_year) {
+            $session = date('Y');
+        } else {
+            $session = date('Y') + 1;
+        }
+
+        return $session;
+    }
+
+    /**
+     * Get the current academic session
+     * @param int $calendar_year - the calendat year
+     * @return string - The associated academic year
+     */
+    public function get_academic_session($calendar_year) {
+
+        $result = $this->mysqli->prepare("SELECT academic_year FROM academic_year WHERE calendar_year = ?");
+        $result->bind_param('i', $calendar_year);
+        $result->execute();
+        $result->bind_result($academic_year);
+        $result->store_result();
+        $result->fetch();
+        $result->close();
+        return $academic_year;
     }
 }

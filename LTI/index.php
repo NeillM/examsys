@@ -30,7 +30,6 @@ require_once '../include/sidebar_menu.inc';
 require_once '../config/index.inc';
 
 require_once '../classes/searchutils.class.php';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/personal_folders.php';
@@ -38,6 +37,7 @@ require_once '../classes/lti_integration.class.php';
 require_once '../classes/smsutils.class.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/facultyutils.class.php';
+require_once '../classes/yearutils.class.php';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
@@ -119,7 +119,8 @@ if (!$lti->isInstructor()) {
   } else {
     //valid data
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
-    $session = date_utils::get_current_academic_year();
+    $yearutils = new year_utils($mysqli);
+    $session = $yearutils->get_current_session();
 
     if (is_null($c_internal_id)) {
    //   $lti_i::invalid_module_code($c_internal_id, $data, 'no returned data');

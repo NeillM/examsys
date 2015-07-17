@@ -23,13 +23,13 @@
 */
 
 require_once $cfg_web_root . 'classes/CMFactory.class.php';
-require_once $cfg_web_root . 'classes/dateutils.class.php';
+require_once $cfg_web_root . 'classes/yearutils.class.php';
 require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 
 $idMod = $_GET['module'];
-
-$session = date_utils::get_current_academic_year();
+$yearutils = new year_utils($mysqli);
+$session = $yearutils->get_current_session();
 $vle_api_cache = array();
 $vle_api_data = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
 $vle_api = $vle_api_data['api'];

@@ -28,7 +28,7 @@ function drawTabs($current_tab, $type, $extra = '') {
 
     global $mysqli;
 
-    $yearutils = new YearUtils($mysqli);
+    $yearutils = new year_utils($mysqli);
 
     $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
 

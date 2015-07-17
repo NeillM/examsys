@@ -1578,7 +1578,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n";
-    $yearutils = new YearUtils($mysqli);
+    $yearutils = new year_utils($mysqli);
     echo $yearutils->get_calendar_year_dropdown_options($properties->get_paper_type(), $properties->get_calendar_year(), $string);
     echo "</select></td>";
 

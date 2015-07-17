@@ -28,6 +28,9 @@
  * @param int $idMod The DB ID of the module
  * @return array List of years
  */
+
+require_once $cfg_web_root . '/classes/yearutils.class.php';
+
 function get_existing_years($db, $idMod) {
 	$years = array();
 	
@@ -75,23 +78,19 @@ function get_existing_years($db, $idMod) {
 <td align="left">
 <?php
 	$message = '';
-
+        $yearutils = new year_utils($mysqli);
 	// Get the current academic session
-	$session = date_utils::get_current_academic_year();
-	$session_parts = explode('/', $session);
-	
+	$session = $yearutils->get_current_session();
+	$nextsession = $yearutils->get_next_session();
 	// Get a list of existing (source) years
 	$source_years = get_existing_years($mysqli, $idMod);
 
 	// Should never be a case where we don't have a source year but check anyway
 	if (count($source_years) > 0) {
-    $cur_year = date_utils::get_current_academic_year();
-		$dest_years = array(date_utils::get_current_academic_year(), date_utils::inc_academic_year($cur_year));
 
-		// Get a list of destination years. Selected year will be removed by JS
-		$start_year = intval(substr($session, 0, 4));
-		
-		if (is_numeric($start_year)) {
+		$dest_years = array($session, $nextsession);
+	
+		if (is_numeric($session)) {
 
 		} else {
 			$message = $string['msg3'];

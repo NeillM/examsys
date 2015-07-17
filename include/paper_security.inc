@@ -32,7 +32,7 @@ require_once $cfg_web_root . '/classes/moduleutils.class.php';
 require_once $cfg_web_root . '/classes/paperutils.class.php';
 require_once $cfg_web_root . '/classes/lab_factory.class.php';
 require_once $cfg_web_root . '/classes/lab.class.php';
-require_once $cfg_web_root . '/classes/dateutils.class.php';
+require_once $cfg_web_root . '/classes/yearutils.class.php';
 
 /**
  * Check that the current IP address of the user is in one of the allowed
@@ -166,7 +166,7 @@ function check_staff_modules($moduleID, $userObject) {
 function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $notice = UserNotices::get_instance();
   $configObject = Config::get_instance();
-
+  $yearutils = new year_utils($mysqli);
   $attempt = 1;
   $usern = $userObj->get_username();
 
@@ -181,7 +181,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
       $stmt->bind_result($moduleid, $attempt);
       $stmt->store_result();
       if ($stmt->num_rows == 0) {
-        if ($calendar_year == '') $calendar_year = date_utils::get_current_academic_year(); //'current year';
+        if ($calendar_year == '') $calendar_year = $yearutils->get_current_session(); //'current year';
         $html = '';
         foreach ($moduleIDs as $modID) {
           $mod_details = module_utils::get_full_details_by_ID($modID, $db);

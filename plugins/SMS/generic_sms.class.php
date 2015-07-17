@@ -27,9 +27,9 @@ if (!isset($cfg_web_root)) {
   $cfg_web_root = $configObject->get('cfg_web_root');
 }
 
-require_once $configObject->get('cfg_web_root') . '/classes/dateutils.class.php';
 require_once $configObject->get('cfg_web_root') . '/classes/lookup.class.php';
 require_once $configObject->get('cfg_web_root') . '/classes/moduleutils.class.php';
+require_once $configObject->get('cfg_web_root') . '/classes/yearutils.class.php';
 
 //updated interface to saturn using the new lookup class plugins
 Class GENERIC_SMS extends SmsUtils {
@@ -53,12 +53,12 @@ Class GENERIC_SMS extends SmsUtils {
     $lookup->clear_debug();
 
     // Calculate what the current academic session is.
-    $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
-    $session_parts = explode('/', $session);
+    $yearutils = new year_utils($mysqli);
+    $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
 
         $lookupdata = new stdClass();
     $lookupdata->modulecode = $moduleID;
-    $lookupdata->calendar_year = $session_parts[0];
+    $lookupdata->calendar_year = $session;
 
     $data = new stdClass();
     $data->lookupdata = $lookupdata;
@@ -163,10 +163,10 @@ Class GENERIC_SMS extends SmsUtils {
       global $mysqli;
     }
 
+    $yearutils = new year_utils($mysqli);
     if ($session == 'NOTSET') {
-      $session = date_utils::get_current_academic_year();
+      $session = $yearutils->get_current_session();
     }
-    $session_parts = explode('/', $session);
 
     $enrolements = 0;
     $deletions = 0;

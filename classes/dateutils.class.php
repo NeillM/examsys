@@ -29,35 +29,6 @@ Class date_utils {
 	public static $academic_year_start = '07/01';
 	
 	/**
-	 * Get the current academic year in the format 'yyyy/yy', e.g. '2013/14'
-	 * @return string
-	 */
-	static function get_current_academic_year($specific_year_start = '')	{
-		return date_utils::get_academic_year(date('Y/m/d'), $specific_year_start);
-	}
-
-	static function get_next_academic_year($specific_year_start = '')	{
-    $session = date_utils::get_academic_year(date('Y/m/d'), $specific_year_start);
-    
-    $parts = explode('/', $session);
-   
-    $next_session = ($parts[0] + 1) . '/' . ($parts[1] + 1);
-    
-		return $next_session;
-	}
-
-  static function inc_academic_year($year) {
-    $first_part = substr($year, 0, 4);
-    $first_part++;
-    $second_part = substr($year, 5, 2);
-    $second_part++;
-    
-    $next_year = $first_part . '/' . $second_part;
-    
-    return $next_year;
-  }
-
-	/**
 	 * Get the academic year for the given date in the format 'yyyy/yy', e.g. '2013/14'
 	 * @param string $date - A date in a format that can be accepted by strtotime
 	 *
