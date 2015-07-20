@@ -212,6 +212,8 @@ class year_utils {
         $result = $this->mysqli->prepare("SELECT calendar_year FROM academic_year WHERE calendar_year = ? LIMIT 1");
         $result->bind_param('i', $calendar_year);
         $result->execute();
+        $result->store_result();
+        $result->fetch();
         if ($result->num_rows == 1) {
             $result->close();
             return true;
@@ -228,13 +230,13 @@ class year_utils {
      *
      * @return bool - Return false if no year is passed.
      */
-     static function delete_year($calendar_year) {
+     public function delete_year($calendar_year) {
         if ($calendar_year == '') {
           return false;
         }
 
-        $result = $db->prepare("UPDATE academic_year SET deleted = NOW() WHERE year = ?");
-        $result->bind_param('i', $year);
+        $result = $this->mysqli->prepare("UPDATE academic_year SET deleted = NOW() WHERE calendar_year = ?");
+        $result->bind_param('i', $calendar_year);
         $result->execute();
         $result->close();
       }

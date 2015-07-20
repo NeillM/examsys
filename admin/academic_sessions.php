@@ -25,7 +25,7 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 
 // Get all sessions.
-$result = $mysqli->prepare("SELECT calendar_year, academic_year, cal_status, stat_status FROM academic_year");
+$result = $mysqli->prepare("SELECT calendar_year, academic_year, cal_status, stat_status FROM academic_year WHERE deleted is NULL");
 $result->execute();
 $result->store_result();
 $result->bind_result($calendar_year, $academic_year, $cal_status, $stat_status);

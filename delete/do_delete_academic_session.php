@@ -26,7 +26,7 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/yearutils.class.php';
 
-$year = check_var('year', 'GET', true, false, true);
+$year = check_var('year', 'REQUEST', true, false, true);
 $yearutils = new year_utils($mysqli);
 
 if (!$yearutils->check_calendar_year($year)) {
