@@ -18,6 +18,7 @@
  * Utility class for academic years supported by system.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 The University of Nottingham
  */
 class year_utils {
 
@@ -199,5 +200,25 @@ class year_utils {
         $result->fetch();
         $result->close();
         return $academic_year;
+    }
+
+    /**
+     * Check if calendar year already exists.
+     * @param int $calendar_year - the calendat year
+     * @return bool - true if calendar year exists, false otherwise
+     */
+    public function check_calendar_year($calendar_year) {
+
+        $result = $this->mysqli->prepare("SELECT calendar_year FROM academic_year WHERE calendar_year = ? LIMIT 1");
+        $result->bind_param('i', $calendar_year);
+        $result->execute();
+        if ($result->num_rows == 1) {
+            $result->close();
+            return true;
+        }
+
+        $result->close();
+        return false;
+
     }
 }

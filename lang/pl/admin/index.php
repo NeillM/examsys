@@ -42,4 +42,5 @@ $string['msg1'] = 'Czy na pewno usunąć wszystkie arkusze/pytania z modułu tre
 $string['msg2'] = 'Czy na pewno usunąć stare rejestry testów formatywnych i diagnostycznych?\n\n(rejestry egzaminów końcowych/ankiet nie będą usunięte)';
 $string['announcments'] = 'Nowiny i ogłoszenia';
 $string['imslti'] = 'Klucze LTI';
+$string['academicsessions'] = 'Academic Sessions';
 ?>
