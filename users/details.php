@@ -31,7 +31,7 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/networkutils.class.php';
-require_once '../classes/dateutils.class.php';
+require_once '../classes/yearutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'GET', true, false, true);
@@ -679,13 +679,16 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   $results->execute();
   $results->store_result();
   $results->bind_result($idMod, $moduleid, $fullname, $calendar_year, $attempt);
+
+  $yearutils = new year_utils($mysqli);
+  $current_session = $yearutils->get_current_session();
   while ($results->fetch()) {
     $user_modules[$row_no]['moduleid'] = $moduleid;
     $user_modules[$row_no]['fullname'] = $fullname;
     $user_modules[$row_no]['calendar_year'] = $calendar_year;
     $user_modules[$row_no]['attempt'] = $attempt;
     $user_modules[$row_no]['idMod'] = $idMod;
-    if ($calendar_year == date_utils::get_current_academic_year()) {
+    if ($calendar_year == $current_session) {
       $current_year = true;
     }
     $row_no++;
@@ -693,9 +696,9 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   $results->close();
 
   if ($current_year == false) {
-    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year();
+    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $current_session;
     if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-      echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+      echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $current_session . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
     }
     echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
@@ -703,7 +706,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   for ($i=0; $i<$row_no; $i++) {
     if ($user_modules[$i]['calendar_year'] != $old_year) {
       echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
-      if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year()) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
+      if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == $current_session) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
         echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";

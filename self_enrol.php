@@ -24,7 +24,7 @@
 
 require_once './include/staff_student_auth.inc';
 require_once './include/errors.inc';
-require_once './classes/dateutils.class.php';
+require_once './classes/yearutils.class.php';
 require_once './classes/userutils.class.php';
 require_once './classes/moduleutils.class.php';
 require_once './classes/smsutils.class.php';
@@ -37,7 +37,8 @@ if (isset($_GET['moduleid'])) {   // Old format
   display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], true);
 }
 
-$session = date_utils::get_current_academic_year();
+$yearutils = new year_utils($mysqli);
+$session = $yearutils->get_current_session();
 
 $modID = module_utils::get_idMod($module, $mysqli);  // Translate module code into ID
 
