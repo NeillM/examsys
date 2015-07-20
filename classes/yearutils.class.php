@@ -221,4 +221,21 @@ class year_utils {
         return false;
 
     }
+
+    /**
+     * Delete an acaemic year by setting a flag
+     * @param int $year - calendat year
+     *
+     * @return bool - Return false if no year is passed.
+     */
+     static function delete_year($calendar_year) {
+        if ($calendar_year == '') {
+          return false;
+        }
+
+        $result = $db->prepare("UPDATE academic_year SET deleted = NOW() WHERE year = ?");
+        $result->bind_param('i', $year);
+        $result->execute();
+        $result->close();
+      }
 }

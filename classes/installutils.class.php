@@ -2389,6 +2389,17 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['academic_year'] = <<<QUERY
+        CREATE TABLE `academic_year` (
+          `calendar_year` int(4) NOT NULL,
+          `academic_year` varchar(30) NOT NULL,
+          `cal_status` tinyint(1) NOT NULL DEFAULT '1',
+          `stat_status` tinyint(1) NOT NULL DEFAULT '1',
+          `deleted` datetime DEFAULT NULL,
+          PRIMARY KEY (`calendar_year`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['modules_student'] = <<<QUERY
         CREATE TABLE `modules_student` (
           `id` int(11) NOT NULL auto_increment,
@@ -2400,19 +2411,21 @@ QUERY;
           PRIMARY KEY (`id`),
           KEY `idx_userID` (`userID`),
           KEY `idx_mod_calyear` (`calendar_year`,`idMod`)
+          CONSTRAINT `modules_student_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['objectives'] = <<<QUERY
         CREATE TABLE `objectives` (
-					`obj_id` int(11) NOT NULL,
-					`objective` text NOT NULL,
-					`idMod` int(11) unsigned NOT NULL DEFAULT '0',
-					`identifier` bigint(20) unsigned NOT NULL,
-					`calendar_year` INT(4) NOT NULL,
-					`sequence` int(11) DEFAULT NULL,
-					PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
-					KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
+        `obj_id` int(11) NOT NULL,
+        `objective` text NOT NULL,
+        `idMod` int(11) unsigned NOT NULL DEFAULT '0',
+        `identifier` bigint(20) unsigned NOT NULL,
+        `calendar_year` INT(4) NOT NULL,
+        `sequence` int(11) DEFAULT NULL,
+        PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
+        KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
+        CONSTRAINT `objectives_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2564,6 +2577,7 @@ QUERY;
           KEY `question_type` (`paper_type`),
           KEY `crypt_name_idx` (`crypt_name`),
           KEY `idx_owner_deleted` (`paper_ownerID`,`deleted`)
+          CONSTRAINT `properties_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2726,6 +2740,7 @@ QUERY;
           KEY `module_id_idx` (`idMod`),
           KEY `paper_id_idx` (`paper_id`),
           KEY `calendar_year` (`calendar_year`)
+          CONSTRAINT `relationships_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2821,7 +2836,8 @@ QUERY;
           `calendar_year` INT(4) NOT NULL DEFAULT '2008/09',
           `occurrence` datetime default NULL,
           PRIMARY KEY (`identifier`,`idMod`,`calendar_year`),
-          KEY `sess_id` (`sess_id`)
+          KEY `sess_id` (`sess_id`),
+          CONSTRAINT `sessions_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2844,7 +2860,8 @@ QUERY;
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
           `academic_year` INT(4) DEFAULT NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          CONSTRAINT `sms_imports_fk0` FOREIGN KEY (`academic_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -3087,6 +3104,7 @@ QUERY;
           `value` varchar(255) default NULL,
           `calendar_year` INT(4) default NULL,
           UNIQUE KEY `idx_users_metadata` (`userID`,`idMod`,`type`,`calendar_year`)
+          CONSTRAINT `users_metadata_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

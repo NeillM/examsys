@@ -66,7 +66,8 @@ $result->close();
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({
-          sortList: [[0,0]]
+          sortList: [[0,0]],
+          headers: { 2: { sorter: false}, 3: {sorter: false} }
         });
       }
       $(".l").click(function(event) {
@@ -101,10 +102,10 @@ $result->close();
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <thead>
 <tr>
-  <th class="col10" style="width:30%"><?php echo $string['calendaryear'] ?></th>
-  <th class="col" style="width:30%"><?php echo $string['academicyear'] ?></th>
-  <th class="col" style="width:15%"><?php echo $string['calendarenabled'] ?></th>
-  <th class="col" style="width:15%"><?php echo $string['statisticsenabled'] ?></th>
+  <th class="col10"><?php echo $string['calendaryear'] ?></th>
+  <th class="col"><?php echo $string['academicyear'] ?></th>
+  <th class="col"><?php echo $string['calendarenabled'] ?></th>
+  <th class="col"><?php echo $string['statisticsenabled'] ?></th>
 </tr>
 </thead>
 
@@ -112,10 +113,12 @@ $result->close();
 <?php
 
 if ($num_sessions > 0) {
+    $yes = "<img src=\"../artwork/tick.gif\" id=\"yes\" />";
+    $no = "<img src=\"../artwork/cross.gif\" id=\"no\" />";
     foreach ($sessions as $year => $info) {
        echo "<tr id=\"$year\" class=\"l\"><td>$year</td><td>$info[0]</td>"
-      . "<td class=\"no\">" . (($info[1] == 0) ? 'No' : 'Yes') . "</td>"
-      . "<td class=\"no\">" . (($info[2] == 0) ? 'No' : 'Yes') . "</td>"
+      . "<td class=\"no\" style=\"text-align:left\">" . (($info[1] == 0) ? $no : $yes) . "</td>"
+      . "<td class=\"no\" style=\"text-align:left\">" . (($info[2] == 0) ? $no : $yes) . "</td>"
       . "</tr>\n";
     }
 } else {

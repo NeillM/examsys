@@ -8,6 +8,7 @@ if (!$updater_utils->does_table_exist('academic_year')) {
 	`academic_year` varchar(30) NOT NULL,
 	`cal_status` boolean NOT NULL DEFAULT '1',
 	`stat_status` boolean NOT NULL DEFAULT '1',
+        `deleted` datetime default NULL,
 	PRIMARY KEY (`calendar_year`)
     )";
 
