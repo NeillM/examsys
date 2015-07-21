@@ -24,7 +24,6 @@
 
 require '../include/invigilator_auth.inc';
 require '../classes/paperproperties.class.php';
-require '../classes/log_extra_time.class.php';
 require '../classes/log_lab_end_time.class.php';
 
 if (isset($_GET['userID'])) {
