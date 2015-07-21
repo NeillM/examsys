@@ -9,7 +9,8 @@ if (!$updater_utils->does_table_exist('academic_year')) {
 	`cal_status` boolean NOT NULL DEFAULT '1',
 	`stat_status` boolean NOT NULL DEFAULT '1',
         `deleted` datetime default NULL,
-	PRIMARY KEY (`calendar_year`)
+	`deletedby` int(10),
+        PRIMARY KEY (`calendar_year`)
     )";
 
     $updater_utils->execute_query($createsql, true);

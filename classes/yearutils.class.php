@@ -231,13 +231,13 @@ class year_utils {
      *
      * @return bool - Return false if no year is passed.
      */
-     public function delete_year($calendar_year) {
+     public function delete_year($calendar_year, $user) {
         if ($calendar_year == '') {
           return false;
         }
 
-        $result = $this->mysqli->prepare("UPDATE academic_year SET deleted = NOW() WHERE calendar_year = ? AND deleted is NULL");
-        $result->bind_param('i', $calendar_year);
+        $result = $this->mysqli->prepare("UPDATE academic_year SET deleted = NOW(), deletedby = ? WHERE calendar_year = ? AND deleted is NULL");
+        $result->bind_param('ii', $user, $calendar_year);
         $result->execute();
         $result->close();
     }

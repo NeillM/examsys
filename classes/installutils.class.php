@@ -2396,6 +2396,7 @@ QUERY;
           `cal_status` tinyint(1) NOT NULL DEFAULT '1',
           `stat_status` tinyint(1) NOT NULL DEFAULT '1',
           `deleted` datetime DEFAULT NULL,
+          `deletedby` int(10),
           PRIMARY KEY (`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;

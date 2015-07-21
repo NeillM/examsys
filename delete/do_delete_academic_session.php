@@ -34,7 +34,7 @@ if (!$yearutils->check_calendar_year($year)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$success = $yearutils->delete_year($year);
+$success = $yearutils->delete_year($year, $userObject->get_user_ID());
 
 $mysqli->close();
 ?>

@@ -112,7 +112,7 @@ for ($i=0; $i<count($items); $i++) {
     $restore->close();
 
   } elseif ($type == 'a') {   // Academic Session
-    $restore = $mysqli->prepare("UPDATE academic_year SET deleted = NULL WHERE calendar_year = ?");
+    $restore = $mysqli->prepare("UPDATE academic_year SET deleted = NULL, deletedby = NULL WHERE calendar_year = ?");
     $restore->bind_param('i', $item_id);
     $restore->execute();
     $restore->close();
