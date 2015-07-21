@@ -41,9 +41,6 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
   return false;
 }
 
-require_once __DIR__ . '/autoload.inc.php';
-autoloader::init();
-
 //set_error_handler("handle_early_errors");
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
