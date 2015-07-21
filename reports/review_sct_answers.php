@@ -26,7 +26,6 @@ require '../include/staff_auth.inc';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperproperties.class.php';
-require_once '../classes/folderutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 

@@ -30,7 +30,6 @@ require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../include/load_config.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
-require_once '../classes/folderutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';

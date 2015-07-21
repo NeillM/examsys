@@ -26,7 +26,6 @@ require '../include/errors.inc';
 require '../include/media.inc';
 
 require_once '../classes/stateutils.class.php';
-require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/textboxmarkingutils.class.php';
 

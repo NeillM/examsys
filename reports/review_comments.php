@@ -29,7 +29,6 @@ require '../include/media.inc';
 require_once '../include/errors.inc';
 
 require_once '../classes/moduleutils.class.php';
-require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/reviews.class.php';
 
