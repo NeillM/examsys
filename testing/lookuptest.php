@@ -48,11 +48,9 @@ require_once $root . '/../include/auth.inc';
 include_once $root . '/../include/load_config.php';
 $cfg_web_root = $configObject->get('cfg_web_root');
 require_once $cfg_web_root . 'classes/configobject.class.php';
-require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/userobject.class.php';
-require_once $cfg_web_root . 'classes/lang.class.php';
 
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
 require_once $cfg_web_root . '/classes/schoolutils.class.php';

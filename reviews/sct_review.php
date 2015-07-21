@@ -23,7 +23,6 @@
 */
 
 require_once '../include/load_config.php';
-require_once '../classes/lang.class.php';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../include/sct_review.inc';

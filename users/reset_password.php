@@ -24,7 +24,6 @@
 
 require_once '../include/load_config.php';
 require_once '../include/auth.inc';
-require_once '../classes/lang.class.php';
 require_once '../classes/usernotices.class.php';
 require_once '../classes/userutils.class.php';
 

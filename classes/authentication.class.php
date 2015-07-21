@@ -24,7 +24,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-require_once $cfg_web_root . '/classes/lang.class.php';
 require_once $cfg_web_root . '/classes/lookup.class.php';
 require_once $cfg_web_root . '/classes/userutils.class.php';
 

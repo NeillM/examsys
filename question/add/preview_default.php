@@ -23,7 +23,6 @@
 */
 
 require_once '../../include/load_config.php';
-require_once $cfg_web_root . 'classes/lang.class.php';
 
 $html = <<< HTML
 <html>

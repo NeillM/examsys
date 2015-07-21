@@ -36,7 +36,6 @@ require_once '../include/mb_string.inc.php';
 
 require_once '../include/custom_error_handler.inc';
 
-require_once '../classes/lang.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/schoolutils.class.php';
