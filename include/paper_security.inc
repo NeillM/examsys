@@ -30,7 +30,6 @@ require_once $cfg_web_root . '/classes/usernotices.class.php';
 require_once $cfg_web_root . '/classes/networkutils.class.php';
 require_once $cfg_web_root . '/classes/moduleutils.class.php';
 require_once $cfg_web_root . '/classes/paperutils.class.php';
-require_once $cfg_web_root . '/classes/lab_factory.class.php';
 
 /**
  * Check that the current IP address of the user is in one of the allowed
