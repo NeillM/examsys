@@ -38,7 +38,6 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/mappingutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
-require_once '../classes/CMFactory.class.php';
 
 $state = $stateutil->getState();
 
