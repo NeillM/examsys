@@ -40,7 +40,6 @@ require_once '../classes/mathsutils.class.php';
 require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../include/demo_replace.inc';
-require_once '../classes/exam_announcements.class.php';
 require_once '../LTI/ims-lti/UoN_LTI.php';
 
 //HTML5 part

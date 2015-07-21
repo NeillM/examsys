@@ -30,7 +30,6 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/feedback.inc';
 require_once '../classes/folderutils.class.php';
-require_once '../classes/exam_announcements.class.php';
 require_once '../classes/noteutils.class.php';
 require_once '../classes/toiletbreakutils.class.php';
 

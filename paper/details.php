@@ -40,7 +40,6 @@ require_once '../classes/paperproperties.class.php';
 require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/question_status.class.php';
-require_once '../classes/exam_announcements.class.php';
 require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);

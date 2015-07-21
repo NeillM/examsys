@@ -37,7 +37,6 @@ require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/summativetimer.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
-require_once '../classes/exam_announcements.class.php';
 
 $userObject = UserObject::get_instance();
 
