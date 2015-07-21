@@ -34,8 +34,8 @@ if (!$yearutils->check_calendar_year($year)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$mysqli->close();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,6 +50,16 @@ $mysqli->close();
 
 <body>
 
+<?php
+
+// Check if in use
+if ($yearutils->check_calendar_year_in_use($year)) {
+    echo "<p>" . $string['warning1'] . "</p>\n";
+} else {
+
+?>
+
+
 <p><?php echo $string['msg'] ?></p>
 
 <div class="button_bar">
@@ -58,6 +68,10 @@ $mysqli->close();
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>
 </div>
+
+<?php
+}
+?>
 
 </body>
 </html>

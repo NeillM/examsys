@@ -52,13 +52,13 @@ class year_utils {
     public function get_supported_years($state = "ALL") {
 
         if ($state == "STAT") {
-            $filter = "WHERE stat_status = 1";
+            $filter = "WHERE stat_status = 1 AND deleted is NULL";
         } else if ($state == "CAL") {
-            $filter = "WHERE cal_status = 1";
+            $filter = "WHERE cal_status = 1 AND deleted is NULL";
         } else if ($state == "BOTH") {
-            $filter = "WHERE cal_status = 1 AND stat_status = 1";
+            $filter = "WHERE cal_status = 1 AND stat_status = 1 AND deleted is NULL";
         } else {
-            $filter = "";
+            $filter = "WHERE deleted is NULL";
         }
 
         $supported_years = array();
@@ -120,6 +120,7 @@ class year_utils {
             . "DISTINCT academic_year "
             . "FROM $table, academic_year "
             . "WHERE $table.calendar_year = academic_year.calendar_year "
+            . "AND deleted is NULL "
             . "ORDER BY academic_year DESC");
         $sql->execute();
         $sql->bind_result($academic_year);
@@ -235,9 +236,36 @@ class year_utils {
           return false;
         }
 
-        $result = $this->mysqli->prepare("UPDATE academic_year SET deleted = NOW() WHERE calendar_year = ?");
+        $result = $this->mysqli->prepare("UPDATE academic_year SET deleted = NOW() WHERE calendar_year = ? AND deleted is NULL");
         $result->bind_param('i', $calendar_year);
         $result->execute();
         $result->close();
-      }
+    }
+
+    /**
+     * Check if calendar year is in use.
+     * @param int $calendar_year - the calendat year
+     * @return bool - true if calendar year is in use, false otherwise
+     */
+    public function check_calendar_year_in_use($calendar_year) {
+
+        $result = $this->mysqli->prepare("SELECT calendar_year FROM modules_student WHERE calendar_year = ? "
+          . "UNION SELECT calendar_year FROM objectives WHERE calendar_year = ? "
+          . "UNION SELECT calendar_year FROM properties WHERE calendar_year = ? "
+          . "UNION SELECT calendar_year FROM relationships WHERE calendar_year = ? "
+          . "UNION SELECT calendar_year FROM sessions WHERE calendar_year = ? "
+          . "UNION SELECT academic_year FROM sms_imports WHERE academic_year = ? "
+          . "UNION SELECT calendar_year FROM users_metadata WHERE calendar_year = ?");
+        $result->bind_param('iiiiiii', $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year);
+        $result->execute();
+        $result->store_result();
+        $result->fetch();
+        if ($result->num_rows == 1) {
+            $result->close();
+            return true;
+        }
+        $result->close();
+        return false;
+
+    }
 }
