@@ -28,7 +28,6 @@ require_once '../classes/installutils.class.php';
 require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
-require_once '../classes/dbutils.class.php';
 require_once '../classes/stringutils.class.php';
 require_once '../include/std_set_shared_functions.inc';
 

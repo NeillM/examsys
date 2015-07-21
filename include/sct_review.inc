@@ -22,7 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'include/errors.inc';
 require_once $cfg_web_root . 'classes/authentication.class.php';

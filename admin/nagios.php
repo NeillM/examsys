@@ -24,7 +24,6 @@
 * @package
 */
   require "../include/load_config.php";
-  require_once $cfg_web_root . 'classes/dbutils.class.php';
   require_once $cfg_web_root . 'classes/usernotices.class.php';
   $error = false;
   $notice = UserNotices::get_instance();

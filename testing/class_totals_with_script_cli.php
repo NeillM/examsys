@@ -26,7 +26,6 @@
 */
 
 require_once 'classes/class_totals.php';
-require_once '../classes/dbutils.class.php';
 include_once '../include/load_config.php';
 
 $cfg_web_host = $configObject->get('cfg_web_host');

@@ -27,7 +27,6 @@ require_once '../classes/installutils.class.php';
 require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../classes/lang.class.php';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
 
 $version = '5.0';
 
