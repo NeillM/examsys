@@ -31,7 +31,6 @@ require_once '../include/errors.inc';
 require_once '../include/mapping.inc';
 
 require_once '../classes/moduleutils.class.php';
-require_once '../classes/keywordutils.class.php';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/mappingutils.class.php';
