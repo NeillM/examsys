@@ -110,6 +110,12 @@ for ($i=0; $i<count($items); $i++) {
     $restore->bind_param('si', $new_title, $item_id);
     $restore->execute();
     $restore->close();
+
+  } elseif ($type == 'a') {   // Academic Session
+    $restore = $mysqli->prepare("UPDATE academic_year SET deleted = NULL WHERE calendar_year = ?");
+    $restore->bind_param('i', $item_id);
+    $restore->execute();
+    $restore->close();
     
   } elseif ($type == 'q') {   // Questions
     $restore = $mysqli->prepare("UPDATE questions SET deleted = NULL WHERE q_id = ?");

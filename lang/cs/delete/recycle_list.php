@@ -24,4 +24,5 @@ $string['name'] = 'Název';
 $string['datedeleted'] = 'Datum odstranění';
 $string['type'] = 'Typ';
 $string['folder'] = 'Složka';
+$string['academicsession'] = 'Academic Session';
 ?>

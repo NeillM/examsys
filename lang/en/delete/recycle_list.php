@@ -24,4 +24,5 @@ $string['name'] = 'Name';
 $string['datedeleted'] = 'Date Deleted';
 $string['type'] = 'Type';
 $string['folder'] = 'Folder';
+$string['academicsession'] = 'Academic Session';
 ?>
