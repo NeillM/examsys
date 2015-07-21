@@ -31,7 +31,6 @@ require_once './classes/recyclebin.class.php';
 require_once './config/index.inc';
 require_once './classes/paperutils.class.php';
 require_once './classes/folderutils.class.php';
-require_once './classes/announcementutils.class.php';
 
 /**
   * Get a list of internal reviews for the current user.
