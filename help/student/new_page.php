@@ -24,7 +24,6 @@
 
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff create pages.
 require '../../include/errors.inc';
-require_once '../../classes/helputils.class.php';
 
 header('Content-Type: text/html; charset=' . $configObject->get('cfg_page_charset'));
 

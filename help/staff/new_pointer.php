@@ -23,7 +23,6 @@
 */
 
 require '../../include/sysadmin_auth.inc';    // Only let SysAdmin staff create links.
-require_once '../../classes/helputils.class.php';
 
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 
