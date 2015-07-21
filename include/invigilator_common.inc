@@ -22,7 +22,6 @@ require_once $configObject->get('cfg_web_root') . 'classes/stringutils.class.php
 require_once $configObject->get('cfg_web_root') . 'classes/paperproperties.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/log_lab_end_time.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/lab_factory.class.php';
-require_once $configObject->get('cfg_web_root') . 'classes/lab.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/log_extra_time.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/logmetadata.class.php';
 

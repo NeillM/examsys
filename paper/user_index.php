@@ -35,7 +35,6 @@ require_once '../classes/userutils.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/timer.class.php';
 require_once '../classes/lab_factory.class.php';
-require_once '../classes/lab.class.php';
 require_once '../classes/log_extra_time.class.php';
 require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/summativetimer.class.php';

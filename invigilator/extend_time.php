@@ -25,7 +25,6 @@
 require '../include/invigilator_auth.inc';
 require '../classes/paperproperties.class.php';
 require '../classes/lab_factory.class.php';
-require '../classes/lab.class.php';
 require '../classes/log_extra_time.class.php';
 require '../classes/log_lab_end_time.class.php';
 
