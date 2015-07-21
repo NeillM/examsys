@@ -38,7 +38,6 @@ require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/question_status.class.php';
-require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -105,8 +104,6 @@ if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_module
 }
 
 if ($properties->get_paper_type() == '4') {		// OSCE
-	require_once '../classes/killer_question.class.php';
-	
 	$killer_questions = new Killer_question($paperID, $mysqli);
 	$killer_questions->load();
 }
