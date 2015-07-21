@@ -32,7 +32,6 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Inc
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
-require_once $cfg_web_root . 'classes/authentication.class.php';
 
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
