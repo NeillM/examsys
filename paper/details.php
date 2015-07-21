@@ -37,7 +37,6 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
-require_once '../classes/exclusion.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/killer_question.class.php';

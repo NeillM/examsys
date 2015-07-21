@@ -25,7 +25,6 @@
 
 require_once 'logger.class.php';
 require_once 'questionutils.class.php';
-require_once 'exclusion.class.php';
 
 class PaperProperties {
 

@@ -30,7 +30,6 @@ require_once '../include/errors.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/folderutils.class.php';
 require_once '../classes/paperproperties.class.php';
-require_once '../classes/exclusion.class.php';
 require_once '../classes/standard_setting.class.php';
 
 //HTML5 part

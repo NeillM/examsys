@@ -24,7 +24,6 @@
 
 require_once $cfg_web_root . 'classes/stringutils.class.php';
 require_once $cfg_web_root . 'classes/configobject.class.php';
-require_once $cfg_web_root . 'classes/exclusion.class.php';
 
 $configObject = Config::get_instance();
 
