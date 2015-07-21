@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/class_totals.class.php';
 require_once '../classes/paperproperties.class.php';
 
 $paperID   = check_var('paperID', 'POST', true, false, true);

@@ -29,7 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once './osce.inc';
 
-require_once '../classes/class_totals.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
