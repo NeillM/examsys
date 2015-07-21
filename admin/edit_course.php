@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/courseutils.class.php';
 require_once '../classes/logger.class.php';
 
 $courseID = check_var('courseID', 'REQUEST', true, false, true);

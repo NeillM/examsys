@@ -24,8 +24,6 @@
  * @package
  */
 
-require_once $cfg_web_root . '/classes/courseutils.class.php';
-
 Class UserUtils {
 
   static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '') {
