@@ -22,13 +22,12 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/CMFactory.class.php';
 require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 
 $idMod = $_GET['module'];
-$yearutils = new yearutils($mysqli);
-$session = $yearutils->get_current_session();
+
+$session = date_utils::get_current_academic_year();
 $vle_api_cache = array();
 $vle_api_data = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
 $vle_api = $vle_api_data['api'];

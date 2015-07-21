@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/dateutils.class.php';
 
 $announcementid = check_var('announcementid', 'REQUEST', true, false, true);
 

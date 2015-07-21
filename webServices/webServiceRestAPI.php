@@ -33,7 +33,6 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // I
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 require_once $cfg_web_root . 'classes/networkutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
-require_once $cfg_web_root . 'classes/dateutils.class.php';
 require_once $cfg_web_root . 'classes/usernotices.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 

@@ -27,7 +27,6 @@
 require '../include/staff_student_auth.inc';
 require_once '../include/icon_display.inc';
 require_once '../config/index.inc';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/networkutils.class.php';
 

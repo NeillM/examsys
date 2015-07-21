@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/dateutils.class.php';
 
 if (isset($_GET['default'])) {
   $parts = explode('_', substr($_GET['default'], 1));
