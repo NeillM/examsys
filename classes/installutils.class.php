@@ -428,6 +428,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
+    // Create constraints.
+    self::createConstraints();
+    
     //LOAD help if requested
     if (isset($_POST['loadHelp'])) {
       self::loadHelp();
@@ -531,6 +534,26 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$db->autocommit(true);
   }
 
+  /**
+   * Create constrainsts to maintain database referential integrity
+   */
+  static function createConstraints() {
+    $alter = array();
+    $alter[] = "ALTER TABLE sms_imports ADD CONSTRAINT sms_imports_fk0 FOREIGN KEY (academic_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE sessions ADD CONSTRAINT sessions_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE relationships ADD CONSTRAINT relationships_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE properties ADD CONSTRAINT properties_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE objectives ADD CONSTRAINT objectives_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE modules_student ADD CONSTRAINT modules_student_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE users_metadata ADD CONSTRAINT users_metadata_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    foreach ($alter as $a) {
+        $res = self::$db->prepare($a);
+        $res->execute();
+        $res->close();
+    }
+    
+  }
+  
   /**
   * create the database and users if they do not exist
   *
@@ -2406,13 +2429,12 @@ QUERY;
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned DEFAULT NULL,
           `idMod` int(11) unsigned DEFAULT NULL,
-          `calendar_year` int(4) DEFAULT NULL,
+          `calendar_year` int(4) NOT NULL,
           `attempt` tinyint(4) DEFAULT NULL,
           `auto_update` tinyint(4) DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `idx_userID` (`userID`),
           KEY `idx_mod_calyear` (`calendar_year`,`idMod`)
-          CONSTRAINT `modules_student_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2426,7 +2448,6 @@ QUERY;
         `sequence` int(11) DEFAULT NULL,
         PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
         KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
-        CONSTRAINT `objectives_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2563,7 +2584,7 @@ QUERY;
           `display_students_response` enum('0','1') default NULL,
           `display_feedback` enum('0','1') default NULL,
           `hide_if_unanswered` enum('0','1') default NULL,
-          `calendar_year` INT(4) default NULL,
+          `calendar_year` INT(4) NOT NULL,
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
@@ -2578,7 +2599,6 @@ QUERY;
           KEY `question_type` (`paper_type`),
           KEY `crypt_name_idx` (`crypt_name`),
           KEY `idx_owner_deleted` (`paper_ownerID`,`deleted`)
-          CONSTRAINT `properties_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2734,14 +2754,13 @@ QUERY;
           `paper_id` mediumint(8) unsigned DEFAULT NULL,
           `question_id` int(11) NOT NULL,
           `obj_id` int(11) NOT NULL,
-          `calendar_year` INT(4) DEFAULT NULL,
+          `calendar_year` INT(4) NOT NULL,
           `vle_api` varchar(255) NOT NULL DEFAULT '',
           `map_level` smallint(2) NOT NULL DEFAULT '0',
           PRIMARY KEY (`rel_id`),
           KEY `module_id_idx` (`idMod`),
           KEY `paper_id_idx` (`paper_id`),
           KEY `calendar_year` (`calendar_year`)
-          CONSTRAINT `relationships_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2834,11 +2853,10 @@ QUERY;
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
           `title` text NOT NULL,
           `source_url` text,
-          `calendar_year` INT(4) NOT NULL DEFAULT '2008/09',
+          `calendar_year` INT(4) NOT NULL,
           `occurrence` datetime default NULL,
           PRIMARY KEY (`identifier`,`idMod`,`calendar_year`),
-          KEY `sess_id` (`sess_id`),
-          CONSTRAINT `sessions_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
+          KEY `sess_id` (`sess_id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2861,8 +2879,7 @@ QUERY;
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
           `academic_year` INT(4) DEFAULT NULL,
-          PRIMARY KEY (`id`),
-          CONSTRAINT `sms_imports_fk0` FOREIGN KEY (`academic_year`) REFERENCES `academic_year` (`calendar_year`)
+          PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -3103,9 +3120,8 @@ QUERY;
           `idMod` int(11) unsigned default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
-          `calendar_year` INT(4) default NULL,
+          `calendar_year` INT(4) NOT NULL,
           UNIQUE KEY `idx_users_metadata` (`userID`,`idMod`,`type`,`calendar_year`)
-          CONSTRAINT `users_metadata_fk0` FOREIGN KEY (`calendar_year`) REFERENCES `academic_year` (`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

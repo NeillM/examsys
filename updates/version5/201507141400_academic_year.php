@@ -36,7 +36,7 @@ $updater_utils->execute_query($insertsql, true);
 // 1. users_metadata
 
 if (!$updater_utils->has_updated('rogo1481alter_users_metadata')) {
-    $altersql = "ALTER TABLE users_metadata CHANGE calendar_year calendar_year INT(4) DEFAULT NULL";
+    $altersql = "ALTER TABLE users_metadata CHANGE calendar_year calendar_year INT(4) NOT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE users_metadata SET calendar_year = 2010 WHERE calendar_year = 1";
@@ -69,7 +69,7 @@ if (!$updater_utils->has_updated('rogo1481alter_users_metadata')) {
 // 2. sms_imports
 
 if (!$updater_utils->has_updated('rogo1481alter_sms_imports')) {
-    $altersql = "ALTER TABLE sms_imports CHANGE academic_year academic_year INT(4) DEFAULT NULL";
+    $altersql = "ALTER TABLE sms_imports CHANGE academic_year academic_year INT(4) NOT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE sms_imports SET academic_year = 2002 WHERE academic_year = 1";
@@ -117,7 +117,7 @@ if (!$updater_utils->has_updated('rogo1481alter_sms_imports')) {
 
 // 3. sessions
 if (!$updater_utils->has_updated('rogo1481alter_sessions')) {
-    $altersql = "ALTER TABLE sessions CHANGE calendar_year calendar_year INT(4) NOT NULL DEFAULT '2008'";
+    $altersql = "ALTER TABLE sessions CHANGE calendar_year calendar_year INT(4) NOT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE sessions SET calendar_year = 2008 WHERE calendar_year = 1";
@@ -153,7 +153,7 @@ if (!$updater_utils->has_updated('rogo1481alter_sessions')) {
 
 // 4. relationships
 if (!$updater_utils->has_updated('rogo1481alter_relationships')) {
-    $altersql = "ALTER TABLE relationships CHANGE calendar_year calendar_year INT(4) DEFAULT NULL";
+    $altersql = "ALTER TABLE relationships CHANGE calendar_year calendar_year INT(4) NOT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE relationships SET calendar_year = 2006 WHERE calendar_year = 1";
@@ -194,7 +194,7 @@ if (!$updater_utils->has_updated('rogo1481alter_relationships')) {
 // 5. properties
 
 if (!$updater_utils->has_updated('rogo1481alter_properties')) {
-    $altersql = "ALTER TABLE properties CHANGE calendar_year calendar_year INT(4) DEFAULT NULL";
+    $altersql = "ALTER TABLE properties CHANGE calendar_year calendar_year INT(4) NOT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE properties SET calendar_year = 2002 WHERE calendar_year = 1";
@@ -243,7 +243,7 @@ if (!$updater_utils->has_updated('rogo1481alter_properties')) {
 // 6. objectives
 
 if (!$updater_utils->has_updated('rogo1481alter_objectives')) {
-    $altersql = "ALTER TABLE objectives CHANGE calendar_year calendar_year INT(4) NOT NULL DEFAULT '2008'";
+    $altersql = "ALTER TABLE objectives CHANGE calendar_year calendar_year INT(4) NOT NULL";
     $updater_utils->execute_query($altersql, true);
 
     $updatesql = "UPDATE objectives SET calendar_year = 2008 WHERE calendar_year = 1";
