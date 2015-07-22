@@ -55,6 +55,8 @@ if (!$yearutils->check_calendar_year($year)) {
 // Check if in use
 if ($yearutils->check_calendar_year_in_use($year)) {
     echo "<p>" . $string['warning1'] . "</p>\n";
+} else if ($yearutils->count_active_academic_session() < 2) {
+    echo "<p>" . $string['warning2'] . "</p>\n";
 } else {
 
 ?>

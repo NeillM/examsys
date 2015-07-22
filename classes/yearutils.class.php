@@ -224,6 +224,20 @@ class year_utils {
         return false;
 
     }
+    
+    /**
+     * Check atleast two academic session exists.
+     * @return bool - number of active academic sessions
+     */
+     public function count_active_academic_session() {
+
+        $result = $this->mysqli->prepare("SELECT count(calendar_year) FROM academic_year WHERE deleted IS NULL");
+        $result->execute();
+        $result->bind_result($count);
+        $result->fetch();
+        return $count;
+
+    }
 
     /**
      * Delete an acaemic year by setting a flag

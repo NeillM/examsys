@@ -73,6 +73,8 @@ if (isset($_POST['submit'])) {
         <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
         <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
         <script type="text/javascript" src="../js/toprightmenu.js"></script>
+        <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
+        <script type="text/javascript" src="../js/system_tooltips.js"></script>
         <script>
           $(function () {
             $('#theform').validate({
@@ -114,10 +116,10 @@ if (isset($_POST['submit'])) {
                         }
                     ?>
                     <table cellpadding="0" cellspacing="2" border="0">
-                        <tr><td class="field"><?php echo $string['calendaryear'] ?></td><td><input type="text" size="4" maxlength="4" id="calendar_year" name="calendar_year" value="" required /></td></tr>
-                        <tr><td class="field"><?php echo $string['academicyear'] ?></td><td><input type="text" size="30" maxlength="30" id="academic_year" name="academic_year" value="" required /></td></tr>
-                        <tr><td class="field"><?php echo $string['calstatus'] ?></td><td><input type="checkbox" id="cal_status" name="cal_status" value="" /></td></tr>
-                        <tr><td class="field"><?php echo $string['statstatus'] ?></td><td><input type="checkbox" id="stat_status" name="stat_status" value="" /></td></tr>
+                        <tr><td class="field"><?php echo $string['calendaryear'] ?> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['calendaryear_tt'] ?>" /></td><td><input type="text" size="4" maxlength="4" id="calendar_year" name="calendar_year" value="" required /></td></tr>
+                        <tr><td class="field"><?php echo $string['academicyear'] ?> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['academicyear_tt'] ?>" /></td><td><input type="text" size="30" maxlength="30" id="academic_year" name="academic_year" value="" required /></td></tr>
+                        <tr><td class="field"><?php echo $string['calstatus'] ?> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['calendarenabled_tt'] ?>" /></td><td><input type="checkbox" id="cal_status" name="cal_status" value="" /></td></tr>
+                        <tr><td class="field"><?php echo $string['statstatus'] ?> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['statenabled_tt'] ?>" /></td><td><input type="checkbox" id="stat_status" name="stat_status" value="" /></td></tr>
                     </table>
                   <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
                 </form>

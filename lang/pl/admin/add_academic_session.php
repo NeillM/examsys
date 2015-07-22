@@ -27,3 +27,7 @@ $string['duplicateerror'] = 'Calendar year already exists.';
 $string['createsession'] = 'Create Academic Session';
 $string['editsession'] = 'Edit Academic Session';
 $string['deletesession'] = 'Delete Academic Session';
+$string['calendaryear_tt'] = 'e.g. 2015, 2016';
+$string['academicyear_tt'] = 'e.g. 2015/16, 2015/2016, 15/16, 15-16';
+$string['calendarenabled_tt'] = 'Will the academic session display in the calendar?';
+$string['statenabled_tt'] = 'Will the academic session display in the summative statistics report?';
