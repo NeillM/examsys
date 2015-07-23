@@ -74,6 +74,7 @@ if (isset($_POST['submit'])) {
         <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
         <script type="text/javascript" src="../js/toprightmenu.js"></script>
         <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
+        <script type="text/javascript" src="../js/staff_help.js"></script>
         <script type="text/javascript" src="../js/system_tooltips.js"></script>
         <script>
           $(function () {
@@ -95,7 +96,7 @@ if (isset($_POST['submit'])) {
     require '../include/academic_session_options.inc';
     require '../include/toprightmenu.inc';
 
-    echo draw_toprightmenu();
+    echo draw_toprightmenu(740);
 ?>
         <div id="content">
 

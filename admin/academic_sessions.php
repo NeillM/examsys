@@ -88,7 +88,7 @@ $result->close();
     require '../include/academic_session_options.inc';
     require '../include/toprightmenu.inc';
 
-    echo draw_toprightmenu();
+    echo draw_toprightmenu(740);
 
 ?>
 <div id="content">
