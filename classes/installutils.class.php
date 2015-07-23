@@ -431,6 +431,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     // Create constraints.
     self::createConstraints();
     
+    // Load default data
+    self::loadData();
+    
     //LOAD help if requested
     if (isset($_POST['loadHelp'])) {
       self::loadHelp();
@@ -552,6 +555,25 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $res->close();
     }
     
+  }
+  
+  /**
+   * Load default data needed for rogo to function
+   */
+  static function loadData() {
+    $calendaryear = date('Y');
+    $previouscalendaryear = date('Y') - 1;
+    $nextcalendaryear = date('Y') + 1;
+    $nextyear = date('y') + 1;
+    $currentyear = date('y');
+    $futureyear = date('y') + 2;
+    $academicyear = $calendaryear . '/' . $nextyear;
+    $previousacademicyear = $previouscalendaryear . '/' . $currentyear;
+    $nextacademicyear = $nextcalendaryear . '/' . $futureyear;
+    $insert = self::$db->prepare('INSERT INTO academic_year VALUES (?, ?, 1, 1, NULL, NULL), (?, ?, 1, 1, NULL, NULL), (?, ?, 1, 1, NULL, NULL)');
+    $insert->bind_param('isisis', $previouscalendaryear, $previousacademicyear, $calendaryear, $academicyear, $nextcalendaryear, $nextacademicyear);
+    $insert->execute();
+    $insert->close();
   }
   
   /**

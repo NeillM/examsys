@@ -318,7 +318,7 @@ if ($_POST['paper_type'] == 'summative') {
  
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
-    echo $yearutils->get_academic_year_dropdown_options("modules_student", $_POST['paper_type'], $string);
+    echo $yearutils->get_calendar_year_dropdown_options($_POST['paper_type'], $yearutils->get_current_session() ,$string);
     echo "</select></td>\n";
   } else {
     echo "<input type=\"hidden\" name=\"session\" value=\"\" />\n";

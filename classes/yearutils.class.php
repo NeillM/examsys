@@ -90,53 +90,11 @@ class year_utils {
 
         foreach ($years as $calendar => $academic) {
             $list .= "<option value=\"" . $calendar . "\"";
-            if ($calendar_year == $academic) {
+            if ($calendar_year == $calendar) {
                 $list .= 'selected';
             }
             $list .= ">" . $academic . "</option>\n";
         }
-        return $list;
-    }
-
-    /**
-     * Create options list for a drop down menu of academic sessions.
-     *
-     * @param string $table table we are referencing to get session data
-     * @param char $paper_type type of paper
-     * @param string $calendar_year - current calendar year
-     * @param array $string - language sting array
-     * @return string - options list
-     */
-    public function get_academic_year_dropdown_options($table, $paper_type, $string) {
-        $list = "";
-        if ($paper_type == '0' or $paper_type == '1') {
-            $list = "<option value=\"\">" . $string['na'] .  "</option>\n";
-        }
-
-        $next_flag = 1;
-        $next_session = $this->get_academic_session($this->get_next_session());
-        $current_session = $this->get_academic_session($this->get_current_session());
-        $sql = $this->mysqli->prepare("SELECT "
-            . "DISTINCT academic_year "
-            . "FROM $table, academic_year "
-            . "WHERE $table.calendar_year = academic_year.calendar_year "
-            . "AND deleted is NULL "
-            . "ORDER BY academic_year DESC");
-        $sql->execute();
-        $sql->bind_result($academic_year);
-
-        
-        while ($sql->fetch()) {
-            if ($next_flag == 1)  {
-                $sel = ($academic_year == $next_session) ? ' selected="selected"' : '';
-                $list .= "<option value=\"$next_session\"$sel>$next_session</option>\n";
-                $next_flag = 0;
-            }
-            $sel = ($current_session == $academic_year) ? ' selected="selected"' : '';
-            $list .= "<option value=\"$academic_year\"$sel>$academic_year</option>\n";
-        }
-
-        $sql->close();
         return $list;
     }
 
