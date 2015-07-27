@@ -4,12 +4,12 @@ if (!$updater_utils->does_table_exist('academic_year')) {
 
     // Create new table.
     $createsql = "CREATE TABLE `academic_year` (
-	`calendar_year` int(4) NOT NULL,
-	`academic_year` varchar(30) NOT NULL,
-	`cal_status` boolean NOT NULL DEFAULT '1',
-	`stat_status` boolean NOT NULL DEFAULT '1',
+        `calendar_year` int(4) NOT NULL,
+        `academic_year` varchar(30) NOT NULL,
+        `cal_status` boolean NOT NULL DEFAULT '1',
+        `stat_status` boolean NOT NULL DEFAULT '1',
         `deleted` datetime default NULL,
-	`deletedby` int(10),
+        `deletedby` int(10),
         PRIMARY KEY (`calendar_year`)
     )";
 
@@ -27,10 +27,10 @@ $grantsql = "GRANT SELECT ON " . $cfg_db_database . ".academic_year TO '" . $cfg
 $updater_utils->execute_query($grantsql, true);
 
 // Default data
-$insertsql = "INSERT INTO academic_year VALUES (2002,'2002/03',0,0), (2003,'2003/04',0,0), (2004,'2004/05',0,0), (2005,'2005/06',0,0), "
-  . "(2006,'2006/07',0,0), (2007,'2007/08',0,0), (2008,'2008/09',0,1), (2009,'2009/10',0,1), (2010,'2010/11',0,1), (2011,'2011/12',0,1), "
-  . "(2012,'2012/13',1,1), (2013,'2013/14',1,1), (2014,'2014/15',1,1), (2015,'2015/16',1,1), (2016,'2016/17',1,0), (2017,'2017/18',0,0), "
-  . "(2018,'2018/19',0,0), (2019,'2019/20',0,0)";
+$insertsql = "INSERT INTO academic_year (calendar_year, academic_year, cal_status, stat_status) VALUES (2002,'2002/03',0,0), "
+  . "(2003,'2003/04',0,0), (2004,'2004/05',0,0), (2005,'2005/06',0,0), (2008,'2008/09',0,1), (2009,'2009/10',0,1), (2010,'2010/11',0,1), "
+  . "(2006,'2006/07',0,0), (2007,'2007/08',0,0), (2011,'2011/12',0,1), (2012,'2012/13',1,1), (2013,'2013/14',1,1), (2014,'2014/15',1,1), "
+  . "(2015,'2015/16',1,1), (2016,'2016/17',1,0), (2017,'2017/18',0,0), (2018,'2018/19',0,0), (2019,'2019/20',0,0), (0,'Unassigned',0,0)";
 $updater_utils->execute_query($insertsql, true);
 
 // 1. users_metadata
