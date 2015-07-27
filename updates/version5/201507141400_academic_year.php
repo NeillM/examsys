@@ -30,15 +30,17 @@ $updater_utils->execute_query($grantsql, true);
 $insertsql = "INSERT INTO academic_year (calendar_year, academic_year, cal_status, stat_status) VALUES (2002,'2002/03',0,0), "
   . "(2003,'2003/04',0,0), (2004,'2004/05',0,0), (2005,'2005/06',0,0), (2008,'2008/09',0,1), (2009,'2009/10',0,1), (2010,'2010/11',0,1), "
   . "(2006,'2006/07',0,0), (2007,'2007/08',0,0), (2011,'2011/12',0,1), (2012,'2012/13',1,1), (2013,'2013/14',1,1), (2014,'2014/15',1,1), "
-  . "(2015,'2015/16',1,1), (2016,'2016/17',1,0), (2017,'2017/18',0,0), (2018,'2018/19',0,0), (2019,'2019/20',0,0), (0,'Unassigned',0,0)";
+  . "(2015,'2015/16',1,1), (2016,'2016/17',1,0), (2017,'2017/18',0,0), (2018,'2018/19',0,0), (2019,'2019/20',0,0)";
 $updater_utils->execute_query($insertsql, true);
 
 // 1. users_metadata
 
 if (!$updater_utils->has_updated('rogo1481alter_users_metadata')) {
-    $altersql = "ALTER TABLE users_metadata CHANGE calendar_year calendar_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE users_metadata CHANGE calendar_year calendar_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE users_metadata SET calendar_year = NULL WHERE calendar_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE users_metadata SET calendar_year = 2010 WHERE calendar_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE users_metadata SET calendar_year = 2011 WHERE calendar_year = 2";
@@ -69,9 +71,11 @@ if (!$updater_utils->has_updated('rogo1481alter_users_metadata')) {
 // 2. sms_imports
 
 if (!$updater_utils->has_updated('rogo1481alter_sms_imports')) {
-    $altersql = "ALTER TABLE sms_imports CHANGE academic_year academic_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE sms_imports CHANGE academic_year academic_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE sms_imports SET academic_year = NULL WHERE academic_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE sms_imports SET academic_year = 2002 WHERE academic_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE sms_imports SET academic_year = 2003 WHERE academic_year = 2";
@@ -117,9 +121,11 @@ if (!$updater_utils->has_updated('rogo1481alter_sms_imports')) {
 
 // 3. sessions
 if (!$updater_utils->has_updated('rogo1481alter_sessions')) {
-    $altersql = "ALTER TABLE sessions CHANGE calendar_year calendar_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE sessions CHANGE calendar_year calendar_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE sessions SET calendar_year = NULL WHERE calendar_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE sessions SET calendar_year = 2008 WHERE calendar_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE sessions SET calendar_year = 2009 WHERE calendar_year = 2";
@@ -153,9 +159,11 @@ if (!$updater_utils->has_updated('rogo1481alter_sessions')) {
 
 // 4. relationships
 if (!$updater_utils->has_updated('rogo1481alter_relationships')) {
-    $altersql = "ALTER TABLE relationships CHANGE calendar_year calendar_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE relationships CHANGE calendar_year calendar_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE relationships SET calendar_year = NULL WHERE calendar_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE relationships SET calendar_year = 2006 WHERE calendar_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE relationships SET calendar_year = 2007 WHERE calendar_year = 2";
@@ -194,9 +202,11 @@ if (!$updater_utils->has_updated('rogo1481alter_relationships')) {
 // 5. properties
 
 if (!$updater_utils->has_updated('rogo1481alter_properties')) {
-    $altersql = "ALTER TABLE properties CHANGE calendar_year calendar_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE properties CHANGE calendar_year calendar_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE properties SET calendar_year = NULL WHERE calendar_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE properties SET calendar_year = 2002 WHERE calendar_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE properties SET calendar_year = 2003 WHERE calendar_year = 2";
@@ -243,9 +253,11 @@ if (!$updater_utils->has_updated('rogo1481alter_properties')) {
 // 6. objectives
 
 if (!$updater_utils->has_updated('rogo1481alter_objectives')) {
-    $altersql = "ALTER TABLE objectives CHANGE calendar_year calendar_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE objectives CHANGE calendar_year calendar_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE objectives SET calendar_year = NULL WHERE calendar_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE objectives SET calendar_year = 2008 WHERE calendar_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE objectives SET calendar_year = 2009 WHERE calendar_year = 2";
@@ -280,9 +292,11 @@ if (!$updater_utils->has_updated('rogo1481alter_objectives')) {
 // 7. modules_student
 
 if (!$updater_utils->has_updated('rogo1481alter_modules_student')) {
-    $altersql = "ALTER TABLE modules_student CHANGE calendar_year calendar_year INT(4) NOT NULL";
+    $altersql = "ALTER TABLE modules_student CHANGE calendar_year calendar_year INT(4)";
     $updater_utils->execute_query($altersql, true);
 
+    $updatesql = "UPDATE modules_student SET calendar_year = NULL WHERE calendar_year = 0";
+    $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE modules_student SET calendar_year = 2008 WHERE calendar_year = 1";
     $updater_utils->execute_query($updatesql, true);
     $updatesql = "UPDATE modules_student SET calendar_year = 2009 WHERE calendar_year = 2";

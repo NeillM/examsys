@@ -561,6 +561,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * Load default data needed for rogo to function
    */
   static function loadData() {
+    // Add 3 academic sessions to the the new user started.
     $calendaryear = date('Y');
     $previouscalendaryear = date('Y') - 1;
     $nextcalendaryear = date('Y') + 1;
