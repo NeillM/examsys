@@ -46,7 +46,9 @@ $cfg_web_root = get_root_path() . '/';
 $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
 require $cfg_web_root . 'classes/installutils.class.php';
-$version = '6.0.5';
+require $cfg_web_root . 'classes/configobject.class.php';
+// Get the code version.
+$version = $configObject->getxml('version');
 
 set_time_limit(0);
 

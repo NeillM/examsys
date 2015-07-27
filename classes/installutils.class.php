@@ -561,6 +561,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * Load default data needed for rogo to function
    */
   static function loadData() {
+    // Add 3 academic sessions to the the new user started.
     $calendaryear = date('Y');
     $previouscalendaryear = date('Y') - 1;
     $nextcalendaryear = date('Y') + 1;
@@ -2451,7 +2452,7 @@ QUERY;
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned DEFAULT NULL,
           `idMod` int(11) unsigned DEFAULT NULL,
-          `calendar_year` int(4) NOT NULL,
+          `calendar_year` int(4),
           `attempt` tinyint(4) DEFAULT NULL,
           `auto_update` tinyint(4) DEFAULT NULL,
           PRIMARY KEY (`id`),
@@ -2466,7 +2467,7 @@ QUERY;
         `objective` text NOT NULL,
         `idMod` int(11) unsigned NOT NULL DEFAULT '0',
         `identifier` bigint(20) unsigned NOT NULL,
-        `calendar_year` INT(4) NOT NULL,
+        `calendar_year` INT(4),
         `sequence` int(11) DEFAULT NULL,
         PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
         KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
@@ -2606,7 +2607,7 @@ QUERY;
           `display_students_response` enum('0','1') default NULL,
           `display_feedback` enum('0','1') default NULL,
           `hide_if_unanswered` enum('0','1') default NULL,
-          `calendar_year` INT(4) NOT NULL,
+          `calendar_year` INT(4),
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
@@ -2776,7 +2777,7 @@ QUERY;
           `paper_id` mediumint(8) unsigned DEFAULT NULL,
           `question_id` int(11) NOT NULL,
           `obj_id` int(11) NOT NULL,
-          `calendar_year` INT(4) NOT NULL,
+          `calendar_year` INT(4),
           `vle_api` varchar(255) NOT NULL DEFAULT '',
           `map_level` smallint(2) NOT NULL DEFAULT '0',
           PRIMARY KEY (`rel_id`),
@@ -2875,7 +2876,7 @@ QUERY;
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
           `title` text NOT NULL,
           `source_url` text,
-          `calendar_year` INT(4) NOT NULL,
+          `calendar_year` INT(4),
           `occurrence` datetime default NULL,
           PRIMARY KEY (`identifier`,`idMod`,`calendar_year`),
           KEY `sess_id` (`sess_id`)
@@ -2900,7 +2901,7 @@ QUERY;
           `deletions` int(11) default NULL,
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
-          `academic_year` INT(4) DEFAULT NULL,
+          `academic_year` INT(4),
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -3142,7 +3143,7 @@ QUERY;
           `idMod` int(11) unsigned default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
-          `calendar_year` INT(4) NOT NULL,
+          `calendar_year` INT(4),
           UNIQUE KEY `idx_users_metadata` (`userID`,`idMod`,`type`,`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
