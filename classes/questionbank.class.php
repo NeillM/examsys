@@ -25,7 +25,6 @@
 */
 
 require_once '../classes/question_status.class.php';
-require_once $cfg_web_root . 'classes/yearutils.class.php';
 
 class QuestionBank {
   
@@ -43,7 +42,7 @@ class QuestionBank {
     $this->idMod  = $idMod;
     $this->module_id = $moduleID;
     $this->notice = $notice;
-    $this->yearutils = new year_utils($this->db);
+    $this->yearutils = new yearutils($this->db);
   }
   
   public function get_categories($type) {

@@ -43,7 +43,6 @@ require_once '../classes/moduleutils.class.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/usernotices.class.php';
 require_once '../classes/stringutils.class.php';
-require_once '../classes/yearutils.class.php';
 
 $notice = UserNotices::get_instance();
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
@@ -98,7 +97,7 @@ if (isset($_POST['submit'])) {
 
   if ($unique_username == true) {
     $_POST['new_grade'] = $new_moduleid;
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     $session = $yearutils->get_current_session();
 		
     // Add staff account

@@ -177,7 +177,7 @@ require '../lang/' . $language. '/include/timezones.inc';
   }
 
   // Create the new paper.
-  $yearutils = new year_utils($mysqli);
+  $yearutils = new yearutils($mysqli);
   $session = $yearutils->get_current_session();
 
   if (isset($_POST['folder'])) {

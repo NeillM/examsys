@@ -20,7 +20,7 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  */
-class year_utils {
+class yearutils {
 
     private $mysqli;
     private $academic_year_start;

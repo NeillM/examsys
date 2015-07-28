@@ -43,7 +43,6 @@ require_once $path . '/include/auth.inc';
 require_once $path . '/classes/smsutils.class.php';
 require_once $path . '/classes/lang.class.php';
 require_once $path . '/include/custom_error_handler.inc';
-require_once $path . '/classes/yearutils.class.php';
 
 if ($configObject->get('cfg_sms_api') == '') {
   log_error(0, 'CRON JOB', 'Application Error', "'cfg_sms_api' setting in config.inc.php is set to blank.", 'users_from_SMS.php', 0, '', null, null, null);
@@ -63,7 +62,7 @@ $module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms, academic_year
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms, $academic_year_start);
-$yearutils = new year_utils($mysqli);
+$yearutils = new yearutils($mysqli);
 while ($module_data->fetch()) {
 
   $session = $yearutils->get_current_session($academic_year_start);

@@ -37,7 +37,6 @@ require_once '../classes/lti_integration.class.php';
 require_once '../classes/smsutils.class.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/facultyutils.class.php';
-require_once '../classes/yearutils.class.php';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
@@ -119,7 +118,7 @@ if (!$lti->isInstructor()) {
   } else {
     //valid data
     list($c_internal_id, $upd) = $lti->lookup_lti_context();
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     $session = $yearutils->get_current_session();
 
     if (is_null($c_internal_id)) {

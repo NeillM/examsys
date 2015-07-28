@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
 
 <tr>
 <?php
-  $yearutils = new year_utils($mysqli);
+  $yearutils = new yearutils($mysqli);
   echo "<td style=\"text-align:right\">" . $string['session'] . "</td><td><select name=\"session\">\n";
   $startyear = ( date('Y') - 1 );
   for ($i = 0; $i < 2; $i++) {

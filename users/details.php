@@ -31,7 +31,6 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/networkutils.class.php';
-require_once '../classes/yearutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'GET', true, false, true);
@@ -680,7 +679,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   $results->store_result();
   $results->bind_result($idMod, $moduleid, $fullname, $calendar_year, $attempt);
 
-  $yearutils = new year_utils($mysqli);
+  $yearutils = new yearutils($mysqli);
   $current_session = $yearutils->get_current_session();
   while ($results->fetch()) {
     $user_modules[$row_no]['moduleid'] = $moduleid;

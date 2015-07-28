@@ -22,13 +22,11 @@
 * @package
 */
 
-require_once $cfg_web_root . '/classes/yearutils.class.php';
-
 function drawTabs($current_tab, $type, $extra = '') {
 
     global $mysqli;
 
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
 
     $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
 

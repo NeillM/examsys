@@ -21,9 +21,8 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/yearutils.class.php';
 
-$yearutils = new year_utils($mysqli);
+$yearutils = new yearutils($mysqli);
 
 if (isset($_POST['submit'])) {
     $calendar_year = trim($_POST['calendar_year']);

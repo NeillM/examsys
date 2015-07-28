@@ -26,7 +26,6 @@
 
 require_once '../include/admin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/yearutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
@@ -128,7 +127,7 @@ if (isset($_POST['submit'])) {
 </html>
 <?php
   } else {
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     if (isset($_GET['session']) and $_GET['session'] != '') {
       $session = $_GET['session'];
     } else {

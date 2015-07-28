@@ -23,12 +23,11 @@
 */
 
 require_once $cfg_web_root . 'classes/CMFactory.class.php';
-require_once $cfg_web_root . 'classes/yearutils.class.php';
 require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 
 $idMod = $_GET['module'];
-$yearutils = new year_utils($mysqli);
+$yearutils = new yearutils($mysqli);
 $session = $yearutils->get_current_session();
 $vle_api_cache = array();
 $vle_api_data = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);

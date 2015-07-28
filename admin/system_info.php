@@ -25,7 +25,6 @@
 require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../classes/networkutils.class.php';
-require_once '../classes/yearutils.class.php';
 
 /**
  * Formats space in human-readable format.
@@ -211,7 +210,7 @@ if ($e6 == 'improved') {
   $ErrorLogSettings .= $string['none'];
 }
 
-$yearutils = new year_utils($mysqli);
+$yearutils = new yearutils($mysqli);
 
 ?>
 </td>

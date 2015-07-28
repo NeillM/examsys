@@ -27,7 +27,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/yearutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -36,7 +35,7 @@ $userID  = check_var('userID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 function getModules($userID, $mysqlidb) {
-  $yearutils = new year_utils($mysqlidb);
+  $yearutils = new yearutils($mysqlidb);
   $modules = array();
   $session = $yearutils->get_current_session();
 

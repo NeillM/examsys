@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
-require '../classes/yearutils.class.php';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/logger.class.php';
@@ -181,7 +180,7 @@ if (!isset($_POST['submit'])) {
   $logger = new Logger($mysqli);
 
   if ($map_outcomes) {
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     $vle_api_cache = array();
     $vle_api_data = MappingUtils::get_vle_api($_GET['module'], $yearutils->get_current_session(), $vle_api_cache, $mysqli);
   }

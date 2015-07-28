@@ -29,7 +29,6 @@ if (!isset($cfg_web_root)) {
 
 require_once $configObject->get('cfg_web_root') . '/classes/lookup.class.php';
 require_once $configObject->get('cfg_web_root') . '/classes/moduleutils.class.php';
-require_once $configObject->get('cfg_web_root') . '/classes/yearutils.class.php';
 
 //updated interface to saturn using the new lookup class plugins
 Class GENERIC_SMS extends SmsUtils {
@@ -53,7 +52,7 @@ Class GENERIC_SMS extends SmsUtils {
     $lookup->clear_debug();
 
     // Calculate what the current academic session is.
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
 
         $lookupdata = new stdClass();
@@ -163,7 +162,7 @@ Class GENERIC_SMS extends SmsUtils {
       global $mysqli;
     }
 
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     if ($session == 'NOTSET') {
       $session = $yearutils->get_current_session();
     }

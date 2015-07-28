@@ -29,8 +29,6 @@
  * @return array List of years
  */
 
-require_once $cfg_web_root . '/classes/yearutils.class.php';
-
 function get_existing_years($db, $idMod) {
 	$years = array();
 	
@@ -77,13 +75,13 @@ function get_existing_years($db, $idMod) {
 <tr>
 <td align="left">
 <?php
-	$message = '';
-        $yearutils = new year_utils($mysqli);
-	// Get the current academic session
-	$session = $yearutils->get_current_session();
-	$nextsession = $yearutils->get_next_session();
-	// Get a list of existing (source) years
-	$source_years = get_existing_years($mysqli, $idMod);
+    $message = '';
+    $yearutils = new yearutils($mysqli);
+    // Get the current academic session
+    $session = $yearutils->get_current_session();
+    $nextsession = $yearutils->get_next_session();
+    // Get a list of existing (source) years
+    $source_years = get_existing_years($mysqli, $idMod);
 
 	// Should never be a case where we don't have a source year but check anyway
 	if (count($source_years) > 0) {

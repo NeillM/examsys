@@ -24,8 +24,6 @@
  * @package
  */
 
-require_once $configObject->get('cfg_web_root') . '/classes/yearutils.class.php';
-
 Class UON_SATURN extends SmsUtils {
   private $enrolement_no;
   private $deletion_no;
@@ -72,7 +70,7 @@ Class UON_SATURN extends SmsUtils {
     $users = array();
 
     // Calculate what the current academic session is.
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
     $replaced_module = str_replace('_UNMC', '', $moduleID);
     $replaced_module = str_replace('_UNNC', '', $replaced_module);
@@ -196,7 +194,7 @@ Class UON_SATURN extends SmsUtils {
       global $mysqli;
     }
 
-    $yearutils = new year_utils($mysqli);
+    $yearutils = new yearutils($mysqli);
     if ($session == 'NOTSET') {
         $session = $yearutils->get_current_session();
     }

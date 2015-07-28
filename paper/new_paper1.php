@@ -142,7 +142,7 @@ $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'of
 <?php
 if (isset($_GET['module'])) {
   $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
-  $yearutils = new year_utils($mysqli);
+  $yearutils = new yearutils($mysqli);
   $default_academic_year = $yearutils->get_current_session($module_details['academic_year_start']);
 } else {
   $default_academic_year = $configObject->get('cfg_academic_year_start');

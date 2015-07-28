@@ -22,10 +22,8 @@
 * @package
 */
 
-require_once '../classes/yearutils.class.php';
-
 // Calculate what the current academic session is.
-$yearutils = new year_utils($mysqli);
+$yearutils = new yearutils($mysqli);
 $current_session = $yearutils->get_current_session();
 $next_session = $yearutils->get_next_session();
 $academic_year = $yearutils->get_academic_session($current_session);

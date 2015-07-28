@@ -25,7 +25,6 @@
  */
 
 require_once $cfg_web_root . '/classes/courseutils.class.php';
-require_once $cfg_web_root . '/classes/yearutils.class.php';
 
 Class UserUtils {
 

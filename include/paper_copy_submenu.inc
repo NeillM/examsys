@@ -23,7 +23,6 @@
 */
 
 require_once '../config/campuses.inc';
-require_once '../classes/dateutils.class.php';
 ?>
 <style>
 	.cancel {margin-right:8px}
@@ -140,7 +139,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 <?php
   echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
   echo "<select name=\"session\">\n";
-  $yearutils = new year_utils($mysqli);
+  $yearutils = new yearutils($mysqli);
   echo $yearutils->get_calendar_year_dropdown_options($properties->get_paper_type(), $properties->get_calendar_year(), $string);
 
   echo "</select></td>\n";

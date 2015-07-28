@@ -27,7 +27,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/userutils.class.php';
-require_once '../classes/yearutils.class.php';
 require_once '../classes/noteutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
@@ -151,7 +150,7 @@ if (isset($_POST['submit'])) {
     echo '<strong>' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['initials'] . '</strong><br />';
   } else {
 		$student_modules = UserUtils::load_student_modules($userID, $mysqli);
-		$yearutils = new year_utils($mysqli);
+		$yearutils = new yearutils($mysqli);
 		$current_year = $yearutils->get_current_session();
 		$module_IDs = array();
 		if (isset($student_modules[$current_year])) {

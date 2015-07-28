@@ -24,10 +24,9 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/yearutils.class.php';
 
 $year = check_var('year', 'GET', true, false, true);
-$yearutils = new year_utils($mysqli);
+$yearutils = new yearutils($mysqli);
 
 if (!$yearutils->check_calendar_year($year)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
