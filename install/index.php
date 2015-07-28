@@ -24,6 +24,10 @@
 * @package
 */
 
+// Start class autoloading.
+require_once dirname(__DIR__) . '/include/autoload.inc.php';
+autoloader::init();
+
 // check for PHP.
 if ( false ) {
   ?>
@@ -45,8 +49,6 @@ require '../include/path_functions.inc.php';
 $cfg_web_root = get_root_path() . '/';
 $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
-require $cfg_web_root . 'classes/installutils.class.php';
-require $cfg_web_root . 'classes/configobject.class.php';
 // Get the code version.
 $version = $configObject->getxml('version');
 
