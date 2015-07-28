@@ -65,10 +65,6 @@ $return = session_start();
 require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
-require_once $cfg_web_root . 'classes/networkutils.class.php';
-require_once $cfg_web_root . 'classes/userobject.class.php';
-require_once $cfg_web_root . 'classes/authentication.class.php';
 
 if (is_null($configObject->get('cfg_db_port'))) {
   $configObject->set('cfg_db_port', 3306);
