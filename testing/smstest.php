@@ -61,8 +61,6 @@ require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
-require_once $cfg_web_root . '/classes/usernotices.class.php';
-
 require_once '../include/admin_auth.inc';
 
 if (!$userObject->has_role('SysAdmin')) {

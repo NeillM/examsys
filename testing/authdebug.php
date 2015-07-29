@@ -36,10 +36,6 @@ require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
-require_once $cfg_web_root . '/classes/usernotices.class.php';
-
-
-
 LangUtils::loadlangfile('admin/detailed_authentication_info.php');
 
 if (is_null($configObject->get('cfg_db_port'))) {

@@ -26,8 +26,6 @@
 * @package
 */
 
-require_once $cfg_web_root . '/classes/usernotices.class.php';
-
 /**
  * Check that the current IP address of the user is in one of the allowed
  * computer labs.
