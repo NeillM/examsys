@@ -39,7 +39,6 @@ require_once $path . '/include/load_config.php';
 require_once $path . '/classes/userutils.class.php';
 require_once $path . '/classes/userobject.class.php';
 require_once $path . '/include/auth.inc';
-require_once $path . '/classes/smsutils.class.php';
 require_once $path . '/include/custom_error_handler.inc';
 
 if ($configObject->get('cfg_sms_api') == '') {

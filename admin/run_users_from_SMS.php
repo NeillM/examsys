@@ -29,7 +29,6 @@ error_reporting(E_ALL);
 
 require '../include/sysadmin_auth.inc';
 require_once '../classes/userutils.class.php';
-require_once '../classes/smsutils.class.php';
 
 if ($configObject->get('cfg_sms_api') == '') {
   log_error(0, 'CRON JOB', 'Application Error', "'cfg_sms_api' setting in config.inc.php is set to blank.", 'users_from_SMS.php', 0, '', null, null, null);

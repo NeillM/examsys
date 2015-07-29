@@ -111,8 +111,6 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   header("location: list_modules.php");
   exit();
 } else {
-  require_once '../classes/smsutils.class.php';
-
   $SMS = SMSutils::GetSmsUtils();
   $cfg_sms_sources = array();
   if (is_object($SMS)) {
