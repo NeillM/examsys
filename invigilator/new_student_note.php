@@ -26,7 +26,6 @@ require '../include/invigilator_auth.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/userutils.class.php';
-require_once '../classes/noteutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 $userID = check_var('userID', 'REQUEST', true, false, true);  // User ID is the student ID.

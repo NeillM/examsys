@@ -24,7 +24,6 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
-require '../../classes/noteutils.class.php';
 require '../../classes/toiletbreakutils.class.php';
 
 $breakID  = check_var('breakID', 'GET', true, false, true);

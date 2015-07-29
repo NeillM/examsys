@@ -17,7 +17,6 @@
 require_once $configObject->get('cfg_web_root') . 'include/sort.inc';
 
 require_once $configObject->get('cfg_web_root') . 'classes/toiletbreakutils.class.php';
-require_once $configObject->get('cfg_web_root') . 'classes/noteutils.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/stringutils.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/paperproperties.class.php';
 
