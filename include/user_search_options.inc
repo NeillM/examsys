@@ -24,7 +24,6 @@
 * @package
 */
 
-require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 

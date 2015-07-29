@@ -62,7 +62,6 @@ require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
 require_once $cfg_web_root . '/classes/smsutils.class.php';
-require_once $cfg_web_root . '/classes/schoolutils.class.php';
 require_once $cfg_web_root . '/classes/usernotices.class.php';
 
 require_once '../include/admin_auth.inc';

@@ -28,7 +28,6 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../include/load_config.php';
-require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
 

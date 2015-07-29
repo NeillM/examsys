@@ -23,7 +23,6 @@
 */
 
   require_once '../../classes/searchutils.class.php';
-  require_once '../../classes/schoolutils.class.php';
 
   function render_metadata($db, $question, $bloom_on, $module, $disabled, &$string, $userObj) {
     global $staff_modules, $faculty;

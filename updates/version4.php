@@ -2412,8 +2412,6 @@ if (!isset($_POST['update'])) {
   }
 
   // 15/08/2012 - cczsa1 adding unknown school and faculty
-  require_once $cfg_web_root . 'classes/schoolutils.class.php';
-
   $result = $mysqli->prepare("SELECT id FROM " . $cfg_db_database . ".faculty  WHERE name='UNKNOWN Faculty'");
   $result->execute();
   $result->store_result();

@@ -36,7 +36,6 @@ require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 require_once $cfg_web_root . 'classes/authentication.class.php';
 
-require_once $cfg_web_root . '/classes/schoolutils.class.php';
 require_once $cfg_web_root . '/classes/usernotices.class.php';
 
 

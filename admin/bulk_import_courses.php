@@ -25,7 +25,6 @@
 */
 
 require '../include/admin_auth.inc';
-require_once '../classes/schoolutils.class.php';
 
 ini_set("auto_detect_line_endings", true);
 ?>

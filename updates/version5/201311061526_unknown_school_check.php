@@ -10,8 +10,6 @@ $configObj = Config::get_instance();
 $cfg_web_root = $configObj->get('cfg_web_root');
 
 // 15/08/2012 - cczsa1 adding unknown school and faculty
-require_once $cfg_web_root . 'classes/schoolutils.class.php';
-
 $facultystatus = FacultyUtils::facultyname_exists('UNKNOWN Faculty', $mysqli);
 if (!FacultyUtils::facultyname_exists('UNKNOWN Faculty', $mysqli)) {
   $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty', $mysqli);

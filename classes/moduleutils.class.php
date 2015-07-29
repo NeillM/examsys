@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once $cfg_web_root . 'classes/schoolutils.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 
 /**
