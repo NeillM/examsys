@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/searchutils.class.php';
 
 $refID = check_var('refID', 'GET', true, false, true);
 

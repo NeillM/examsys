@@ -24,7 +24,6 @@
 * @package
 */
 
-require_once '../classes/searchutils.class.php';
 require_once '../classes/stateutils.class.php';
 
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');
