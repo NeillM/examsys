@@ -32,7 +32,6 @@ require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/timer.class.php';
-require_once '../classes/log_lab_end_time.class.php';
 require_once '../classes/summativetimer.class.php';
 require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
