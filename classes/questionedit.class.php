@@ -25,7 +25,6 @@
  */
 
 require_once 'exceptions.inc.php';
-require_once 'rogo_object.class.php';
 require_once 'question.class.php';
 
 Class QuestionEdit extends RogoObject {
