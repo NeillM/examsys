@@ -24,7 +24,6 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
-require '../../classes/reviews.class.php';
 
 $userID  = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);

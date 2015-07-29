@@ -110,7 +110,6 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 
 if ($userObject->has_role(array('External Examiner'))) {
   // No further security checks.
-  require_once '../classes/reviews.class.php';
   if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);

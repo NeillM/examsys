@@ -28,7 +28,6 @@ require '../include/errors.inc';
 require '../include/media.inc';
 
 require_once '../classes/standard_setting.class.php';
-require_once '../classes/reviews.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
