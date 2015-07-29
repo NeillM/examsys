@@ -29,7 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
 require_once '../classes/userutils.class.php';
-require_once '../classes/timer.class.php';
 
 check_var('id', 'GET', true, false, false);
 
