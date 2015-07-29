@@ -6,7 +6,6 @@
  *****   NOW UPDATE THE INSTALLER SCRIPT   *****
  */
 
-require_once $cfg_web_root . 'classes/stringutils.class.php';
 $mysqli->autocommit(false);
 
 //error_reporting(E_ALL);
