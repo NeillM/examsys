@@ -23,9 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once $cfg_web_root . 'classes/keywordutils.class.php';
-
 Class PaperUtils {
   
   /**
