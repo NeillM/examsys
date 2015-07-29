@@ -24,7 +24,6 @@
 
 require '../../include/invigilator_auth.inc';
 require_once '../../include/errors.inc';
-require_once '../../classes/userutils.class.php';
 
 $userID  = check_var('userID', 'POST', true, false, true);
 $paperID = check_var('paperID', 'POST', true, false, true);

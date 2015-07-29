@@ -25,9 +25,6 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-
-require_once $configObject->get('cfg_web_root') . 'classes/userutils.class.php';
-
 class lti_integration_extended extends lti_integration {
 
   public $description = 'UoN';

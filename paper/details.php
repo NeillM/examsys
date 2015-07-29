@@ -32,7 +32,6 @@ require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../include/std_set_shared_functions.inc';
-require_once '../classes/userutils.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 

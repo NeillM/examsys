@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/userutils.class.php';
 
 $metadataID = check_var('metadataID', 'POST', true, false, true);
 $userID     = check_var('userID', 'POST', true, false, true);

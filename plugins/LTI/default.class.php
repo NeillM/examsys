@@ -6,9 +6,6 @@
  * Time: 13:31
  * To change this template use File | Settings | File Templates.
  */
-
-require_once $configObject->get('cfg_web_root') . 'classes/userutils.class.php';
-
 class lti_integration_extended  extends lti_integration {
 
 

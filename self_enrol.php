@@ -24,7 +24,6 @@
 
 require_once './include/staff_student_auth.inc';
 require_once './include/errors.inc';
-require_once './classes/userutils.class.php';
 
 if (isset($_GET['moduleid'])) {   // Old format
   $module = $_GET['moduleid'];

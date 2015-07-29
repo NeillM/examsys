@@ -27,7 +27,6 @@
 
 require_once '../include/load_config.php';
 require_once '../include/auth.inc';
-require_once '../classes/userutils.class.php';
 
 $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 

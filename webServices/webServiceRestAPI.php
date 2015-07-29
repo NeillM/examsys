@@ -26,7 +26,6 @@ $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $root = "$root/../";
 require_once $root . 'include/load_config.php';
 require_once $cfg_web_root . 'include/auth.inc';
-require_once $cfg_web_root . 'classes/userutils.class.php';
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // Include common language file that all scripts need
 

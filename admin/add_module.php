@@ -24,8 +24,6 @@
 
 require_once '../include/sysadmin_auth.inc';
 
-require_once '../classes/userutils.class.php';
-
 $SMS = SMSutils::GetSmsUtils();
 $cfg_sms_sources = array();
 if (is_object($SMS)) {
