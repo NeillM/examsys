@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/sort.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
-require_once '../classes/stateutils.class.php';
 require_once '../classes/questionbank.class.php';
 require_once '../include/errors.inc';
 

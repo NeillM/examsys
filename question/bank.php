@@ -30,7 +30,6 @@ require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/mapping.inc';
 
-require_once '../classes/stateutils.class.php';
 require_once '../classes/questionbank.class.php';
 
 $state = $stateutil->getState();

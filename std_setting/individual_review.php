@@ -27,8 +27,6 @@ require_once '../include/media.inc';
 require_once '../include/std_set_functions.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/stateutils.class.php';
-
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';

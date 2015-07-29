@@ -25,7 +25,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../classes/stateutils.class.php';
 
 $prefix = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'];
 $page = str_ireplace($prefix, '', $_REQUEST['page']);

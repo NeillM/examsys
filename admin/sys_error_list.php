@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/stateutils.class.php';
 
 $state = $stateutil->getState();
 

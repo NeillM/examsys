@@ -30,8 +30,6 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sidebar_menu.inc';
 
-require_once '../classes/stateutils.class.php';
-
 $module = check_var('module', 'GET', true, false, true);
 $type = check_var('type', 'GET', true, false, true);
 
