@@ -28,7 +28,6 @@ require_once '../include/std_set_functions.inc';
 require_once '../include/errors.inc';
 
 require_once '../classes/stateutils.class.php';
-require_once '../classes/standard_setting.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
