@@ -44,8 +44,8 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
 //set_error_handler("handle_early_errors");
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-require_once $root . 'include/auth.inc';
 include_once $root . 'include/load_config.php';
+require_once $root . 'include/auth.inc';
 if (!file_exists($root . 'config/config.inc.php')) {
   $mysqli = null;
   $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
