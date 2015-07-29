@@ -27,7 +27,6 @@
  */
 
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
-require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 class UserObject extends RogoStaticSingleton {
