@@ -25,7 +25,6 @@
  */
 
 require_once 'staff_student_auth.inc';
-require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron'))) {
