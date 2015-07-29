@@ -24,6 +24,7 @@
 * @package
 */
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');
 
 if (isset($_GET['calendar_year'])) {

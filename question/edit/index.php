@@ -28,6 +28,7 @@ require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 $question = null;

@@ -30,6 +30,7 @@ require_once '../include/errors.inc';
 
 $type = check_var('type', 'GET', true, false, true);
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];

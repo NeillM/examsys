@@ -34,5 +34,6 @@ $parts = explode('?', $page);
 $page = $parts[0];
 
 $userID = $userObject->get_user_ID();
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $stateutil->setState($_REQUEST['state_name'], $_REQUEST['content'], $page);
 ?>

@@ -32,6 +32,7 @@ require_once '../include/mapping.inc';
 
 require_once '../classes/questionbank.class.php';
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 $type = check_var('type', 'GET', true, false, true);

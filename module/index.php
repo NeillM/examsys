@@ -127,6 +127,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Paper type folders
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['papers'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/type.php');
 
 if (isset($state['showretired']) and $state['showretired'] == 'true') {

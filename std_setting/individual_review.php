@@ -47,6 +47,7 @@ $paper_type = $propertyObj->get_paper_type();
 $paper_prologue = $propertyObj->get_paper_prologue();
 $marking = $propertyObj->get_marking();
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 function ebelDropdown($dropdownID, $ebel_grid) {

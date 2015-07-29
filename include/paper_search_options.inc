@@ -22,6 +22,7 @@
 * @package
 */
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/search.php');
 ?>
 <script>

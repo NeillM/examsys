@@ -33,6 +33,7 @@ require_once '../include/sidebar_menu.inc';
 $module = check_var('module', 'GET', true, false, true);
 $type = check_var('type', 'GET', true, false, true);
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 if ($_GET['module'] != '0') {

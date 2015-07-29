@@ -71,6 +71,3 @@ Class StateUtils {
   }
 
 }
-
-$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
-?>
