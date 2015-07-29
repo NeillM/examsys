@@ -27,7 +27,6 @@ require '../../include/errors.inc';
 require '../../include/media.inc';
 require_once '../../classes/searchutils.class.php';
 require_once '../../classes/questionutils.class.php';
-require_once '../../classes/question_status.class.php';
 require_once '../../classes/stateutils.class.php';
 
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/search.php');

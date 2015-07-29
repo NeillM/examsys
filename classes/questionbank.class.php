@@ -23,9 +23,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once '../classes/question_status.class.php';
-
 class QuestionBank {
   
   private $db;

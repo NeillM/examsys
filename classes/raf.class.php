@@ -24,7 +24,6 @@
 * @package
 */
 
-require_once 'question_status.class.php';
 require_once 'usernotices.class.php';
 
 class RAF {

@@ -29,8 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/media.inc';
 require_once '../include/mapping.inc';
 
-require_once '../classes/question_status.class.php';
-
 $paperid = check_var('paperID', 'POST', true, false, true);
 
 if (!Paper_utils::paper_exists($paperid, $mysqli)) {

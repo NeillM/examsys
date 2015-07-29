@@ -26,7 +26,6 @@ require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
 require '../../include/question_types.inc';
 require_once '../../classes/questionutils.class.php';
-require_once '../../classes/question_status.class.php';
 
 $question_paper = check_var('question_paper', 'GET', true, false, true);
 
