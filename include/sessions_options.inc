@@ -22,7 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 
 $idMod = $_GET['module'];

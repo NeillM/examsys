@@ -33,7 +33,6 @@
  */
 
 require_once $cfg_web_root . 'webServices/RestRequest.class.php';
-require_once $cfg_web_root . 'classes/mappingutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/relationship.class.php';
 
