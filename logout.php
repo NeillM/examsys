@@ -22,7 +22,6 @@
  * @package
  */
 
-require_once 'classes/configobject.class.php';
 $configObject = Config::get_instance();
 
 if ($configObject->get('cfg_session_name') != '') {

@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/configobject.class.php';
-
 $configObject = Config::get_instance();
 
 function can_display_feedback($paper_type, $moduleID, $userObject) {

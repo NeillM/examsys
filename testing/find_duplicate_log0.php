@@ -27,7 +27,7 @@ $typelist = array(3, 1, 2, 0);
 $typelist = array( 0);
 $cfg_web_root='../';
 require_once '../include/custom_error_handler.inc';
-require_once '../classes/configobject.class.php';
+require_once '../classes/config.class.php';
 require_once '../classes/dbutils.class.php';
 @apache_setenv('no-gzip', 1);
 @ini_set('zlib.output_compression', 0);

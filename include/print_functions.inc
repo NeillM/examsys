@@ -22,7 +22,6 @@
 * @package
 */
 
-require_once $root . 'classes/configobject.class.php';
 $configObject          = Config::get_instance();
 
 function calcPreParse($inputVal, $user_answers, $tmp_vars) {

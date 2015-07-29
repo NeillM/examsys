@@ -22,8 +22,6 @@
  * @package
  */
 
-require_once $cfg_web_root . 'classes/configobject.class.php';
-
 set_error_handler("customErrorHandler");
 
 set_exception_handler("exceptionHandler");

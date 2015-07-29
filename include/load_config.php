@@ -29,8 +29,6 @@ $root                  = str_replace( '/include', '/', str_replace('\\', '/', di
 require_once __DIR__ . '/autoload.inc.php';
 autoloader::init();
 
-require_once $root . 'classes/configobject.class.php';
-
 $configObject          = Config::get_instance();
 
 $cfg_web_root          = $configObject->get('cfg_web_root');

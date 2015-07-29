@@ -22,7 +22,6 @@
 * @package
 */
 
-require_once $root . 'classes/configobject.class.php';
 $configObject          = Config::get_instance();
 
 function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db) {

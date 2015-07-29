@@ -76,7 +76,6 @@ if ($media['filename'] != ''):
       }
     }
   }
-require_once $root . 'classes/configobject.class.php';
 $configObject          = Config::get_instance();
 if ($configObject->get('cfg_interactive_qs') == 'html5') {
 	//<!-- ======================== HTML5 part ================= -->
