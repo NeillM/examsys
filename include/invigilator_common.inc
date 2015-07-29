@@ -20,7 +20,6 @@ require_once $configObject->get('cfg_web_root') . 'classes/toiletbreakutils.clas
 require_once $configObject->get('cfg_web_root') . 'classes/noteutils.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/stringutils.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/paperproperties.class.php';
-require_once $configObject->get('cfg_web_root') . 'classes/logmetadata.class.php';
 
 /**
  *

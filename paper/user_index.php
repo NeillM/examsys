@@ -32,7 +32,6 @@ require_once '../classes/stringutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
-require_once '../classes/logmetadata.class.php';
 require_once '../classes/timer.class.php';
 require_once '../classes/summativetimer.class.php';
 require_once '../classes/paperproperties.class.php';

@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/logmetadata.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/paperproperties.class.php';
 

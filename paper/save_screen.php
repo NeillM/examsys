@@ -29,7 +29,6 @@ require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 require_once '../classes/paperutils.class.php';
-require_once '../classes/logmetadata.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/exceptions.inc.php';
 
