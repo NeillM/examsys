@@ -29,7 +29,6 @@ require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'classes/userutils.class.php';
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // Include common language file that all scripts need
-require_once $cfg_web_root . 'classes/userobject.class.php';
 
 $displayDebug = false; //XML call so debug info messes up the output
 error_reporting(E_ALL);

@@ -23,9 +23,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once $cfg_web_root . 'classes/userobject.class.php';
-
 Class UserNotices extends RogoStaticSingleton {
   public static $inst = NULL;
   public static $class_name = 'user_notices';
