@@ -23,10 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-global $configObject;
-require_once $configObject->get('cfg_web_root') . 'classes/paperproperties.class.php';
-
 abstract class Corrector {
   protected $_mysqli;
   protected $_lang_strings;

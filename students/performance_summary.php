@@ -29,7 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
 require_once '../include/toprightmenu.inc';
-require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
 
 if (isset($_GET['userID'])) {

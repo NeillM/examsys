@@ -33,7 +33,6 @@ require_once '../include/sort.inc';
 require_once '../include/errors.inc';
 
 require_once '../classes/paperutils.class.php';
-require_once '../classes/paperproperties.class.php';
 require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';

@@ -27,7 +27,6 @@
 require '../include/staff_student_auth.inc';
 require '../include/demo_replace.inc';
 require './osce.inc';
-require_once '../classes/paperproperties.class.php';
 
 if ($userObject->has_role('Demo')) $demo = true;
 

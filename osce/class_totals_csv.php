@@ -32,7 +32,6 @@ require_once '../include/sort.inc';
 require_once './osce.inc';
 
 require_once '../classes/paperutils.class.php';
-require_once '../classes/paperproperties.class.php';
 
 $demo = is_demo($userObject);
 

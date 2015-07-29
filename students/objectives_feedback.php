@@ -32,7 +32,6 @@ require_once '../include/sort.inc';
 require_once '../include/calculate_marks.inc';
 require_once '../include/toprightmenu.inc';
 
-require_once '../classes/paperproperties.class.php';
 require_once '../classes/paperutils.class.php';
 
 check_var('id', 'GET', true, false, false);

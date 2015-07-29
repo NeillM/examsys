@@ -33,7 +33,6 @@ require_once '../classes/paperutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/timer.class.php';
 require_once '../classes/summativetimer.class.php';
-require_once '../classes/paperproperties.class.php';
 
 check_var('id', 'GET', true, false, false);
 

@@ -23,7 +23,6 @@
  */
 
 require '../include/invigilator_auth.inc';
-require '../classes/paperproperties.class.php';
 
 if (isset($_GET['userID'])) {
   $student_id = $_GET['userID'];

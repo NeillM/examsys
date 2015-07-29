@@ -30,7 +30,6 @@
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperproperties.class.php';
 require_once 'include/inc.php';
 require_once 'local/local_load.php';
 require_once 'qti12/qti12_save.php';

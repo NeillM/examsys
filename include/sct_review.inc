@@ -24,7 +24,6 @@
 
 require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'include/errors.inc';
-require_once $cfg_web_root . 'classes/paperproperties.class.php';
 
 // Check for key parameters
 $crypt_name = check_var('id', 'REQUEST', true, false, true);

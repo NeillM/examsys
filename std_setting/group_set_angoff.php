@@ -26,7 +26,6 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require '../include/std_set_functions.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperproperties.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
