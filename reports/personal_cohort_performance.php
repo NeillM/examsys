@@ -29,8 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/calculate_marks.inc';
 
-require_once '../classes/results_cache.class.php';
-
 $paperID  = check_var('paperID', 'GET', true, false, true);
 $userID   = check_var('userID', 'GET', true, false, true);
 

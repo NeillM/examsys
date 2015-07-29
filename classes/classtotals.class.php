@@ -32,7 +32,6 @@
 require_once '../include/calculate_marks.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/sort.inc';
-require_once '../classes/results_cache.class.php';
 require_once '../classes/standard_setting.class.php';
 
 class ClassTotals {
