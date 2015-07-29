@@ -16,8 +16,6 @@
 
 require_once $configObject->get('cfg_web_root') . 'include/sort.inc';
 
-require_once $configObject->get('cfg_web_root') . 'classes/toiletbreakutils.class.php';
-
 /**
  *
  * @author Simon Wilkinson
