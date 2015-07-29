@@ -21,9 +21,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
-require_once('question.interface.php');
 define('QUESTION_ERROR', -1);
 
 define('Q_MARKING_EXACT', 1);															// Student answer is an exact match
