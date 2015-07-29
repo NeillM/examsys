@@ -27,7 +27,6 @@
 require_once './include/staff_student_auth.inc';
 require_once './include/errors.inc';
 require_once './include/sidebar_menu.inc';
-require_once './classes/recyclebin.class.php';
 require_once './config/index.inc';
 
 /**
