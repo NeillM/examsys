@@ -24,7 +24,6 @@
  */
 
 require_once '../include/load_config.php';
-require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 require_once '../include/std_set_shared_functions.inc';
 

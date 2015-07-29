@@ -23,7 +23,6 @@
  */
 
 require_once '../include/load_config.php';
-require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
 
 $version = '5.0';
