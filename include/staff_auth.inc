@@ -30,7 +30,6 @@ require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
-require_once $cfg_web_root . 'classes/logger.class.php';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron'))) {

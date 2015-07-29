@@ -27,7 +27,6 @@
 require_once '../../include/staff_auth.inc';
 require_once '../../include/errors.inc';
 require_once '../../plugins/questions/enhancedcalc/enhancedcalc.class.php';
-require_once '../../classes/logger.class.php';
 
 $status = 'ERROR';
 

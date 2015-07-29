@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/logger.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 

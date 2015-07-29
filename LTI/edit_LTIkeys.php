@@ -25,7 +25,6 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 require_once 'ims-lti/UoN_LTI.php';
-require_once '../classes/logger.class.php';
 
 $lti = new UoN_LTI($mysqli);
 $lti->init_lti0($mysqli);

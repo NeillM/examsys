@@ -16,7 +16,6 @@
 
 require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 require_once $cfg_web_root . 'classes/schoolutils.class.php';
-require_once $cfg_web_root . 'classes/logger.class.php';
 require_once $cfg_web_root . 'classes/userobject.class.php';
 
 /**

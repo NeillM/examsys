@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 
 $data = array();

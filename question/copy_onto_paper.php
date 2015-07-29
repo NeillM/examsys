@@ -27,7 +27,6 @@ require '../include/errors.inc';
 require '../include/media.inc';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperutils.class.php';
-require_once '../classes/logger.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../include/mapping.inc';

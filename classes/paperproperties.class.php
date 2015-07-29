@@ -23,7 +23,6 @@
  * @package
  */
 
-require_once 'logger.class.php';
 require_once 'questionutils.class.php';
 
 class PaperProperties {
