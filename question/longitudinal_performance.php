@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/sort.inc';
-require '../classes/questioninfo.class.php';
   
 $q_id = check_var('q_id', 'GET', true, false, true);
   
