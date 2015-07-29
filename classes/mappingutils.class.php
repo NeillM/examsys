@@ -23,9 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'relationship.class.php';
-
 class MappingUtils {
   /**
    * Get the VLE API that is in effect for the given module and academic year
