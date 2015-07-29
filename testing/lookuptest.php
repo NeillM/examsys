@@ -50,6 +50,7 @@ $cfg_web_root = $configObject->get('cfg_web_root');
 require_once $cfg_web_root . 'classes/configobject.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
+require_once $cfg_web_root . 'classes/authentication.class.php';
 
 require_once '../include/admin_auth.inc';
 
