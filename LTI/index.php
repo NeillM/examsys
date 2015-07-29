@@ -33,7 +33,6 @@ require_once '../classes/searchutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/personal_folders.php';
-require_once '../classes/lti_integration.class.php';
 require_once '../classes/smsutils.class.php';
 require_once '../classes/schoolutils.class.php';
 

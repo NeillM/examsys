@@ -1,7 +1,6 @@
 <?php
 
 require_once '../include/staff_student_auth.inc';
-require_once '../classes/lti_integration.class.php';
 
 $lti_i = lti_integration::load();
 
