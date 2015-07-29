@@ -25,7 +25,6 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../classes/questionutils.class.php';
 
 set_time_limit(0);
 

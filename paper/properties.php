@@ -31,7 +31,6 @@ require_once '../include/load_config.php';
 require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
-require_once '../classes/questionutils.class.php';
 
 // Marking options
 define('MARK_NO_ADJUSTMENT', '0');

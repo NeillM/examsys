@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/questionutils.class.php';
 
 $qIDs = check_var('q_id', 'POST', true, false, true);
 if ($qIDs{0} == ',') {

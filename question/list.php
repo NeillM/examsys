@@ -27,7 +27,6 @@ require_once '../include/sort.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/questionbank.class.php';
-require_once '../classes/questionutils.class.php';
 require_once '../include/errors.inc';
 
 $type = check_var('type', 'GET', true, false, true);

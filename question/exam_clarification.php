@@ -24,7 +24,6 @@
 
 require '../include/admin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/questionutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
