@@ -25,7 +25,6 @@
 */
 
   require '../include/staff_auth.inc';
-  require '../classes/mathsutils.class.php';
 
   $mydata = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat');
   $mydata = unserialize($mydata[0]);

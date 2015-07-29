@@ -22,9 +22,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once '../classes/mathsutils.class.php';
-
 class ResultsCache {
 
   private $db;

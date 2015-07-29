@@ -24,7 +24,6 @@
  */
 global $configObject;
 
-require_once $configObject->get('cfg_web_root') . 'classes/mathsutils.class.php';
 require_once $configObject->get('cfg_web_root') . 'classes/question.class.php';
 
 class EnhancedCalc extends Question implements questionInterface {

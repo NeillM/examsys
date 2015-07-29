@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once '../classes/mathsutils.class.php';
-
 /**
  * Save OSCE form data back to the database.
  * @param int $propertyObj					- Object of the OSCE station paper.

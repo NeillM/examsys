@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/mathsutils.class.php';
-
 /**
  * Returns the number of marks the question is out of.
  * This number will adapt if the question (or parts) are excluded.
