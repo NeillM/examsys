@@ -21,9 +21,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
-
 $idMod = $_GET['module'];
 
 $session = date_utils::get_current_academic_year();

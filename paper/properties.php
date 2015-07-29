@@ -32,7 +32,6 @@ require_once '../classes/schoolutils.class.php';
 require_once '../classes/searchutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
 require_once '../classes/paperutils.class.php';
-require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionutils.class.php';
 require_once '../classes/paperproperties.class.php';
 

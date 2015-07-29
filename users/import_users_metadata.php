@@ -27,7 +27,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
-require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../include/demo_replace.inc';
 

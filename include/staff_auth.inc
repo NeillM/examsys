@@ -26,9 +26,7 @@
 
 require_once 'staff_student_auth.inc';
 require_once $cfg_web_root . 'classes/paperutils.class.php';
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
 require_once $cfg_web_root . 'classes/refmaterialsutils.class.php';
 $userObject = UserObject::get_instance();
 
