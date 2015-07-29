@@ -31,7 +31,6 @@ require_once '../include/display_functions.inc';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../classes/timer.class.php';
-require_once '../classes/summativetimer.class.php';
 
 $userObject = UserObject::get_instance();
 
