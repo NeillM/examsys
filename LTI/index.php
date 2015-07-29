@@ -31,7 +31,6 @@ require_once '../config/index.inc';
 
 require_once '../classes/searchutils.class.php';
 require_once '../classes/userutils.class.php';
-require_once '../classes/personal_folders.php';
 require_once '../classes/smsutils.class.php';
 require_once '../classes/schoolutils.class.php';
 
