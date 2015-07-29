@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once realpath(dirname(__FILE__) . '/../classes/networkutils.class.php');
-
 function time_to_seconds($seconds) {
   $hr = intval(substr($seconds,8,2));
   $min = intval(substr($seconds,10,2));

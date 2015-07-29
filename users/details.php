@@ -30,7 +30,6 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 require_once '../classes/schoolutils.class.php';
-require_once '../classes/networkutils.class.php';
 require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'GET', true, false, true);

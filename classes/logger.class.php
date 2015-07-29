@@ -25,7 +25,6 @@
 */
 
 require_once 'exceptions.inc.php';
-require_once $cfg_web_root . 'classes/networkutils.class.php';
 
 Class Logger {
   private $_mysqli;

@@ -27,7 +27,6 @@
 */
 
 require_once $cfg_web_root . '/classes/usernotices.class.php';
-require_once $cfg_web_root . '/classes/networkutils.class.php';
 require_once $cfg_web_root . '/classes/paperutils.class.php';
 
 /**

@@ -21,9 +21,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once realpath(dirname(__FILE__) . '/../classes/networkutils.class.php');
-
 class Review {
 
   private $db;

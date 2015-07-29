@@ -28,7 +28,6 @@
 
 require_once '../include/staff_student_auth.inc';
 
-require_once '../classes/networkutils.class.php';
 require_once '../classes/paperutils.class.php';
 
 // Redirect External Exminers and Invigilators to their own areas.
