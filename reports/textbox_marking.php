@@ -25,8 +25,6 @@ require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 
-require_once '../classes/textboxmarkingutils.class.php';
-
 $state = $stateutil->getState();
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
