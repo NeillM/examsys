@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once $configObject->get('cfg_web_root') . 'include/sort.inc';
+require_once __DIR__ . '/sort.inc';
 
 /**
  *

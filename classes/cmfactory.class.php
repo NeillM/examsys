@@ -25,7 +25,7 @@
  */
 
 
-require_once $cfg_web_root . 'classes/exceptions.inc.php';
+require_once dirname(__DIR__) . 'classes/exceptions.inc.php';
 
 class CMFactory {
   public static function GetCMAPI($vleapi) {

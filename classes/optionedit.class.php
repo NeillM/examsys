@@ -25,7 +25,7 @@
  */
 
 require_once 'exceptions.inc.php';
-require_once $cfg_web_root . '/include/path_functions.inc.php';
+require_once dirname(__DIR__) . '/include/path_functions.inc.php';
 
 Class OptionEdit extends RogoObject {
 

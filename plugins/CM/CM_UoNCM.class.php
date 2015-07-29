@@ -25,7 +25,7 @@
 */
 
 require_once 'CMAPI.if.php';
-require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class.php';
+require_once dirname(dirname(__DIR__)) . '/webServices/RestRequest.class.php';
 
 class CM_UoNCM implements iCMAPI {
   private $_root_url = 'http://curriculum.nottingham.ac.uk/%s/index.php/';

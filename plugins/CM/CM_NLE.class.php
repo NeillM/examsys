@@ -25,7 +25,7 @@
 */
 
 require_once 'CMAPI.if.php';
-require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class.php';
+require_once dirname(dirname(__DIR__)) . '/webServices/RestRequest.class.php';
 
 class CM_NLE implements iCMAPI {
   private $_mapping_level = self::LEVEL_SESSION;
