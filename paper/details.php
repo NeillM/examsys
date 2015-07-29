@@ -33,7 +33,6 @@ require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../include/std_set_shared_functions.inc';
 require_once '../classes/questionutils.class.php';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/question_status.class.php';
 

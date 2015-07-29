@@ -23,7 +23,6 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../classes/paperutils.class.php';
 require_once '../include/errors.inc';
 
 $property_id = check_var('property_id', 'POST', true, false, true);

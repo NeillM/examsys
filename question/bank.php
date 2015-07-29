@@ -31,7 +31,6 @@ require_once '../include/errors.inc';
 require_once '../include/mapping.inc';
 
 require_once '../classes/stateutils.class.php';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
 

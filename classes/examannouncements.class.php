@@ -24,8 +24,6 @@
 * @package
 */
 
-require_once '../classes/paperutils.class.php';
-
 class ExamAnnouncements {
 
   private $db;

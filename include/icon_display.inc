@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/paperutils.class.php';
-
 function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj) {
   global $folder, $module, $string;
   

@@ -28,16 +28,6 @@ require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
 require_once $cfg_web_root . 'classes/questionutils.class.php';
 require_once $cfg_web_root . 'classes/keywordutils.class.php';
 
-Class Paper_utils extends RogoStaticSingleton {
-  public static $inst = NULL;
-  public static $class_name = 'PaperUtils';
-
-  /**
-  * constructor
-  */
-  private function __construct() {}
-}
-
 Class PaperUtils {
   
   /**

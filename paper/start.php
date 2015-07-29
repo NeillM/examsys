@@ -30,7 +30,6 @@ require_once '../include/paper_security.inc';
 require_once '../include/display_functions.inc';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/timer.class.php';
 require_once '../classes/summativetimer.class.php';
 

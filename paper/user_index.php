@@ -29,7 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
 require_once '../classes/stringutils.class.php';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/timer.class.php';
 require_once '../classes/summativetimer.class.php';

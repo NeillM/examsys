@@ -15,22 +15,24 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Check that a paper name has not already been used elsewhere.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ * Utility class for paper related functionality
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
-require '../../include/staff_auth.inc';
-require_once '../../include/errors.inc';
+require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
+require_once $cfg_web_root . 'classes/questionutils.class.php';
+require_once $cfg_web_root . 'classes/keywordutils.class.php';
 
-$name = check_var('name', 'POST', true, false, true);
+Class Paper_utils extends RogoStaticSingleton {
+  public static $inst = NULL;
+  public static $class_name = 'PaperUtils';
 
-if (Paper_utils::is_paper_title_unique($name, $mysqli)) {
-  echo 'unique';
-} else {
-  echo 'duplicate';
+  /**
+  * constructor
+  */
+  private function __construct() {}
 }

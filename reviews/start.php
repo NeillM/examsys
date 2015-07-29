@@ -27,7 +27,6 @@ require './display_functions.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
 
-require_once '../classes/paperutils.class.php';
 require_once '../classes/standard_setting.class.php';
 require_once '../classes/reviews.class.php';
 

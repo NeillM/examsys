@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require '../config/campuses.inc';
 require_once '../classes/schoolutils.class.php';
-require_once '../classes/paperutils.class.php';
 require_once '../include/sort.inc';
 require '../lang/' . $language. '/include/timezones.inc';
 ?>

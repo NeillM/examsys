@@ -24,7 +24,6 @@
 
 require '../include/invigilator_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 

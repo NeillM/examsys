@@ -26,7 +26,6 @@
 
 require '../include/admin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
 
 $paperid = check_var('paperID', 'GET', true, false, true);
 

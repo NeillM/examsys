@@ -29,7 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../classes/recyclebin.class.php';
 require_once '../config/index.inc';
-require_once '../classes/paperutils.class.php';
 
 $userObject = UserObject::get_instance();
 

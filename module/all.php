@@ -24,7 +24,6 @@
 
   require '../include/admin_auth.inc';
   require '../include/sidebar_menu.inc';
-  require_once '../classes/paperutils.class.php';
 ?>
 <!DOCTYPE html>
 <html>

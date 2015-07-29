@@ -32,7 +32,6 @@ require_once '../include/mapping.inc';
 require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.inc';
 require_once '../include/media.inc';
-require_once '../classes/paperutils.class.php';
 require_once '../classes/question_status.class.php';
 
 //HTML5 part

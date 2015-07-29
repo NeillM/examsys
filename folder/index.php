@@ -31,7 +31,6 @@ require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 
 require_once '../classes/stateutils.class.php';
-require_once '../classes/paperutils.class.php';
 
 $folder = check_var('folder', 'GET', true, false, true);
 

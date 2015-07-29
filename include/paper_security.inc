@@ -27,7 +27,6 @@
 */
 
 require_once $cfg_web_root . '/classes/usernotices.class.php';
-require_once $cfg_web_root . '/classes/paperutils.class.php';
 
 /**
  * Check that the current IP address of the user is in one of the allowed

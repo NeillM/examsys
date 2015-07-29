@@ -25,7 +25,6 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../classes/paperutils.class.php';
 
 if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['summative']) and isset($_POST['survey']) and isset($_POST['osce']) and isset($_POST['offline']) and isset($_POST['peerreview'])) {
   // All types are selected so don't build into query.

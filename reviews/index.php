@@ -28,7 +28,6 @@
 
 require '../include/staff_auth.inc';
 require '../config/index.inc';  // Get the logo
-require_once '../classes/paperutils.class.php';
 require_once '../classes/reviews.class.php';
 
 ?>
