@@ -31,7 +31,6 @@ include_once $root . '/../include/load_config.php';
 $cfg_web_root = $configObject->get('cfg_web_root');
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
-require_once $cfg_web_root . 'classes/authentication.class.php';
 
 global $cfg_web_root;
 global $cfg_web_root;
