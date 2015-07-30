@@ -15,28 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
- * Return a new object for the chose VLE API
+ * Random question not found exception class
  *
  * @author Rob Ingram
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-class CMFactory {
-  public static function GetCMAPI($vleapi) {
-    $configObject = Config::get_instance();
-
-    $classname = 'CM_' . $vleapi;
-    $classfile = 'CM_' . $vleapi . '.class.php';
-
-    try {
-      include_once $configObject->get('cfg_web_root') . '/plugins/CM/' . $classfile;
-      $object = new $classname();
-    } catch (Exception $ex) {
-      throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
-    }
-
-    return $object;
-  }
-}
+class RandomQuestionNotFound extends Exception { }

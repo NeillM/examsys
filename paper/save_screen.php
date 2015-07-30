@@ -28,7 +28,6 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
-require_once '../classes/exceptions.inc.php';
 
 if ($_GET['ans_changed'] == '0') {
   echo $_POST['randomPageID'];
