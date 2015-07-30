@@ -22,10 +22,6 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-global $configObject;
-
-require_once $configObject->get('cfg_web_root') . 'classes/question.class.php';
-
 class EnhancedCalc extends Question implements questionInterface {
 
 	protected $configObj;
