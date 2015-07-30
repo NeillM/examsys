@@ -24,9 +24,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-define('ROGO_AUTH_OBJ_FAILED', 0);
-define('ROGO_AUTH_OBJ_SUCCESS', 1);
-define('ROGO_AUTH_OBJ_LOOKUPONLY', 2);
 
 /*
  * Rogos main authentication stack and plugin system
