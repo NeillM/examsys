@@ -22,6 +22,7 @@
  * @package
  */
 
+require_once __DIR__ . '/include/load_config.php';
 $configObject = Config::get_instance();
 
 if ($configObject->get('cfg_session_name') != '') {
