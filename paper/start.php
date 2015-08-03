@@ -51,6 +51,14 @@ check_var('id', 'GET', true, false, false);
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
+$deleted = $propertyObj->get_deleted();
+
+// If the paper has been deleted we should exit as this is an invalid page.
+if ($deleted != NULL) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
+}
+
 $paperID = $propertyObj->get_property_id();
 
 /*
