@@ -22,7 +22,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/logger.class.php';
 
 $year = check_var('year', 'GET', true, false, true);
 

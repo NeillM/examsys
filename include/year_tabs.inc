@@ -22,6 +22,14 @@
 * @package
 */
 
+/**
+ * Draw tabs of available years to view.
+ * 
+ * @param string $current_tab - the tab currently in view 
+ * @param string $type type of year - academic or calendar
+ * @param string $extra - extra html to add to table cell
+ * @return  
+ */
 function drawTabs($current_tab, $type, $extra = '') {
 
     global $mysqli;

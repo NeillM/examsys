@@ -28,7 +28,6 @@
  * @param int $idMod The DB ID of the module
  * @return array List of years
  */
-
 function get_existing_years($db, $idMod) {
 	$years = array();
 	
@@ -88,9 +87,7 @@ function get_existing_years($db, $idMod) {
 
 		$dest_years = array($session, $nextsession);
 	
-		if (is_numeric($session)) {
-
-		} else {
+		if (!is_numeric($session)) {
 			$message = $string['msg3'];
 		}
 	} else {

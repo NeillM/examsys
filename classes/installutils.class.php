@@ -277,11 +277,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * @return bool - True = user exists, False = user does not exist.
    */
   static function does_user_exist($username) {
-    $result  = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
+    $result = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
     $result->bind_param('s', $username);
     $result->execute();
     $result->store_result();
-    $num_rows =  $result->num_rows;
+    $num_rows = $result->num_rows;
 
     $result->close();
 

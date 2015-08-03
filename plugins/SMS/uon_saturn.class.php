@@ -75,6 +75,10 @@ Class UON_SATURN extends SmsUtils {
     $replaced_module = str_replace('_UNMC', '', $moduleID);
     $replaced_module = str_replace('_UNNC', '', $replaced_module);
 
+    // If session does not exist we can quit now.
+    if(!$yearutils->check_calendar_year($session)) {
+        return false;
+    }
 
     if ($this->url !== '') {
       $returned_data = @file_get_contents($this->url . "&code=$replaced_module&year=" . $session);

@@ -55,7 +55,12 @@ Class GENERIC_SMS extends SmsUtils {
     $yearutils = new yearutils($mysqli);
     $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
 
-        $lookupdata = new stdClass();
+    // If session does not exist we can quit now.
+    if(!$yearutils->check_calendar_year($session)) {
+        return false;
+    }
+
+    $lookupdata = new stdClass();
     $lookupdata->modulecode = $moduleID;
     $lookupdata->calendar_year = $session;
 
