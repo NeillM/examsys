@@ -28,7 +28,7 @@
  * @param string $current_tab - the tab currently in view 
  * @param string $type type of year - academic or calendar
  * @param string $extra - extra html to add to table cell
- * @return  
+ * @return string $html - the html for the tab
  */
 function drawTabs($current_tab, $type, $extra = '') {
 
