@@ -221,7 +221,7 @@ $previously_submitted = 0;
 $low_bandwidth = 0;
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli, true);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli, true);
 
   //Check this PC is registered for this exam
   $low_bandwidth = check_labs($test_type, $labs, $current_address, $password, $string, $mysqli);

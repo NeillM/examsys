@@ -83,7 +83,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   // No further security checks.
 } else {    // Treat as student with extra security checks.
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
 
   // Check time security
   check_datetime($start_date, $end_date, $string, $mysqli);

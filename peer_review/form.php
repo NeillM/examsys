@@ -120,7 +120,7 @@ if ($userObject->has_role('Student')) {
                               );
 
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli, true);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli, true);
 }
 
 // Get questions on the paper
