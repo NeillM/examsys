@@ -32,12 +32,6 @@ require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/paperutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/exclusion.class.php';
-require_once '../classes/results_cache.class.php';
-require_once '../classes/standard_setting.class.php';
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
 //HTML5 part
@@ -909,7 +903,6 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $tmp_height = $q_media_height;
         if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
 
-	require_once '../classes/configobject.class.php';
 	if ($configObject->get('cfg_interactive_qs')=='html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
@@ -1058,8 +1051,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $tmp_correct = str_replace("'", "\'", trim($correct));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-        
-				require_once '../classes/configobject.class.php';
+
 				$configObject          = Config::get_instance();
 				if ($configObject->get('cfg_interactive_qs') == 'html5') {
 					//<!-- ======================== HTML5 part rep disc ================= -->

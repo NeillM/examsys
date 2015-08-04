@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/question_status.class.php';
 
 // Check if we have any faculties
 $statuses = QuestionStatus::get_all_statuses($mysqli, $string);

@@ -22,10 +22,7 @@
 * @package
 */
 
-require_once '../classes/schoolutils.class.php';
-require_once '../classes/searchutils.class.php';
-require_once '../classes/stateutils.class.php';
-
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/search.php');
 ?>
 <script>

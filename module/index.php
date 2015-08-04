@@ -29,11 +29,6 @@ require_once '../include/icon_display.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/stateutils.class.php';
-require_once '../classes/questionbank.class.php';
 
 $module = check_var('module', 'GET', true, false, true);
 
@@ -130,6 +125,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Paper type folders
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['papers'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/type.php');
 
 if (isset($state['showretired']) and $state['showretired'] == 'true') {

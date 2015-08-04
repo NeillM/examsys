@@ -29,8 +29,6 @@
 $cfg_web_root = $configObject->get('cfg_web_root');
 require_once 'outline_authentication.class.php';
 require_once 'internaldb.class.php';
-require_once $cfg_web_root . '/classes/moduleutils.class.php';
-require_once $cfg_web_root . '/classes/schoolutils.class.php';
 
 class demo_auth extends internaldb_auth {
 

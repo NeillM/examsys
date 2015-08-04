@@ -25,9 +25,6 @@
 
 $cfg_web_root = '../';
 require_once '../include/custom_error_handler.inc';
-require_once '../classes/configobject.class.php';
-require_once '../classes/usernotices.class.php';
-require_once '../classes/userobject.class.php';
 require_once '../classes/dbutils.class.php';
 @apache_setenv('no-gzip', 1);
 @ini_set('zlib.output_compression', 0);

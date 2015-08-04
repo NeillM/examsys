@@ -68,7 +68,6 @@ require_once 'detail_parts/details_scenario.php';
 										$tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
 										$tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
-									require_once $root . 'classes/configobject.class.php';
 									$configObject          = Config::get_instance();
 									if ($configObject->get('cfg_interactive_qs') == 'html5') {
 										//<!-- ======================== HTML5 part ================= -->

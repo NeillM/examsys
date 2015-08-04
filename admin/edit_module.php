@@ -24,8 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/logger.class.php';
 
 check_var('moduleid', 'GET', true, false, false);
 
@@ -113,8 +111,6 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   header("location: list_modules.php");
   exit();
 } else {
-  require_once '../classes/smsutils.class.php';
-
   $SMS = SMSutils::GetSmsUtils();
   $cfg_sms_sources = array();
   if (is_object($SMS)) {

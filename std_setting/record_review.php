@@ -24,9 +24,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/logger.class.php';
 require_once '../include/std_set_shared_functions.inc';
-require_once '../classes/paperproperties.class.php';
 
 $paperID    = check_var('paperID', 'POST', true, false, true);
 $tmp_method = check_var('method', 'POST', true, false, true);

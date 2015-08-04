@@ -23,14 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'exceptions.inc.php';
-require_once 'rogo_object.class.php';
-require_once 'question.class.php';
-require_once 'optionEdit.class.php';
-require_once 'logger.class.php';
-require_once 'questionutils.class.php';
-
 Class QuestionEdit extends RogoObject {
 
   public $id = -1;

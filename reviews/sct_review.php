@@ -23,11 +23,9 @@
 */
 
 require_once '../include/load_config.php';
-require_once '../classes/lang.class.php';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
 require_once '../include/sct_review.inc';
-require_once '../classes/dbutils.class.php';
 
 // Connect to the database as the SCT user.
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_sct_user'), $configObject->get('cfg_db_sct_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));

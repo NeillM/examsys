@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/moduleutils.class.php';
 ?>
 <!DOCTYPE html>
 <html>

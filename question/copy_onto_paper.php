@@ -25,14 +25,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require '../include/media.inc';
-require_once '../classes/questionutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/logger.class.php';
-require_once '../classes/question_status.class.php';
-require_once '../classes/paperproperties.class.php';
 require_once '../include/mapping.inc';
-require_once '../classes/mappingutils.class.php';
-require_once '../classes/moduleutils.class.php';
 require_once '../classes/questionbank.class.php';
 
 check_var('q_id', 'GET', true, false, false);

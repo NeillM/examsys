@@ -23,8 +23,8 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/stateutils.class.php';
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 ?>

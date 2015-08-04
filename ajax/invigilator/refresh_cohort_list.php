@@ -23,7 +23,6 @@
 */
 
 require_once '../../include/invigilator_auth.inc';
-require_once '../../classes/usernotices.class.php';
 require_once '../../include/errors.inc';
 require_once '../../include/invigilator_common.inc';
 

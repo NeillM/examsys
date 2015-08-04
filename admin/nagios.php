@@ -24,8 +24,6 @@
 * @package
 */
   require "../include/load_config.php";
-  require_once $cfg_web_root . 'classes/dbutils.class.php';
-  require_once $cfg_web_root . 'classes/usernotices.class.php';
   $error = false;
   $notice = UserNotices::get_instance();
   $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));

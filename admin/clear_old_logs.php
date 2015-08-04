@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
-require_once '../classes/logger.class.php';
 
 set_time_limit(0);
 ob_start();

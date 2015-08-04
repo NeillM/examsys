@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require '../classes/folderutils.class.php';
 
 $folderID = check_var('folderID', 'POST', true, false, true);
 

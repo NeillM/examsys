@@ -23,9 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'exceptions.inc.php';
-
 Class RogoObject {
   protected $_fields_editable = array();
   protected $_modified_fields = array();

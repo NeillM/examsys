@@ -24,8 +24,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/logger.class.php';
-require_once '../classes/facultyutils.class.php';
 
 $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
 

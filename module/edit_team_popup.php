@@ -24,8 +24,6 @@
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/userutils.class.php';
-require_once '../classes/moduleutils.class.php';
 
 $moduleID = check_var('module', 'GET', true, false, true);
 

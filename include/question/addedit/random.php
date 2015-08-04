@@ -21,8 +21,6 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-
-require_once '../../classes/questionutils.class.php';
 ?>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>

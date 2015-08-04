@@ -28,10 +28,6 @@ require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
 require_once $cfg_web_root . 'include/mapping.inc';
 
-require_once $cfg_web_root . 'classes/paperproperties.class.php';
-require_once $cfg_web_root . 'classes/paperutils.class.php';
-require_once $cfg_web_root . 'classes/relationship.class.php';
-
 $userObject = UserObject::get_instance();
 
 $clarif_types = $configObject->get('midexam_clarification');

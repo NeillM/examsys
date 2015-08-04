@@ -24,7 +24,7 @@
 * @package
 */
 
-require_once ($configObject->get('cfg_web_root') . '/include/load_config.php');
+require_once (dirname(__DIR__) . '/include/load_config.php');
 
 Abstract Class SmsUtils {
 

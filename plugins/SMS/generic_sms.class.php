@@ -27,8 +27,6 @@ if (!isset($cfg_web_root)) {
   $cfg_web_root = $configObject->get('cfg_web_root');
 }
 
-require_once $configObject->get('cfg_web_root') . '/classes/lookup.class.php';
-require_once $configObject->get('cfg_web_root') . '/classes/moduleutils.class.php';
 
 //updated interface to saturn using the new lookup class plugins
 Class GENERIC_SMS extends SmsUtils {

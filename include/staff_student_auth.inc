@@ -44,15 +44,13 @@ function handle_early_errors($errno, $errstr, $errfile, $errline) {
 //set_error_handler("handle_early_errors");
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-require_once $root . 'include/auth.inc';
 include_once $root . 'include/load_config.php';
+require_once $root . 'include/auth.inc';
 if (!file_exists($root . 'config/config.inc.php')) {
   $mysqli = null;
   $cfg_root_path = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
   $notice->display_notice_and_exit(null, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
 }
-
-require_once $cfg_web_root . 'classes/configobject.class.php';
 
 //start the session early as the lang class looks in the session 
 if ($configObject->get('cfg_session_name') != '') {
@@ -62,7 +60,6 @@ if ($configObject->get('cfg_session_name') != '') {
 }
 $return = session_start();
 
-require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 

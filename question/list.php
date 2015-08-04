@@ -25,16 +25,12 @@
 require '../include/staff_auth.inc';
 require_once '../include/sort.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
-require_once '../classes/stateutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/keywordutils.class.php';
-require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
-require_once '../classes/questionutils.class.php';
 require_once '../include/errors.inc';
 
 $type = check_var('type', 'GET', true, false, true);
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];

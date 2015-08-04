@@ -25,9 +25,6 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require './osce.inc';
-require_once '../classes/userutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/killer_question.class.php';
 
 check_var('id', 'GET', true, false, false);
 

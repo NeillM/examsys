@@ -29,15 +29,6 @@ require_once '../include/sidebar_menu.inc';
 
 require_once '../config/index.inc';
 
-require_once '../classes/searchutils.class.php';
-require_once '../classes/userutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/personal_folders.php';
-require_once '../classes/lti_integration.class.php';
-require_once '../classes/smsutils.class.php';
-require_once '../classes/schoolutils.class.php';
-require_once '../classes/facultyutils.class.php';
-
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false) {
   $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 

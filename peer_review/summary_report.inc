@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once '../classes/paperutils.class.php';
-
 function padDecimals($number, $rounding) {
   $number = round($number, $rounding);
 

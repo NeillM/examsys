@@ -21,12 +21,8 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once $cfg_web_root . 'classes/CMFactory.class.php';
-require_once $cfg_web_root . 'classes/mappingutils.class.php';
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
-
 $idMod = $_GET['module'];
+
 $yearutils = new yearutils($mysqli);
 $session = $yearutils->get_current_session();
 $vle_api_cache = array();
