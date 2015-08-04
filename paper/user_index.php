@@ -189,10 +189,11 @@ $exam_duration_sec  = $exam_duration * 60;
 $calendar_year      = $propertyObj->get_calendar_year();
 $sound_demo         = $propertyObj->get_sound_demo();
 $password           = $propertyObj->get_password();
-$modIDs							= array_keys($propertyObj->get_modules());
+$modIDs             = array_keys($propertyObj->get_modules());
+$deleted            = $propertyObj->get_deleted();
 
-// If OSCE paper we should exit as this is an invalid page.
-if ($test_type == '4') {
+// If OSCE paper or if the paper has been deleted we should exit as this is an invalid page.
+if ($test_type == '4' OR $deleted != NULL) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
