@@ -709,12 +709,24 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['academic_year'] = <<<QUERY
+        CREATE TABLE `academic_year` (
+          `calendar_year` int(4) NOT NULL,
+          `academic_year` varchar(30) NOT NULL,
+          `cal_status` tinyint(1) NOT NULL DEFAULT '1',
+          `stat_status` tinyint(1) NOT NULL DEFAULT '1',
+          `deleted` datetime DEFAULT NULL,
+          `deletedby` int(10),
+          PRIMARY KEY (`calendar_year`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['modules_student'] = <<<QUERY
         CREATE TABLE `modules_student` (
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned DEFAULT NULL,
           `idMod` int(11) unsigned DEFAULT NULL,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          `calendar_year` int(4),
           `attempt` tinyint(4) DEFAULT NULL,
           `auto_update` tinyint(4) DEFAULT NULL,
           PRIMARY KEY (`id`),
@@ -725,14 +737,14 @@ QUERY;
 
     $this->tableList['objectives'] = <<<QUERY
         CREATE TABLE `objectives` (
-					`obj_id` int(11) NOT NULL,
-					`objective` text NOT NULL,
-					`idMod` int(11) unsigned NOT NULL DEFAULT '0',
-					`identifier` bigint(20) unsigned NOT NULL,
-					`calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
-					`sequence` int(11) DEFAULT NULL,
-					PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
-					KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
+        `obj_id` int(11) NOT NULL,
+        `objective` text NOT NULL,
+        `idMod` int(11) unsigned NOT NULL DEFAULT '0',
+        `identifier` bigint(20) unsigned NOT NULL,
+        `calendar_year` INT(4),
+        `sequence` int(11) DEFAULT NULL,
+        PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
+        KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -869,7 +881,7 @@ QUERY;
           `display_students_response` enum('0','1') default NULL,
           `display_feedback` enum('0','1') default NULL,
           `hide_if_unanswered` enum('0','1') default NULL,
-          `calendar_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
+          `calendar_year` INT(4),
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
@@ -1039,7 +1051,7 @@ QUERY;
           `paper_id` mediumint(8) unsigned DEFAULT NULL,
           `question_id` int(11) NOT NULL,
           `obj_id` int(11) NOT NULL,
-          `calendar_year` enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          `calendar_year` INT(4),
           `vle_api` varchar(255) NOT NULL DEFAULT '',
           `map_level` smallint(2) NOT NULL DEFAULT '0',
           PRIMARY KEY (`rel_id`),
@@ -1138,7 +1150,7 @@ QUERY;
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
           `title` text NOT NULL,
           `source_url` text,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
+          `calendar_year` INT(4),
           `occurrence` datetime default NULL,
           PRIMARY KEY (`identifier`,`idMod`,`calendar_year`),
           KEY `sess_id` (`sess_id`)
@@ -1163,7 +1175,7 @@ QUERY;
           `deletions` int(11) default NULL,
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
-          `academic_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          `academic_year` INT(4),
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1405,7 +1417,7 @@ QUERY;
           `idMod` int(11) unsigned default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
-          `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
+          `calendar_year` INT(4),
           UNIQUE KEY `idx_users_metadata` (`userID`,`idMod`,`type`,`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
