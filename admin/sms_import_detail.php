@@ -102,7 +102,12 @@ function get_list($list, $db) {
 </thead>
 <tbody>
 <?php
-  $result = $mysqli->prepare("SELECT idMod, moduleid, academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type FROM sms_imports, modules WHERE sms_imports.idMod=modules.id AND updated=? ORDER BY moduleid");
+  $result = $mysqli->prepare("SELECT "
+    . "idMod, moduleid, academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type "
+    . "FROM sms_imports, modules, academic_year "
+    . "WHERE sms_imports.idMod=modules.id "
+    . "AND sms_imports.academic_year = academic_year.calendar_year "
+    . "AND updated=? ORDER BY moduleid");
   $db = $mysqli;
   if ($db->error) {
     try {

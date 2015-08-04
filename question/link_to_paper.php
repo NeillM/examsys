@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../classes/paperproperties.class.php';
 require_once '../classes/mappingutils.class.php';
@@ -167,8 +166,9 @@ if (!isset($_POST['submit'])) {
   $q_id = $_GET['q_id'];
   
   if ($map_outcomes) {
+    $yearutils = new yearutils($mysqli);
     $vle_api_cache = array();
-    $vle_api_data = MappingUtils::get_vle_api($_GET['module'], date_utils::get_current_academic_year(), $vle_api_cache, $mysqli);
+    $vle_api_data = MappingUtils::get_vle_api($_GET['module'], $yearutils->get_current_session(), $vle_api_cache, $mysqli);
   }
 
   // Get the maximum display position for an existing paper.

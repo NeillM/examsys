@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require '../config/campuses.inc';
 require_once '../classes/schoolutils.class.php';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/paperutils.class.php';
 require_once '../include/sort.inc';
 require '../lang/' . $language. '/include/timezones.inc';
@@ -178,7 +177,8 @@ require '../lang/' . $language. '/include/timezones.inc';
   }
 
   // Create the new paper.
-  $session = date_utils::get_current_academic_year();
+  $yearutils = new yearutils($mysqli);
+  $session = $yearutils->get_current_session();
 
   if (isset($_POST['folder'])) {
     $folder = $_POST['folder'];
@@ -315,31 +315,10 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['summativeexamdetails'] . "</td></tr>\n";
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
-    $next_flag = 1;
-
-    $year_options = array();
-    $calendar_year = date_utils::get_current_academic_year();
-    $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
-    $year_options[] = $next_session;   // Add next year's session
-
-    $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
-    $module_details->execute();
-    $module_details->bind_result($calendar_year);
-    while ($module_details->fetch()) {
-      $year_options[] = $calendar_year;
-    }
-    $module_details->close();
-
-    if (count($year_options) == 1) {
-      $year_options[] = date_utils::get_current_academic_year();  // Add current year
-    }
-
+ 
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
-    foreach ($year_options as $calendar_year) {
-      $sel = ($_POST['default_academic_year'] == $calendar_year) ? ' selected="selected"' : '';
-      echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
-    }
+    echo $yearutils->get_calendar_year_dropdown_options($paper_types[$_POST['paper_type']], $yearutils->get_current_session($module_details['academic_year_start']) ,$string);
     echo "</select></td>\n";
   } else {
     echo "<input type=\"hidden\" name=\"session\" value=\"\" />\n";

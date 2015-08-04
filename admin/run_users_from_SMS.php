@@ -28,7 +28,6 @@ set_time_limit(0);
 error_reporting(E_ALL);
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/smsutils.class.php';
 
@@ -39,8 +38,9 @@ if ($configObject->get('cfg_sms_api') == '') {
 $sms_connection = SmsUtils::GetSmsUtils();
 
 // Calculate what the current academic session is.
-$session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
-$session_parts = explode('/', $session);
+$yearutils = new yearutils($mysqli);
+$session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
+$academic_year = $yearutils->get_academic_session($session);
 ?>
 <!DOCTYPE html>
 <html>
@@ -94,7 +94,7 @@ $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
   $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
-  echo "<tr class=\"l\"><td>$session</td><td>$module</td><td>$sms</td><td>" . $sms_connection->get_enrolement_no($module) . "</td><td>" . $sms_connection->get_deletion_no($module) . "</td></tr>\n";
+  echo "<tr class=\"l\"><td>$academic_year</td><td>$module</td><td>$sms</td><td>" . $sms_connection->get_enrolement_no($module) . "</td><td>" . $sms_connection->get_deletion_no($module) . "</td></tr>\n";
 }
 $module_data->close();
 

@@ -42,4 +42,5 @@ $string['msg1'] = 'Are you sure you wish to clear all papers/questions from the 
 $string['msg2'] = 'Are you sure you wish to delete old Formative and Progress Test records?\n\n(Summative/Survey records will not be affected)';
 $string['announcments'] = 'News &amp; Announcements';
 $string['imslti'] = 'LTI Keys';
+$string['academicsessions'] = 'Academic Sessions';
 ?>

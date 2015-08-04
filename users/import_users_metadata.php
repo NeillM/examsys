@@ -27,7 +27,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../include/demo_replace.inc';
@@ -207,7 +206,8 @@ if (!$module_details) {
 <table style="margin-left:auto; margin-right:auto; text-align:left">
 <tr><td><?php echo $string['year']; ?></td><td><select name="session">
 <?php
-  $current_year = date_utils::get_current_academic_year();
+  $yearutils = new yearutils($mysqli);
+  $current_year = $yearutils->get_current_session();
 
   $parts = explode('/', $current_year);
   echo "<option value=\"" . ($parts[0]-1) . "/" . ($parts[1]-1) . "\">" . ($parts[0]-1) . "/" . ($parts[1]-1) . "</option>\n";

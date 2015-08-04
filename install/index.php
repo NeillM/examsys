@@ -49,7 +49,8 @@ require '../include/path_functions.inc.php';
 $cfg_web_root = get_root_path() . '/';
 $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
-$version = '6.0.5';
+// Get the code version.
+$version = $configObject->getxml('version');
 
 set_time_limit(0);
 

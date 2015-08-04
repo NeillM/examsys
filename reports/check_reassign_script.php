@@ -27,7 +27,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/dateutils.class.php';
 require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -36,8 +35,9 @@ $userID  = check_var('userID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 function getModules($userID, $mysqlidb) {
+  $yearutils = new yearutils($mysqlidb);
   $modules = array();
-  $session = date_utils::get_current_academic_year();
+  $session = $yearutils->get_current_session();
 
   $result = $mysqlidb->prepare("SELECT idmod FROM modules_student WHERE calendar_year = ? AND userID = ?");
   $result->bind_param('si', $session, $userID);

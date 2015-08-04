@@ -400,7 +400,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $extra = '';
   }
 ?>
-<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', 3, 2, $extra); ?></div>
+<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', $extra); ?></div>
 </th>
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>

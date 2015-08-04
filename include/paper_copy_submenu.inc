@@ -23,7 +23,6 @@
 */
 
 require_once '../config/campuses.inc';
-require_once '../classes/dateutils.class.php';
 ?>
 <style>
 	.cancel {margin-right:8px}
@@ -138,25 +137,11 @@ if ($configObject->get('cfg_summative_mgmt')) {
 ?>
   </select><td><tr>
 <?php
-  $next_flag = 1;
   echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
-  $module_details = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student WHERE calendar_year != '' ORDER BY calendar_year DESC");
-  $module_details->execute();
-  $module_details->bind_result($calendar_year);
   echo "<select name=\"session\">\n";
-  if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1') {
-    echo "<option value=\"\">N/A</option>\n";
-  }
-  while ($module_details->fetch()) {
-    if ($next_flag == 1) {
-      $next_session = (substr($calendar_year,0,4) + 1) . '/' . (substr($calendar_year,-2) + 1);
-      $sel = (date_utils::get_current_academic_year() == $next_session) ? ' selected="selected"' : '';
-      echo "<option value=\"$next_session\"$sel>$next_session</option>\n";
-      $next_flag = 0;
-    }
-    $sel = (date_utils::get_current_academic_year() == $calendar_year) ? ' selected="selected"' : '';
-    echo "<option value=\"$calendar_year\"$sel>$calendar_year</option>\n";
-  }
+  $yearutils = new yearutils($mysqli);
+  echo $yearutils->get_calendar_year_dropdown_options($properties->get_paper_type(), $properties->get_calendar_year(), $string);
+
   echo "</select></td>\n";
 ?>
 </tr>

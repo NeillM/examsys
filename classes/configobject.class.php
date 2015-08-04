@@ -32,6 +32,7 @@ class Config extends RogoStaticSingleton {
    * @var array
    */
   public $data;
+  public $xmldata;
   protected static $inst;
   protected static $class_name = 'Config';
 
@@ -58,6 +59,11 @@ class Config extends RogoStaticSingleton {
   }
 
   protected function __construct() {
+ 
+    // Get out of the box config information.
+    $file = __DIR__ . '/../config/rogo.xml';
+    $this->xmldata = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
+    // Get installed system config information.
     $conf_file = __DIR__ . '/../config/config.inc.php';
     if (file_exists($conf_file)) {
       include $conf_file;
@@ -96,6 +102,21 @@ class Config extends RogoStaticSingleton {
       }
       return $dat;
     }
+    return null;
+  }
+  
+  /**
+   * Get value of xml node.
+   * 
+   * @param string $name name of xml node
+   * @return value of xml node
+   */
+  function getxml($name) {
+    if (is_string($name)) {
+      if (isset($this->xmldata->$name)) {
+        return $this->xmldata->$name;
+      }
+    } 
     return null;
   }
 

@@ -84,7 +84,23 @@ Class RecycleBin {
       $i++;
     }
     $stmt->close();
-    
+
+    // Sys admins can restore deleted sessions.
+    if ($userObj->has_role(array('SysAdmin'))) {
+        // Query the academic session tables.
+        $stmt = $db->prepare("SELECT calendar_year, academic_year, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM academic_year WHERE deleted IS NOT NULL");
+        $stmt->execute();
+        $stmt->bind_result($calendar_year, $academic_year, $deleted);
+        while ($stmt->fetch()) {
+          $recycle_bin[$i]['id'] = $calendar_year;
+          $recycle_bin[$i]['type'] = 'academic_year';
+          $recycle_bin[$i]['name'] = $academic_year;
+          $recycle_bin[$i]['deleted'] = $deleted;
+          $recycle_bin[$i]['subtype'] = '';
+          $i++;
+        }
+        $stmt->close();
+    }
     return $recycle_bin;	
   }
   

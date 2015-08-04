@@ -277,11 +277,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * @return bool - True = user exists, False = user does not exist.
    */
   static function does_user_exist($username) {
-    $result  = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
+    $result = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
     $result->bind_param('s', $username);
     $result->execute();
     $result->store_result();
-    $num_rows =  $result->num_rows;
+    $num_rows = $result->num_rows;
 
     $result->close();
 
@@ -428,6 +428,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
 
+    // Create constraints.
+    self::createConstraints();
+    
+    // Load default data
+    self::loadData();
+    
     //LOAD help if requested
     if (isset($_POST['loadHelp'])) {
       self::loadHelp();
@@ -531,6 +537,46 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$db->autocommit(true);
   }
 
+  /**
+   * Create constrainsts to maintain database referential integrity
+   */
+  static function createConstraints() {
+    $alter = array();
+    $alter[] = "ALTER TABLE sms_imports ADD CONSTRAINT sms_imports_fk0 FOREIGN KEY (academic_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE sessions ADD CONSTRAINT sessions_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE relationships ADD CONSTRAINT relationships_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE properties ADD CONSTRAINT properties_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE objectives ADD CONSTRAINT objectives_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE modules_student ADD CONSTRAINT modules_student_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    $alter[] = "ALTER TABLE users_metadata ADD CONSTRAINT users_metadata_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    foreach ($alter as $a) {
+        $res = self::$db->prepare($a);
+        $res->execute();
+        $res->close();
+    }
+    
+  }
+  
+  /**
+   * Load default data needed for rogo to function
+   */
+  static function loadData() {
+    // Add 3 academic sessions to the the new user started.
+    $calendaryear = date('Y');
+    $previouscalendaryear = date('Y') - 1;
+    $nextcalendaryear = date('Y') + 1;
+    $nextyear = date('y') + 1;
+    $currentyear = date('y');
+    $futureyear = date('y') + 2;
+    $academicyear = $calendaryear . '/' . $nextyear;
+    $previousacademicyear = $previouscalendaryear . '/' . $currentyear;
+    $nextacademicyear = $nextcalendaryear . '/' . $futureyear;
+    $insert = self::$db->prepare('INSERT INTO academic_year VALUES (?, ?, 1, 1, NULL, NULL), (?, ?, 1, 1, NULL, NULL), (?, ?, 1, 1, NULL, NULL)');
+    $insert->bind_param('isisis', $previouscalendaryear, $previousacademicyear, $calendaryear, $academicyear, $nextcalendaryear, $nextacademicyear);
+    $insert->execute();
+    $insert->close();
+  }
+  
   /**
   * create the database and users if they do not exist
   *
@@ -708,8 +754,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
-		$priv_SQL[] = "GRANT SELECT ON " . $dbname . ".killer_questions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
-		$priv_SQL[] = "GRANT INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".killer_questions TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".academic_year TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
 
     foreach ($priv_SQL as $sql) {
@@ -784,6 +831,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_feedback TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".objectives TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sessions TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".academic_year TO '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -879,6 +927,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".killer_questions TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".save_fail_log TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $dbname . ".toilet_breaks TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".academic_year TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
 
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
@@ -948,7 +997,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".toilet_breaks TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
-
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".academic_year TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -2386,12 +2435,24 @@ QUERY;
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['academic_year'] = <<<QUERY
+        CREATE TABLE `academic_year` (
+          `calendar_year` int(4) NOT NULL,
+          `academic_year` varchar(30) NOT NULL,
+          `cal_status` tinyint(1) NOT NULL DEFAULT '1',
+          `stat_status` tinyint(1) NOT NULL DEFAULT '1',
+          `deleted` datetime DEFAULT NULL,
+          `deletedby` int(10),
+          PRIMARY KEY (`calendar_year`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['modules_student'] = <<<QUERY
         CREATE TABLE `modules_student` (
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned DEFAULT NULL,
           `idMod` int(11) unsigned DEFAULT NULL,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          `calendar_year` int(4),
           `attempt` tinyint(4) DEFAULT NULL,
           `auto_update` tinyint(4) DEFAULT NULL,
           PRIMARY KEY (`id`),
@@ -2402,14 +2463,14 @@ QUERY;
 
     $this->tableList['objectives'] = <<<QUERY
         CREATE TABLE `objectives` (
-					`obj_id` int(11) NOT NULL,
-					`objective` text NOT NULL,
-					`idMod` int(11) unsigned NOT NULL DEFAULT '0',
-					`identifier` bigint(20) unsigned NOT NULL,
-					`calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
-					`sequence` int(11) DEFAULT NULL,
-					PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
-					KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
+        `obj_id` int(11) NOT NULL,
+        `objective` text NOT NULL,
+        `idMod` int(11) unsigned NOT NULL DEFAULT '0',
+        `identifier` bigint(20) unsigned NOT NULL,
+        `calendar_year` INT(4),
+        `sequence` int(11) DEFAULT NULL,
+        PRIMARY KEY (`obj_id`,`idMod`,`calendar_year`),
+        KEY `idx_identifier_calendar_year_sequence` (`identifier`,`calendar_year`,`sequence`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -2546,7 +2607,7 @@ QUERY;
           `display_students_response` enum('0','1') default NULL,
           `display_feedback` enum('0','1') default NULL,
           `hide_if_unanswered` enum('0','1') default NULL,
-          `calendar_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
+          `calendar_year` INT(4),
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
@@ -2716,7 +2777,7 @@ QUERY;
           `paper_id` mediumint(8) unsigned DEFAULT NULL,
           `question_id` int(11) NOT NULL,
           `obj_id` int(11) NOT NULL,
-          `calendar_year` enum('2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          `calendar_year` INT(4),
           `vle_api` varchar(255) NOT NULL DEFAULT '',
           `map_level` smallint(2) NOT NULL DEFAULT '0',
           PRIMARY KEY (`rel_id`),
@@ -2815,7 +2876,7 @@ QUERY;
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
           `title` text NOT NULL,
           `source_url` text,
-          `calendar_year` enum('2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') NOT NULL DEFAULT '2008/09',
+          `calendar_year` INT(4),
           `occurrence` datetime default NULL,
           PRIMARY KEY (`identifier`,`idMod`,`calendar_year`),
           KEY `sess_id` (`sess_id`)
@@ -2840,7 +2901,7 @@ QUERY;
           `deletions` int(11) default NULL,
           `deletion_details` text,
           `import_type` varchar(255) default NULL,
-          `academic_year` enum('2002/03','2003/04','2004/05','2005/06','2006/07','2007/08','2008/09','2009/10','2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') DEFAULT NULL,
+          `academic_year` INT(4),
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -3082,7 +3143,7 @@ QUERY;
           `idMod` int(11) unsigned default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
-          `calendar_year` enum('2010/11','2011/12','2012/13','2013/14','2014/15','2015/16','2016/17','2017/18','2018/19','2019/20') default NULL,
+          `calendar_year` INT(4),
           UNIQUE KEY `idx_users_metadata` (`userID`,`idMod`,`type`,`calendar_year`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;

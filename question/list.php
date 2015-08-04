@@ -28,7 +28,6 @@ require_once '../lang/' . $language . '/include/question_types.inc';
 require_once '../classes/stateutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/keywordutils.class.php';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
 require_once '../classes/questionutils.class.php';
@@ -251,8 +250,9 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   } elseif ($_GET['type'] == 'bloom') {
     $sql = "SELECT DISTINCT bloom AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in)";
   } elseif ($_GET['type'] == 'objective') {
+    $yearutils = new yearutils($mysqli);
     $vle_api_cache = array();
-    $vle_api_data = MappingUtils::get_vle_api($module, date_utils::get_current_academic_year(), $vle_api_cache, $mysqli);
+    $vle_api_data = MappingUtils::get_vle_api($module, $yearutils->get_current_session(), $vle_api_cache, $mysqli);
     $sql = "SELECT DISTINCT GROUP_CONCAT(obj_id SEPARATOR ' ') AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules, relationships) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = relationships.question_id AND relationships.vle_api = '{$vle_api_data['api']}' AND relationships.map_level = '{$vle_api_data['level']}' $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in) GROUP BY question_id";
   } else {
     $sql = "SELECT DISTINCT NULL AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL $keyword AND deleted IS NULL";

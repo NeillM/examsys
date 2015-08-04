@@ -41,7 +41,6 @@ require_once '../classes/lang.class.php';
 require_once '../classes/userutils.class.php';
 require_once '../classes/moduleutils.class.php';
 require_once '../classes/schoolutils.class.php';
-require_once '../classes/dateutils.class.php';
 require_once '../classes/usernotices.class.php';
 require_once '../classes/stringutils.class.php';
 
@@ -98,7 +97,8 @@ if (isset($_POST['submit'])) {
 
   if ($unique_username == true) {
     $_POST['new_grade'] = $new_moduleid;
-		$session = date_utils::get_current_academic_year();
+    $yearutils = new yearutils($mysqli);
+    $session = $yearutils->get_current_session();
 		
     // Add staff account
 		$new_username = trim($_POST['new_username']);

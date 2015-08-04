@@ -28,8 +28,6 @@ require_once $cfg_web_root . '/classes/courseutils.class.php';
 
 Class UserUtils {
 
-  private static $supported_years = array('2008/09', '2009/10', '2010/11', '2011/12', '2012/13', '2013/14', '2014/15', '2015/16', '2016/17', '2017/18', '2018/19', '2019/20');
-
   static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '') {
     $courseok = CourseUtils::add_course($school, $course, $coursedesc, $db);
 
@@ -493,7 +491,8 @@ Class UserUtils {
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
 
-    if (!in_array($session, self::$supported_years) or $idMod == '' or $tmp_userID == '') {
+    $yearutils = new year_utils($db);
+    if (!in_array($session, $yearutils->get_supported_years()) or $idMod == '' or $tmp_userID == '') {
       return false;
     }
 
@@ -514,8 +513,9 @@ Class UserUtils {
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
-  
-    if (!in_array($session, self::$supported_years) or $idMod == '' or $tmp_userID == '') {
+
+    $yearutils = new year_utils($db);
+    if (!in_array($session, $yearutils->get_supported_years()) or $idMod == '' or $tmp_userID == '') {
       return false;
     }
 

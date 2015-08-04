@@ -25,7 +25,6 @@
 require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../classes/networkutils.class.php';
-require_once '../classes/dateutils.class.php';
 
 /**
  * Formats space in human-readable format.
@@ -211,6 +210,8 @@ if ($e6 == 'improved') {
   $ErrorLogSettings .= $string['none'];
 }
 
+$yearutils = new yearutils($mysqli);
+
 ?>
 </td>
 <td style="width:50px">&nbsp;</td>
@@ -223,7 +224,7 @@ if ($e6 == 'improved') {
 <tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get('cfg_company'); ?></td></tr>
 <tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
 <tr><td><?php echo $string['interactivequestions']; ?></td><td><?php echo $configObject->get('cfg_interactive_qs'); ?></td></tr>
-<tr><td><?php echo $string['Session']; ?></td><td><?php echo date_utils::get_current_academic_year(); ?></td></tr>
+<tr><td><?php echo $string['Session']; ?></td><td><?php echo $yearutils->get_academic_session($yearutils->get_current_session()); ?></td></tr>
 <tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>
 
 <tr><td colspan="2">&nbsp;</td></tr>
