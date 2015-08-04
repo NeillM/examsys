@@ -165,7 +165,7 @@ function check_staff_modules($moduleID, $userObject) {
 function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $notice = UserNotices::get_instance();
   $configObject = Config::get_instance();
-  $yearutils = new yearutils($mysqli);
+  $yearutils = new yearutils($db);
   $attempt = 1;
   $usern = $userObj->get_username();
 
