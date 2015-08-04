@@ -87,7 +87,7 @@ function check_paper_password($password, $string, $db, $show_form = false) {
     if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
       if ($show_form) {
         if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $password) {
-          @setcookie('paperpwd', $_POST['paperpwd']);
+          setcookie('paperpwd', $_POST['paperpwd'], 0, '/');
         } else {
           $notice = UserNotices::get_instance();
           $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/fingerprint_48.png', '#C00000', true, true);
