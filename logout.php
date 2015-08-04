@@ -35,7 +35,9 @@ $return = session_start();
 session_unset();
 session_destroy();
 session_write_close();
-setcookie('paperpwd', '', -1, '/');
+if (isset($_COOKIE['paperpwd'])) {
+    setcookie('paperpwd', '', -1, '/');
+}
 setcookie(session_name(), '', 0, '/');
 session_regenerate_id(true);
 
