@@ -32,16 +32,6 @@ require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../include/std_set_shared_functions.inc';
-require_once '../classes/questionutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/userutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/exclusion.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/question_status.class.php';
-require_once '../classes/exam_announcements.class.php';
-require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -108,8 +98,6 @@ if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_module
 }
 
 if ($properties->get_paper_type() == '4') {		// OSCE
-	require_once '../classes/killer_question.class.php';
-	
 	$killer_questions = new Killer_question($paperID, $mysqli);
 	$killer_questions->load();
 }

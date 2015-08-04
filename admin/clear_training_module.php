@@ -23,9 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../classes/moduleutils.class.php';
-require '../classes/paperutils.class.php';
-require_once '../classes/questionutils.class.php';
 
 function stripTrainModule($module_string) {
   $new_modules = array();

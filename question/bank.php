@@ -30,16 +30,9 @@ require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/mapping.inc';
 
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/keywordutils.class.php';
-require_once '../classes/stateutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/mappingutils.class.php';
-require_once '../classes/question_status.class.php';
 require_once '../classes/questionbank.class.php';
-require_once '../classes/CMFactory.class.php';
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 $type = check_var('type', 'GET', true, false, true);

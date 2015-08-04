@@ -32,12 +32,6 @@ require_once '../include/mapping.inc';
 require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.inc';
 require_once '../include/media.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/logger.class.php';
-require_once '../classes/question_status.class.php';
-require_once '../classes/exam_announcements.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/paper/finish.php';

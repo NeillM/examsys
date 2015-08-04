@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
-require_once '../classes/dateutils.class.php';
 
 if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] == '1')) {
   $title = trim($_POST['title']);

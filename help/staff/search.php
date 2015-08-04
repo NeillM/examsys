@@ -23,7 +23,6 @@
 */
 
 require '../../include/staff_auth.inc';
-require_once '../../classes/helputils.class.php';
 
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
 

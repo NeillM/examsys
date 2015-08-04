@@ -28,11 +28,6 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/reviews.class.php';
-
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
@@ -322,7 +317,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 ?>
   <div align="center">
 	<?php
-	require_once '../classes/configobject.class.php';
 	$configObject          = Config::get_instance();
 	if ($configObject->get('cfg_interactive_qs') == 'html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->

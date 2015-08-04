@@ -30,12 +30,10 @@
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperproperties.class.php';
 require_once 'include/inc.php';
 require_once 'local/local_load.php';
 require_once 'qti12/qti12_save.php';
 require_once 'qti20/qti20_save.php';
-require_once '../classes/question_status.class.php';
 
 $ids = check_var('paperID', 'GET', true, false, true);
 $dest = check_var('dest', 'GET', true, false, true);

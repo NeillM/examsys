@@ -27,8 +27,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/paperproperties.class.php';
-
 $paperID = check_var('paperID', 'GET', true, false, true);
 $userID  = check_var('userID', 'GET', true, false, true);
 

@@ -15,27 +15,21 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Custom exception classes
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Wrapper class for old static style calls to module_utils::[Function]
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
+Class module_utils extends RogoStaticSingleton {
+  public static $inst = NULL;
+  public static $class_name = 'module'; //name of the new dynamic class
 
-class ValidationException extends Exception { }
+  /**
+  * constructor
+  */
+  private function __construct() {}
 
-class DataTypeException extends Exception { }
-
-class RecordNotFoundException extends Exception { }
-
-class DatabaseException extends Exception { }
-
-class ClassNotFoundException extends Exception { }
-
-class MethodNotImplementedException extends Exception { }
-
-class RandomQuestionNotFound extends Exception { }
-
-class ItemExistsException extends Exception { }
+}

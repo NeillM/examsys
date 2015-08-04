@@ -27,7 +27,6 @@
 if (!isset($cfg_web_root)) {
   $cfg_web_root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 }
-require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 $notice = UserNotices::get_instance();
 

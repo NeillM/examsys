@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/sort.inc';
-require '../classes/recyclebin.class.php';
 
 function dateDisplay($tmp_date) {
   return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);

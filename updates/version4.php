@@ -23,11 +23,7 @@
  */
 
 require_once '../include/load_config.php';
-require_once '../classes/installutils.class.php';
-require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
-require_once '../classes/lang.class.php';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
 
 $version = '5.0';
 
@@ -2415,9 +2411,6 @@ if (!isset($_POST['update'])) {
   }
 
   // 15/08/2012 - cczsa1 adding unknown school and faculty
-  require_once $cfg_web_root . 'classes/facultyutils.class.php';
-  require_once $cfg_web_root . 'classes/schoolutils.class.php';
-
   $result = $mysqli->prepare("SELECT id FROM " . $cfg_db_database . ".faculty  WHERE name='UNKNOWN Faculty'");
   $result->execute();
   $result->store_result();

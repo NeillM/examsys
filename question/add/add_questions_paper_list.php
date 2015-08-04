@@ -23,7 +23,6 @@
 */
 
 require '../../include/staff_auth.inc';
-require_once '../../classes/moduleutils.class.php';
 
 if (isset($_GET['teamID'])) {
   if (!module_utils::get_moduleid_from_id($_GET['teamID'], $mysqli)) {

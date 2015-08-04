@@ -61,12 +61,11 @@ if(!isset($_GET['test'])) {
 
 	//setup the Rogo config object
 	$root = str_replace( '/testing', '/', str_replace('\\', '/', dirname(__FILE__) ) );
-	require_once $root . 'classes/configobject.class.php';
 	$configObject = Config::get_instance();
 	$cfg_web_root = $configObject->get('cfg_web_root');
 
 
-  require_once $cfg_web_root . 'classes/lang.class.php';
+  require_once $cfg_web_root . 'classes/langutils.class.php';
   
   $language = LangUtils::getLang($cfg_web_root);
 	//load the mysqli mocking classes	

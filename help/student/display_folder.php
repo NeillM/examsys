@@ -24,7 +24,6 @@
  
 require '../../include/staff_student_auth.inc';
 require '../../include/errors.inc';
-require_once '../../classes/helputils.class.php';
 
 $title = check_var('title', 'GET', true, false, true);
 

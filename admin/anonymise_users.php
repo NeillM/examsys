@@ -27,7 +27,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../classes/anonymise.class.php';
 
 $anonymiseObj = new Anonymise($mysqli);
 

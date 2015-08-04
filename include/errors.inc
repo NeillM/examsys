@@ -23,7 +23,6 @@
 */
 
 require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
-require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 /**
  * Display an error to the screen.

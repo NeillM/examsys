@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../include/invigilator_auth.inc';
-require_once '../classes/exam_announcements.class.php';
 
 $paperID = $_GET['paperID'];
 if (!isset($string)) $string = array();

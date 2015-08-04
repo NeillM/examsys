@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once '../classes/standard_setting.class.php';
-
 function updateDB($review, $db) {
   $update = $db->prepare("UPDATE std_set SET pass_score = ?, distinction_score = ? WHERE id = ?");
   $update->bind_param('ddi', $review['pass_score'], $review['distinction_score'], $review['std_setID']);

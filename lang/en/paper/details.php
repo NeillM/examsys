@@ -18,8 +18,6 @@ require '../lang/' . $language . '/include/paper_options.inc';
 require '../lang/' . $language . '/include/months.inc';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
-require_once '../classes/configobject.class.php';
-
 $configObject = Config::get_instance();
 
 $string['start'] = 'Start';

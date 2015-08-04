@@ -27,12 +27,6 @@ require_once '../include/media.inc';
 require_once '../include/std_set_functions.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/stateutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/exclusion.class.php';
-require_once '../classes/standard_setting.class.php';
-
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
@@ -53,6 +47,7 @@ $paper_type = $propertyObj->get_paper_type();
 $paper_prologue = $propertyObj->get_paper_prologue();
 $marking = $propertyObj->get_marking();
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 function ebelDropdown($dropdownID, $ebel_grid) {

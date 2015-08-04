@@ -15,32 +15,24 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Passed through the postauthfail callbacks. Stores settings of what it does when it finishes the callback.
  *
- * Return a new object for the chose VLE API
- *
- * @author Rob Ingram
+ * @author Simon Atack
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
- * @package
+ * @package Authentication
  */
+class postauthfailreturn extends stdClass {
+  public $attempt;
+  public $form;
+  public $url;
+  public $callback;
+  public $stop;
+  public $exit;
 
-
-require_once $cfg_web_root . 'classes/exceptions.inc.php';
-
-class CMFactory {
-  public static function GetCMAPI($vleapi) {
-    $configObject = Config::get_instance();
-
-    $classname = 'CM_' . $vleapi;
-    $classfile = 'CM_' . $vleapi . '.class.php';
-
-    try {
-      include_once $configObject->get('cfg_web_root') . '/plugins/CM/' . $classfile;
-      $object = new $classname();
-    } catch (Exception $ex) {
-      throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
-    }
-
-    return $object;
+  function __construct() {
+    $this->attempt = $_SESSION['authenticationObj']['attempt'];
+    $this->stop = false;
+    $this->exit = false;
   }
 }

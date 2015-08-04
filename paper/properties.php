@@ -28,16 +28,7 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../include/load_config.php';
-require_once '../classes/schoolutils.class.php';
-require_once '../classes/searchutils.class.php';
-require_once '../classes/folderutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/questionutils.class.php';
-require_once '../classes/generalutils.class.php';
-require_once '../classes/logger.class.php';
-require_once '../classes/paperproperties.class.php';
 
 // Marking options
 define('MARK_NO_ADJUSTMENT', '0');

@@ -24,7 +24,6 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.inc';
-require_once '../../classes/question_status.class.php';
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);

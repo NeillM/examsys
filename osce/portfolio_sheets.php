@@ -24,9 +24,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/stringutils.class.php';
 require_once '../include/errors.inc';
 require_once './osce.inc';
 

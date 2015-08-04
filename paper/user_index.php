@@ -28,19 +28,6 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
-require_once '../classes/stringutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/userutils.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/timer.class.php';
-require_once '../classes/lab_factory.class.php';
-require_once '../classes/lab.class.php';
-require_once '../classes/log_extra_time.class.php';
-require_once '../classes/log_lab_end_time.class.php';
-require_once '../classes/summativetimer.class.php';
-require_once '../classes/paperproperties.class.php';
-
 check_var('id', 'GET', true, false, false);
 
 function load_attempts($test_type, $paperID, $userObj, $db) {

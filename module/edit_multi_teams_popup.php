@@ -24,7 +24,6 @@
 
 require_once '../include/admin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
 

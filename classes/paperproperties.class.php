@@ -22,11 +22,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'logger.class.php';
-require_once 'questionutils.class.php';
-require_once 'exclusion.class.php';
-
 class PaperProperties {
 
   private $db;

@@ -23,8 +23,6 @@
 */
 
 require '../../include/staff_auth.inc';
-require_once '../../classes/paperutils.class.php';
-require_once '../../classes/logger.class.php';
 
 if ($_POST['questions_to_add'] != '') {
   $logger = new Logger($mysqli);
