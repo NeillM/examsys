@@ -491,7 +491,7 @@ Class UserUtils {
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
 
-    $yearutils = new year_utils($db);
+    $yearutils = new yearutils($db);
     if (!in_array($session, $yearutils->get_supported_years()) or $idMod == '' or $tmp_userID == '') {
       return false;
     }
@@ -514,7 +514,7 @@ Class UserUtils {
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
 
-    $yearutils = new year_utils($db);
+    $yearutils = new yearutils($db);
     if (!in_array($session, $yearutils->get_supported_years()) or $idMod == '' or $tmp_userID == '') {
       return false;
     }
