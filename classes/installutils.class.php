@@ -21,6 +21,7 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
+require_once dirname(__DIR__) . '/include/load_config.php';
 require_once dirname(__DIR__) . '/include/auth.inc';
 require_once dirname(__DIR__) . '/lang/' . $language . '/include/timezones.inc';
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
