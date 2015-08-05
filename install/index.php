@@ -45,9 +45,19 @@ if ( false ) {
   exit;
 }
 
-require '../include/path_functions.inc.php';
+// The config class must be loaded for the new version checking code to work.
+// It must be loaded before require_once '../include/path_functions.inc.php';
+// As the config file (if it exists) can require that same file. Which causes
+// a fatal error.
+$configObject = Config::get_instance();
+
+require_once '../include/path_functions.inc.php';
 $cfg_web_root = get_root_path() . '/';
 $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
+
+require_once dirname(__DIR__) . '/include/auth.inc';
+LangUtils::loadlangfile('/include/timezones.inc');
+LangUtils::loadlangfile('/install/index.php');
 
 // Get the code version.
 $version = $configObject->getxml('version');
