@@ -597,6 +597,7 @@ if (isset($_POST['Submit'])) {
     } else {
       $properties->set_sound_demo(0);
     }
+    
     $password = $_POST['password'];
     if (!$locked) {
         if ($password != $properties->get_password()) {
@@ -604,8 +605,9 @@ if (isset($_POST['Submit'])) {
           $enc_password = encpw($salt, $paperID, $paperID . trim($password));
           $properties->set_password($enc_password);
         }
-      $properties->set_fullscreen($_POST['fullscreen']);
+        $properties->set_fullscreen($_POST['fullscreen']);
     }
+    
     $properties->set_bgcolor($_POST['bgcolor']);
     $properties->set_fgcolor($_POST['fgcolor']);
     $properties->set_themecolor($_POST['themecolor']);
