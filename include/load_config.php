@@ -37,8 +37,4 @@ $cfg_editor_javascript = $configObject->get('cfg_editor_javascript');
 $cfg_editor_name       = $configObject->get('cfg_editor_name');
 
 $language = LangUtils::getLang($cfg_web_root);
-$lang_path = "{$cfg_web_root}lang/$language/" . str_replace($cfg_web_root, '', normalise_path($_SERVER['SCRIPT_FILENAME']));
-
-if (file_exists($lang_path)) {
-  require $lang_path;
-}
+LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
