@@ -78,16 +78,12 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
  */
 function check_paper_password($paperID, $password, $string, $db, $show_form = false) {
   if ($password != '') {
-    if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
+    if (!isset($_SESSION['paperpwd']) or $password != $_SESSION['paperpwd']) {
       if ($show_form) {
-        if (isset($_POST['paperpwd'])) {
-          $salt = UserUtils::get_salt();
-          $encpassword = encpw($salt, $paperID, $paperID . $_POST['paperpwd']);
-        } else {
-          $encpassword = '';  
-        }
-        if ($encpassword == $password) {
-          setcookie('paperpwd', $encpassword, 0, '/');
+        $paperproperties = new PaperProperties($db);
+        $decrypt_password = ltrim($paperproperties->decrypt_password($password),$paperID);
+        if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
+          $_SESSION['paperpwd'] = $password;
         } else {
           $notice = UserNotices::get_instance();
           $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/fingerprint_48.png', '#C00000', true, true);

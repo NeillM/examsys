@@ -598,12 +598,10 @@ if (isset($_POST['Submit'])) {
       $properties->set_sound_demo(0);
     }
     
-    $password = $_POST['password'];
+    $password = trim($_POST['password']);
     if (!$locked) {
-        if ($password != $properties->get_password()) {
-          $salt = UserUtils::get_salt();
-          $enc_password = encpw($salt, $paperID, $paperID . trim($password));
-          $properties->set_password($enc_password);
+        if ($password != $properties->get_decrypted_password()) {
+            $properties->set_password($password);
         }
         $properties->set_fullscreen($_POST['fullscreen']);
     }
@@ -1579,9 +1577,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "</select></td>";
 
     if ($properties->get_paper_type() == '4') {
-      echo "<td></td><td><input type=\"hidden\" name=\"password\" value=\"" . $properties->get_password() . "\" /></td></tr>\n";
+      echo "<td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_decrypted_password() . "\" /></td></tr>\n";
     } else {
-      echo "<td align=\"right\">" . $string['password'] . "</td><td><input type=\"password\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
+      echo "<td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_decrypted_password() . "\"$disabled /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
     }
 
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
