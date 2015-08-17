@@ -30,6 +30,7 @@ Class InstallUtils {
 
   public static $cfg_company;
   public static $cfg_short_date;
+  public static $cfg_long_date;
   public static $cfg_long_date_time;
   public static $cfg_short_date_time;
   public static $cfg_long_date_php;
@@ -160,6 +161,7 @@ $mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-function
 $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 ?>
         <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /></div>
+        <div><label for="cfg_long_date"><?php echo sprintf($string['longdate'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date" name="cfg_long_date" class="required" minlength="2" value="%d/%m/%Y" /></div>
         <div><label for="cfg_long_date_time"><?php echo sprintf($string['longdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
         <div><label for="cfg_short_date_time"><?php echo sprintf($string['shortdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" /></div>
         <div><label for="cfg_long_date_php"><?php echo sprintf($string['longdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" /></div>
@@ -303,6 +305,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_SysAdmin_username = $_POST['SysAdmin_username'];
 
     self::$cfg_short_date = $_POST['cfg_short_date'];
+    self::$cfg_long_date = $_POST['cfg_long_date'];
     self::$cfg_long_date_time = $_POST['cfg_long_date_time'];
     self::$cfg_short_date_time = $_POST['cfg_short_date_time'];
     self::$cfg_long_date_php = $_POST['cfg_long_date_php'];
@@ -1009,7 +1012,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".client_identifiers TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".labs TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".log2 TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".log_metadata TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, UPDATE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log_extra_time TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log_lab_end_time TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules_student TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
@@ -1028,6 +1031,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, DELETE ON " . $dbname . ".toilet_breaks TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".academic_year TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".temp_users TO '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -1554,6 +1558,7 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
 // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
+  \$cfg_long_date = '{cfg_long_date}';
   \$cfg_long_date_time = '{cfg_long_date_time}';
   \$cfg_tablesorter_date_time = '{cfg_tablesorter_date_time}';
   \$cfg_short_date_time = '{cfg_short_date_time}';
@@ -1661,12 +1666,21 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
 //Assistance
   \$support_email = '{cfg_support_email}';
   \$emergency_support_numbers = {emergency_support_numbers};
-
+  \$midexam_clarification = array('invigilators', 'students');
+  
 //Global DEBUG OUTPUT
   //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
 
-  //\$display_auth_debug = true; // set this to deisplay debug on failed authentication
+  //\display_auth_debug = false; // set this to deisplay debug on failed authentication
+
+  //\$displayerrors = false;  // overrides settings in php for errors not to be shown to screen (true enables)
+
+  //\$displayallerrors = false; // display/logs any error the system has including notices (true enables)
+
+  //\$errorshutdownhandling=true; //enables log at shutdown (allows you to catch reasons behind fatal errors etc including mysqli errors (true enables)
+
+  //\$errorcontexthandling = 'improved'; //improved gives a good capture of context variables while filtering for security of display/saved data, basic captures all but doesnt run and security routines, none doesnt capture any context variables
 
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
@@ -1706,6 +1720,7 @@ CONFIG;
     $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
+    $config = str_replace('{cfg_long_date}', self::$cfg_long_date, $config);
     $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
     $config = str_replace('{cfg_short_date_time}', self::$cfg_short_date_time, $config);
     $config = str_replace('{cfg_long_date_php}', self::$cfg_long_date_php, $config);
