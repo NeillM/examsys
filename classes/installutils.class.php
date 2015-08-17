@@ -1673,15 +1673,15 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
 
-  //\display_auth_debug = false; // set this to deisplay debug on failed authentication
+  \display_auth_debug = false; // set this to deisplay debug on failed authentication
 
-  //\$displayerrors = false;  // overrides settings in php for errors not to be shown to screen (true enables)
+  \$displayerrors = false;  // overrides settings in php for errors not to be shown to screen (true enables)
 
-  //\$displayallerrors = false; // display/logs any error the system has including notices (true enables)
+  \$displayallerrors = false; // display/logs any error the system has including notices (true enables)
 
-  //\$errorshutdownhandling=true; //enables log at shutdown (allows you to catch reasons behind fatal errors etc including mysqli errors (true enables)
+  \$errorshutdownhandling=true; //enables log at shutdown (allows you to catch reasons behind fatal errors etc including mysqli errors (true enables)
 
-  //\$errorcontexthandling = 'improved'; //improved gives a good capture of context variables while filtering for security of display/saved data, basic captures all but doesnt run and security routines, none doesnt capture any context variables
+  \$errorcontexthandling = 'improved'; //improved gives a good capture of context variables while filtering for security of display/saved data, basic captures all but doesnt run and security routines, none doesnt capture any context variables
 
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
