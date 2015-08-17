@@ -424,6 +424,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     // Load default data
     self::loadData();
     
+    // Update sys_updates table
+    self::updateSysUpdates();
+    
     //LOAD help if requested
     if (isset($_POST['loadHelp'])) {
       self::loadHelp();
@@ -565,6 +568,43 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->bind_param('isisis', $previouscalendaryear, $previousacademicyear, $calendaryear, $academicyear, $nextcalendaryear, $nextacademicyear);
     $insert->execute();
     $insert->close();
+  }
+  
+  /**
+   * Update the sys updates table as we just did a clean install and do not want the update process
+   * running these updates again.
+   */
+  static function updateSysUpdates() {
+    $current_datetime = date('Y-m-d H:i:s');
+    $updates = array('convert_calc_ans_done',
+    'sct_fix',
+    'textbox_fix',
+    'textbox_update',
+    'labelling_search',
+    'ext_match_graphics_fix',
+    'status_fix',
+    'keyword_loop',
+    'errorstate_signed_log0',
+    'errorstate_signed_log0_deleted',
+    'errorstate_signed_log1',
+    'errorstate_signed_log1_deleted',
+    'errorstate_signed_log2',
+    'errorstate_signed_log3',
+    'errorstate_signed_log_late',
+    'rogo1481alter_users_metadata',
+    'rogo1481alter_sms_imports',
+    'rogo1481alter_sessions',
+    'rogo1481alter_relationships',
+    'rogo1481alter_properties',
+    'rogo1481alter_objectives',
+    'rogo1481alter_modules_student',
+    'rogo1477_paperpassword');
+    foreach ($updates as $update) {
+        $insert = self::$db->prepare('INSERT INTO sys_updates VALUES (?, ?)');
+        $insert->bind_param('ss', $update, $current_datetime);
+        $insert->execute();
+        $insert->close();
+    }
   }
   
   /**
