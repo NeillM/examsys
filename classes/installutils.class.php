@@ -600,8 +600,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     'rogo1481alter_relationships',
     'rogo1481alter_properties',
     'rogo1481alter_objectives',
-    'rogo1481alter_modules_student',
-    'rogo1477_paperpassword');
+    'rogo1481alter_modules_student');
     foreach ($updates as $update) {
         $insert = self::$db->prepare('INSERT INTO sys_updates VALUES (?, ?)');
         $insert->bind_param('ss', $update, $current_datetime);
