@@ -1540,13 +1540,14 @@ class PaperProperties {
   }
   
   /**
-   * Return the password for a paper, stripping of the paper id.
+   * Return the password for a paper.
    * 
    * @return string $password
    */
   public function get_decrypted_password() {
     $paperID = $this->get_property_id();
     $password = $this->decrypt_password($this->password);
+    // Strip of the paper id before returning the password.
     return ltrim($password, $paperID);
   }
   
