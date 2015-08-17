@@ -62,8 +62,8 @@ Class LangUtils {
     } else {
       $string = $str;
     }
-    $configObj = Config::get_instance();
-    $cfg_web_root = $configObj->get('cfg_web_root');
+    $configObject = Config::get_instance();
+    $cfg_web_root = $configObject->get('cfg_web_root');
     $language = LangUtils::getLang($cfg_web_root);
     $lang_path = "{$cfg_web_root}lang/$language/" . $file;
     if (file_exists($lang_path)) {
