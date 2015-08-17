@@ -576,6 +576,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   /**
    * Update the sys updates table as we just did a clean install and do not want the update process
    * running these updates again.
+   * 
+   * This list should not be added to as all new updates should be tied to a release.
    */
   static function updateSysUpdates() {
     $current_datetime = date('Y-m-d H:i:s');
