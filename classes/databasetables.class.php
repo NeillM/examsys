@@ -886,7 +886,7 @@ QUERY;
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default NULL,
           `latex_needed` tinyint(4) default '0',
-          `password` char(90) default NULL,
+          `password` char(45) default NULL,
           `retired` datetime default NULL,
           `crypt_name` varchar(32) default NULL,
           `recache_marks` tinyint(3) unsigned DEFAULT '0',

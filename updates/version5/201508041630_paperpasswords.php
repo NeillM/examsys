@@ -1,7 +1,7 @@
 <?php
 
 if ($updater_utils->check_version("6.1.0")) {
-    // Update properties password field to be 90 characters - to hold encrypted password.
+    // Update properties password field to be 45 characters - to hold encrypted password.
     if (!$updater_utils->has_updated('rogo1477_paperpassword')) {
         $altersql = "ALTER TABLE properties CHANGE password password char(45) default NULL";
         $updater_utils->execute_query($altersql, true);
