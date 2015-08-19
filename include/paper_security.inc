@@ -68,6 +68,7 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
 /**
  * Check if there is a password on the assessment and if so will work out whether it needs
  * to show the password entry form.
+ * @param int $paperID      - Paper id.
  * @param string $password  - Type of the assessment (e.g. 0 = Formative, 1 = Progress Test, etc).
  * @param array $string     - Language translation strings.
  * @param bool $show_form   - If true then it will display a form for the student to enter the password.
@@ -75,12 +76,14 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
  *                            and finish.php should not ask, password should already be set.
  * @param object $db        - The MySQL connection.
  */
-function check_paper_password($password, $string, $db, $show_form = false) {
+function check_paper_password($paperID, $password, $string, $db, $show_form = false) {
   if ($password != '') {
-    if (!isset($_COOKIE['paperpwd']) or $password != $_COOKIE['paperpwd']) {
+    if (!isset($_SESSION['paperpwd']) or $password != $_SESSION['paperpwd']) {
       if ($show_form) {
-        if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $password) {
-          @setcookie('paperpwd', $_POST['paperpwd']);
+        $paperproperties = new PaperProperties($db);
+        $decrypt_password = ltrim($paperproperties->decrypt_password($password),$paperID);
+        if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
+          $_SESSION['paperpwd'] = $password;
         } else {
           $notice = UserNotices::get_instance();
           $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/fingerprint_48.png', '#C00000', true, true);

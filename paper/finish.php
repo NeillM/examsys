@@ -122,7 +122,7 @@ if ($userObject->has_role(array('External Examiner'))) {
   if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
 
   // Check time security
   check_datetime($start_date, $end_date, $string, $mysqli);

@@ -73,7 +73,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string, $mysqli);
+  check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli);
 
   // Check time security
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);

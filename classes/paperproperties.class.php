@@ -1531,23 +1531,65 @@ class PaperProperties {
   }
 
   /**
+   * Return the encrypted password for a paper.
+   * 
    * @return string $password
    */
   public function get_password() {
     return $this->password;
   }
-
+  
   /**
+   * Return the password for a paper.
+   * 
+   * @return string $password
+   */
+  public function get_decrypted_password() {
+    $paperID = $this->get_property_id();
+    $password = $this->decrypt_password($this->password);
+    // Strip of the paper id before returning the password.
+    return ltrim($password, $paperID);
+  }
+  
+  /**
+   * Save password to database.
+   * 
    * @param string $password
+   * @param bool $encypt if true we encypt the password
    */
   public function set_password($password) {
+    $paperID = $this->get_property_id();
     $old_password = $this->password;
 
-    $this->password = $password;
+    $this->password = $this->encrypt_password($paperID . $password);
 
     if ($old_password != $password) {
       $this->changes[] = array('old'=>$old_password, 'new'=>$password, 'part'=>'password');
     }
+  }
+  
+  /**
+   * Encrypt a password that can be de-crypted.
+   * 
+   * @param $string $password 
+   * @return $string encrypted passsword
+   */
+  public function encrypt_password($password) {
+    $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+    $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), $password, MCRYPT_MODE_ECB, $iv);
+    return trim(base64_encode($enc));
+  }
+  
+  /**
+   * Decrypt the password.
+   * 
+   * @param string $enc_password encrypted passsword
+   * @return string decrypted passsword
+   */
+  public function decrypt_password($encpassword) {
+    $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+    $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), base64_decode($encpassword), MCRYPT_MODE_ECB, $iv);
+    return trim($dec);
   }
 
   /**
