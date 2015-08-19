@@ -1351,15 +1351,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $apache = explode('/', $_SERVER['SERVER_SOFTWARE']);
 
     //php
-    $php_min_ver = '5.0';
+    $php_min_ver = '5.3.2';
     if (phpversion() < $php_min_ver) {
       $errors['202'] = $string['errors10'];
     }
     $phpModules = get_loaded_extensions();
-    if ( !in_array('mysqli', $phpModules) ) {
-      $errors['203'] = $string['errors11'];
+    $extensions = array (207 => 'ctype', 208 => 'mbstring', 209 => 'xml', 210 => 'xmlrpc', 203 => 'mysqli', 204 => 'mcrypt', 205 => 'curl', 206 => 'gd');
+    foreach ($extensions as $errorcode => $extension) {
+        if (!in_array($extension, $phpModules) ) {
+          $errors[$errorcode] = sprintf($string['errors11'], $extension);
+        }
     }
-
     if (count($errors) > 0) {
       self::displayError($errors);
     }
