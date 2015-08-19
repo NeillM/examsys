@@ -19,6 +19,7 @@ $string['rdbpassword'] = 'Heslo';
 $string['timedateformats'] = 'Čas/Datum - formáty';
 
 $string['date'] = 'Datum (%s)';
+$string['longdate'] = 'Long Date (%s)';
 $string['shortdatetime'] = 'Short Date/Time (%s)';
 $string['longdatetime'] = 'Long Date/Time (%s)';
 $string['longdatephp'] = 'Nezkrácené datum (%s)';

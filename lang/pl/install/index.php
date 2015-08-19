@@ -34,6 +34,7 @@ $string['rdbusername'] = 'Użytkownik';
 $string['rdbpassword'] = 'Hasło:';
 $string['timedateformats'] = 'Formaty czasu/daty';
 $string['date'] = 'Data (%s)';
+$string['longdate'] = 'Long Date (%s)';
 $string['shortdatetime'] = 'Krótka forma Daty/Czasu (%s)';
 $string['longdatetime'] = 'Długa forma Daty/Czasu (%s)';
 $string['longdatephp'] = 'Długi format daty (PHP)'; 
