@@ -109,10 +109,16 @@ class Config extends RogoStaticSingleton {
    * @param string $name name of xml node
    * @return value of xml node
    */
-  function getxml($name) {
+  function getxml($name, $subname = '') {
     if (is_string($name)) {
       if (isset($this->xmldata->$name)) {
-        return $this->xmldata->$name;
+        if ($subname == '') {
+          return $this->xmldata->$name;
+        } else {
+          if (isset($this->xmldata->$name->$subname)) {
+             return $this->xmldata->$name->$subname;
+          }
+        }
       }
     } 
     return null;

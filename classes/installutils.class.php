@@ -122,15 +122,6 @@ Class InstallUtils {
     </script>
     <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
 
-      <?php
-        if (!defined('PHP_VERSION_ID')) {
-          $version = explode('.', PHP_VERSION);
-          define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-        }
-        if (PHP_VERSION_ID < 50302) {
-          echo "<div class=\"warning\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> Current PHP version " . phpversion() . " is below recommended version 5.3.2</div>\n";
-        }
-      ?>
       <table class="h"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" /></div>
 
@@ -286,7 +277,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   
   static function processForm() {
     global $string, $cfg_encrypt_salt;
-
+    $configObject = Config::get_instance();
+    
     self::$cfg_company = $_POST['company_name'];
     self::$cfg_page_charset = $_POST['page_charset'];
 
@@ -304,7 +296,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::displayError(array('001' => mysqli_connect_error()));
     }
 
-    $mysql_min_ver = '50100';
+    $mysql_min_ver = $configObject->getxml('mysql', 'min_version');
     $mysql_version = mysqli_get_server_version($check);
     if($mysql_version < $mysql_min_ver) {
         self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver, $mysql_version)));
@@ -1359,22 +1351,23 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function checkSoftware() {
     global $string;
-
+    $configObject = Config::get_instance();
     $errors = array();
     
     $server = split("[/ ]",$_SERVER['SERVER_SOFTWARE']);
     // Apache
     if ($server[0] == 'Apache') {
         $apache = $server[1];
-        $apache_min_ver = '2.2';
+        $apache_min_ver = $configObject->getxml('apache', 'min_version');;
         if ($apache < $apache_min_ver) {
             $errors['201'] = sprintf($string['errors9'], $apache_min_ver, $apache);
         }
     }
     // php
-    $php_min_ver = '5.3.2';
-    if (phpversion() < $php_min_ver) {
-      $errors['202'] = $string['errors10'];
+    $php_min_ver = $configObject->getxml('php', 'min_version');
+    $phpversion = phpversion();
+    if ($phpversion < $php_min_ver) {
+      $errors['202'] = sprintf($string['errors10'], $php_min_ver, $phpversion);
     }
     $phpModules = get_loaded_extensions();
     $extensions = array(203 => 'mysqli',
