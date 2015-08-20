@@ -288,15 +288,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     global $string, $cfg_encrypt_salt;
 
     self::$cfg_company = $_POST['company_name'];
-    //check admin database user name and password and create the connection
+    self::$cfg_page_charset = $_POST['page_charset'];
+
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_charset = $_POST['mysql_db_charset'];
-    self::$cfg_page_charset = $_POST['page_charset'];
     self::$cfg_db_port = $_POST['mysql_db_port'];
     self::$cfg_db_name = $_POST['mysql_db_name'];
     self::$db_admin_username = $_POST['mysql_admin_user'];
     self::$db_admin_passwd = $_POST['mysql_admin_pass'];
+    
+    // Check mysql version.
+    $check = mysqli_connect(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd);
 
+    if (mysqli_connect_error()) {
+      self::displayError(array('001' => mysqli_connect_error()));
+    }
+
+    $mysql_min_ver = '50100';
+    $mysql_version = mysqli_get_server_version($check);
+    if($mysql_version < $mysql_min_ver) {
+        self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver, $mysql_version)));
+    }
+    $check->close();
+    
     self::$cfg_web_host = $_POST['web_host'];
 
 

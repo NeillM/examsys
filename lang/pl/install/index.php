@@ -107,6 +107,7 @@ $string['errors13'] = 'Błąd';
 $string['errors14'] = 'Wygenerowano następujące ostrzeżenia';
 $string['errors15'] = 'Uwaga';
 $string['errors16'] = 'Rog&#333; wymaga prawa zapisu w swym pliku konfiguracyjnym %s/config/config.inc.php. Jednym ze sposobów realizacji tego jest tymczasowe udzielenie praw zapisu do  %s/config i przywrócenie oryginalnych przywilejów zaraz po dokonaniu aktualizacji.';
+$string['errors17'] = 'Rog&#333; wymaga serwera MYSQL w wersji %s lub wyższej %s';
 $string['installscript'] = 'Skrypt instalacyjny Rog&#333;';
 $string['systeminstallation'] = 'Instalacja systemu';
 
