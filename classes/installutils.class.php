@@ -1370,15 +1370,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $errors['202'] = sprintf($string['errors10'], $php_min_ver, $phpversion);
     }
     $phpModules = get_loaded_extensions();
-    $extensions = array(203 => 'mysqli',
-                        204 => 'mcrypt',
-                        205 => 'curl',
-                        206 => 'gd',
-                        207 => 'ctype',
-                        208 => 'mbstring',
-                        209 => 'xml',
-                        210 => 'xmlrpc');
-    foreach ($extensions as $errorcode => $extension) {
+    $extensions = split("[ ]", $configObject->getxml('php', 'extensions'));
+    $errorcode = 202;
+    foreach ($extensions as $extension) {
+        $errorcode += 1;
         if (!in_array($extension, $phpModules) ) {
           $errors[$errorcode] = sprintf($string['errors11'], $extension);
         }
