@@ -107,6 +107,7 @@ class Config extends RogoStaticSingleton {
    * Get value of xml node.
    * 
    * @param string $name name of xml node
+   * @param string $subname xml sub node name
    * @return value of xml node
    */
   function getxml($name, $subname = '') {
