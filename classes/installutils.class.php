@@ -1347,8 +1347,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     global $string;
 
     $errors = array();
-
-    //php
+    
+    $server = split("[/ ]",$_SERVER['SERVER_SOFTWARE']);
+    // Apache
+    if ($server[0] == 'Apache') {
+        $apache = $server[1];
+        $apache_min_ver = '2.2';
+        if ($apache < $apache_min_ver) {
+            $errors['201'] = sprintf($string['errors9'], $apache_min_ver, $apache);
+        }
+    }
+    // php
     $php_min_ver = '5.3.2';
     if (phpversion() < $php_min_ver) {
       $errors['202'] = $string['errors10'];
