@@ -106,18 +106,23 @@ class Config extends RogoStaticSingleton {
   /**
    * Get value of xml node.
    * 
-   * @param string $name name of xml node
-   * @param string $subname xml sub node name
+   * @param string $parent name of xml node
+   * @param string $child xml child node name
+   * @param string $grandchild xml grandchild node name
    * @return value of xml node
    */
-  function getxml($name, $subname = '') {
-    if (is_string($name)) {
-      if (isset($this->xmldata->$name)) {
-        if ($subname == '') {
-          return $this->xmldata->$name;
+  function getxml($parent, $child = '', $grandchild = '') {
+    if (is_string($parent)) {
+      if (isset($this->xmldata->$parent)) {
+        if ($child == '' and $grandchild == '') {
+          return $this->xmldata->$parent;
+        } elseif ($child != '' and $grandchild == '') {
+          if (isset($this->xmldata->$parent->$child)) {
+             return $this->xmldata->$parent->$child;
+          }
         } else {
-          if (isset($this->xmldata->$name->$subname)) {
-             return $this->xmldata->$name->$subname;
+          if (isset($this->xmldata->$parent->$child->$grandchild)) {
+             return $this->xmldata->$parent->$child->$grandchild;
           }
         }
       }

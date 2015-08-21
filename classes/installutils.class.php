@@ -296,7 +296,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::displayError(array('001' => mysqli_connect_error()));
     }
 
-    $mysql_min_ver = $configObject->getxml('mysql', 'min_version');
+    $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
     $mysql_version = mysqli_get_server_version($check);
     if($mysql_version < $mysql_min_ver) {
         self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver, $mysql_version)));
@@ -1354,11 +1354,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject = Config::get_instance();
     $errors = array();
     
-    $server = split("[/ ]",$_SERVER['SERVER_SOFTWARE']);
+    $server = preg_split("/[\/ ]/",$_SERVER['SERVER_SOFTWARE']);
     // Apache
     if ($server[0] == 'Apache') {
         $apache = $server[1];
-        $apache_min_ver = $configObject->getxml('apache', 'min_version');;
+        $apache_min_ver = $configObject->getxml('webserver', 'apache', 'min_version');
         if ($apache < $apache_min_ver) {
             $errors['201'] = sprintf($string['errors9'], $apache_min_ver, $apache);
         }
@@ -1370,9 +1370,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $errors['202'] = sprintf($string['errors10'], $php_min_ver, $phpversion);
     }
     $phpModules = get_loaded_extensions();
-    $extensions = split("[[:space:]]", $configObject->getxml('php', 'extensions'));
+    $extensions = $configObject->getxml('php', 'extensions');
     $errorcode = 202;
-    foreach ($extensions as $extension) {
+    foreach ($extensions->children() as $extension) {
         $errorcode += 1;
         if (!in_array($extension, $phpModules) ) {
           $errors[$errorcode] = sprintf($string['errors11'], $extension);
