@@ -71,8 +71,8 @@
 			return {
 				longname : 'Email tags plugin',
 				author : 'Rob Ingram',
-				authorurl : 'http://www.nottingham.ac.uk/nle/about/touchstone/',
-				infourl : 'http://www.nottingham.ac.uk/nle/about/touchstone/',
+				authorurl : 'https://rogo-eassessment-docs.atlassian.net',
+				infourl : 'https://rogo-eassessment-docs.atlassian.net',
 				version : "1.0"
 			};
 		}
