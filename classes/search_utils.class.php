@@ -94,13 +94,15 @@ Class search_utils {
    * @return array of name data
    */
   static function get_owners($userObj, $db) {
+    $select = "SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users";
+    $order = "ORDER BY surname, initials";
     $roles = "(roles LIKE 'Staff%' OR roles = 'Inactive Staff')";
     if ($userObj->has_role(array('SysAdmin','Admin'))) {
-      $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users WHERE $roles ORDER BY surname, initials");
+      $stmt = $db->prepare("$select WHERE $roles $order");
     } else {
       $team_sql = implode(',',array_keys($userObj->get_staff_modules()));
       if($team_sql != '') $team_sql = " AND idMod IN ($team_sql) ";
-      $stmt = $db->prepare("SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users, modules_staff WHERE users.id=modules_staff.memberID $team_sql AND $roles ORDER BY surname, initials");
+      $stmt = $db->prepare("$select, modules_staff WHERE users.id=modules_staff.memberID $team_sql AND $roles $order");
     }
     $stmt->execute();
     $stmt->bind_result($id, $title, $initials, $surname);
