@@ -38,7 +38,7 @@
 	</script>
 </head>
 <body>
-<a href='https://suivarro.nottingham.ac.uk/trac/rogo/wiki/codeStandards'>codeStandards</a>
+<a href='https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Coding+Standards'>codeStandards</a>
 <?php
 
 
