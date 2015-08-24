@@ -46,11 +46,7 @@ class phpEvalTests extends \Enhance\TestFixture
   # connect
   #
   public function connect() {
-      //$enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>6311,'timeout'=>5);
-      //$obj = new enhancedcalc_rserve($enhancedcalculation);
-      
-      //$enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>8080,'timeout'=>5);
-      //$enhancedcalculation = array('host' => 'this.will.not.work.com', 'port'=>6311,'timeout'=>5);
+
   }
   
   public function test_calc_dp() {

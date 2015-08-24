@@ -191,7 +191,7 @@ echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"2\" widht=\"100%\">\n"
 echo "<tr><td>Start Date</td><td>Paper ID</td><td>Title</td><td>Status</td><td>Old Fails</td><td>New Fails</td><td>Old Passes</td><td>New Passes</td><td>Old Distinctions</td><td>New Distinctions</td><td>Affected</td><td>Change</td></tr>";
 foreach ($papers as $paper) {
 
-  $url = "https://rogo.nottingham.ac.uk/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repcourse=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&studentsonly=1&direction=asc";
+  $url = "https://" . $configObject->get('cfg_test_server') . "/reports/class_totals.php?paperID=" . $paper['paperID'] . "&startdate=" . $paper['start_date'] . "&enddate=" . $paper['end_date'] . "&repmodule=&repdegree=%&repcourse=%&repyear=%&sortby=student_id&module=&folder=&percent=100&absent=0&studentsonly=1&direction=asc";
   $output = getData($url);
   $marks_set1 = parseRawMarks_old($output);
   
