@@ -170,7 +170,7 @@ HTML;
                 alert("$string[reqsurname]");
                 return false;
             }
-            if (document.newUser.new_email.value == "" || document.newUser.new_email.value == "@rogodemo.com") {
+            if (document.newUser.new_email.value == "" || document.newUser.new_email.value == "@example.com") {
                 alert("$string[reqemail]");
                 return false;
             }

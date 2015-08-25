@@ -214,7 +214,7 @@ class Anonymise {
   private function get_email($first_names, $surname) {
     $parts = explode(' ', $first_names);
     
-    $email = strtolower($parts[0]) . '.' . strtolower(str_replace(' ', '', $surname)) . '@rogoanonymised.com';
+    $email = strtolower($parts[0]) . '.' . strtolower(str_replace(' ', '', $surname)) . '@example.com';
     
     return $email;
   }
