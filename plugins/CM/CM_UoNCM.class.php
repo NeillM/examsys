@@ -28,7 +28,6 @@ require_once 'CMAPI.if.php';
 require_once dirname(dirname(__DIR__)) . '/webServices/RestRequest.class.php';
 
 class CM_UoNCM implements iCMAPI {
-    
   private $_sess_year;
   private $_module_id;
   private $_mapping_level = self::LEVEL_SESSION;

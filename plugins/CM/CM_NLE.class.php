@@ -38,9 +38,9 @@ class CM_NLE implements iCMAPI {
    */
   public function getObjectives($moduleID, $session) {
     $configObject = Config::get_instance();
-    $req = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$session");
-    $req->execute();
-    return $req->getResponseBody();
+    $objectives = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$session");
+    $objectives->execute();
+    return $objectives->getResponseBody();
   }
 
   /**
