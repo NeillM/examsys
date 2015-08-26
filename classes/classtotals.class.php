@@ -1278,7 +1278,7 @@ class ClassTotals {
                                                 'room'=>$room,
                                                 'student_id'=>$student_id,
                                                 'attempt'=>$attempt,
-                                                'visible'=>true,
+                                                'visible'=>false, // We must assume the user should not be displayed.
                                                 'display_started'=>$display_started,
                                                 'started'=>$started,
                                                 'student_grade'=>$student_grade,
