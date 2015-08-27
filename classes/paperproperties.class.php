@@ -1546,9 +1546,13 @@ class PaperProperties {
    */
   public function get_decrypted_password() {
     $paperID = $this->get_property_id();
-    $password = $this->decrypt_password($this->password);
-    // Strip of the paper id before returning the password.
-    return ltrim($password, $paperID);
+    if ($this->password != '') {
+        $password = $this->decrypt_password($this->password);
+        // Strip of the paper id before returning the password.
+        return ltrim($password, $paperID);
+    } else {
+        return $this->password;
+    }
   }
   
   /**
@@ -1561,8 +1565,12 @@ class PaperProperties {
     $paperID = $this->get_property_id();
     $old_password = $this->password;
 
-    $this->password = $this->encrypt_password($paperID . $password);
-
+    if ($password != '') {
+        $this->password = $this->encrypt_password($paperID . $password);
+    } else {
+        $this->password = '';
+    }
+    
     if ($old_password != $password) {
       $this->changes[] = array('old'=>$old_password, 'new'=>$password, 'part'=>'password');
     }
