@@ -285,17 +285,7 @@ Class PaperUtils {
   * @return void
   */
   public function update_modules($paper_modules, $paperID, $db, $userObject) {
-    // Non sysadmin users can only remove modules if they are on the team. Sysadmins have no restrictions.
-    if ($userObject->has_role('SysAdmin')) {
-      Paper_utils::remove_modules($paper_modules, $paperID, $db, '');
-    } else {
-      $staff_modules = $userObject->get_staff_modules();
-      if (count($staff_modules) > 0) {
-        $modulefilter = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; 
-        Paper_utils::remove_modules($paper_modules, $paperID, $db, $modulefilter);
-      }
-    }
-
+    Paper_utils::remove_modules($paper_modules, $paperID, $db, $userObject, "all");
     Paper_utils::add_modules($paper_modules, $paperID, $db);
   }
 
@@ -364,17 +354,37 @@ Class PaperUtils {
   * @param array $paper_modules - An array of modules keyed on idMod
   * @param int $paperID - The id of the paper or property_id
   * @param object $db - Database connection
-  * @param strting $modulefilter - filter on specfic modules
+  * @param objkect $userObject - user object
+  * @param strting $modulefilter - 'all' or a specfic module
   * @return void
   */
-  public function remove_modules($paper_modules, $paperID, $db, $modulefilter = "AND idMod = ?") {
-    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $modulefilter");
-    if ($modulefilter == "AND idMod = ?") {
+  public function remove_modules($paper_modules, $paperID, $db, $userObject, $modulefilter = "") {
+      
+    // Non sysadmin users can only remove modules if they are on the team. Sysadmins have no restrictions.
+    if (!$userObject->has_role('SysAdmin')) {
+      $staff_modules = $userObject->get_staff_modules();
+      if (count($staff_modules) > 0) {
+        $permission = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; 
+      }
+    } else {
+        $permission = "";
+    }
+    
+    // Are we removing all of the associated modules or a specifc one.
+    if ($modulefilter == "all") {
+        $modules = "";
+    } else {
+        $modules = "AND idMod = ?";
+    }
+    
+    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $modules $permission");
+    
+    if ($modulefilter == "all") {
+      $remove->bind_param('i', $paperID);
+    } else {
       foreach ($paper_modules as $idMod => $ModuleID) {
         $remove->bind_param('ii', $paperID, $idMod);
       }
-    } else {
-      $remove->bind_param('i', $paperID);
     }
     $remove->execute();
     $remove->close();
