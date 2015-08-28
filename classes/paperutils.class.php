@@ -354,7 +354,7 @@ Class PaperUtils {
   * @param array $paper_modules - An array of modules keyed on idMod
   * @param int $paperID - The id of the paper or property_id
   * @param object $db - Database connection
-  * @param objkect $userObject - user object
+  * @param object $userObject - user object
   * @param strting $modulefilter - 'all' or a specfic module
   * @return void
   */
