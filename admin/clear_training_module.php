@@ -50,7 +50,7 @@ $result->store_result();
 $result->bind_result($paperID);
 while ($result->fetch()) {
     
-    Paper_utils::remove_modules(array($trainIdMod => 'TRAIN'), $paperID, $mysqli);
+    Paper_utils::remove_modules(array($trainIdMod => 'TRAIN'), $paperID, $mysqli, $userObject);
 
     $q_result = $mysqli->prepare("SELECT question FROM papers WHERE paper=?");
     $q_result->bind_param('i', $paperID);
