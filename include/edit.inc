@@ -284,9 +284,21 @@ function disable_locked($question, &$dis_class, &$dis_readonly) {
   }
 }
 
-function wysywig_or_non_editable($dis_class, $id, $field, $value, $width=756, $height=220) {
+/**
+ * Create wysiwyg editor or non editable textarea.
+ * 
+ * @param string $dis_class - name of disabled class
+ * @param string $id - name for editor 
+ * @param string $field - id for editor
+ * @param string $value - current content
+ * @param string $type TinyMCE only - type of editor i.e. simple/advanced
+ * @param int $width width of textarea
+ * @param int $height  height of textarea
+ * @return html of editor
+ */
+function wysywig_or_non_editable($dis_class, $id, $field, $value, $type = '', $width=756, $height=220) {
   if ($dis_class == '') {
-    $html = wysiwyg_editor($id, $field, $value, $width, $height );
+    $html = wysiwyg_editor($id, $field, $value, $type, $width, $height );
   } else {
     $value_safe = htmlentities(htmlspecialchars_decode($value));
     $html = <<< HTML
