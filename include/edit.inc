@@ -291,7 +291,7 @@ function disable_locked($question, &$dis_class, &$dis_readonly) {
  * @param string $id - name for editor 
  * @param string $field - id for editor
  * @param string $value - current content
- * @param string $type TinyMCE only - type of editor i.e. simple/advanced
+ * @param string $type TinyMCE only - type of editor i.e. mceEditorSimple/mceEditor
  * @param int $width width of textarea
  * @param int $height  height of textarea
  * @return html of editor

@@ -81,7 +81,7 @@ function clearMSOtags($sHTML) {
  * @param string $name - name for editor 
  * @param string $replace - id for editor
  * @param string $content - current content
- * @param string $type - TinyMCE only - type of editor i.e. simple/advanced
+ * @param string $type - TinyMCE only - type of editor i.e. mceEditorSimple/mceEditor
  * @param int $width width of textarea
  * @param int $height  height of textarea
  * @return html of editor
