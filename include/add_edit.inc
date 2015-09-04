@@ -75,7 +75,18 @@ function clearMSOtags($sHTML) {
   return $sHTML;
 }
 
-function wysiwyg_editor($name, $replace, $content='', $width=756, $height=120) {
+/**
+ * Create wysiwyg editor.
+ * 
+ * @param string $name - name for editor 
+ * @param string $replace - id for editor
+ * @param string $content - current content
+ * @param string $type - TinyMCE only - type of editor i.e. mceEditorSimple/mceEditor
+ * @param int $width width of textarea
+ * @param int $height  height of textarea
+ * @return html of editor
+ */
+function wysiwyg_editor($name, $replace, $content='', $type = '', $width=756, $height=120) {
   global $cfg_editor_name;
 
   $html = '';
@@ -83,7 +94,10 @@ function wysiwyg_editor($name, $replace, $content='', $width=756, $height=120) {
   $content = htmlspecialchars($content);
 
   if ($cfg_editor_name == 'tinymce') {
-    $html .= "<textarea class=\"mceEditor\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px; margin: 0\" rows=\"5\" cols=\"20\">$content</textarea>\n";
+    if ($type == '') {
+      $type = 'mceEditor';
+    }
+    $html .= "<textarea class=\"$type\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px; margin: 0\" rows=\"5\" cols=\"20\">$content</textarea>\n";
   } else {
     //If no editor is specified, output plain textarea.
     $height = $height - 6;
