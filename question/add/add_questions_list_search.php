@@ -179,7 +179,15 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
     if ($_GET['owner'] == '') {
       $teams = array_keys($userObject->get_staff_modules());
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions_modules, questions, question_statuses) LEFT JOIN options ON questions.q_id=options.o_id WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id AND (idMod IN (" . implode(',', $teams) . ") OR questions.ownerID=?)  AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $sortby $ordering, questions.q_id");
+      $teamlist = "'" . implode(',', $teams) . "'";
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, "
+      . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
+      . "FROM (questions_modules, questions, question_statuses) "
+      . "LEFT JOIN options ON questions.q_id=options.o_id "
+      . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
+      . "AND (idMod IN ($teamlist) OR questions.ownerID=?) AND (leadin_plain LIKE ? OR theme LIKE ? "
+      . "OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL "
+      . "ORDER BY $sortby $ordering, questions.q_id");
       $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
     } else {
       $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions, question_statuses) LEFT JOIN options ON questions.q_id=options.o_id WHERE questions.status = question_statuses.id  AND questions.ownerID = ? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $sortby $ordering, q_id");
