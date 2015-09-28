@@ -136,7 +136,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0) {
         }
         $partID = 0;
 
-        if ($rating != '') {
+        if ($rating != -1) {
           $rating_array = explode(',', $rating);
           
           foreach ($rating_array as $individual_rating) {
@@ -971,9 +971,9 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
   if ($part_no != '') $qID .= '_' . $part_no;
   switch ($method) {
     case 'modified_angoff':
-      $html = "<select name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"\"></option>\n";
+      $html = "<select name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"-1\"></option>\n";
       for ($i=0; $i<=100; $i+=5) {
-        $sel = ($valid and $value !== '' and $value == $i) ? ' selected="selected"' : '';
+        $sel = ($valid and $value == $i) ? ' selected="selected"' : '';
         +$html .= "<option value=\"$i\"$sel>$i%</option>\n";
       }
       $html .=  "</select>\n";
