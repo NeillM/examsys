@@ -966,7 +966,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
   } else {
     $dropdown_class = 'dropdown';
   }
-  
+
   $qID = $q_no;
   if ($part_no != '') $qID .= '_' . $part_no;
   switch ($method) {
