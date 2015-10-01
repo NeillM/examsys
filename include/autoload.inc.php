@@ -30,15 +30,9 @@ class autoloader {
    * Sets up autoloading.
    */
   public static function init() {
-    if (function_exists('spl_autoload_register')) {
       spl_autoload_register(array('autoloader', 'load_class'));
-    } else {
-      // This is to allow autoloading in versions of PHP that do not support spl_autoload_register().
-      function __autoload($class)
-      {
-        autoloader::load_class($class);
-      }
-    }
+      // vendor
+      require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
   }
 
   /**
@@ -47,9 +41,26 @@ class autoloader {
    * @param string $class
    */
   protected static function load_class($class) {
+
+    // non namespaced.
     $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . strtolower($class) . '.class.php';
     if (file_exists($filename)) {
       include_once $filename;
+    } else {
+        // subdir classes (namespaced).
+        $folders = explode('\\', strtolower($class));
+        $classname = array_pop($folders);
+        $path = implode(DIRECTORY_SEPARATOR, $folders);
+        $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . $classname . '.class.php';
+        if (file_exists($filename)) {
+            include_once $filename;
+        } else {
+            // namespaced.
+            $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . $classname . '.class.php';
+            if (file_exists($filename)) {
+              include_once $filename;
+            }
+        }
     }
   }
 }
