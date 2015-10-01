@@ -30,7 +30,6 @@ require_once '../include/errors.inc';
 require_once '../include/feedback.inc';
 require_once '../include/sort.inc';
 require_once '../include/calculate_marks.inc';
-require_once '../include/toprightmenu.inc';
 
 check_var('id', 'GET', true, false, false);
 
@@ -169,7 +168,7 @@ $textsize -= 10;
     .ico {width:16px; height:16px}
     .sum_field {width:8em}
   </style>
-	
+
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <?php
@@ -182,6 +181,7 @@ $textsize -= 10;
 </head>
 <body>
 <?php
+        require_once '../include/toprightmenu.inc';
 	echo draw_toprightmenu();
 ?>
     <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFE; padding-left:6px; padding-right:6px">
