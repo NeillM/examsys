@@ -171,25 +171,25 @@ $textsize -= 10;
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-<?php
-	if ($userObject->has_role('Staff')) {
-		echo '  <script type="text/javascript" src="../js/staff_help.js"></script>';
-	} else {
-		echo '  <script type="text/javascript" src="../js/student_help.js"></script>';
-	}
-?>
+  <?php
+  if ($userObject->has_role('Staff')) {
+      echo '  <script type="text/javascript" src="../js/staff_help.js"></script>';
+  } else {
+      echo '  <script type="text/javascript" src="../js/student_help.js"></script>';
+  }
+  ?>
 </head>
 <body>
-<?php
-        require_once '../include/toprightmenu.inc';
-	echo draw_toprightmenu();
-?>
+    <?php
+    require_once '../include/toprightmenu.inc';
+    echo draw_toprightmenu();
+    ?>
     <table style="position:relative; border: 2px solid #FCE699; z-index:10; float:right; top:26px; right:10px; font-size:90%; background-color:#FFE; padding-left:6px; padding-right:6px">
-    <tr><td><img src="../artwork/ok_comment.png" class="ico" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon'] ?></td></tr>
-    <tr><td><img src="../artwork/minor_comment.png" class="ico" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon'] ?></td></tr>
-    <tr><td><img src="../artwork/major_comment.png" class="ico" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon'] ?></td></tr>
-    <tr><td colspan="2"><?php echo $string['relativekey']; ?></td></tr>
-    <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
+        <tr><td><img src="../artwork/ok_comment.png" class="ico" alt="Completely/Mostly acquired" /></td><td><?php echo $string['greenicon'] ?></td></tr>
+        <tr><td><img src="../artwork/minor_comment.png" class="ico" height="16" alt="Partically acquired" /></td><td><?php echo $string['ambericon'] ?></td></tr>
+        <tr><td><img src="../artwork/major_comment.png" class="ico" height="16" alt="Mostly not acquired" /></td><td><?php echo $string['redicon'] ?></td></tr>
+        <tr><td colspan="2"><?php echo $string['relativekey']; ?></td></tr>
+        <tr><td colspan="2"><?php echo $string['question']; ?></td></tr>
     </table>
   <?php
   echo "<div style=\"position:absolute; top:0; left:0; width:100%\">\n";
