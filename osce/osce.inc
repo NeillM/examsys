@@ -83,7 +83,11 @@ function save_osce_form($propertyObj, $userID, $postdata, $db) {
 
 		// Update Log4_overall with the overall score.
     if ($marking == '5') {
-      $user_percent = ($numeric_score / $total_mark) * 100;
+      if ($total_mark == 0) {
+        $user_percent = 0;
+      } else {
+        $user_percent = ($numeric_score / $total_mark) * 100;
+      }
       if ($user_percent >= $pass_mark) {
         $overall_rating = 'pass';
       } else {
