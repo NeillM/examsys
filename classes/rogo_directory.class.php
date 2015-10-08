@@ -1,0 +1,182 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Utility class to get information about Rogo directories.
+ *
+ * @author Neill Magill
+ * @copyright Copyright (c) 2015 The University of Nottingham
+ * @package core
+ */
+abstract class rogo_directory {
+  /** @var string Path relative to the Rogo root directory used to download files. */
+  protected $downloadfile = 'getfile.php';
+
+  /** 
+   * An array of rogo_directory objects, the key should match the type
+   * that would cause it to be loaded.
+   *
+   * This array should only be accessed via the get_directory() method.
+   *
+   * @var rogo_directory[]
+   */
+  protected static $loaded = array();
+
+  /**
+   * Is the user required to be authenticated to access files in the directory.
+   *
+   * @return boolean
+   */
+  public function authentication_required() {
+    return true;
+  }
+
+  /**
+   * Get the amount of time in seconds that files in the directory should be cached for.
+   *
+   * @return int
+   */
+  abstract public function cachetime();
+
+  /**
+   * Get the full OS dependant path to the specified file.
+   *
+   * @param string $filename
+   * @return string
+   */
+  public function fullpath($filename) {
+    return $this->location() . $filename;
+  }
+
+  /**
+   * Get an instance of a specific type of rogo_directory class.
+   * The instanciated class is cached in the loaded array.
+   *
+   * @param string $type A type of Rogo directory that should be loaded.
+   * @return rogo_directory
+   * @throws directory_not_found
+   */
+  public static function get_directory($type) {
+    // Check if we have already loaded the directory type.
+    if (empty(self::$loaded[$type])) {
+      // Try to find the directory class.
+      if (!class_exists($type)) {
+        var_dump($type);
+        throw new directory_not_found($type);
+      }
+      // Check that it is a valid directory class.
+      $directory = new $type();
+      if (!($directory instanceof rogo_directory)) {
+        throw new directory_not_found($type);
+      }
+      self::$loaded[$type] = $directory;
+    }
+    return self::$loaded[$type];
+  }
+
+  /**
+   * Get the file system location of the directory, including a trailing slash.
+   *
+   * @return string
+   */
+  abstract public function location();
+
+  /**
+   * Sends the specified file to the users browser then terminates the script.
+   *
+   * @param string $filename The name of the file in the directory.
+   * @param boolean $forcedownload When false the user will be prompted to save the file.
+   * @return void
+   * @throws file_not_found
+   */
+  public function send_file($filename, $forcedownload = false) {
+    $this->verify_file($filename);
+    $fullpath = $this->fullpath($filename);
+    // Start sending headers.
+    if (!empty($forcedownload)) {
+      header('Content-Disposition: attachment; filename="'.$filename.'"');
+    } else {
+      header('Content-Disposition: inline; filename="'.$filename.'"');
+    }
+
+    if ($this->cachetime() > 0) {
+      if ($this->authentication_required()) {
+        // Only cache on the browser.
+        $cachelevel = ' private,';
+      } else {
+        // Proxies may cache the file.
+        $cachelevel = ' public,';
+      }
+      header('Cache-Control:' . $cachelevel . ' max-age=' . $this->cachetime() . ', no-transform');
+      header('Expires: '. gmdate('D, d M Y H:i:s', time() + $this->cachetime()) .' GMT');
+      header('Pragma: ');
+    } else {
+      // No caching anywhere!
+      header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0, no-transform');
+      header('Expires: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
+      header('Pragma: no-cache');
+    }
+    $fileinfo = new finfo(FILEINFO_MIME);
+    header('Content-Type: ' . $fileinfo->file($fullpath));
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($fullpath)) . ' GMT');
+    header('Content-Length: ' . filesize($fullpath));
+    // Send the file.
+    readfile($fullpath);
+    // Kill the script.
+    exit;
+  }
+
+  /**
+   * Get the url for a file in the directory.
+   *
+   * If the filename specified does not exist an exception should be thrown.
+   *
+   * @param string $filename The name of a file inside the directory.
+   * @param boolean $forcedownload Specify if an exception should be thrown if the file does not exist.
+   * @param boolean $verifyfile Specify if an exception should be thrown if the file does not exist.
+   * @return string
+   * @thows file_not_found
+   */
+  public function url($filename, $forcedownload = false, $verifyfile = false) {
+    if ($verifyfile) {
+      self::verify_file($filename);
+    }
+    $config = Config::get_instance();
+    $webroot = $config->get('cfg_web_root');
+    // Build the parameters for the url.
+    $get = '?type=' . get_called_class();
+    $get .= '&filename=' . $filename;
+    if ($forcedownload) {
+      $get .= '&forcedownload=1';
+    }
+    // Generate and return the url.
+    return $webroot . $this->downloadfile . $get;
+  }
+
+  /**
+   * Check if the specified file exists.
+   *
+   * @param string $filename
+   * @throws file_not_found
+   */
+  public function verify_file($filename) {
+    $fullpath = $this->fullpath($filename);
+    if (empty($filename) || !file_exists($fullpath) || !is_readable($fullpath)) {
+      // The file cannot be retrived for the user.
+      throw new file_not_found($fullpath);
+    }
+  }
+}
