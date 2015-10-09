@@ -174,8 +174,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         if (count($old_course) > 0 and count($new_course) > 0) {
             copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
             //Copy the objectives for each session where the objective still exists
-            $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ? as paper_id, question_id, ?, ?, vle_api, map_level"
-              . " FROM relationships WHERE question_id IN ($qids) AND paper_id = ? AND obj_id = ?)");
+            $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, r.idMod, ? as paper_id, r.question_id, ?, ?, r.vle_api, r.map_level"
+              . " FROM relationships r, modules m WHERE question_id IN ($qids) AND r.idMod = m.id AND paper_id = ? AND obj_id = ?)");
             foreach ($mappings_copy_objID as $oldmapid => $newmapid) {
                 $result->bind_param('iisii', $new_paper_id, $newmapid, $new_calendar_year, $paperid, $oldmapid);
                 $result->execute();
@@ -446,8 +446,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
 
         // Copy the objectives for each session where the objective still exists
-        $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM"
-          . " relationships WHERE question_id = ? AND paper_id = ? AND obj_id = ?)");
+        $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, r.idMod, ?, ?, ?, ?, r.vle_api, r.map_level FROM"
+          . " relationships r, modules m WHERE r.idMod = m.id and r.vle_api = m.vle_api AND r.question_id = ? AND r.paper_id = ? AND r.obj_id = ?)");
         $nw_paperid = 0;
         $nw_qid = 0;
         $nw_mapid = 0;
