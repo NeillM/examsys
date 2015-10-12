@@ -155,7 +155,19 @@ abstract class rogo_directory {
       self::verify_file($filename);
     }
     $config = Config::get_instance();
-    $webroot = $config->get('cfg_web_root');
+    $webroot = $config->get('cfg_web_host');
+    // Ensure there is a trailing slash.
+    if (substr($webroot, -1) !== '/') {
+      $webroot .= '/';
+    }
+    // Check if a protocol has been added to the webroot directory.
+    if (!substr($webroot, 4) != 'http') {
+      if ($config->get('cfg_secure_connection')) {
+        $webroot = "https://$webroot";
+      } else {
+        $webroot = "http://$webroot";
+      }
+    }
     // Build the parameters for the url.
     $get = '?type=' . get_called_class();
     $get .= '&filename=' . $filename;
