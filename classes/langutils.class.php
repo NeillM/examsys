@@ -57,7 +57,7 @@ Class LangUtils {
   }
 
   static function loadlangfile ($file, $str = null) {
-    // The language file may alsoi contain a jstring variable. We should load this as well.
+    // The language file may also contain a jstring variable. We should load this as well.
     global $jstring;
     if (is_null($str)) {
       global $string;
