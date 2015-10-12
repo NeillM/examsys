@@ -355,15 +355,18 @@ if ($textsize > 120) {
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
     $student_photo = UserUtils::student_photo_exist($userObject->get_username());
+    $photodirectory = rogo_directory::get_directory('user_photo');
     if ($student_photo !== false) {
-      $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $student_photo);
+      $photo_size = getimagesize($photodirectory->fullpath($student_photo));
       echo '<td rowspan="';
       if ($sound_demo == '1') {
         echo '8';
       } else {
         echo '7';
       }
-      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] . '</div><img src="../users/photos/' . $student_photo . '" ' . $photo_size[3] . ' alt="Photo" style="border: 10px solid white" /></td>';
+      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] 
+          . '</div><img src="' . $photodirectory->url($student_photo) . '" ' . $photo_size[3]
+          . ' alt="Photo" style="border: 10px solid white" /></td>';
     }
   }
   echo '</tr>';

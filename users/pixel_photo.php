@@ -25,11 +25,38 @@
 * @package
 */
 
+require_once dirname(__DIR__) . '/include/autoload.inc.php';
+autoloader::init();
+
 header('Content-Type: image/jpeg');
 
-$filename = '../users/photos/' . $_GET['username'] . '.jpg';
+$photodirectory = rogo_directory::get_directory('user_photo');
+$photoname = UserUtils::student_photo_exist($_GET['username']);
 
-$im = imagecreatefromjpeg($filename);
+if ($photoname) {
+  $fullpath = $photodirectory->fullpath($photoname);
+  $fileinfo = new finfo(FILEINFO_MIME_TYPE);
+  // Should be able to handle several filetypes.
+  switch ($fileinfo->file($fullpath)) {
+    case 'image/jpeg':
+    case 'image/pjpeg':
+      $im = imagecreatefromjpeg($fullpath);
+      break;
+    case 'image/png':
+      $im = imagecreatefrompng($fullpath);
+      break;
+    case 'image/gif':
+      $im = imagecreatefromgif($fullpath);
+      break;
+    default:
+      // Just create a 1 pixel image if everything else fails.
+      $im = imagecreate(1, 1);
+      break;
+  }
+} else {
+  $im = imagecreate(1, 1);
+}
+
 imagefilter($im, IMG_FILTER_PIXELATE, 7, true);
 
 imagejpeg($im);

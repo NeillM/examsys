@@ -693,19 +693,19 @@ Class UserUtils {
    */
   static function student_photo_exist($username) {
     $found = false;
-    $configObj = Config::get_instance();
-    
-    $filename = $configObj->get('cfg_web_root') . "users/photos/" . $username;
-    if (file_exists($filename . '.jpg')) {
+    $photodirectory = rogo_directory::get_directory('user_photo');
+    $location = $photodirectory->location();
+
+    if (file_exists($location . "$username.jpg")) {
       $found = $username . '.jpg';
-    } elseif (file_exists($filename . '.jpeg')) {
+    } elseif (file_exists($location . "$username.jpeg")) {
       $found = $username . '.jpeg';
-    } elseif (file_exists($filename . '.gif')) {
+    } elseif (file_exists($location . "$username.gif")) {
       $found = $username . '.gif';
-    } elseif (file_exists($filename . '.png')) {
+    } elseif (file_exists($location . "$username.png")) {
       $found = $username . '.png';
     }
-    
+
     return $found;
   }
   
