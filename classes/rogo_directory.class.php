@@ -25,6 +25,9 @@ abstract class rogo_directory {
   /** @var string Path relative to the Rogo root directory used to download files. */
   protected $downloadfile = 'getfile.php';
 
+  /** @var int The file permissions to be used by the directory. */
+  protected $filepermissions = 0744;
+
   /** 
    * An array of rogo_directory objects, the key should match the type
    * that would cause it to be loaded.
@@ -50,6 +53,16 @@ abstract class rogo_directory {
    * @return int
    */
   abstract public function cachetime();
+
+  /**
+   * Create the directory if it does not exist.
+   */
+  public function create() {
+    $directory = $this->location();
+    if (!file_exists($directory)) {
+      mkdir($directory, $this->filepermissions, true);
+    }
+  }
 
   /**
    * Get the full OS dependant path to the specified file.
@@ -147,26 +160,19 @@ abstract class rogo_directory {
    * @param string $filename The name of a file inside the directory.
    * @param boolean $forcedownload Specify if an exception should be thrown if the file does not exist.
    * @param boolean $verifyfile Specify if an exception should be thrown if the file does not exist.
+   * @param boolean $escaped Should the url to the file be escaped.
    * @return string
    * @thows file_not_found
    */
-  public function url($filename, $forcedownload = false, $verifyfile = false) {
+  public function url($filename, $forcedownload = false, $verifyfile = false, $escaped = false) {
     if ($verifyfile) {
       self::verify_file($filename);
     }
     $config = Config::get_instance();
-    $webroot = $config->get('cfg_web_host');
+    $webroot = $config->get('cfg_root_path');
     // Ensure there is a trailing slash.
     if (substr($webroot, -1) !== '/') {
       $webroot .= '/';
-    }
-    // Check if a protocol has been added to the webroot directory.
-    if (!substr($webroot, 4) != 'http') {
-      if ($config->get('cfg_secure_connection')) {
-        $webroot = "https://$webroot";
-      } else {
-        $webroot = "http://$webroot";
-      }
     }
     // Build the parameters for the url.
     $get = '?type=' . get_called_class();
@@ -175,7 +181,11 @@ abstract class rogo_directory {
       $get .= '&forcedownload=1';
     }
     // Generate and return the url.
-    return $webroot . $this->downloadfile . $get;
+    $url = $webroot . $this->downloadfile . $get;
+    if ($escaped) {
+      $url = htmlentities($url, ENT_HTML5);
+    }
+    return $url;
   }
 
   /**
