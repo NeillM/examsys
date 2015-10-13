@@ -504,6 +504,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
   global $ex_no, $d_no, $d_total, $user_total, $language, $string;
 
 	$configObject = Config::get_instance();
+  $mediadirectory = rogo_directory::get_directory('media');
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
@@ -908,7 +909,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 		echo "<script>\n";
-		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
+		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $mediadirectory->url($q_media, false, false, true) . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
@@ -968,7 +969,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
               echo ">";
               if (strpos(strtolower($individual_option),'.jpg') !== false or strpos(strtolower($individual_option),'.jpeg') !== false or strpos(strtolower($individual_option),'.gif') !== false or strpos(strtolower($individual_option),'.png') !== false) {
                 $image_parts = explode('~', $individual_option);
-                echo "<img src=\"../media/" . $image_parts[0] . "\" width=\"" . $image_parts[1] . "\" height=\"" . $image_parts[2] . "\" alt=\"\" border=\"1\" />";
+                echo "<img src=\"" . $mediadirectory->url($image_parts[0]) . "\" width=\"" . $image_parts[1] . "\" height=\"" . $image_parts[2] . "\" alt=\"\" border=\"1\" />";
               } else {
                 echo "<strong>$individual_option</strong>";
               }
@@ -1007,14 +1008,14 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         <script>
           write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $q_no; ?>" width="<?php echo $q_media_width; ?>" height="<?php echo $q_media_height; ?>" align="middle">');
           write_string('<param name="allowScriptAccess" value="sameDomain" />');
-          write_string('<param name="movie" value="../media/<?php echo $q_media; ?>" />');
+          write_string('<param name="movie" value="<?php echo $mediadirectory->url($q_media); ?>" />');
           write_string('<param name="quality" value="high" />');
           write_string('<param name="bgcolor" value="#ffffff" />');
           <?php
             if ($scenario != '') {
               echo 'write_string(\'<param name="FlashVars" value="' . $scenario . '">\')';
             }
-            echo 'write_string(\'<embed src="../media/' . $q_media . '"';
+            echo 'write_string(\'<embed src="' . $mediadirectory->url($q_media) . '"';
             if ($scenario != '') {
               echo ' FlashVars="' . $scenario . '"';
             }
@@ -1058,7 +1059,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script>\n";
-					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '../media/" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
+					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $mediadirectory->url($q_media, false, false, true) . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {

@@ -22,6 +22,7 @@
 * @package
 */
 
+$mediadirectory = rogo_directory::get_directory('media');
 $media = $question->get_media();
 $plugin_height = $media['height'] + 24;
 $plugin_width = ($media['width'] < 235) ? 235 : $media['width'] + 2;
@@ -55,7 +56,7 @@ $error_range = range(0, 50);
 <script>
 //<![CDATA[
 $(function () {
-  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
+  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'" . $mediadirectory->url($media['filename'], false, false, true) . "', '" . $correct . "'" ?>);
 });
 //]]>
 </script>

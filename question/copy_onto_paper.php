@@ -42,6 +42,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
 } else {
   $map_outcomes = false;
 }
+$mediadirectory = rogo_directory::get_directory('media');
 
 if (!isset($_POST['submit'])) {
 ?>
@@ -226,8 +227,8 @@ if (!isset($_POST['submit'])) {
         foreach ($media_array as $individual_media) {
           if ($individual_media != '' and $individual_media != 'NULL') {
             $new_media_name = unique_filename($individual_media);
-            if (file_exists("../media/$individual_media")){
-              if (!copy("../media/$individual_media","../media/$new_media_name")) {
+            if (file_exists($mediadirectory->fullpath($individual_media))){
+              if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                 display_error('File Copy Error 1', sprintf($string['error1'], $new_media_name));
               }
             } else {
@@ -276,8 +277,8 @@ if (!isset($_POST['submit'])) {
           foreach ($media_array as $individual_media) {
             if ($individual_media != '' and $individual_media != 'NULL') {
               $new_media_name = unique_filename($individual_media);
-              if (file_exists("../media/$individual_media")){
-                if (!copy("../media/$individual_media","../media/$new_media_name")) {
+              if (file_exists($mediadirectory->fullpath($individual_media))){
+                if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                   display_error('File Copy Error 2', sprintf($string['error2'], $new_media_name, $individual_media));
                 }
               } else {

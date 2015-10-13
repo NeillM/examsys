@@ -420,6 +420,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
   
   $configObject->get('cfg_root_path');
   $qn_excluded = ($exclude == '1');
+  $mediadirectory = rogo_directory::get_directory('media');
   
   switch ($firstoption['q_type']) {
     case 'area':
@@ -470,7 +471,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
 				echo "write_string('</object>');\n";
 				echo "write_string('<!--<![endif]-->');\n";
 				echo "write_string('</object>');\n";
-				echo "sendTextToAS3('$language', 'q$question_no', 3, '../media/" . $display_option['q_media'] . "', '" . $display_option['correct'] . "', '');\n";
+				echo "sendTextToAS3('$language', 'q$question_no', 3, '" . $mediadirectory->url($display_option['q_media'], false, false, true) . "', '" . $display_option['correct'] . "', '');\n";
 				echo "</script>\n<br />";
 			}       
       echo "<br /><br />\n";
@@ -621,21 +622,21 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
       } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and image
         if ($display_option['correct'] == 'y') {
           if ($display_option['score_method'] == 'Mark per Question') {
-            echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\"$excl_string>" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+            echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\"$excl_string>" . $display_option['option_text'] . "</span><br /><img src=\"" . $mediadirectory->url($display_option['o_media']) . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
           } else {
-            echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\"$excl_string>" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/>";
+            echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\"$excl_string>" . $display_option['option_text'] . "</span><br /><img src=\"" . $mediadirectory->url($display_option['o_media']) . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/>";
             echo "</td><td>&nbsp;</td><td>\n";
             echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
             echo "</td></tr>\n";
           }
         } else {
-          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\"$excl_string>" . $display_option['option_text'] . "</span><br /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" id=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><span class=\"active\" id=\"$question_no" . "_" . "$part_id\"$excl_string>" . $display_option['option_text'] . "</span><br /><img src=\"" . $mediadirectory->url($display_option['o_media']) . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
         }
       } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and image
         if ($display_option['correct'] == 'y' and $display_option['score_method'] != 'Mark per Question') {
-          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
+          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /><img src=\"" . $mediadirectory->url($display_option['o_media']) . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/></td><td>&nbsp;</td><td>&nbsp;</td></tr>\n";
         } else {
-          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><img src=\"./media/" . $display_option['o_media'] . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/>";
+          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /><img src=\"" . $mediadirectory->url($display_option['o_media']) . "\" width=\"" . $display_option['o_media_width'] . "\" height=\"" . $display_option['o_media_height'] . "\" border=\"0\"/>";
           echo "</td><td>&nbsp;</td><td>\n";
           echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
           echo "</td></tr>\n";
@@ -812,7 +813,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
 				  echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 301) . "' height='" . ($display_option['q_media_height'] + 30) . "'></canvas>\n";
 				  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 				  echo "<script>\n";
-				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $display_option['q_media'] . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0','hotspot','script');\n";
+				  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $mediadirectory->url($display_option['q_media'], false, false, true) . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0','hotspot','script');\n";
 				  echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -852,7 +853,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
 				echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 				echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 				echo "<script>\n";
-				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '../media/" . $display_option['q_media'] . "', '" . trim($display_option['correct']) . "', '',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','script');\n";
+				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $mediadirectory->url($display_option['q_media'], false, false, true) . "', '" . trim($display_option['correct']) . "', '',',0000000000000000000000000000000000000000,11110','#FFC0C0','labelling','script');\n";
 				echo "</script>\n";
 				//<!-- ==================================================== -->
 			} else {
@@ -902,14 +903,14 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
   <div align="center">
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo $display_option['q_media_width']; ?>" height="<?php echo $display_option['q_media_height']; ?>" align="middle">
     <param name="allowScriptAccess" value="sameDomain" />
-    <param name="movie" value="../media/<?php echo $display_option['q_media']; ?>" />
+    <param name="movie" value="<?php echo $mediadirectory->url($display_option['q_media']); ?>" />
     <param name="quality" value="high" />
     <param name="bgcolor" value="<?php echo $bgcolor; ?>" />
 <?php
     if ($display_option['scenario'] != '') {
       echo '<param name="FlashVars" value="' . $display_option['scenario'] . '">';
     }
-    echo '<embed src="../media/' . $display_option['q_media'] . '"';
+    echo '<embed src="' . $mediadirectory->url($display_option['q_media']) . '"';
     if ($display_option['scenario'] != '') {
       echo ' FlashVars="' . $display_option['scenario'] . '"';
     }

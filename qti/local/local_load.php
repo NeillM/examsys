@@ -755,10 +755,10 @@ class IE_Local_Load extends IE_Main {
   }
 
   function GetMedia($filename) {
-    $configObject = Config::get_instance();
-    $cfg_web_root = $configObject->get('cfg_web_root');
-    if (file_exists($cfg_web_root.'media/'.$filename)) {
-      copy($cfg_web_root . 'media/'. $filename, $this->params->base_dir . $this->params->dir . '/' . $filename);
+    $mediadirectory = rogo_directory::get_directory('media');
+    $fullpath = $mediadirectory->fullpath($filename);
+    if (file_exists($fullpath)) {
+      copy($fullpath, $this->params->base_dir . $this->params->dir . '/' . $filename);
     }
   }
 

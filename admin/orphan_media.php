@@ -30,6 +30,9 @@ set_time_limit (0);
 $exempt = array('formulary.gif', 'formulary.html');
 
 function getImages($html) {
+  $mediadirectory = rogo_directory::get_directory('media');
+  $regexp = '#' . $mediadirectory->url('(.*)') . '#';
+
   $image_array = array();
   
   $parts = explode('<img',$html);
@@ -40,9 +43,13 @@ function getImages($html) {
       $second_split = explode('src="',$image_line);
       $third_split = explode('"',$second_split[1]);
       $image_src = $third_split[0];
+      $matches = array();
+      preg_match($regexp, $image_src, $matches);
       $image_src = str_replace('./media/','',$image_src);
       $image_src = str_replace('/media/','',$image_src);
-      
+      if (!empty($matches[1])) {
+        $image_src = $matches[1];
+      }
       $image_array[] = $image_src;
     }
   }
@@ -88,12 +95,13 @@ function getImages($html) {
   <div class="page_title"><?php echo $string['removeorphanmedia'] ?></div>
 </div>
 <?php
+$mediadirectory = rogo_directory::get_directory('media');
 
   $file_array = array();
   $missing_array = array();
 
   //- Get all the files from the 'media' directory first. ------------------------------
-  $default_dir = '../media/';
+  $default_dir = $mediadirectory->location();
   if (!($dp = opendir($default_dir))) die ("Cannot open $default_dir.");
   while ($file = readdir($dp)) {
     // Ignore hidden files
@@ -206,15 +214,16 @@ function getImages($html) {
   // Run through the array and remove any files not used.
   echo "<h1>" . $string['deletingfiles'] . "</h1>\n<ul>\n"; 
   foreach ($file_array as $filename => $file_used) {
+    $fullpath = $mediadirectory->fullpath($filename);
     if ($file_used == 0) {
-      $file_date = date("Ymd", filectime("../media/$filename"));
+      $file_date = date("Ymd", filectime($fullpath));
 	    $current_date = date("Ymd",$tmp_date);  
       if (in_array($filename,$exempt)) {
         echo "<li>" . $string['notremoving'] .  " $filename <strong>" . $string['inexamptionslist'] . "</strong>.</li>\n";	    
       } elseif ($file_date < $current_date) {                // Fix for image hotspot and labelling.
-        $saved_space += filesize("../media/$filename");
-		    if (!unlink("../media/$filename")) {
-          echo "<li>" . $string['deletefailed'] . " ../media/$filename</li>\n";
+        $saved_space += filesize($fullpath);
+		    if (!unlink($fullpath)) {
+          echo "<li>" . $string['deletefailed'] . " $fullpath</li>\n";
         } else {        
           echo "<li>" . $string['removed'] .  " $filename</li>\n";
           $deleted_files++;

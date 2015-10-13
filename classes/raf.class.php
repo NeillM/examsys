@@ -218,9 +218,10 @@ class RAF {
 		$this->json_filename = $this->configObj->get('cfg_tmpdir') . $this->userID . '_raf.json';
 
 		$zip->addFile($this->json_filename, 'raf.json');
+    $mediadirectory = rogo_directory::get_directory('media');
 		foreach ($this->media as $media_filename) {
-			if (file_exists($this->configObj->get('cfg_web_root') . 'media/' . $media_filename)) {
-				$zip->addFile($this->configObj->get('cfg_web_root') . 'media/' . $media_filename, $media_filename);
+			if (file_exists($mediadirectory->fullname($media_filename))) {
+				$zip->addFile($mediadirectory->fullname($media_filename), $media_filename);
 			}
 		}
 		$zip->close();
@@ -282,12 +283,13 @@ class RAF {
 	 */
 	private function copy_images($dir, $tmp_path) {
 		$configObj = Config::get_instance();
+    $mediadirectory = rogo_directory::get_directory('media');
 
 		if ($handle = opendir($dir)) {
 			while (false !== ($entry = readdir($handle))) {
 				if ($entry != '.' and $entry != '..' and $entry != 'raf.json') {
 					$new_media = unique_filename($entry);
-					rename($tmp_path . $this->userID . '/' . $entry, $this->configObj->get('cfg_web_root') . 'media/' . $new_media);
+					rename($tmp_path . $this->userID . '/' . $entry, $mediadirectory->fullname($new_media));
 					$this->data = str_replace($entry, $new_media, $this->data);
 				}
 			}
