@@ -55,6 +55,18 @@ abstract class rogo_directory {
   abstract public function cachetime();
 
   /**
+   * Check if the directory has the correct permissions.
+   *
+   * @return boolean true on correct, false otherwise.
+   */
+  public function check_permissions() {
+    if (!is_writable($this->location())) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
    * Create the directory if it does not exist.
    */
   public function create() {
