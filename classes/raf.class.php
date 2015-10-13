@@ -357,6 +357,23 @@ class RAF {
 		if ($q['q_option_order'] == '') $q['q_option_order'] = 'display order';
 		if ($q['score_method'] == '') 	$q['score_method'] = 'Mark per Option';
 
+    // The file may have been written in a version of Rogo that did not use rogo_directory classes.
+    // So we must check and filter the leadin and scenario to clean them up.
+    //
+    // Regular expression to match the old media directory location.
+    // it will match directories ./media/ or /media/ and grab the filename.
+    $regexp = '#src=".?\/media\/(.*?)"#';
+    // The substitution will replace the old src tag with a new one that.
+    $webroot = $configObject->get('cfg_root_path');
+    // Ensure there is a trailing slash.
+    if (substr($webroot, -1) !== '/') {
+      $webroot .= '/';
+    }
+    $substitution = 'src="' . $webroot . 'getfile.php?type=media&amp;filename=$1"';
+    // Fix the leadin and scenario.
+    $q['leadin'] = preg_replace($regexp, $substitution, $q['leadin']);
+    $q['scenario'] = preg_replace($regexp, $substitution, $q['scenario']);
+
 		$server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
 		$guid = $server_ipaddress . uniqid('', true);
 
