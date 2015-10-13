@@ -32,6 +32,8 @@ $exempt = array('formulary.gif', 'formulary.html');
 function getImages($html) {
   $mediadirectory = rogo_directory::get_directory('media');
   $regexp = '#' . $mediadirectory->url('(.*)') . '#';
+  $regexp = str_replace('&', '&amp;', $regexp);
+  $regexp = str_replace('?', '\?', $regexp);
 
   $image_array = array();
   
@@ -45,8 +47,6 @@ function getImages($html) {
       $image_src = $third_split[0];
       $matches = array();
       preg_match($regexp, $image_src, $matches);
-      $image_src = str_replace('./media/','',$image_src);
-      $image_src = str_replace('/media/','',$image_src);
       if (!empty($matches[1])) {
         $image_src = $matches[1];
       }

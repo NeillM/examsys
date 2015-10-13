@@ -179,7 +179,13 @@ class RAF {
 	/**
 	 * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
 	 */
-	private function getImages_from_html($html) {
+  private function getImages_from_html($html) {
+    $mediadirectory = rogo_directory::get_directory('media');
+    $regexp = '#' . $mediadirectory->url('(.*)') . '#';
+    // Make this a regular expression thar will actually match.
+    $regexp = str_replace('&', '&amp;', $regexp);
+    $regexp = str_replace('?', '\?', $regexp);
+
 		$parts = explode('<img', $html);
 		if (count($parts) > 0) {
 			unset($parts[0]);
@@ -187,9 +193,11 @@ class RAF {
 				$second_split = explode('src="', $image_line);
 				$third_split = explode('"', $second_split[1]);
 				$image_src = $third_split[0];
-				$image_src = str_replace('./media/', '', $image_src);
-				$image_src = str_replace('/media/', '', $image_src);
-				
+        $matches = array();
+        preg_match($regexp, $image_src, $matches);
+				if (!empty($matches[1])) {
+          $image_src = $matches[1];
+        }
 				$this->media[] = $image_src;
 			}
 		}
