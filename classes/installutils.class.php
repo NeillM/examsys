@@ -1287,16 +1287,34 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
     //media
-    if (!is_writable(self::$rogo_path . '/media')) {
-      $errors['102'] = sprintf($string['errors4'], self::$rogo_path);
+    $mediadirectory = rogo_directory::get_directory('media');
+    $mediadirectory->create();
+    if (!$mediadirectory->check_permissions()) {
+      $errors['102'] = sprintf($string['errors3'], $mediadirectory->location());
     }
     //qti imports
-    if (!is_writable(self::$rogo_path . '/qti/imports')) {
-      $errors['103'] = sprintf($string['errors5'], self::$rogo_path);
+    $qtiimportdirectory = rogo_directory::get_directory('qti_import');
+    $qtiimportdirectory->create();
+    if (!$qtiimportdirectory->check_permissions()) {
+      $errors['103'] = sprintf($string['errors3'], $qtiimportdirectory->location());
     }
     //qti exports
-    if (!is_writable(self::$rogo_path . '/qti/exports')) {
-      $errors['104'] = sprintf($string['errors6'], self::$rogo_path);
+    $qtiexportdirectory = rogo_directory::get_directory('qti_export');
+    $qtiexportdirectory->create();
+    if (!$qtiexportdirectory->check_permissions()) {
+      $errors['104'] = sprintf($string['errors3'], $qtiexportdirectory->location());
+    }
+    // email_templates.
+    $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
+    $emailtemplatesdirectory->create();
+    if (!$emailtemplatesdirectory->check_permissions()) {
+      $errors['105'] = sprintf($string['errors3'], $emailtemplatesdirectory->location());
+    }
+    // user photos.
+    $photodirectory = rogo_directory::get_directory('user_photo');
+    $photodirectory->create();
+    if (!$photodirectory->check_permissions()) {
+      $errors['106'] = sprintf($string['errors3'], $photodirectory->location());
     }
     if (!is_writable(self::$rogo_path . '/config/config.inc.php')) {
       if (!is_writable(self::$rogo_path . '/config')) {
