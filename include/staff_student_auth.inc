@@ -77,7 +77,9 @@ $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_roo
 
 // Check for secure protocol
 if ($configObject->get('cfg_secure_connection')) {
-  if (! ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') ) ) {
+  if (! ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or
+          (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') or 
+          (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ) ) {
     $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
     $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
   }
