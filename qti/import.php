@@ -85,7 +85,8 @@ if (isset($_GET['debug'])) {
 }
 
 // Create dir for QTI to save into
-$base_dir = $cfg_web_root.'qti/imports/';
+$qtiimportdirectory = rogo_directory::get_directory('qti_import');
+$base_dir = $qtiimportdirectory->location();
 $dir = GetAuthorName($userObject->get_user_ID())."/".date("Y-m-d")."/".date("H.i.s"); //todo replace with userobject function
 
 if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
