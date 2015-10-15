@@ -23,7 +23,7 @@
  */
 class email_templates extends rogo_directory {
   public function location() {
-    return dirname(__DIR__) . DIRECTORY_SEPARATOR. 'email_templates' . DIRECTORY_SEPARATOR;
+    return $this->base_directory() . 'email_templates' . DIRECTORY_SEPARATOR;
   }
 
   public function cachetime() {

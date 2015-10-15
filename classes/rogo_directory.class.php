@@ -48,6 +48,40 @@ abstract class rogo_directory {
   }
 
   /**
+   * Gets the configured Rogo data directory.
+   *
+   * @return string A path to the Rogo data directory, including a trailing slash.
+   * @throws directory_not_found
+   */
+  protected function base_directory() {
+    $config = Config::get_instance();
+    // This will be null if the user has not configured it.
+    $rogodata = $config->get('cfg_rogo_data');
+    // The directory locations in flash questions are hardcoded to be
+    // relative to the Rogo root directory, so we need to verify that
+    // flash is not the interface used.
+    $question_interface = $config->get('cfg_interactive_qs');
+
+    if ($question_interface != 'flash' && !empty($rogodata)) {
+      // Data driectory configured and should be used.
+      if (!is_writable($rogodata)) {
+        // Huston we have a problem.
+        throw new directory_not_found('rogo_data');
+      }
+      // Ensure the directory has a trailing slash.
+      if (substr($rogodata, -1) != DIRECTORY_SEPARATOR) {
+        $rogodata .= DIRECTORY_SEPARATOR;
+      }
+      $path = $rogodata;
+    } else {
+      // Data directory not configured, or flash question interfaces are defined.
+      // We should return the root Rogo path.
+      $path = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+    }
+    return $path;
+  }
+
+  /**
    * Get the amount of time in seconds that files in the directory should be cached for.
    *
    * @return int

@@ -25,7 +25,7 @@ class qti_export extends rogo_directory {
   protected $filepermissions = 0755;
 
   public function location() {
-    return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'qti' . DIRECTORY_SEPARATOR . 'exports' . DIRECTORY_SEPARATOR;
+    return $this->base_directory() . 'qti' . DIRECTORY_SEPARATOR . 'exports' . DIRECTORY_SEPARATOR;
   }
 
   public function cachetime() {

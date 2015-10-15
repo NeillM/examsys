@@ -23,7 +23,7 @@
  */
 class media extends rogo_directory {
   public function location() {
-    return dirname(__DIR__) . DIRECTORY_SEPARATOR. 'media' . DIRECTORY_SEPARATOR;
+    return $this->base_directory() . 'media' . DIRECTORY_SEPARATOR;
   }
 
   public function cachetime() {

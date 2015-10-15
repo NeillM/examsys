@@ -23,7 +23,7 @@
  */
 class user_photo extends rogo_directory {
   public function location() {
-    return dirname(__DIR__) . DIRECTORY_SEPARATOR. 'users' . DIRECTORY_SEPARATOR . 'photos' . DIRECTORY_SEPARATOR;
+    return $this->base_directory() . 'users' . DIRECTORY_SEPARATOR . 'photos' . DIRECTORY_SEPARATOR;
   }
 
   public function cachetime() {
