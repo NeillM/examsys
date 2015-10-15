@@ -9,6 +9,8 @@ $string['dbusername'] = 'Databázové uživatelské jméno';
 $string['dbpassword'] = 'Databázové heslo';
 $string['databasesetup'] = 'Nastavení databáze';
 $string['databasehost'] = 'Hostitel databáze';
+$string['webhost'] = 'WebServer host';
+$string['datadirectory'] = 'Rogo data directory';
 $string['databaseport'] = 'Port databáze';
 $string['databasename'] = 'Název databáze';
 $string['databasecharset'] = 'Znaková sada databáze';
@@ -90,6 +92,8 @@ $string['errors14'] = 'Byla generována následující varování"';
 $string['errors15'] = 'Varování';
 $string['errors16'] = 'Rogo vyžaduje schopnost tvořit jeho konfigurační soubor %s/config/config.inc.php, jedním ze způsobů, jak toto zvládnout je, že dočasně povolíte přístup osobě, která toto ovládá, do %s/config a po spuštění aktualizace toto oprávnění zrušíte.';
 $string['errors17'] = 'Rogo vyžaduje MYSQL verzi %s nebo novější než máte %s';
+$string['errors18'] = 'The Rog&#333; data directory requires %s path to exist';
+$string['errors19'] = 'The Rog&#333; data directory requires %s must be writable';
 $string['installscript'] = 'Instalační skript Rogō ';
 $string['systeminstallation'] = 'Instalace systému';
 

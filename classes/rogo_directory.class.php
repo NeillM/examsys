@@ -54,13 +54,20 @@ abstract class rogo_directory {
    * @throws directory_not_found
    */
   protected function base_directory() {
-    $config = Config::get_instance();
-    // This will be null if the user has not configured it.
-    $rogodata = $config->get('cfg_rogo_data');
-    // The directory locations in flash questions are hardcoded to be
-    // relative to the Rogo root directory, so we need to verify that
-    // flash is not the interface used.
-    $question_interface = $config->get('cfg_interactive_qs');
+    if (!empty(InstallUtils::$cfg_rogo_data)) {
+      // Rogo is being installed. We should take the settings from InstallUtills
+      $rogodata = InstallUtils::$cfg_rogo_data;
+      $question_interface = InstallUtils::$cfg_interactivequestions;
+    } else {
+      $config = Config::get_instance();
+      // This will be null if the user has not configured it.
+      $rogodata = $config->get('cfg_rogo_data');
+      // The directory locations in flash questions are hardcoded to be
+      // relative to the Rogo root directory, so we need to verify that
+      // flash is not the interface used.
+      $question_interface = $config->get('cfg_interactive_qs');
+    }
+    
 
     if ($question_interface != 'flash' && !empty($rogodata)) {
       // Data driectory configured and should be used.

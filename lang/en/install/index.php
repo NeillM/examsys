@@ -25,6 +25,7 @@ $string['dbpassword'] = 'DB Password';
 $string['databasesetup'] = 'Database Setup';
 $string['databasehost'] = 'Database host';
 $string['webhost'] = 'WebServer host';
+$string['datadirectory'] = 'Rogo data directory';
 $string['databaseport'] = 'Database port';
 $string['databasename'] = 'Database Name';
 $string['databasecharset'] = 'Database Character Set';
@@ -105,6 +106,8 @@ $string['errors14'] = 'The following warnings were generated';
 $string['errors15'] = 'Warning';
 $string['errors16'] = 'Rog&#333; requires ability to write its config file %s/config/config.inc.php. One way to fix this is you can temporarily allow write access to %s/config and change permissions once update has run.';
 $string['errors17'] = 'Rog&#333; requires MYSQL version %s or above you have %s';
+$string['errors18'] = 'The Rog&#333; data directory requires %s path to exist';
+$string['errors19'] = 'The Rog&#333; data directory requires %s must be writable';
 $string['installscript'] = 'Rog&#333; Install script';
 $string['systeminstallation'] = 'System Installation';
 

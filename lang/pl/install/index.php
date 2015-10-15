@@ -25,6 +25,7 @@ $string['dbpassword'] = 'Hasło:';
 $string['databasesetup'] = 'Ustawienia bazy danych';
 $string['databasehost'] = 'Adres:';
 $string['webhost'] = 'host WebSerwera';
+$string['datadirectory'] = 'Rogo data directory';
 $string['databaseport'] = 'Port:';
 $string['databasename'] = 'Nazwa:';
 $string['databasecharset'] = 'Kodowanie znaków w bazie danych';
@@ -105,6 +106,8 @@ $string['errors14'] = 'Wygenerowano następujące ostrzeżenia';
 $string['errors15'] = 'Uwaga';
 $string['errors16'] = 'Rog&#333; wymaga prawa zapisu w swym pliku konfiguracyjnym %s/config/config.inc.php. Jednym ze sposobów realizacji tego jest tymczasowe udzielenie praw zapisu do  %s/config i przywrócenie oryginalnych przywilejów zaraz po dokonaniu aktualizacji.';
 $string['errors17'] = 'Rog&#333; wymaga serwera MYSQL w wersji %s lub wyższej %s';
+$string['errors18'] = 'The Rog&#333; data directory requires %s path to exist';
+$string['errors19'] = 'The Rog&#333; data directory requires %s must be writable';
 $string['installscript'] = 'Skrypt instalacyjny Rog&#333;';
 $string['systeminstallation'] = 'Instalacja systemu';
 
