@@ -469,7 +469,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
 
         if (isset($user_answers[$current_screen][$q_id])) {
-          $blank_user_answers = explode('|', $user_answers[$current_screen][$q_id]);
+          $blank_user_answers = json_decode($user_answers[$current_screen][$q_id]);
         } else {
           $blank_user_answers = array();
         }

@@ -708,14 +708,14 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $no_answers = count($blank_details) - 1;
         $have_answer = false;
 
-        $saved_response = '';
+        $saved_response = array();
         for ($i = 1; $i <= $no_answers; $i++) {
           $qid = 'q' . $question_no . '_' . $i;
           if (isset($_POST[$qid])) {
             if ($_POST[$qid] == '') {
-              $saved_response .= '|u';
+              $saved_response[] = 'u';
             } else {
-              $saved_response .= '|' . $_POST[$qid];
+              $saved_response[] = $_POST[$qid];
             }
           }
 
@@ -760,6 +760,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           }
           $totalpos = $marks_correct;
         }
+        $saved_response = json_encode($saved_response);
         break;
       case 'textbox':
         $qid = 'q' . $question_no;

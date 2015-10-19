@@ -185,7 +185,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
       break;
     case 'blank':
       $tmp_answer_parts = array();
-      $tmp_answer_parts = explode('|', $answer);
+      $tmp_answer_parts = json_decode($answer);
       $i = 0;
       foreach ($tmp_answer_parts as $tmp_individual_answer) {
         $tmp_individual_answer = strtolower(trim($tmp_individual_answer));
