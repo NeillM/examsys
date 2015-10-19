@@ -67,7 +67,6 @@ abstract class rogo_directory {
       // flash is not the interface used.
       $question_interface = $config->get('cfg_interactive_qs');
     }
-    
 
     if ($question_interface != 'flash' && !empty($rogodata)) {
       // Data driectory configured and should be used.
