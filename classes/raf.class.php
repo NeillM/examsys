@@ -176,9 +176,9 @@ class RAF {
 		}
 	}
 	
-	/**
-	 * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
-	 */
+  /**
+   * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
+   */
   private function getImages_from_html($html) {
     $mediadirectory = rogo_directory::get_directory('media');
     $regexp = '#' . $mediadirectory->url('(.*)') . '#';
