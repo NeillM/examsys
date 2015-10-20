@@ -50,6 +50,7 @@ Class InstallUtils {
   public static $cfg_page_charset;
 
   public static $cfg_web_host;
+  public static $cfg_rogo_data;
   public static $cfg_db_basename;
   public static $cfg_db_student_user;
   public static $cfg_db_student_passwd;
@@ -128,6 +129,7 @@ Class InstallUtils {
       <table class="h"><tr><td><nobr><?php echo $string['server']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <br />
         <div><label for="web_host"><?php echo $string['webhost']; ?></label> <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" /></div>
+        <div><label for="rogo_data"><?php echo $string['datadirectory']; ?></label> <input type="text" id="rogo_data" name="rogo_data" value="<?php echo dirname(__DIR__) . DIRECTORY_SEPARATOR ?>" /></div>
         <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" /></div>
         <div style="clear: left"><label for="page_charset"><?php echo $string['pagecharset']; ?></label> <select id="page_charset" name="page_charset"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO 8859-1</option></select></div>
 
@@ -304,7 +306,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $check->close();
     
     self::$cfg_web_host = $_POST['web_host'];
+    self::$cfg_rogo_data = $_POST['rogo_data'];
+    if (!file_exists(self::$cfg_rogo_data)) {
+      self::displayError(array('003' => sprintf($string['errors18'], self::$cfg_rogo_data)));
+    }
+    if (!is_writable(self::$cfg_rogo_data)) {
+      self::displayError(array('004' => sprintf($string['errors19'], self::$cfg_rogo_data)));
+    }
+    self::createDirectories();
 
+    // On windows we must escape the slashes.
+    self::$cfg_rogo_data = str_replace('\\', '\\\\', self::$cfg_rogo_data);
 
     self::$cfg_db_basename = $_POST['mysql_baseusername'];
 
@@ -1277,33 +1289,59 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Check Apache can write to the required directories
-  *
+   * Ensures that the rogo user directories are created.
+   */
+  public static function createDirectories() {
+    $errors = array();
+    //media
+    $mediadirectory = rogo_directory::get_directory('media');
+    $mediadirectory->create();
+    if (!$mediadirectory->check_permissions()) {
+      $errors['102'] = sprintf($string['errors3'], $mediadirectory->location());
+    }
+    //qti imports
+    $qtiimportdirectory = rogo_directory::get_directory('qti_import');
+    $qtiimportdirectory->create();
+    if (!$qtiimportdirectory->check_permissions()) {
+      $errors['103'] = sprintf($string['errors3'], $qtiimportdirectory->location());
+    }
+    //qti exports
+    $qtiexportdirectory = rogo_directory::get_directory('qti_export');
+    $qtiexportdirectory->create();
+    if (!$qtiexportdirectory->check_permissions()) {
+      $errors['104'] = sprintf($string['errors3'], $qtiexportdirectory->location());
+    }
+    // email_templates.
+    $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
+    $emailtemplatesdirectory->create();
+    if (!$emailtemplatesdirectory->check_permissions()) {
+      $errors['105'] = sprintf($string['errors3'], $emailtemplatesdirectory->location());
+    }
+    // user photos.
+    $photodirectory = rogo_directory::get_directory('user_photo');
+    $photodirectory->create();
+    if (!$photodirectory->check_permissions()) {
+      $errors['106'] = sprintf($string['errors3'], $photodirectory->location());
+    }
+    if (count($errors) > 0) {
+      self::displayError($errors);
+    }
+  }
+
+  /**
+  * Check Apache can write to the required directories.
   */
   static function checkDirPermissionsPre() {
     global $string;
-
     // This should work for both windows and UNIX style paths.
     self::$rogo_path = str_ireplace('/install/index.php','', normalise_path($_SERVER['SCRIPT_FILENAME']));
     $errors = array();
-    //media
-    if (!is_writable(self::$rogo_path . '/media')) {
-      $errors['102'] = sprintf($string['errors4'], self::$rogo_path);
-    }
-    //qti imports
-    if (!is_writable(self::$rogo_path . '/qti/imports')) {
-      $errors['103'] = sprintf($string['errors5'], self::$rogo_path);
-    }
-    //qti exports
-    if (!is_writable(self::$rogo_path . '/qti/exports')) {
-      $errors['104'] = sprintf($string['errors6'], self::$rogo_path);
-    }
+
     if (!is_writable(self::$rogo_path . '/config/config.inc.php')) {
       if (!is_writable(self::$rogo_path . '/config')) {
         $errors['901'] = sprintf($string['errors16'], self::$rogo_path, self::$rogo_path);
       }
     }
-
 
     if (count($errors) > 0) {
       self::displayError($errors);
@@ -1550,6 +1588,7 @@ require \$root . '/include/path_functions.inc.php';
 
 
   \$cfg_web_host = '{cfg_web_host}';
+  \$cfg_rogo_data = '{cfg_rogo_data}';
 
 // Local database
   \$cfg_db_username = '{cfg_db_username}';
@@ -1704,6 +1743,7 @@ CONFIG;
     $config = str_replace('{rogo_version}', $version, $config);
     $config = str_replace('{SysAdmin_username}', 'USERNMAE_FOR_DEBUG', $config);
     $config = str_replace('{cfg_web_host}', self::$cfg_web_host, $config);
+    $config = str_replace('{cfg_rogo_data}', self::$cfg_rogo_data, $config);
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);

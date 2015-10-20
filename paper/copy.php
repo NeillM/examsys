@@ -190,6 +190,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 } else {    // Copy the paper and the questions.
   // Copy the properties (properties table)
   $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
+  $mediadirectory = rogo_directory::get_directory('media');
 
   // Get question statuses
   $default_status = -1;
@@ -233,8 +234,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
               $new_media_name = '';
               if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
                 $new_media_name = unique_filename($individual_media);
-                if (file_exists("../media/$individual_media")) {
-                  if (!copy("../media/$individual_media", "../media/$new_media_name")) {
+                if (file_exists($mediadirectory->fullpath($individual_media))) {
+                  if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                     $error[] = sprintf($string['copyerror'], $individual_media);
                     // If the image is missing dont put the file name in the new question
                     $new_media_name = '';
@@ -264,8 +265,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         foreach ($media_array as $individual_media) {
           if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
             $new_media_name = unique_filename($individual_media);
-            if (file_exists("../media/$individual_media")) {
-              if (!copy("../media/$individual_media","../media/$new_media_name")) {
+            if (file_exists($mediadirectory->fullpath($individual_media))) {
+              if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                 $error[] = sprintf($string['copyerror'], $individual_media);
                 //if the image is missing don't put the file name in the new question
                 $new_media_name = '';

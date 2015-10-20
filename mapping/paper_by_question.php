@@ -36,6 +36,7 @@ $session = $propertyObj->get_calendar_year();
 $start_date = $propertyObj->get_raw_start_date();
 $end_date = $propertyObj->get_raw_end_date();
 $paper_type = $propertyObj->get_paper_type();
+$mediadirectory = rogo_directory::get_directory('media');
 ?>
 <!DOCTYPE html>
 <html>
@@ -235,7 +236,7 @@ $paper_type = $propertyObj->get_paper_type();
         echo "<td><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
         if ($temp_array[$x]['q_type'] != 'info') echo "<img style=\"cursor: pointer\" onclick=\"mapQuestion('$question_number', '" . $paperID . "','" . $temp_array[$x]['q_id'] . "','" . $session . "')\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
       } else {
-        echo "<td><img src=\"../media/" . $temp_array[$x]['q_media'] . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
+        echo "<td><img src=\"" . $mediadirectory->url($temp_array[$x]['q_media']) . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
         if ($temp_array[$x]['q_type'] != 'info') echo "<img style=\"cursor: pointer\" onclick=\"mapQuestion('$question_number', '" . $paperID . "','" . $temp_array[$x]['q_id'] . "','" . $session . "')\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
       }
       echo "</tr>\n";

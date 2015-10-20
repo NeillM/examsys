@@ -755,9 +755,8 @@ class ST_QTI12_Material // <material>
     global $file;
     global $wct;
     global $load_params;
-    
-    $configObject=Config::get_instance();
-    $cfg_web_root=$configObject->get('cfg_web_root');
+
+    $mediadirectory = rogo_directory::get_directory('media');
 
     if (stripos(" ".$image, "notes_icon.gif") > 0) {
       return;
@@ -798,9 +797,10 @@ class ST_QTI12_Material // <material>
 
       $basename = basename($imagefile);
       $uniqueFilename = unique_filename($basename);
+      $fullpath = $mediadirectory->fullpath($uniqueFilename);
 
-      copy($imagefile, $cfg_web_root.'media/'.$uniqueFilename);
-      echo "Copied $imagefile to ".$cfg_web_root."media/$uniqueFilename<br />";
+      copy($imagefile, $fullpath);
+      echo "Copied $imagefile to $fullpath<br />";
       $this->media = $uniqueFilename;
     } else {
       $this->media = basename($imagefile);
@@ -812,6 +812,8 @@ class ST_QTI12_Material // <material>
     global $import_directory;
     global $q_warnings;
     global $q_errors;
+
+    $mediadirectory = rogo_directory::get_directory('media');
     
     if (stripos(" ".$text, "<img") > 0) {
       $output = '';
@@ -835,8 +837,9 @@ class ST_QTI12_Material // <material>
             if ($filename) {
               $basename = basename($filename);
               $uniqueFilename = unique_filename($basename);
+              $fullpath = $mediadirectory->fullpath($uniqueFilename);
 
-              copy($import_directory."/".$filename, $cfg_web_root.'media/'.$uniqueFilename);
+              copy($import_directory."/".$filename, $fullpath);
               
               $data['IMG'][0]['src'] = "/media/".$basename;
               // recreate img tag

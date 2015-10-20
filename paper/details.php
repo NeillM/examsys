@@ -40,6 +40,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+$mediadirectory = rogo_directory::get_directory('media');
 
 // Unlock code - emergency use only!
 // Can only unlock if current user is SysAdmin!
@@ -1081,7 +1082,7 @@ function check_latex_random($q_ids, $mysqli) {
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";
     } else {
-      echo "<img src=\"../media/" . $temp_array[$x]['q_media'] . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
+      echo "<img src=\"" . $mediadirectory->url($temp_array[$x]['q_media']) . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
     }
     echo "</td>";
 

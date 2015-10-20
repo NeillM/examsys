@@ -41,7 +41,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
             this.ql_redraw_canvas();
         }
         this.gen_img.onload = ql_gen_img_onload.bind(this);
-        this.gen_img.src = ((mode == 'edit') ? '../' : '') + '../media/' + image;
+        this.gen_img.src = ((mode == 'edit') ? '../' : '') + '../getfile.php?type=media&filename=' + image;
         //---------- mode
         this.yOffset = 25;
         if (mode == 'edit')
@@ -399,7 +399,7 @@ function setUpLabelling(num, doorId, lang, image, config, answer, extra, colour,
                 if (typeof (this.answerBox[i][j]) != 'undefined' && this.answerBox[i][j][1] == "image" && this.all_images[this.all_images.indexOf(this.answerBox[i][j][2]) + 1] == '') {
                     this.imageBox[this.answerBox[i][j][2]] = new Image();
                     this.imageBox[this.answerBox[i][j][2]].onload = ql_ans_img_onload.bind(this);
-                    this.imageBox[this.answerBox[i][j][2]].src = ((this.qmode == 'edit') ? '../' : '') + '../media/' + this.answerBox[i][j][2];
+                    this.imageBox[this.answerBox[i][j][2]].src = ((this.qmode == 'edit') ? '../' : '') + '../getfile.php?type=media&filename=' + this.answerBox[i][j][2];
                     this.all_images[this.answerBox[i][j][2]] = i + ',' + j;
                 }
             }

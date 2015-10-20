@@ -39,6 +39,7 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
 
   $configObject = Config::get_instance();
 
+  $mediadirectory = rogo_directory::get_directory('media');
   $html = '';
 
   $fn_parts = pathinfo($filename);
@@ -46,17 +47,17 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
   if ($imageid > -1) $html .= "<div id=\"media$imageid\" class=\"media\">";
   // Is the file an image or something else (e.g. RasMol)?
   if (!array_key_exists('extension', $fn_parts)) {
-    $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
     if ($border_color == '') {
-      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" alt=\"Image\" />";
+      $html .= "<img src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" alt=\"Image\" />";
     } else {
-      $html .= "<img src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" alt=\"Image\" style=\"border: 1px solid $border_color\" />";
+      $html .= "<img src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" alt=\"Image\" style=\"border: 1px solid $border_color\" />";
     }
   } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"{$configObject->get('cfg_root_path')}/media/$filename\">Audio Clip</a>";
+    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"" . $mediadirectory->url($filename) . "\">Audio Clip</a>";
   } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
-    $html .= "<iframe src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
+    $html .= "<iframe src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
   } elseif ($fn_parts['extension'] == 'flv') {
     if ($width == 0 or $height == 0) {
       $width = 320;
@@ -65,7 +66,7 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
     $html .= <<< OBJEMBED
 <object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_flv_maxi.swf" width="{$width}" height="{$height}">
 <param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_flv_maxi.swf" />
-<param name="FlashVars" value="flv={$configObject->get('cfg_root_path')}/media/{$filename}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
+<param name="FlashVars" value="flv={$mediadirectory->url($filename, false, false, true)}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
 </object>
 OBJEMBED;
 
@@ -76,18 +77,18 @@ OBJEMBED;
     }
 
     $html .= <<< OBJEMBED
-<audio src="{$configObject->get('cfg_root_path')}/media/{$filename}" controls>
+<audio src="{$mediadirectory->url($filename)}" controls>
 <object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" width="200" height="20">
 <param name="wmode" value="transparent" />
 <param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" />
-<param name="FlashVars" value="mp3={$configObject->get('cfg_root_path')}/media/{$filename}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
+<param name="FlashVars" value="mp3={$mediadirectory->url($filename, false, false, true)}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
 </object>
 </audio>
 OBJEMBED;
   } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-    $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   } else {
-    $html .= "<embed src=\"{$configObject->get('cfg_root_path')}/media/$filename\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+    $html .= "<embed src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
   }
   if ($imageid > -1 and !$locked) {
     $html .= <<< DELETE
@@ -110,19 +111,15 @@ DELETE;
  *
  */
 function unique_filename($filename) {
-
-  $configObject = Config::get_instance();
-  $cfg_web_root = $configObject->get( 'cfg_web_root' );
+  $mediadirectory = rogo_directory::get_directory('media');
 
   $ext = substr($filename, strrpos($filename, '.'));
   $fileno = date('U');
 
-  $tmp_filename = $fileno . $ext;
-
-  while (file_exists($cfg_web_root . "media/$tmp_filename")) {
-    $fileno++;
+  do {
     $tmp_filename = $fileno . $ext;
-  }
+    $fileno++;
+  } while (file_exists($mediadirectory->fullpath($tmp_filename)));
 
   return $tmp_filename;
 }
@@ -144,9 +141,11 @@ function uploadFile($fileID) {
   }
 
   $bad_file = true;   // Default safe.
+  $mediadirectory = rogo_directory::get_directory('media');
   
   $filename = strtolower($_FILES[$fileID]['name']);
   $unique_name = unique_filename($filename);
+  $fullpath = $mediadirectory->fullpath($unique_name);
 
   $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.swf', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3', '.mid', '.wav', '.ram');
   foreach ($permitted as $extension) {
@@ -159,17 +158,14 @@ function uploadFile($fileID) {
     return false;
   }
 
-  $configObject = Config::get_instance();
-  $cfg_web_root = $configObject->get( 'cfg_web_root' );
-
-  if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $cfg_web_root . "media/$unique_name")) {
+  if (!move_uploaded_file($_FILES[$fileID]['tmp_name'], $fullpath)) {
     echo uploadError($_FILES[$fileID]['error']);
     return false;
   }
 
-  chmod( $cfg_web_root . "media/$unique_name", 0664);
+  chmod($fullpath, 0664);
   $getID3 = new getID3;
-  $file_info = $getID3->analyze($cfg_web_root . "media/$unique_name");
+  $file_info = $getID3->analyze($fullpath);
 
   switch ($_FILES[$fileID]['type']) {
     case 'application/msword':
@@ -207,7 +203,7 @@ function uploadFile($fileID) {
     case 'image/x-png':
     case 'image/png':
       // Image formats
-      $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
+      $identifier_size = GetImageSize($fullpath);
       $file_width = $identifier_size[0];
       $file_height = $identifier_size[1];
       if ($file_width == 0 or $file_height == 0) {
@@ -216,7 +212,7 @@ function uploadFile($fileID) {
       break;
     case 'application/x-shockwave-flash':
       //ShockWave
-      $identifier_size = GetImageSize($cfg_web_root . "media/$unique_name");
+      $identifier_size = GetImageSize($fullpath);
       $file_width = $identifier_size[0];
       $file_height = $identifier_size[1];
       if ($file_width == 0 or $file_height == 0) {
@@ -248,7 +244,7 @@ function uploadFile($fileID) {
       break;
     default:
       // Can't get mimetype, trying extension types
-      $path_parts = pathinfo($cfg_web_root . "media/$unique_name");
+      $path_parts = pathinfo($fullpath);
       switch (strtolower($path_parts['extension'])) {
         case 'mpg':
         case 'mpeg':
@@ -294,10 +290,8 @@ function uploadFile($fileID) {
 }
 
 function deleteMedia( $filename ) {
-
-  $configObject = Config::get_instance();
-  $cfg_web_root = $configObject->get( 'cfg_web_root' );
-  $file         = $cfg_web_root . 'media/' . $filename;
+  $mediadirectory = rogo_directory::get_directory('media');
+  $file = $mediadirectory->fullpath($filename);
 
   if ( $filename == '' or !file_exists( $file ) ) {
      return false;

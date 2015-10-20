@@ -176,10 +176,16 @@ class RAF {
 		}
 	}
 	
-	/**
-	 * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
-	 */
-	private function getImages_from_html($html) {
+  /**
+   * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
+   */
+  private function getImages_from_html($html) {
+    $mediadirectory = rogo_directory::get_directory('media');
+    $regexp = '#' . $mediadirectory->url('(.*)') . '#';
+    // Make this a regular expression thar will actually match.
+    $regexp = str_replace('&', '&amp;', $regexp);
+    $regexp = str_replace('?', '\?', $regexp);
+
 		$parts = explode('<img', $html);
 		if (count($parts) > 0) {
 			unset($parts[0]);
@@ -187,9 +193,11 @@ class RAF {
 				$second_split = explode('src="', $image_line);
 				$third_split = explode('"', $second_split[1]);
 				$image_src = $third_split[0];
-				$image_src = str_replace('./media/', '', $image_src);
-				$image_src = str_replace('/media/', '', $image_src);
-				
+        $matches = array();
+        preg_match($regexp, $image_src, $matches);
+				if (!empty($matches[1])) {
+          $image_src = $matches[1];
+        }
 				$this->media[] = $image_src;
 			}
 		}
@@ -218,9 +226,10 @@ class RAF {
 		$this->json_filename = $this->configObj->get('cfg_tmpdir') . $this->userID . '_raf.json';
 
 		$zip->addFile($this->json_filename, 'raf.json');
+    $mediadirectory = rogo_directory::get_directory('media');
 		foreach ($this->media as $media_filename) {
-			if (file_exists($this->configObj->get('cfg_web_root') . 'media/' . $media_filename)) {
-				$zip->addFile($this->configObj->get('cfg_web_root') . 'media/' . $media_filename, $media_filename);
+			if (file_exists($mediadirectory->fullname($media_filename))) {
+				$zip->addFile($mediadirectory->fullname($media_filename), $media_filename);
 			}
 		}
 		$zip->close();
@@ -282,12 +291,13 @@ class RAF {
 	 */
 	private function copy_images($dir, $tmp_path) {
 		$configObj = Config::get_instance();
+    $mediadirectory = rogo_directory::get_directory('media');
 
 		if ($handle = opendir($dir)) {
 			while (false !== ($entry = readdir($handle))) {
 				if ($entry != '.' and $entry != '..' and $entry != 'raf.json') {
 					$new_media = unique_filename($entry);
-					rename($tmp_path . $this->userID . '/' . $entry, $this->configObj->get('cfg_web_root') . 'media/' . $new_media);
+					rename($tmp_path . $this->userID . '/' . $entry, $mediadirectory->fullname($new_media));
 					$this->data = str_replace($entry, $new_media, $this->data);
 				}
 			}
@@ -346,6 +356,23 @@ class RAF {
 		if ($q['bloom'] == '') 					$q['bloom'] = null;  
 		if ($q['q_option_order'] == '') $q['q_option_order'] = 'display order';
 		if ($q['score_method'] == '') 	$q['score_method'] = 'Mark per Option';
+
+    // The file may have been written in a version of Rogo that did not use rogo_directory classes.
+    // So we must check and filter the leadin and scenario to clean them up.
+    //
+    // Regular expression to match the old media directory location.
+    // it will match directories ./media/ or /media/ and grab the filename.
+    $regexp = '#src=".?\/media\/(.*?)"#';
+    // The substitution will replace the old src tag with a new one that.
+    $webroot = $configObject->get('cfg_root_path');
+    // Ensure there is a trailing slash.
+    if (substr($webroot, -1) !== '/') {
+      $webroot .= '/';
+    }
+    $substitution = 'src="' . $webroot . 'getfile.php?type=media&amp;filename=$1"';
+    // Fix the leadin and scenario.
+    $q['leadin'] = preg_replace($regexp, $substitution, $q['leadin']);
+    $q['scenario'] = preg_replace($regexp, $substitution, $q['scenario']);
 
 		$server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
 		$guid = $server_ipaddress . uniqid('', true);

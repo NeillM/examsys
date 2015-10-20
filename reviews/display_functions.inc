@@ -47,6 +47,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
   
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
+  $mediadirectory = rogo_directory::get_directory('media');
 
   // Determine if negative marking is used.
   $neg_marking = false;
@@ -340,7 +341,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
 					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 1) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script>\n";
-					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . '../media/' . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $display_option['correct'] . "',1,'#FFC0C0','area','review');\n";
+					echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $mediadirectory->url($question['q_media'], false, false, true) . "', '" . $display_option['correct'] . "', '" . $display_option['correct'] . "',1,'#FFC0C0','area','review');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
@@ -376,7 +377,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-					echo "sendTextToAS3('" . $language . "','q" . $question_no . "', 1, '" . '../media/' . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $display_option['correct'] . "');\n";
+					echo "sendTextToAS3('" . $language . "','q" . $question_no . "', 1, '" . $mediadirectory->url($question['q_media'], false, false, true) . "', '" . $display_option['correct'] . "', '" . $display_option['correct'] . "');\n";
 					echo "</script>\n";
 				}
 				?>
@@ -866,14 +867,14 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
   <script>
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="../media/<?php echo $question['q_media']; ?>" />');
+    write_string('<param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     <?php
       if ($question['scenario'] != '') {
         echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
       }
-      echo 'write_string(\'<embed src="../media/' . $question['q_media'] . '"';
+      echo 'write_string(\'<embed src="' . $mediadirectory->url($question['q_media']) . '"';
       if (isset($display_option['scenario']) and $display_option['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }

@@ -56,8 +56,9 @@ if (isset($_POST['submit']) and !$errors) {
     $explode = explode('.', $filename);
     $count = count($explode) - 1;  
     $file_ext = $explode[$count];
+    $photodirectory = rogo_directory::get_directory('user_photo');
 
-    if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $cfg_web_root . 'users/photos/' . $_POST['username'] . '.' . $file_ext)) {
+    if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $photodirectory->fullpath($_POST['username'] . '.' . $file_ext))) {
       log_error($userObject->get_user_ID(), 'Edit User', 'Application Error', 'Error uploading user photo - error: ' . $_FILES['photofile']['error'], $_SERVER['PHP_SELF'], 49, '', null, null, null);
     }
   }

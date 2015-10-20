@@ -43,28 +43,21 @@ require '../../../../../../include/media.inc';
 <?php
   if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
-
+    $mediadirectory = rogo_directory::get_directory('media');
+    // Make the directory.
+    $mediadirectory->create();
     $filename = $_FILES['FileName']['tmp_name'];
-
-    $path     = $cfg_web_root . 'media/';
-
-    //make the dirs
-    if (!file_exists($path)) {
-      mkdir($path, 0744);
-    }
 
     //move original file
     $imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
 
     $destName  = unique_filename( $_FILES['FileName']['name'] );
-
-
-    $destPath  = $path . $destName;
+    $destPath  = $mediadirectory->fullpath($destName);
 
     $worked    = move_uploaded_file( $_FILES['FileName']['tmp_name'], $destPath );
 
     if (!$worked) {
-      echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
+      echo "Failed to copy " . $_FILES['FileName']['name'] . " to: " . $destPath;
       exit;
     }
 
@@ -74,7 +67,7 @@ require '../../../../../../include/media.inc';
       $class = 'class="image_no_brd"';
     }
 
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="' . $configObject->get('cfg_root_path') . '/media/' . $destName . '" ' . $class . ' />';
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="' . $mediadirectory->url($destName) . '" ' . $class . ' />';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>

@@ -37,7 +37,7 @@ function setUpHotspot(num, doorId, lang, image, config, answer, extra, colour, m
 			this.qa_redraw_canvas;
 		} 
 		this.gen_img.onload = qh_gen_img_onload.bind(this);
-		this.gen_img.src = ((mode == 'edit' || mode == 'correction')?'../':'')+'../media/'+image;
+		this.gen_img.src = ((mode == 'edit' || mode == 'correction')?'../':'')+'../getfile.php?type=media&filename='+image;
 		//---------- mode 
 		if (mode == 'review') mode='script';
 		if (mode == 'edit' || mode == 'analysis' || mode == 'correction') this.yOffset = 0;

@@ -370,12 +370,13 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   }
   if (stripos($user_details['roles'], 'Student') !== false) {
     $student_photo = UserUtils::student_photo_exist($user_details['username']);
-    if ($student_photo !== false) {
-      $photo_size = getimagesize('photos/' .$student_photo);
+    $photodirectory = rogo_directory::get_directory('user_photo');
+    if ($student_photo) {
+      $photo_size = getimagesize($photodirectory->fullpath($student_photo));
       if (isset($demo) and $demo == true) {
         echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"./pixel_photo.php?username=" . $user_details['username'] . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       } else {
-        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $student_photo . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"" . $photodirectory->url($student_photo) . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       }
     } else {
       echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"$generic_icon\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";

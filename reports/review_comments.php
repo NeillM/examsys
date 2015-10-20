@@ -148,6 +148,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $configObject = Config::get_instance();
 
   $cfg_root_path = $configObject->get('cfg_root_path');
+  $mediadirectory = rogo_directory::get_directory('media');
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
@@ -217,7 +218,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-          echo "sendTextToAS3('$language', 'q$q_no', 1, '../media/" . $q_media . "', '" . $correct . "', '');\n";
+          echo "sendTextToAS3('$language', 'q$q_no', 1, '" . $mediadirectory->url($q_media, false, false, true) . "', '" . $correct . "', '');\n";
 					echo "</script>\n<br />";
          }          
 			?>
