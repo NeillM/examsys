@@ -12,7 +12,6 @@
             <extension>mbstring</extension>
             <extension>xml</extension>
             <extension>xmlrpc</extension>
-			<extension>fileinfo</extension>
         </extensions>
     </php>
     <database>
