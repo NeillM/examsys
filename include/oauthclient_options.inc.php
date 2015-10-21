@@ -16,9 +16,9 @@
 
 /**
  *
- * @author Simon Wilkinson
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
+ * @copyright Copyright (c) 2015 onwards The University of Nottingham
  * @package
  */
 
