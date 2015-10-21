@@ -424,12 +424,7 @@ Class PaperUtils {
     $update = $db->prepare("UPDATE properties SET deleted = NOW(), paper_ownerID = -1 WHERE property_id = ?");
     $update->bind_param('i', $paperID);
     $update->execute();
-    $update->close();
-    if ($db->errno != 0) {
-      return false;
-    }
-    return true;
-    
+    $update->close(); 
   }
 
   public function type_to_name($type, $string) {
