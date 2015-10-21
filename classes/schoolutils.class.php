@@ -89,36 +89,12 @@ Class SchoolUtils {
           return false;
         }
 
-        $id = false;
-
         $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = ?");
         $stmt->bind_param('s', $school_name);
         $stmt->execute();
         $stmt->bind_result($id);
-        $stmt->store_result();
         $stmt->fetch();
-        $row = $stmt->num_rows;
         $stmt->close();
-        //TODO current UoN Fudge for some data that doesnt follow convention should shift to saturn abstraction
-        if ($row == 0) {
-          $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = CONCAT('School of ', ?)");
-          $stmt->bind_param('s', $school_name);
-          $stmt->execute();
-          $stmt->bind_result($id);
-          $stmt->store_result();
-          $stmt->fetch();
-          $row = $stmt->num_rows;
-          $stmt->close();
-          if ($row == 0) {
-            $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = 'UNKNOWN School'");
-            $stmt->execute();
-            $stmt->bind_result($id);
-            $stmt->store_result();
-            $stmt->fetch();
-            $stmt->close();
-          }
-        }
-
         return $id;
     }
 
@@ -245,5 +221,101 @@ Class SchoolUtils {
         $result->bind_param('i', $schoolID);
         $result->execute();
         $result->close();
+        return true;
       }
+      
+      /**
+     * Updates a school
+     * @param integer $if       - School id in rogo.
+     * @param int $facultyID    - ID of the faculty to which the new school belongs.
+     * @param string $school    - Name of the new school
+     * @param object $db        - Link to mysqli
+     *
+     * @return int              - The ID of the school.
+     */
+    static function update_school($id, $facultyID, $school, $db) {
+        if ($facultyID === '' or $school === '') {
+          return false;
+        }
+
+        $schoolID = SchoolUtils::school_name_exists($school, $db);
+        if ($schoolID !== false) {
+          return $schoolID;
+        }
+
+        $result = $db->prepare("UPDATE schools set school = ?, facultyID = ? where id = ?");
+        $result->bind_param('sii', $school, $facultyID, $id);
+        $result->execute();
+        $result->close();
+        if ($db->errno != 0) {
+          return false;
+        }
+
+        return true;
+    }
+    
+    /**
+   * @brief Get factulty details
+   * @param integer $id 
+   * @param mysqli $db 
+   * @return array details
+   */
+  static function get_school_details_by_id($id, $db) {
+    $result = $db->prepare("SELECT school, facultyID FROM schools WHERE id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($name, $faculty);
+    $result->fetch();
+    $result->close();
+
+    return array('name' => $name, 'faculty' => $faculty);
+  }
+  
+  /**
+   * @brief Check if school contains modules or courses
+   * @param integer $id school id
+   * @param mysqli $db 
+   * @return  
+   */
+  static function get_modules_courses_in_school($id, $db) {
+    $result = $db->prepare("SELECT count(*) FROM courses WHERE schoolid = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->bind_result($count);
+    $result->fetch();
+    $result->close();
+    if ($count > 0) {
+        return true;
+    } else {
+        $result = $db->prepare("SELECT count(*) FROM modules WHERE schoolid = ?");
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->bind_result($count);
+        $result->fetch();
+        $result->close();
+        if ($count > 0) {
+            return true;
+        }
+    }
+    return false;
+  }
+  
+  /**
+   * @brief  Generate a school id based on name and faculty.
+   * @param string $school 
+   * @param string $faculty 
+   * @param mysqli $db
+   * @return integer 
+  */
+  static function school_and_faculty($school, $faculty, $db) {
+    $facultyid = FacultyUtils::facultyid_by_name($params['faculty'], $db);
+    if (!$facultyid) {
+        // Add new faculty.
+        $facultyid = FacultyUtils::add_faculty($params['faculty'], $db);
+    }
+    // Add new school to faculty.
+    $schoolid = SchoolUtils::add_school($facultyid, $params['school'], $db);
+    return $schoolid;
+  }
 }

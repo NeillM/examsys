@@ -857,15 +857,15 @@ QUERY;
           `paper_type` enum('0','1','2','3','4','5','6') default NULL,
           `paper_prologue` text,
           `paper_postscript` text,
-          `bgcolor` varchar(20) default NULL,
-          `fgcolor` varchar(20) default NULL,
-          `themecolor` varchar(20) default NULL,
-          `labelcolor` varchar(20) default NULL,
-          `fullscreen` enum('0','1') NOT NULL default '0',
-          `marking` char(60) default NULL,
-          `bidirectional` enum('0','1') NOT NULL default '0',
-          `pass_mark` tinyint(4) default NULL,
-          `distinction_mark` tinyint(4) default NULL,
+          `bgcolor` varchar(20) DEFAULT 'white',
+          `fgcolor` varchar(20) default 'black',
+          `themecolor` varchar(20) default '#316AC5',
+          `labelcolor` varchar(20) default '#C00000',
+          `fullscreen` enum('0','1') NOT NULL default '1',
+          `marking` char(60) default '1',
+          `bidirectional` enum('0','1') NOT NULL default '1',
+          `pass_mark` tinyint(4) default '40',
+          `distinction_mark` tinyint(4) default '70',
           `paper_ownerID` int(10) unsigned default NULL,
           `folder` varchar(255) default NULL,
           `labs` text,
@@ -874,17 +874,17 @@ QUERY;
           `exam_duration` smallint(6) default NULL,
           `deleted` datetime default NULL,
           `created` datetime default NULL,
-          `random_mark` float default NULL,
-          `total_mark` mediumint(9) default NULL,
-          `display_correct_answer` enum('0','1') default NULL,
-          `display_question_mark` enum('0','1') default NULL,
-          `display_students_response` enum('0','1') default NULL,
-          `display_feedback` enum('0','1') default NULL,
-          `hide_if_unanswered` enum('0','1') default NULL,
+          `random_mark` float default 0,
+          `total_mark` mediumint(9) default 0,
+          `display_correct_answer` enum('0','1') default '1',
+          `display_question_mark` enum('0','1') default '1',
+          `display_students_response` enum('0','1') default '1',
+          `display_feedback` enum('0','1') default '1',
+          `hide_if_unanswered` enum('0','1') default '0',
           `calendar_year` INT(4),
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
-          `sound_demo` enum('0','1') default NULL,
+          `sound_demo` enum('0','1') default '0',
           `latex_needed` tinyint(4) default '0',
           `password` char(255) default NULL,
           `retired` datetime default NULL,
@@ -1422,8 +1422,96 @@ QUERY;
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
-  }
+    $this->tableList['webservice_permissions'] = <<<QUERY
+        CREATE TABLE webservice_permissions (
+            client_id varchar(80) NOT NULL,
+            action varchar(80) NOT NULL,
+            access BOOLEAN NOT NULL default false,
+            PRIMARY KEY (client_id,action)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
 
+    $this->tableList['permissions'] = <<<QUERY
+        CREATE TABLE permissions (
+            action varchar(80) NOT NULL,
+            description varchar(255) NOT NULL,
+            PRIMARY KEY (action)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_clients'] = <<<QUERY
+        CREATE TABLE oauth_clients (
+            client_id VARCHAR(80) NOT NULL,
+            client_secret VARCHAR(80),
+            redirect_uri VARCHAR(2000) NOT NULL,
+            grant_types VARCHAR(80),
+            scope VARCHAR(100),
+            user_id VARCHAR(80),
+            CONSTRAINT clients_client_id_pk PRIMARY KEY (client_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_access_tokens'] = <<<QUERY
+        CREATE TABLE oauth_access_tokens (
+            access_token VARCHAR(40) NOT NULL,
+            client_id VARCHAR(80) NOT NULL,
+            user_id VARCHAR(255),
+            expires TIMESTAMP NOT NULL,
+            scope VARCHAR(2000),
+            CONSTRAINT access_token_pk PRIMARY KEY (access_token)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_authorization_codes'] = <<<QUERY
+        CREATE TABLE oauth_authorization_codes (
+            authorization_code VARCHAR(40) NOT NULL,
+            client_id VARCHAR(80) NOT NULL,
+            user_id VARCHAR(255),
+            redirect_uri VARCHAR(2000),
+            expires TIMESTAMP NOT NULL,
+            scope VARCHAR(2000),
+            CONSTRAINT auth_code_pk PRIMARY KEY (authorization_code)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_refresh_tokens'] = <<<QUERY
+        CREATE TABLE oauth_refresh_tokens (
+            refresh_token VARCHAR(40) NOT NULL,
+            client_id VARCHAR(80) NOT NULL,
+            user_id VARCHAR(255), expires TIMESTAMP NOT NULL,
+            scope VARCHAR(2000),
+            CONSTRAINT refresh_token_pk PRIMARY KEY (refresh_token)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_users'] = <<<QUERY
+        CREATE TABLE oauth_users (
+            username VARCHAR(255) NOT NULL,
+            password VARCHAR(2000),
+            first_name VARCHAR(255),
+            last_name VARCHAR(255),
+            CONSTRAINT username_pk PRIMARY KEY (username)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_scopes'] = <<<QUERY
+        CREATE TABLE oauth_scopes (
+            scope TEXT,
+            is_default BOOLEAN
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['oauth_jwt'] = <<<QUERY
+        CREATE TABLE oauth_jwt (
+            client_id VARCHAR(80) NOT NULL,
+            subject VARCHAR(80),
+            public_key VARCHAR(2000),
+            CONSTRAINT jwt_client_id_pk PRIMARY KEY (client_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+  }
+  
   function next() {
     if (count($this->tableList) > 0) {
       return array_pop($this->tableList);

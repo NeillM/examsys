@@ -1,0 +1,43 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="facultyManagementRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="create" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+		    <xs:choice>
+			  <xs:group ref="create"/>
+			  <xs:group ref="update"/>
+			</xs:choice>
+			<xs:attribute type="xs:string" name="id" use="required"/>
+          </xs:complexType>
+        </xs:element>
+		<xs:element name="delete" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="xs:integer"/>
+            </xs:sequence>
+			<xs:attribute type="xs:string" name="id" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="create">
+    <xs:sequence>
+	  <xs:element name="name" type="faculty"/>
+	</xs:sequence>
+  </xs:group>
+  <xs:group name="update">
+    <xs:sequence>
+	  <xs:element name="id" type="xs:integer"/>
+	  <xs:element name="name" type="faculty" minOccurs="0"/>
+	</xs:sequence>
+  </xs:group>
+  <xs:simpleType name="faculty">
+    <xs:restriction base="xs:string">
+	  <xs:minLength value="1"/>
+	  <xs:maxLength value="80"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

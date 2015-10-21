@@ -425,6 +425,11 @@ Class PaperUtils {
     $update->bind_param('i', $paperID);
     $update->execute();
     $update->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return true;
+    
   }
 
   public function type_to_name($type, $string) {
@@ -672,6 +677,35 @@ Class PaperUtils {
     $result->close();
 
     return $maxscreen;
+  }
+  
+  /**
+  * @brief Check if the paper has been taken
+  * @param integer $id - paper id
+  * @param mysqli $db 
+  * @return bool
+  */
+  static function paper_taken($id, $db) {
+    $result = $db->prepare("SELECT count(*) FROM log_metadata WHERE paperID = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->bind_result($count);
+    $result->fetch();
+    $result->close();
+    if ($count > 0) {
+        return true;
+    } else {
+        $result = $db->prepare("SELECT count(*) FROM log4_overall WHERE q_paper = ?");
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->bind_result($count);
+        $result->fetch();
+        $result->close();
+        if ($count > 0) {
+            return true;
+        }
+    }
+    return false;
   }
   
 }

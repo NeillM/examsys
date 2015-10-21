@@ -43,4 +43,5 @@ $string['msg2'] = 'Are you sure you wish to delete old Formative and Progress Te
 $string['announcments'] = 'News &amp; Announcements';
 $string['imslti'] = 'LTI Keys';
 $string['academicsessions'] = 'Academic Sessions';
+$string['authentication'] = 'OAuth Authentication';
 ?>

@@ -1,0 +1,67 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="courseManagementRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="create" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+		    <xs:choice>
+			  <xs:group ref="create"/>
+			  <xs:group ref="update"/>
+			</xs:choice>
+			<xs:attribute type="xs:string" name="id" use="required"/>
+          </xs:complexType>
+        </xs:element>
+		<xs:element name="delete" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="xs:integer"/>
+            </xs:sequence>
+			<xs:attribute type="xs:string" name="id" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:group name="create">
+    <xs:sequence>
+	  <xs:element name="name" type="coursename"/>
+	  <xs:element name="description" type="description"/>
+	  <xs:element name="school" type="school"/>
+	  <xs:element name="faculty" type="faculty" minOccurs="0"/>
+	</xs:sequence>
+  </xs:group>
+  <xs:group name="update">
+    <xs:sequence>
+	  <xs:element name="id" type="xs:integer"/>
+	  <xs:element name="name" type="coursename" minOccurs="0"/>
+	  <xs:element name="description" type="description" minOccurs="0"/>
+	  <xs:element name="school" type="school" minOccurs="0"/>
+	  <xs:element name="faculty" type="faculty" minOccurs="0"/>
+	</xs:sequence>
+  </xs:group>
+  <xs:simpleType name="coursename">
+    <xs:restriction base="xs:string">
+	  <xs:minLength value="1"/>
+	  <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="description">
+    <xs:restriction base="xs:string">
+	  <xs:minLength value="1"/>
+	  <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="school">
+    <xs:restriction base="xs:string">
+	  <xs:minLength value="1"/>
+	  <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="faculty">
+    <xs:restriction base="xs:string">
+	  <xs:minLength value="1"/>
+	  <xs:maxLength value="80"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

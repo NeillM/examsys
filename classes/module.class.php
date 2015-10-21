@@ -552,6 +552,7 @@ Class module {
     $result->bind_param('i', $idMod);
     $result->execute();
     $result->close();
+    return true;
   }
 
   /**
@@ -651,5 +652,62 @@ Class module {
     $result->close();
 
     return $paper_types;
+  }
+  
+  /**
+   * @brief Update module based on id
+   * @param integer $id 
+   * @param string $code - shortcode of module
+   * @param string $name - fullname
+   * @param integer $schoolid - school module is run under
+   * @param string $sms - student management system that create the module
+   * @param mysqli $db - db connection
+   * @return bool true on success
+   */
+  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db) {
+    $sql = "UPDATE modules SET
+               moduleid = ?,
+               fullname = ?,
+               sms = ?,
+               schoolid = ?
+            WHERE
+              id = ?";
+    $result = $db->prepare($sql);
+    $result->bind_param('sssii', $code, $name, $sms, $schoolid, $id);
+    $res = $result->execute();
+    
+    if ($db->errno != 0) {
+        return false;
+    }
+
+    return true;
+  }
+  
+  /**
+   * @brief Check if papers or enrolements exist on this module
+   * @param integer $id module us
+   * @return 
+   */
+  public static function get_enrol_papers_on_module ($id, $db) {
+    $result = $db->prepare("SELECT count(*) FROM properties_modules WHERE idMod = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->bind_result($count);
+    $result->fetch();
+    $result->close();
+    if ($count > 0) {
+        return true;
+    } else {
+        $result = $db->prepare("SELECT count(*) FROM modules_student WHERE idMod = ?");
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->bind_result($count);
+        $result->fetch();
+        $result->close();
+        if ($count > 0) {
+            return true;
+        }
+    }
+    return false;
   }
 }

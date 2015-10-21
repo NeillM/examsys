@@ -1,0 +1,16 @@
+{
+    "name": "uon/rogo",
+    "description": "Rogo e-assessment",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Joseph Baxter",
+            "email": "joseph.baxter@nottingham.ac.uk"
+        }
+    ],
+    "require": {
+        "slim/slim": "^2.6",
+        "bshaffer/oauth2-server-php": "^1.7",
+        "twig/twig": "^1.22"
+    }
+}
