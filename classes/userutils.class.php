@@ -423,7 +423,7 @@ Class UserUtils {
    * @param integer $tmp_userID - UserID of the member of staff.
    * @param int $idmod          - The id of the team (module).
    * @param object $db          - Database connection.
-   * @rerutn bool
+   * @return bool
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {

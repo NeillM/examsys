@@ -58,7 +58,7 @@ class modulemanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Enrol student on a Module (private method).
+     * @brief Enrol student on a Module.
      * @param array $params module enrol parameters
      * @return array - success status and enrolment id
      */
@@ -86,7 +86,7 @@ class modulemanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief UnEnrol student on a Module (private method).
+     * @brief UnEnrol student on a Module.
      * @param array $params module enrol parameters
      * @return array - success status and enrolment id
      */
