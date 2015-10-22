@@ -48,8 +48,8 @@ class autoloader {
       include_once $filename;
     } else {
         // subdir classes (namespaced).
-        $folders = explode('\\', strtolower($class));
-        $classname = array_pop($folders);
+        $folders = explode('\\', $class);
+        $classname = strtolower(array_pop($folders));
         $path = implode(DIRECTORY_SEPARATOR, $folders);
         $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . $classname . '.class.php';
         if (file_exists($filename)) {
