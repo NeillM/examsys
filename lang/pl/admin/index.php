@@ -43,4 +43,5 @@ $string['msg2'] = 'Czy na pewno usunąć stare rejestry testów formatywnych i d
 $string['announcments'] = 'Nowiny i ogłoszenia';
 $string['imslti'] = 'Klucze LTI';
 $string['academicsessions'] = 'Academic Sessions';
+$string['authentication'] = 'OAuth Authentication';
 ?>
