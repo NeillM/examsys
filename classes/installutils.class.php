@@ -1771,6 +1771,10 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
 
+  //twig settings
+  \$twig_templates = \$_SERVER['DOCUMENT_ROOT'] . 'templates';
+  \$twig_cache = false;
+
   ?>
 CONFIG;
 
