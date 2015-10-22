@@ -2,7 +2,6 @@
 
 require_once '../include/load_config.php';
 
-// TODO use a webservice db user.
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 
                                  $configObject->get('cfg_db_webservice_user'), 
                                  $configObject->get('cfg_db_webservice_passwd'), 
