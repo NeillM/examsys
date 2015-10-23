@@ -684,7 +684,7 @@ QUERY;
     $this->tableList['modules'] = <<<QUERY
         CREATE TABLE `modules` (
           `id` int(11) NOT NULL auto_increment,
-          `moduleid` char(25) default NULL,
+          `moduleid` char(255) default NULL,
           `fullname` text,
           `active` tinyint(4) default NULL,
           `vle_api` varchar(255) default NULL,
