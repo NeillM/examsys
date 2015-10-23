@@ -15,23 +15,25 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for network related functionality
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for network related functionality
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 Class NetworkUtils {
-	/**
-	 * Get the IP address or name of the computer from the server headers
+  /**
+   * Get the IP address or name of the computer from the server headers
    * @return mixed client ip address
-	 */
+   */
   static function get_client_address() {
     $configObject = Config::get_instance();
-
+    if(PHP_SAPI == 'cli') {
+      return null;
+    }
     // If don't have cached version look it up
     if (!isset($_SESSION['current_ip'])) {
       if ($configObject->get('cfg_client_lookup') == 'name') {
@@ -99,4 +101,3 @@ Class NetworkUtils {
     }
   }
 }
-?>
