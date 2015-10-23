@@ -74,13 +74,7 @@ $additionaljs ="
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
  $string['oauthkeys'] => "list_oauth.php");
-$render->render_admin_header(array('lang' => $lang,
-                    'config' => $config,
-                    'breadcrumb' => $breadcrumb,
-                    'toprightmenu' => $toprightmenu,
-                    'additionaljs' => $additionaljs,
-                    'additionalcss' => $addtionalcss));
-$render->render_admin_list(array('data' => $clients,
-                     'header' => $header));
-$render->render_admin_footer(array());
+$render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $addtionalcss);
+$render->render_admin_list($clients, $header);
+$render->render_admin_footer();
                      

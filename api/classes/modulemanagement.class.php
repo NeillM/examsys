@@ -136,7 +136,7 @@ class modulemanagement extends \api\abstractmanagement {
             $schoolid = \SchoolUtils::school_name_exists($params['school'], $this->db);
             if (!$schoolid) {
                 if (isset($params['faculty']) and $params['faculty'] != '') {
-                    $schoolid = \SchoolUtils::school_and_faculty($params['school'], $params['faculty'], $this->db);
+                    $schoolid = \SchoolUtils::generate_school_id($params['school'], $params['faculty'], $this->db);
                 } else {
                     $faculty = false;
                 }

@@ -42,42 +42,52 @@ class render {
     }
     
     /**
-     * @brief Render page.
+     * @brief Render xml reponse.
      * @param string $template - template location
-     * @param array $data - data  to subsitutue
-     * @return  
+     * @param string $reponsename - response name
+     * @param array $response - response data
+     * @return void
      */
-    public function render($template, $data) {
+    public function render_xml($template, $reponsename, $response) {
+        $data = array('name' => $reponsename, 'response' => $response);
         echo $this->twig->render($template, $data);
     }
     
     /**
      * @brief Render admin list page.
      * @param string $template - template location
-     * @param array $data - data  to subsitutue
-     * @return  
+     * @param array $data - data to list
+     * @param array $header - headers for data
+     * @return void
      */
-    public function render_admin_list($data) {
+    public function render_admin_list($data, $header) {
+        $data = array('data' => $data, 'header' => $header);
         echo $this->twig->render('admin/list.html', $data);
     }
     
     /**
      * @brief Render admin page header.
      * @param string $template - template location
-     * @param array $data - data  to subsitutue
-     * @return  
+     * @param array $lang translations used in header
+     * @param array $config configuration items required
+     * @param array $breadcrumb breadcrumb navigation
+     * @param string $toprightmenu menu link
+     * @param string $additionaljs additional javascript required
+     * @param string $additionalcss additional css required
+     * @return void
      */
-    public function render_admin_header($data) {
+    public function render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $additionalcss) {
+        $data = array('lang' => $lang, 'config' => $config, 'breadcrumb' => $breadcrumb, 'toprightmenu' => $toprightmenu,
+            'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss);
         echo $this->twig->render('admin/header.html', $data);
     }
     
     /**
      * @brief Render admin page footer.
      * @param string $template - template location
-     * @param array $data - data  to subsitutue
-     * @return  
+     * @return void
      */
-    public function render_admin_footer($data) {
-        echo $this->twig->render('admin/footer.html', $data);
+    public function render_admin_footer() {
+        echo $this->twig->render('admin/footer.html');
     }
 }

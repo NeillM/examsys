@@ -11,7 +11,7 @@
 			    <xs:group ref="update"/>
 			  </xs:choice>
 			  <xs:element name="title" type="title" minOccurs="0"/>
-			  <xs:element name="forname" type="forname" minOccurs="0"/>
+			  <xs:element name="forename" type="forename" minOccurs="0"/>
 			  <xs:element name="initials" type="initials" minOccurs="0"/>
 			  <xs:element name="email" type="email" minOccurs="0"/>
 			  <xs:element name="password" type="password" minOccurs="0"/>
@@ -70,7 +70,7 @@
 	  <xs:maxLength value="30"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="forname">
+  <xs:simpleType name="forename">
     <xs:restriction base="xs:string">
 	  <xs:minLength value="1"/>
 	  <xs:maxLength value="60"/>

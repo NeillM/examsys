@@ -68,7 +68,7 @@ Class UserUtils {
       
       // If there is no password generate a default one.
       if ($password == '') {
-          $password = $enc->gen_password();
+        $password = $enc->gen_password();
       }
 
       // Force valid value for gender or default to NULL
@@ -587,7 +587,7 @@ Class UserUtils {
    * @param string $idMod Module code for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return bool return true if successful.
+   * @return bool return true if successful or false.
    *
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
@@ -905,13 +905,13 @@ Class UserUtils {
   }
   
   /**
-    * @brief Remove the student from the module
-    * @param int $userid 
-    * @param int $moduleid
-    * @param string $session 
-    * @param mysqli $db
-    * @return false / enrolment id
-  */
+   * @brief Remove the student from the module
+   * @param int $userid 
+   * @param int $moduleid
+   * @param string $session 
+   * @param mysqli $db
+   * @return bool|int false / enrolment id
+   */
   static function remove_student_from_module($userid, $moduleid, $session, $db) {
     if ($userid == '' or $moduleid == '' or $session == '') {
       return false;

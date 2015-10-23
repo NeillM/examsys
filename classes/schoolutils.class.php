@@ -224,7 +224,7 @@ Class SchoolUtils {
         return true;
       }
       
-      /**
+    /**
      * Updates a school
      * @param integer $if       - School id in rogo.
      * @param int $facultyID    - ID of the faculty to which the new school belongs.
@@ -254,7 +254,7 @@ Class SchoolUtils {
         return true;
     }
     
-    /**
+  /**
    * @brief Get factulty details
    * @param integer $id 
    * @param mysqli $db 
@@ -303,19 +303,19 @@ Class SchoolUtils {
   
   /**
    * @brief  Generate a school id based on name and faculty.
-   * @param string $school 
-   * @param string $faculty 
+   * @param string $school - school name
+   * @param string $faculty - faculty name
    * @param mysqli $db
    * @return integer 
   */
-  static function school_and_faculty($school, $faculty, $db) {
-    $facultyid = FacultyUtils::facultyid_by_name($params['faculty'], $db);
+  static function generate_school_id($school, $faculty, $db) {
+    $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
     if (!$facultyid) {
         // Add new faculty.
-        $facultyid = FacultyUtils::add_faculty($params['faculty'], $db);
+        $facultyid = FacultyUtils::add_faculty($faculty, $db);
     }
     // Add new school to faculty.
-    $schoolid = SchoolUtils::add_school($facultyid, $params['school'], $db);
+    $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
     return $schoolid;
   }
 }

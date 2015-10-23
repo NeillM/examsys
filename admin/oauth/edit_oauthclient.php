@@ -15,7 +15,8 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
+* Admin screen to edit an oauth client
+* 
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2015 onwards The University of Nottingham
 */
@@ -55,7 +56,7 @@ if (isset($_POST['submit'])) {
         $oauth->set_permission('modulemanagement/enrol', $client, false);
     }
     
-    header("location: list_oauthclient.php");
+    header("location: list_oauthclient.php", TRUE,303);
     exit();
 } else {
     $client = check_var('client', 'GET', true, false, true);
@@ -119,12 +120,7 @@ $addtionalcss = "<style type=\"text/css\">
         </style>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['oauthkeys'] => "list_oauth.php", $string['listoauthclient'] => "list_oauthclient.php" );
 $action = $_SERVER['PHP_SELF'];
-$render->render_admin_header(array('lang' => $lang,
-                     'config' => $config,
-                     'breadcrumb' => $breadcrumb,
-                     'toprightmenu' => $toprightmenu,
-                     'additionaljs' => $additionaljs,
-                     'additionalcss' => $addtionalcss));
+$render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $addtionalcss);
 
 ?>
 
@@ -154,5 +150,5 @@ $render->render_admin_header(array('lang' => $lang,
 </div>
 
 <?php
-    $render->render_admin_footer(array());
+    $render->render_admin_footer();
 ?>

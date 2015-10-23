@@ -119,7 +119,7 @@ class oauth {
      * @param string $action 
      * @param string $client 
      * @param bool $access 
-     * @return bool 
+     * @return void 
      */
     public function add_permission($action, $client, $access) {
         $result = $this->db->prepare("INSERT INTO webservice_permissions (client_id, action, access) values (?, ?, ?)");
@@ -137,7 +137,7 @@ class oauth {
     
     /**
      * @brief Handle a request to a resource and authenticate the access token
-     * return string - client id if authenticated
+     * return string|void - client id if authenticated, void otherwise
      */
     public function check_auth() {
         $verify = $this->server->verifyResourceRequest(\OAuth2\Request::createFromGlobals());
@@ -160,7 +160,7 @@ class oauth {
      * @brief Authorise an OAuth2.0 access token
      * @param bool $authorised is the token authorised
      * @param int $userid the user authorising
-     * @return string error
+     * @return string|void error response or void
      */
     public function authorise($authorised = false, $userid = '') {
         $request = \OAuth2\Request::createFromGlobals();
@@ -182,7 +182,7 @@ class oauth {
      /**
      * @brief Check if the access/refresh token exists
      * @param string $id - access/refresh token
-     * @return token type or false
+     * @return string|bool token type or false
      */
     public function id_exists($id) {
         $result = $this->db->prepare("SELECT count(access_token) FROM oauth_access_tokens WHERE access_token = ?");
@@ -212,7 +212,7 @@ class oauth {
      * @brief Delete the access/refresh token
      * @param string $id - access/refresh token
      * @param string $type - token type
-     * @return  
+     * @return void
      */
     public function delete_auth($id, $type) {
         if ($type == 'access_token') {
@@ -265,7 +265,7 @@ class oauth {
     /**
      * @brief Delete the oauth client
      * @param string $client - oauth client
-     * @return  
+     * @return void
      */
     public function delete_oauthclient($client) {
         $result = $this->db->prepare("DELETE FROM oauth_clients WHERE client_id = ?");

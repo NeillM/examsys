@@ -33,7 +33,7 @@ $app->post('/modulemanagement/enrol', function() use($app, $api, $mysqli, $oauth
     
     // Check media type - only test/xml supported currently.
     if(!$api->get_mediatype()) {
-        $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', 'mediatype'))));
+        $render->render_xml('api/error.xml','rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
         die;
     }
     
@@ -55,7 +55,7 @@ $app->post('/modulemanagement/enrol', function() use($app, $api, $mysqli, $oauth
     }
     
     // Render response.
-    $render->render($template, array('name' => 'moduleManagementEnrolResponse', 'response' => $response));
+    $render->render_xml($template, 'moduleManagementEnrolResponse', $response);
     
 });
 
@@ -69,7 +69,7 @@ $app->post('/modulemanagement', function() use($app, $api, $mysqli, $oauth, $ren
     
     // Check media type - only test/xml supported currently.
     if(!$api->get_mediatype()) {
-        $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', 'mediatype'))));
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
         die;
     }
 
@@ -91,7 +91,7 @@ $app->post('/modulemanagement', function() use($app, $api, $mysqli, $oauth, $ren
     }
 
     // Render response.
-    $render->render($template, array('name' => 'moduleManagementResponse', 'response' => $response));
+    $render->render_xml($template, 'moduleManagementResponse', $response);
     
 });
 
@@ -105,7 +105,7 @@ $app->post('/coursemanagement', function() use($app, $api, $mysqli, $oauth, $ren
     
     // Check media type - only test/xml supported currently.
     if(!$api->get_mediatype()) {
-        $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', 'mediatype'))));
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
         die;
     }
     $response = array();
@@ -125,7 +125,7 @@ $app->post('/coursemanagement', function() use($app, $api, $mysqli, $oauth, $ren
     }
 
     // Render response.
-    $render->render($template, array('name' => 'courseManagementResponse', 'response' => $response));
+    $render->render_xml($template, 'courseManagementResponse', $response);
     
 });
 
@@ -139,7 +139,7 @@ $app->post('/schoolmanagement', function() use($app, $api, $mysqli, $oauth, $ren
     
     // Check media type - only test/xml supported currently.
     if(!$api->get_mediatype()) {
-        $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', 'mediatype'))));
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
         die;
     }
     $response = array();
@@ -159,7 +159,7 @@ $app->post('/schoolmanagement', function() use($app, $api, $mysqli, $oauth, $ren
     }
 
     // Render response.
-    $render->render($template, array('name' => 'schoolManagementResponse', 'response' => $response));
+    $render->render_xml($template, 'schoolManagementResponse', $response);
     
 });
 
@@ -174,7 +174,7 @@ $app->post('/facultymanagement', function() use($app, $api, $mysqli, $oauth, $re
     
     // Check media type - only test/xml supported currently.
     if(!$api->get_mediatype()) {
-        $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', 'mediatype'))));
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
         die;
     }
     $response = array();
@@ -194,7 +194,7 @@ $app->post('/facultymanagement', function() use($app, $api, $mysqli, $oauth, $re
     }
 
     // Render response.
-    $render->render($template, array('name' => 'facultyManagementResponse', 'response' => $response));
+    $render->render_xml($template, 'facultyManagementResponse', $response);
     
 });
 
@@ -208,7 +208,7 @@ $app->post('/usermanagement', function() use($app, $api, $mysqli, $oauth, $rende
     
     // Check media type - only test/xml supported currently.
     if(!$api->get_mediatype()) {
-        $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', 'mediatype'))));
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
         die;
     }
 
@@ -230,16 +230,16 @@ $app->post('/usermanagement', function() use($app, $api, $mysqli, $oauth, $rende
     }
     
     // Render response.
-    $render->render($template, array('name' => 'userManagementResponse', 'response' => $response));
+    $render->render_xml($template, 'userManagementResponse', $response);
     
 });
 
 $app->notFound(function () use ($app, $api, $render, $langpack) {
-    $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', '404'))));
+    $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
 });
 
 $app->error(function (\Exception $e) use ($app, $api, $render, $langpack) {
-    $render->render('api/error.xml', array('name' => 'rogo', 'response' => array($langpack->get_string('api/commonapi', '500'))));
+    $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
 });
 
 $app->run();
