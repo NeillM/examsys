@@ -54,7 +54,7 @@ Class CourseUtils {
       }
     }
 
-    $result = $db->prepare("INSERT INTO courses (name, description, schoolid) VALUES (?, ?, ?)");
+    $result = $db->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
     $result->bind_param('ssi', $name, $description, $schoolid);
     $result->execute();
     $result->close();
@@ -168,6 +168,27 @@ Class CourseUtils {
     
     return $details;
   }
+
+  /**
+   * Returns a name for a given course ID.
+   * @param string $courseID - The ID of the course to be checked
+   * @param object $db        - Link to mysqli
+   * @return bool|string      - False if the course does not exist, otherwise returns the name.
+   */
+  static function get_course_name_by_id($courseID, $db) {
+    $course_name = false;
+
+    $result = $db->prepare("SELECT name FROM courses WHERE id = ? AND deleted IS NULL");
+    $result->bind_param('i', $courseID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($course_name);
+    $result->fetch();
+    $result->close();
+
+    return $course_name;
+  }
+
   
   /**
    * Get course details
@@ -221,8 +242,7 @@ Class CourseUtils {
    */
   static function update_course($id, $schoolid, $name, $description, $db) {
     // Check if name already in use.
-    $courseid = CourseUtils::get_course_id($name, $db);
-    if ($courseid !== false and $courseid != $id) {
+    if (CourseUtils::course_exists($name, $db) === true) {
       return false;
     }
     $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ? WHERE id = ?");
@@ -249,14 +269,12 @@ Class CourseUtils {
     $result = $db->prepare("SELECT id FROM courses WHERE name = ? AND deleted IS NULL");
     $result->bind_param('s', $name);
     $result->execute();
-    $result->store_result();
     $result->bind_result($id);
     $result->fetch();
+    $result->close();
     if ($result->num_rows == 0) {
-      $result->close();
       return false;
     }
-    $result->close();
     return $id;
   }
 }
