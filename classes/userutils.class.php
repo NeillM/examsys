@@ -587,7 +587,7 @@ Class UserUtils {
    * @param string $idMod Module code for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return bool return true if successful or false.
+   * @return int|bool enrolement id or false
    *
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
@@ -610,7 +610,7 @@ Class UserUtils {
    * @param int $idMod Module ID for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return int enrolement id
+   * @return int|bool enrolement id or false
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
