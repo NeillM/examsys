@@ -35,9 +35,9 @@ class render {
      * @return void 
      */
     function __construct($configObject) {
-        $loader = new \Twig_Loader_Filesystem($configObject->get('twig_templates'));
+        $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
         $this->twig = new \Twig_Environment($loader, array(
-            'cache' => $configObject->get('twig_cache')
+            'cache' => false
         ));
     }
     

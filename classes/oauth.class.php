@@ -56,9 +56,9 @@ class oauth {
 
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $this->server = new \OAuth2\Server($this->storage, array(
-            'access_lifetime' => 1209600,
-            'refresh_token_lifetime' => 1209600,
-            'always_issue_new_refresh_token' => true
+            'access_lifetime' => $configObject->get('cfg_oauth_access_lifetime'),
+            'refresh_token_lifetime' => $configObject->get('cfg_oauth_refresh_token_lifetime'),
+            'always_issue_new_refresh_token' => $configObject->get('cfg_oauth_always_issue_new_refresh_token')
         ));
 
         // Add the "Authorization Code" grant type 

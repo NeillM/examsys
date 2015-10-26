@@ -3,8 +3,8 @@
 if ($updater_utils->check_version("6.1.0")) {
 
     if (!$updater_utils->has_updated('rogo1559_webserviceuser')) {
-            $cfg_db_webservice_user = $cfg_db_database . '_web';
-            $cfg_db_webservice_passwd = gen_password(16);
+        $cfg_db_webservice_user = $cfg_db_database . '_web';
+        $cfg_db_webservice_passwd = gen_password(16);
     
         $createsql ="CREATE USER  '" . $cfg_db_webservice_user . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_webservice_passwd . "'";
         $updater_utils->execute_query($createsql, true);

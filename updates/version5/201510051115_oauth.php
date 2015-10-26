@@ -54,6 +54,12 @@ if ($updater_utils->check_version("6.1.0")) {
             public_key VARCHAR(2000),
             CONSTRAINT jwt_client_id_pk PRIMARY KEY (client_id))";
         $updater_utils->execute_query($createsql, true);
+        
+        // Add oauth settings config file.
+        $new_lines = array("\$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.\n", "\$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.\n" , "\$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.\n");
+        $target_line = '$debug_lang_string';
+        $updater_utils->add_line($string, '$cfg_oauth_access_lifetime', $new_lines, 28, $cfg_web_root, $target_line, +2);
+
         $updater_utils->record_update('rogo1559_oauth');
     }
 }

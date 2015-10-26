@@ -1771,10 +1771,10 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
 
-  //twig settings
-  \$twig_templates = \$_SERVER['DOCUMENT_ROOT'] . 'templates';
-  \$twig_cache = false;
-
+  //oauth settings
+  \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
+  \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
+  \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
   ?>
 CONFIG;
 
