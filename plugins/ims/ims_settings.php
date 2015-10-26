@@ -112,15 +112,15 @@ $render = new \html_renderer();
     ?>
     <div id="content">
       <div class="head_title">
+        <div>
+          <img alt="menu icon" src="../../artwork/toprightmenu.gif" id="toprightmenu_icon" />
+        </div>
         <div class="breadcrumb">
           <a href="../../index.php"><?php echo $string['home'] ?>
           </a>
           <img src="../../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/>
           <a href="../../admin/index.php"><?php echo $string['administrativetools']; ?>
           </a>
-        </div>
-        <div>
-          <img alt="menu icon" src="../../artwork/toprightmenu.gif" id="toprightmenu_icon" />
         </div>
         <div class="page_title"><?php echo $string['imssettings'] ?></div>
       </div>
