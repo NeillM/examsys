@@ -56,81 +56,29 @@ $render = new \html_renderer();
       #content {
         padding-bottom: 100px;
       }
-
-      td {text-align:left}
-      .field {text-align:right; padding-right:30px}
-      .form-error {
-        width: 468px;
-        margin: 38px auto;
-        padding: 36px;
-        background-color: #FFD9D9;
-        color: #800000;
-        border: 2px solid #800000;
+      td {
+          text-align: left
       }
-
-      div.form-defaultinfo {
-        margin-bottom: 30px;
-        color: #777;
-        font-size: 0.85em;
-        position: relative;
-        left: 50px;
-        max-width: 900px;
+      tr {
+          min-height: 2em;
       }
-
-      #theform > div > div > div.label {
-        float: left;
-        width: 350px;
-        padding: 5px;
-        -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.35);
-        -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.35);
-        box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.35);
+      td.formlabel {
+        text-align: right;
+        padding-right: 10px;
+        max-width: 300px;
       }
-
-      .form_buttons {
-        margin-top: 50px;
+      td.formtooltip {
+        padding-right: 10px;
       }
-
-      #theform > div > div > div > div > select,
-      #theform > div > div > div > div > input {
-        float: left;
-        width: 300px;
-        position: relative;
-        left: 30px;
-        height: 22px;;
+      td.formdefault {
+        text-align: left;
+        padding-left: 30px;
+        max-width: 300px;
+        font-size: 0.8em;
+        opacity: 0.7;
       }
-
-      #theform > div > div, h3, h2, h3 {
-        padding: 5px;
-      }
-
-      div.tooltip {
-        padding: 5px;
-      }
-
-      #theform > div > div.form_buttons > input[type="submit"] {
-        padding-left: 50px;
-        padding-right: 50px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-weight: bold;
-      }
-
-      #theform > div > div.form_buttons > a {
-        padding-left: 50px;
-        padding-right: 50px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        font-weight: bold;
-        background-color: #FFD9D9;
-        position: relative;
-        left: 50px;
-        border: solid 1px #000;
-      }
-
-      #theform > div > div.form_buttons > a:hover {
-        background-color: #fcc4c4;
-        color: #000;
-        text-decoration: none;
+      .formrow {
+          height: 3em;
       }
     </style>
     <?php echo $configObject->get('cfg_js_root') ?>
@@ -157,13 +105,6 @@ $render = new \html_renderer();
   </head>
   <body>
     <div id="left-sidebar" class="sidebar">
-      <div class="breadcrumb">
-        <a href="../../index.php"><?php echo $string['home'] ?>
-        </a>
-        <img src="../../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/>
-        <a href="../../admin/index.php"><?php echo $string['administrativetools']; ?>
-        </a>
-      </div>
     </div>
     <?php
     require '../../include/toprightmenu.inc';
@@ -171,6 +112,13 @@ $render = new \html_renderer();
     ?>
     <div id="content">
       <div class="head_title">
+        <div class="breadcrumb">
+          <a href="../../index.php"><?php echo $string['home'] ?>
+          </a>
+          <img src="../../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/>
+          <a href="../../admin/index.php"><?php echo $string['administrativetools']; ?>
+          </a>
+        </div>
         <div>
           <img alt="menu icon" src="../../artwork/toprightmenu.gif" id="toprightmenu_icon" />
         </div>
@@ -179,48 +127,56 @@ $render = new \html_renderer();
       <br />
       <div class="ims_settings">
         <form id="theform" name="ims_settings" method="post">
-          <div>
+          <table>
             <?php
-            $render->heading('h2', $string['imstitle'], $string['pluginname_desc']);
-            $render->heading('h3', $string['basicsettings']);
-            $render->text_input('filelocation', 'filelocation', $string['location'], $ims->filelocation, $string['default'] . $string['empty']);
-            $render->checkbox_input('validatexml', 'validatexml', $string['validatexml'], $ims->validatexml, $string['default'] . $string['yes'], $string['validatexml_desc']);
-            $render->heading('h3', $string['usersettings']);
-            $render->checkbox_input('createusers', 'createusers', $string['createusers'], $ims->createusers, $string['default'] . $string['no'], $string['createusers_desc']);
-            $render->checkbox_input('deleteusers', 'deleteusers', $string['deleteusers'], $ims->deleteusers, $string['default'] . $string['no'], $string['deleteusers_desc']);
-            $render->checkbox_input('fixcaseusernames', 'fixcaseusernames', $string['fixcaseusernames'], $ims->fixcaseusernames, $string['default'] . $string['no']);
-            $render->checkbox_input('fixcasenames', 'fixcasenames', $string['fixcasenames'], $ims->fixcasenames, $string['default'] . $string['no'], $string['fixcasenames_desc']);
-            $render->checkbox_input('sourcedidfailback', 'sourcedidfailback', $string['sourcedidfailback'], $ims->sourcedidfailback, $string['default'] . $string['no'], $string['sourcedidfailback_desc']);
-            $render->heading('h3', $string['roles'], $string['imsrolesdescription']);
-            $render->select($rolemappings, 'rolemap01', 'rolemap01', $ims->rolemap01, $string['role_learner'], $string['default'] . $string['student']);
-            $render->select($rolemappings, 'rolemap02', 'rolemap02', $ims->rolemap02, $string['role_instructor'], $string['default'] . $string['staff']);
-            $render->select($rolemappings, 'rolemap03', 'rolemap03', $ims->rolemap03, $string['role_contentdeveloper'], $string['default'] . $string['staff']);
-            $render->select($rolemappings, 'rolemap04', 'rolemap04', $ims->rolemap04, $string['role_member'], $string['default'] . $string['student']);
-            $render->select($rolemappings, 'rolemap05', 'rolemap05', $ims->rolemap05, $string['role_manager'], $string['default'] . $string['staff']);
-            $render->select($rolemappings, 'rolemap06', 'rolemap06', $ims->rolemap06, $string['role_mentor'], $string['default'] . $string['staff']);
-            $render->select($rolemappings, 'rolemap07', 'rolemap07', $ims->rolemap07, $string['role_administrator'], $string['default'] . $string['staff']);
-            $render->select($rolemappings, 'rolemap08', 'rolemap08', $ims->rolemap08, $string['role_teachingassistant'], $string['default'] . $string['staff']);
-            $render->heading('h3', $string['coursesettings']);
-            $render->text_input('truncatemodulecodes', 'truncatemodulecodes', $string['truncatemodulecodes'], $ims->truncatemodulecodes, $string['default'] . $string['zero'], $string['truncatemodulecodes_desc']);
-            $render->checkbox_input('createmodules', 'createmodules', $string['createmodules'], $ims->createmodules, $string['default'] . $string['no'], $string['createmodules_desc']);
-            $render->checkbox_input('createschools', 'createschools', $string['createschools'], $ims->createschools, $string['default'] . $string['no'], $string['createschools_desc']);
-            $render->select($hierarchy_creation_options, 'schoolsource', 'schoolsource', $ims->schoolsource, $string['schoolsource'], $string['default'] . $string['orgname']);
-            $render->checkbox_input('createfaculties', 'createfaculties', $string['createfaculties'], $ims->createfaculties, $string['default'] . $string['no'], $string['createfaculties_desc']);
-            $render->select($hierarchy_creation_options, 'facultysource', 'facultysource', $ims->facultysource, $string['facultysource'], $string['default'] . $string['orgname']);
-            $render->checkbox_input('createprogrammes', 'createprogrammes', $string['createprogrammes'], $ims->createprogrammes, $string['default'] . $string['no'], $string['createprogrammes_desc']);
-            $render->select($hierarchy_creation_options, 'programmesource', 'programmesource', $ims->programmesource, $string['programmesource'], $string['default'] . $string['orgname']);
-            $render->checkbox_input('unenrol', 'unenrol', $string['allowunenrol'], $ims->unenrol, $string['default'] . $string['no'], $string['allowunenrol_desc']);
-            $render->select($coursetags, 'mapmoduleid', 'mapmoduleid', $ims->mapmoduleid, $string['settingmoduleid'], $string['default'] . $string['coursecode'], $string['settingmoduleiddescription']);
-            $render->select($coursetags, 'mapfulltname', 'mapfullname', $ims->mapfullname, $string['settingfullname'], $string['default'] . $string['short'], $string['settingfullnamedescription']);
-            $render->heading('h3', $string['miscsettings']);
-            $render->text_input('restricttarget', 'restricttarget', $string['restricttarget'], $ims->restricttarget, $string['default'] . $string['empty'], $string['restricttarget_desc']);
-            $render->checkbox_input('capitafix', 'capitafix', $string['usecapitafix'], $ims->capitafix, $string['default'] . $string['no'], $string['usecapitafix_desc']);
+            $render->heading('h2', $string['imstitle'], $string['pluginname_desc'], false, true);
+            $render->heading('h3', $string['basicsettings'], '', false, true);
+            $render->text_input('filelocation', 'filelocation', $string['location'], $ims->filelocation, $string['default'] . $string['empty'], '', false, true);
+            $render->checkbox_input('validatexml', 'validatexml', $string['validatexml'], $ims->validatexml, $string['default'] . $string['yes'], $string['validatexml_desc'], false, true);
+            $render->heading('h3', $string['usersettings'], '', false, true);
+            $render->checkbox_input('createusers', 'createusers', $string['createusers'], $ims->createusers, $string['default'] . $string['no'], $string['createusers_desc'], false, true);
+            $render->checkbox_input('deleteusers', 'deleteusers', $string['deleteusers'], $ims->deleteusers, $string['default'] . $string['no'], $string['deleteusers_desc'], false, true);
+            $render->checkbox_input('fixcaseusernames', 'fixcaseusernames', $string['fixcaseusernames'], $ims->fixcaseusernames, $string['default'] . $string['no'], false, true);
+            $render->checkbox_input('fixcasenames', 'fixcasenames', $string['fixcasenames'], $ims->fixcasenames, $string['default'] . $string['no'], $string['fixcasenames_desc'], false, true);
+            $render->checkbox_input('sourcedidfailback', 'sourcedidfailback', $string['sourcedidfailback'], $ims->sourcedidfailback, $string['default'] . $string['no'], $string['sourcedidfailback_desc'], false, true);
+            $render->heading('h3', $string['roles'], $string['imsrolesdescription'], false, true);
+            $render->select($rolemappings, 'rolemap01', 'rolemap01', $ims->rolemap01, $string['role_learner'], $string['default'] . $string['student'], '', false, true);
+            $render->select($rolemappings, 'rolemap02', 'rolemap02', $ims->rolemap02, $string['role_instructor'], $string['default'] . $string['staff'], '', false, true);
+            $render->select($rolemappings, 'rolemap03', 'rolemap03', $ims->rolemap03, $string['role_contentdeveloper'], $string['default'] . $string['staff'], '', false, true);
+            $render->select($rolemappings, 'rolemap04', 'rolemap04', $ims->rolemap04, $string['role_member'], $string['default'] . $string['student'], '', false, true);
+            $render->select($rolemappings, 'rolemap05', 'rolemap05', $ims->rolemap05, $string['role_manager'], $string['default'] . $string['staff'], '', false, true);
+            $render->select($rolemappings, 'rolemap06', 'rolemap06', $ims->rolemap06, $string['role_mentor'], $string['default'] . $string['staff'], '', false, true);
+            $render->select($rolemappings, 'rolemap07', 'rolemap07', $ims->rolemap07, $string['role_administrator'], $string['default'] . $string['staff'], '', false, true);
+            $render->select($rolemappings, 'rolemap08', 'rolemap08', $ims->rolemap08, $string['role_teachingassistant'], $string['default'] . $string['staff'], '', false, true);
+            $render->heading('h3', $string['coursesettings'], '', false, true);
+            $render->text_input('truncatemodulecodes', 'truncatemodulecodes', $string['truncatemodulecodes'], $ims->truncatemodulecodes, $string['default'] . $string['zero'], $string['truncatemodulecodes_desc'], false, true);
+            $render->checkbox_input('createmodules', 'createmodules', $string['createmodules'], $ims->createmodules, $string['default'] . $string['no'], $string['createmodules_desc'], false, true);
+            $render->checkbox_input('createschools', 'createschools', $string['createschools'], $ims->createschools, $string['default'] . $string['no'], $string['createschools_desc'], false, true);
+            $render->select($hierarchy_creation_options, 'schoolsource', 'schoolsource', $ims->schoolsource, $string['schoolsource'], $string['default'] . $string['orgname'], false, true);
+            $render->checkbox_input('createfaculties', 'createfaculties', $string['createfaculties'], $ims->createfaculties, $string['default'] . $string['no'], $string['createfaculties_desc'], false, true);
+            $render->select($hierarchy_creation_options, 'facultysource', 'facultysource', $ims->facultysource, $string['facultysource'], $string['default'] . $string['orgname'], '', false, true);
+            $render->checkbox_input('createprogrammes', 'createprogrammes', $string['createprogrammes'], $ims->createprogrammes, $string['default'] . $string['no'], $string['createprogrammes_desc'], false, true);
+            $render->select($hierarchy_creation_options, 'programmesource', 'programmesource', $ims->programmesource, $string['programmesource'], $string['default'] . $string['orgname'], false, true);
+            $render->checkbox_input('unenrol', 'unenrol', $string['allowunenrol'], $ims->unenrol, $string['default'] . $string['no'], $string['allowunenrol_desc'], false, true);
+            $render->select($coursetags, 'mapmoduleid', 'mapmoduleid', $ims->mapmoduleid, $string['settingmoduleid'], $string['default'] . $string['coursecode'], $string['settingmoduleiddescription'], false, true);
+            $render->select($coursetags, 'mapfulltname', 'mapfullname', $ims->mapfullname, $string['settingfullname'], $string['default'] . $string['short'], $string['settingfullnamedescription'], false, true);
+            $render->heading('h3', $string['miscsettings'], '', false, true);
+            $render->text_input('restricttarget', 'restricttarget', $string['restricttarget'], $ims->restricttarget, $string['default'] . $string['empty'], $string['restricttarget_desc'], false, true);
+            $render->checkbox_input('capitafix', 'capitafix', $string['usecapitafix'], $ims->capitafix, $string['default'] . $string['no'], $string['usecapitafix_desc'], false, true);
             ?>
-            <div class="form_buttons">
-              <input type="submit" name="submit" value="<?php echo $string['save'] ?>">
-              <a href="../admin/index.php"><?php echo $string['cancel']; ?></a>
-            </div>
-          </div>
+              <tr class="formrow">
+                  <td class="formlabel">
+                  <input class="ok" type="submit" name="submit" value="<?php echo $string['save'] ?>">
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  <input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>">
+                  </td>
+                  <td>
+                  </td>
+              </tr>
+          </table>
         </form>
       </div>
     </div>

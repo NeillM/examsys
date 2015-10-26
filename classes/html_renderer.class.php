@@ -16,7 +16,7 @@
 
 /**
  * HTML renderer class
- * 
+ *
  * @author Barry Oosthuizen <barry.oosthuizen@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,7 +25,7 @@ class html_renderer {
 
   /**
    * Render a select input element
-   * 
+   *
    * @param array $options
    * @param string $selectid
    * @param string $selectname
@@ -34,14 +34,54 @@ class html_renderer {
    * @param string $default_description
    * @param string $tooltip
    */
-  public function select($options, $selectid, $selectname, $selectedid, $label, $default_description, $tooltip = '') {
-    $html = '<div><div class="label"><label for="' . $selectid . '">' . $label . '</label>';
-    if (!empty($tooltip)) {
-      $html .= $this->tooltip($tooltip, true);
-    }
-    $html .= '</div><div><div>';
+  public function select($options, $selectid, $selectname, $selectedid, $label, $default_description, $tooltip = '', $return = false, $intable = false) {
 
-    $html .= '<select id="' . $selectid . '" name="' . $selectname . '">';
+    if ($intable) {
+      $html = '<tr class="formrow">';
+      $html .= '<td class="formlabel">';
+      $html .= '<label for="' . $selectid . '">' . $label . '</label>';
+      $html .= '</td>';
+      $html .= '<td class="formtooltip">';
+      if (!empty($tooltip)) {
+        $html .= $this->tooltip($tooltip, true, false);
+      }
+      $html .= '</td>';
+      $html .= '<td class="forminput select">';
+      $html .= $this->generate_select_element($selectid, $selectname, $options, $selectedid);
+      $html .= '</td>';
+      $html .= '<td class="formdefault">';
+      $html .= $default_description;
+      $html .= '</td>';
+      $html .= '</tr>';
+    } else {
+      $html = '<div><div class="label"><label for="' . $selectid . '">' . $label . '</label>';
+      if (!empty($tooltip)) {
+        $html .= $this->tooltip($tooltip, true, false);
+      }
+      $html .= '</div><div><div>';
+
+      $html .= $this->generate_select_element($selectid, $selectname, $options, $selectedid);
+      $html .= '</div><div class="form-defaultinfo default">' . $default_description . '</div></div>';
+      $html .= '</div>';
+    }
+
+    if ($return) {
+      return $html;
+    }
+    echo "\n" . $html;
+  }
+
+  /**
+   * Generate a select element for the select renderer
+   *
+   * @param string $selectid
+   * @param string $selectname
+   * @param array $options
+   * @param string $selectedid
+   * @return string
+   */
+  private function generate_select_element($selectid, $selectname, $options, $selectedid) {
+    $html = '<select id="' . $selectid . '" name="' . $selectname . '">';
     $selected = '';
     foreach ($options as $optionid => $option) {
       if ($optionid == $selectedid) {
@@ -51,13 +91,8 @@ class html_renderer {
       $selected = '';
     }
     $html .= '</select>';
-    $html .= '</div><div class="form-defaultinfo">' . $default_description . '</div></div>';
-
-
-    $html .= '</div>';
-
-    echo $html;
-  }
+    return $html;
+}
 
   /**
    * Render a text input form element
@@ -71,22 +106,41 @@ class html_renderer {
    * @param bool $return
    * @return string|void Return the HTML or echo it depending on the $return parameter
    */
-  public function text_input($name, $id, $label, $default, $default_description, $tooltip = '', $return = false) {
-    $input = '<div><div class="label">';
-    $input .= '<label for="filelocation">' . $label . '</label>';
-    if (!empty($tooltip)) {
-      $input .= $this->tooltip($tooltip);
-    }
-    $input .= '</div><div><div>';
-    $input .= '<input type="text" size="30" id="' . $id . '" name="' . $name . '" value="' . $default . '">';
-    $input .= '</div>';
+  public function text_input($name, $id, $label, $default, $default_description, $tooltip = '', $return = false, $intable = false) {
+    if ($intable) {
+      $input = '<tr class="formrow">';
+      $input .= '<td class="formlabel">';
+      $input .= '<label for="' . $id . '">' . $label . '</label>';
+      $input .= '</td>';
+      $input .= '<td class="formtooltip">';
+      if (!empty($tooltip)) {
+        $input .= $this->tooltip($tooltip, true, false);
+      }
+      $input .= '</td>';
+      $input .= '<td class="forminput text">';
+      $input .= '<input type="text" size="30" id="' . $id . '" name="' . $name . '" value="' . $default . '">';
+      $input .= '</td>';
+      $input .= '<td class="formdefault">';
+      $input .= $default_description;
+      $input .= '</td>';
+      $input .= '</tr>';
+    } else {
+      $input = '<div><div class="label">';
+      $input .= '<label for="filelocation">' . $label . '</label>';
+      if (!empty($tooltip)) {
+        $input .= $this->tooltip($tooltip);
+      }
+      $input .= '</div><div><div>';
+      $input .= '<input type="text" size="30" id="' . $id . '" name="' . $name . '" value="' . $default . '">';
+      $input .= '</div>';
 
-    if (!empty($default_description)) {
-      $input .= '<div class="form-defaultinfo">' . $default_description . '</div>';
-    }
+      if (!empty($default_description)) {
+        $input .= '<div class="form-defaultinfo default">' . $default_description . '</div>';
+      }
 
-    $input .= '</div><div></div>';
-    $input .= '</div>';
+      $input .= '</div><div></div>';
+      $input .= '</div>';
+    }
 
     if ($return) {
       return $input;
@@ -106,28 +160,47 @@ class html_renderer {
    * @param bool $return
    * @return string|void Return the HTML or echo it depending on the $return parameter
    */
-  public function checkbox_input($name, $id, $label, $default, $default_description, $tooltip = '', $return = false) {
+  public function checkbox_input($name, $id, $label, $default, $default_description, $tooltip = '', $return = false, $intable = false) {
     $checked = '';
 
     if (!empty($default)) {
       $checked = ' checked="checked" ';
     }
-    $input = '<div><div class="label">';
-    $input .= '<label for="' . $id . '">' . $label . '</label>';
-    if (!empty($tooltip)) {
-      $input .= $this->tooltip($tooltip, true);
+    
+    if ($intable) {
+      $input = '<tr class="formrow">';
+      $input .= '<td class="formlabel">';
+      $input .= '<label for="' . $id . '">' . $label . '</label>';
+      $input .= '</td>';
+      $input .= '<td class="formtooltip">';
+      if (!empty($tooltip)) {
+        $input .= $this->tooltip($tooltip, true, false);
+      }
+      $input .= '</td>';
+      $input .= '<td class="forminput text">';
+      $input .= '<input type="checkbox" ' . $checked . ' id="' . $id . '" name="' . $name . '" value="1">';
+      $input .= '</td>';
+      $input .= '<td class="formdefault">';
+      $input .= $default_description;
+      $input .= '</td>';
+      $input .= '</tr>';
+    } else {
+      $input = '<div><div class="label">';
+      $input .= '<label for="' . $id . '">' . $label . '</label>';
+      if (!empty($tooltip)) {
+        $input .= $this->tooltip($tooltip, true, false);
+      }
+      $input .= '</div><div><div>';
+      $input .= '<input type="checkbox" ' . $checked . ' id="' . $id . '" name="' . $name . '" value="1">';
+      $input .= '</div>';
+
+      if (!empty($default_description)) {
+        $input .= '<div class="form-defaultinfo checkbox">' . $default_description . '</div>';
+      }
+
+      $input .= '</div><div></div>';
+      $input .= '</div>';
     }
-    $input .= '</div><div><div>';
-    $input .= '<input type="checkbox" ' . $checked . ' id="' . $id . '" name="' . $name . '" value="1">';
-    $input .= '</div>';
-
-    if (!empty($default_description)) {
-      $input .= '<div class="form-defaultinfo">' . $default_description . '</div>';
-    }
-
-    $input .= '</div><div></div>';
-
-    $input .= '</div>';
 
     if ($return) {
       return $input;
@@ -137,25 +210,29 @@ class html_renderer {
 
   /**
    * Render a tooltip
-   * 
+   *
    * @param string $text
    * @param string $return
    * @return string|void Return the HTML or echo it depending on the $return parameter
    */
-  public function tooltip($text, $return = false) {
+  public function tooltip($text, $return = false, $div = true) {
+    $tag = 'div';
+    if (!$div) {
+      $tag = 'span';
+    }
     $configObj = Config::get_instance();
-    $html = '<div class="tooltip">';
+    $html = '<' . $tag . ' class="tooltip">';
     $html .= '<img alt="' . $text . '" src="' . $configObj->get('cfg_root_path') . '/artwork/tooltip_icon.gif" class="help_tip" title="' . $text . '" />';
-    $html .= '</div>';
+    $html .= '</' . $tag . '>';
     if ($return) {
       return $html;
     }
-    echo $html;
+    echo "\n" . $html;
   }
 
   /**
    * Render an html tag with text, class and attibutes.
-   * 
+   *
    * @param string $tag
    * @param string $text
    * @param string $class
@@ -184,17 +261,17 @@ class html_renderer {
     if ($return) {
       return $html;
     }
-    echo $html;
+    echo "\n" . $html;
   }
 
   /**
    * Render a start div tag
-   * 
+   *
    * @param string $class
    * @param bool $return
    * @return string|void Return the HTML or echo it depending on the $return parameter
    */
-  public function start_div($class = '', $return = false) {
+  public function start_div($class = '', $return = false, $intable = false) {
 
     $class_html = '';
 
@@ -206,7 +283,7 @@ class html_renderer {
     if ($return) {
       return $html;
     }
-    echo $html;
+    echo "\n" . $html;
   }
 
   /**
@@ -219,31 +296,48 @@ class html_renderer {
     if ($return) {
       return $html;
     }
-    echo $html;
+    echo "\n" . $html;
   }
 
   /**
    * Render a heading with optional tooltip
-   * 
+   *
    * @param string $tag
    * @param string $text
    * @param string $tooltip
    * @param bool $return
    * @return string|void Return the HTML or echo it depending on the $return parameter
    */
-  public function heading($tag, $text, $tooltip = '', $return = false) {
-    $html = $this->start_div('heading', true);
-    $html .= $this->start_div('', true);
-    $html .= $this->tag($tag, $text, '', null, true);
-    $html .= $this->end_div(true);
-    if (!empty($tooltip)) {
-      $html .= $this->tooltip($tooltip, true);
+  public function heading($tag, $text, $tooltip = '', $return = false, $intable = false) {
+    if ($intable) {
+      $html = '<tr class="formrow">';
+      $html .= '<td class="formlabel heading">';
+      $html .= $this->tag($tag, $text, '', null, true);
+      $html .= '</td>';
+      $html .= '<td class="formtooltip">';
+      if (!empty($tooltip)) {
+        $html .= $this->tooltip($tooltip, true, false);
+      }
+      $html .= '</td>';
+      $html .= '<td>';
+      $html .= '</td>';
+      $html .= '<td>';
+      $html .= '</td>';
+      $html .= '</tr>';
+    } else {
+      $html = $this->start_div('heading', true);
+      $html .= $this->start_div('', true);
+      $html .= $this->tag($tag, $text, '', null, true);
+      $html .= $this->end_div(true);
+      if (!empty($tooltip)) {
+        $html .= $this->tooltip($tooltip, true, false);
+      }
+      $html .= $this->end_div(true);
     }
-    $html .= $this->end_div(true);
 
     if ($return) {
       return $html;
     }
-    echo $html;
+    echo "\n" . $html;
   }
 }

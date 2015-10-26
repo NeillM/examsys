@@ -120,7 +120,7 @@ class ims_enterprise_roles {
     global $string;
 
     $rolemappings = array();
-    $rolemappings[0] = $string['ignore'];
+    $rolemappings['Ignore'] = $string['ignore'];
     $rolemappings['Student'] = $string['student'];
     $rolemappings['Staff'] = $string['staff'];
     $rolemappings['Invigilator'] = $string['invigilator'];

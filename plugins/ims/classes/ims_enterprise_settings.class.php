@@ -207,7 +207,7 @@ class ims_enterprise_settings {
     $ims->createschools = 1;
     $ims->unenrol = 1;
     $ims->mapmoduleid = 'short';
-    $ims->mapfullname = 'full';
+    $ims->mapfullname = 'long';
     $ims->restricttarget = '';
     $ims->capitafix = '0';
     $ims->prevtime = '';
