@@ -666,7 +666,7 @@ class ims_enterprise {
     $mapping = true;
     $map_level = 0;
     $vle_api = '';
-    $sms_api = $this->filename;
+    $sms_api = 'ims_enterprise';
     $sms_import = 0;
     $timed_exams = 1;
     $exam_q_feedback = 1;
