@@ -46,14 +46,6 @@ abstract class apiabstract {
     abstract protected function validate($folder, $type);
     
     /**
-     * Abstract get response
-     * 
-     * Get the response body for the request.
-     * @return array - the response data
-     */
-    abstract protected function getdata();
-    
-    /**
      * Abstract parse request
      * 
      * Carry out the operations in the request.
@@ -66,4 +58,16 @@ abstract class apiabstract {
      */
     abstract protected function parse($tasktype, $fields, $actions, $body, $task);
     
+    /**
+     * The request data.
+     */
+    protected $data;
+    
+    /**
+     * Get the request data
+     * @return array the request data
+     */
+    public function getdata() {
+        return $this->data;
+    }
 }

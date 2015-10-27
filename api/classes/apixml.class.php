@@ -27,9 +27,6 @@ namespace api;
  */
 class apixml extends \api\apiabstract {
    
-    // XML data.
-    private $data;
-    
     // Language pack component.
     private $langcomponent = 'api/apixml';
     
@@ -62,14 +59,6 @@ class apixml extends \api\apiabstract {
             libxml_clear_errors();
         }
         return $errorresp;
-    }
-    
-    /**
-     * Get the response data
-     * @return array the response data
-     */
-    public function getdata() {
-        return $this->data;
     }
     
     /**
