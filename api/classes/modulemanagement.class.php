@@ -179,6 +179,9 @@ class modulemanagement extends \api\abstractmanagement {
             } else {
                 $moduleid = \module_utils::get_idMod($params['modulecode'], $this->db);
                 if (!$moduleid) {
+                    if (!isset($params['sms']) or $params['sms'] == '') {
+                        $params['sms'] = 'rogo webservice';
+                    }
                     $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],
                         '', false, false, false, false, '', '', $this->db, false, '', '', '', 0);
                     if ($id) {
