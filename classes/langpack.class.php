@@ -29,7 +29,7 @@ class langpack {
     private $langdir;
     
     /**
-     * @brief Constructor
+     * Constructor
      * @return  
      */
     function __construct() {
@@ -39,7 +39,7 @@ class langpack {
     }
     
     /**
-     * @brief Get the string value.
+     * Get the string value.
      * @param string $component 
      * @param string $name 
      * @return  
@@ -55,7 +55,7 @@ class langpack {
     }
     
     /**
-     * @brief Get the value of X strings.
+     * Get the value of X strings.
      * @param string $component 
      * @param array $names
      * @return  

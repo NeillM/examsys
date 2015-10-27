@@ -30,7 +30,7 @@ class render {
     private $twig;
     
     /**
-     * @brief Constructor
+     * Constructor
      * @param object $configObject - rogo configuration object
      * @return void 
      */
@@ -42,7 +42,7 @@ class render {
     }
     
     /**
-     * @brief Render xml reponse.
+     * Render xml reponse.
      * @param string $template - template location
      * @param string $reponsename - response name
      * @param array $response - response data
@@ -54,7 +54,7 @@ class render {
     }
     
     /**
-     * @brief Render admin list page.
+     * Render admin list page.
      * @param string $template - template location
      * @param array $data - data to list
      * @param array $header - headers for data
@@ -66,7 +66,7 @@ class render {
     }
     
     /**
-     * @brief Render admin page header.
+     * Render admin page header.
      * @param string $template - template location
      * @param array $lang translations used in header
      * @param array $config configuration items required
@@ -83,7 +83,7 @@ class render {
     }
     
     /**
-     * @brief Render admin page footer.
+     * Render admin page footer.
      * @param string $template - template location
      * @return void
      */

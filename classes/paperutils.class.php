@@ -675,7 +675,7 @@ Class PaperUtils {
   }
   
   /**
-  * @brief Check if the paper has been taken
+  * Check if the paper has been taken
   * @param integer $id - paper id
   * @param mysqli $db 
   * @return bool

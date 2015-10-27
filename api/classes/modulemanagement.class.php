@@ -26,45 +26,20 @@ namespace api;
  * Course class
  */
 class modulemanagement extends \api\abstractmanagement {
-    
-    // The database connection.
-    private $db;
-    
-    // Language pack component.
+       
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'api/modulemanagement';
-    
+           
     /**
-     * @brief Constructor
-     * @param mysqli $mysqli the database connection
-     * @return  
-     */
-    function __construct($mysqli, $configObject = null) {
-        $this->db = $mysqli;
-    }
-    
-     /**
-     * @brief Return response to request
-     * @param array $data 
-     * @param string $action
-     * @param string $nodeid
-     * @return  
-     */
-    public function get_response($data, $action, $nodeid, $error = null) {
-        return $response = array(
-            "status" => $data['status'],
-            "id" => $data['id'],
-            "node" => $action,
-            "nodeid" => $nodeid);
-    }
-    
-    /**
-     * @brief Enrol student on a Module.
+     * Enrol student on a Module.
      * @param array $params module enrol parameters
      * @return array - success status and enrolment id
      */
     public function enrol($params) {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('user_not_enrolled', 'user_does_not_exist'));
+        $strings = $langpack->get_strings($this->langcomponent, array('user_not_enrolled', 'user_does_not_exist', 'user_already_enrolled'));
         $userid = \UserUtils::userid_exists($params['userid'], $this->db);
         if ($userid) {
             $yearutils = new \yearutils($this->db);
@@ -74,10 +49,17 @@ class modulemanagement extends \api\abstractmanagement {
                 $session = $params['session'];
             }
             $ret = \UserUtils::add_student_to_module($params['userid'], $params['moduleid'], $params['attempt'], $session, $this->db, 1);
-            if ($ret) {
-                $data = array('status' => 'OK', 'id' => $ret);
+            if ($ret === 0) {
+                // Already enrolled so just update. Essential the web service taking ownership.
+                $id = \UserUtils::get_enrolement_id($params['userid'], $params['moduleid'], $session, $this->db);
+                \UserUtils::update_module_enrolement($id, $params['attempt'], 1, $this->db);
+                $data = array('status' => 'OK', 'id' => $id);
             } else {
-                $data = array('status' => $strings['user_not_enrolled'], 'id' => null);
+                if ($ret) {
+                    $data = array('status' => 'OK', 'id' => $ret);
+                } else {
+                    $data = array('status' => $strings['user_not_enrolled'], 'id' => null);
+                }
             }
         } else {
             $data = array('status' => $strings['user_does_not_exist'], 'id' => null);
@@ -86,7 +68,7 @@ class modulemanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief UnEnrol student on a Module.
+     * UnEnrol student on a Module.
      * @param array $params module enrol parameters
      * @return array - success status and enrolment id
      */
@@ -114,7 +96,7 @@ class modulemanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Create/Update module
+     * Create/Update module
      * @param array $params module creation parameters
      * @return - success status and module id
      */
@@ -123,13 +105,13 @@ class modulemanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist',
             'module_not_created', 'module_already_exists', 'faculty_not_supplied'));
         $faculty = true;
-        $action = 'create';
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
-            $action = 'update';
             if ($moduleid) {
                 $details = \module_utils::get_full_details_by_ID($params['id'], $this->db);
             }
+        } else {
+            $params['id'] = false;
         }
         // Get school id if school name provided.
         if (isset($params['school']) and $params['school'] != '') {
@@ -163,7 +145,7 @@ class modulemanagement extends \api\abstractmanagement {
             }
             
             // Update Module.
-            if ($action == 'update') {
+            if ($params['id']) {
                 if ($moduleid) {
                     $update = \module_utils::update_module_by_id($params['id'], $moduleid, 
                         $params['name'], $schoolid, $params['sms'], $this->db);
@@ -200,7 +182,7 @@ class modulemanagement extends \api\abstractmanagement {
     }
 
     /**
-     * @brief Delete module
+     * Delete module
      * @param array $parms delete module parameters
      * @return success status and module id
      */
@@ -208,12 +190,14 @@ class modulemanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_deleted_inuse', 'module_not_deleted',
             'module_does_not_exist'));
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
+        } else {
+            $params['id'] = false;
         }
         if ($moduleid) {
              // Only delete module if it contains no enrolments, and no papers
-            $inuse = \module_utils::get_enrol_papers_on_module($params['id'], $this->db);
+            $inuse = \module_utils::module_in_use($params['id'], $this->db);
             if ($inuse) {
                 $data = array('status' => $strings['module_not_deleted_inuse'], 'id' => null);
             } else {

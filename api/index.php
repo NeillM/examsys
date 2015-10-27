@@ -1,4 +1,24 @@
 <?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+* API routing functions
+* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+* @copyright Copyright (c) 2015 onwards The University of Nottingham
+*/
 
 require_once '../include/load_config.php';
 
@@ -19,227 +39,130 @@ $langpack = new \langpack();
 $api = new \api\api($app);
 $api->set_header();
 
-$app->post('/requesttoken', function() use($app, $oauth) {
+// Request oauth token.
+$app->post('/requesttoken', function() use($oauth) {
     $oauth->request_token();
 });
 
-$app->post('/modulemanagement/enrol', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
-    //Check Permissions
-    $perm['enrol'] = $oauth->check_permissions('modulemanagement/enrol', $client_id);
-    $perm['unenrol'] = $oauth->check_permissions('modulemanagement/unenrol', $client_id);
-    
-    // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml','rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-    
-    $response = array();
-    $course = new \api\modulemanagement($mysqli);
-    
-    // Process the request.
-    $request = $api->process('modulemanagement', 'enrolrequest');
+// Enrolment request.
+$app->post('/modulemanagement/enrol', function() use($api, $mysqli, $oauth, $render, $langpack) {
+    $request = 'modulemanagement';
+    $response = 'moduleManagementEnrolResponse';
+    $operations = array('enrol', 'unenrol');
     $fields = array('userid', 'attempt', 'moduleid', 'session');
-    
-    // XML.
-    if ($request[0] == 'OK') {
-        $actions = array('enrol', 'unenrol');
-        $response = $api->parse($course, $fields, $actions, $request[1], $perm);
-        $template = 'api/success.xml';
-    } else {
-        $response = $request[1];
-        $template = 'api/error.xml';
-    }
-    
-    // Render response.
-    $render->render_xml($template, 'moduleManagementEnrolResponse', $response);
-    
+    $xsd = 'enrolrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
-$app->post('/modulemanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
-    //Check Permissions
-    $perm['create'] = $oauth->check_permissions('modulemanagement/create', $client_id);
-    $perm['delete'] = $oauth->check_permissions('modulemanagement/delete', $client_id);
-    
-    // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-
-    $response = array();
-    $course = new \api\modulemanagement($mysqli);
-
-    // Process the request.
-    $request = $api->process('modulemanagement', 'managementrequest');
+// Module management request.
+$app->post('/modulemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
+    $request = 'modulemanagement';
+    $response = 'moduleManagementResponse';
+    $operations = array('create', 'delete');
     $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms');
-        
-    // XML.
-    if ($request[0] == 'OK') {
-        $actions = array('create', 'delete');
-        $response = $api->parse($course, $fields, $actions, $request[1], $perm);
-        $template = 'api/success.xml';
-    } else {
-        $response = $request[1];
-        $template = 'api/error.xml';
-    }
-
-    // Render response.
-    $render->render_xml($template, 'moduleManagementResponse', $response);
-    
+    $xsd = 'managementrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
-$app->post('/coursemanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
-    //Check Permissions
-    $perm['create'] = $oauth->check_permissions('coursemanagement/create', $client_id);
-    $perm['delete'] = $oauth->check_permissions('coursemanagement/delete', $client_id);
-    
-    // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-    $response = array();
-    $course = new \api\coursemanagement($mysqli);
-    // Process the request.
-    $request = $api->process('coursemanagement', 'managementrequest');
+// Course management request.
+$app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
+    $request = 'coursemanagement';
+    $response = 'courseManagementResponse';
+    $operations = array('create', 'delete');
     $fields = array('id', 'name', 'description', 'school', 'faculty');
-        
-    // XML.
-    if ($request[0] == 'OK') {
-        $actions = array('create', 'delete');
-        $response = $api->parse($course, $fields, $actions, $request[1], $perm);
-        $template = 'api/success.xml';
-    } else {
-        $response = $request[1];
-        $template = 'api/error.xml';
-    }
-
-    // Render response.
-    $render->render_xml($template, 'courseManagementResponse', $response);
-    
+    $xsd = 'managementrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
+// School management request.
 $app->post('/schoolmanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
-    //Check Permissions
-    $perm['create'] = $oauth->check_permissions('schoolmanagement/create', $client_id);
-    $perm['delete'] = $oauth->check_permissions('schoolmanagement/delete', $client_id);
-    
-    // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-    $response = array();
-    $school = new \api\schoolmanagement($mysqli);
-    // Process the request.
-    $request = $api->process('schoolmanagement', 'managementrequest');
+    $request = 'schoolmanagement';
+    $response = 'schoolManagementResponse';
+    $operations = array('create', 'delete');
     $fields = array('id', 'name', 'faculty');
-        
-    // XML.
-    if ($request[0] == 'OK') {
-        $actions = array('create', 'delete');
-        $response = $api->parse($school, $fields, $actions, $request[1], $perm);
-        $template = 'api/success.xml';
-    } else {
-        $response = $request[1];
-        $template = 'api/error.xml';
-    }
-
-    // Render response.
-    $render->render_xml($template, 'schoolManagementResponse', $response);
-    
+    $xsd = 'managementrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
-
+// Faculty management request.
 $app->post('/facultymanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
-    //Check Permissions
-    $perm['create'] = $oauth->check_permissions('facultymanagement/create', $client_id);
-    $perm['delete'] = $oauth->check_permissions('facultymanagement/delete', $client_id);
-    
-    // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-    $response = array();
-    $faculty = new \api\facultymanagement($mysqli);
-    // Process the request.
-    $request = $api->process('facultymanagement', 'managementrequest');
+    $request = 'facultymanagement';
+    $response = 'facultyManagementResponse';
+    $operations = array('create', 'delete');
     $fields = array('id', 'name');
-        
-    // XML.
-    if ($request[0] == 'OK') {
-        $actions = array('create', 'delete');
-        $response = $api->parse($faculty, $fields, $actions, $request[1], $perm);
-        $template = 'api/success.xml';
-    } else {
-        $response = $request[1];
-        $template = 'api/error.xml';
-    }
-
-    // Render response.
-    $render->render_xml($template, 'facultyManagementResponse', $response);
-    
+    $xsd = 'managementrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
+// User management request.
 $app->post('/usermanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {  
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
-    //Check Permissions
-    $perm['create'] = $oauth->check_permissions('usermanagement/create', $client_id);
-    $perm['delete'] = $oauth->check_permissions('usermanagement/delete', $client_id);
-    
-    // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-
-    $response = array();
-    $person = new \api\usermanagement($mysqli);
-
-    // Process the request.
-    $request = $api->process('usermanagement', 'managementrequest');
+    $request = 'usermanagement';
+    $response = 'userManagementResponse';
+    $operations = array('create', 'delete');
     $fields = array('id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
         'course', 'gender', 'year', 'role', 'studentid', 'modules');
-
-    if ($request[0] == 'OK') {
-            $actions = array('create', 'delete');
-            $response = $api->parse($person, $fields, $actions, $request[1], $perm);
-            $template = 'api/success.xml';
-    } else {
-        $response = $request[1];
-        $template = 'api/error.xml';
-    }
-    
-    // Render response.
-    $render->render_xml($template, 'userManagementResponse', $response);
-    
+    $xsd = 'managementrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
-$app->notFound(function () use ($app, $api, $render, $langpack) {
+// 404 error handling.
+$app->notFound(function () use ($render, $langpack) {
     $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
 });
 
-$app->error(function (\Exception $e) use ($app, $api, $render, $langpack) {
+// 500 error handling.
+$app->error(function (\Exception $e) use ($render, $langpack) {
     $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
 });
+
+/**
+ * Process the web wervice request.
+ * 
+ * All request are authenticated, validated and processed.
+ * @param string $request - name of request
+ * @param array $operations - operations available in request
+ * @param array $fields - expected request fields
+ * @param string $response - name of response
+ * @param object $oauth - oauth object
+ * @param object $api - api object
+ * @param object $langpack - language object
+ * @param object $render - render object
+ * @param string $xsd - xsd filename
+ * @param mysqli $mysqli - db connection 
+ */
+function process ($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli) {
+    // Check for auth tokens
+    $client_id = $oauth->check_auth();
+    
+    //Check Permissions
+    foreach ($operations as $operation) {
+        $perm[$operation] = $oauth->check_permissions($request . '/' . $operation, $client_id);
+    }
+
+    // Check media type - only test/xml supported currently.
+    if(!$api->get_mediatype()) {
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+        die;
+    }
+
+    $responsedata = array();
+    $classname = '\\api\\' . $request;
+    $requestobject = new $classname($mysqli);
+
+    // Process the request.
+    $data = $api->process($request, $xsd);
+    
+    // XML.
+    if ($data[0] == 'OK') {
+        $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm);
+        $template = 'api/success.xml';
+    } else {
+        $responsedata = $data[1];
+        $template = 'api/error.xml';
+    }
+    
+    // Render response.
+    $render->render_xml($template, $response, $responsedata);
+}
 
 $app->run();

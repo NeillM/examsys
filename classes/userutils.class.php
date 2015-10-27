@@ -107,7 +107,7 @@ Class UserUtils {
   }
 
   /**
-   * @brief Update existing user.
+   * Update existing user.
    * @param integer $id - user id
    * @param string $username - user username
    * @param string $password - user password
@@ -610,7 +610,7 @@ Class UserUtils {
    * @param int $idMod Module ID for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return int|bool enrolement id or false
+   * @return int|bool enrolement id, 0 if already enrolled, false on error
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
@@ -624,7 +624,7 @@ Class UserUtils {
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       // Don't add a user to a module multiple times.
-      return false;
+      return 0;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
       $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
@@ -831,7 +831,7 @@ Class UserUtils {
   }
 
  /**
-  * @brief Check if the user has started a paper
+  * Check if the user has started a paper
   * @param integer $id - user id
   * @param mysqli $db 
   * @return bool
@@ -860,7 +860,7 @@ Class UserUtils {
   }
   
   /**
-   * @brief Get user details
+   * Get user details
    * @param integer $id user id
    * @param mysqli $db 
    * @return array user details  
@@ -905,7 +905,8 @@ Class UserUtils {
   }
   
   /**
-   * @brief Remove the student from the module
+   * Remove the student from the module
+   * 
    * @param int $userid 
    * @param int $moduleid
    * @param string $session 
@@ -916,29 +917,62 @@ Class UserUtils {
     if ($userid == '' or $moduleid == '' or $session == '') {
       return false;
     }
-    if ($moduleid) {
-      $result = $db->prepare("SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ? AND auto_update = 1");
-      $result->bind_param('iis', $userid, $moduleid, $session);
-      $result->execute();
-      $result->bind_result($id);
-      $result->fetch();
-      $result->close();
-      if ($id) {
+    $result = $db->prepare("SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
+    $result->bind_param('iis', $userid, $moduleid, $session);
+    $result->execute();
+    $result->bind_result($id);
+    $result->fetch();
+    $result->close();
+    if ($id) {
         $result = $db->prepare("DELETE FROM modules_student WHERE id = ? AND idMod = ? AND calendar_year = ?");
         $result->bind_param('iis', $id, $moduleid, $session);
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
-            return false;
+          return false;
         }
         return $id;
-      } else {
-        return false;
-      }
     } else {
       return false;
     }
   }
+  
+  /**
+   * Get the enrolment id of the user on the module
+   * 
+   * Only the attempt and auto_update values can be updated.
+   * @param integer $userid - user id
+   * @param integer $moduleid - module id
+   * @param integer $session - academic session
+   * @param mysqli $db - db connection
+   * @return integer - enrolement id
+   */
+  static function get_enrolement_id($userid, $moduleid, $session, $db) {
+      $result = $db->prepare("SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
+      $result->bind_param('iii', $userid, $moduleid, $session);
+      $result->execute();
+      $result->bind_result($id);
+      $result->fetch();
+      $result->close();
+      return $id;
+  }
+  
+  /**
+   * Update module enrolement
+   * 
+   * Only the attempt and auto_update values can be updated.
+   * @param integer $id - enrolement id
+   * @param integer $attempt - attempt at module
+   * @param integer $auto_update - is enrolement remotely updatable
+   * @param mysqli $db - db connection
+   */
+  static function update_module_enrolement($id, $attempt, $auto_update, $db) {
+      $result = $db->prepare("UPDATE modules_student SET auto_update = ?, attempt = ? WHERE id = ?");
+      $result->bind_param('iii', $auto_update, $attempt, $id);
+      $result->execute();  
+      $result->close();
+  }
+  
 }
 
 ?>

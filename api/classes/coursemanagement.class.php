@@ -27,38 +27,13 @@ namespace api;
  */
 class coursemanagement extends \api\abstractmanagement {
     
-    // The database connection.
-    private $db;
-    
-    // Language pack component.
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'api/coursemanagement';
     
     /**
-     * @brief Constructor
-     * @param mysqli $mysqli the database connection
-     * @return  
-     */
-    function __construct($mysqli, $configObject = null) {
-        $this->db = $mysqli;
-    }
-    
-     /**
-     * @brief Return response to request
-     * @param array $data 
-     * @param string $action
-     * @param string $nodeid
-     * @return  
-     */
-    public function get_response($data, $action, $nodeid, $error = null) {
-        return $response = array(
-            "status" => $data['status'],
-            "id" => $data['id'],
-            "node" => $action,
-            "nodeid" => $nodeid);
-    }
-    
-    /**
-     * @brief Create/Update course
+     * Create/Update course
      * @param array $params course creation parameters
      * @return - success status and course id
      */
@@ -67,13 +42,13 @@ class coursemanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_updated', 'course_does_not_exist'
             , 'course_not_created', 'course_already_exists', 'faculty_not_supplied'));
         $faculty = true;
-        $action = 'create';
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
-            $action = 'update';
             if ($courseid) {
                 $details = \CourseUtils::get_course_details_by_id($params['id'], $this->db);
             }
+        } else {
+            $params['id'] = false;
         }
         // Get school id if school name provided.
         if (isset($params['school']) and $params['school'] != '') {
@@ -103,7 +78,7 @@ class coursemanagement extends \api\abstractmanagement {
             }
             
             // Update Course.
-            if ($action == 'update') {
+            if ($params['id']) {
                 if ($courseid) {
                     $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $this->db);
                     if ($update) {
@@ -135,7 +110,7 @@ class coursemanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Delete course
+     * Delete course
      * @param array $parms delete course parameters
      * @return success status and course id 
      */
@@ -143,9 +118,11 @@ class coursemanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_deleted_inuse', 'course_not_deleted'
             , 'course_does_not_exist'));
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
             $details = \CourseUtils::get_course_details_by_id($params['id'], $this->db);
+        } else {
+            $params['id'] = false;
         }
         if ($courseid) {
             // Only delete course if it contains no users.

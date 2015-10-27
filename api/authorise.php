@@ -42,9 +42,9 @@ if (isset($_POST['submit'])) {
         $resp = $oauth->authorise(true, $userid);
     } else {
         $resp = $oauth->authorise(false, $userid);
-    } 
-    if (!$resp) {
-        error($resp, $string, $mysqli, $configObject, $notice);
+    }
+    if (!$resp[0]) {
+        error($resp[1], $string, $mysqli, $configObject, $notice);
     }
 } else {
     $client_id = check_var('client_id', 'GET', true, false, true);

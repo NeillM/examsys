@@ -34,11 +34,10 @@ class apixml extends \api\apiabstract {
     private $langcomponent = 'api/apixml';
     
     /**
-     * @brief Constructor
-     * @param string $request - the xml request
-     * @return  
+     * Constructor
+     * @param string $request - the xml request 
      */
-    function __construct($request) {
+    public function __construct($request) {
         // Enable user error handling
         libxml_use_internal_errors(true);
         $this->data = new \DOMDocument();
@@ -46,7 +45,7 @@ class apixml extends \api\apiabstract {
     }
     
     /**
-     * @brief Validate the xml request againt an XSD
+     * Validate the xml request againt an XSD
      * @param string $folder - sub dir where xsd is located
      * @param string $type - the filename
      * @return array - errors
@@ -66,21 +65,21 @@ class apixml extends \api\apiabstract {
     }
     
     /**
-     * @brief Get the response data
-     * @return array
+     * Get the response data
+     * @return array the response data
      */
     public function getdata() {
         return $this->data;
     }
     
     /**
-     * @brief Parse the request and process it.
+     * Parse the request and process it.
      * @param object $tasktype task object
      * @param array $fields expected fields
      * @param array $actions possible actions
      * @param object $xml xml data
      * @param array $task user permissions
-     * @return  
+     * @return string - successful operation response or error response
      */
     public function parse($tasktype, $fields, $actions, $xml, $perms) {
         $langpack = new \langpack();

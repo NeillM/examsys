@@ -27,38 +27,13 @@ namespace api;
  */
 class facultymanagement extends \api\abstractmanagement {
     
-    // The database connection.
-    private $db;
-    
-    // Language pack component.
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'api/facultymanagement';
-    
+       
     /**
-     * @brief Constructor
-     * @param mysqli $mysqli the database connection
-     * @return  
-     */
-    function __construct($mysqli, $configObject = null) {
-        $this->db = $mysqli;
-    }
-    
-     /**
-     * @brief Return response to request
-     * @param array $data 
-     * @param string $action
-     * @param string $nodeid
-     * @return  
-     */
-    public function get_response($data, $action, $nodeid, $error = null) {
-        return $response = array(
-            "status" => $data['status'],
-            "id" => $data['id'],
-            "node" => $action,
-            "nodeid" => $nodeid);
-    }
-    
-    /**
-     * @brief Create/Update faculty
+     * Create/Update faculty
      * @param array $params faculty creation parameters
      * @return - success status and faculty id
      */
@@ -66,13 +41,13 @@ class facultymanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_updated', 'faculty_does_not_exist'
             , 'faculty_not_created', 'faculty_already_exists'));
-        $action = 'create';
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $facultyid = \FacultyUtils::faculty_name_by_id($params['id'], $this->db);
-            $action = 'update';
             if ($facultyid) {
                 $details = \FacultyUtils::get_faculty_details_by_id($params['id'], $this->db);
             }
+        } else {
+            $params['id'] = false;
         }
         
         // Get name if not provided.
@@ -81,7 +56,7 @@ class facultymanagement extends \api\abstractmanagement {
         }
             
         // Update faculty.
-        if ($action == 'update') {
+        if ($params['id']) {
             if ($facultyid) {
                 $update = \FacultyUtils::update_faculty($params['id'], $params['name'],  $this->db);
                 if ($update) {
@@ -111,7 +86,7 @@ class facultymanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Delete faculty
+     * Delete faculty
      * @param array $parms delete faculty parameters
      * @return success status and faculty id 
      */
@@ -119,12 +94,14 @@ class facultymanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_deleted_inuse', 'faculty_not_deleted'
             , 'faculty_does_not_exist'));
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $facultyid = \FacultyUtils::faculty_name_by_id($params['id'], $this->db);
+        } else {
+            $params['id'] = false;
         }
         if ($facultyid) {
             // Only delete faculty if it contains no schools.
-            $schools = \FacultyUtils::get_schools_in_faculty($params['id'], $this->db);
+            $schools = \FacultyUtils::count_schools_in_faculty($params['id'], $this->db);
             if (isset($schools) and $schools > 0) {
                 $data = array('status' => $strings['faculty_not_deleted_inuse'], 'id' => null);
             } else {

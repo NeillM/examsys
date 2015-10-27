@@ -92,7 +92,7 @@ Class CourseUtils {
   }
   
   /**
-   * @brief Deletes an existing course.
+   * Deletes an existing course.
    * @param integer $id 
    * @param object $db database connection
    *
@@ -170,7 +170,7 @@ Class CourseUtils {
   }
   
   /**
-   * @brief Get course details
+   * Get course details
    * @param integer $id 
    * @param mysqli $db 
    * @return array details
@@ -193,7 +193,7 @@ Class CourseUtils {
   }
  
  /**
-  * @brief Get the number of users on a course.
+  * Get the number of users on a course.
   * @param string $name - name of the course
   * @param mysqli $db 
   * @return  

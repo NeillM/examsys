@@ -65,7 +65,7 @@ class LabFactory {
   }
   
   /**
-   * @brief Get the lab id
+   * Get the lab id
    * @param string $username 
    * @return int 
   */

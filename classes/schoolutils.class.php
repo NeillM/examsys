@@ -226,12 +226,12 @@ Class SchoolUtils {
       
     /**
      * Updates a school
-     * @param integer $if       - School id in rogo.
-     * @param int $facultyID    - ID of the faculty to which the new school belongs.
-     * @param string $school    - Name of the new school
-     * @param object $db        - Link to mysqli
+     * @param integer $id  - School id in rogo.
+     * @param int $facultyID - ID of the faculty to which the new school belongs.
+     * @param string $school - Name of the new school
+     * @param object $db - Link to mysqli
      *
-     * @return int              - The ID of the school.
+     * @return int|bool - The ID of the school / false on error.
      */
     static function update_school($id, $facultyID, $school, $db) {
         if ($facultyID === '' or $school === '') {
@@ -240,7 +240,7 @@ Class SchoolUtils {
 
         $schoolID = SchoolUtils::school_name_exists($school, $db);
         if ($schoolID !== false) {
-          return $schoolID;
+          return false;
         }
 
         $result = $db->prepare("UPDATE schools set school = ?, facultyID = ? where id = ?");
@@ -255,7 +255,7 @@ Class SchoolUtils {
     }
     
   /**
-   * @brief Get factulty details
+   * Get factulty details
    * @param integer $id 
    * @param mysqli $db 
    * @return array details
@@ -273,36 +273,27 @@ Class SchoolUtils {
   }
   
   /**
-   * @brief Check if school contains modules or courses
+   * Check if school contains modules or courses
    * @param integer $id school id
    * @param mysqli $db 
    * @return  
    */
-  static function get_modules_courses_in_school($id, $db) {
-    $result = $db->prepare("SELECT count(*) FROM courses WHERE schoolid = ?");
-    $result->bind_param('i', $id);
+  static function school_in_use($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM courses WHERE schoolid = ?
+        UNION SELECT NULL FROM modules WHERE schoolid = ?");
+    $result->bind_param('ii', $id, $id);
     $result->execute();
-    $result->bind_result($count);
     $result->fetch();
-    $result->close();
-    if ($count > 0) {
-        return true;
-    } else {
-        $result = $db->prepare("SELECT count(*) FROM modules WHERE schoolid = ?");
-        $result->bind_param('i', $id);
-        $result->execute();
-        $result->bind_result($count);
-        $result->fetch();
+    if ($result->num_rows > 0) {
         $result->close();
-        if ($count > 0) {
-            return true;
-        }
+        return true;
     }
+    $result->close();
     return false;
   }
   
   /**
-   * @brief  Generate a school id based on name and faculty.
+   *  Generate a school id based on name and faculty.
    * @param string $school - school name
    * @param string $faculty - faculty name
    * @param mysqli $db

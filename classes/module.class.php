@@ -655,7 +655,7 @@ Class module {
   }
   
   /**
-   * @brief Update module based on id
+   * Update module based on id
    * @param integer $id 
    * @param string $code - shortcode of module
    * @param string $name - fullname
@@ -684,30 +684,21 @@ Class module {
   }
   
   /**
-   * @brief Check if papers or enrolements exist on this module
+   * Check if papers or enrolements exist on this module
    * @param integer $id module us
    * @return 
    */
-  public static function get_enrol_papers_on_module ($id, $db) {
-    $result = $db->prepare("SELECT count(*) FROM properties_modules WHERE idMod = ?");
-    $result->bind_param('i', $id);
+  public static function module_in_use($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM properties_modules WHERE idMod = ?
+        UNION SELECT NULL FROM modules_student WHERE idMod = ?");
+    $result->bind_param('ii', $id, $id);
     $result->execute();
-    $result->bind_result($count);
     $result->fetch();
-    $result->close();
-    if ($count > 0) {
-        return true;
-    } else {
-        $result = $db->prepare("SELECT count(*) FROM modules_student WHERE idMod = ?");
-        $result->bind_param('i', $id);
-        $result->execute();
-        $result->bind_result($count);
-        $result->fetch();
+    if ($result->num_rows > 0) {
         $result->close();
-        if ($count > 0) {
-            return true;
-        }
+        return true;
     }
+    $result->close();
     return false;
   }
 }

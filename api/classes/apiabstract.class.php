@@ -24,6 +24,8 @@ namespace api;
 
 /**
  * Abstract API class.
+ * 
+ * Use this class when defining supported media types such as 'xml/text'.
  */
 abstract class apiabstract {
 
@@ -31,25 +33,37 @@ abstract class apiabstract {
      * Abstract constructor
      * @param string $request api request 
      */
-    abstract protected function __construct($request);
+    abstract public function __construct($request);
+    
     /**
      * Abstract validate request
+     * 
+     * Validate the request body against a schema/dtd.
      * @param string $folder location of schema
      * @param string $type file type 
+     * @return array - list of errors in the request body
      */
     abstract protected function validate($folder, $type);
+    
     /**
      * Abstract get response
+     * 
+     * Get the response body for the request.
+     * @return array - the response data
      */
     abstract protected function getdata();
+    
     /**
      * Abstract parse request
+     * 
+     * Carry out the operations in the request.
      * @param object $tasktype task object
      * @param array $fields expected fields
      * @param array $actions possible actions
-     * @param object $data xml data
+     * @param object $body request body
      * @param string $task the task to be carried out
+     * @return string - successful operation response or error response
      */
-    abstract protected function parse($tasktype, $fields, $actions, $data, $task);
+    abstract protected function parse($tasktype, $fields, $actions, $body, $task);
     
 }

@@ -27,44 +27,48 @@ namespace api;
  */
 class api {
 
-    // The slim application.
+    /**
+     * The slim application.
+     */
     private $app;
     
-    // The media type.
+    /**
+     * The media type.
+     */
     private $mediatype;
     
-    // Language pack component.
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'api/api';
     
     /**
-     * @brief Constructor
+     * Constructor
      * @param object $app the slim application
-     * @return  
      */
-    function __construct($app) {
+    public function __construct($app) {
         $this->app = $app;
     }
        
     /**
-     * @brief Set the header for the response.
+     * Set the header for the response.
      * @param string $type - header type
-     * @return  
      */
     public function set_header($type = 'text/xml') {
         $this->app->response()->header("Content-Type", $type);
     }
     
     /**
-     * @brief Get the body of the request.
-     * @return  
+     * Get the body of the request.
+     * @return string - body of request.
      */
     public function get_body() {
         return $this->app->request->getBody();
     }
 
     /**
-     * @brief Get the media type of the request.
-     * @return string - media type
+     * Get the media type of the request.
+     * @return string|bool - media type if valid, false otherwise
      */
     public function get_mediatype() {
         $mediatype = $this->app->request()->getMediaType();
@@ -77,7 +81,7 @@ class api {
     }
     
     /**
-     * @brief Process the request
+     * Process the request
      * @param string $folder - location of validation schema
      * @param string $type - filename of validation schema
      * @return array - status and response
@@ -99,17 +103,17 @@ class api {
     }
     
     /**
-     * @brief Parse the request and process it.
+     * Parse the request and process it.
      * @param object $tasktype task object
      * @param array $fields expected fields
      * @param array $actions possible actions
-     * @param object $xml xml data
+     * @param object $body request body
      * @param array $perms user permissions
-     * @return  
+     * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $xml, $perms) {
+    public function parse($tasktype, $fields, $actions, $body, $perms) {
         $api = new \api\apixml($body);
-        return $api->parse($tasktype, $fields, $actions, $xml, $perms);
+        return $api->parse($tasktype, $fields, $actions, $body, $perms);
     }
     
 }

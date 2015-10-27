@@ -27,38 +27,13 @@ namespace api;
  */
 class schoolmanagement extends \api\abstractmanagement {
     
-    // The database connection.
-    private $db;
-    
-    // Language pack component.
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'api/schoolmanagement';
-    
+        
     /**
-     * @brief Constructor
-     * @param mysqli $mysqli the database connection
-     * @return  
-     */
-    function __construct($mysqli, $configObject = null) {
-        $this->db = $mysqli;
-    }
-    
-     /**
-     * @brief Return response to request
-     * @param array $data 
-     * @param string $action
-     * @param string $nodeid
-     * @return  
-     */
-    public function get_response($data, $action, $nodeid, $error = null) {
-        return $response = array(
-            "status" => $data['status'],
-            "id" => $data['id'],
-            "node" => $action,
-            "nodeid" => $nodeid);
-    }
-    
-    /**
-     * @brief Create/Update school
+     * Create/Update school
      * @param array $params school creation parameters
      * @return - success status and school id
      */
@@ -66,14 +41,14 @@ class schoolmanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
             , 'school_created', 'school_alreads_exists', 'faculty_not_supplied'));
-        $action = 'create';
         $faculty = true;
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
-            $action = 'update';
             if ($schoolid) {
                 $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
             }
+        } else {
+            $params['id'] = false;
         }
         
         // Get name if not provided.
@@ -96,7 +71,7 @@ class schoolmanagement extends \api\abstractmanagement {
         
         if ($faculty) {        
             // Update school.
-            if ($action == 'update') {
+            if ($params['id']) {
                 if ($schoolid) {
                     $update = \SchoolUtils::update_school($params['id'], $facultyid, $params['name'], $this->db);
                     if ($update) {
@@ -128,7 +103,7 @@ class schoolmanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Delete school
+     * Delete school
      * @param array $parms delete school parameters
      * @return success status and school id
      */
@@ -136,12 +111,14 @@ class schoolmanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_deleted_inuse', 'school_not_deleted'
             , 'school_does_not_exist'));
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
+        } else {
+            $params['id'] = false;
         }
         if ($schoolid) {
             // Only delete school if it contains no modules or courses.
-            $inuse = \SchoolUtils::get_modules_courses_in_school($params['id'], $this->db);
+            $inuse = \SchoolUtils::school_in_use($params['id'], $this->db);
             if ($inuse) {
                 $data = array('status' => $strings['school_not_deleted_inuse'], 'id' => null);
             } else {

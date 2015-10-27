@@ -27,23 +27,13 @@ namespace api;
  */
 class usermanagement extends \api\abstractmanagement {
     
-    // The database connection.
-    private $db;
-    
-    // Language pack component.
-    private $langcomponent = 'api/usermanagement';
-    
     /**
-     * @brief Constructor
-     * @param mysqli $mysqli the database connection
-     * @return  
+     * Language pack component.
      */
-    function __construct($mysqli, $configObject = null) {
-        $this->db = $mysqli;
-    }
-    
+    private $langcomponent = 'api/usermanagement';
+        
     /**
-     * @brief (Un)Enrol users onto modules.
+     * Enrol users onto modules.
      * @param integer $id - user id
      * @param array $modules - modules to (un)enrol user
      * @param string $role  - role of user
@@ -75,12 +65,12 @@ class usermanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Return response to request
-     * @param array $data 
-     * @param string $action
-     * @param string $nodeid
-     * @para, array $error non fatal errors
-     * @return  
+     * Return response to request
+     * @param array $data - Response data
+     * @param string $action - Relevant action
+     * @param integer $nodeid - Request Node id
+     * @param array $error - array of errors generated
+     * return array response to operation, id of construct or error message.
      */
     public function get_response($data, $action, $nodeid, $error) {
         return $response = array(
@@ -92,7 +82,7 @@ class usermanagement extends \api\abstractmanagement {
     }
     
     /**
-     * @brief Create/Update user
+     * Create/Update user
      * @param array $params create user params
      * @return - success status and user id
      */ 
@@ -107,12 +97,13 @@ class usermanagement extends \api\abstractmanagement {
         $staffroles = array('Staff', 'Inactive Staff');
         $roles = array_merge($studentroles, $staffroles);
         
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $userid = \UserUtils::userid_exists($params['id'], $this->db);
-            $action = 'update';
             if ($userid) {
                 $details = \UserUtils::get_full_details_by_ID($params['id'], $this->db);
             }
+        } else {
+            $params['id'] = false;
         }
         
         if ($userid) {
@@ -126,7 +117,7 @@ class usermanagement extends \api\abstractmanagement {
             }
         } 
         
-        if (!$userid and $action == 'update') {
+        if (!$userid and $params['id']) {
             $data = array('status' => $strings['user_does_not_exist'], 'id' => null);
         } else {
             if (!in_array($params['role'], $roles)) {
@@ -147,7 +138,7 @@ class usermanagement extends \api\abstractmanagement {
 
                 if ($course) {
                     // Update.
-                    if ($action == 'update') {
+                    if ($params['id']) {
                         $update = \UserUtils::update_user($params['id'], $params['username'], $password, $params['title'],
                                     $params['forename'], $params['surname'], $params['email'], $params['course'],
                                     $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
@@ -178,7 +169,7 @@ class usermanagement extends \api\abstractmanagement {
     }
  
     /**
-     * @brief Delete user
+     * Delete user
      * @param array $parms delete user parameters
      * @return  
      */
@@ -186,8 +177,10 @@ class usermanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_paper_exists' ,'user_not_deleted',
             'user_does_not_exist'));
-        if (isset($params['id']) and $params['id'] != '') {
+        if (isset($params['id']) and $params['id'] !== '') {
             $userid = \UserUtils::userid_exists($params['id'], $this->db);
+        } else {
+            $params['id'] = false;
         }
         if ($userid) {
             // Only delete user they have taken no papers

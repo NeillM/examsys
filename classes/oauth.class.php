@@ -26,17 +26,17 @@
  */
 class oauth {
     
-    // @brief The db connection.
+    // The db connection.
     private $db;
     
-    // @brief The oauth server object.
+    // The oauth server object.
     private $server;
     
-    // @brief The oauth storage object.
+    // The oauth storage object.
     private $storage;
     
     /**
-     * @brief Constructor
+     * Constructor
      * @param object $configObject - rogo configuration object
      * @return void 
      */
@@ -68,7 +68,7 @@ class oauth {
     }
     
     /**
-     * @brief Delete ALL permissions for client.
+     * Delete ALL permissions for client.
      * @param string $action 
      * @param string $client
      * @return bool 
@@ -81,7 +81,7 @@ class oauth {
     }
     
     /**
-     * @brief Check if client has permission to take an action
+     * Check if client has permission to take an action
      * @param string $action 
      * @param string $client 
      * @return bool 
@@ -101,7 +101,7 @@ class oauth {
     }
     
     /**
-     * @brief Enable/Disable permission for client.
+     * Enable/Disable permission for client.
      * @param string $action 
      * @param string $client 
      * @param bool $access 
@@ -115,7 +115,7 @@ class oauth {
     }
     
     /**
-     * @brief Create permission for client.
+     * Create permission for client.
      * @param string $action 
      * @param string $client 
      * @param bool $access 
@@ -129,14 +129,14 @@ class oauth {
     }
 
     /**
-     * @brief Get ouath storage object
+     * Get ouath storage object
      */
     public function get_storage() {
         return $this->storage;
     }
     
     /**
-     * @brief Handle a request to a resource and authenticate the access token
+     * Handle a request to a resource and authenticate the access token
      * return string|void - client id if authenticated, void otherwise
      */
     public function check_auth() {
@@ -150,17 +150,17 @@ class oauth {
     }
     
     /**
-     * @brief Handle a request for an OAuth2.0 access token and send the response to the client 
+     * Handle a request for an OAuth2.0 access token and send the response to the client 
      */
     public function request_token() {
         $this->server->handleTokenRequest(\OAuth2\Request::createFromGlobals())->send('xml');
     }
     
     /**
-     * @brief Authorise an OAuth2.0 access token
+     * Authorise an OAuth2.0 access token
      * @param bool $authorised is the token authorised
      * @param int $userid the user authorising
-     * @return string|void error response or void
+     * @return array - success (true) or failure (false) and status message.
      */
     public function authorise($authorised = false, $userid = '') {
         $request = \OAuth2\Request::createFromGlobals();
@@ -168,19 +168,19 @@ class oauth {
         // validate the authorize request
         if (!$this->server->validateAuthorizeRequest($request, $response)) {
             $response->send('xml');
-            return;
+            return array(false, 'Validation Failure');
         }
         try {
             $this->server->handleAuthorizeRequest($request, $response, $authorised, $userid);
         } catch (Exception $e){
-            return $e->getMessage();
+            return array(false, $e->getMessage());
         }
         $response->send('xml');
-        return;
+        return array(true, 'OK');
     }
     
      /**
-     * @brief Check if the access/refresh token exists
+     * Check if the access/refresh token exists
      * @param string $id - access/refresh token
      * @return string|bool token type or false
      */
@@ -209,7 +209,7 @@ class oauth {
     }
     
     /**
-     * @brief Delete the access/refresh token
+     * Delete the access/refresh token
      * @param string $id - access/refresh token
      * @param string $type - token type
      * @return void
@@ -229,7 +229,7 @@ class oauth {
     }
     
     /**
-     * @brief get the rogo user id of the oauth client
+     * get the rogo user id of the oauth client
      * @param string $client - oauth client
      * @return int - user id
      */
@@ -244,7 +244,7 @@ class oauth {
     }
     
     /**
-     * @brief Check if client exists
+     * Check if client exists
      * @param string $client - oauth client
      * @return  bool
      */
@@ -263,7 +263,7 @@ class oauth {
     }
     
     /**
-     * @brief Delete the oauth client
+     * Delete the oauth client
      * @param string $client - oauth client
      * @return void
      */

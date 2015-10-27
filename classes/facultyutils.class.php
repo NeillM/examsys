@@ -154,7 +154,7 @@ Class FacultyUtils {
   }
   
   /**
-   * @brief Get factulty details
+   * Get factulty details
    * @param integer $id 
    * @param mysqli $db 
    * @return array details
@@ -172,12 +172,12 @@ Class FacultyUtils {
   }
   
   /**
-  * @brief Get the number of schools on a faculty.
+  * Get the number of schools on a faculty.
   * @param string $name - id of the faculty
   * @param mysqli $db 
   * @return  
   */
-  static function get_schools_in_faculty($id, $db) {
+  static function count_schools_in_faculty($id, $db) {
     $result = $db->prepare("SELECT count(*) FROM schools WHERE facultyID = ?");
     $result->bind_param('i', $id);
     $result->execute();

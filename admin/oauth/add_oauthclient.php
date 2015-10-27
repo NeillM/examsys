@@ -54,7 +54,12 @@ if (isset($_POST['submit'])) {
     } else {
         $oauth->add_permission('modulemanagement/enrol', $client, false);
     }
-       
+    if (isset($_POST['modulemanagement/unenrol'])) {
+        $oauth->add_permission('modulemanagement/unenrol', $client, true);
+    } else {
+        $oauth->add_permission('modulemanagement/unenrol', $client, false);
+    } 
+    
     header("location: list_oauthclient.php", true, 303);
     exit();
 } else {
