@@ -17,8 +17,6 @@
 /**
 * Abstract API functionality
 * 
-* This class should be extend by classes used to creation academic constructs such as
-*  modules, schools, courses etc.
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2015 onwards The University of Nottingham
 */
@@ -27,6 +25,9 @@ namespace api;
 
 /**
  * Abstract management class.
+ * 
+ * This class should be extend by classes used to creation academic constructs such as
+ *  modules, schools, courses etc.
  */
 abstract class abstractmanagement {
            
