@@ -56,7 +56,7 @@ if (isset($_POST['submit'])) {
         $oauth->set_permission('modulemanagement/enrol', $client, false);
     }
     
-    header("location: list_oauthclient.php", TRUE,303);
+    header("location: list_oauthclient.php", true, 303);
     exit();
 } else {
     $client = check_var('client', 'GET', true, false, true);

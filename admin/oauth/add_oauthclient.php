@@ -55,7 +55,7 @@ if (isset($_POST['submit'])) {
         $oauth->add_permission('modulemanagement/enrol', $client, false);
     }
        
-    header("location: list_oauthclient.php", TRUE,303);
+    header("location: list_oauthclient.php", true, 303);
     exit();
 } else {
     $users = array();
