@@ -46,7 +46,7 @@ class usermanagement extends \api\abstractmanagement {
         $session = $yearutils->get_current_session();
         if ($modules != '') {
             foreach ($modules->childNodes as $module) {
-                  if ($module->childNodes->length) {
+                if ($module->childNodes->length) {
                     if ($role == 'Student') {
                         $enrol = \UserUtils::add_student_to_module($id, $module->nodeValue, 1, $session, $this->db, 1);
                         if (!$enrol) {   
