@@ -120,7 +120,10 @@
   <xs:simpleType name="role">
     <xs:restriction base="xs:string">
 	  <xs:enumeration value="Student"/>
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Graduate"/>
 	  <xs:enumeration value="Staff"/>
+      <xs:enumeration value="Inactive Staff"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="studentid">
