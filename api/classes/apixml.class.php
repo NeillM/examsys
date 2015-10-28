@@ -73,22 +73,18 @@ class apixml extends \api\apiabstract {
     public function parse($tasktype, $fields, $actions, $xml, $perms) {
         $langpack = new \langpack();
         $response = array();
+        $xpath = new \DOMXPath($xml); 
         foreach ($actions as $action) {
-            $parentnode = $xml->getElementsByTagName($action);
+            $parentnode = $xpath->query($action);
             $error = false;
             foreach ($parentnode as $node) {
                 if ($perms[$action]) {
-                    if ($node->childNodes->length) {
-                        foreach ($node->childNodes as $i) {
-                            foreach ($fields as $field) {
-                                if ($i->nodeName == $field) {
-                                     if ($i->childNodes->length > 1) {
-                                        $params[$field] = $i;
-                                     } else {
-                                        $params[$field] = $i->nodeValue;
-                                     }
-                                }
-                            }   
+                    foreach ($fields as $field) {
+                        $item = $node->getElementsByTagName($field);
+                        if ($item->item(0)->childNodes->length > 1) {
+                            $params[$field] = $item->item(0);
+                        } else {
+                            $params[$field] = $item->item(0)->nodeValue;
                         }
                         $params['nodeid'] = $node->getAttribute('id');
                     } 

@@ -22,11 +22,11 @@
 			  <xs:element name="modules" minOccurs="0">
                 <xs:complexType>
                   <xs:sequence>
-				    <xs:element name="modulecode" maxOccurs="unbounded">
+				    <xs:element name="moduleid" maxOccurs="unbounded">
 					  <xs:complexType>
 					    <xs:simpleContent>
-						  <xs:extension base="modulecode">
-						    <xs:attribute type="xs:integer" name="id" use="optional"/>
+						  <xs:extension base="xs:integer">
+						    <xs:attribute type="xs:string" name="id" use="optional"/>
 						  </xs:extension>
 					    </xs:simpleContent>
 					  </xs:complexType>
@@ -127,12 +127,6 @@
     <xs:restriction base="xs:string">
 	  <xs:minLength value="1"/>
 	  <xs:maxLength value="15"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="modulecode">
-    <xs:restriction base="xs:string">
-	  <xs:minLength value="1"/>
-	  <xs:maxLength value="25"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="username">

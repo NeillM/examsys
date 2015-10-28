@@ -44,15 +44,15 @@ class usermanagement extends \api\abstractmanagement {
         $error = array();
         $yearutils = new \yearutils($this->db);
         $session = $yearutils->get_current_session();
-        if ($params['modules'] != '') {
-            foreach ($params['modules']->childNodes as $module) {
-                if ($module->childNodes->length) {
-                    if ($params['role'] == 'Student') {
-                        $enrol = \UserUtils::add_student_to_module($id, $module->nodeValue, '', 1, $session, $this->db, 1);
+        if ($modules != '') {
+            foreach ($modules->childNodes as $module) {
+                  if ($module->childNodes->length) {
+                    if ($role == 'Student') {
+                        $enrol = \UserUtils::add_student_to_module($id, $module->nodeValue, 1, $session, $this->db, 1);
                         if (!$enrol) {   
                             $error[] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module->nodeValue);
                         }
-                    } elseif ($params['role'] == 'Staff') {
+                    } elseif ($role == 'Staff') {
                         $enrol = \UserUtils::add_staff_to_module($id, $module->nodeValue, $this->db);
                         if (!$enrol) {
                             $error[] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module->nodeValue);
