@@ -111,7 +111,7 @@ class usermanagement extends \api\abstractmanagement {
             $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
                 'gender', 'year', 'role', 'studentid', 'initials');
             foreach ($paramnames as $name) {
-                if (!isset($params[$name]) or $params[$name] == '') {
+                if (!isset($params[$name]) or $params[$name] === '') {
                     $params[$name] = $details[$name];
                 }
             }

@@ -48,10 +48,11 @@ class facultymanagement extends \api\abstractmanagement {
             }
         } else {
             $params['id'] = false;
+            $facultyid = false;
         }
         
         // Get name if not provided.
-        if ($facultyid and (!isset($params['name']) or $params['name'] == '')) {
+        if ($facultyid and (!isset($params['name']) or $params['name'] === '')) {
             $params['name'] = $details['name'];
         }
             

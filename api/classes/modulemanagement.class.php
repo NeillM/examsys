@@ -112,12 +112,13 @@ class modulemanagement extends \api\abstractmanagement {
             }
         } else {
             $params['id'] = false;
+            $moduleid = false;
         }
         // Get school id if school name provided.
-        if (isset($params['school']) and $params['school'] != '') {
+        if (isset($params['school']) and $params['school'] !== '') {
             $schoolid = \SchoolUtils::school_name_exists($params['school'], $this->db);
             if (!$schoolid) {
-                if (isset($params['faculty']) and $params['faculty'] != '') {
+                if (isset($params['faculty']) and $params['faculty'] !== '') {
                     $schoolid = \SchoolUtils::generate_school_id($params['school'], $params['faculty'], $this->db);
                 } else {
                     $faculty = false;
@@ -130,12 +131,12 @@ class modulemanagement extends \api\abstractmanagement {
         
         if ($faculty) {
             // Get module code if not provided.
-            if ($moduleid and (!isset($params['modulecode']) or $params['modulecode'] == '')) {
+            if ($moduleid and (!isset($params['modulecode']) or $params['modulecode'] === '')) {
                 $params['modulecode'] = $details['modulecode'];
             }
             
             // Get name if not provided.
-            if ($moduleid and (!isset($params['name']) or $params['name'] == '')) {
+            if ($moduleid and (!isset($params['name']) or $params['name'] === '')) {
                 $params['name'] = $details['name'];
             }
             
@@ -161,7 +162,7 @@ class modulemanagement extends \api\abstractmanagement {
             } else {
                 $moduleid = \module_utils::get_idMod($params['modulecode'], $this->db);
                 if (!$moduleid) {
-                    if (!isset($params['sms']) or $params['sms'] == '') {
+                    if (!isset($params['sms']) or $params['sms'] === '') {
                         $params['sms'] = 'rogo webservice';
                     }
                     $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],

@@ -49,12 +49,13 @@ class coursemanagement extends \api\abstractmanagement {
             }
         } else {
             $params['id'] = false;
+            $courseid = false;
         }
         // Get school id if school name provided.
-        if (isset($params['school']) and $params['school'] != '') {
+        if (isset($params['school']) and $params['school'] !== '') {
             $schoolid = \SchoolUtils::school_name_exists($params['school'], $this->db);
             if (!$schoolid) {
-                if (isset($params['faculty']) and $params['faculty'] != '') {
+                if (isset($params['faculty']) and $params['faculty'] !== '') {
                     $schoolid = \SchoolUtils::generate_school_id($params['school'], $params['faculty'], $this->db);
                 } else {
                     $faculty = false;
@@ -68,12 +69,12 @@ class coursemanagement extends \api\abstractmanagement {
         // If creating/updating module with a new school, faculty needs to be supplied.
         if ($faculty) {
             // Get description if not provided.
-            if ($courseid and (!isset($params['description']) or $params['description'] == '')) {
+            if ($courseid and (!isset($params['description']) or $params['description'] === '')) {
                 $params['description'] = $details['description'];
             }
             
             // Get name if not provided.
-            if ($courseid and (!isset($params['name']) or $params['name'] == '')) {
+            if ($courseid and (!isset($params['name']) or $params['name'] === '')) {
                 $params['name'] = $details['name'];
             }
             

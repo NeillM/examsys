@@ -49,15 +49,16 @@ class schoolmanagement extends \api\abstractmanagement {
             }
         } else {
             $params['id'] = false;
+            $schoolid = false;
         }
         
         // Get name if not provided.
-        if ($schoolid and (!isset($params['name']) or $params['name'] == '')) {
+        if ($schoolid and (!isset($params['name']) or $params['name'] === '')) {
             $params['name'] = $details['name'];
         }
         
         // Get faculty if provided.
-        if (isset($params['faculty']) and $params['faculty'] != '') {
+        if (isset($params['faculty']) and $params['faculty'] !== '') {
             $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
             if (!$facultyid) {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
