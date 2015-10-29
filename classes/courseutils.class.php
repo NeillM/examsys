@@ -198,7 +198,7 @@ Class CourseUtils {
   * @param mysqli $db 
   * @return  
   */
-  static function get_users_on_course($name, $db) {
+  static function count_users_on_course($name, $db) {
     $result = $db->prepare("SELECT count(*) FROM users WHERE grade = ?");
     $result->bind_param('s', $name);
     $result->execute();
@@ -211,15 +211,19 @@ Class CourseUtils {
   /**
    * Update new course.
    *
-   * @param integer Course id.
+   * @param integer $id Course id.
    * @param integer $schoolid ID of the school the course belongs to
    * @param string $name code of the course e.g. B140
    * @param string $description a title for the course e.g. Neuroscience BSc
    * @param mysqli $db
    * 
    * @return bool success response
-*/
+   */
   static function update_course($id, $schoolid, $name, $description, $db) {
+    // Check if name already in use.
+    if (CourseUtils::course_exists($name, $db) === true) {
+      return false;
+    }
     $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ? WHERE id = ?");
     $result->bind_param('ssii', $name, $description, $schoolid, $id);
     $result->execute();
@@ -238,7 +242,7 @@ Class CourseUtils {
    * @param string $name name of the course to check
    * @param object $db database connection
    *
-   * @return int
+   * @return int|bool id of course or false
   */
   static function get_course_id($name, $db) {
     $result = $db->prepare("SELECT id FROM courses WHERE name = ? AND deleted IS NULL");
@@ -247,6 +251,9 @@ Class CourseUtils {
     $result->bind_result($id);
     $result->fetch();
     $result->close();
+    if ($result->num_rows == 0) {
+      return false;
+    }
     return $id;
   }
 }

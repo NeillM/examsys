@@ -1447,7 +1447,8 @@ $this->tableList['oauth_clients'] = <<<QUERY
             grant_types VARCHAR(80),
             scope VARCHAR(100),
             user_id VARCHAR(80),
-            CONSTRAINT clients_client_id_pk PRIMARY KEY (client_id)
+            CONSTRAINT clients_client_id_pk PRIMARY KEY (client_id),
+            KEY `idx_user_id` (`user_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1480,7 +1481,8 @@ $this->tableList['oauth_refresh_tokens'] = <<<QUERY
             client_id VARCHAR(80) NOT NULL,
             user_id VARCHAR(255), expires TIMESTAMP NOT NULL,
             scope VARCHAR(2000),
-            CONSTRAINT refresh_token_pk PRIMARY KEY (refresh_token)
+            CONSTRAINT refresh_token_pk PRIMARY KEY (refresh_token),
+            KEY `idx_user_id` (`user_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

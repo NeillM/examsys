@@ -127,7 +127,7 @@ class coursemanagement extends \api\abstractmanagement {
         }
         if ($courseid) {
             // Only delete course if it contains no users.
-            $users = \CourseUtils::get_users_on_course($details['name'], $this->db);
+            $users = \CourseUtils::count_users_on_course($details['name'], $this->db);
             if (isset($users) and $users > 0) {
                 $data = array('status' => $strings['course_not_deleted_inuse'], 'id' => null);
             } else {

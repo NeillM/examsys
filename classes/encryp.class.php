@@ -25,10 +25,7 @@
  * Interfaces with the vendor/bshaffer/oauth2-server-php
  */
 class encryp {
-    
-    function __construct() {
-    }
-    
+       
     /**
      * This is function encpw encrpts a password using SHA-512 for storage in the DB.
      * MD5 encryption is kept for backwards compatibility.

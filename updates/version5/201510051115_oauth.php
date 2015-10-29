@@ -11,7 +11,8 @@ if ($updater_utils->check_version("6.1.0")) {
             grant_types VARCHAR(80),
             scope VARCHAR(100),
             user_id VARCHAR(80),
-            CONSTRAINT clients_client_id_pk PRIMARY KEY (client_id))";
+            CONSTRAINT clients_client_id_pk PRIMARY KEY (client_id),
+            KEY `idx_user_id` (`user_id`))";
         $updater_utils->execute_query($createsql, true);
         $createsql = "CREATE TABLE oauth_access_tokens (
             access_token VARCHAR(40) NOT NULL,
@@ -35,7 +36,8 @@ if ($updater_utils->check_version("6.1.0")) {
             client_id VARCHAR(80) NOT NULL,
             user_id VARCHAR(255), expires TIMESTAMP NOT NULL,
             scope VARCHAR(2000),
-            CONSTRAINT refresh_token_pk PRIMARY KEY (refresh_token))";
+            CONSTRAINT refresh_token_pk PRIMARY KEY (refresh_token),
+            KEY `idx_user_id` (`user_id`))";
         $updater_utils->execute_query($createsql, true);
         $createsql = "CREATE TABLE oauth_users (
             username VARCHAR(255) NOT NULL,
