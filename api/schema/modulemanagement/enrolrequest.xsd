@@ -1,36 +1,36 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="moduleManagementEnrolRequest">
-    <xs:complexType>
-      <xs:sequence>
-	  <xs:element name="enrol" maxOccurs="unbounded" minOccurs="0">
-          <xs:complexType>
+    <xs:element name="moduleManagementEnrolRequest">
+        <xs:complexType>
             <xs:sequence>
-			  <xs:element name="userid" type="xs:integer"/>
-			  <xs:element name="moduleid" type="xs:integer"/>
-			  <xs:element type="xs:gYear" name="session" minOccurs="0"/>
-              <xs:element name="attempt" type="attempt"/>
+                <xs:element name="enrol" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="userid" type="xs:integer"/>
+                            <xs:element name="moduleid" type="xs:integer"/>
+                            <xs:element type="xs:gYear" name="session" minOccurs="0"/>
+                            <xs:element name="attempt" type="attempt"/>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="id" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="unenrol" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="userid" type="xs:integer"/>
+                            <xs:element name="moduleid" type="xs:integer"/>
+                            <xs:element type="xs:gYear" name="session" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="id" use="required"/>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
-			<xs:attribute type="xs:string" name="id" use="required"/>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="unenrol" maxOccurs="unbounded" minOccurs="0">
-          <xs:complexType>
-            <xs:sequence>
-			  <xs:element name="userid" type="xs:integer"/>
-			  <xs:element name="moduleid" type="xs:integer"/>
-			  <xs:element type="xs:gYear" name="session" minOccurs="0"/>
-            </xs:sequence>
-			<xs:attribute type="xs:string" name="id" use="required"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:simpleType name="attempt">
-    <xs:restriction base="xs:integer">
-	  <xs:minInclusive value="1"/>
-	  <xs:maxInclusive value="3"/>
-    </xs:restriction>
-  </xs:simpleType>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="attempt">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

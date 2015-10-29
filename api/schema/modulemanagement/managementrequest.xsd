@@ -1,76 +1,76 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="moduleManagementRequest">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="create" maxOccurs="unbounded" minOccurs="0">
-          <xs:complexType>
-		    <xs:sequence>
-			  <xs:choice>
-			    <xs:group ref="create"/>
-			    <xs:group ref="update"/>
-			  </xs:choice>
-              <xs:element name="sms" type="sms" minOccurs="0"/>
-			</xs:sequence>
-			<xs:attribute type="xs:string" name="id" use="required"/>
-          </xs:complexType>
-        </xs:element>
-		<xs:element name="delete" maxOccurs="unbounded" minOccurs="0">
-          <xs:complexType>
+    <xs:element name="moduleManagementRequest">
+        <xs:complexType>
             <xs:sequence>
-              <xs:element name="id" type="xs:integer"/>
+                <xs:element name="create" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:choice>
+                                <xs:group ref="create"/>
+                                <xs:group ref="update"/>
+                            </xs:choice>
+                            <xs:element name="sms" type="sms" minOccurs="0"/>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="id" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="delete" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="id" type="xs:integer"/>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="id" use="required"/>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
-			<xs:attribute type="xs:string" name="id" use="required"/>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-  <xs:group name="create">
-    <xs:sequence>
-      <xs:element name="modulecode" type="modulecode"/>
-	  <xs:element name="name" type="modulename"/>
-	  <xs:element name="school" type="school"/>
-	  <xs:element name="faculty" type="faculty" minOccurs="0"/>
-	</xs:sequence>
-  </xs:group>
-  <xs:group name="update">
-    <xs:sequence>
-	  <xs:element name="id" type="xs:integer"/>
-	  <xs:element name="modulecode" type="modulecode" minOccurs="0"/>
-	  <xs:element name="name" type="modulename" minOccurs="0"/>
-	  <xs:element name="school" type="school" minOccurs="0"/>
-	  <xs:element name="faculty" type="faculty" minOccurs="0"/>
-	</xs:sequence>
-  </xs:group>
-  <xs:simpleType name="modulecode">
-    <xs:restriction base="xs:string">
-	  <xs:minLength value="1"/>
-	  <xs:maxLength value="25"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="modulename">
-    <xs:restriction base="xs:string">
-	  <xs:minLength value="1"/>
-	  <xs:maxLength value="255"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="school">
-    <xs:restriction base="xs:string">
-	  <xs:minLength value="1"/>
-	  <xs:maxLength value="255"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="faculty">
-    <xs:restriction base="xs:string">
-	  <xs:minLength value="1"/>
-	  <xs:maxLength value="80"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="sms">
-    <xs:restriction base="xs:string">
-	  <xs:minLength value="1"/>
-	  <xs:maxLength value="255"/>
-    </xs:restriction>
-  </xs:simpleType>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="create">
+        <xs:sequence>
+            <xs:element name="modulecode" type="modulecode"/>
+            <xs:element name="name" type="modulename"/>
+            <xs:element name="school" type="school"/>
+            <xs:element name="faculty" type="faculty" minOccurs="0"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:group name="update">
+        <xs:sequence>
+            <xs:element name="id" type="xs:integer"/>
+            <xs:element name="modulecode" type="modulecode" minOccurs="0"/>
+            <xs:element name="name" type="modulename" minOccurs="0"/>
+            <xs:element name="school" type="school" minOccurs="0"/>
+            <xs:element name="faculty" type="faculty" minOccurs="0"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:simpleType name="modulecode">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="25"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="modulename">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="school">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="faculty">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="80"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="sms">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

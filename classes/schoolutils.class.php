@@ -82,7 +82,7 @@ Class SchoolUtils {
      * @param int $school_name  - Name of the school to be looked up.
      * @param object $db        - Link to mysqli
      *
-     * @return int              - ID of the school.
+     * @return int|bool              - ID of the school, or false if non-existant.
      */
     static function get_school_id_by_name($school_name, $db) {
         if ($school_name == '') {
@@ -95,6 +95,9 @@ Class SchoolUtils {
         $stmt->bind_result($id);
         $stmt->fetch();
         $stmt->close();
+        if ($result->num_rows == 0) {
+            $exist = false;
+        }
         return $id;
     }
 
@@ -221,6 +224,9 @@ Class SchoolUtils {
         $result->bind_param('i', $schoolID);
         $result->execute();
         $result->close();
+        if ($db->errno != 0) {
+            return false;
+        }
         return true;
       }
       
@@ -231,7 +237,7 @@ Class SchoolUtils {
      * @param string $school - Name of the new school
      * @param object $db - Link to mysqli
      *
-     * @return int|bool - The ID of the school / false on error.
+     * @return bool - true on success
      */
     static function update_school($id, $facultyID, $school, $db) {
         if ($facultyID === '' or $school === '') {
@@ -239,7 +245,7 @@ Class SchoolUtils {
         }
 
         $schoolID = SchoolUtils::school_name_exists($school, $db);
-        if ($schoolID !== false) {
+        if ($schoolID !== false and $schoolid != $id) {
           return false;
         }
 
@@ -276,7 +282,7 @@ Class SchoolUtils {
    * Check if school contains modules or courses
    * @param integer $id school id
    * @param mysqli $db 
-   * @return  
+   * @return bool true if school is in use
    */
   static function school_in_use($id, $db) {
     $result = $db->prepare("SELECT NULL FROM courses WHERE schoolid = ?
@@ -293,11 +299,11 @@ Class SchoolUtils {
   }
   
   /**
-   *  Generate a school id based on name and faculty.
+   * Generate a school id based on name and faculty.
    * @param string $school - school name
    * @param string $faculty - faculty name
    * @param mysqli $db
-   * @return integer 
+   * @return integer|bool - new school id or false on error
   */
   static function generate_school_id($school, $faculty, $db) {
     $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
@@ -306,7 +312,11 @@ Class SchoolUtils {
         $facultyid = FacultyUtils::add_faculty($faculty, $db);
     }
     // Add new school to faculty.
-    $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
+    if ($facultyid) {
+        $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
+    } else {
+        return false;
+    }
     return $schoolid;
   }
 }

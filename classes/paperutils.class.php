@@ -681,25 +681,16 @@ Class PaperUtils {
   * @return bool
   */
   static function paper_taken($id, $db) {
-    $result = $db->prepare("SELECT count(*) FROM log_metadata WHERE paperID = ?");
-    $result->bind_param('i', $id);
+    $result = $db->prepare("SELECT NULL FROM log_metadata WHERE paperID = ?
+        UNION SELECT NULL FROM log4_overall WHERE q_paper = ?");
+    $result->bind_param('ii', $id, $id);
     $result->execute();
-    $result->bind_result($count);
     $result->fetch();
-    $result->close();
-    if ($count > 0) {
-        return true;
-    } else {
-        $result = $db->prepare("SELECT count(*) FROM log4_overall WHERE q_paper = ?");
-        $result->bind_param('i', $id);
-        $result->execute();
-        $result->bind_result($count);
-        $result->fetch();
+    if ($result->num_rows > 0) {
         $result->close();
-        if ($count > 0) {
-            return true;
-        }
+        return true;
     }
+    $result->close();
     return false;
   }
   

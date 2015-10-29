@@ -35,19 +35,16 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-  <form name="myform">
-    <br/>
-
-		<div id="menu1a">
+    <form name="myform">
+        <br/>
+        <div id="menu1a">
             <div class="menuitem"><a href="list_oauthclient.php"><img class="sidebar_icon" src="../../artwork/lti_key_16.png" alt="<?php echo $string['listoauthclient'] ?>" /><?php echo $string['listoauthclient'] ?></a></div>
             <div class="grey menuitem"><img class="sidebar_icon" src="../../artwork/red_cross_grey.png" alt="<?php echo $string['deleteoauthkeys'] ?>" /><?php echo $string['deleteoauthkeys'] ?></div>
         </div>
-
-		<div style="display:none" id="menu1b">
+        <div style="display:none" id="menu1b">
             <div class="menuitem"><a href="list_oauthclient.php"><img class="sidebar_icon" src="../../artwork/lti_key_16.png" alt="<?php echo $string['listoauthclient'] ?>" /><?php echo $string['listoauthclient'] ?></a></div>
             <div class="menuitem"><a href="#" onclick="deleteOAuthkeys(); return false;"><img class="sidebar_icon" src="../../artwork/red_cross.png" alt="<?php echo $string['deleteoauthkeys'] ?>" /><?php echo $string['deleteoauthkeys'] ?></a></div>
-		</div>
-
-    <input type="hidden" id="lineID" name="lineID" value=""/>
-  </form>
+        </div>
+        <input type="hidden" id="lineID" name="lineID" value=""/>
+    </form>
 </div>

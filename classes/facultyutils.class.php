@@ -131,6 +131,9 @@ Class FacultyUtils {
     $result->bind_param('i', $facultyID);
     $result->execute();  
     $result->close();
+    if ($db->errno != 0) {
+      return false;
+    }
     return true;
   }
   
@@ -139,10 +142,10 @@ Class FacultyUtils {
    * @param integer $id     - Faculty id in rogo
    * @param string $faculty - The name of the faculty to be added
    * @param object $db      - Link to mysqli
-   * @return int            - The last insert number from the database
+   * @return bool           - True on success
   */
   static function update_faculty($id, $faculty, $db) {
-    $result = $db->prepare("UPDATE faculty set name = ? where id = ?");
+    $result = $db->prepare("UPDATE faculty SET name = ? WHERE id = ?");
     $result->bind_param('si', $faculty, $id);
     $result->execute();
     $result->close();
@@ -173,9 +176,9 @@ Class FacultyUtils {
   
   /**
   * Get the number of schools on a faculty.
-  * @param string $name - id of the faculty
+  * @param integer $id - id of the faculty
   * @param mysqli $db 
-  * @return  
+  * @return integer - number of schools in faculty
   */
   static function count_schools_in_faculty($id, $db) {
     $result = $db->prepare("SELECT count(*) FROM schools WHERE facultyID = ?");

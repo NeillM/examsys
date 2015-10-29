@@ -26,7 +26,9 @@
  */
 class render {
     
-    // Twig object.
+    /**
+     * Twig object
+     */
     private $twig;
     
     /**

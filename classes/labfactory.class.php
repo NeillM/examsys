@@ -64,18 +64,4 @@ class LabFactory {
     return $lab_object;
   }
   
-  /**
-   * Get the lab id
-   * @param string $username 
-   * @return int 
-  */
-  public function get_lab_id($lab) {
-    $result = $this->db->prepare("SELECT id FROM labs WHERE name = ?");
-    $result->bind_param('s', $lab);
-    $result->execute();
-    $result->bind_result($id);
-    $result->fetch();
-    $result->close();
-    return $id;  
-  }
 }

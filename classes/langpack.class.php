@@ -26,11 +26,14 @@
 
 class langpack {
        
+    /**
+     * Server lang directory type
+     * i.e. en
+     */
     private $langdir;
     
     /**
-     * Constructor
-     * @return  
+     * Constructor 
      */
     function __construct() {
         $configObject = Config::get_instance();
@@ -39,33 +42,39 @@ class langpack {
     }
     
     /**
+     * Get lang filename of component
+     * @param array $component lang component name
+     * @return string absolute lang file name
+     */
+    private function get_filename($component) {
+        $componentparts = explode('/', $component);
+        $file = array_pop($componentparts);
+        $path = implode(DIRECTORY_SEPARATOR, $componentparts);
+        $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR
+            . 'lang' . DIRECTORY_SEPARATOR . $this->langdir . DIRECTORY_SEPARATOR . $file . '.lang.php';
+        return $filename;
+    }
+    
+    /**
      * Get the string value.
-     * @param string $component 
-     * @param string $name 
-     * @return  
+     * @param string $component lang file component name
+     * @param string $name string to translate
+     * @return string translated value
      */
     public function get_string($component, $name) {
-        $componentparts = explode('/', $component);
-        $subdir = $componentparts[0];
-        $file = $componentparts[1];
-        $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $subdir . DIRECTORY_SEPARATOR
-            . 'lang' . DIRECTORY_SEPARATOR . $this->langdir . DIRECTORY_SEPARATOR . $file . '.lang.php';
+        $filename = $this->get_filename($component);
         include $filename;
         return $string[$name];
     }
     
     /**
      * Get the value of X strings.
-     * @param string $component 
-     * @param array $names
-     * @return  
+     * @param string $component lang file component name
+     * @param array $names strings to translate
+     * @return array list of translated values
      */
     public function get_strings($component, $names) {
-        $componentparts = explode('/', $component);
-        $subdir = $componentparts[0];
-        $file = $componentparts[1];
-        $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $subdir . DIRECTORY_SEPARATOR
-            . 'lang' . DIRECTORY_SEPARATOR . $this->langdir . DIRECTORY_SEPARATOR . $file . '.lang.php';
+        $filename = $this->get_filename($component);
         include $filename;
         $strings = array();
         foreach ($names as $name) {

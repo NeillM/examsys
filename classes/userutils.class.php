@@ -122,13 +122,13 @@ Class UserUtils {
    * @param string $sid - student id
    * @param mysqli $db - db connection
    * @param string $initials - user initials
-   * @return  
+   * @return bool - true on success
   */
   static function update_user($id, $username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
 
     $current = self::get_full_details_by_ID($id, $db);
 
-    if (empty($username) or  empty($surname) or empty($role)) {
+    if (empty($username) or  empty($surname) or empty($role) or empty($current['username'])) {
       return false;
     }
 
@@ -161,7 +161,7 @@ Class UserUtils {
         $title = self::my_ucwords($title);
     }
 
-    // If updatinf the password - encrypt.
+    // If updating the password - encrypt.
     if ($current['password'] != $password) {
         $enc = new encryp();
         $salt = UserUtils::get_salt();
@@ -170,7 +170,7 @@ Class UserUtils {
         $encrypt_password = $password;
     }
 
-    // // If updating the gender. Force valid value for gender or default to NULL
+    // If updating the gender. Force valid value for gender or default to NULL
     if ($current['gender'] != $gender) {
         if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
             $gender = null;
@@ -587,7 +587,7 @@ Class UserUtils {
    * @param string $idMod Module code for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return int|bool enrolement id or false
+   * @return int|bool enrolement id 0 if already enrolled, false on error
    *
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
@@ -837,25 +837,16 @@ Class UserUtils {
   * @return bool
   */
   static function user_paper_started($id, $db) {
-    $result = $db->prepare("SELECT count(*) FROM log_metadata WHERE userID = ?");
-    $result->bind_param('i', $id);
+    $result = $db->prepare("SELECT NULL FROM log_metadata WHERE userID = ?
+        UNION SELECT NULL FROM log4_overall WHERE userID = ?");
+    $result->bind_param('ii', $id, $id);
     $result->execute();
-    $result->bind_result($count);
     $result->fetch();
-    $result->close();
-    if ($count > 0) {
-        return true;
-    } else {
-        $result = $db->prepare("SELECT count(*) FROM log4_overall WHERE userID = ?");
-        $result->bind_param('i', $id);
-        $result->execute();
-        $result->bind_result($count);
-        $result->fetch();
+    if ($result->num_rows > 0) {
         $result->close();
-        if ($count > 0) {
-            return true;
-        }
+        return true;
     }
+    $result->close();
     return false;
   }
   
@@ -867,26 +858,14 @@ Class UserUtils {
    */
   static function get_full_details_by_ID($id, $db) {
       $sql = $db->prepare("SELECT username, password, title, first_names, surname, email, grade, gender,
-        yearofstudy, roles, initials FROM users WHERE id = ?");
+        yearofstudy, roles, initials, student_id FROM users LEFT JOIN sid ON id = userID WHERE id = ?");
       $sql->bind_param('i', $id);
       $sql->execute();
       $sql->bind_result($username, $password, $title, $first_names, $surname, $email, $grade, $gender,
-        $yearofstudy, $roles, $initials);
+        $yearofstudy, $roles, $initials, $student_id);
       $sql->fetch();
       $sql->close();
-      
-      $studentroles = array('Student', 'Left', 'Graduate');
-      if (in_array($roles, $studentroles)) {
-          $sql = $db->prepare("SELECT student_id from sid WHERE userID = ?");
-          $sql->bind_param('i', $id);
-          $sql->execute();
-          $sql->bind_result($student_id);
-          $sql->fetch();
-          $sql->close();
-      } else {
-          $student_id = null;
-      }
-      
+            
       $details = array(
         'username' => $username,
         'password' => $password,
@@ -917,24 +896,18 @@ Class UserUtils {
     if ($userid == '' or $moduleid == '' or $session == '') {
       return false;
     }
-    $result = $db->prepare("SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
-    $result->bind_param('iis', $userid, $moduleid, $session);
+    $result = $db->prepare("DELETE FROM modules_student WHERE id = ? AND idMod = ? AND calendar_year = ?");
+    $result->bind_param('iis', $id, $moduleid, $session);
     $result->execute();
-    $result->bind_result($id);
-    $result->fetch();
-    $result->close();
-    if ($id) {
-        $result = $db->prepare("DELETE FROM modules_student WHERE id = ? AND idMod = ? AND calendar_year = ?");
-        $result->bind_param('iis', $id, $moduleid, $session);
-        $result->execute();
+    if ($result->affected_rows == 0) {
         $result->close();
-        if ($db->errno != 0) {
-          return false;
-        }
-        return $id;
-    } else {
+        return false;
+    }
+    $result->close();
+    if ($db->errno != 0) {
       return false;
     }
+    return $id;
   }
   
   /**
@@ -945,7 +918,7 @@ Class UserUtils {
    * @param integer $moduleid - module id
    * @param integer $session - academic session
    * @param mysqli $db - db connection
-   * @return integer - enrolement id
+   * @return integer|bool - enrolement id, false on error
    */
   static function get_enrolement_id($userid, $moduleid, $session, $db) {
       $result = $db->prepare("SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
@@ -953,6 +926,10 @@ Class UserUtils {
       $result->execute();
       $result->bind_result($id);
       $result->fetch();
+      if ($result->num_rows == 0) {
+        $result->close();
+        return false;
+      }
       $result->close();
       return $id;
   }

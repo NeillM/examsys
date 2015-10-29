@@ -65,7 +65,7 @@ $oauth->delete_auth($id, $type);
 
 <div class="button_bar">
   <form action="" method="get">
-    <input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();"/>
+    <input type="button" name="ok" value="OK" class="ok" onclick="javascript:window.close();"/>
   </form>
 </div>
 

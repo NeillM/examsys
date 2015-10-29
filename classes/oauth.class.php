@@ -26,13 +26,20 @@
  */
 class oauth {
     
-    // The db connection.
+    /**
+     * The db connection.
+     * @var mysqli 
+     */
     private $db;
     
-    // The oauth server object.
+    /**
+     * The oauth server object.
+     */
     private $server;
     
-    // The oauth storage object.
+    /**
+     * The oauth storage object.
+     */
     private $storage;
     
     /**
@@ -105,7 +112,7 @@ class oauth {
      * @param string $action 
      * @param string $client 
      * @param bool $access 
-     * @return bool 
+     * @return void 
      */
     public function set_permission($action, $client, $access) {
         $result = $this->db->prepare("UPDATE  webservice_permissions SET access = ? WHERE client_id = ? AND action = ?");
@@ -231,7 +238,7 @@ class oauth {
     /**
      * get the rogo user id of the oauth client
      * @param string $client - oauth client
-     * @return int - user id
+     * @return int|bool - user id if one exists, false otherwise
      */
     public function get_client_user($client) {
         $result = $this->db->prepare("SELECT user_id FROM oauth_clients WHERE client_id = ?");
@@ -239,6 +246,10 @@ class oauth {
         $result->execute();
         $result->bind_result($userid);
         $result->fetch();
+        if ($result->num_rows == 0) {
+            $result->close();
+            return false;
+        }
         $result->close();
         return $userid;
     }

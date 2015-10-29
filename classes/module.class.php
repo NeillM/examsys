@@ -552,6 +552,9 @@ Class module {
     $result->bind_param('i', $idMod);
     $result->execute();
     $result->close();
+    if ($db->errno != 0) {
+        return false;
+    }
     return true;
   }
 
@@ -686,7 +689,7 @@ Class module {
   /**
    * Check if papers or enrolements exist on this module
    * @param integer $id module us
-   * @return 
+   * @return bool true if module is in use
    */
   public static function module_in_use($id, $db) {
     $result = $db->prepare("SELECT NULL FROM properties_modules WHERE idMod = ?
