@@ -100,8 +100,10 @@ class apixml extends \api\apiabstract {
                         } elseif (!is_null($item->item(0)->nodeValue)) {
                             $params[$field] = $item->item(0)->nodeValue;
                         }
-                    } 
-                    $params['nodeid'] = $node->getAttribute('id');
+                    }
+                    if ($node->hasAttribute('id')) { 
+                        $params['nodeid'] = $node->getAttribute('id');
+                    }
                 } else {
                     $error = true;
                     $data = array('status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null);
