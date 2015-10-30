@@ -65,8 +65,6 @@ require '../include/sysadmin_auth.inc';
 
   <h2>Development Tests</h2>
 	<ol>
-		<li><a href="unittest.php">Unit tests</a></li>
-		<li><a href="selenium/README.txt">Selenium tests</a></li>
 		<li><a href="lang_test.php">Language translations</a></li>
 		<li><a href="database_grants.php">Database grants</a></li>
 		<li><a href="database_indexes.php">Database indexes</a></li>
