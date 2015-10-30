@@ -52,19 +52,23 @@ Class UserUtils {
 
     if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
       // Force re-build of initials off forenames.
-      $initial = explode(' ', $forname);
-      $initials = '';
-      foreach ($initial as $name) {
-        $initials .= substr($name, 0, 1);
+      if ($initials == '') {
+          $initial = explode(' ', $forname);
+          $initials = '';
+          foreach ($initial as $name) {
+            $initials .= substr($name, 0, 1);
+          }
+          $initials = strtoupper($initials);
       }
-      $initials = strtoupper($initials);
-
+      
       $surname = self::my_ucwords($surname);
       $title = self::my_ucwords(trim($title));
 
+      $enc = new encryp();
+      
       // If there is no password generate a default one.
       if ($password == '') {
-        $password = gen_password();
+        $password = $enc->gen_password();
       }
 
       // Force valid value for gender or default to NULL
@@ -73,7 +77,7 @@ Class UserUtils {
       }
 
       $salt = UserUtils::get_salt();
-      $encrypt_password = encpw($salt, $username, $password);  // One way encrypt the password.
+      $encrypt_password = $enc->encpw($salt, $username, $password);  // One way encrypt the password.
 
       // Add new record into users table.
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, 0, ?, NULL, NULL)");
@@ -102,6 +106,99 @@ Class UserUtils {
     return false;
   }
 
+  /**
+   * Update existing user.
+   * @param integer $id - user id
+   * @param string $username - user username
+   * @param string $password - user password
+   * @param string $title - user title
+   * @param string $forname - user first names
+   * @param string $surname - user surname
+   * @param string $email - user email address
+   * @param string $course - user course 
+   * @param string $gender - user gender
+   * @param integer $year - year of study
+   * @param string $role - user role
+   * @param string $sid - student id
+   * @param mysqli $db - db connection
+   * @param string $initials - user initials
+   * @return bool - true on success
+  */
+  static function update_user($id, $username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
+
+    $current = self::get_full_details_by_ID($id, $db);
+
+    if (empty($username) or  empty($surname) or empty($role) or empty($current['username'])) {
+      return false;
+    }
+
+    // If updating the username check if it exists.
+    if ($current['username'] != $username) {
+        if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
+            return false;
+        }
+    }
+    
+    // If updating the forename Force re-build of initials off forenames.
+    if ($current['forname'] != $forname) {
+        if ($initials == '') {
+          $initial = explode(' ', $forname);
+          $initials = '';
+          foreach ($initial as $name) {
+            $initials .= substr($name, 0, 1);
+          }
+          $initials = strtoupper($initials);
+        }
+    }
+    
+    // If updating the surname check case.
+    if ($current['surname'] != $surname) {
+        $surname = self::my_ucwords($surname);
+    }
+    // If updating the title check case.
+    $title = trim($title);
+    if ($current['title'] != $title) {
+        $title = self::my_ucwords($title);
+    }
+
+    // If updating the password - encrypt.
+    if ($current['password'] != $password) {
+        $enc = new encryp();
+        $salt = UserUtils::get_salt();
+        $encrypt_password = $enc->encpw($salt, $username, $password);  // One way encrypt the password.
+    } else {
+        $encrypt_password = $password;
+    }
+
+    // If updating the gender. Force valid value for gender or default to NULL
+    if ($current['gender'] != $gender) {
+        if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
+            $gender = null;
+        }
+    }
+
+    // Update record into users table.
+    $result = $db->prepare("UPDATE users SET password = ?, grade = ?, surname = ?, initials = ?, title = ?, username = ?,
+    email = ?, roles = ?, first_names = ?, gender = ?, yearofstudy = ? WHERE id = ?");
+    $result->bind_param('ssssssssssii', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year, $id);
+    $result->execute();
+    $result->close();
+    if ($db->errno != 0) {
+        return false;
+    }
+    if (isset($sid) and $sid != '') {
+        $result = $db->prepare("UPDATE sid SET student_id = ? WHERE userID = ?");
+        $result->bind_param('si', $sid, $id);
+        $result->execute();
+        $result->close();
+    }
+    if ($db->errno != 0) {
+        return false;
+    }
+    return true;
+   
+  }
+  
   static function get_salt() {
     $configObj = Config::get_instance();
   
@@ -326,7 +423,7 @@ Class UserUtils {
    * @param integer $tmp_userID - UserID of the member of staff.
    * @param int $idmod          - The id of the team (module).
    * @param object $db          - Database connection.
-   *
+   * @return bool
    */
   static function add_staff_to_module($tmp_userID, $idMod, $db) {
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
@@ -334,9 +431,15 @@ Class UserUtils {
       $stmt->bind_param('ii', $idMod, $tmp_userID);
       $stmt->execute();
       $stmt->close();
+      if ($db->errno != 0) {
+        return false;
+      }
+      return true;
     }
+    return false;
+  }  
 
-  }  /**
+  /**
    * Add a member of staff onto a team by modulecode.
    *
    * @param integer $tmp_userID UserID of the member of staff
@@ -484,7 +587,7 @@ Class UserUtils {
    * @param string $idMod Module code for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return bool return true if successful.
+   * @return int|bool enrolement id 0 if already enrolled, false on error
    *
    */
   static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
@@ -507,7 +610,7 @@ Class UserUtils {
    * @param int $idMod Module ID for the enrolement.
    * @param object $db $mysqli database connection.
    *
-   * @return bool return true if successful.
+   * @return int|bool enrolement id, 0 if already enrolled, false on error
    *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
@@ -521,7 +624,7 @@ Class UserUtils {
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
       // Don't add a user to a module multiple times.
-      return true;
+      return 0;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
       $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
@@ -534,7 +637,7 @@ Class UserUtils {
         $userObject->load_student_modules();
       }
 
-      return true;
+      return $db->insert_id;
     }
   }
 
@@ -676,10 +779,14 @@ Class UserUtils {
    *
    */
 	static function delete_userID($userID, $db) {
-    $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
-    $result->bind_param('i', $userID);
-    $result->execute();  
-    $result->close();
+      $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
+      $result->bind_param('i', $userID);
+      $result->execute();  
+      $result->close();
+      if ($db->errno != 0) {
+        return false;
+      }
+      return true;
 	}
   
   /**
@@ -723,7 +830,126 @@ Class UserUtils {
     $result->close();
   }
 
-
+ /**
+  * Check if the user has started a paper
+  * @param integer $id - user id
+  * @param mysqli $db 
+  * @return bool
+  */
+  static function user_paper_started($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM log_metadata WHERE userID = ?
+        UNION SELECT NULL FROM log4_overall WHERE userID = ?");
+    $result->bind_param('ii', $id, $id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
+  }
+  
+  /**
+   * Get user details
+   * @param integer $id user id
+   * @param mysqli $db 
+   * @return array user details  
+   */
+  static function get_full_details_by_ID($id, $db) {
+      $sql = $db->prepare("SELECT username, password, title, first_names, surname, email, grade, gender,
+        yearofstudy, roles, initials, student_id FROM users LEFT JOIN sid ON id = userID WHERE id = ?");
+      $sql->bind_param('i', $id);
+      $sql->execute();
+      $sql->bind_result($username, $password, $title, $first_names, $surname, $email, $grade, $gender,
+        $yearofstudy, $roles, $initials, $student_id);
+      $sql->fetch();
+      $sql->close();
+            
+      $details = array(
+        'username' => $username,
+        'password' => $password,
+        'title' => $title,
+        'forename' => $first_names,
+        'surname' => $surname,
+        'email' => $email,
+        'course' => $grade,
+        'gender' => $gender, 
+        'year' => $yearofstudy, 
+        'role' => $roles, 
+        'studentid' => $student_id, 
+        'initials' => $initials);
+        
+      return $details;
+  }
+  
+  /**
+   * Remove the student from the module
+   * 
+   * @param int $userid 
+   * @param int $moduleid
+   * @param string $session 
+   * @param mysqli $db
+   * @return bool|int false / enrolment id
+   */
+  static function remove_student_from_module($userid, $moduleid, $session, $db) {
+    if ($userid == '' or $moduleid == '' or $session == '') {
+      return false;
+    }
+    $result = $db->prepare("DELETE FROM modules_student WHERE id = ? AND idMod = ? AND calendar_year = ?");
+    $result->bind_param('iis', $id, $moduleid, $session);
+    $result->execute();
+    if ($result->affected_rows == 0) {
+        $result->close();
+        return false;
+    }
+    $result->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return $id;
+  }
+  
+  /**
+   * Get the enrolment id of the user on the module
+   * 
+   * Only the attempt and auto_update values can be updated.
+   * @param integer $userid - user id
+   * @param integer $moduleid - module id
+   * @param integer $session - academic session
+   * @param mysqli $db - db connection
+   * @return integer|bool - enrolement id, false on error
+   */
+  static function get_enrolement_id($userid, $moduleid, $session, $db) {
+      $result = $db->prepare("SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
+      $result->bind_param('iii', $userid, $moduleid, $session);
+      $result->execute();
+      $result->bind_result($id);
+      $result->fetch();
+      if ($result->num_rows == 0) {
+        $result->close();
+        return false;
+      }
+      $result->close();
+      return $id;
+  }
+  
+  /**
+   * Update module enrolement
+   * 
+   * Only the attempt and auto_update values can be updated.
+   * @param integer $id - enrolement id
+   * @param integer $attempt - attempt at module
+   * @param integer $auto_update - is enrolement remotely updatable
+   * @param mysqli $db - db connection
+   */
+  static function update_module_enrolement($id, $attempt, $auto_update, $db) {
+      $result = $db->prepare("UPDATE modules_student SET auto_update = ?, attempt = ? WHERE id = ?");
+      $result->bind_param('iii', $auto_update, $attempt, $id);
+      $result->execute();  
+      $result->close();
+  }
+  
 }
 
 ?>

@@ -58,12 +58,6 @@ class autoloader {
         $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . $classname . '.class.php';
         if (file_exists($filename)) {
             include_once $filename;
-        } else {
-            // namespaced.
-            $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . $classname . '.class.php';
-            if (file_exists($filename)) {
-              include_once $filename;
-            }
         }
     }
   }

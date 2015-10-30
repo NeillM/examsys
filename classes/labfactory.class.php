@@ -63,4 +63,5 @@ class LabFactory {
 
     return $lab_object;
   }
+  
 }

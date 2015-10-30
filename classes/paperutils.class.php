@@ -674,4 +674,24 @@ Class PaperUtils {
     return $maxscreen;
   }
   
+  /**
+  * Check if the paper has been taken
+  * @param integer $id - paper id
+  * @param mysqli $db 
+  * @return bool
+  */
+  static function paper_taken($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM log_metadata WHERE paperID = ?
+        UNION SELECT NULL FROM log4_overall WHERE q_paper = ?");
+    $result->bind_param('ii', $id, $id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
+  }
+  
 }

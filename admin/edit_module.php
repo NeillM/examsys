@@ -271,6 +271,10 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
         echo "<option value=\"$value\">$key</option>\n";
       }
     }
+    // SMS might be IMS enterprise or rogo web service.
+    if (!in_array($module['sms'], $cfg_sms_sources)) {
+        echo "<option value=\"" . $module['sms'] .  "\" selected>" . $module['sms'] . "</option>\n";
+    }
     echo '</select></td></tr>';
   ?>
       <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text" name="academic_year_start" value="<?php echo $module['academic_year_start'] ?>" style="width:50px" required /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_format'] ?>" /></td></tr>

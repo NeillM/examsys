@@ -43,5 +43,5 @@ $string['savefailattempts'] = 'Uložit nezdařené pokusy';
 $string['testing'] = 'Testování systémů';
 $string['bug'] = 'Hlášení chyb';
 $string['academicsessions'] = 'Academic Sessions';
-
+$string['authentication'] = 'OAuth Authentication';
 ?>

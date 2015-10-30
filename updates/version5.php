@@ -72,6 +72,7 @@ if (round($old_version,0) < 5) {
   exit;
 }
 if (!isset($_POST['update'])) {
+  InstallUtils::checkSoftware();
   ?>
 <script>
   $(document).ready(function () {

@@ -60,6 +60,8 @@ Class InstallUtils {
   public static $cfg_db_external_passwd;
   public static $cfg_db_sysadmin_user;
   public static $cfg_db_sysadmin_passwd;
+  public static $cfg_db_webservice_user;
+  public static $cfg_db_webservice_passwd;
   public static $cfg_db_sct_user;
   public static $cfg_db_sct_passwd;
   public static $cfg_db_inv_user;
@@ -563,6 +565,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE objectives ADD CONSTRAINT objectives_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE modules_student ADD CONSTRAINT modules_student_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE users_metadata ADD CONSTRAINT users_metadata_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
+    
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);
         $res->execute();
@@ -589,6 +592,25 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->bind_param('isisis', $previouscalendaryear, $previousacademicyear, $calendaryear, $academicyear, $nextcalendaryear, $nextacademicyear);
     $insert->execute();
     $insert->close();
+    // Add user psermissions.
+    $permissions = array('modulemanagement/create' => 'Create/Update a module',
+        'modulemanagement/delete' => 'Delete a module',
+        'modulemanagement/enrol' => 'Enrol Users onto a module',
+        'modulemanagement/update' => 'Update a module',
+        'usermanagement/create' => 'Create/Update a user',
+        'usermanagement/delete' => 'Delete a user',
+        'coursemanagement/create' => 'Create/Update a course',
+        'coursemanagement/delete' => 'Delete a course',
+        'schoolmanagement/create' => 'Create/Update a school',
+        'schoolmanagement/delete' => 'Delete a school',
+        'modulemanagement/create' => 'Create/Update a faculty',
+        'modulemanagement/delete' => 'Delete a faculty');
+    foreach ($permissions as $permission => $description) {
+        $insert = self::$db->prepare("INSERT INTO permissions (action, description) VALUES (?, ?)");
+        $insert->bind_param('ss', $permission, $description);
+        $insert->execute();
+        $insert->close();
+    } 
   }
   
   /**
@@ -694,6 +716,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_db_external_passwd  = gen_password() . gen_password();
     self::$cfg_db_sysadmin_user = self::$cfg_db_basename . '_sys';
     self::$cfg_db_sysadmin_passwd = gen_password() . gen_password();
+    self::$cfg_db_webservice_user = self::$cfg_db_basename . '_web';
+    self::$cfg_db_webservice_passwd = gen_password() . gen_password();
     self::$cfg_db_sct_user = self::$cfg_db_basename . '_sct';
     self::$cfg_db_sct_passwd = gen_password() . gen_password();
     self::$cfg_db_inv_user = self::$cfg_db_basename . '_inv';
@@ -1071,6 +1095,21 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
+    //create 'database user webservice user' and grant permissions
+    self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
+    if (self::$db->errno != 0) {
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+    }
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".* TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".faculty TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".schools TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".courses TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".modules_student TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".modules TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".modules_staff TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".users TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".sid TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -1614,6 +1653,9 @@ require \$root . '/include/path_functions.inc.php';
 //invigilator db user
   \$cfg_db_inv_user = '{cfg_db_inv_user}';
   \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
+//sysdamin db user
+  \$cfg_db_webservice_user = '{cfg_db_webservice_user}';
+  \$cfg_db_webservice_passwd = '{cfg_db_webservice_passwd}';
 // Date formats in MySQL DATE_FORMAT format
   \$cfg_short_date = '{cfg_short_date}';
   \$cfg_long_date = '{cfg_long_date}';
@@ -1737,6 +1779,10 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
 
+  //oauth settings
+  \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
+  \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
+  \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
   ?>
 CONFIG;
 
@@ -1765,7 +1811,8 @@ CONFIG;
     $config = str_replace('{cfg_db_sct_passwd}', self::$cfg_db_sct_passwd, $config);
     $config = str_replace('{cfg_db_inv_user}', self::$cfg_db_inv_user, $config);
     $config = str_replace('{cfg_db_inv_passwd}', self::$cfg_db_inv_passwd, $config);
-
+    $config = str_replace('{cfg_db_webservice_user}', self::$cfg_db_sysadmin_user, $config);
+    $config = str_replace('{cfg_db_webservice_passwd}', self::$cfg_db_sysadmin_passwd, $config);
     $config = str_replace('{cfg_cron_user}', self::$cfg_cron_user, $config);
     $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
 

@@ -552,6 +552,10 @@ Class module {
     $result->bind_param('i', $idMod);
     $result->execute();
     $result->close();
+    if ($db->errno != 0) {
+        return false;
+    }
+    return true;
   }
 
   /**
@@ -651,5 +655,53 @@ Class module {
     $result->close();
 
     return $paper_types;
+  }
+  
+  /**
+   * Update module based on id
+   * @param integer $id 
+   * @param string $code - shortcode of module
+   * @param string $name - fullname
+   * @param integer $schoolid - school module is run under
+   * @param string $sms - student management system that create the module
+   * @param mysqli $db - db connection
+   * @return bool true on success
+   */
+  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db) {
+    $sql = "UPDATE modules SET
+               moduleid = ?,
+               fullname = ?,
+               sms = ?,
+               schoolid = ?
+            WHERE
+              id = ?";
+    $result = $db->prepare($sql);
+    $result->bind_param('sssii', $code, $name, $sms, $schoolid, $id);
+    $res = $result->execute();
+    
+    if ($db->errno != 0) {
+        return false;
+    }
+
+    return true;
+  }
+  
+  /**
+   * Check if papers or enrolements exist on this module
+   * @param integer $id module us
+   * @return bool true if module is in use
+   */
+  public static function module_in_use($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM properties_modules WHERE idMod = ?
+        UNION SELECT NULL FROM modules_student WHERE idMod = ?");
+    $result->bind_param('ii', $id, $id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
   }
 }
