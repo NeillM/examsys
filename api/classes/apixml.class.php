@@ -27,7 +27,9 @@ namespace api;
  */
 class apixml extends \api\apiabstract {
    
-    // Language pack component.
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'api/apixml';
     
     /**
@@ -82,7 +84,19 @@ class apixml extends \api\apiabstract {
                     foreach ($fields as $field) {
                         $item = $node->getElementsByTagName($field);
                         if ($item->item(0)->childNodes->length > 1) {
-                            $params[$field] = $item->item(0);
+                            $childarray = array();
+                            foreach ($item->item(0)->childNodes as $childnodes) {
+                                if (!$childnodes->length) {
+                                    if ($childnodes->hasAttribute('id')) {
+                                        $childarray[] = array('id' => $childnodes->getAttribute('id'),
+                                            'name' => $childnodes->nodeName, 'value' => $childnodes->nodeValue);
+                                    } else {
+                                        $childarray[] = array('name' => $childnodes->nodeName,
+                                            'value' => $childnodes->nodeValue);
+                                    }
+                                }
+                            }
+                            $params[$field] = $childarray;
                         } elseif (!is_null($item->item(0)->nodeValue)) {
                             $params[$field] = $item->item(0)->nodeValue;
                         }

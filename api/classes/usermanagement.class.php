@@ -44,18 +44,18 @@ class usermanagement extends \api\abstractmanagement {
         $error = array();
         $yearutils = new \yearutils($this->db);
         $session = $yearutils->get_current_session();
-        if ($modules != '') {
-            foreach ($modules->childNodes as $module) {
-                if ($module->childNodes->length) {
+        if (count($modules) > 0) {
+            foreach ($modules as $module) {
+                if ($module['name'] == 'moduleid') {
                     if ($role == 'Student') {
-                        $enrol = \UserUtils::add_student_to_module($id, $module->nodeValue, 1, $session, $this->db, 1);
+                        $enrol = \UserUtils::add_student_to_module($id, $module['value'], 1, $session, $this->db, 1);
                         if (!$enrol) {   
-                            $error[] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module->nodeValue);
+                            $error[$module['id']] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module['value']);
                         }
                     } elseif ($role == 'Staff') {
-                        $enrol = \UserUtils::add_staff_to_module($id, $module->nodeValue, $this->db);
+                        $enrol = \UserUtils::add_staff_to_module($id, $module['value'], $this->db);
                         if (!$enrol) {
-                            $error[] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module->nodeValue);
+                            $error[$module['id']] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module['value']);
                         }
                     }
                 }
