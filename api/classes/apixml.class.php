@@ -109,7 +109,11 @@ class apixml extends \api\apiabstract {
                     $data = array('status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null);
                 }
                 if ($error) {
-                    $response[] = &$tasktype->get_response($data, $action, $node->getAttribute('id'));
+                    if ($node->hasAttribute('id')) { 
+                        $response[] = &$tasktype->get_response($data, $action, $node->getAttribute('id'));
+                    } else {
+                        $response[] = &$tasktype->get_response($data, $action);
+                    }
                 } else {
                     $response[] = &$tasktype->$action($params);
                 }

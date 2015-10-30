@@ -65,23 +65,6 @@ class usermanagement extends \api\abstractmanagement {
     }
     
     /**
-     * Return response to request
-     * @param array $data - Response data
-     * @param string $action - Relevant action
-     * @param integer $nodeid - Request Node id
-     * @param array $error - array of errors generated
-     * return array response to operation, id of construct or error message.
-     */
-    public function get_response($data, $action, $nodeid, $error) {
-        return $response = array(
-            "status" => $data['status'],
-            "id" => $data['id'],
-            "error" => $error,
-            "node" => $action,
-            "nodeid" => $nodeid);
-    }
-    
-    /**
      * Create/Update user
      * @param array $params create user params
      * @return - success status and user id

@@ -72,7 +72,7 @@ abstract class abstractmanagement {
      * @param array $error - array of errors generated
      * return array response to operation, id of construct or error message.
      */
-    public function get_response($data, $action, $nodeid, $error = null) {
+    public function get_response($data, $action, $nodeid = null, $error = null) {
         return $response = array(
             "status" => $data['status'],
             "id" => $data['id'],
