@@ -31,7 +31,7 @@ Class NetworkUtils {
    */
   static function get_client_address() {
     $configObject = Config::get_instance();
-    if(PHP_SAPI == 'cli') {
+    if (PHP_SAPI == 'cli') {
       return null;
     }
     // If don't have cached version look it up

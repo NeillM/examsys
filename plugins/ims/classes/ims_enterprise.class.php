@@ -685,8 +685,10 @@ class ims_enterprise {
       case self::RECORD_DELETE:
         $moduleid = \module_utils::get_idMod($modulecode, $this->db);
         if ($moduleid) {
-          \module_utils::delete_module($moduleid, $this->db);
-          $this->log_line('Deleted module: ' . $modulecode);
+          if (!\module_utils::module_in_use($moduleid, $this->db)) {
+            \module_utils::delete_module($moduleid, $this->db);
+            $this->log_line('Deleted module: ' . $modulecode);
+          }
         }
         break;
       case self::RECORD_CREATE:
@@ -959,6 +961,10 @@ class ims_enterprise {
    */
   protected function delete_user($person) {
     if ($userid = \UserUtils::username_exists($person->username, $this->db)) {
+        if (\UserUtils::user_paper_started($userid, $this->db)) {
+          $this->log_line("Can not delete user '$person->username' (ID number $person->idnumber) - This user has already started at least one paper.");
+          return;
+        }
       try {
         \UserUtils::delete_userID($userid);
         $this->log_line("Deleted user '$person->username' (ID number $person->idnumber).");
@@ -1018,11 +1024,12 @@ class ims_enterprise {
     $status = (string) $member->role->status;
     $this->log_line('Processing member: ' . $username);
     $userid = \UserUtils::studentid_exists($studentid, $this->db);
-    $start_date = substr((string) $member->role->timeframe->begin, -10, 4);
+    $session = substr((string) $member->role->timeframe->begin, -10, 4);
     $attempt = (string) $member->extension->attempt;
 
     if ($status == self::ROLE_STATUS_ACTIVE && $role === 'Student') {
-      $success = \UserUtils::add_student_to_module_by_name($userid, $modulecode, $attempt, $start_date, $this->db, 1);
+      $this->log_line("Adding user $userid to module $modulecode");
+      $success = \UserUtils::add_student_to_module_by_name($userid, $modulecode, $attempt, $session, $this->db, 1);
     } else if ($status == self::ROLE_STATUS_ACTIVE) {
 
       $success = \UserUtils::add_staff_to_module_by_modulecode($userid, $modulecode, $this->db);

@@ -117,6 +117,7 @@ class Config extends RogoStaticSingleton {
    */
   public function set_setting($setting, $value, $component = 'core') {
     $currentsetting = $this->get_setting($component, $setting);
+    $this->cache_setting($setting, $value, $component);
 
     if ($currentsetting) {
       $this->update_setting($setting, $value, $component);
@@ -198,7 +199,7 @@ class Config extends RogoStaticSingleton {
    * @param string $setting
    * @return string|array
    */
-  private function get_setting_from_cache($component, $setting = null) {
+  protected function get_setting_from_cache($component, $setting = null) {
     if (is_string($component)) {
       if (is_string($setting) && isset($this->settings[$component]) && isset($this->settings[$component][$setting])) {
         return $this->settings[$component][$setting];
