@@ -92,12 +92,14 @@ Class SchoolUtils {
         $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = ?");
         $stmt->bind_param('s', $school_name);
         $stmt->execute();
+        $stmt->store_result();
         $stmt->bind_result($id);
         $stmt->fetch();
-        $stmt->close();
-        if ($result->num_rows == 0) {
-            $exist = false;
+        if ($stmt->num_rows == 0) {
+            $stmt->close();
+            return false;
         }
+        $stmt->close();
         return $id;
     }
 

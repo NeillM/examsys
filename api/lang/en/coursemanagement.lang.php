@@ -17,7 +17,7 @@
 include 'commonapi.lang.php';
 
 $string['course_not_updated'] = 'Course not updated';
-$string['course_not_created'] = ' Course not created';
+$string['course_not_created'] = 'Course not created';
 $string['course_already_exists'] = 'Course already exists';
 $string['course_not_deleted'] = 'Course not deleted';
 $string['course_not_deleted_inuse'] = 'Course not deleted, as users enrolled';

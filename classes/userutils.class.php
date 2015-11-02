@@ -134,7 +134,7 @@ Class UserUtils {
 
     // If updating the username check if it exists.
     if ($current['username'] != $username) {
-        if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
+        if (self::username_exists($username, $db)) {
             return false;
         }
     }
@@ -896,18 +896,23 @@ Class UserUtils {
     if ($userid == '' or $moduleid == '' or $session == '') {
       return false;
     }
-    $result = $db->prepare("DELETE FROM modules_student WHERE id = ? AND idMod = ? AND calendar_year = ?");
-    $result->bind_param('iis', $id, $moduleid, $session);
-    $result->execute();
-    if ($result->affected_rows == 0) {
+    $sql = $db->prepare("SELECT id from modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
+    $sql->bind_param('iii', $userid, $moduleid, $session);
+    $sql->execute();
+    $sql->bind_result($id);
+    $sql->fetch();
+    $sql->close();
+    if ($id) {
+        $result = $db->prepare("DELETE FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
+        $result->bind_param('iii', $userid, $moduleid, $session);
+        $result->execute();
         $result->close();
-        return false;
+        if ($db->errno != 0) {
+          return false;
+        }
+        return $id;
     }
-    $result->close();
-    if ($db->errno != 0) {
-      return false;
-    }
-    return $id;
+    return false;
   }
   
   /**
