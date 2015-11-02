@@ -145,6 +145,11 @@ Class FacultyUtils {
    * @return bool           - True on success
   */
   static function update_faculty($id, $faculty, $db) {
+    // Check if name already in use.
+    $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
+    if ($facultyid !== false and $facultyid != $id) {
+      return false;
+    }
     $result = $db->prepare("UPDATE faculty SET name = ? WHERE id = ?");
     $result->bind_param('si', $faculty, $id);
     $result->execute();

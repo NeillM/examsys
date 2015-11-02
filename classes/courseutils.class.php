@@ -54,7 +54,7 @@ Class CourseUtils {
       }
     }
 
-    $result = $db->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
+    $result = $db->prepare("INSERT INTO courses (name, description, schoolid) VALUES (?, ?, ?)");
     $result->bind_param('ssi', $name, $description, $schoolid);
     $result->execute();
     $result->close();
@@ -63,7 +63,7 @@ Class CourseUtils {
       return false;
     }
 
-    return $this->db->insert_id;
+    return $db->insert_id;
   }
 
   /**
@@ -221,7 +221,8 @@ Class CourseUtils {
    */
   static function update_course($id, $schoolid, $name, $description, $db) {
     // Check if name already in use.
-    if (CourseUtils::course_exists($name, $db) === true) {
+    $courseid = CourseUtils::get_course_id($name, $db);
+    if ($courseid !== false and $courseid != $id) {
       return false;
     }
     $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ? WHERE id = ?");
@@ -248,12 +249,14 @@ Class CourseUtils {
     $result = $db->prepare("SELECT id FROM courses WHERE name = ? AND deleted IS NULL");
     $result->bind_param('s', $name);
     $result->execute();
+    $result->store_result();
     $result->bind_result($id);
     $result->fetch();
-    $result->close();
     if ($result->num_rows == 0) {
+      $result->close();
       return false;
     }
+    $result->close();
     return $id;
   }
 }
