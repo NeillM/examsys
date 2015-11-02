@@ -96,8 +96,8 @@ Class SchoolUtils {
         $stmt->bind_result($id);
         $stmt->fetch();
         if ($stmt->num_rows == 0) {
-            $stmt->close();
-            return false;
+          $stmt->close();
+          return false;
         }
         $stmt->close();
         return $id;

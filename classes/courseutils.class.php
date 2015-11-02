@@ -253,8 +253,8 @@ Class CourseUtils {
     $result->bind_result($id);
     $result->fetch();
     if ($result->num_rows == 0) {
-        $result->close();
-        return false;
+      $result->close();
+      return false;
     }
     $result->close();
     return $id;

@@ -903,14 +903,14 @@ Class UserUtils {
     $sql->fetch();
     $sql->close();
     if ($id) {
-        $result = $db->prepare("DELETE FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
-        $result->bind_param('iii', $userid, $moduleid, $session);
-        $result->execute();
-        $result->close();
+      $result = $db->prepare("DELETE FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?");
+      $result->bind_param('iii', $userid, $moduleid, $session);
+      $result->execute();
+      $result->close();
         if ($db->errno != 0) {
           return false;
         }
-        return $id;
+      return $id;
     }
     return false;
   }
