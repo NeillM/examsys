@@ -907,9 +907,9 @@ Class UserUtils {
       $result->bind_param('iii', $userid, $moduleid, $session);
       $result->execute();
       $result->close();
-        if ($db->errno != 0) {
-          return false;
-        }
+      if ($db->errno != 0) {
+        return false;
+      }
       return $id;
     }
     return false;
