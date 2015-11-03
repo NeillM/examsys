@@ -345,6 +345,7 @@ SQL;
    * @param integer $p_id paper id
    * @param integer $q_id question id
    * @param mysqli $db database connection
+   * @return bool true if answered, false otherwise
    */
   static function question_answered_in_summative($p_id, $q_id, $db) {
     $result = $db->prepare("SELECT NULL FROM log2 l, log_metadata m, users u
