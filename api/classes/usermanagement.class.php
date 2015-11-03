@@ -72,7 +72,7 @@ class usermanagement extends \api\abstractmanagement {
     public function create($params) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_does_not_exist'
-            , 'user_not_updated', 'user_not_created', 'course_does_not_exist'));
+            , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists'));
         $error = array();
         $userid = false;
         // Student and Staff users only.
@@ -140,7 +140,13 @@ class usermanagement extends \api\abstractmanagement {
                             $error = $this->user_modules($id, $params['modules'], $params['role']);
                             $data = array('status' => 'OK', 'id' => $id, 'error' => $error);
                         } else {
-                            $data = array('status' => $strings['user_not_created'], 'id' => null);
+                            // Check if user exists, otherwise throw generic error.
+                            $userid = \UserUtils::username_exists($params['username'], $this->db);
+                            if ($userid) {
+                                $data = array('status' => $strings['user_already_exists'], 'id' => $userid);
+                            } else {
+                                $data = array('status' => $strings['user_not_created'], 'id' => null);
+                            }
                         }
                     } 
                 } else {
