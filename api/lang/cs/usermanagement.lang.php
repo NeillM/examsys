@@ -21,3 +21,4 @@ $string['user_paper_exists'] = 'User not deleted, as they have taken a paper';
 $string['user_not_created'] = 'User not created';
 $string['user_not_updated'] = 'User not updated';
 $string['user_invalid_role'] = 'User has invalid role';
+$string['user_already_exists'] = 'User already exists';
