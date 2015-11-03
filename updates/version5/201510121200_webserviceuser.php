@@ -6,18 +6,19 @@ if ($updater_utils->check_version("6.1.0")) {
         $cfg_db_webservice_user = $cfg_db_database . '_web';
         $cfg_db_webservice_passwd = gen_password(16);
     
-        $createsql ="CREATE USER  '" . $cfg_db_webservice_user . "'@'" . $cfg_db_host . "' IDENTIFIED BY '" . $cfg_db_webservice_passwd . "'";
+        $createsql ="CREATE USER  '" . $cfg_db_webservice_user . "'@'" . $cfg_web_host . "' IDENTIFIED BY '" . $cfg_db_webservice_passwd . "'";
         $updater_utils->execute_query($createsql, true);
         // Grants
-        $grantsql[] = "GRANT SELECT ON " . $cfg_db_database . ".* TO '" . $cfg_db_webservice_user . "'@'" . $cfg_db_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".faculty TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".schools TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".courses TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".modules_student TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".modules TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT ON " . $dbname . ".modules_staff TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".users TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".sid TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
+        $grantsql = array();
+        $grantsql[] = "GRANT SELECT ON " . $cfg_db_database . ".* TO '" . $cfg_db_webservice_user . "'@'" . $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".faculty TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".schools TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".courses TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".modules_student TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".modules TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_staff TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".sid TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
         foreach ($grantsql as $sql) {
             $updater_utils->execute_query($sql, true);
         }
