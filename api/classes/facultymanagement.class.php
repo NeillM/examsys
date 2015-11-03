@@ -79,7 +79,7 @@ class facultymanagement extends \api\abstractmanagement {
                     $data = array('status' => $strings['faculty_not_created'], 'id' => null);
                 }
             } else {
-                $data = array('status' => $strings['faculty_already_exists'], 'id' => $courseid);
+                $data = array('status' => $strings['faculty_already_exists'], 'id' => $facultyid);
             }
         }
         

@@ -173,7 +173,7 @@ class modulemanagement extends \api\abstractmanagement {
                         $data = array('status' => $strings['module_not_created'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['module_already_exists'], 'id' => $courseid);
+                    $data = array('status' => $strings['module_already_exists'], 'id' => $moduleid);
                 }
             }
         } else {

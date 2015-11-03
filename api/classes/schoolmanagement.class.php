@@ -94,11 +94,15 @@ class schoolmanagement extends \api\abstractmanagement {
                         $data = array('status' => $strings['school_created'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['school_alreads_exists'], 'id' => $courseid);
+                    $data = array('status' => $strings['school_alreads_exists'], 'id' => $schoolid);
                 }
             }
         } else {
-            $data = array('status' => $strings['faculty_not_supplied'], 'id' => null);
+            if (!$schoolid) {
+                $data = array('status' => $strings['school_does_not_exist'], 'id' => null);
+            } else {
+                $data = array('status' => $strings['faculty_not_supplied'], 'id' => null);
+            }
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
