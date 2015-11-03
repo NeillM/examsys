@@ -242,7 +242,8 @@ Class CourseUtils {
    */
   static function update_course($id, $schoolid, $name, $description, $db) {
     // Check if name already in use.
-    if (CourseUtils::course_exists($name, $db) === true) {
+    $courseid = CourseUtils::get_course_id($name, $db);
+    if ($courseid !== false and $courseid != $id) {
       return false;
     }
     $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ? WHERE id = ?");
