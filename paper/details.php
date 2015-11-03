@@ -778,11 +778,19 @@ function check_latex_random($q_ids, $mysqli) {
         $temp_array[$row_no]['random'] = randomDetails($q_id, $configObject, $mysqli);
       }
 
+      // If summative paper is locked and the question is unlocked
+      // - lock it
       if ($properties->get_summative_lock() and $locked == '') {
         QuestionUtils::lock_question($q_id, $mysqli);
+      // If summative paper is not locked and the question is locked
+      // - unlock it if it has not been answered by a student
+      } elseif (!$properties->get_summative_lock() and $locked != '') {
+        if (!QuestionUtils::question_answered_in_summative($p_id, $q_id, $db)) {
+          QuestionUtils::unlock_question($q_id, $mysqli);
+        }
       }
     }
-		$old_p_id						= $p_id;
+    $old_p_id           = $p_id;
     $old_q_id           = $q_id;
     $old_display_pos    = $display_pos;
     $old_q_type         = $q_type;
