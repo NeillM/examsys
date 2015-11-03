@@ -329,6 +329,38 @@ SQL;
   }
 
   /**
+   * Unlock a question
+   * @param integer $q_id question id
+   * @param mysqli $db database connection
+   */
+  static function unlock_question($q_id, $db) {
+    $lock = $db->prepare("UPDATE questions SET locked = NULL WHERE q_id = ?");
+    $lock->bind_param('i', $q_id);
+    $lock->execute();
+    $lock->close();
+  }
+  
+  /**
+   * Check if a question has been answered in a summative exam by a student
+   * @param integer $p_id paper id
+   * @param integer $q_id question id
+   * @param mysqli $db database connection
+   */
+  static function question_answered_in_summative($p_id, $q_id, $db) {
+    $result = $db->prepare("SELECT NULL FROM log2 l, log_metadata m, users u
+        WHERE l.metadataID = m.id AND m.userID = u.id AND m.paperID = ? AND l.q_id = ? and u.roles like '%Student%'");
+    $result->bind_param('ii', $p_id, $q_id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
+  }
+  
+  /**
    * Get the number of questions assigned to a given status
    * @param  integer $status_id Status ID
    * @param  mysqli $db        DB link
