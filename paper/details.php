@@ -790,7 +790,7 @@ function check_latex_random($q_ids, $mysqli) {
         }
       }
     }
-		$old_p_id						= $p_id;
+    $old_p_id           = $p_id;
     $old_q_id           = $q_id;
     $old_display_pos    = $display_pos;
     $old_q_type         = $q_type;
