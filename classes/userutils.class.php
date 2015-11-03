@@ -169,7 +169,7 @@ Class UserUtils {
 
     // If updating the username check if it exists.
     if ($current['username'] != $username) {
-        if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
+        if (self::username_exists($username, $db)) {
             return false;
         }
     }
