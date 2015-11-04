@@ -103,7 +103,7 @@ function get_list($list, $db) {
 <tbody>
 <?php
   $result = $mysqli->prepare("SELECT "
-    . "idMod, moduleid, academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type "
+    . "idMod, moduleid, sms_imports.academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type "
     . "FROM sms_imports, modules, academic_year "
     . "WHERE sms_imports.idMod=modules.id "
     . "AND sms_imports.academic_year = academic_year.calendar_year "
