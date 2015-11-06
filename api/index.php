@@ -75,7 +75,7 @@ $app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $
 });
 
 // School management request.
-$app->post('/schoolmanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
+$app->post('/schoolmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'schoolmanagement';
     $response = 'schoolManagementResponse';
     $operations = array('create', 'delete');
@@ -85,7 +85,7 @@ $app->post('/schoolmanagement', function() use($app, $api, $mysqli, $oauth, $ren
 });
 
 // Faculty management request.
-$app->post('/facultymanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {
+$app->post('/facultymanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'facultymanagement';
     $response = 'facultyManagementResponse';
     $operations = array('create', 'delete');
@@ -95,7 +95,7 @@ $app->post('/facultymanagement', function() use($app, $api, $mysqli, $oauth, $re
 });
 
 // User management request.
-$app->post('/usermanagement', function() use($app, $api, $mysqli, $oauth, $render, $langpack) {  
+$app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
     $request = 'usermanagement';
     $response = 'userManagementResponse';
     $operations = array('create', 'delete');
@@ -140,29 +140,28 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
     }
 
     // Check media type - only test/xml supported currently.
-    if(!$api->get_mediatype()) {
+    if (!$api->get_mediatype()) {
         $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        die;
-    }
-
-    $responsedata = array();
-    $classname = '\\api\\' . $request;
-    $requestobject = new $classname($mysqli);
-
-    // Process the request.
-    $data = $api->process($request, $xsd);
-    
-    // XML.
-    if ($data[0] == 'OK') {
-        $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm);
-        $template = 'api/success.xml';
     } else {
-        $responsedata = $data[1];
-        $template = 'api/error.xml';
+        $responsedata = array();
+        $classname = '\\api\\' . $request;
+        $requestobject = new $classname($mysqli);
+
+        // Process the request.
+        $data = $api->process($request, $xsd);
+        
+        // XML.
+        if ($data[0] == 'OK') {
+            $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm);
+            $template = 'api/success.xml';
+        } else {
+            $responsedata = $data[1];
+            $template = 'api/error.xml';
+        }
+        
+        // Render response.
+        $render->render_xml($template, $response, $responsedata);
     }
-    
-    // Render response.
-    $render->render_xml($template, $response, $responsedata);
 }
 
 $app->run();
