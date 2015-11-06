@@ -75,15 +75,15 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 
 <div class="submenuheading" id="currentmodule"><?php echo $string['moduleimports']; ?></div>
 <div id="menu2">
-	<div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport'] ?></a></div>
-	<?php
+    <div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport'] ?></a></div>
+    <?php
         if ($configObject->get('cfg_sms_api') != '') {
     ?>
     <div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary'] ?></a></div>
     <div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary'] ?>" />Run Imports (<?php echo $academic_year ?>)</a></div>
     <div class="menuitem"><a href="run_users_from_SMS.php?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/ims_16.png" alt="<?php echo $string['importsummary'] ?>" />Run Imports (<?php echo $next_academic_year ?>)</a></div>
     <?php
-        }
+    }
     ?>
 </div>
 
