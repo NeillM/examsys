@@ -42,4 +42,5 @@ $string['msg7'] = 'Varování: Je potřeba vyplnit datum konání zkoušky.';
 $string['msg8'] = 'Varování: Je potřeba vyplnit délku trvání zkoušky v minutách.';
 $string['msg9'] = 'Varování: Je potřeba vyplnit velikost skupiny studentů.';
 $string['duration'] = 'Trvání';
+$string['na'] = 'N/A';
 ?>
