@@ -29,10 +29,6 @@ require_once '../include/demo_replace.inc';
 require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 
-require_once '../classes/stringutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/paperproperties.class.php';
-
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);

@@ -28,19 +28,6 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
-require_once '../classes/stringutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/userutils.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/timer.class.php';
-require_once '../classes/lab_factory.class.php';
-require_once '../classes/lab.class.php';
-require_once '../classes/log_extra_time.class.php';
-require_once '../classes/log_lab_end_time.class.php';
-require_once '../classes/summativetimer.class.php';
-require_once '../classes/paperproperties.class.php';
-
 check_var('id', 'GET', true, false, false);
 
 function load_attempts($test_type, $paperID, $userObj, $db) {
@@ -189,10 +176,11 @@ $exam_duration_sec  = $exam_duration * 60;
 $calendar_year      = $propertyObj->get_calendar_year();
 $sound_demo         = $propertyObj->get_sound_demo();
 $password           = $propertyObj->get_password();
-$modIDs							= array_keys($propertyObj->get_modules());
+$modIDs             = array_keys($propertyObj->get_modules());
+$deleted            = $propertyObj->get_deleted();
 
-// If OSCE paper we should exit as this is an invalid page.
-if ($test_type == '4') {
+// If OSCE paper or if the paper has been deleted we should exit as this is an invalid page.
+if ($test_type == '4' OR $deleted != NULL) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
@@ -220,7 +208,7 @@ $previously_submitted = 0;
 $low_bandwidth = 0;
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli, true);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli, true);
 
   //Check this PC is registered for this exam
   $low_bandwidth = check_labs($test_type, $labs, $current_address, $password, $string, $mysqli);
@@ -367,15 +355,18 @@ if ($textsize > 120) {
   echo '<tr><td colspan="4">&nbsp;</td>';
   if ($test_type == 2) {
     $student_photo = UserUtils::student_photo_exist($userObject->get_username());
+    $photodirectory = rogo_directory::get_directory('user_photo');
     if ($student_photo !== false) {
-      $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $student_photo);
+      $photo_size = getimagesize($photodirectory->fullpath($student_photo));
       echo '<td rowspan="';
       if ($sound_demo == '1') {
         echo '8';
       } else {
         echo '7';
       }
-      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] . '</div><img src="../users/photos/' . $student_photo . '" ' . $photo_size[3] . ' alt="Photo" style="border: 10px solid white" /></td>';
+      echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid'] 
+          . '</div><img src="' . $photodirectory->url($student_photo) . '" ' . $photo_size[3]
+          . ' alt="Photo" style="border: 10px solid white" /></td>';
     }
   }
   echo '</tr>';

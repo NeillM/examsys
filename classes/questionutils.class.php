@@ -329,6 +329,39 @@ SQL;
   }
 
   /**
+   * Unlock a question
+   * @param integer $q_id question id
+   * @param mysqli $db database connection
+   */
+  static function unlock_question($q_id, $db) {
+    $lock = $db->prepare("UPDATE questions SET locked = NULL WHERE q_id = ?");
+    $lock->bind_param('i', $q_id);
+    $lock->execute();
+    $lock->close();
+  }
+  
+  /**
+   * Check if a question has been answered in a summative exam by a student
+   * @param integer $p_id paper id
+   * @param integer $q_id question id
+   * @param mysqli $db database connection
+   * @return bool true if answered, false otherwise
+   */
+  static function question_answered_in_summative($p_id, $q_id, $db) {
+    $result = $db->prepare("SELECT NULL FROM log2 l, log_metadata m, users u
+        WHERE l.metadataID = m.id AND m.userID = u.id AND m.paperID = ? AND l.q_id = ? and u.roles like '%Student%'");
+    $result->bind_param('ii', $p_id, $q_id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
+  }
+  
+  /**
    * Get the number of questions assigned to a given status
    * @param  integer $status_id Status ID
    * @param  mysqli $db        DB link
@@ -425,5 +458,44 @@ SQL;
        return $possible;
    }
   
+    /**
+     * Is the question in a random block
+     * @param int $q_id question
+     * @param mysqli $db
+     * @return array the random blocks the question appears in
+     */
+    static function is_in_random_block($q_id, $db) {
+        $questions = array();
+        $query = $db->prepare("SELECT question FROM questions, options, papers WHERE question = q_id AND "
+          . "q_id = o_id AND q_type ='random' AND option_text = ?");
+        $query->bind_param('i', $q_id);
+        $query->execute();
+        $query->bind_result($question);
+        while ($query->fetch()) {
+            $questions[] = $question;
+        }
+        $query->close();
+        return $questions;
+    }
+
+    /**
+     * Is the question in a keyword block
+     * @param int $q_id question
+     * @param mysqli $db
+     * @return array the keyword blocks the question appears in
+     */
+    static function is_in_keyword_block($q_id, $db) {
+        $questions = array();
+        $query = $db->prepare("SELECT question FROM keywords_question, options, papers WHERE question = o_id AND "
+          . "keywordID = option_text AND q_id = ?");
+        $query->bind_param('i',$q_id);
+        $query->execute();
+        $query->bind_result($question);
+        while ($query->fetch()) {
+            $questions[] = $question;
+        }
+        $query->close();
+        return $questions;
+    }
 }
 ?>

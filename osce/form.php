@@ -25,9 +25,6 @@
 require '../include/staff_auth.inc';
 require '../include/errors.inc';
 require './osce.inc';
-require_once '../classes/userutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/killer_question.class.php';
 
 check_var('id', 'GET', true, false, false);
 
@@ -236,9 +233,11 @@ if (isset($_POST) and count($_POST) > 0) {
   <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" id="osceform" name="osceform">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
-  if (file_exists('../users/photos/' . $username . '.jpg')) {
-    $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $username . '.jpg');
-    echo '<td class="photo"><img src="../users/photos/' . $username . '.jpg" ' . $photo_size[3] . ' alt="Photo" /></td>';
+$photodirectory = rogo_directory::get_directory('user_photo');
+$photoname = UserUtils::student_photo_exist($username);
+  if ($photoname) {
+    $photo_size = getimagesize($photodirectory->fullpath($photoname));
+    echo '<td class="photo"><img src="' . $photodirectory->url($photoname) . '" ' . $photo_size[3] . ' alt="Photo" /></td>';
   } else {
     echo '<td></td>';
   }

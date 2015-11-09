@@ -33,14 +33,7 @@ require_once '../include/mapping.inc';
 require_once '../include/media.inc';
 require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/mathsutils.class.php';
-require_once '../classes/log_lab_end_time.class.php';
-require_once '../classes/question_status.class.php';
 require_once '../include/demo_replace.inc';
-require_once '../classes/exam_announcements.class.php';
 require_once '../LTI/ims-lti/UoN_LTI.php';
 
 //HTML5 part
@@ -117,7 +110,6 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 
 if ($userObject->has_role(array('External Examiner'))) {
   // No further security checks.
-  require_once '../classes/reviews.class.php';
   if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
@@ -130,7 +122,7 @@ if ($userObject->has_role(array('External Examiner'))) {
   if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
 
   // Check time security
   check_datetime($start_date, $end_date, $string, $mysqli);

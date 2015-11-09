@@ -25,11 +25,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once $cfg_web_root . 'classes/schoolutils.class.php';
-require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
-require_once $cfg_web_root . 'classes/usernotices.class.php';
-
 class UserObject extends RogoStaticSingleton {
 
   protected static $inst = NULL;

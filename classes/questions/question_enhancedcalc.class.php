@@ -24,7 +24,6 @@
  * @package
  */
 require_once __DIR__ . '/../options/option_enhancedcalc.class.php';
-require_once __DIR__ . '/../stringutils.class.php';
 
 Class QuestionENHANCEDCALC extends QuestionEdit {
 

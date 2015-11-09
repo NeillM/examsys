@@ -29,11 +29,6 @@ set_time_limit(0);
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/feedback.inc';
-require_once '../classes/class_totals.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/exam_announcements.class.php';
-require_once '../classes/noteutils.class.php';
-require_once '../classes/toiletbreakutils.class.php';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -73,7 +68,10 @@ $question_no  = $report->get_question_no();
 $log_late     = $report->get_log_late();
 $user_no      = $report->get_user_no();
 
-if (($paper_type == '2' and $propertyObj->unmarked_enhancedcalc() and !$propertyObj->is_active()) or ($paper_type == '1' and $report->unmarked_enhancedcalc())) {
+// Check for unmarked calculation questions against the cohort subset selected by the user.
+$unmarked = $propertyObj->unmarked_enhancedcalc($studentsonly);
+
+if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or ($paper_type == '1' and $unmarked)) {
 // Only mark calculation questions when the exam is not active.
 ?>
 <!DOCTYPE html>
@@ -826,7 +824,8 @@ echo draw_toprightmenu(30);
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
-      $file = fopen("../email_templates/" . $userObject->get_user_ID() . ".txt", "w");
+      $emailtemplatedir = rogo_directory::get_directory('email_templates');
+      $file = fopen($emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt"), "w");
       fwrite($file, $userObject->get_email() . "\n");
       fwrite($file, $_POST['ccaddress'] . "\n");
       fwrite($file, $_POST['bccaddress'] . "\n");

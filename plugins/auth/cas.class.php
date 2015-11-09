@@ -30,7 +30,7 @@ session_start(); // may need this line to use session variables (depending on th
 
 require_once 'outline_authentication.class.php';
 // require_once $_SERVER['DOCUMENT_ROOT'] . '/CAS/config.php'; // or require_once $configObject->get('cfg_web_root') . 'CAS/config.php'; i.e. location of config file
-require_once $_SERVER['DOCUMENT_ROOT'] . '/CAS/CAS.php'; // or require_once $configObject->get('cfg_web_root') . 'CAS/CAS.php'; i.e. location of CAS library
+require_once dirname(dirname(__DIR__)) . '/CAS/CAS.php'; // or require_once $configObject->get('cfg_web_root') . 'CAS/CAS.php'; i.e. location of CAS library
 
 class cas_auth extends outline_authentication {
 

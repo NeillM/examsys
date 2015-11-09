@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/mathsutils.class.php';
-
 /**
  * Returns the number of marks the question is out of.
  * This number will adapt if the question (or parts) are excluded.
@@ -108,7 +106,8 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       break;
     case 'likert':
       $marks = 0;
-      if ($display_method == '0|1|2|false' or $display_method == '0|1|2|true') {
+      if ($display_method == '0|1|2|false' or $display_method == '0|1|2|true'
+          or $display_method == 'Fail|Borderline|Pass|false' or $display_method == 'Fail|Borderline|Pass|true') {
         $marks = 2;
       } elseif ($display_method == '0|1|false' or $display_method == '0|1|true') {
         $marks = 1;

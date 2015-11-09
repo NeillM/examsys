@@ -28,11 +28,6 @@ require '../include/staff_auth.inc';
 require '../include/media.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/reviews.class.php';
-
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
 require_once '../lang/' . $language . '/question/edit/area.txt';
@@ -153,6 +148,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $configObject = Config::get_instance();
 
   $cfg_root_path = $configObject->get('cfg_root_path');
+  $mediadirectory = rogo_directory::get_directory('media');
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
@@ -222,7 +218,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-          echo "sendTextToAS3('$language', 'q$q_no', 1, '../media/" . $q_media . "', '" . $correct . "', '');\n";
+          echo "sendTextToAS3('$language', 'q$q_no', 1, '" . $mediadirectory->url($q_media, false, false, true) . "', '" . $correct . "', '');\n";
 					echo "</script>\n<br />";
          }          
 			?>
@@ -322,7 +318,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 ?>
   <div align="center">
 	<?php
-	require_once '../classes/configobject.class.php';
 	$configObject          = Config::get_instance();
 	if ($configObject->get('cfg_interactive_qs') == 'html5') {
 		//<!-- ======================== HTML5 part rep disc ================= -->

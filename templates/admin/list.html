@@ -1,0 +1,22 @@
+<table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+    <thead>
+        <tr>
+        {% for item in header %}
+          <th class="{{item.class}}" style="{{item.style}}">{{item.value}}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for id,item in data %}
+        <tr id="{{id}}" class="l">
+        {% for i in item %}
+            {% if i == 0 %}
+            <td class=\"col10\">{{i}}</td>
+            {% else %}
+            <td class=\"col\">{{i}}</td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

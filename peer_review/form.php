@@ -27,8 +27,6 @@
 require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/paperproperties.class.php';
 
 
 check_var('id', 'GET', true, false, false);
@@ -120,7 +118,7 @@ if ($userObject->has_role('Student')) {
                               );
 
   // Check for additional password on the paper
-  check_paper_password($password, $string, $mysqli, true);
+  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli, true);
 }
 
 // Get questions on the paper
@@ -383,13 +381,14 @@ if (isset($_POST['submit'] )) {
     $result->bind_param('sss', $calendar_year, $type, $group);
     $result->execute();
     $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
+    $photodirectory = rogo_directory::get_directory('user_photo');
     while ($result->fetch()) {
       if ($member_userID != $userObject->get_user_ID()) {   // Make sure current user cannot peer review themself.
         $row_no = 0;
         echo "<tr><td class=\"phototd\" rowspan=\"" . (count($questions) + 2) . "\">";
-        $peer_photo = $cfg_web_root . 'users/photos/' . $member_username . '.jpg';
-        if (file_exists($peer_photo) and $display_photos == '1') {
-          echo "<img class=\"photo\" src=\"../users/photos/" . $member_username . ".jpg\" width=\"90\" height=\"135\" border=\"0\" />";
+        $photoname = UserUtils::student_photo_exist($member_username);
+        if ($photoname and $display_photos == '1') {
+          echo "<img class=\"photo\" src=\"" . $photodirectory->url($photoname) . "\" width=\"90\" height=\"135\" border=\"0\" />";
         }
         $first_names = explode(' ', $member_first_names);
         echo "</td><td class=\"title\" colspan=\"" . ($columns + 1) . "\">$member_title " . $first_names[0] . " $member_surname</td></tr>\n";

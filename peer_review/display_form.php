@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
-require_once '../classes/paperproperties.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -196,10 +195,11 @@ echo "</table>\n</form>\n";
 function display_user($review_type, $q_type, $questions, $saved_results, $cfg_web_root, $member_userID, $member_username, $member_title, $member_first_names, $member_surname, $display_photos, $columns, $parts, $marking) {
   $row_no = 0;
   $rowspan = ($review_type == '1') ? count($questions) + 2 : (count($questions) * 2) + 2;
+  $photodirectory = rogo_directory::get_directory('user_photo');
+  $photoname = UserUtils::student_photo_exist($member_username);
   echo "<tr><td class=\"phototd\" rowspan=\"$rowspan\">";
-  $peer_photo = $cfg_web_root . 'users/photos/' . $member_username . '.jpg';
-  if (file_exists($peer_photo) and $display_photos == '1') {
-    echo "<img class=\"photo\" src=\"../users/photos/" . $member_username . ".jpg\" width=\"90\" height=\"135\" />";
+  if ($photoname and $display_photos == '1') {
+    echo "<img class=\"photo\" src=\"" . $photodirectory->url($photoname) . "\" width=\"90\" height=\"135\" />";
   }
   $first_names = explode(' ', $member_first_names);
   echo "</td><td class=\"title\" colspan=\"" . ($columns + 1) . "\">$member_title " . $first_names[0] . " $member_surname</td></tr>\n";

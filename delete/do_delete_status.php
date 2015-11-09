@@ -26,7 +26,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/question_status.class.php';
 
 $status_id = check_var('status_id', 'POST', true, false, true);
 

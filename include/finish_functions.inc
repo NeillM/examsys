@@ -22,10 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/stringutils.class.php';
-require_once $cfg_web_root . 'classes/configobject.class.php';
-require_once $cfg_web_root . 'classes/exclusion.class.php';
-
 $configObject = Config::get_instance();
 
 function can_display_feedback($paper_type, $moduleID, $userObject) {
@@ -163,6 +159,7 @@ function populate_variable($varname, $value, &$leadin, &$feedback, $string) {
 function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_metadata, $mysqlidb, $status_array, $overrides, $preview_q_id = null) {
   global $language, $string, $bottom_html, $hide_if_unanswered, $tmp_display_correct_answer, $tmp_display_students_response, $tmp_display_feedback, $tmp_display_question_mark, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $pass_mark, $strong_on, $strong_off;
 
+  $mediadirectory = rogo_directory::get_directory('media');
   $paperID          = $propertyObj->get_property_id();
   $paper_type       = $propertyObj->get_paper_type();
   $paper_title      = $propertyObj->get_paper_title();
@@ -805,7 +802,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             if ($tmp_exclude{$tmp_part_id} == '1') echo ' class="exclude"';
             echo ">";
             if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') echo $paper[$question]['option_text'][$tmp_part_id] . '<br />';
-            echo "<img src=\"../media/" . $paper[$question]['o_media'][$tmp_part_id] . "\" width=\"" . $paper[$question]['o_media_width'][$tmp_part_id] . "\" height=\"" . $paper[$question]['o_media_height'][$tmp_part_id] . "\" border=\"0\" /></td></tr>\n";
+            echo "<img src=\"" . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . "\" width=\"" . $paper[$question]['o_media_width'][$tmp_part_id] . "\" height=\"" . $paper[$question]['o_media_height'][$tmp_part_id] . "\" border=\"0\" /></td></tr>\n";
           }
 
           // Feedback
@@ -885,7 +882,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
+                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') echo ' ' . $strong_on . $string['iscorrect'] . $strong_off;
               }
               echo '</td></tr>';
@@ -904,7 +901,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 if ($tmp_exclude{0} == '1') echo '</span>';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
+                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') echo ' <strong>' . $string['iscorrect'] . '</strong>';
               }
               echo '</td></tr>';
@@ -921,7 +918,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" />';
+                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" />';
               }
               echo "</td></tr>";
             } else {
@@ -933,7 +930,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="../media/' . $paper[$question]['o_media'][$tmp_part_id] . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" />';
+                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" />';
               }
               echo '</td></tr>';
             }
@@ -2411,11 +2408,11 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
   <script>
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="../media/<?php echo $movie; ?>" />');
+    write_string('<param name="movie" value="<?php echo $mediadirectory->url($movie); ?>" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     write_string('<param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" />');
-    write_string('<embed src="../media/<?php echo $movie ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
+    write_string('<embed src="<?php echo $mediadirectory->url($movie) ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
     write_string('</object>');
   </script>
   </div>

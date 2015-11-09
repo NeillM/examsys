@@ -23,9 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require '../classes/moduleutils.class.php';
-require '../classes/paperutils.class.php';
-require_once '../classes/questionutils.class.php';
 
 function stripTrainModule($module_string) {
   $new_modules = array();
@@ -53,7 +50,7 @@ $result->store_result();
 $result->bind_result($paperID);
 while ($result->fetch()) {
     
-    Paper_utils::remove_modules(array($trainIdMod => 'TRAIN'), $paperID, $mysqli);
+    Paper_utils::remove_modules(array($trainIdMod => 'TRAIN'), $paperID, $mysqli, $userObject);
 
     $q_result = $mysqli->prepare("SELECT question FROM papers WHERE paper=?");
     $q_result->bind_param('i', $paperID);

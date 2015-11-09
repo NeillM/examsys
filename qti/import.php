@@ -17,13 +17,11 @@
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperproperties.class.php';
 require_once 'include/inc.php';
 require_once 'qti/qti_load.php';
 require_once 'qti12/qti12_load.php';
 require_once 'qti20/qti20_load.php';
 require_once 'local/local_save.php';
-require_once '../classes/question_status.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -87,7 +85,8 @@ if (isset($_GET['debug'])) {
 }
 
 // Create dir for QTI to save into
-$base_dir = $cfg_web_root.'qti/imports/';
+$qtiimportdirectory = rogo_directory::get_directory('qti_import');
+$base_dir = $qtiimportdirectory->location();
 $dir = GetAuthorName($userObject->get_user_ID())."/".date("Y-m-d")."/".date("H.i.s"); //todo replace with userobject function
 
 if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);

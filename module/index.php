@@ -30,13 +30,6 @@ require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
 
-require_once '../classes/dateutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/stateutils.class.php';
-require_once '../classes/questionbank.class.php';
-
 $module = check_var('module', 'GET', true, false, true);
 
 if ((int)$module != $module) {
@@ -132,6 +125,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Paper type folders
 echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\">" . $string['papers'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/type.php');
 
 if (isset($state['showretired']) and $state['showretired'] == 'true') {
@@ -184,7 +178,9 @@ echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_tit
 echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../users/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../users/search.php?module=$module\">" . $string['search'] . "</a><br /><span class=\"grey\">" . $string['forusers'] . "</span></div></div>\n";
 
 if ($_GET['module'] != '0') {
-  $current_year = date_utils::get_current_academic_year($module_details['academic_year_start']);
+  $yearutils = new yearutils($mysqli);
+  $current_year = $yearutils->get_current_session($module_details['academic_year_start']);
+  $academic_year = $yearutils->get_academic_session($current_year);
   $student_cohort = module_utils::get_student_members($current_year, $module, $mysqli);
 
   $url = '../users/search.php?submit=Search&module=' . $module . '&calendar_year=' . $current_year . '&students=on&search_username=&student_id=';
@@ -194,7 +190,7 @@ if ($_GET['module'] != '0') {
   } else {
     $student_class = 'grey';
   }
-  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . sprintf($string['studentlist'], $current_year) . "</a><br /><span class=\"$student_class\">" . number_format($student_no) . " " . $string['students'] . "</span></div></div>\n";
+  echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_accounts_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . sprintf($string['studentlist'], $academic_year) . "</a><br /><span class=\"$student_class\">" . number_format($student_no) . " " . $string['students'] . "</span></div></div>\n";
 
   $url = '../users/import_users_metadata.php?module=' . $module;
   echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['addmetadata'] . "</a><br /><span class=\"grey\">" . sprintf($string['extradataaboutstudents'], $module_details['moduleid']) . "</span></div></div>\n";

@@ -29,10 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/media.inc';
 require_once '../include/mapping.inc';
 
-require_once '../classes/question_status.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/logger.class.php';
-
 $paperid = check_var('paperID', 'POST', true, false, true);
 
 if (!Paper_utils::paper_exists($paperid, $mysqli)) {
@@ -99,16 +95,18 @@ function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_cours
               }
               // VLE Objectives.
               if (isset($new_course[$module][$identifier]['VLE']) and $new_course[$module][$identifier]['VLE'] != '') {
-                if (isset($new_course[$module][$identifier]['objectives'])){
-                    foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
-                      if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
-                              or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
-                              and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
-                                      and $new_obj['content'] == $obj['content'])) {
-                        // Build a list of objectives that are still in both sessions
-                        $mappings_copy_objID[$old_objID] = $new_obj['id'];
-                        break;
-                      }
+                if ($new_course[$module][$identifier]['VLE'] == $old_course[$module][$identifier]['VLE']) {
+                    if (isset($new_course[$module][$identifier]['objectives'])){
+                        foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+                          if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
+                                  or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
+                                  and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
+                                          and $new_obj['content'] == $obj['content'])) {
+                            // Build a list of objectives that are still in both sessions
+                            $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                            break;
+                          }
+                        }
                     }
                 }
               // Internal Rogo Objectives.
@@ -192,6 +190,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 } else {    // Copy the paper and the questions.
   // Copy the properties (properties table)
   $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
+  $mediadirectory = rogo_directory::get_directory('media');
 
   // Get question statuses
   $default_status = -1;
@@ -235,8 +234,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
               $new_media_name = '';
               if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
                 $new_media_name = unique_filename($individual_media);
-                if (file_exists("../media/$individual_media")) {
-                  if (!copy("../media/$individual_media", "../media/$new_media_name")) {
+                if (file_exists($mediadirectory->fullpath($individual_media))) {
+                  if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                     $error[] = sprintf($string['copyerror'], $individual_media);
                     // If the image is missing dont put the file name in the new question
                     $new_media_name = '';
@@ -266,8 +265,8 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         foreach ($media_array as $individual_media) {
           if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
             $new_media_name = unique_filename($individual_media);
-            if (file_exists("../media/$individual_media")) {
-              if (!copy("../media/$individual_media","../media/$new_media_name")) {
+            if (file_exists($mediadirectory->fullpath($individual_media))) {
+              if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                 $error[] = sprintf($string['copyerror'], $individual_media);
                 //if the image is missing don't put the file name in the new question
                 $new_media_name = '';

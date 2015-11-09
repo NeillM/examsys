@@ -29,8 +29,6 @@
 $cfg_web_root = $configObject->get('cfg_web_root');
 require_once 'outline_authentication.class.php';
 require_once 'internaldb.class.php';
-require_once $cfg_web_root . '/classes/moduleutils.class.php';
-require_once $cfg_web_root . '/classes/schoolutils.class.php';
 
 class demo_auth extends internaldb_auth {
 
@@ -172,7 +170,7 @@ HTML;
                 alert("$string[reqsurname]");
                 return false;
             }
-            if (document.newUser.new_email.value == "" || document.newUser.new_email.value == "@nottingham.ac.uk") {
+            if (document.newUser.new_email.value == "" || document.newUser.new_email.value == "@example.com") {
                 alert("$string[reqemail]");
                 return false;
             }

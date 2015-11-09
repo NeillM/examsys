@@ -30,14 +30,6 @@ require_once '../include/paper_security.inc';
 require_once '../include/display_functions.inc';
 require_once '../include/media.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/timer.class.php';
-require_once '../classes/log_extra_time.class.php';
-require_once '../classes/log_lab_end_time.class.php';
-require_once '../classes/summativetimer.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/exam_announcements.class.php';
 
 $userObject = UserObject::get_instance();
 
@@ -50,6 +42,14 @@ check_var('id', 'GET', true, false, false);
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+
+$deleted = $propertyObj->get_deleted();
+
+// If the paper has been deleted we should exit as this is an invalid page.
+if ($deleted != NULL) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
+}
 
 $paperID = $propertyObj->get_property_id();
 
@@ -106,7 +106,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
 } else {    // Treat as student with extra security checks.
 
   // Check for additional password on the paper.
-  check_paper_password($propertyObj->get_password(), $string, $mysqli);
+  check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli);
 
   // Check time security.
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);

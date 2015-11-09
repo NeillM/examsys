@@ -22,6 +22,7 @@
 * @package
 */
 
+$mediadirectory = rogo_directory::get_directory('media');
 $media = $question->get_media();
 $plugin_height = $media['height'] + 24;
 $plugin_width = ($media['width'] < 235) ? 235 : $media['width'] + 2;
@@ -55,7 +56,7 @@ $error_range = range(0, 50);
 <script>
 //<![CDATA[
 $(function () {
-  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'../../media/" . $media['filename'] . "', '" . $correct . "'" ?>);
+  sendTextToAS3('<?php echo $language ?>', 'option_correct', '2', <?php echo "'" . $mediadirectory->url($media['filename'], false, false, true) . "', '" . $correct . "'" ?>);
 });
 //]]>
 </script>
@@ -80,8 +81,7 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("'", "\'", trim($correct));
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-	
-require_once $root . 'classes/configobject.class.php';
+
 $configObject          = Config::get_instance();
 if ($configObject->get('cfg_interactive_qs') == 'html5') {
   //<!-- ======================== HTML5 part ================= -->

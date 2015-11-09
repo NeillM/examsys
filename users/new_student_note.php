@@ -26,15 +26,12 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/userutils.class.php';
-require_once '../classes/dateutils.class.php';
-require_once '../classes/noteutils.class.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
-$paperID = check_var('paperID', 'REQUEST', true, false, true);
+$paperID = check_var('paperID', 'REQUEST', false, false, true);
 
 // Does the paper exist?
-if (!Paper_utils::paper_exists($paperID, $mysqli)) {
+if (!is_null($paperID) and !Paper_utils::paper_exists($paperID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -151,8 +148,8 @@ if (isset($_POST['submit'])) {
     echo '<strong>' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['initials'] . '</strong><br />';
   } else {
 		$student_modules = UserUtils::load_student_modules($userID, $mysqli);
-		
-		$current_year = date_utils::get_current_academic_year();
+		$yearutils = new yearutils($mysqli);
+		$current_year = $yearutils->get_current_session();
 		$module_IDs = array();
 		if (isset($student_modules[$current_year])) {
 			foreach ($student_modules[$current_year] as $moduleID=>$module_code) {
@@ -162,8 +159,8 @@ if (isset($_POST['submit'])) {
 		
     echo $string['papername'] . " <select name=\"paperID\" id=\"paperID\" required>\n<option value=\"\"></option>\n";
     if (count($module_IDs) > 0) {
-			// Look up summative papers that have been live in the last 28 days.
-			$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (" . implode(',', $module_IDs) . ") AND paper_type = '2' AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title");
+			// Look up papers that have been live in the last 28 days.
+			$result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (" . implode(',', $module_IDs) . ") AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title");
 			$result->execute();
 			$result->bind_result($property_id, $paper_title);
 			while ($result->fetch()) {

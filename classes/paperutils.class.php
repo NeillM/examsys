@@ -23,21 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once $cfg_web_root . 'classes/rogostaticsingleton.class.php';
-require_once $cfg_web_root . 'classes/questionutils.class.php';
-require_once $cfg_web_root . 'classes/keywordutils.class.php';
-
-Class Paper_utils extends RogoStaticSingleton {
-  public static $inst = NULL;
-  public static $class_name = 'PaperUtils';
-
-  /**
-  * constructor
-  */
-  private function __construct() {}
-}
-
 Class PaperUtils {
   
   /**
@@ -300,24 +285,7 @@ Class PaperUtils {
   * @return void
   */
   public function update_modules($paper_modules, $paperID, $db, $userObject) {
-    $staff_modules = $userObject->get_staff_modules();
-    if (count($staff_modules) < 0) {
-      $user_modules = get_staff_modules($userObject->get_user_ID(), $db, $userObject->get_user_ID());
-    }
-
-    if (count($staff_modules) > 0) {
-      if ($userObject->has_role('SysAdmin')) {
-        $user_can_delete = ''; // No restrictions
-      } else {
-        $user_can_delete = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; // Users can only remove modules if they are on the team.
-      }
-
-      $editProperties = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $user_can_delete");
-      $editProperties->bind_param('i', $paperID);
-      $editProperties->execute();
-      $editProperties->close();
-    }
-
+    Paper_utils::remove_modules($paper_modules, $paperID, $db, $userObject, "all");
     Paper_utils::add_modules($paper_modules, $paperID, $db);
   }
 
@@ -382,19 +350,43 @@ Class PaperUtils {
 
   /**
   * Remove modules from a paper
-	*
+  *
   * @param array $paper_modules - An array of modules keyed on idMod
-  * @param int $paperID					- The id of the paper or property_id
-  * @param object $db						- Database connection
-	*
+  * @param int $paperID - The id of the paper or property_id
+  * @param object $db - Database connection
+  * @param object $userObject - user object
+  * @param strting $modulefilter - 'all' or a specfic module
   * @return void
   */
-  public function remove_modules($paper_modules, $paperID, $db) {
-    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod = ?");
-    foreach ($paper_modules as $idMod => $ModuleID) {
-      $remove->bind_param('ii', $paperID, $idMod);
-      $remove->execute();
+  public function remove_modules($paper_modules, $paperID, $db, $userObject, $modulefilter = "") {
+      
+    // Non sysadmin users can only remove modules if they are on the team. Sysadmins have no restrictions.
+    if (!$userObject->has_role('SysAdmin')) {
+      $staff_modules = $userObject->get_staff_modules();
+      if (count($staff_modules) > 0) {
+        $permission = "AND idMod IN (" . implode(',', array_keys($staff_modules)) . ")"; 
+      }
+    } else {
+        $permission = "";
     }
+    
+    // Are we removing all of the associated modules or a specifc one.
+    if ($modulefilter == "all") {
+        $modules = "";
+    } else {
+        $modules = "AND idMod = ?";
+    }
+    
+    $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $modules $permission");
+    
+    if ($modulefilter == "all") {
+      $remove->bind_param('i', $paperID);
+    } else {
+      foreach ($paper_modules as $idMod => $ModuleID) {
+        $remove->bind_param('ii', $paperID, $idMod);
+      }
+    }
+    $remove->execute();
     $remove->close();
   }
 
@@ -680,6 +672,26 @@ Class PaperUtils {
     $result->close();
 
     return $maxscreen;
+  }
+  
+  /**
+  * Check if the paper has been taken
+  * @param integer $id - paper id
+  * @param mysqli $db 
+  * @return bool
+  */
+  static function paper_taken($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM log_metadata WHERE paperID = ?
+        UNION SELECT NULL FROM log4_overall WHERE q_paper = ?");
+    $result->bind_param('ii', $id, $id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
   }
   
 }

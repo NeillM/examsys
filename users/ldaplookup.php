@@ -26,8 +26,6 @@
 
 require '../include/admin_auth.inc';
 require '../include/sort.inc';
-require_once '../classes/lookup.class.php';
-require_once '../classes/stringutils.class.php';
 
 if (isset($_REQUEST['LOOKUP'])) {
   if (isset($_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']])) {

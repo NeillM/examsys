@@ -32,7 +32,8 @@ $path = check_var('path', 'GET', true, false, true);
 $path = str_replace("..", "", $path);
 $title = check_var('path', 'GET', true, false, true);
 
-$base_dir = $cfg_web_root.'qti/exports/';
+$qtiexportdirectory = rogo_directory::get_directory('qti_export');
+$base_dir = $qtiexportdirectory->location();
 
 $accessfile = $base_dir.$path."/access.xml";
 if (!file_exists($accessfile)) exit;

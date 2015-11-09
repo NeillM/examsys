@@ -24,19 +24,18 @@
  */
 
 require_once '../include/load_config.php';
-require_once '../classes/installutils.class.php';
-require_once '../classes/updaterutils.class.php';
 require_once '../include/auth.inc';
-require_once '../classes/lang.class.php';
-require_once '../classes/dbutils.class.php';
-require_once '../classes/stringutils.class.php';
 require_once '../include/std_set_shared_functions.inc';
+require_once dirname(__DIR__) . '/lang/' . $language . '/include/timezones.inc';
+require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
 
-$version = '6.0.3';
+// Get the code version.
+$version = $configObject->getxml('version');
 $migration_path = 'version5';
 
 set_time_limit(0);
 
+// Get the installed version.
 $old_version = $configObject->get('rogo_version');
 ?>
 <!DOCTYPE html>
@@ -73,6 +72,7 @@ if (round($old_version,0) < 5) {
   exit;
 }
 if (!isset($_POST['update'])) {
+  InstallUtils::checkSoftware();
   ?>
 <script>
   $(document).ready(function () {

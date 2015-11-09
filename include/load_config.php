@@ -26,10 +26,15 @@
 
 $root                  = str_replace( '/include', '/', str_replace('\\', '/', dirname(__FILE__) ) );
 
-require_once $root . 'classes/configobject.class.php';
+require_once 'defines.inc.php';
+require_once __DIR__ . '/autoload.inc.php';
+autoloader::init();
 
 $configObject          = Config::get_instance();
 
 $cfg_web_root          = $configObject->get('cfg_web_root');
 $cfg_editor_javascript = $configObject->get('cfg_editor_javascript');
 $cfg_editor_name       = $configObject->get('cfg_editor_name');
+
+$language = LangUtils::getLang($cfg_web_root);
+LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));

@@ -27,7 +27,6 @@
 if (!isset($cfg_web_root)) {
   $cfg_web_root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 }
-require_once $cfg_web_root . 'classes/usernotices.class.php';
 
 $notice = UserNotices::get_instance();
 
@@ -43,20 +42,8 @@ $notice = UserNotices::get_instance();
  *
  */
 function encpw($salt, $u, $p, $type = 'SHA-512') {
-  $supportsha = false;
-  if (version_compare(PHP_VERSION, '5.3.2') >= 0) {
-    $supportsha = true;
-  }
-  if ($type == 'SHA-512' and $supportsha == true) {
-    $full_salt = '$6$' . $salt . '$'; // SHA-512
-    $new_password = crypt($p, $full_salt);
-    $new_password = '$6$' . substr($new_password, strlen($full_salt));
-  } else {
-    $full_salt = '$1$' . substr(md5($u), 0, 8) . '$'; // Simple MD5, for barckwards compatibility
-    $new_password = crypt($p, $full_salt);
-  }
-
-  return $new_password;
+  $enc = new encryp();
+  return $enc->encpw($salt, $u, $p, $type = 'SHA-512');
 }
 
 /**
@@ -67,20 +54,7 @@ function encpw($salt, $u, $p, $type = 'SHA-512') {
  *
  */
 function gen_password($len = 8) {
-  $lower    = 'abcdefghijklmnoprrstuvwxyzabcdefghijklmnoprrstuvwxyz';
-  $upper    = 'ABCDEFGHIJKLMN0PQRSTUVWXYZABCDEFGHIJKLMN0PQRSTUVWXYZ';
-  $num      = '0123456789012345678901234501234567890123456789012345';
-  $special  = '!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-';
-
-  $pass = '';
-  $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);
-  for ($i = 0; $i < $len; $i++) {
-    if ($i < 7) {
-      $pass .= substr($chars[$i], rand(0, 51), 1);
-    } else {
-      $pass .= substr($chars[rand(2, 6)], rand(0, 51), 1);
-    }
-  }
-  return $pass;
+  $enc = new encryp();
+  return $enc->gen_password($len);
 }
 ?>

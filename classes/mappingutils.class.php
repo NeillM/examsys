@@ -23,15 +23,12 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'relationship.class.php';
-
 class MappingUtils {
   /**
    * Get the VLE API that is in effect for the given module and academic year
    * either from the module itself or from existing relationships
    * @param  integer $idMod         ID of the module
-   * @param  string  $session       Calendar year in the form YYYY/YY (e.g. 2012/13)
+   * @param  string  $session       Calendar year in the form YYYY
    * @param  array   $vle_api_cache List of chached API references
    * @param  mysqli  $db            DB link
    * @return string                 Name of the VLE API that is in effect

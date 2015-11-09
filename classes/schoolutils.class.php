@@ -82,43 +82,24 @@ Class SchoolUtils {
      * @param int $school_name  - Name of the school to be looked up.
      * @param object $db        - Link to mysqli
      *
-     * @return int              - ID of the school.
+     * @return int|bool              - ID of the school, or false if non-existant.
      */
     static function get_school_id_by_name($school_name, $db) {
         if ($school_name == '') {
           return false;
         }
 
-        $id = false;
-
         $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = ?");
         $stmt->bind_param('s', $school_name);
         $stmt->execute();
-        $stmt->bind_result($id);
         $stmt->store_result();
+        $stmt->bind_result($id);
         $stmt->fetch();
-        $row = $stmt->num_rows;
-        $stmt->close();
-        //TODO current UoN Fudge for some data that doesnt follow convention should shift to saturn abstraction
-        if ($row == 0) {
-          $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = CONCAT('School of ', ?)");
-          $stmt->bind_param('s', $school_name);
-          $stmt->execute();
-          $stmt->bind_result($id);
-          $stmt->store_result();
-          $stmt->fetch();
-          $row = $stmt->num_rows;
+        if ($stmt->num_rows == 0) {
           $stmt->close();
-          if ($row == 0) {
-            $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = 'UNKNOWN School'");
-            $stmt->execute();
-            $stmt->bind_result($id);
-            $stmt->store_result();
-            $stmt->fetch();
-            $stmt->close();
-          }
+          return false;
         }
-
+        $stmt->close();
         return $id;
     }
 
@@ -245,5 +226,99 @@ Class SchoolUtils {
         $result->bind_param('i', $schoolID);
         $result->execute();
         $result->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+        return true;
       }
+      
+    /**
+     * Updates a school
+     * @param integer $id  - School id in rogo.
+     * @param int $facultyID - ID of the faculty to which the new school belongs.
+     * @param string $school - Name of the new school
+     * @param object $db - Link to mysqli
+     *
+     * @return bool - true on success
+     */
+    static function update_school($id, $facultyID, $school, $db) {
+        if ($facultyID === '' or $school === '') {
+          return false;
+        }
+
+        $schoolID = SchoolUtils::school_name_exists($school, $db);
+        if ($schoolID !== false and $schoolid != $id) {
+          return false;
+        }
+
+        $result = $db->prepare("UPDATE schools set school = ?, facultyID = ? where id = ?");
+        $result->bind_param('sii', $school, $facultyID, $id);
+        $result->execute();
+        $result->close();
+        if ($db->errno != 0) {
+          return false;
+        }
+
+        return true;
+    }
+    
+  /**
+   * Get factulty details
+   * @param integer $id 
+   * @param mysqli $db 
+   * @return array details
+   */
+  static function get_school_details_by_id($id, $db) {
+    $result = $db->prepare("SELECT school, facultyID FROM schools WHERE id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($name, $faculty);
+    $result->fetch();
+    $result->close();
+
+    return array('name' => $name, 'faculty' => $faculty);
+  }
+  
+  /**
+   * Check if school contains modules or courses
+   * @param integer $id school id
+   * @param mysqli $db 
+   * @return bool true if school is in use
+   */
+  static function school_in_use($id, $db) {
+    $result = $db->prepare("SELECT NULL FROM courses WHERE schoolid = ?
+        UNION SELECT NULL FROM modules WHERE schoolid = ?");
+    $result->bind_param('ii', $id, $id);
+    $result->execute();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return true;
+    }
+    $result->close();
+    return false;
+  }
+  
+  /**
+   * Generate a school id based on name and faculty.
+   * @param string $school - school name
+   * @param string $faculty - faculty name
+   * @param mysqli $db
+   * @return integer|bool - new school id or false on error
+  */
+  static function generate_school_id($school, $faculty, $db) {
+    $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
+    if (!$facultyid) {
+        // Add new faculty.
+        $facultyid = FacultyUtils::add_faculty($faculty, $db);
+    }
+    // Add new school to faculty.
+    if ($facultyid) {
+        $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
+    } else {
+        return false;
+    }
+    return $schoolid;
+  }
 }

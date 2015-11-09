@@ -40,6 +40,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
   }
 
   $display_inline = array('dichotomous', 'mrq', 'rank', 'flash');
+  $mediadirectory = rogo_directory::get_directory('media');
 
   $option_no = count($options);
   $total_rank_no = 0;
@@ -368,7 +369,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
           echo "<tr><td>" . chr($part_id + 64) . ".</td><td>";
           if (strpos($single_option,'.gif') !== false or strpos($single_option,'.png') !== false or strpos($single_option,'.jpg') !== false or strpos($single_option,'.jpeg') !== false) {
             $image_parts = explode('~', $single_option);
-            echo '<img src="../media/' . $image_parts[0] . '" width="' . $image_parts[1] . '" height="' . $image_parts[2] . '" border="0" />';
+            echo '<img src="' . $mediadirectory->url($image_parts[0]) . '" width="' . $image_parts[1] . '" height="' . $image_parts[2] . '" border="0" />';
           } else {
             echo $single_option;
           }

@@ -23,19 +23,12 @@
 */
 
 require_once '../../include/staff_auth.inc';
-require_once '../../classes/questionEdit.class.php';
-require_once '../../classes/logger.class.php';
-require_once '../../classes/viewhelper.class.php';
-require_once '../../classes/stateutils.class.php';
-require_once '../../classes/moduleutils.class.php';
-require_once '../../classes/questioninfo.class.php';
-require_once '../../classes/question_status.class.php';
-require_once '../../classes/paperutils.class.php';
 require_once '../../include/edit.inc';
 require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
 
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 $question = null;

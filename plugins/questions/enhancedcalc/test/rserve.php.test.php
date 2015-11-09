@@ -34,7 +34,8 @@ class RserveTests extends \Enhance\TestFixture
 
   // SetUp
   public function setUp() {
-    $enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>6311,'timeout'=>5);
+    $configObject = Config::get_instance();
+    $enhancedcalculation = array('host' => $configObject->get('cfg_test_rserve_server'), 'port'=> $configObject->get('cfg_test_rserve_port'),'timeout'=>5);
     $this->target = \Enhance\Core::getCodeCoverageWrapper('EnhancedCalc_Rrserve', array($enhancedcalculation));
   }
 
@@ -47,10 +48,10 @@ class RserveTests extends \Enhance\TestFixture
   # connect
   #
   public function connect() {
-      //$enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>6311,'timeout'=>5);
+      //$enhancedcalculation = array('host' => $configObject->get('cfg_test_rserve_server'), 'port'=> $configObject->get('cfg_test_rserve_port'),'timeout'=>5);
       //$obj = new enhancedcalc_rserve($enhancedcalculation);
       
-      //$enhancedcalculation = array('host' => 'suivarro.nottingham.ac.uk', 'port'=>8080,'timeout'=>5);
+      //$enhancedcalculation = array('host' => $configObject->get('cfg_test_rserve_server'), 'port'=>8080,'timeout'=>5);
       //$enhancedcalculation = array('host' => 'this.will.not.work.com', 'port'=>6311,'timeout'=>5);
   }
   

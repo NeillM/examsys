@@ -27,17 +27,23 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-require_once '../classes/dateutils.class.php';
-require_once '../classes/paperproperties.class.php';
-
 $paperID = check_var('paperID', 'GET', true, false, true);
 $userID  = check_var('userID', 'GET', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-function getModules($userID, $mysqlidb) {
+/**
+ * Get the modules that a user is enrolled on in the year that the paper the exam was run in.
+ *
+ * @param int $userID The id of the user that modules should be retrieved for.
+ * @param object $mysqlidb The database connection object.
+ * @param PaperProperties $properties The paper properties for the exam that the guest user is on.
+ * @return array An array of module codes the user is enrolled on
+ */
+function getModules($userID, $mysqlidb, $properties) {
   $modules = array();
-  $session = date_utils::get_current_academic_year();
+  // The session we get student modules for should be based on that of the year the paper is set for.
+  $session = $properties->get_calendar_year();
 
   $result = $mysqlidb->prepare("SELECT idmod FROM modules_student WHERE calendar_year = ? AND userID = ?");
   $result->bind_param('si', $session, $userID);
@@ -92,6 +98,8 @@ if (isset($_POST['submit'])) {
     .uline {height:54px; cursor:pointer; background-repeat:no-repeat; background-position: 2px center; vertical-align:middle}
     .uline:hover {background-color:#FFE7A2}
     .name {margin-left:60px; position:relative; top:50%; transform: translateY(-50%)}
+    .ineligible {background-color:#FFD9D9}
+    .ineligible:hover {background-color:#D99594}
   </style>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -144,7 +152,7 @@ if ($temp_student_id != '') {
     $target_student[$target_userID]['title']        = $target_title;
     $target_student[$target_userID]['gender']       = $gender;
     $target_student[$target_userID]['student_id']   = $temp_student_id;
-    $target_student[$target_userID]['modules']      = getModules($target_userID, $mysqli);
+    $target_student[$target_userID]['modules']      = getModules($target_userID, $mysqli, $properties);
   }
   $result->close();
 }
@@ -164,7 +172,7 @@ if ($target_userID == '') {
     $target_student[$target_userID]['title']        = $target_title;
     $target_student[$target_userID]['gender']       = $gender;
     $target_student[$target_userID]['student_id']   = $student_id;
-    $target_student[$target_userID]['modules']      = getModules($target_userID, $mysqli);
+    $target_student[$target_userID]['modules']      = getModules($target_userID, $mysqli, $properties);
   }
   $result->close();
 }
@@ -177,8 +185,23 @@ echo "</table>\n</form>\n";
 if (count($target_student) == 0) {
   echo "<div>" . $string['msg4'] . ".</div>\n";
 } else {
+  // Get the modules for the paper so we can check if the students are enrolled on any of them.
+  $paper_modules = $properties->get_modules();
+
   echo "<br /><div>" . $string['Reassign answers'] . " " . str_replace('user','Temporary Account ',$temp_username) . " " . $string['to following user'] . ":</div>\n<div id=\"userlist\" style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
   foreach ($target_student as $individualID=>$individual) {
+    // Check if the student eligible to take the paper, if they are not we should highlight this to the user.
+    $modules_student_is_on = array_intersect($paper_modules, $individual['modules']);
+    if (empty($modules_student_is_on)) {
+      // Student is not enrolled on the paper's modules.
+      $div_class = 'uline ineligible';
+      $eligible = false;
+    } else {
+      // Student is enrolled on at least one of the paper's modules.
+      $div_class = 'uline';
+      $eligible = true;
+    }
+
     if ($individual['title'] == 'Mr') {
       $user_icon = 'user_male_48.png';
     } elseif ($individual['title'] == 'Dr') {
@@ -190,8 +213,12 @@ if (count($target_student) == 0) {
     } else {
       $user_icon = 'user_female_48.png';
     }
-    echo "<div class=\"uline\" style=\"background-image:url('../artwork/$user_icon')\" onclick=\"doReassign($individualID)\" id=\"$individualID\"><div class=\"name\">" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
-    echo implode(', ',$individual['modules']);
+    echo "<div class=\"$div_class\" style=\"background-image:url('../artwork/$user_icon')\" onclick=\"doReassign($individualID)\" id=\"$individualID\"><div class=\"name\">" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    if ($eligible) {
+      echo implode(', ', $modules_student_is_on);
+    } else {
+      echo $string['user_not_on_paper_modules'];
+    }
     echo "</div></div>";
   }
   echo "</div>\n";

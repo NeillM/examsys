@@ -24,9 +24,11 @@
 
 require '../include/staff_auth.inc';
 
+$emailtemplatedir = rogo_directory::get_directory('email_templates');
+$templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
 $message = '';
-if (file_exists("../email_templates/" . $userObject->get_user_ID() . ".txt")) {
-	$file = fopen("../email_templates/" . $userObject->get_user_ID() . ".txt",'r');
+if (file_exists($templatefile)) {
+	$file = fopen($templatefile,'r');
 	$from = fgets($file, 64000);
 	$ccaddress = fgets($file, 64000);
 	$bccaddress = fgets($file, 64000);

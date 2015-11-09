@@ -25,7 +25,7 @@
 */
 
 require_once 'CMAPI.if.php';
-require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class.php';
+require_once dirname(dirname(__DIR__)) . '/webServices/RestRequest.class.php';
 
 class CM_NLE implements iCMAPI {
   private $_mapping_level = self::LEVEL_SESSION;
@@ -37,9 +37,10 @@ class CM_NLE implements iCMAPI {
    * @return mixed Array of session and objective data in format required by Rogō
    */
   public function getObjectives($moduleID, $session) {
-    $req = new RestRequest("http://www.nle.nottingham.ac.uk/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$session");
-    $req->execute();
-    return $req->getResponseBody();
+    $configObject = Config::get_instance();
+    $objectives = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$session");
+    $objectives->execute();
+    return $objectives->getResponseBody();
   }
 
   /**

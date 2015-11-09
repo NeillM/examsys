@@ -41,7 +41,7 @@ function setUpArea(num, doorId, lang, image, config, answer, extra, colour, mode
 			this.qa_redraw_canvas;
 		}  
 		this.gen_img.onload = qa_gen_img_onload.bind(this);
- 		this.gen_img.src = ((mode == 'edit')?'../':'')+'../media/'+image;
+ 		this.gen_img.src = ((mode == 'edit')?'../':'')+'../getfile.php?type=media&filename='+image;
 
 		//---------- mode 
 		this.yoffset = 25; //ofset of top edge of the image

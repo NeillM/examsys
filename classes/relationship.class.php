@@ -23,9 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'exceptions.inc.php';
-
 class Relationship {
   private $id = -1;
   private $idMod;

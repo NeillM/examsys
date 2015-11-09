@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
-require_once '../classes/paperproperties.class.php';
 
 function get_special_needs($db) {
   $needs_array = array();
@@ -391,13 +390,15 @@ if ($user_data->num_rows == 0) {
 }
 
 $x = 0;
+$photodirectory = rogo_directory::get_directory('user_photo');
 while ($user_data->fetch()) {
   if ($userObject->has_role('SysAdmin')) {
     echo "<tr class=\"l\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2c','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
   } else {
     echo "<tr class=\"l\" id=\"$x\" onclick=\"selUser('$tmp_id',$x,'2b','" . $tmp_roles . "',event); return false;\" ondblclick=\"profile('$tmp_id'); return false;\">";
   }
-  if (file_exists($cfg_web_root . 'users/photos/' . $tmp_username . '.jpg')) {
+  $photoname = UserUtils::student_photo_exist($tmp_username);
+  if ($photoname) {
     echo '<td><img src="../artwork/photo.png" width="16" height="16" alt="Photo" /></td>';
   } else {
     echo '<td></td>';

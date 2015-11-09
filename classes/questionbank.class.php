@@ -23,10 +23,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once '../classes/question_status.class.php';
-require_once $cfg_web_root . 'classes/dateutils.class.php';
-
 class QuestionBank {
   
   private $db;
@@ -43,6 +39,7 @@ class QuestionBank {
     $this->idMod  = $idMod;
     $this->module_id = $moduleID;
     $this->notice = $notice;
+    $this->yearutils = new yearutils($this->db);
   }
   
   public function get_categories($type) {
@@ -197,7 +194,7 @@ class QuestionBank {
     } else {
       $ownerSQL = 'questions_modules.idMod =  ' . $this->idMod;
     }
-    
+
     switch ($type) {
       case 'all':
       case 'type':
@@ -232,7 +229,7 @@ class QuestionBank {
         . ' AND deleted IS NULL AND status != -1 GROUP BY keywordID';
         break;      
       case 'objective':
-        $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+        $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
         $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
         $all_years = implode("','", $all_years);
         
@@ -258,10 +255,9 @@ class QuestionBank {
   public function get_outcomes($ac_year = 'all', $vle_api_data = null) {
     $outcomes = array();
     $vle_api_cache = array();
-
     // Get the VLE API we're using currently
     if (is_null($vle_api_data)) {
-      $vle_api_data = MappingUtils::get_vle_api($this->idMod, date_utils::get_current_academic_year(), $vle_api_cache, $this->db);
+      $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
     }
 
     // Get years for which there are mappings for the current mapping source

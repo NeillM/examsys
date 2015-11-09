@@ -28,14 +28,6 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/lab_factory.class.php';
-require_once '../classes/lab.class.php';
-require_once '../classes/log_extra_time.class.php';
-require_once '../classes/log_lab_end_time.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/exceptions.inc.php';
 
 if ($_GET['ans_changed'] == '0') {
   echo $_POST['randomPageID'];
@@ -81,7 +73,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
 
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string, $mysqli);
+  check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli);
 
   // Check time security
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);
@@ -100,6 +92,9 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
 
   // Check for any metadata security restrictions
   check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
+
+  // Check if the student has clicked 'Finish'.
+  check_finished($propertyObj, $userObject, $string, $mysqli);
 
   $summative_exam_session_started = false;
 }

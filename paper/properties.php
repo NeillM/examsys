@@ -28,16 +28,7 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../include/load_config.php';
-require_once '../classes/schoolutils.class.php';
-require_once '../classes/searchutils.class.php';
-require_once '../classes/folderutils.class.php';
 require_once '../lang/' . $language . '/include/timezones.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/questionutils.class.php';
-require_once '../classes/generalutils.class.php';
-require_once '../classes/logger.class.php';
-require_once '../classes/paperproperties.class.php';
 
 // Marking options
 define('MARK_NO_ADJUSTMENT', '0');
@@ -581,7 +572,9 @@ if (isset($_POST['Submit'])) {
       $properties->set_rubric(clearMSOtags($_POST['rubric_text']));
     }
 
-    if (!isset($_POST['marking']) or $_POST['marking'] == '') {
+    if (!isset($_POST['marking']) and $properties->get_paper_type() == 4) {
+      // Do nothing, the marking method is locked.
+    } elseif (!isset($_POST['marking']) or $_POST['marking'] == '') {
       $properties->set_marking(MARK_NO_ADJUSTMENT);
     } elseif ($_POST['marking'] == MARK_STD_SET) {
       $properties->set_marking($_POST['std_set']);
@@ -606,11 +599,15 @@ if (isset($_POST['Submit'])) {
     } else {
       $properties->set_sound_demo(0);
     }
-
+    
+    $password = trim($_POST['password']);
     if (!$locked) {
-      $properties->set_password(trim($_POST['password']));
-      $properties->set_fullscreen($_POST['fullscreen']);
+        if ($password != $properties->get_decrypted_password()) {
+            $properties->set_password($password);
+        }
+        $properties->set_fullscreen($_POST['fullscreen']);
     }
+    
     $properties->set_bgcolor($_POST['bgcolor']);
     $properties->set_fgcolor($_POST['fgcolor']);
     $properties->set_themecolor($_POST['themecolor']);
@@ -1577,26 +1574,14 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n";
-		
-		if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {
-			echo "<option value=\"\">" . $string['na'] .  "</option>\n";		// N/A option.
-		}
-		
-    $stop_year = date("Y") + 3;
-    for ($year=2002; $year<$stop_year; $year++) {
-      $next_year = ($year - 2000) + 1;
-			if (strlen($next_year) == 1) $next_year = '0' . $next_year;
-      $value = $year . '/' . $next_year;
-      echo "<option value=\"" . $value . "\"";
-      if ($properties->get_calendar_year() == $value) echo 'selected';
-      echo ">";
-      echo $value . "</option>\n";
-    }
+    $yearutils = new yearutils($mysqli);
+    echo $yearutils->get_calendar_year_dropdown_options($properties->get_paper_type(), $properties->get_calendar_year(), $string);
+    echo "</select></td>";
 
     if ($properties->get_paper_type() == '4') {
-      echo "</select></td><td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\" /></td></tr>\n";
+      echo "<td></td><td><input type=\"hidden\" size=\"20\" name=\"password\" value=\"" . $properties->get_decrypted_password() . "\" /></td></tr>\n";
     } else {
-      echo "</select></td><td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_password() . "\"$disabled /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
+      echo "<td align=\"right\">" . $string['password'] . "</td><td><input type=\"text\" size=\"20\" name=\"password\" value=\"" . $properties->get_decrypted_password() . "\"$disabled /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
     }
 
     echo "<tr><td align=\"right\">" . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";

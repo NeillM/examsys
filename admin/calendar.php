@@ -36,7 +36,7 @@ if (isset($_GET['calyear'])) {
   $current_year = date("Y");
 }
 
-function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone, $userObject) {
+function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone, $userObject, $mysqli) {
   echo "<table id=\"month_grid\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">\n";
   foreach ($paper_details as $paper) {
     if ($paper['type'] == 'extra_date') {
@@ -94,6 +94,8 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
           echo ':' . $paper['start_minute'];
         }
         echo '&nbsp;' . $paper['am_pm'] . '</td>';
+        $properties = PaperProperties::get_paper_properties_by_id($paper['property_id'], $mysqli, $string);
+        $paper['password']  = $properties->get_decrypted_password();
         echo "<td class=\"p\"><div class=\"pd\"><a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showCallout(" . $paper['type'] . ", $cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "', '$metadata')\" onmouseout=\"hideCallout()\">" . $paper['paper_title'] . "</a></div></td></tr>";
         $cellID++;
       }
@@ -400,7 +402,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $extra = '';
   }
 ?>
-<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', 3, 2, $extra); ?></div>
+<div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', $extra); ?></div>
 </th>
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
@@ -635,7 +637,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
           }
           $papers = 0;
           
-					display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject);
+					display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
 
           if ($papers == 0) echo '&nbsp;';
           
@@ -657,7 +659,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 								echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
 							}
 							echo "</table>";              
-              display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject);
+              display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
             }
           }
           

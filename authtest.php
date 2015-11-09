@@ -26,15 +26,8 @@ if (!file_exists($root . 'config/config.inc.php')) {
   $notice->display_notice_and_exit($mysqli, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
 }
 
-require_once $cfg_web_root . 'classes/configobject.class.php';
-require_once $cfg_web_root . 'classes/lang.class.php';
 require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc'; // Include common language file that all scripts need
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
-require_once $cfg_web_root . 'classes/dbutils.class.php';
-require_once $cfg_web_root . 'classes/networkutils.class.php';
-require_once $cfg_web_root . 'classes/userobject.class.php';
-require_once $cfg_web_root . 'classes/authentication.class.php';
-
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_staff_user'), $configObject->get('cfg_db_staff_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 

@@ -36,7 +36,6 @@
 
 $cfg_web_root = $configObject->get('cfg_web_root');
 require_once 'outline_authentication.class.php';
-require_once $cfg_web_root . '/classes/lang.class.php';
 
 class Languageselection_auth extends outline_authentication {
 

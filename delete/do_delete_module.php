@@ -26,7 +26,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/moduleutils.class.php';
 
 $idMod = check_var('idMod', 'POST', true, false, true);
 

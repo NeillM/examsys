@@ -25,7 +25,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../classes/stateutils.class.php';
 
 $prefix = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'];
 $page = str_ireplace($prefix, '', $_REQUEST['page']);
@@ -35,5 +34,6 @@ $parts = explode('?', $page);
 $page = $parts[0];
 
 $userID = $userObject->get_user_ID();
+$stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $stateutil->setState($_REQUEST['state_name'], $_REQUEST['content'], $page);
 ?>

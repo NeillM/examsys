@@ -23,7 +23,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../classes/schoolutils.class.php';
 
 $school = '';
 $faculty = '';

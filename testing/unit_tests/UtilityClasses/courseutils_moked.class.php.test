@@ -1,8 +1,4 @@
 <?php
-
-  require_once "../classes/courseutils.class.php";
-  require_once "../classes/schoolutils.class.php";
-
 class CourseUtilsTests extends \Enhance\TestFixture
 {
     

@@ -74,26 +74,20 @@ function get_existing_years($db, $idMod) {
 <tr>
 <td align="left">
 <?php
-	$message = '';
-
-	// Get the current academic session
-	$session = date_utils::get_current_academic_year();
-	$session_parts = explode('/', $session);
-	
-	// Get a list of existing (source) years
-	$source_years = get_existing_years($mysqli, $idMod);
+    $message = '';
+    $yearutils = new yearutils($mysqli);
+    // Get the current academic session
+    $session = $yearutils->get_current_session();
+    $nextsession = $yearutils->get_next_session();
+    // Get a list of existing (source) years
+    $source_years = get_existing_years($mysqli, $idMod);
 
 	// Should never be a case where we don't have a source year but check anyway
 	if (count($source_years) > 0) {
-    $cur_year = date_utils::get_current_academic_year();
-		$dest_years = array(date_utils::get_current_academic_year(), date_utils::inc_academic_year($cur_year));
 
-		// Get a list of destination years. Selected year will be removed by JS
-		$start_year = intval(substr($session, 0, 4));
-		
-		if (is_numeric($start_year)) {
-
-		} else {
+		$dest_years = array($session, $nextsession);
+	
+		if (!is_numeric($session)) {
 			$message = $string['msg3'];
 		}
 	} else {

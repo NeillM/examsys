@@ -25,15 +25,13 @@
 */
 
 require_once 'CMAPI.if.php';
-require_once $configObject->get('cfg_web_root') . 'webServices/RestRequest.class.php';
+require_once dirname(dirname(__DIR__)) . '/webServices/RestRequest.class.php';
 
 class CM_UoNCM implements iCMAPI {
-  private $_root_url = 'http://curriculum.nottingham.ac.uk/%s/index.php/';
+  private $_root_url;
   private $_sess_year;
   private $_module_id;
   private $_mapping_level = self::LEVEL_SESSION;
-
-  private $_moodle_base_url = 'http://moodle.nottingham.ac.uk/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
 
   /**
    * Return objectives from the University of Nottingham Curriculum Mapping system
@@ -42,8 +40,9 @@ class CM_UoNCM implements iCMAPI {
    * @return mixed Array of session and objective data in format required by Rogō
    */
   public function getObjectives($moduleID, $session) {
+    $configObject = Config::get_instance();
     $this->_sess_year = strstr($session, '/', true);
-    $this->_root_url = sprintf($this->_root_url, $this->_sess_year);
+    $this->_root_url = $configObject->get('cfg_cmap_url') . "/" . $this->_sess_year . "/index.php/";
     $this->_module_id = $moduleID;
     $req = new RestRequest($this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attribute&attrib=code&output=module_session_obs");
     $req->execute();

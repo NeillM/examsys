@@ -25,9 +25,8 @@
  * @package
  */
 
-require_once $configObject->get('cfg_web_root') . 'LTI/ims-lti/UoN_LTI.php';
+require_once dirname(dirname(__DIR__)) . '/LTI/ims-lti/UoN_LTI.php';
 require_once 'outline_authentication.class.php';
-require_once $configObject->get('cfg_web_root') . 'classes/lti_integration.class.php';
 
 class ltilogin_auth extends outline_authentication {
 

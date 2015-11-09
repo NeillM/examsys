@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/question_types.inc';
 require_once '../include/errors.inc';
-require_once '../classes/paperproperties.class.php';
 
 ini_set("auto_detect_line_endings", true);
 

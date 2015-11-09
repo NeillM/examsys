@@ -33,11 +33,6 @@
  */
 
 require_once $cfg_web_root . 'webServices/RestRequest.class.php';
-require_once $cfg_web_root . 'classes/CMFactory.class.php';
-require_once $cfg_web_root . 'classes/dateutils.class.php';
-require_once $cfg_web_root . 'classes/mappingutils.class.php';
-require_once $cfg_web_root . 'classes/moduleutils.class.php';
-require_once $cfg_web_root . 'classes/relationship.class.php';
 
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;

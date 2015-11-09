@@ -32,12 +32,6 @@ require_once '../include/mapping.inc';
 require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.inc';
 require_once '../include/media.inc';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/logmetadata.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/logger.class.php';
-require_once '../classes/question_status.class.php';
-require_once '../classes/exam_announcements.class.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/paper/finish.php';
@@ -90,7 +84,7 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 if ($userObject->has_role('Student')) {
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_password(), $string, $mysqli, true);
+  check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli, true);
   
   $display_correct_answer     = 1;
   $display_question_mark      = 1;

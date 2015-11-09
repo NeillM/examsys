@@ -36,13 +36,7 @@ if ($path == '') {
   $path = $_SERVER['DOCUMENT_ROOT'];
 }
 require_once $path . '/include/load_config.php';
-require_once $path . '/classes/dateutils.class.php';
-require_once $path . '/classes/dbutils.class.php';
-require_once $path . '/classes/userutils.class.php';
-require_once $path . '/classes/userobject.class.php';
 require_once $path . '/include/auth.inc';
-require_once $path . '/classes/smsutils.class.php';
-require_once $path . '/classes/lang.class.php';
 require_once $path . '/include/custom_error_handler.inc';
 
 if ($configObject->get('cfg_sms_api') == '') {
@@ -63,8 +57,10 @@ $module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms, academic_year
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms, $academic_year_start);
+$yearutils = new yearutils($mysqli);
 while ($module_data->fetch()) {
-  $session = date_utils::get_current_academic_year($academic_year_start);
+
+  $session = $yearutils->get_current_session($academic_year_start);
 
   $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
 }

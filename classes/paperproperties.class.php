@@ -22,10 +22,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-require_once 'logger.class.php';
-require_once 'questionutils.class.php';
-
 class PaperProperties {
 
   private $db;
@@ -86,9 +82,10 @@ class PaperProperties {
   private $question_fb_released;
   private $changes;
   private $recache_marks;
-	private $modules;
-	private $questions;
-	private $unmarked_enhancedcalc;
+  private $modules;
+  private $questions;
+  private $unmarked_enhancedcalc;
+  private $unmarked_student_enhancedcalc;
 
   private $_date_timezone = null;
 
@@ -1534,23 +1531,73 @@ class PaperProperties {
   }
 
   /**
+   * Return the encrypted password for a paper.
+   * 
    * @return string $password
    */
   public function get_password() {
     return $this->password;
   }
-
+  
   /**
+   * Return the password for a paper.
+   * 
+   * @return string $password
+   */
+  public function get_decrypted_password() {
+    $paperID = $this->get_property_id();
+    if ($this->password != '') {
+        $password = $this->decrypt_password($this->password);
+        // Strip of the paper id before returning the password.
+        return ltrim($password, $paperID);
+    } else {
+        return $this->password;
+    }
+  }
+  
+  /**
+   * Save password to database.
+   * 
    * @param string $password
+   * @param bool $encypt if true we encypt the password
    */
   public function set_password($password) {
+    $paperID = $this->get_property_id();
     $old_password = $this->password;
 
-    $this->password = $password;
-
+    if ($password != '') {
+        $this->password = $this->encrypt_password($paperID . $password);
+    } else {
+        $this->password = '';
+    }
+    
     if ($old_password != $password) {
       $this->changes[] = array('old'=>$old_password, 'new'=>$password, 'part'=>'password');
     }
+  }
+  
+  /**
+   * Encrypt a password that can be de-crypted.
+   * 
+   * @param $string $password 
+   * @return $string encrypted passsword
+   */
+  public function encrypt_password($password) {
+    $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+    $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), $password, MCRYPT_MODE_ECB, $iv);
+    return trim(base64_encode($enc));
+  }
+  
+  /**
+   * Decrypt the password.
+   * 
+   * @param string $enc_password encrypted passsword
+   * @return string decrypted passsword
+   */
+  public function decrypt_password($encpassword) {
+    $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+    $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), base64_decode($encpassword), MCRYPT_MODE_ECB, $iv);
+    return trim($dec);
   }
 
   /**
@@ -1627,26 +1674,56 @@ class PaperProperties {
     return $this->_date_timezone;
   }
 
-	public function unmarked_enhancedcalc() {
-	  if ($this->unmarked_enhancedcalc === null) {
-			$this->load_unmarked_enhancedcalc();
-		}
+  /**
+   * Check state of unmarked calculation questions
+   * @param int $studentsonly only check students in cohort
+   * @return bool are there unmarked questions?
+   */
+    public function unmarked_enhancedcalc($studentsonly = 0) {
+        if ($studentsonly) {
+            $check = $this->unmarked_student_enhancedcalc;
+        } else {
+            $check = $this->unmarked_enhancedcalc;
+        }
 
-		return $this->unmarked_enhancedcalc;
-	}
+        if ($check === null) {
+            $this->load_unmarked_enhancedcalc($studentsonly);
+        }
 
-	private function load_unmarked_enhancedcalc() {
+        if ($studentsonly) {
+            return $this->unmarked_student_enhancedcalc;
+        } else {
+            return $this->unmarked_enhancedcalc;
+        }
+    }
+
+    /**
+     * Check if calculation answers have been marked
+     * @param int $studentsonly only check students in cohort
+     */
+    private function load_unmarked_enhancedcalc($studentsonly = 0) {
+        if ($studentsonly) {
+            $this->unmarked_student_enhancedcalc = false;
+        } else {
             $this->unmarked_enhancedcalc = false;
+        }
+        
+        if (!isset($this->questions)) {
+            $this->load_questions();
+        }
 
-            if (!isset($this->questions)) {
-                $this->load_questions();
-            }
+        $enhancedcalc_ids = array();
 
-            $enhancedcalc_ids = array();
+        $paperID = $this->get_property_id();
+        $paperType = $this->get_paper_type();
+        $excluded = new Exclusion($paperID, $this->db);
+        $excluded->load();
 
-            if (is_array($this->questions) and count($this->questions) > 0) {
-                // Calculation questions may be hidden in random blocks of keyword baed questions so we have to check all possibilities.
-                foreach ($this->questions as $question) {
+        if (is_array($this->questions) and count($this->questions) > 0) {
+            // Calculation questions may be hidden in random blocks of keyword baed questions so we have to check all possibilities.
+            foreach ($this->questions as $question) {
+                // Skip excluded questions.
+                if (!$excluded->is_question_excluded($question['q_id'])) {
                     switch ($question['type']) {
                         case 'random':
                             foreach (QuestionUtils::get_random_calc_question($question['q_id'], $this->db) as $possible) {
@@ -1666,46 +1743,61 @@ class PaperProperties {
                     }
                 }
             }
+        }
 
-            if (count($enhancedcalc_ids) > 0) {
-                $paperID = $this->get_property_id();
+        // Find unmarked questions.
+        if (count($enhancedcalc_ids) > 0) {
 
-                $result = $this->db->prepare("SELECT log2.id FROM log2, log_metadata WHERE log2.metadataID = log_metadata.id "
-                  . "AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL LIMIT 1");
-                $result->bind_param('i', $paperID);
-                $result->execute();
-                $result->store_result();
-                $result->bind_result($id);
-                if ($result->num_rows > 0) {
+            // Some error states are fatal we should skip over these to avoid an infitie loop trying to mark them,
+            // Affected questions will be flagged to the staff member marking.
+            $skiperrorstates = array(-5);
+
+            if ($studentsonly) {
+                $rolesql = "AND (users.roles = 'Student' OR users.roles = 'graduate')";
+            } else {
+                $rolesql = '';
+            }
+            $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
+              . "AND users.id = log_metadata.userID AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL and errorstate not in ("
+              . implode(',', $skiperrorstates) . ") $rolesql LIMIT 1");
+            $result->bind_param('i', $paperID);
+            $result->execute();
+            $result->store_result();
+            $result->bind_result($id);
+            if ($result->num_rows > 0) {
+                if ($studentsonly) {
+                    $this->unmarked_student_enhancedcalc = true;
+                } else {
                     $this->unmarked_enhancedcalc = true;
                 }
-                $result->close();
             }
-	}
+            $result->close();
+        }
+    }
 
-	public function q_type_exist($type) {
-		$paperID = $this->get_property_id();
+    public function q_type_exist($type) {
+            $paperID = $this->get_property_id();
 
-		$result = $this->db->prepare("SELECT COUNT(q_id) AS q_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = ?");
-		$result->bind_param('is', $paperID, $type);
-		$result->execute();
-		$result->bind_result($q_no);
-		$result->fetch();
-		$result->close();
+            $result = $this->db->prepare("SELECT COUNT(q_id) AS q_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = ?");
+            $result->bind_param('is', $paperID, $type);
+            $result->execute();
+            $result->bind_result($q_no);
+            $result->fetch();
+            $result->close();
 
-		if ($q_no > 0) {
-		  return true;
-		} else {
-		  return false;
-		}
-	}
+            if ($q_no > 0) {
+              return true;
+            } else {
+              return false;
+            }
+    }
 
-	public function is_active() {
-	  if (date('U') > $this->start_date and date('U') < $this->end_date) {
-		  return true;
-		} else {
-		  return false;
-		}
-	}
+    public function is_active() {
+      if (date('U') > $this->start_date and date('U') < $this->end_date) {
+              return true;
+            } else {
+              return false;
+            }
+    }
 
 }

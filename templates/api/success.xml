@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<{{ name }}>
+    {% for key,val in response %}
+    <{{ val.node }} id="{{val.nodeid}}">
+		<id>{{val.id}}</id>
+        <status>{{ val.status }}</status>
+		{% for key,error in val.error %}
+		<error id="{{key}}">{{error}}</error>
+		{% endfor %}
+    </{{ val.node }}>
+    {% endfor %}
+<{{ name }}/>

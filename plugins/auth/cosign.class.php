@@ -26,7 +26,7 @@
  */
 
 require_once 'outline_authentication.class.php';
-require_once $configObject->get('cfg_web_root') . 'cosign/cosign.class.php';
+require_once dirname(dirname(__DIR__)) . '/cosign/cosign.class.php';
 
 class cosign_auth extends outline_authentication {
 

@@ -24,7 +24,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/std_set_shared_functions.inc';
-require_once '../classes/paperproperties.class.php';
 require_once '../include/errors.inc';
 
 $paperID = check_var('paperID', 'GET', true, false, true);

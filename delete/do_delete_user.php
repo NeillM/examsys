@@ -26,7 +26,6 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-require_once '../classes/userutils.class.php';
 
 $userID = check_var('id', 'POST', true, false, true);
 

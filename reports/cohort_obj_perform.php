@@ -26,10 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/mapping.inc';
 require '../include/feedback.inc';
 require_once '../include/sort.inc';
-require_once '../classes/folderutils.class.php';
 require_once '../include/errors.inc';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/paperutils.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $startdate = check_var('startdate', 'GET', true, false, true);
@@ -178,7 +175,11 @@ $enddate = check_var('enddate', 'GET', true, false, true);
         $tmp_identifier = '';
       }
       if (isset($obj_data['session']['specificguide'])) {
-        $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a target=\"_blank\" href=\"http://www.nle.nottingham.ac.uk/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
+        $session_string = "&nbsp;&nbsp;<a target=\"_blank\" href=\"" . $configObject->get('cfg_nle_url') .
+        "/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" . $obj_data['session']['specificguide'] .
+        "&mk=" . $tmp_identifier . "\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a target=\"_blank\" href=\"" .
+        $configObject->get('cfg_nle_url') . "/displayMediGuide.php?module=" . $module . "&session=" . $session . "&specificguide=" .
+        $obj_data['session']['specificguide'] . "&mk=" . $tmp_identifier . "\">" . $obj_data['session']['sessiontitle'] . "</a>";
       }
       echo "<tr><td><img src=\"$img_src\" alt=\"" . $obj_data['mark_sum'] . ' out of ' . $obj_data['totalpos_sum'] . " objectives acquired\" width=\"16\" height=\"16\" /></td><td>" . floor(($obj_data['mark_sum']/$obj_data['totalpos_sum'])*100) . "%</td><td>" . $obj_data['content'] . " $session_string</td></tr>\n";
     }

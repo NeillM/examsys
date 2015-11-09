@@ -23,10 +23,6 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-require_once '../classes/userutils.class.php';
-require_once '../classes/moduleutils.class.php';
-
 ini_set("auto_detect_line_endings", true);
 
 $header = array();

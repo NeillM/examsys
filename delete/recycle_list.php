@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/sort.inc';
-require '../classes/recyclebin.class.php';
 
 function dateDisplay($tmp_date) {
   return substr($tmp_date,6,2) . '/' . substr($tmp_date,4,2) . '/' . substr($tmp_date,0,4) . ' ' . substr($tmp_date,8,2) . ':' . substr($tmp_date,10,2);
@@ -181,6 +180,8 @@ for ($item=0; $item<$list_size; $item++) {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'p" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/" . $paper_icons[$temp_type] . "\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'folder') {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'f" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/yellow_folder.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['folder'] . "</nobr></td></tr>\n";
+  } elseif ($recycle_bin[$item]['type'] == 'academic_year') {
+    echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'a" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/add_sessions_16.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['academicsession'] . "</nobr></td></tr>\n";
   } else {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'q" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/question_item_icon.gif\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
   }

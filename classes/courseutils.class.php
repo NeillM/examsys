@@ -35,7 +35,7 @@ Class CourseUtils {
    * @param string $description a title for the course e.g. Neuroscience BSc
    * @param object $db database connection
    *
-   * @return bool depending on insert success
+   * @return integer new course id
    */
   static function add_course($schoolid, $name, $description, $db) {
 
@@ -43,7 +43,7 @@ Class CourseUtils {
       return false;
     }
     if (CourseUtils::course_exists($name, $db) === true) {
-      return true;
+      return false;
     }
 
     if (!is_int($schoolid)) {
@@ -54,7 +54,7 @@ Class CourseUtils {
       }
     }
 
-    $result = $db->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
+    $result = $db->prepare("INSERT INTO courses (name, description, schoolid) VALUES (?, ?, ?)");
     $result->bind_param('ssi', $name, $description, $schoolid);
     $result->execute();
     $result->close();
@@ -63,7 +63,7 @@ Class CourseUtils {
       return false;
     }
 
-    return true;
+    return $db->insert_id;
   }
 
   /**
@@ -81,6 +81,26 @@ Class CourseUtils {
     
     $result = $db->prepare("DELETE FROM courses WHERE name = ? AND deleted IS NULL LIMIT 1");
     $result->bind_param('s', $name);
+    $result->execute();
+    $result->close();
+
+    if ($db->errno != 0) {
+      return false;
+    }
+
+    return true;
+  }
+  
+  /**
+   * Deletes an existing course.
+   * @param integer $id 
+   * @param object $db database connection
+   *
+   * @return bool depending on  success
+   */
+  static function delete_course_by_id($id, $db) {
+    $result = $db->prepare("UPDATE courses SET deleted = NOW() where id = ?");
+    $result->bind_param('i', $id);
     $result->execute();
     $result->close();
 
@@ -149,6 +169,96 @@ Class CourseUtils {
     return $details;
   }
   
+  /**
+   * Get course details
+   * @param integer $id 
+   * @param mysqli $db 
+   * @return array details
+   */
+  static function get_course_details_by_id($id, $db) {
+    $result = $db->prepare("SELECT name, description, deleted, schoolid FROM courses WHERE id = ? LIMIT 1");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($name, $description, $deleted, $schoolid);
+    if ($result->num_rows == 0) {
+      $details = false;
+    } else {
+      $result->fetch();
+      $details = array('name'=>$name, 'description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid);
+    }
+    $result->close();
+    
+    return $details;
+  }
+ 
+ /**
+  * Get the number of users on a course.
+  * @param string $name - name of the course
+  * @param mysqli $db 
+  * @return  
+  */
+  static function count_users_on_course($name, $db) {
+    $result = $db->prepare("SELECT count(*) FROM users WHERE grade = ?");
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->bind_result($count);
+    $result->fetch();
+    $result->close();
+    return $count;
+  }
+  
+  /**
+   * Update new course.
+   *
+   * @param integer $id Course id.
+   * @param integer $schoolid ID of the school the course belongs to
+   * @param string $name code of the course e.g. B140
+   * @param string $description a title for the course e.g. Neuroscience BSc
+   * @param mysqli $db
+   * 
+   * @return bool success response
+   */
+  static function update_course($id, $schoolid, $name, $description, $db) {
+    // Check if name already in use.
+    $courseid = CourseUtils::get_course_id($name, $db);
+    if ($courseid !== false and $courseid != $id) {
+      return false;
+    }
+    $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ? WHERE id = ?");
+    $result->bind_param('ssii', $name, $description, $schoolid, $id);
+    $result->execute();
+    $result->close();
+
+    if ($db->errno != 0) {
+        return false;
+    }
+
+    return true;
+  }
+ 
+  /**
+   * Get the course id if it exists
+   *
+   * @param string $name name of the course to check
+   * @param object $db database connection
+   *
+   * @return int|bool id of course or false
+  */
+  static function get_course_id($name, $db) {
+    $result = $db->prepare("SELECT id FROM courses WHERE name = ? AND deleted IS NULL");
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $result->close();
+      return false;
+    }
+    $result->close();
+    return $id;
+  }
 }
 
 ?>

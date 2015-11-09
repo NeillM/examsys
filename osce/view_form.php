@@ -27,8 +27,6 @@
 require '../include/staff_student_auth.inc';
 require '../include/demo_replace.inc';
 require './osce.inc';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/killer_question.class.php';
 
 if ($userObject->has_role('Demo')) $demo = true;
 
@@ -96,12 +94,14 @@ $marking      = $propertyObj->get_marking();
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
 $demo = true;
-  if (file_exists('../users/photos/' . $original_username . '.jpg')) {
-    $photo_size = getimagesize($cfg_web_root . 'users/photos/' . $username . '.jpg');
+$photodirectory = rogo_directory::get_directory('user_photo');
+$photoname = UserUtils::student_photo_exist($username);
+  if ($photoname) {
+    $photo_size = getimagesize($photodirectory->fullpath($photoname));
     if (isset($demo) and $demo == true) {
       echo '<td class="photo"><img src="../users/pixel_photo.php?username=' . $username . '" ' . $photo_size[3] . ' alt="Photo" /></td>';
     } else {
-      echo '<td style="width:180px"><img src="../users/photos/' . $original_username . '.jpg" ' . $photo_size[3] . ' alt="Photo" /></td>';
+      echo '<td style="width:180px"><img src="' . $photodirectory->url($photoname) . '" ' . $photo_size[3] . ' alt="Photo" /></td>';
     }
   } else {
     echo '<td></td>';
@@ -199,6 +199,9 @@ $demo = true;
     case '7':
       $labels = array('Fail', 'Pass');
       $colors = array('#D99694', '#C2D69B');
+      break;
+    default:
+      $labels = array();
       break;
   }
 

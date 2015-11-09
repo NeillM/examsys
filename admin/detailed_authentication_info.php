@@ -24,8 +24,6 @@
 
 require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
-require_once '../classes/networkutils.class.php';
-require_once '../classes/dateutils.class.php';
 
 ?>
 <!DOCTYPE html>

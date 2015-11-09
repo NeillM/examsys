@@ -23,7 +23,6 @@
 */
 
 require '../../include/staff_student_auth.inc';
-require_once '../../classes/helputils.class.php';
 
 if (isset($_GET['id'])) {
   $id = $_GET['id'];

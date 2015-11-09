@@ -48,6 +48,25 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <?php
   $qIDs = substr($_GET['q_id'], 1);
 
+  // We need to check if the question is in a random block or a keyword block.
+  // If so we should add those ids to qIDs to be search un the query below.
+  $questions = explode(',', $qIDs);
+  $questionutils = new QuestionUtils();
+  foreach ($questions as $qid) {
+    $random = $questionutils->is_in_random_block($qid, $mysqli);
+    if (sizeof($random) > 0) {
+        $qIDs = $qIDs . ", " . implode(',', $random);
+    }
+  }
+
+  foreach ($questions as $qid) {
+    $keyword = $questionutils->is_in_keyword_block($qid, $mysqli);
+    if (sizeof($keyword) > 0) {
+        $qIDs = $qIDs . ", " . implode(',', $keyword);
+    }
+  }
+
+  // Search for question usage.
   $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper = properties.property_id AND properties.deleted IS NULL AND question IN ($qIDs)");
   $result->execute();  
   $result->store_result();

@@ -29,11 +29,6 @@ require_once '../include/errors.inc';
 require_once '../include/sort.inc';
 require_once './osce.inc';
 
-require_once '../classes/class_totals.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/results_cache.class.php';
-
 $demo = is_demo($userObject);
 
 $paperID   = check_var('paperID', 'GET', true, false, true);
@@ -91,7 +86,7 @@ $user_results = array_csort($user_results, $sortby, $ordering);
 
 $completed_no = 0;
 $total_score = 0;
-$classifications = array(''=>'', 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 'ERROR'=>0);
+$classifications = array(''=>'', 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 'ERROR'=>0, 'pass' => 0, 'fail' => 0);
 
 for ($i=0; $i<$user_no; $i++) {
   if ($user_results[$i]['metadataID'] != '') {   // No attendance

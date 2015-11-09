@@ -335,6 +335,23 @@ Class UpdaterUtils {
   }
 
   /**
+   * Check if update should be run againt installed version.
+   * 
+   * @param string $version 
+   * @return bool true if update should be run  
+   */
+  public function check_version($version) {
+    $configObject = Config::get_instance();
+    $cfg_version = $configObject->get('rogo_version');
+    $code_version = $configObject->getxml('version');
+    
+    if ($cfg_version < $version and $code_version >= $version) {
+        return true;
+    }
+    return false;
+  }
+
+  /**
    * Adds a new line to /config/config.inc.php if not already there.
    *
    * @param string $string 				- Language translations.

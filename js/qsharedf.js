@@ -2,16 +2,27 @@ var rq = new Array(); //array of questions/canvases
 
 //main startup function
 function setUpQuestion(num, canvasId, lang, image, config, answer, extra, colour, type, mode) {
-//preload cursors
-$.get('../js/images/cur_erase.cur', function() { }); 
-$.get('../js/images/cur_cross.cur', function() { }); 
+  var jspathprefix = '../';
+  if (typeof(mode) == 'undefined') {
+    mode = 'answer';
+  } else if (mode == '1') {
+    mode = 'answer';
+  } else if (mode == '2') {
+    mode = 'edit';
+    jspathprefix = '../../';
+  } else if (mode == '3') {
+    mode = 'script';
+  } else if (mode == '4') {
+    mode = 'analysis';
+  } else if (mode == '5') {
+    mode = 'correction';
+  } else if (mode == 'edit') {
+    jspathprefix = '../../';
+  }
 
-	if (typeof(mode) == 'undefined') mode = 'answer';
-	if (mode == '1') mode = 'answer';
-	if (mode == '2') mode = 'edit';
-	if (mode == '3') mode = 'script';
-	if (mode == '4') mode = 'analysis';
-	if (mode == '5') mode = 'correction';
+  //preload cursors
+  $.get(jspathprefix + 'js/images/cur_erase.cur', function() { });
+  $.get(jspathprefix + 'js/images/cur_cross.cur', function() { });
 	
   if (type == 'labelling') {
 		rq[num] = new rql(num);
@@ -149,12 +160,14 @@ function fillWrappedText(ctx,tt,tx,ty) {
 
 
 function findPos(obj) {
+  var loc_lft = 0; 
+  var loc_top = 0;  
   if (obj.offsetParent) {
 	do {
 		loc_lft += obj.offsetLeft;
 		loc_top += obj.offsetTop;
 	} while (obj = obj.offsetParent);
-	return [loc_lft,loc_top];
+	return {left:loc_lft,top:loc_top};
 	}
 }
 

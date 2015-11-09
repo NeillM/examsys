@@ -24,9 +24,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-$configObject = Config::get_instance();
-
 class Lookup extends RogoStaticSingleton {
   public static $inst = NULL;
   public static $class_name = 'Lookup';

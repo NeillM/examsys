@@ -124,52 +124,52 @@ require '../include/sysadmin_auth.inc';
     $summative_year--;
   }
 
-	$menudata = array();
-	$menudata['bug']						= array('https://rogo-eassessment.atlassian.net', 'bug.png');
-	$menudata['calendar']							= array('calendar.php#week' . date("W"), 'calendar_icon.png');
-	$menudata['clearguestaccounts']		= array('clear_guest_users.php', 'clear_guest_users.png');
-	$menudata['clearoldlogs']					= array('clear_old_logs.php', 'clear_logs.png');
-	$menudata['clearorphanmedia']			= array('orphan_media.php', 'remove_orphan_icon.png');
-	$menudata['cleartraining']				= array('clear_training_module.php', 'training.png');
-	$menudata['computerlabs']					= array('list_labs.php', 'computer_lab_48.png');
-	$menudata['courses']							= array('list_courses.php', 'courses_icon.png');
-	$menudata['deniedlogwarnings']		= array('view_access_denied.php', 'access_denied.png');
-	$menudata['ebelgridtemplates']		= array('list_ebel_grids.php', 'grid_48.png');
-	$menudata['faculties']						= array('list_faculties.php', 'faculty.png');
-	$menudata['imslti']								= array('../LTI/lti_keys_list.php', 'lti_key_48.png');
-	$menudata['modules']							= array('list_modules.php', 'modules_icon.png');
-	$menudata['announcments']					= array('list_announcements.php', 'news_48.png');
-	$menudata['optimizetables']				= array('optimize_tables.php', 'optimize_tables_icon.png');
-	$menudata['phpinfo']              = array('phpinfo.php', 'php.png');
-	$menudata['questionstatuses']			= array('list_statuses.php', 'status_icon.png');
-	$menudata['savefailattempts']			= array('list_save_fails.php', 'save_fail_48.png');
-	$menudata['schools']							= array('list_schools.php', 'school_icon.png');
-	$menudata['statistics']		= array('../statistics/index.php', 'statistics.png');
+  $menudata = array();
+  $menudata['academicsessions']     = array('academic_sessions.php', 'sessions.png');
+  $menudata['authentication']       = array('./oauth/list_oauth.php', 'auth.png');
+  $menudata['bug']                  = array('https://rogo-eassessment.atlassian.net', 'bug.png');
+  $menudata['calendar']             = array('calendar.php#week' . date("W"), 'calendar_icon.png');
+  $menudata['clearguestaccounts']   = array('clear_guest_users.php', 'clear_guest_users.png');
+  $menudata['clearoldlogs']         = array('clear_old_logs.php', 'clear_logs.png');
+  $menudata['clearorphanmedia']     = array('orphan_media.php', 'remove_orphan_icon.png');
+  $menudata['cleartraining']        = array('clear_training_module.php', 'training.png');
+  $menudata['computerlabs']         = array('list_labs.php', 'computer_lab_48.png');
+  $menudata['courses']              = array('list_courses.php', 'courses_icon.png');
+  $menudata['deniedlogwarnings']    = array('view_access_denied.php', 'access_denied.png');
+  $menudata['ebelgridtemplates']    = array('list_ebel_grids.php', 'grid_48.png');
+  $menudata['faculties']            = array('list_faculties.php', 'faculty.png');
+  $menudata['imslti']               = array('../LTI/lti_keys_list.php', 'lti_key_48.png');
+  $menudata['modules']              = array('list_modules.php', 'modules_icon.png');
+  $menudata['announcments']         = array('list_announcements.php', 'news_48.png');
+  $menudata['optimizetables']       = array('optimize_tables.php', 'optimize_tables_icon.png');
+  $menudata['phpinfo']              = array('phpinfo.php', 'php.png');
+  $menudata['questionstatuses']     = array('list_statuses.php', 'status_icon.png');
+  $menudata['savefailattempts']     = array('list_save_fails.php', 'save_fail_48.png');
+  $menudata['schools']              = array('list_schools.php', 'school_icon.png');
+  $menudata['statistics']           = array('../statistics/index.php', 'statistics.png');
   if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
-		$menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
-	}
-	$menudata['systemerrors']					= array('sys_error_list.php', 'system_errors.png');
-	$menudata['systeminformation']		= array('system_info.php', 'information.png');
-	$menudata['testing']							= array('../testing/', 'crash_test.png');
-	$menudata['usermanagement']				= array('../users/search.php', 'user_accounts_icon.png');
+        $menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
+  }
+  $menudata['systemerrors']         = array('sys_error_list.php', 'system_errors.png');
+  $menudata['systeminformation']    = array('system_info.php', 'information.png');
+  $menudata['testing']              = array('../testing/', 'crash_test.png');
+  $menudata['usermanagement']       = array('../users/search.php', 'user_accounts_icon.png');
 
-	
-	if ($configObject->get('cfg_setting_icons_order')) {
-		foreach($configObject->get('cfg_setting_icons_order') as $iconkey) {
-			if (($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;
-			$parts = explode('.php', $menudata[$iconkey][0]);
-			echo '<a class="blacklink" href="' . $menudata[$iconkey][0] . '" id="' . $parts[0] . '">';
-			echo '<div class="container"><img src="../artwork/' . $menudata[$iconkey][1] . '" alt="" class="icon" /><br />' . $string[$iconkey] . '</div></a>';
-		}
-	}
-	else {
-		foreach($menudata as $menukey => $menuitem) {
-			$parts = explode('.php', $menuitem[0]);
-			echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
-			echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
-		}
-	}
-	
+  if ($configObject->get('cfg_setting_icons_order')) {
+    foreach($configObject->get('cfg_setting_icons_order') as $iconkey) {
+        if (($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;
+        $parts = explode('.php', $menudata[$iconkey][0]);
+        echo '<a class="blacklink" href="' . $menudata[$iconkey][0] . '" id="' . $parts[0] . '">';
+        echo '<div class="container"><img src="../artwork/' . $menudata[$iconkey][1] . '" alt="" class="icon" /><br />' . $string[$iconkey] . '</div></a>';
+    }
+  }
+  else {
+    foreach($menudata as $menukey => $menuitem) {
+        $parts = explode('.php', $menuitem[0]);
+        echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
+        echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
+    }
+  }
 
 ?>
 </div>

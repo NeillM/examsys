@@ -24,8 +24,6 @@
  * @package
  */
 
-require_once $configObject->get('cfg_web_root') . '/classes/dateutils.class.php';
-
 Class UON_SATURN extends SmsUtils {
   private $enrolement_no;
   private $deletion_no;
@@ -72,14 +70,18 @@ Class UON_SATURN extends SmsUtils {
     $users = array();
 
     // Calculate what the current academic session is.
-    $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : date_utils::get_current_academic_year();
-    $session_parts = explode('/', $session);
+    $yearutils = new yearutils($mysqli);
+    $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
     $replaced_module = str_replace('_UNMC', '', $moduleID);
     $replaced_module = str_replace('_UNNC', '', $replaced_module);
 
+    // If session does not exist we can quit now.
+    if(!$yearutils->check_calendar_year($session)) {
+        return false;
+    }
 
     if ($this->url !== '') {
-      $returned_data = @file_get_contents($this->url . "&code=$replaced_module&year=" . $session_parts[0]);
+      $returned_data = @file_get_contents($this->url . "&code=$replaced_module&year=" . $session);
     } else {
       $returned_data = false;
     }
@@ -159,11 +161,19 @@ Class UON_SATURN extends SmsUtils {
   }
 
   function getStudentSources() {
-    return array('&lt;No lookup&gt;' => '', 'UK' => 'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=uk', 'Malaysia' => 'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=malaysia', 'China' => 'http://saturn-exports.nottingham.ac.uk/touchstonestudent.ashx?campus=china');
+    $configObject = Config::get_instance();
+    return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get('cfg_sms_url') .
+    '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get('cfg_sms_url') .
+    '/touchstonestudent.ashx?campus=malaysia', 'China' => $configObject->get('cfg_sms_url') .
+    '/touchstonestudent.ashx?campus=china');
   }
 
   function getModuleSources() {
-    return array('UK' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=uk', 'Malaysia' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia', 'China' => 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china');
+    $configObject = Config::get_instance();
+    return array('UK' => $configObject->get('cfg_sms_url') .
+    '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get('cfg_sms_url') .
+    '/touchstone.ashx?campus=malaysia', 'China' => $configObject->get('cfg_sms_url') .
+    '/touchstone.ashx?campus=china');
   }
 
 
@@ -191,15 +201,17 @@ Class UON_SATURN extends SmsUtils {
 
   function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET', $demomode = false) {
 
+    $configObject = Config::get_instance();
+    
     // run module enrolement for select code
     if ($mysqli == 'NOTSET') {
       global $mysqli;
     }
 
+    $yearutils = new yearutils($mysqli);
     if ($session == 'NOTSET') {
-      $session = date_utils::get_current_academic_year();
+        $session = $yearutils->get_current_session();
     }
-    $session_parts = explode('/', $session);
 
     $enrolements = 0;
     $deletions = 0;
@@ -238,7 +250,7 @@ Class UON_SATURN extends SmsUtils {
     $c_u = $current_users;
 
     // Look up SMS
-    $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session_parts[0]);
+    $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session);
     $xml = false;
     if ($returned_data !== false) {
       $xml = new SimpleXMLElement($returned_data);
@@ -413,9 +425,9 @@ Class UON_SATURN extends SmsUtils {
     }
     $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
-      if ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=malaysia') {
+      if ($sms_api == $configObject->get('cfg_sms_url') . '/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
-      } elseif ($sms_api == 'http://saturn-exports.nottingham.ac.uk/touchstone.ashx?campus=china') {
+      } elseif ($sms_api == $configObject->get('cfg_sms_url') . '/touchstone.ashx?campus=china') {
         $import_type = 'SATURN China';
       } else {
         $import_type = 'SATURN UK';

@@ -29,10 +29,6 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/demo_replace.inc';
-require_once '../classes/schoolutils.class.php';
-require_once '../classes/networkutils.class.php';
-require_once '../classes/dateutils.class.php';
-require_once '../classes/userutils.class.php';
 
 $userID = check_var('userID', 'GET', true, false, true);
 $student_id = check_var('student_id', 'GET', false, false, true);
@@ -374,12 +370,13 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   }
   if (stripos($user_details['roles'], 'Student') !== false) {
     $student_photo = UserUtils::student_photo_exist($user_details['username']);
-    if ($student_photo !== false) {
-      $photo_size = getimagesize('photos/' .$student_photo);
+    $photodirectory = rogo_directory::get_directory('user_photo');
+    if ($student_photo) {
+      $photo_size = getimagesize($photodirectory->fullpath($student_photo));
       if (isset($demo) and $demo == true) {
         echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"./pixel_photo.php?username=" . $user_details['username'] . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       } else {
-        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"photos/" . $student_photo . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
+        echo "<tr><td rowspan=\"6\" style=\"vertical-align:top; width:" . $photo_size[2] . "px\"><img src=\"" . $photodirectory->url($student_photo) . "\" " . $photo_size[3] . " alt=\"Photo\" /></td>";
       }
     } else {
       echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"$generic_icon\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
@@ -679,13 +676,16 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   $results->execute();
   $results->store_result();
   $results->bind_result($idMod, $moduleid, $fullname, $calendar_year, $attempt);
+
+  $yearutils = new yearutils($mysqli);
+  $current_session = $yearutils->get_current_session();
   while ($results->fetch()) {
     $user_modules[$row_no]['moduleid'] = $moduleid;
     $user_modules[$row_no]['fullname'] = $fullname;
     $user_modules[$row_no]['calendar_year'] = $calendar_year;
     $user_modules[$row_no]['attempt'] = $attempt;
     $user_modules[$row_no]['idMod'] = $idMod;
-    if ($calendar_year == date_utils::get_current_academic_year()) {
+    if ($calendar_year == $current_session) {
       $current_year = true;
     }
     $row_no++;
@@ -693,9 +693,9 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   $results->close();
 
   if ($current_year == false) {
-    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . date_utils::get_current_academic_year();
+    echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $current_session;
     if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-      echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . date_utils::get_current_academic_year() . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+      echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $current_session . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
     }
     echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
@@ -703,7 +703,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   for ($i=0; $i<$row_no; $i++) {
     if ($user_modules[$i]['calendar_year'] != $old_year) {
       echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
-      if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == date_utils::get_current_academic_year()) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
+      if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == $current_session) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
         echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";

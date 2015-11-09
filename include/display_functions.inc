@@ -22,8 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'classes/mathsutils.class.php';
-require_once $root . 'classes/configobject.class.php';
 $configObject          = Config::get_instance();
 
 function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db) {
@@ -263,6 +261,9 @@ function calc_replace_error_safe($haystack, $needle, $replacement) {
 
 function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
   global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject, $unanswered_color;
+
+  // Get the media directory object.
+  $mediadirectory = rogo_directory::get_directory('media');
 
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
@@ -602,7 +603,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 					echo "write_string('</object>');\n";
 					echo "write_string('<!--<![endif]-->');\n";
 					echo "write_string('</object>');\n";
-					echo "sendTextToAS3('" . $language . "','q" . $question_no . "', 1, '../media/" . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "');\n";
+					echo "sendTextToAS3('" . $language . "','q" . $question_no . "', 1, '" . $mediadirectory->url($question['q_media']) . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "');\n";
 					echo "</script>\n";
 					}
 				?>
@@ -1217,14 +1218,14 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
     write_string('<param name="wmode" value="opaque" />');
     write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="../media/<?php echo $question['q_media']; ?>" />');
+    write_string('<param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />');
     write_string('<param name="quality" value="high" />');
     write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     <?php
       if ($question['scenario'] != '') {
         echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
       }
-      echo 'write_string(\'<embed style="z-index:0;" src="../media/' . $question['q_media'] . '"';
+      echo 'write_string(\'<embed style="z-index:0;" src="' . $mediadirectory->url($question['q_media']) . '"';
       if ($question['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }

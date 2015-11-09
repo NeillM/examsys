@@ -26,4 +26,5 @@ $string['Student ID'] = 'Numer legitymacji';
 $string['msg4'] = 'Nie znaleziono użytkownika pasującego do tych danych';
 $string['Reassign answers'] = 'Przypisz odpowiedzi/oceny z';
 $string['to following user'] = 'do następującego użytkownika';
+$string['user_not_on_paper_modules'] = 'The student is not on any of the paper\'s modules.';
 ?>

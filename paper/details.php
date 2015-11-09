@@ -32,16 +32,6 @@ require '../include/question_types.inc';
 require '../include/errors.inc';
 require '../include/calculate_marks.inc';
 require_once '../include/std_set_shared_functions.inc';
-require_once '../classes/questionutils.class.php';
-require_once '../classes/paperutils.class.php';
-require_once '../classes/folderutils.class.php';
-require_once '../classes/userutils.class.php';
-require_once '../classes/paperproperties.class.php';
-require_once '../classes/exclusion.class.php';
-require_once '../classes/moduleutils.class.php';
-require_once '../classes/question_status.class.php';
-require_once '../classes/exam_announcements.class.php';
-require_once '../classes/killer_question.class.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 
@@ -50,6 +40,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+$mediadirectory = rogo_directory::get_directory('media');
 
 // Unlock code - emergency use only!
 // Can only unlock if current user is SysAdmin!
@@ -108,8 +99,6 @@ if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_module
 }
 
 if ($properties->get_paper_type() == '4') {		// OSCE
-	require_once '../classes/killer_question.class.php';
-	
 	$killer_questions = new Killer_question($paperID, $mysqli);
 	$killer_questions->load();
 }
@@ -709,7 +698,11 @@ function check_latex_random($q_ids, $mysqli) {
     }
     if ($latex == 0) {
       if ($q_type == 'random') {
-        $rnd_q_ids[] = $option_text;
+        // Skip if random question not defined.
+        // No options defined message will be displayed to user.
+        if ($option_text != '') {
+          $rnd_q_ids[] = $option_text;
+        }
       } else {
         $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
       }
@@ -785,11 +778,19 @@ function check_latex_random($q_ids, $mysqli) {
         $temp_array[$row_no]['random'] = randomDetails($q_id, $configObject, $mysqli);
       }
 
+      // If summative paper is locked and the question is unlocked
+      // - lock it
       if ($properties->get_summative_lock() and $locked == '') {
         QuestionUtils::lock_question($q_id, $mysqli);
+      // If summative paper is not locked and the question is locked
+      // - unlock it if it has not been answered by a student
+      } elseif (!$properties->get_summative_lock() and $locked != '') {
+        if (!QuestionUtils::question_answered_in_summative($p_id, $q_id, $db)) {
+          QuestionUtils::unlock_question($q_id, $mysqli);
+        }
       }
     }
-		$old_p_id						= $p_id;
+    $old_p_id           = $p_id;
     $old_q_id           = $q_id;
     $old_display_pos    = $display_pos;
     $old_q_type         = $q_type;
@@ -1089,7 +1090,7 @@ function check_latex_random($q_ids, $mysqli) {
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";
     } else {
-      echo "<img src=\"../media/" . $temp_array[$x]['q_media'] . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
+      echo "<img src=\"" . $mediadirectory->url($temp_array[$x]['q_media']) . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
     }
     echo "</td>";
 

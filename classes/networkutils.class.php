@@ -57,7 +57,9 @@ Class NetworkUtils {
   }
 
   static function get_protocol() {
-    if ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') ) {
+    if ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or
+         (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') or
+         (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ) {
       return 'https://';
     } else {
       return 'http://';

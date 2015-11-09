@@ -28,9 +28,6 @@ require '../include/question_types.inc';
 require '../include/mapping.inc';
 require '../include/errors.inc';
 
-require_once '../classes/paperutils.class.php';
-require_once '../classes/folderutils.class.php';
-
 $paperID = check_var('paperID', 'GET', true, false, true);
 
 function getPaper($paperID) {
