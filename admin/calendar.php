@@ -513,6 +513,8 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
       }
     }
     $result->close();
+    // Set the property id to be the maximum value found so that we do not overwrite any of the details retrived in the loop above.
+    $property_id = $max_property_id;
   }
   
   // Get extra calendar events
