@@ -17,6 +17,6 @@
 require '../lang/' . $language . '/delete/delete.inc';
 
 $string['msg'] = 'Pokoušíte se odstranit úlohu z banky úloh.<br /><br /><strong> Potvrďte, prosím, že je to opravdu Vaším záměrem.';
-$string['warning1'] = 'Tuto úlohu nelze odstranit, je používána v následujících dokumentech:';
+$string['warning1'] = 'Tuto úlohu nelze odstranit, jelikož je používána v následujících dokumentech:';
 $string['warning2'] = 'Před odstraněním úlohy odeberte veškeré odkazy na úlohu.';
 ?>

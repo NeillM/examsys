@@ -8,11 +8,11 @@ $string['lines'] = 'Šířka linky';
 $string['erase'] = 'Vymazat popisek/linku';
 $string['edit'] = 'Přesunout popisek/linku';
 $string['line'] = 'Nakreslit linku ';
-$string['bobble'] = 'Kreslit bambuli';
+$string['bobble'] = 'Kreslit bublinu';
 $string['arrow'] = 'Kreslit šipku';
 $string['single'] = 'Jedinečný popisek';
 $string['multiple'] = 'Opakovaný popisek';
-$string['label'] = 'Přesouvací popisek';
+$string['label'] = 'Přesuvný popisek';
 $string['menu'] = 'Rozbalovací nabídka';
 
 $string['themecolours'] = 'Barevné motivy';

@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/users/details.php';
 
-$string['edituserdetails'] = 'Edit User Details';
-$string['photo'] = 'Photo';
-$string['usernameexists'] = '<strong>ERROR:</strong> Username already exists.'
+$string['edituserdetails'] = 'Upravit Uživatele';
+$string['photo'] = 'Fotka';
+$string['usernameexists'] = '<strong>CHYBA:</strong> Toto Uživatelské jméno již existuje.'
 ?>

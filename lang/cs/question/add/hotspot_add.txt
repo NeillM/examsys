@@ -6,7 +6,7 @@ $string['newLayer'] = 'Přidat část úlohy';
 $string['deleteLayer'] = 'Odstranit část úlohy';
 $string['edit'] = 'Přesunou/upravit aktivní místa obrázku';
 $string['ellipse'] = 'Ovál';
-$string['rectangle'] = 'Obdelník';
+$string['rectangle'] = 'Obdélník';
 $string['polygon'] = 'Mnohoúhelník';
 $string['erase'] = 'Smazat aktivní místa obrázku';
 

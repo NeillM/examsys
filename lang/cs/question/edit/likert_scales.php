@@ -24,7 +24,7 @@ $string['neveralways4'] = 'Nikdy|||Pokaždé';
 $string['neveralways5'] = 'Nikdy||||Pokaždé';
 $string['disagre3'] = 'Nesouhlasím|Neutrální|Souhlasím';
 $string['disagre4'] = 'Naprosto<br />nesouhlasím|Nesouhlasím|Souhlasím|Naprosto<br />souhlasím';
-$string['disagre5a'] = 'Naprosto<br />nesouhlasím|Nesouhlasím|Neither Disagree<br />nor Agree|Souhlasím|Naprosto<br />souhlasím';
+$string['disagre5a'] = 'Naprosto<br />nesouhlasím|Nesouhlasím|Ani nesouhlasím<br />ani souhlasím|Souhlasím|Naprosto<br />souhlasím';
 $string['disagre5b'] = 'Naprosto<br />nesouhlasím|Nesouhlasím|Nevím|Souhlasím|Naprosto<br />souhlasím';
 $string['disagre5c'] = 'Naprosto<br />nesouhlasím|Nesouhlasím|Neutrální|Souhlasím|Naprosto<br />souhlasím';
 // Likert Scales

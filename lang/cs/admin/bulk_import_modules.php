@@ -18,9 +18,9 @@ require '../lang/' . $language . '/admin/list_modules.php';
 require '../lang/' . $language . '/admin/add_module.php';
 
 $string['entermoduleid'] = 'Zadejte, prosím,  Identifikátor modulu.';
-$string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
+$string['entermoduletitle'] = 'Zadejte, prosím, Název modulu.';
 $string['moduleid'] = 'ID modulu';
-$string['msg1'] = 'Tato funkce umožňuje moduly nahrát hromadně. Studenty však již zapisujte do modulů samostatně.';
+$string['msg1'] = 'Tato funkce umožňuje nahrát moduly hromadně. Studenty však již zapisujte do modulů samostatně.';
 $string['msg2'] = "Mezi povinná pole patří pouze položky 'ID Modulu', 'Název' a 'Škola'.";
 $string['csvfile'] = 'CSV soubor:';
 $string['import'] = 'Importovat';

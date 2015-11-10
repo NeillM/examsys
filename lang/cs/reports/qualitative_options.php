@@ -17,5 +17,5 @@
 $string['qualitativeanalysis'] = 'Kvalitativní analýza';
 $string['highlight'] = 'Zvýraznit';
 $string['collapse'] = 'Sbalit';
-$string['casesensitive'] = 'Rozlišuje "malá a VELKÁ';
+$string['casesensitive'] = 'Rozlišovat "malá a VELKÁ';
 ?>

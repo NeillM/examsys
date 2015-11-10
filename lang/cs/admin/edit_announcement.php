@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/months.inc';
 
 $string['editannouncement'] = 'Upravit oznámení';
 $string['save'] = 'Uložit';
-$string['Title'] = 'Nadpis';
+$string['Title'] = 'Název';
 $string['Available from'] = 'Dostupné od';
 $string['Available to'] = 'Dostupné do';
 $string['Staff Message'] = 'Oznámení pro zaměstnance';

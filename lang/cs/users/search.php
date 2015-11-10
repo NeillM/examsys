@@ -19,9 +19,9 @@ require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Nastavení uživatelů';
 $string['usersearch'] = 'Hledání uživatelů';
-$string['msg1'] = "<strong>Pozor</strong>&nbsp;&nbsp;&nbsp; nemáte žádnou specifikaci kategorie hledání v parametrech 'Rozšířené'.";
-$string['msg2'] = 'V rámci zadananých kritérií nebyl nalezen žádný odpovídající uživatel';
+$string['msg1'] = "<strong>Pozor</strong>&nbsp;&nbsp;&nbsp; nemáte žádnou specifikaci kategorie hledání v 'Rozšířených' parametrech.";
+$string['msg2'] = 'V rámci zadaných kritérií nebyl nalezen žádný odpovídající uživatel';
 $string['performsummary'] = 'Přehled výsledků';
-$string['largeresult'] = 'Large number of users found, only the first 10,000 are displayed.'
-  . ' Please try narrowing your search criteria.';
+$string['largeresult'] = 'Byl nalezen velký počet odpovídajících položek, zobrazeno je prvních 10,000.'
+  . 'Specifikujte, prosím, podrobněji.';
 ?>

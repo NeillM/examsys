@@ -30,13 +30,13 @@ $string['standardssetting'] = 'Nastavení Standardů';
 $string['cohortsize'] = 'Velikost skupiny';
 $string['maximumscore'] = 'Max skóre';
 $string['topquartile'] = 'Q3'; 
-$string['median'] = 'Q2 (Median)';
+$string['median'] = 'Q2 (Medián)';
 $string['lowerquartile'] = 'Q1'; 
 $string['minimumscore'] = 'Min skóre';
 $string['save'] = 'Uložit';
 $string['marking0'] = 'Dokument beze změn';
 $string['marking1'] = 'Určete Potřebnou známku/S vyznamenáním ve Standardním nastavení.';
 $string['marking2'] = 'Přizpůsobit dokument Standardnímu nastavení';
-$string['examnotfinished'] = 'Zkouška nebyla ukončena';
+$string['examnotfinished'] = 'Zkouška nebyla dokončena';
 $string['notfinishedmsg'] = 'Nastavit standardy Hofstedeovy metody nelze před plánovaným datem ukončení zkoušky.';
 ?>

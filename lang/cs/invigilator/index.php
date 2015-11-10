@@ -18,9 +18,9 @@ $string['invigilatoraccess'] = 'Přístup dohlížejícího';
 $string['lab'] = 'Učebna:';
 $string['unknownlab'] = ' - neznámá učebna';
 $string['nopapersfound'] = 'Nebyly nalezeny žádné dokumenty!';
-$string['nopapersfoundmsg'] = 'K této učebně nelze, v doučasnosti, dohledat žádné dokumenty.';
+$string['nopapersfoundmsg'] = 'K této učebně nelze, v současnosti, dohledat žádné dokumenty.';
 $string['emergencynumbers'] = 'Čísla na pohotovost';
-$string['title'] = 'Nadpis';
+$string['title'] = 'Titul';
 $string['surname'] = 'Příjmení';
 $string['forenames'] = 'Křestní jméno';
 $string['extension_mins'] = 'Prodloužení (minuty)';
@@ -59,7 +59,7 @@ $string['midexamlist'] = '<ol>
 $string['postexam'] = 'Po zkoušce';
 $string['postexamlist'] = '<ol>
     <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Tímto zkouška končí. Přejděte, prosím, na poslední stránku a klikněte na \'Dokončit\'."</li>
-    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Klikněte na \'Zavřít okno\' a následně se z  Rog&#333 odhlašte."</li>
+    <li><img src="../artwork/green_speech.gif" width="15" height="14" /> "Klikněte na \'Zavřít okno\' a následně se z  Rog&#333 odhlaste."</li>
     <li>Posbírejte přihlašovací údaje</li>
     <li>Posbírejte prázdné papíry</li>
     <li>Zkontrolujte, zda jsou odhlášeny <strong>všechny</strong> počítače</li>
@@ -70,7 +70,7 @@ $string['timeerror'] = 'Chyba v čase';
 $string['timeerrormsg'] = 'Zkouška musí trvat minimálně %d minut.';
 $string['examquestionclarifications'] = 'Ujasnění testové úlohy';
 $string['midexamclarifications'] = 'Ujasnění v průběhu testování';
-$string['examchecklist'] = 'Kontrolní seznam zkoušky';
+$string['examchecklist'] = 'Kontrolní seznam';
 $string['viewrubric'] = 'Přehled Rubriky';
 $string['examrubric'] = 'Rubrika zkoušky';
 $string['unknowncomputer'] = 'Neznámý počítač';

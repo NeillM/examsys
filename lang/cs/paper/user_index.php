@@ -54,5 +54,5 @@ $string['tooltip_bidirectional'] = 'Máte povoleno se mezi obrazovkami pohybovat
 $string['tooltip_unidirectional'] = 'Jakmile potvrdíte své odpovědi odesláním formuláře, nebudete se moci vrátit zpět.';
 $string['tooltip_adjustmark'] = 'Vaše procenta budou po zkoušce automaticky upravena dle Náhodné známky, kterou by získal student, jež by odpovídal zcela nahodile. Z tohoto důvodu Vám tedy doporučujeme zodpovědět veškeré úlohy.';
 $string['tooltip_testclip'] = 'Toto je testovací zvukový klip, sloužící ke správnému nastavení sluchátek a hlasitosti..';
-$string['photoid'] = 'ID fotografie';
+$string['photoid'] = 'ID fotka';
 ?>

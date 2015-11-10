@@ -18,7 +18,7 @@ $string['createannouncement'] = 'Nové oznámení';
 $string['editannouncement'] = 'Upravit oznámení';
 $string['deleteannouncement'] = 'Odstranit oznámení';
 $string['newsannouncements'] = 'Novinky &amp; Oznámení';
-$string['title'] = 'Nadpis';
+$string['title'] = 'Název';
 $string['startdate'] = 'Datum zahájení';
 $string['enddate'] = 'Datum ukončení';
 ?>

@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['externalexaminers'] = 'Externí zkoušející';
-$string['initialinvitation'] = 'Počáteční pozvánka';
+$string['externalexaminers'] = 'Externí recenzenti';
+$string['initialinvitation'] = 'Prvotní pozvánka';
 $string['reminder'] = 'Upomínka';
-$string['viewcomments'] = 'View Comments';
+$string['viewcomments'] = 'Prohlédnout Komentáře';
 $string['msg'] = 'Prosím, vyberte Externího zkoušejícího, jemuž byste chtěli zaslat email.';
 $string['noexternals'] = 'V současnosti nejsou k testu přiřazeni žádní externisté. Pokud si přejete některé doplnit, použijte, prosím, možnosti "Upravit vlastnosti".';
 ?>

@@ -15,13 +15,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['entermoduleid'] = 'Zadejte, prosím, Identifikátor modulu.';
-$string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
+$string['entermoduletitle'] = 'Zadejte, prosím, Název modulu.';
 $string['moduleid'] = 'ID modulu';
 $string['createcourse'] = 'Nový kurz';
 $string['bulkcourseimport'] = 'Nahrát kurz';
 $string['editcourse'] = 'Upravit kurz';
 $string['deletecourse'] = 'Odstranit kurz';
-$string['msg1'] = 'Tato funkce umožňuje kurzy nahrát hromadně. CSV soubor by měl obsahovat následující pole:';
+$string['msg1'] = 'Tato funkce umožňuje nahrát kurzy hromadně. CSV soubor by měl obsahovat následující pole:';
 $string['csvfile'] = 'CSV soubor:';
 $string['import'] = 'Importovat';
 $string['alreadyexists'] = 'Již existuje';

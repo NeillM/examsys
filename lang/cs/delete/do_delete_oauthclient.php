@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['oauthclientdel'] = 'OAuth Client Deleted';
-$string['oauthclientdelsuccess'] = 'OAuth Client successfully deleted.';
+$string['oauthclientdel'] = 'Autorizační klíč odstraněn';
+$string['oauthclientdelsuccess'] = 'Autorizační klíč byl úspěšně odstraněn.';
 ?>

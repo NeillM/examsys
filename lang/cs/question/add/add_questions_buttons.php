@@ -16,9 +16,9 @@
 
 $string['myunused'] = 'Moje nevyužité';
 $string['allmyquestions'] = 'Moje úlohy';
-$string['bykeywords'] = 'podle klíčových slov';
-$string['bystatus'] = 'podle statusu';
-$string['bypaper'] = 'podle dokumentu';
-$string['byteam'] = 'podle týmu';
+$string['bykeywords'] = 'dle klíčových slov';
+$string['bystatus'] = 'dle statusu';
+$string['bypaper'] = 'dle dokumentu';
+$string['byteam'] = 'dle týmu';
 $string['search'] = 'Hledat';
 ?>

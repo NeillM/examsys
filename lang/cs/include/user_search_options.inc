@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['genmsg'] = 'Hledání podle všech, či jen vybraných kritérií.';
+$string['genmsg'] = 'Hledání na základě všech, či jen vybraných kritérií.';
 $string['name'] = 'Příjmení';
 $string['username'] = 'Uživatelské ID';
 $string['studentid'] = 'ID studenta';
@@ -31,7 +31,7 @@ $string['staffadmin'] = 'Zaměstnanec (Admin)';
 $string['staffsysadmin'] = 'Zaměstnanec (SysAdmin)';
 $string['staffstudent'] = 'Zaměstnanec a Student'; 
 $string['inactivestaff'] = 'Neaktivní zaměstnanec' ;
-$string['externalexaminers'] = 'Externí recenzent';
+$string['externalexaminers'] = 'Externí recenzenti';
 $string['invigilators'] = 'Dohlížející osoba';
 $string['back'] = 'Zpět';
 $string['search'] = 'Hledat';
@@ -57,5 +57,5 @@ $string['ms'] = 'Paní';
 $string['professor'] = 'Profesor';
 $string['deleteuser'] = 'Odstranit uživatele';
 $string['performsummary'] = 'Přehled výsledků';
-$string['clearltilinks'] = 'Clear LTI Links';
+$string['clearltilinks'] = 'Vymazat LTI';
 ?>

@@ -1,3 +1,3 @@
 <?php
-$string['filenotfound'] = 'File % was not found.';
-$string['directorynotfound'] = 'Directory % was not found.';
+$string['filenotfound'] = 'Složka % nebyla nalezena.';
+$string['directorynotfound'] = 'Adresář % nebyl nalezen.';

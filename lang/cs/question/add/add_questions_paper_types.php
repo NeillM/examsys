@@ -16,6 +16,6 @@
 
 require $cfg_web_root . 'lang/' . $language . '/include/paper_types.inc';
 
-$string['papersbytype'] = 'Dokumenty podle typu';
-$string['papersbyteam'] = 'Dokumenty podle týmu';
+$string['papersbytype'] = 'Dokumenty dle typu';
+$string['papersbyteam'] = 'Dokumenty dle týmu';
 ?>

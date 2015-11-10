@@ -16,7 +16,7 @@
 
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['bykeywords'] = 'Podle klíčových slov';
+$string['bykeywords'] = 'Dle klíčových slov';
 $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';

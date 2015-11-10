@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['editacademicsession'] = 'Edit Academic Session';
-$string['academicyear'] = 'Academic Year';
-$string['calstatus'] = 'Enabled in Calendar';
-$string['statstatus'] = 'Enabled in Statistics';
-$string['save'] = 'Save';
-$string['cancel'] = 'Cancel';
-$string['academicsessions'] = 'Academic Sessions';
-$string['createsession'] = 'Create Academic Session';
-$string['editsession'] = 'Edit Academic Session';
-$string['deletesession'] = 'Delete Academic Session';
+$string['editacademicsession'] = 'Upravit Akademickou Relaci';
+$string['academicyear'] = 'Akademický rok';
+$string['calstatus'] = 'Povolit v Kalendáři';
+$string['statstatus'] = 'Povolit ve Statistice';
+$string['save'] = 'Uložit';
+$string['cancel'] = 'Zrušit';
+$string['academicsessions'] = 'Akademická Relace';
+$string['createsession'] = 'Nová Akademická Relace';
+$string['editsession'] = 'Upravit Akademickou Relaci';
+$string['deletesession'] = 'Odstranit Akademickou Relaci';

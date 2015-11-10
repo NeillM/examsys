@@ -20,6 +20,6 @@ $string['allmyquestions'] = 'Moje úlohy';
 $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
-$string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
+$string['warningnoleadin'] = 'Varování: v hlavičce chybí text úlohy!';
 $string['locked'] = 'Uzamčeno';
 ?>

@@ -16,6 +16,6 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['msg1'] = 'Včechny IP adresy přiřazené k učebně budou odstraněny.';
+$string['msg1'] = 'Všechny IP adresy přiřazené k učebně budou odstraněny.';
 $string['msg2'] = 'Jste si skutečně jisti, že chcete tyto IP adresy odstranit?';
 ?>

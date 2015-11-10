@@ -35,11 +35,11 @@ $string['formula'] = 'Vzorec';
 $string['tolerancefull'] = 'Odchylka pro celkové hodnocení';
 $string['tolerancepartial'] = 'Odchylka pro částečné hodnocení';
 $string['javacheck2'] = "Jste si skutečně jisti, že chcete skončit? Po kliknutí na tlačítko 'OK' se již nebudete moci vrátit.";
-$string['msgselectable1'] = 'Vybráno příliš mnnoho možností! Lze vybrat pouze ';
+$string['msgselectable1'] = 'Vybráno příliš mnoho možností! Lze vybrat pouze ';
 $string['msgselectable2'] = ' položku/y/ek.';
 $string['msgselectable3'] = 'Již jste vybrali ';
-$string['msgselectable4'] = 'Vyberte, prosím,  jiný ranking.';
+$string['msgselectable4'] = 'Vyberte, prosím, jiný ranking.';
 $string['AllItemsCorrect'] = "Všechny položky správně";
 $string['other'] = 'Ostatní';
-$string['togglevariables'] = 'Toggle Variables';
+$string['togglevariables'] = 'Přepnout proměnné';
 ?>

@@ -24,7 +24,7 @@ $string['key1'] = 'Získání 80-100% ze specifického cíle';
 $string['key2'] = 'Získání 50-79% ze specifického cíle';
 $string['key3'] = 'Získání 0-49% ze specifického cíle';
 $string['key4'] = '<a href="" onclick="return false;">odkaz</a> - skok do sekce VLE, kde získáte další podrobnosti';
-$string['msg'] = 'Níže je uveden seznam %d unikátních cílů, které jsou tímto dokumentem posuzovány. Protože některé cíle mohou být testovány více úlohami, je možné získat částečné splnění cíle. Následující seznam je seřazen podle procentuelního splnění každého cíle ve skupině - začíná nejvyšším.';
+$string['msg'] = 'Níže je uveden seznam %d unikátních cílů, které jsou tímto dokumentem posuzovány. Protože některé cíle mohou být testovány více úlohami, je možné získat částečné splnění cíle. Následující seznam je seřazen podle procentuálního splnění každého cíle ve skupině - začíná nejvyšším.';
 $string['uppersize'] = 'Horní velikost skupiny';
 $string['lowersize'] = 'Spodní velikost skupiny';
 $string['candidates'] = 'Kandidáti';

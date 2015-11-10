@@ -20,7 +20,7 @@ require '../lang/' . $language . '/paper/new_paper2.php';
 
 $configObject = Config::get_instance();
 
-$string['start'] = 'Start';
+$string['start'] = 'Začátek';
 $string['owner'] = 'Vlastník';
 $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
@@ -29,12 +29,12 @@ $string['modified'] = 'Upraveno';
 $string['passmark'] = 'Potřebná známka';
 $string['randommark'] = 'Náhodná známka';
 $string['screen'] = 'Obrazovka';
-$string['paperlockedwarning'] = '<strong>Uzamčený dokument</strong>&nbsp;&nbsp;&nbsp;Tento dokument je v současnosti uzamčen a nelze jej tedy upravovat.';
+$string['paperlockedwarning'] = '<strong>Uzamčený dokument</strong>&nbsp;&nbsp;&nbsp;Tento dokument je v současnosti uzamčen a nelze jej upravovat.';
 $string['paperlockedclick'] ='Pro více informací klikněte ZDE.';
 $string['earlywarning'] = '<strong>Varování: Čas/Datum </strong>&nbsp;&nbsp;&nbsp;Začátek tohoto dokumentu je naplánován před %sam';
 $string['farfuturewarning'] = '<strong>Varování: Čas/Datum </strong>&nbsp;&nbsp;&nbsp;Začátek tohoto dokumentu je naplánován s velkým předstihem na (%s)';
 $string['nooptionsdefined'] = 'Úloha nemá definovanou žádnou volbu';
-$string['noquestionscreen'] = '<strong>Varování:</strong> v okně nejsou žádné úlohy.<br />Pokud budete tento dokument použijete ke zkoušení, objeví se závada!';
+$string['noquestionscreen'] = '<strong>Varování:</strong> na obrazovce chybí úlohy.<br />Pokud tento dokument použijete k testování, objeví se pouze chybové hlášení!';
 $string['markswarning'] = 'Okno %d má %d bodů z %d%% celkem v dokumentu. Abyste minimalizovali ztrátu bodů v případě závady na počítači, přidejte, prosím, další zalomení okna. ';
 $string['duplicateoptions'] = 'Duplicitní možnosti. MCQ možnosti musí být jedinečné.';
 $string['nocorrect'] = 'Nelze najít správnou odpověď';
@@ -56,8 +56,8 @@ $string['next'] = 'Další >>';
 $string['na'] = 'N/A';
 $string['Duplicate questions'] = 'Duplikovat Úlohu';
 $string['following_questions'] = 'Následující úlohy jsou';
-$string['mismatchbrackets'] = 'Mismatching brackets found.';
-$string['mismatchblanktags'] = 'Neodpovídající prázdá či rolovací políčka.';
-$string['nomatchsession'] = 'Sezení v Názvu Testu (%s) neodpovídá sezení testu (%s).';
-$string['notsummativeexams'] = 'Should not use with Summative Exams';
+$string['mismatchbrackets'] = 'Nalezeny nesourodé závorky.';
+$string['mismatchblanktags'] = 'Neodpovídající prázdná či rolovací políčka.';
+$string['nomatchsession'] = 'Datum v Názvu Testu (%s) neodpovídá sezení testu (%s).';
+$string['notsummativeexams'] = 'Nemělo by být použito k Sumativnímu testování';
 ?>

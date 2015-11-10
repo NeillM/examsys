@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['moduleselfenrolment'] = 'Modul Samopřihlašování';
+$string['moduleselfenrolment'] = 'Modul Samo-přihlašování';
 $string['moduleid'] = 'ID Modulu:';
 $string['name'] = 'Jméno:';
 $string['school'] = 'Škola:';
 $string['academicyear'] = 'Akademický rok:';
 $string['enroll'] = 'Zápis';
 $string['iwouldliketo'] = '%s %s %s (%s), chcete se sám(a) zapsat do modulu.';
-$string['notavailableselfenrollment'] = 'Tento modul nemá Samopřihlašování nastaveno.';
+$string['notavailableselfenrollment'] = 'Tento modul nemá Samo-přihlašování nastaveno.';
 $string['notactive'] = 'Tento modul není aktuálně aktivní.';
 $string['icanaccess'] = 'Zobrazit dokumenty, ke kterým mám přístup.';
 $string['enrolmentcompleted'] = 'Zápis ukončen';

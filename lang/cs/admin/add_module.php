@@ -17,7 +17,7 @@
 require '../lang/' . $language . '/admin/list_modules.php';
 
 $string['entermoduleid'] = 'Zadejte, prosím, Identifikátor modulu.';
-$string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
+$string['entermoduletitle'] = 'Zadejte, prosím, Název modulu.';
 $string['selectschool'] = 'Přiřaďte, prosím, k modulu školu.';
 $string['moduleid'] = 'ID modulu';
 $string['name'] = 'Název';
@@ -25,13 +25,13 @@ $string['school'] = 'Škola';
 $string['smsapi'] = 'SMS API';
 $string['academicyearstart'] = 'Začátek akademického roku';
 $string['objapi'] = 'API cílů';
-$string['summativechecklist'] = 'Sumativní kontrolní seznam';
+$string['summativechecklist'] = 'Kontrolní seznam';
 $string['peerreview'] = 'Recenze';
-$string['externalexaminers'] = 'Externí Recenzent';
+$string['externalexaminers'] = 'Externí Recenzenti';
 $string['standardssetting'] = 'Nastavení Standardů';
 $string['mapping'] = 'Mapování';
 $string['active'] = 'Aktivní';
-$string['allowselfenrol'] = 'Povolit samopřihlášení';
+$string['allowselfenrol'] = 'Povolit samo-přihlášení';
 $string['negativemarking'] = 'Záporné známkování';
 $string['add'] = 'Přidat';
 $string['save'] = 'Uložit';

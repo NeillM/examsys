@@ -20,7 +20,7 @@ require_once '../lang/' . $language . '/include/blooms.inc';
 
 $string['questionbank'] = 'Banka úloh';
 $string['bytype'] = 'dle Typu';
-$string['byblooms'] = 'dle Bloomovi taxonomie';
+$string['byblooms'] = 'dle Bloomovy taxonomie';
 $string['bykeyword'] = 'dle Klíčového slova';
 $string['bystatus'] = 'dle Statusu';
 $string['bydifficulty'] = 'dle Obtížnosti';
@@ -29,16 +29,16 @@ $string['byperformance'] = 'dle Výkonu';
 $string['byobjective'] = 'dle Výukových cílů';
 $string['manageobjectives'] = 'Správa Cílů';
 $string['managekeywords'] = 'Správa Klíčových slov';
-$string['referencematerial'] = 'Referenční materiál';
+$string['referencematerial'] = 'Referenční materiály';
 $string['nokeywords'] = 'Do tohoto Modulu nebyla přidána žádná Klíčová slova..';
 $string['question'] = 'Úloha';
 $string['questions'] = 'Úloh';
 $string['papers'] = 'Dokumenty';
 $string['people'] = 'Lidé';
 $string['noquestions'] = 'V Bance nebyly nalezeny žádné úlohy.';
-$string['noquestionsbloom']  = 'Nebyla nalezena žádná úloha na základě vyhledávání "dle Bloomovi tyxonomie".';
+$string['noquestionsbloom']  = 'Nebyla nalezena žádná úloha na základě vyhledávání "dle Bloomovy taxonomie".';
 $string['noquestionsstatus'] = 'Nebyla nalezena žádná úloha na základě vyhledávání "dle Statusu".';
 $string['noquestionsperformance'] = 'Nebyla nalezena žádná úloha na základě vyhledávání "dle Výkonu".';
 $string['noquestionsobjective'] = 'Nebyla nalezena žádná úloha na základě vyhledávání "dle Cílů".';
-$string['search'] = 'Search';
+$string['search'] = 'Hledat';
 ?>

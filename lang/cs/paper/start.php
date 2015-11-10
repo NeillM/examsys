@@ -47,10 +47,10 @@ $string['negmarking'] = 'Záporné známkování';
 $string['bonusmark'] = 'Ke správným odpovědím přidat s %d bonusem %s zcela správné odpovědi';
 $string['calculator'] = 'Kalkulačka';
 $string['timeremaining'] = 'Zbývající čas';
-$string['finishnote'] = '<strong>Poznámka:</strong> Před klepnutím na tlačítko &#145;Dokončit&#146; zodpovězte, prosím, veškeré úlohy, poté se již nebudete moci vrátit k jejich vypracování';
+$string['finishnote'] = '<strong>Poznámka:</strong> Před kliknutím na tlačítko &#145;Dokončit&#146; zodpovězte, prosím, veškeré úlohy, poté se již nebudete moci vrátit k jejich vypracování';
 $string['gobackpink'] = 'Pokud se vrátíte, nezodpovězené úlohy budou růžově zvýrazněné.';
 $string['fireexit'] = 'Nouzový východ';
-$string['pleasecomplete'] = '<strong>Poznámka:</strong> Před klepnutím na tlačítko &#145;Dokončit&#146; zodpovězte, prosím, veškeré úlohy, poté se již nebudete moci vrátit k jejich vypracování';
+$string['pleasecomplete'] = '<strong>Poznámka:</strong> Před kliknutím na tlačítko &#145;Dokončit&#146; zodpovězte, prosím, veškeré úlohy, poté se již nebudete moci vrátit k jejich vypracování';
 $string['javacheck1'] = 'Dokončili jste všechny úkoly v tomto okně? Zpět jít nelze. .\nJste si skutečně jisti, že chcete pokračovat?';
 $string['javacheck2'] = "Jste si skutečně jisti, že chcete skončit? Po kliknutí na tlačítko 'OK' se již nebudete moci vrátit.";
 $string['error_random'] = 'Chyba: nelze nalézt úlohu jakékoli sestavy otázek';
@@ -70,10 +70,10 @@ $string['savefailed'] = 'Ukládání selhalo';
 $string['tryagain'] = 'Zkuste, prosím, znovu: Přechodem na předchozí nebo následující okno.</div>';
 
 $string['question'] = 'Úloha';
-$string['questionclarification'] = 'Ujasnění úlohy';
+$string['questionclarification'] = 'Dodatečné vysvětlivky k úloze';
 $string['other'] = 'Ostatní';
 $string['answer_to'] = 'odpovědět';
 $string['decimal_places'] = 'desetinná místa';
 $string['significant_figures'] = 'významná figura';
-$string['forcesave'] = 'Váš čas vypršel a Vaše odpovědi byly uloženy. ';
+$string['forcesave'] = 'Váš čas vypršel, Vaše odpovědi <strong>byly</strong> uloženy. ';
 ?>

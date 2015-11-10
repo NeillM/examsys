@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamstats'] = 'Summativní zkoušky';
+$string['summativeexamstats'] = 'Sumativní zkoušky';
 $string['statistics'] = 'Statistika';
 $string['month'] = 'měsíc';
 $string['papers'] = 'Dokumenty';
@@ -28,9 +28,9 @@ $string['studentpapers'] = 'Studentů/Dokumentů';
 $string['cohortsizes'] = 'Velikost Skupiny';
 $string['uniquestudents'] = 'Unikátních studentů = %s';
 $string['totals'] = 'Souhrny';
-$string['students'] = 'Students';
-$string['taken'] = 'Taken';
-$string['unused'] = 'Unused';
-$string['computerlab'] = 'Computer Lab';
-$string['examno'] = 'Exam No';
+$string['students'] = 'Studentů';
+$string['taken'] = 'Proběhla';
+$string['unused'] = 'Nepoužité';
+$string['computerlab'] = 'PC učebna';
+$string['examno'] = 'Zkouška č.';
 ?>

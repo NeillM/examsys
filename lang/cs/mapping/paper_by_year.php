@@ -23,11 +23,11 @@ $string['type'] = 'Typ';
 $string['marks'] = 'Známky';
 $string['modified'] = 'Upraveno';
 $string['passmark'] = 'Potřebná známka';
-$string['mappingbyyear'] = 'Mapování podle roku';
-$string['bysession'] = 'podle relace';
-$string['byquestion'] = 'podle úlohy';
+$string['mappingbyyear'] = 'Mapování dle roku';
+$string['bysession'] = 'dle relace';
+$string['byquestion'] = 'dle úlohy';
 $string['longitudinal'] = 'Dlouhodobě';
 $string['screen'] = 'Obrazovka';
 $string['warning'] = 'Varování';
-$string['nomatchsession'] = 'Relace v názvu dekumentu (%s) neodpovídá dokumentu relace (%s).';
+$string['nomatchsession'] = 'Datum v Názvu Testu (%s) neodpovídá sezení testu (%s).';
 ?>

@@ -30,10 +30,10 @@ $string['msg2'] = 'Začátek a konec sumativní zkoušky musí být ve stejný d
 $string['msg3'] = 'U sumativních zkoušek musí být zadána délka trvání.\nTa odpovídá času vyměřenému k vykonání zkoušky, bez přidaného času pro např. dyslektické studenty.';
 $string['msg4'] = 'U sumativních zkoušek musí být zadán akademický rok, záložka (\'Přístupová práva\').';
 $string['msg5'] = 'OSCE test musí být přiřazen nejméně k jednomu modulu.';
-$string['msg6a'] = 'Zadali jste recenzenty, ale nazadali jste lhůtu.';
-$string['msg6'] = 'Zadali jste externí recenzenty, ale nazadali jste lhůtu.';
+$string['msg6a'] = 'Zadali jste recenzenty, ale nezadali jste lhůtu.';
+$string['msg6'] = 'Zadali jste externí recenzenty, ale nezadali jste lhůtu.';
 $string['msg7'] = 'Zadejte, prosím, název dokumentu.';
-$string['msg8'] = 'Jedná se o uzavřenou zkoušku, tedy bez použití pomůcek. Studenti nesmí používat jiných zdrojů (včetně souseda), než kterých je užito v dokumentu. Nelze používat žádná jiná elektronická zařízení, než počítač ke zkoušce určený. Slovníky <em>nejsou</em> povoleny s jedinnou výjimkou. Ti, kteří <em>nemají</em> češtinu jako rodný jazyk, mohou používat pro překlad do češtiny slovník. Za podmínky, že ani jeden z jazyků není předmětem zkoušky. Odborné slovníky jsou zakázány. Během zkoušky a ani po jejím ukončení není dovoleno z učebny odnášet jakékoliv dokumenty a poznámky. Veškeré poznámky, které si zapíšete v průběhu zkoušky budou shromážděny Dohlížejícím a zlikvidovány.';
+$string['msg8'] = 'Jedná se o uzavřenou zkoušku, tedy bez použití pomůcek. Studenti nesmí používat jiných zdrojů (včetně souseda), než kterých je užito v dokumentu. Nelze používat žádná jiná elektronická zařízení, než počítač ke zkoušce určený. Slovníky <em>nejsou</em> povoleny s jedinou výjimkou. Ti, kteří <em>nemají</em> češtinu jako rodný jazyk, mohou používat pro překlad do češtiny slovník. Za podmínky, že ani jeden z jazyků není předmětem zkoušky. Odborné slovníky jsou zakázány. Během zkoušky a ani po jejím ukončení není dovoleno z učebny odnášet jakékoliv dokumenty a poznámky. Veškeré poznámky, které si zapíšete v průběhu zkoušky budou shromážděny Dohlížejícím a zlikvidovány.';
 
 
 // General tab
@@ -84,7 +84,7 @@ $string['photos'] = 'Fotky';
 $string['ifavailable'] = 'pokud je k dispozici';
 $string['review'] = 'Přehled';
 $string['allpeerspergroup'] = 'Všichni členové skupiny';
-$string['singlereview'] = 'Jeden komentář';
+$string['singlereview'] = 'Jedena recenze';
 $string['numberfrom'] = 'Číslo z';
 $string['groupdetails'] = 'Podrobnosti skupiny';
 $string['tooltip_random'] = 'Rogo vypočítá ohodnocení, jakého by student dosáhl náhodným zodpovězením úloh. Procentuální hodnocení je následně tomuto uzpůsobeno.';
@@ -128,10 +128,10 @@ $string['prologueheading'] = 'Text zobrazený při zahájení dokumentu v horní
 $string['postscripttab'] = 'Dodatek';
 $string['postscriptheading'] = "Text zobrazený po kliknutí na 'Konec'.";
 
-// Záložka Referenčního materiálu
-$string['referencematerial'] = 'Referenční materiál';
+// Záložka Referenčních materiálů
+$string['referencematerial'] = 'Referenční materiály';
 $string['referenceheading'] = 'Určit, které referenční materiály budou v dokumentu k dispozici.';
-$string['nomaterials'] = 'K tomuto dokumentu nejsou dostupné žádné referenční materiály.<br /><br />Referenční materiál může být doplněn kliknutím na volbu \'Referenční materiáll\' v modulu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">viz nápověda</a>).';
+$string['nomaterials'] = 'K tomuto dokumentu nejsou dostupné žádné referenční materiály.<br /><br />Referenční materiál může být doplněn kliknutím na volbu \'Referenční materiál\' v modulu (<a href="" style="color:blue" onclick="launchHelp(296); return false;">viz nápověda</a>).';
 
 // Záložka zpětné vazby
 $string['feedbackheading'] = 'Komentář dostupný studentům';

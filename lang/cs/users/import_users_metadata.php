@@ -17,7 +17,7 @@
 require_once '../lang/' . $language . '/module/index.php';
 
 $string['importmetadata'] = 'Nahrát metadata studenta';
-$string['msg'] = 'CSV soubor by měl obsahovat hlavičku zahrnující názvy polí. V prvním sloupci by mělo být uživatelské jméno následované daty. Příklad nám ukazuje dvě položky metadat (\'Site\' and \'Project Group\').';
+$string['msg'] = 'CSV soubor by měl obsahovat hlavičku zahrnující názvy polí. V prvním sloupci by mělo být uživatelské jméno, následované daty. Příklad nám ukazuje dvě položky metadat (\'Site\' and \'Project Group\').';
 $string['year'] = 'Rok';
 $string['file'] = 'Soubor';
 $string['import'] = 'Importovat';

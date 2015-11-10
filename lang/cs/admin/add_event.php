@@ -17,7 +17,7 @@
 require '../lang/' . $language . '/include/months.inc';
 
 $string['addevent'] = 'Přidat událost';
-$string['title'] = 'Titul';
+$string['title'] = 'Název';
 $string['date'] = 'Datum';
 $string['message'] = 'Zpráva';
 $string['duration'] = 'Trvání';

@@ -16,11 +16,11 @@
 
 require '../../lang/' . $language . '/include/question_types.inc';
 
-$string['byteam'] = 'podle týmu';
+$string['byteam'] = 'dle týmu';
 $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
-$string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
+$string['warningnoleadin'] = 'Varování: v hlavičce chybí text úlohy!';
 $string['locked'] = 'Uzamčeno';
 $string['warningnoquestion'] = 'Pro vybraný tým nebyla nalezena žádná úloha';
 ?>

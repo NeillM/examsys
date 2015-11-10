@@ -18,7 +18,7 @@ require '../lang/' . $language . '/admin/list_announcements.php';
 require '../lang/' . $language . '/include/months.inc';
 
 $string['addannouncement'] = 'Přidat oznámení';
-$string['Title'] = 'Titul';
+$string['Title'] = 'Název';
 $string['Available from'] = 'Dostupné od';
 $string['Available to'] = 'Dostupné do';
 $string['Staff Message'] = 'Oznámení pro zaměstnance';

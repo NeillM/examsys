@@ -17,7 +17,7 @@
 $string['machine'] = 'Počítač';
 $string['machines'] = 'Počítače';
 $string['createnewlab'] = 'Nová učebna';
-$string['computerlabs'] = 'Počítačové učebny';
+$string['computerlabs'] = 'PC učebny';
 $string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
 $string['deletelab'] = 'Odstranit učebnu';
 $string['lowbandwidth'] = 'Pomalé připojení';
@@ -30,7 +30,7 @@ $string['low'] = 'Pomalé';
 $string['high'] = 'Rychlé';
 $string['timetabling'] = 'Rozvrh';
 $string['itsupport'] = 'IT Podpora';
-$string['plagarism'] = 'Plagiátorství';
+$string['plagarism'] = 'Podvádění';
 $string['ipaddresses'] = 'IP Adresy';
 $string['save'] = 'Uložit';
 $string['badaddressesmsg'] = 'Následující IP adresy byly chybné a nebyly do učebny zařazeny: %s. Ostatní adresy byly uloženy.';

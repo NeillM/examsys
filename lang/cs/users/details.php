@@ -18,9 +18,9 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 require '../lang/' . $language . '/include/titles.inc';
 
 $string['usermanagement'] = 'Nastavení uživatelů';
-$string['usersearch'] = 'User Search';
-$string['user'] = 'User:';
-$string['edit'] = 'Edit';
+$string['usersearch'] = 'Hledání uživatelů';
+$string['user'] = 'Uživatel:';
+$string['edit'] = 'Upravit';
 $string['status'] = 'Status'; 
 $string['student'] = 'Student';
 $string['Students'] = 'Studenti';
@@ -47,9 +47,9 @@ $string['accessibility'] = 'Přístupnost';
 $string['metadata'] = 'Metadata';
 $string['papername'] = 'Název dokumentu';
 $string['type'] = 'Typ';
-$string['started'] = 'Zahájeno';
+$string['started'] = 'Začátek';
 $string['duration'] = 'Trvání';
-$string['ipaddress'] = 'IP Addresa';
+$string['ipaddress'] = 'IP Adresa';
 $string['update'] = 'Aktualizace';
 $string['telephone'] = 'Telefon';
 $string['ldapunavailable'] = 'nedostupný LDAP Server';
@@ -108,7 +108,7 @@ $string['forcereset'] = 'Nucené obnovení';
 $string['classifiedinfo'] = 'Utajované informace';
 $string['custom'] = 'Rutina';
 $string['Access Denied'] = 'Přístup odepřen';
-$string['resitcandidate'] = 'Přeřadit studenta (resit)';
+$string['resitcandidate'] = 'Opakování (resit)';
 
 //Colour picker
 $string['colour'] = 'Barva';

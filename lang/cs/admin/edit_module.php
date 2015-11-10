@@ -17,7 +17,7 @@
 require '../lang/' . $language . '/admin/add_module.php';
 
 $string['entermoduleidentifier'] = 'Zadejte, prosím, Identifikátor modulu.';
-$string['entermoduletitle'] = 'Zadejte, prosím, Nadpis modulu.';
+$string['entermoduletitle'] = 'Zadejte, prosím, Název modulu.';
 $string['selectschool'] = 'Přiřaďte, prosím, k modulu školu.';
 $string['moduleidinuse'] = 'Identifikátor modulu %s již existuje. Vyberte, prosím, jiné ID.';
 $string['nolookup'] = '&lt;Vyhledat&gt;';

@@ -18,13 +18,13 @@ $string['forgottenpassword'] = 'Zapomenuté heslo';
 $string['emailaddress'] = 'E-mailová adresa';
 $string['emailaddressinvalid'] = 'Zadejte, prosím, platnou e-mailovou adresu';
 $string['emailaddressnotfound'] = 'E-mailová adresa nenalezena';
-$string['emailaddressininstitutionaldomains'] = 'Váš účet je veden u instituce, jež je řízena pomocí centrální autentizační služby. Kontaktujte, prosím, IT podporu pro postup při obnovení hesla.';
+$string['emailaddressininstitutionaldomains'] = 'Váš účet je veden u instituce, jež je řízena pomocí centrální autentizační služby. Kontaktujte, prosím, IT podporu kvůli postupu při obnovení hesla.';
 $string['passwordreset'] = 'Obnovení hesla';
 $string['emailhtml'] = <<< EMAIL_HTML
 <p>Vážený %s %s,</p>
 <p>Obdrželi jsme žádost o obnovení hesla na  Rog&#333;. Chcete-li  požadavek dokončit, klikněte na odkaz uvedený níže:</p>
 <p><a href="https://%s/users/reset_password.php?token=%s">Obnovení hesla</a></p>
-<p>Pokud jste o obnovení hesla nežadali:  <a href="mailto:%s">napište nám</a>. Vaše stávající uživatelské jméno a heslo vám i tak umožní přihlášení do Rog&#333;.</p>
+<p>Pokud jste o obnovení hesla nežádali:  <a href="mailto:%s">napište nám</a>. Vaše stávající uživatelské jméno a heslo vám i tak umožní přihlášení do Rog&#333;.</p>
 
 EMAIL_HTML;
 $string['couldntsendemail'] = 'Nelze odeslat e-mail <strong>%s</strong>';

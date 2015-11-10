@@ -17,13 +17,13 @@
 include 'lti_common.php';
 
 $string['NoPapers'] = 'K tomuto modulu nejsou dostupné žádné dokumenty';
-$string['NoPapersDesc'] = 'K tomuto modulu nejsou dostupné žádné dokumenty. Pravděpodobně je to způsobeno tím, že jste vytvořili nový odkaz z VLE z nového modulu, a proto nemáte v současnosti nakonfigurované žádné dokumety.<br /><br />K vytvoření dokumentu vyberte, prosím <a href="../" target="_blank">spustit Rogo</a>'; //zavřete prohlížeč (<strong>velice dùležité</strong>) následně přejděte na domovskou stránku Rogo a dokument vytvořte.
+$string['NoPapersDesc'] = 'K tomuto modulu nejsou dostupné žádné dokumenty. Pravděpodobně je to způsobeno tím, že jste vytvořili nový odkaz z VLE z nového modulu, a proto nemáte v současnosti nakonfigurované žádné dokumenty.<br /><br />K vytvoření dokumentu vyberte, prosím <a href="../" target="_blank">spustit Rogo</a>'; //zavřete prohlížeč (<strong>velice důležité</strong>) následně přejděte na domovskou stránku Rogo a dokument vytvořte.
 
 $string['NoModCreateTitle'] = 'Vytvoření nového modulu není povoleno';
 $string['NoModCreate'] = 'Tvorba modulu z LTI není povolena v konfiguraci, proto nelze vytvořit modul s kódem kurzu: ';
 $string['NotAddedToModuleTitle'] = 'Přidání do týmu modulu nebylo úspěšné';
 $string['NotAddedToModule'] = 'Přidávání do týmu modulu není v LTI konfiguraci povoleno, tato závada se vyskytla u modulu: ';
 
-$string['NoModCreateTitle2'] = 'Vytváření modulu neběží';
+$string['NoModCreateTitle2'] = 'Vytvoření modulu nefunguje';
 $string['NoModCreate2'] = 'Tvorba modulu z LTI neběží, jelikož uživatel nevlastní oprávnění, a proto nelze vytvořit modul s kódem kurzu: ';
 ?>
