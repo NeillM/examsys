@@ -21,5 +21,5 @@ $string['question'] = 'Úloha';
 $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
 $string['locked'] = 'Uzamčeno';
-$string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
+$string['warningnoleadin'] = 'Varování: v hlavičce chybí text úlohy!';
 ?>

@@ -18,9 +18,9 @@ $string['username'] = 'Uživatelské jméno';
 $string['surname'] = 'Příjmení';
 $string['lookup'] = 'Vyhledat';
 $string['nousersalert'] = 'V LDAP nebyl nikdo nalezen.';
-$string['first_names'] = 'Křestní jméno';
+$string['first_names'] = 'Jméno';
 $string['email'] = 'Email';
-$string['title'] = 'Titul';
+$string['title'] = 'Název';
 $string['role'] = 'Role';
 
 ?>

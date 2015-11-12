@@ -16,11 +16,11 @@
 
 $string['copypaper'] = 'Kopírovat dokument';
 $string['warning'] = 'Varování';
-$string['titlewarning'] = 'Varování ohledně Nadpisu';
+$string['titlewarning'] = 'Varování ohledně Názvu';
 $string['nameused'] = 'Název \'<strong>%s</strong>\' je již používán.<br />Vyberte, prosím, jiný.';
 $string['back'] = '&lt; Zpět';
 $string['copyerror'] = 'Číslo úlohy $q_no) Chyba při kopírování (Úloha) Soubor <strong>\'%s\'</strong> nelze kopírovat.';
 $string['completemsg'] = 'Váš dokument a úlohy byly zkopírovány, ale následující obrázek zkopírován nebyl.';
 $string['filecopywarning'] = 'Varování ohledně kopírování souboru';
-$string['calculation_link_update_error'] = 'K prolinkovaným početním úlohám se nepodařilo přidat linky. - <strong>\'%s\'</strong>';
+$string['calculation_link_update_error'] = 'K pro-linkovaným početním úlohám se nepodařilo přidat linky. - <strong>\'%s\'</strong>';
 ?>

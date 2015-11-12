@@ -21,9 +21,9 @@ $string['rdbpassword'] = 'Heslo';
 $string['timedateformats'] = 'Čas/Datum - formáty';
 
 $string['date'] = 'Datum (%s)';
-$string['longdate'] = 'Long Date (%s)';
-$string['shortdatetime'] = 'Short Date/Time (%s)';
-$string['longdatetime'] = 'Long Date/Time (%s)';
+$string['longdate'] = 'Nezkrácené datum (%s)';
+$string['shortdatetime'] = 'Zkrácené datum/čas (%s)';
+$string['longdatetime'] = 'Nezkrácené datum/čas (%s)';
 $string['longdatephp'] = 'Nezkrácené datum (%s)';
 $string['shortdatephp'] = 'Zkrácené datum (%s)';
 $string['longtimephp'] = 'Nezkrácený čas (%s)';
@@ -34,7 +34,7 @@ $string['authentication'] = 'Ověřování';
 $string['allowlti'] = 'Povolit LTI (lineární časová neměnná';
 $string['allowintdb'] = 'Vnitřní databáze';
 $string['allowguest'] = 'Dočasné účty (pro sumativní zkoušky)';
-$string['allowimpersonation'] = 'Impersonifikace uživatele (pouze SysAdmin)';
+$string['allowimpersonation'] = 'Personifikace uživatele (pouze SysAdmin)';
 
 $string['lookup'] = 'Vyhledat zdroje dat';
 $string['allowlookupXML'] = 'Použít XML (Značkovací jazyk, bude potřeba přizpůsobení v konfiguračním souboru)';
@@ -80,12 +80,15 @@ $string['wnotcreated'] = ' nemohl být vytvořen';
 $string['wnotpermission'] = ' nemohl nastavit povolení';
 $string['logwarning20'] = 'Nelze FLUSH PRIVILEGES';
 $string['errors1'] = 'Rogo již bylo nainstalováno! Pro nové nastavení odstraňte/přejmenujte.';
-$string['errors3'] = 'Rogo vyžaduje existenci %s a jejich zapisovatelnost na webserver';
-$string['errors7'] = 'Rogo vyžaduje existenci %s/dočasných adresářů a jejich zapisovatelnost na webserver';
-$string['errors8'] = 'Rogo vyžaduje Apache verzi %s';
-$string['errors9'] = 'Rogo vyžaduje Apache verzi %s nebo novější než máte %s';
-$string['errors10'] = 'Rogo vyžaduje PHP verzi %s nebo novější než máte %s';
-$string['errors11'] = 'Rogo k fungování vyžaduje PHP %s modul, prosím, nainstalujte jej a aktivujte.';
+$string['errors3'] = 'Rogo vyžaduje existenci %s a jejich zapisovatelnost na web-server';
+$string['errors4'] = 'Rogo vyžaduje existenci %s/medií a jejich zapisovatelnost na web-server';
+$string['errors5'] = 'Rogo vyžaduje existenci %s/qti/importů a a jejich zapisovatelnost na web-server';
+$string['errors6'] = 'Rogo vyžaduje existenci %s/qti/exportů a jejich zapisovatelnost na web-server';
+$string['errors7'] = 'Rogo vyžaduje existenci %s/dočasných adresářů a jejich zapisovatelnost na web-server';
+$string['errors8'] = 'Rogo vyžaduje Apache verzi $apache_min_ver';
+$string['errors9'] = 'Rogo vyžaduje Apache verzi $apache_min_ver nebo novější než máte';
+$string['errors10'] = 'Rogo vyžaduje PHP verzi $php_min_ver nebo novější';
+$string['errors11'] = 'Rogo k fungování vyžaduje PHP mysqli modul, prosím, nainstalujte jej a aktivujte.';
 $string['errors12'] = 'Přístup do Rogō je možný pouze pomocí https. Aktualizujte prosím konfiguraci Apache.';
 $string['errors13'] = 'Chyba';
 $string['errors14'] = 'Byla generována následující varování"';
@@ -103,7 +106,7 @@ $string['webhost'] = 'WebServer host';
 $string['html5'] = "HTML5";
 
 $string['labsecuritytype'] = "Zabezpečení učebny";
-$string['IP'] = "IP addresa";
+$string['IP'] = "IP adresa";
 $string['interactivequestions'] = "Nastavení interaktivních úloh.";
 
 ?>

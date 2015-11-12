@@ -24,6 +24,6 @@ $string['type'] = 'Typ';
 $string['modified'] = 'Upraveno';
 $string['status'] = 'Status';
 $string['locked'] = 'Uzamčeno';
-$string['warningnoleadin'] = 'Varování: v hlavičce není text úlohy!';
+$string['warningnoleadin'] = 'Varování: v hlavičce chybí text úlohy!';
 $string['bykeyword'] = 'dle Klíčového slova';
 ?>

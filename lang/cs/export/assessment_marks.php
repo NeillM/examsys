@@ -22,7 +22,7 @@ $string['studentid'] = 'ID studenta';
 $string['course'] = 'Kurz';
 $string['year'] = 'Rok';
 $string['submitted'] = 'Odevzdáno';
-$string['started'] = 'Zahájeno';
+$string['started'] = 'Začátek';
 $string['correctanswers'] = 'Správné odpovědi ->';
 $string['nodata'] = 'V daném období zkoušku nesložil žádný student';
 ?>

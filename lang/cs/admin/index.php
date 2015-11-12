@@ -19,7 +19,7 @@ $string['clearguestaccounts'] = 'Vyčistit dočasné účty';
 $string['clearoldlogs'] = 'Odstranit staré přístupy';
 $string['clearorphanmedia'] = 'Odstranit osiřelé mediální soubory ';
 $string['cleartraining'] = 'Vyčistit obsah Cvičného modulu';
-$string['computerlabs'] = 'Počítačové učebny';
+$string['computerlabs'] = 'PC učebny';
 $string['courses'] = 'Kurzy';
 $string['deniedlogwarnings'] = 'Upozornění na Odepřené přístupy';
 $string['ebelgridtemplates'] = 'Šablony Ebelovy mřížky';
@@ -42,6 +42,5 @@ $string['questionstatuses'] = 'Statusy úloh';
 $string['savefailattempts'] = 'Uložit nezdařené pokusy';
 $string['testing'] = 'Testování systémů';
 $string['bug'] = 'Hlášení chyb';
-$string['academicsessions'] = 'Academic Sessions';
-$string['authentication'] = 'OAuth Authentication';
+
 ?>

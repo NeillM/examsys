@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['nomodules'] = 'Pro akademické relace nebyly nalezeny žádné moduly ';
+$string['nomodules'] = 'Nebyly nalezeny žádné moduly ';
 $string['modules'] = 'Moduly';
 $string['modulesfor'] = 'Moduly pro';
 $string[1] = '1. pokus';

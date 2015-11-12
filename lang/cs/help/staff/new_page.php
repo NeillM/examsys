@@ -16,5 +16,5 @@
 
 require '../../lang/' . $language . '/help/staff/index.php';
 
-$string['pagetitle'] = 'Nadpis stránky...';
+$string['pagetitle'] = 'Název stránky...';
 ?>

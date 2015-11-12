@@ -18,7 +18,7 @@ require '../lang/' . $language . '/mapping/sessions_list.php';
 require '../lang/' . $language . '/include/months.inc';
 
 $string['editsession'] = 'Úprava relace';
-$string['title'] = 'Nadpis';
+$string['title'] = 'Název';
 $string['session'] = 'Relace';
 $string['date'] = 'Datum';
 $string['url'] = 'URL'; 

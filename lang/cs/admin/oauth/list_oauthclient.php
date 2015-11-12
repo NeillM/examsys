@@ -14,12 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['oauthclients'] = 'Clients';
-$string['addoauthclient'] = 'Add Oauth Client';
-$string['deleteoauthclient'] = 'Delete Oauth Client';
-$string['editoauthclient'] = 'Edit Oauth Client';
-$string['username'] = 'Username';
-$string['client'] = 'Client';
-$string['secret'] = 'Secret';
+$string['oauthclients'] = 'Klienti';
+$string['addoauthclient'] = 'Přidat klienta';
+$string['deleteoauthclient'] = 'Odebrat klienta';
+$string['editoauthclient'] = 'Upravit klienta';
+$string['username'] = 'Uživatelské jméno';
+$string['client'] = 'Klient';
+$string['secret'] = 'Heslo';
 $string['uri'] = 'URI';
-$string['oauthkeys'] = 'OAuth Keys';
+$string['oauthkeys'] = 'Autorizační klíče';

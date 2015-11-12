@@ -24,10 +24,10 @@ $string['type'] = 'Typ';
 $string['marks'] = 'Známky';
 $string['modified'] = 'Upraveno';
 $string['passmark'] = 'Potřebná známka';
-$string['mappingbysession'] = 'Mapování podle relace';
-$string['bysession'] = 'podle relace';
-$string['byquestion'] = 'podle úlohy';
+$string['mappingbysession'] = 'Mapování dle relace';
+$string['bysession'] = 'dle relace';
+$string['byquestion'] = 'dle úlohy';
 $string['longitudinal'] = 'Dlouhodobě';
 $string['warning'] = 'Varování';
-$string['nomatchsession'] = 'Relace v názvu dekumentu (%s) neodpovídá dokumentu relace (%s).';
+$string['nomatchsession'] = 'Datum v Názvu Testu (%s) neodpovídá sezení testu (%s).';
 ?>

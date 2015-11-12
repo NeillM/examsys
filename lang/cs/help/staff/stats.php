@@ -20,7 +20,7 @@ require '../../lang/' . $language . '/include/months.inc';
 $string['dates'] = 'Data';
 $string['page'] = 'Stránka';
 $string['hits'] = 'Zobrazeno';
-$string['tutorial'] = 'Tutorial';
+$string['tutorial'] = 'Tutoriál';
 $string['searches'] = 'Vyhledávání';
 $string['term'] = 'Výraz';
 $string['results'] = 'Výsledky';

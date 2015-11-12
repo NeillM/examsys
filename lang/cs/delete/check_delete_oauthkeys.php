@@ -16,5 +16,5 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['msg'] = 'Are you sure you wish to delete this OAuth Key?';
+$string['msg'] = 'Opravdu si přejete tento Autorizační klíč odstranit?';
 ?>

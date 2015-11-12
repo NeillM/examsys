@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/delete/delete.inc';
 
-$string['msg'] = 'Are you sure you wish to delete this academic session?';
-$string['warning1'] = 'The academic session is in use and so cannot be deleted.';
-$string['warning2'] = 'At least one academic session must be in the system.';
+$string['msg'] = 'Opravdu si přejete tuto Akademickou relaci odstranit?';
+$string['warning1'] = 'Akademická relace je používána a nelze ji odstranit.';
+$string['warning2'] = 'V systému musí být alespoň jedna relace.';
 ?>

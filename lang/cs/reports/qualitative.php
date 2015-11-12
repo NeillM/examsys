@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['qualitativeanalysis'] = 'Kvalitativní Analýza';
+$string['qualitativeanalysis'] = 'Kvalitativní analýza';
 $string['highlight'] = 'Zvýraznit';
 $string['collapse'] = 'Sbalit';
-$string['casesensitive'] = 'Rozlišuje "malá a VELKÁ"';
+$string['casesensitive'] = 'Rozlišovat "malá a VELKÁ"';
 $string['screen'] = 'Obrazovka';
 $string['comments'] = '%d komentářů.';
 $string['nocomments'] = '&lt;Žádné komentáře&gt;';

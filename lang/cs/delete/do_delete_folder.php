@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['folderdeleted'] = 'Složka odtsraněna';
+$string['folderdeleted'] = 'Složka odstraněna';
 $string['msg'] = 'Složka byla úspěšně odstraněna.';
 $string['recyclebin'] = 'Koš';
 ?>

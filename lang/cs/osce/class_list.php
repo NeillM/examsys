@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['classlist'] = 'OSCE: Class List';
+$string['classlist'] = 'OSCE: Seznam';
 $string['error1'] = 'Nebyl vybrán žádný Modul, proto nemohli být nalezeni žádní Studenti.';
 $string['error2'] = 'Nebyl nastaven žádný Akademický rok, proto nemohli být nalezeni žádní Studenti.';
 $string['error3'] = 'V tomto Modulu nebyli nalezeni žádní Studenti.';

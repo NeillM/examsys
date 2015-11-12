@@ -28,7 +28,7 @@ $string['mandatory'] = 'Označte <strong>povinná</strong> pole, která musí b�
 $string['bymodulecode'] = 'Moduly dle kódu';
 $string['myfolders'] = 'Moje složky';
 $string['papersoncurrentmodule'] = 'Dokumenty v tomto modulu';
-$string['describemodulechoice'] = 'Vyberte, prosím, dokument k prolinkování';
+$string['describemodulechoice'] = 'Vyberte, prosím, dokument k pro-linkování';
 $string['missingfields'] ='Chybějící pole';
 $string['module'] = 'Modul: %s';
 ?>

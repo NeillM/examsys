@@ -16,5 +16,5 @@
 
 $string['occurrance'] = 'Výskyt ';
 $string['percent'] = 'Procent';
-$string['adjustedpercent'] = 'Upravená procenta';
+$string['adjustedpercent'] = '% z úloh';
 ?>

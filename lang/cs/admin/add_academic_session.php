@@ -15,19 +15,19 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 
-$string['addacademicsession'] = 'Add Academic Session';
-$string['calendaryear'] = 'Calendar Year';
-$string['academicyear'] = 'Academic Year';
-$string['calstatus'] = 'Enabled in Calendar';
-$string['statstatus'] = 'Enabled in Statistics';
-$string['save'] = 'Save';
-$string['cancel'] = 'Cancel';
-$string['academicsessions'] = 'Academic Sessions';
-$string['duplicateerror'] = 'Calendar year already exists.';
-$string['createsession'] = 'Create Academic Session';
-$string['editsession'] = 'Edit Academic Session';
-$string['deletesession'] = 'Delete Academic Session';
-$string['calendaryear_tt'] = 'e.g. 2015, 2016';
-$string['academicyear_tt'] = 'e.g. 2015/16, 2015/2016, 15/16, 15-16';
-$string['calendarenabled_tt'] = 'Will the academic session display in the calendar?';
-$string['statenabled_tt'] = 'Will the academic session display in the summative statistics report?';
+$string['addacademicsession'] = 'Nová Akademická relace';
+$string['calendaryear'] = 'Kalendářní rok';
+$string['academicyear'] = 'Akademický rok';
+$string['calstatus'] = 'Povolit v Kalendáři';
+$string['statstatus'] = 'Povolit ve Statistice';
+$string['save'] = 'Uložit';
+$string['cancel'] = 'Zrušit';
+$string['academicsessions'] = 'Akademická Relace';
+$string['duplicateerror'] = 'Kalendářní rok již existuje.';
+$string['createsession'] = 'Nová Akademická Relace';
+$string['editsession'] = 'Upravit Akademickou Relaci';
+$string['deletesession'] = 'Odstranit Akademickou Relaci';
+$string['calendaryear_tt'] = 'např. 2015, 2016';
+$string['academicyear_tt'] = 'např. 2015/16, 2015/2016, 15/16, 15-16';
+$string['calendarenabled_tt'] = 'Zobrazí se Akademická relace v Kalendáři?';
+$string['statenabled_tt'] = 'Zobrazí se Akademická relace ve Statistikách?';

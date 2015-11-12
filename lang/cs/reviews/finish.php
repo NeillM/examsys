@@ -18,6 +18,6 @@ $string['reviewcomplete'] = 'Kontrola dokončena';
 $string['deadline'] = 'Uzavírka';
 $string['generalcomments'] = 'Obecné Komentáře';
 $string['generalmsg'] = 'Obecné připomínky k celkovému testu (obtížnost, vhodnost atd.) zaznamenejte do níže uvedené oblasti.';
-$string['saveclose'] = 'Uložiz &amp; Zavřít';
+$string['saveclose'] = 'Uložit &amp; Zavřít';
 $string['savefinish'] = 'Uložit &amp; Ukončit';
 ?>

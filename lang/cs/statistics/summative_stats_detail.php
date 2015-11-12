@@ -16,10 +16,10 @@
 
 require '../lang/' . $language . '/include/months.inc';
 
-$string['summativeexamstats'] = 'Summative Exams';
-$string['statistics'] = 'Statistics';
-$string['date'] = 'Date';
-$string['papers'] = 'Papers';
-$string['uniquestudents'] = 'Unique students = %s';
-$string['students'] = 'Students';
+$string['summativeexamstats'] = 'Sumativní zkoušky';
+$string['statistics'] = 'Statistiky';
+$string['date'] = 'Datum';
+$string['papers'] = 'Dokumenty';
+$string['uniquestudents'] = 'Unikátních studentů = %s';
+$string['students'] = 'Studentů';
 ?>

@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['title'] = 'Titul';
-$string['bypaper'] = 'podle dokumentu';
+$string['title'] = 'Název';
+$string['bypaper'] = 'dle dokumentu';
 $string['module'] = 'Modul';
 $string['owner'] = 'Vlastník';
 $string['created'] = 'Vytvořeno';

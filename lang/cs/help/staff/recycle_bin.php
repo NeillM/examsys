@@ -16,7 +16,7 @@
 
 require '../../lang/' . $language . '/help/staff/index.php';
 
-$string['title'] = 'Nadpis';
+$string['title'] = 'Název';
 $string['content'] = 'Obsah';
 $string['access'] = 'Přístup';
 $string['deleted'] = 'Odstraněno';

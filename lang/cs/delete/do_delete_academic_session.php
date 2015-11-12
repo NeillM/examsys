@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['success'] = 'Academic Session successfully deleted.';
-$string['failure'] = 'Academic Session unknown.';
-$string['title'] = 'Academic Session Deletion';
+$string['success'] = 'Akademická relace úspěšně odstraněna.';
+$string['failure'] = 'Akademická relace neznámá.';
+$string['title'] = 'Odebrání Akademické relace';
 $string['ok'] = "OK";

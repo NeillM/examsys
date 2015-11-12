@@ -15,15 +15,15 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['emailtemplate'] = 'Emailová šablona';
-$string['to'] = 'To';
-$string['cc'] = 'Cc';
-$string['bcc'] = 'Bcc';
+$string['to'] = 'Komu';
+$string['cc'] = 'Kopie';
+$string['bcc'] = 'Skrytá kopie';
 $string['subject'] = 'Předmět';
 $string['subject_msg0'] = 'Komentář k e-testu %s ';
-$string['subject_msg1'] = 'REMINDER: %s e-assessment review';
-$string['subject_msg2'] = '%s review comments';
-$string['emailsent'] = 'Email byl zaslán.';
+$string['subject_msg1'] = 'PŘIPOMÍNKA: recenze dokumentu %s';
+$string['subject_msg2'] = '%s prohlédnout komentáře';
+$string['emailsent'] = 'Email byl odeslán.';
 $string['back'] = '&lt zpět';
 $string['email'] = 'E-mail';
-$string['noexaminers'] = 'No deadline has been set for the external examiners.';
+$string['noexaminers'] = 'Pro externí examinátory nebyl nastaven žádný termín uzávěrky.';
 ?>

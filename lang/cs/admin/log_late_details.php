@@ -15,6 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['loglatedetails'] = 'Detaily pozdě přihlášených';
-$string['papertitle'] = 'Nadpis dokumentu';
+$string['papertitle'] = 'Název dokumentu';
 $string['studentslate'] = 'Pozdě přihlášení studenti';
 ?>

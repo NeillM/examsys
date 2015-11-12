@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['labdetails'] = 'Detaily učebny';
-$string['editcomputerlab'] = 'Upravit počítačovou učebnu';
+$string['editcomputerlab'] = 'Upravit PC učebnu';
 $string['createnewlab'] = 'Nová učebna';
 $string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
 $string['deletelab'] = 'Odstranit učebnu';
@@ -29,7 +29,7 @@ $string['low'] = 'Pomalé';
 $string['high'] = 'Rychlé';
 $string['timetabling'] = 'Rozvrh';
 $string['itsupport'] = 'IT Podpora';
-$string['plagarism'] = 'Anti plagiátorská nóta';
+$string['plagarism'] = 'Podvádění';
 $string['ipaddresses'] = 'IP Adresy';
 $string['save'] = 'Uložit';
 $string['badaddressesmsg'] = 'Následující IP adresy byly chybné a nebyly do učebny zařazeny: %s. Ostatní adresy byly uloženy.';

@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/user_search_options.inc';
 $string['impmodtitle'] = 'Rogō: Nahrát moduly';
 $string['csvfile'] = 'CSV soubor:';
 $string['import'] = 'Importovat';
-$string['msg1'] = "Rogō může zápisy studentů imporotvat do modulu hromadně. První řádek by měl obsahovat hlavičku obsahující následující pole:";
+$string['msg1'] = "Rogō může zápisy studentů importovat do modulu hromadně. První řádek by měl obsahovat hlavičku obsahující následující pole:";
 $string['msg2'] = "Další (nepovinné) pole 'Pokus' může být použito k uložení čísla pokusu  pro případné opakované vyplnění. Pokud pole nevyplníte, předpokládá se, že jde o první pokus.";
 $string['addingmodules'] = 'Přidat moduly z';
 $string['missingusers'] = 'Chybějící uživatelé';

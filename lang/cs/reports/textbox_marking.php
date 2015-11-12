@@ -32,8 +32,8 @@ $string['comments'] = 'Komentáře';
 $string['next'] = 'Další &gt;';
 $string['previous'] = '&lt; Předchozí';
 $string['finish'] = 'Dokončit';
-$string['mark_progress'] = 'Student %d of %d';
+$string['mark_progress'] = 'Student %d z %d';
 $string['answer_saved'] = 'Známky uloženy';
 $string['noattempts'] = 'V daném období <strong>%s &ndash; %s</strong> zkoušku nesložil žádný student.';
-$string['tooltip_comments'] = 'Comments are only for staff. These cannot be viewed by students.';
+$string['tooltip_comments'] = 'Tyto Komentáře jsou viditelné pouze akademikům, studentům nikoliv.';
 ?>

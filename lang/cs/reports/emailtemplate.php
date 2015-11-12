@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cc'] = 'CC'; 
-$string['bcc'] = 'BCC';
+$string['cc'] = 'Kopie'; 
+$string['bcc'] = 'Skrytá kopie';
 $string['subject'] = 'Předmět';
 $string['email_class'] = 'Zaslat E-mail';
 $string['cancel'] = 'Zrušit'

@@ -73,7 +73,7 @@ $string['overriddenby'] = 'Hodnocení upraveno(kým)';
 $string['questionclarification'] = 'Ujasnění úlohy';
 $string['EnhancedCalcCorrectError'] = 'CHYBA: Správná odpověď nemohla být vypočítána';
 $string['student'] = 'Student';
-$string['started'] = 'Started';
+$string['started'] = 'Začátek';
 $string['finished'] = 'Dokončeno';
-$string['comments'] = 'Comments:';
+$string['comments'] = 'Komentáře:';
 ?>

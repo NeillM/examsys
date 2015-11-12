@@ -23,7 +23,7 @@ $string['add'] = 'Přidat';
 $string['createcourse'] = 'Nový kurz';
 $string['bulkcourseimport'] = 'Nahrát kurz';
 $string['editcourse'] = 'Upravit kurz';
-$string['deletecourse'] = 'Odebrat kurz';
+$string['deletecourse'] = 'Odstranit kurz';
 $string['codecourse'] = 'Zadejte, prosím, Identifikátor kurzu.';
-$string['titlecourse'] = 'Zadejte, prosím, Nadpis kurzu.';
+$string['titlecourse'] = 'Zadejte, prosím, Název kurzu.';
 ?>

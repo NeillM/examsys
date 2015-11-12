@@ -14,6 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['bykeyword'] = 'podle klíčových slov';
+$string['bykeyword'] = 'dle klíčových slov';
 $string['mykeywords'] = 'Moje klíčová slova';
 ?>

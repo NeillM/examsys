@@ -15,5 +15,5 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['preview'] = 'Náhled';
-$string['previewmsg'] = 'Pro získání náhledu v podokně, klikněte na hlavičku úlohy.';
+$string['previewmsg'] = 'Pro získání náhledu v pod-okně, klikněte na hlavičku úlohy.';
 ?>

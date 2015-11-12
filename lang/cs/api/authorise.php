@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['authorise'] = "Authorise";
-$string['authoriseaccess'] = "Do you wish to authorise the access token?";
-$string['yes'] = "Yes";
-$string['no'] = "No";
-$string['unauthorised'] = "Authorisation denied";
-$string['save'] = "Save";
+$string['authorise'] = "Autorizovat";
+$string['authoriseaccess'] = "Přejete si přístupový token autorizovat??";
+$string['yes'] = "Ano";
+$string['no'] = "Ne";
+$string['unauthorised'] = "Autorizace odepřena";
+$string['save'] = "Uložit";

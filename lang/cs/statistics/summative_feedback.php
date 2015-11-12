@@ -21,5 +21,5 @@ $string['exams'] = 'Zkoušky';
 $string['objectivefeedback'] = 'Komentář k Cílům';
 $string['questionfeedback'] = 'Komentář k Úlohám';
 $string['cohortperformance'] = 'Výkon Skupiny';
-$string['externalexaminers'] = 'Externí zkoušející';
+$string['externalexaminers'] = 'Externí recenzenti';
 ?>
