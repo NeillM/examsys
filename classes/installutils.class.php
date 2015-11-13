@@ -1449,7 +1449,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $phpModules = get_loaded_extensions();
     $extensions = $configObject->getxml('php', 'extensions');
     $errorcode = 202;
-    foreach ($extensions->children() as $extension) {
+    foreach ($extensions->extension as $extension) {
         $errorcode += 1;
         if (!in_array($extension, $phpModules) ) {
           $errors[$errorcode] = sprintf($string['errors11'], $extension);

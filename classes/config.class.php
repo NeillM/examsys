@@ -60,7 +60,7 @@ class Config extends RogoStaticSingleton {
  
     // Get out of the box config information.
     $file = __DIR__ . '/../config/rogo.xml';
-    $this->xmldata = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
+    $this->xmldata = json_encode(simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA));
     // Get installed system config information.
     $conf_file = __DIR__ . '/../config/config.inc.php';
     if (file_exists($conf_file)) {
@@ -112,17 +112,18 @@ class Config extends RogoStaticSingleton {
    * @return value of xml node
    */
   function getxml($parent, $child = '', $grandchild = '') {
+    $xmldata = json_decode($this->xmldata);
     if (is_string($parent)) {
-      if (isset($this->xmldata->$parent)) {
+      if (isset($xmldata->$parent)) {
         if ($child == '' and $grandchild == '') {
-          return $this->xmldata->$parent;
+          return $xmldata->$parent;
         } elseif ($child != '' and $grandchild == '') {
-          if (isset($this->xmldata->$parent->$child)) {
-             return $this->xmldata->$parent->$child;
+          if (isset($xmldata->$parent->$child)) {
+             return $xmldata->$parent->$child;
           }
         } else {
-          if (isset($this->xmldata->$parent->$child->$grandchild)) {
-             return $this->xmldata->$parent->$child->$grandchild;
+          if (isset($xmldata->$parent->$child->$grandchild)) {
+             return $xmldata->$parent->$child->$grandchild;
           }
         }
       }
