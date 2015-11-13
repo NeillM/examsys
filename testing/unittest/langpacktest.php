@@ -44,6 +44,6 @@ class langpacktest extends PHPUnit_Framework_TestCase {
         $names = array('user_invalid_role', 'user_does_not_exist');
         $strings = $lang->get_strings($component, $names);
         $this->assertEquals('User has invalid role', $strings['user_invalid_role']);
-        $this->assertNotEquals('Failure', $strings['user_does_not_exist']);
+        $this->assertEquals('User does not exist', $strings['user_does_not_exist']);
     }
 }
