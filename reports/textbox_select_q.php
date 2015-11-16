@@ -139,7 +139,7 @@ $paper = $propertyObj->get_paper_title();
       } elseif ($_GET['action'] == 'finalise') {
         $candidates_marked = 0;
         // Check how many candidates are marked for this question.
-        $marked = $mysqli->prepare("SELECT mark FROM log2, log_metadata, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles = 'graduate') AND paperID = ? AND q_id = ?");
+        $marked = $mysqli->prepare("SELECT mark FROM log$paper_type, log_metadata, users WHERE log$paper_type.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles = 'graduate') AND paperID = ? AND q_id = ?");
         $marked->bind_param('ii', $paperID, $q_id);
         $marked->execute();
         $marked->bind_result($mark);
