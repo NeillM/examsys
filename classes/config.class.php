@@ -174,14 +174,10 @@ class Config extends RogoStaticSingleton {
     }
 
     if ($setting) {
-      $value = null;
-      $result = $this->db->prepare("SELECT `value` FROM `config` WHERE component = ? AND setting = ?");
-      $result->bind_param('ss', $component, $setting);
-      $result->bind_result($value);
-      $result->execute();
-      while ($result->fetch()) {
-        $result->close();
-        return $value;
+      $this->load_settings($component);
+      $cachedsetting = $this->get_setting_from_cache($component, $setting);
+      if ($cachedsetting) {
+        return $cachedsetting;
       }
     } else {
       $this->load_settings($component);
