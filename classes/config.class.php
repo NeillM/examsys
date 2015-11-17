@@ -173,18 +173,10 @@ class Config extends RogoStaticSingleton {
       return $cachedsetting;
     }
 
-    if ($setting) {
-      $this->load_settings($component);
-      $cachedsetting = $this->get_setting_from_cache($component, $setting);
-      if ($cachedsetting) {
-        return $cachedsetting;
-      }
-    } else {
-      $this->load_settings($component);
-      $cachedsetting = $this->get_setting_from_cache($component);
-      if ($cachedsetting) {
-        return $cachedsetting;
-      }
+    $this->load_settings($component);
+    $cachedsetting = $this->get_setting_from_cache($component);
+    if ($cachedsetting) {
+      return $cachedsetting;
     }
     return null;
   }
