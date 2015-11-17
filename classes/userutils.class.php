@@ -29,7 +29,7 @@ Class UserUtils {
   static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '') {
     $courseok = CourseUtils::add_course($school, $course, $coursedesc, $db);
 
-    if (($courseok !== true and $course!='') or $username == '' or $surname == '' or $email == '') {
+    if (($courseok !== true and $course != '') or $username == '' or $surname == '' or $email == '') {
       return false;
     }
 
@@ -46,7 +46,7 @@ Class UserUtils {
   static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null) {
     $username = trim($username);
     $surname = trim($surname);
-    if (empty($username) or  empty($surname) or empty($role)) {
+    if (empty($username) or empty($surname) or empty($role)) {
       return false;
     }
 
@@ -60,12 +60,12 @@ Class UserUtils {
           }
           $initials = strtoupper($initials);
       }
-      
+
       $surname = self::my_ucwords($surname);
       $title = self::my_ucwords(trim($title));
 
       $enc = new encryp();
-      
+
       // If there is no password generate a default one.
       if ($password == '') {
         $password = $enc->gen_password();
@@ -86,24 +86,59 @@ Class UserUtils {
       $result->close();
       $tmp_userID = $db->insert_id;
       if (isset($sid) and $sid != '') {
-        $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
-        if ($db->error) {
-          try {
-            throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
-          } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
-          }
-        }
-        $result->bind_param('si', $sid, $tmp_userID);
-        $result->execute();
-        $result->close();
+        self::insert_student_id($db, $sid, $tmp_userID);
       }
 
       return $tmp_userID;
     }
 
     return false;
+  }
+
+  /**
+   * Insert a new student id in the sid table
+   * @param mysqli $db
+   * @param string $studentid
+   * @param int $userid
+   * @throws Exception
+   */
+  static function insert_student_id($db, $studentid, $userid) {
+    $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
+    if ($db->error) {
+      try {
+        throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
+      } catch (Exception $e) {
+        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+        echo nl2br($e->getTraceAsString());
+      }
+    }
+    $result->bind_param('si', $studentid, $userid);
+    $result->execute();
+    $result->close();
+  }
+
+  /**
+   * Update a user's details by using their studentid as unique identifier
+   *
+   * @param string $studentid
+   * @param string $username user username
+   * @param string $password user password
+   * @param string $title user title
+   * @param string $forname user first names
+   * @param string $surname user surname
+   * @param string $email user email address
+   * @param string $course user course
+   * @param string $gender user gender
+   * @param integer $year year of study
+   * @param string $role user role
+   * @param string $sid student id
+   * @param mysqli $db db connection
+   * @param string $initials user initials
+   */
+  static function update_user_by_studentid($studentid, $username, $title, $first_names, $surname, $email, $course, $gender, $year, $role, $db, $initials) {
+    $userID = self::studentid_exists($studentid, $db);
+    $current = self::get_full_details_by_ID($userID, $db);
+    self::update_user($userID, $username, $current['password'], $title, $first_names, $surname, $email, $course, $gender, $year, $role, $studentid, $db, $initials);
   }
 
   /**
@@ -115,7 +150,7 @@ Class UserUtils {
    * @param string $forname - user first names
    * @param string $surname - user surname
    * @param string $email - user email address
-   * @param string $course - user course 
+   * @param string $course - user course
    * @param string $gender - user gender
    * @param integer $year - year of study
    * @param string $role - user role
@@ -138,7 +173,7 @@ Class UserUtils {
             return false;
         }
     }
-    
+
     // If updating the forename Force re-build of initials off forenames.
     if ($current['forname'] != $forname) {
         if ($initials == '') {
@@ -150,7 +185,7 @@ Class UserUtils {
           $initials = strtoupper($initials);
         }
     }
-    
+
     // If updating the surname check case.
     if ($current['surname'] != $surname) {
         $surname = self::my_ucwords($surname);
@@ -196,19 +231,19 @@ Class UserUtils {
         return false;
     }
     return true;
-   
+
   }
-  
+
   static function get_salt() {
     $configObj = Config::get_instance();
-  
+
     $auth_settings = $configObj->get('authentication');
     for ($i = 0; $i < count($auth_settings); $i++) {
       if ($auth_settings[$i][0] == 'internaldb') {
         $cfg_encrypt_salt = $auth_settings[$i][1]['encrypt_salt'];
       }
     }
-    
+
     return $cfg_encrypt_salt;
   }
 
@@ -228,10 +263,10 @@ Class UserUtils {
       $success = true;
     }
     $stmt->close();
-    
+
     return $success;
   }
-  
+
   /**
    * Check if username exists and if so return ID.
    *
@@ -246,7 +281,6 @@ Class UserUtils {
       return false;
     }
     $username = substr($username, 0, 60);
-  
     $stmt = $db->prepare("SELECT id FROM users WHERE username = ? AND user_deleted IS NULL");
     $stmt->bind_param('s', $username);
     $stmt->execute();
@@ -258,7 +292,7 @@ Class UserUtils {
 
     return $exists;
   }
-  
+
   /**
    * Add a new role to a user.
    *
@@ -270,16 +304,15 @@ Class UserUtils {
     if ($new_role == '') {
       return false;
     }
-    
+
     $has_role = UserUtils::has_user_role($userid, $new_role, $db);
-    
+
     if (!$has_role) {    // If new roles does not exist, add.
       $stmt = $db->prepare("UPDATE users SET roles = CONCAT(roles, ',', '$new_role') WHERE id = ?");
       $stmt->bind_param('i', $userid);
       $stmt->execute();
       $stmt->close();
     }
-    
   }
 
   /**
@@ -376,7 +409,7 @@ Class UserUtils {
 
     return $match;
   }
-  
+
   /**
    * Get all the details of a user account.
    *
@@ -394,14 +427,14 @@ Class UserUtils {
     $exists = ($stmt->num_rows > 0);
     $stmt->fetch();
     $stmt->close();
-    
+
     if (!$exists) {  // Return false if no record found for passed ID.
       return false;
     }
-    
+
     $parts = explode(' ', $first_names);
     $first_name = $parts[0];
-    
+
     if (stripos($roles, 'Student') !== false or stripos($roles, 'Graduate') !== false) {
       $stmt = $db->prepare("SELECT student_id FROM sid WHERE userID = ? LIMIT 1");
       $stmt->bind_param('i', $userID);
@@ -410,11 +443,10 @@ Class UserUtils {
       $stmt->fetch();
       $stmt->close();
 
-      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'first_name'=>$first_name, 'email'=>$email, 'roles'=>$roles, 'student_id'=>$student_id, 'gender'=>$gender, 'grade'=>$grade, 'yearofstudy'=>$yearofstudy, 'user_deleted'=>$user_deleted);
+      return array('username' => $username, 'title' => $title, 'surname' => $surname, 'initials' => $initials, 'first_names' => $first_names, 'first_name' => $first_name, 'email' => $email, 'roles' => $roles, 'student_id' => $student_id, 'gender' => $gender, 'grade' => $grade, 'yearofstudy' => $yearofstudy, 'user_deleted' => $user_deleted);
     } else {
-      return array('username'=>$username, 'title'=>$title, 'surname'=>$surname, 'initials'=>$initials, 'first_names'=>$first_names, 'first_name'=>$first_name, 'email'=>$email, 'roles'=>$roles, 'student_id'=>'', 'gender'=>$gender, 'grade'=>$grade, 'yearofstudy'=>$yearofstudy, 'user_deleted'=>$user_deleted);
+      return array('username' => $username, 'title' => $title, 'surname' => $surname, 'initials' => $initials, 'first_names' => $first_names, 'first_name' => $first_name, 'email' => $email, 'roles' => $roles, 'student_id' => '', 'gender' => $gender, 'grade' => $grade, 'yearofstudy' => $yearofstudy, 'user_deleted' => $user_deleted);
     }
-    
   }
 
   /**
@@ -437,7 +469,24 @@ Class UserUtils {
       return true;
     }
     return false;
-  }  
+  }
+
+  /**
+   * Remove a member of staff from a team.
+   *
+   * @param integer $tmp_userID - UserID of the member of staff.
+   * @param int $idMod          - The id of the team (module).
+   * @param object $db          - Database connection.
+   *
+   */
+  static function remove_staff_from_module($tmp_userID, $idMod, $db) {
+    if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
+      $stmt = $db->prepare("DELETE FROM modules_staff WHERE memberID = ? AND idMod = ?");
+      $stmt->bind_param('ii', $tmp_userID, $idMod);
+      $stmt->execute();
+      $stmt->close();
+    }
+  }
 
   /**
    * Add a member of staff onto a team by modulecode.
@@ -471,22 +520,22 @@ Class UserUtils {
     $stmt->execute();
     $stmt->close();
   }
-  
+
   /**
    * Lists the teams a user ID is on (uses the user object for the curent users
    * use this if we are not dealing with the logged in user)
-   * 
+   *
    * @param string $userID the id of the user
    * @param object $db mysqli database connection
    *
    */
   static function list_staff_modules_by_userID($userID, $db) {
     $user_modules = array();
-    $result = $db->prepare("SELECT 
-                                moduleID, idMod 
-                            FROM 
-                                modules_staff, modules 
-                            WHERE 
+    $result = $db->prepare("SELECT
+                                moduleID, idMod
+                            FROM
+                                modules_staff, modules
+                            WHERE
                                 modules_staff.idMod = modules.id AND
                                 mod_deleted IS NULL AND
                                 memberID = ?");
@@ -602,6 +651,21 @@ Class UserUtils {
       return self::add_student_to_module($tmp_userID, $moduleid, $attempt, $session, $db, $auto_update);
     }
   }
+  
+  /**
+   * Un-enrole a student on a module.
+   * @param int $tmp_userID ID of the student to be un-enroled.
+   * @param string $modulename Module name for the enrolement.
+   * @param int $attempt Attempt number
+   * @param mysqli $db database connection.
+   * @param bool $auto_update
+   */
+  public static function remove_student_from_module_by_modulecode($tmp_userID, $modulename, $session, $db) {
+    $moduleid = module_utils::get_idMod($modulename, $db);
+    if ($moduleid !== false) {
+      self::remove_student_from_module($tmp_userID, $moduleid, $session, $db);
+    }
+  }
 
   /**
    * Enrole a student on a module.
@@ -611,7 +675,6 @@ Class UserUtils {
    * @param object $db $mysqli database connection.
    *
    * @return int|bool enrolement id, 0 if already enrolled, false on error
-   *
    */
   static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0) {
 
@@ -646,7 +709,7 @@ Class UserUtils {
    *
    * @param integer $tmp_userID UserID of the member of student to remove
    * @param integer $session session year to be removed from
-   * @param integer $attemp attempt to be removed from
+   * @param integer $attempt attempt to be removed from
    * @param object $db mysqli database connection
    *
    */
@@ -713,7 +776,7 @@ Class UserUtils {
       $result = $db->prepare($sql);
       $result->bind_param('is', $tmp_userID, $session);
     }
-    
+
     $result->execute();
     $result->store_result();
     $result->bind_result($tmp_userID);
@@ -745,13 +808,13 @@ Class UserUtils {
 
   static function my_ucwords($s) {
     if (mb_check_encoding($s, "UTF-8")) {
-      //do nothing 
+      //do nothing
     } else {
       $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s);
     }
     return $s;
   }
-  
+
   static function load_student_modules($userID, $db) {
     $studentModules = array();
 
@@ -768,27 +831,27 @@ Class UserUtils {
 
     return $studentModules;
   }
-	
+
   /**
    * Set a single user to be deleted. Also appends the primary key ID
-	 * to the end of username so that username is still unique if
-	 * another user with the same username is added later.
+   * to the end of username so that username is still unique if
+   * another user with the same username is added later.
    *
    * @param int $userID - ID of the student.
    * @param object $db  - database connection.
    *
    */
-	static function delete_userID($userID, $db) {
-      $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
-      $result->bind_param('i', $userID);
-      $result->execute();  
-      $result->close();
-      if ($db->errno != 0) {
-        return false;
-      }
-      return true;
-	}
-  
+  static function delete_userID($userID, $db) {
+    $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Does a search for a student photo in the /users/photos/ directory.
    * A search is performed against JPEG, GIF and PNG file types.
@@ -815,7 +878,7 @@ Class UserUtils {
 
     return $found;
   }
-  
+
   /**
    * Delete all the LTI records associated with a Rogo user ID.
    *
@@ -826,14 +889,14 @@ Class UserUtils {
   static function clear_lti_user($userID, $db) {
     $result = $db->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
     $result->bind_param('i', $userID);
-    $result->execute();  
+    $result->execute();
     $result->close();
   }
 
  /**
   * Check if the user has started a paper
   * @param integer $id - user id
-  * @param mysqli $db 
+  * @param mysqli $db
   * @return bool
   */
   static function user_paper_started($id, $db) {
@@ -849,12 +912,12 @@ Class UserUtils {
     $result->close();
     return false;
   }
-  
+
   /**
    * Get user details
    * @param integer $id user id
-   * @param mysqli $db 
-   * @return array user details  
+   * @param mysqli $db
+   * @return array user details
    */
   static function get_full_details_by_ID($id, $db) {
       $sql = $db->prepare("SELECT username, password, title, first_names, surname, email, grade, gender,
@@ -865,7 +928,7 @@ Class UserUtils {
         $yearofstudy, $roles, $initials, $student_id);
       $sql->fetch();
       $sql->close();
-            
+
       $details = array(
         'username' => $username,
         'password' => $password,
@@ -874,15 +937,15 @@ Class UserUtils {
         'surname' => $surname,
         'email' => $email,
         'course' => $grade,
-        'gender' => $gender, 
-        'year' => $yearofstudy, 
-        'role' => $roles, 
-        'studentid' => $student_id, 
+        'gender' => $gender,
+        'year' => $yearofstudy,
+        'role' => $roles,
+        'studentid' => $student_id,
         'initials' => $initials);
-        
+
       return $details;
   }
-  
+
   /**
    * Remove the student from the module
    * 
@@ -914,10 +977,10 @@ Class UserUtils {
     }
     return false;
   }
-  
+
   /**
    * Get the enrolment id of the user on the module
-   * 
+   *
    * Only the attempt and auto_update values can be updated.
    * @param integer $userid - user id
    * @param integer $moduleid - module id
@@ -938,10 +1001,10 @@ Class UserUtils {
       $result->close();
       return $id;
   }
-  
+
   /**
    * Update module enrolement
-   * 
+   *
    * Only the attempt and auto_update values can be updated.
    * @param integer $id - enrolement id
    * @param integer $attempt - attempt at module
@@ -951,10 +1014,8 @@ Class UserUtils {
   static function update_module_enrolement($id, $attempt, $auto_update, $db) {
       $result = $db->prepare("UPDATE modules_student SET auto_update = ?, attempt = ? WHERE id = ?");
       $result->bind_param('iii', $auto_update, $attempt, $id);
-      $result->execute();  
+      $result->execute();
       $result->close();
   }
-  
-}
 
-?>
+}

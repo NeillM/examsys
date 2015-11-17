@@ -78,7 +78,7 @@ Class CourseUtils {
     if (trim($name) == '') {
       return false;
     }
-    
+
     $result = $db->prepare("DELETE FROM courses WHERE name = ? AND deleted IS NULL LIMIT 1");
     $result->bind_param('s', $name);
     $result->execute();
@@ -90,10 +90,10 @@ Class CourseUtils {
 
     return true;
   }
-  
+
   /**
    * Deletes an existing course.
-   * @param integer $id 
+   * @param integer $id
    * @param object $db database connection
    *
    * @return bool depending on  success
@@ -148,10 +148,10 @@ Class CourseUtils {
     }
     $result->free_result();
     $result->close();
-    
+
     return $exist;
   }
-  
+
   static function get_course_details_by_name($name, $db) {
     $result = $db->prepare("SELECT description, deleted, schoolid FROM courses WHERE name = ? LIMIT 1");
     $result->bind_param('s', $name);
@@ -165,14 +165,35 @@ Class CourseUtils {
       $details = array('description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid);
     }
     $result->close();
-    
+
     return $details;
   }
-  
+
+  /**
+   * Returns a name for a given course ID.
+   * @param string $courseID - The ID of the course to be checked
+   * @param object $db        - Link to mysqli
+   * @return bool|string      - False if the course does not exist, otherwise returns the name.
+   */
+  static function get_course_name_by_id($courseID, $db) {
+    $course_name = false;
+
+    $result = $db->prepare("SELECT name FROM courses WHERE id = ? AND deleted IS NULL");
+    $result->bind_param('i', $courseID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($course_name);
+    $result->fetch();
+    $result->close();
+
+    return $course_name;
+  }
+
+
   /**
    * Get course details
-   * @param integer $id 
-   * @param mysqli $db 
+   * @param integer $id
+   * @param mysqli $db
    * @return array details
    */
   static function get_course_details_by_id($id, $db) {
@@ -188,15 +209,15 @@ Class CourseUtils {
       $details = array('name'=>$name, 'description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid);
     }
     $result->close();
-    
+
     return $details;
   }
- 
+
  /**
   * Get the number of users on a course.
   * @param string $name - name of the course
-  * @param mysqli $db 
-  * @return  
+  * @param mysqli $db
+  * @return
   */
   static function count_users_on_course($name, $db) {
     $result = $db->prepare("SELECT count(*) FROM users WHERE grade = ?");
@@ -207,7 +228,7 @@ Class CourseUtils {
     $result->close();
     return $count;
   }
-  
+
   /**
    * Update new course.
    *
@@ -216,7 +237,7 @@ Class CourseUtils {
    * @param string $name code of the course e.g. B140
    * @param string $description a title for the course e.g. Neuroscience BSc
    * @param mysqli $db
-   * 
+   *
    * @return bool success response
    */
   static function update_course($id, $schoolid, $name, $description, $db) {
@@ -236,7 +257,7 @@ Class CourseUtils {
 
     return true;
   }
- 
+
   /**
    * Get the course id if it exists
    *

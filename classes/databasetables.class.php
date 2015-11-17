@@ -114,6 +114,15 @@ QUERY;
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
+        
+    $this->tableList['config'] = <<<QUERY
+        CREATE TABLE `config` (
+          `component` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'core',
+          `setting` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+          `value` text COLLATE utf8_unicode_ci,
+          PRIMARY KEY (`component`,`setting`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
 
     $this->tableList['courses'] = <<<QUERY
         CREATE TABLE `courses` (
@@ -675,7 +684,7 @@ QUERY;
     $this->tableList['modules'] = <<<QUERY
         CREATE TABLE `modules` (
           `id` int(11) NOT NULL auto_increment,
-          `moduleid` char(25) default NULL,
+          `moduleid` char(255) default NULL,
           `fullname` text,
           `active` tinyint(4) default NULL,
           `vle_api` varchar(255) default NULL,
