@@ -44,24 +44,6 @@ class Config extends RogoStaticSingleton {
   /** The path to the behat config file relative to the root Rogo directory. */
   const BEHAT_CONFIG_FILE = '/config/behat.xml';
 
-  /**
-   *
-   */
-/*
-  public static function get_instance()
-  {
-    if (!is_object(self::$inst)) {
-      self::$inst = new Config();
-    }
-    return self::$inst;
-  }
-*/
-
-  function __Clone() {
- //   print "conf cloned";
-
-  }
-
   function __toString() {
     return "ConfigObject!";
   }
