@@ -1409,7 +1409,7 @@ QUERY;
           `roles` char(40) default NULL,
           `id` int(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
-          `gender` enum('Male','Female') default NULL,
+          `gender` enum('Male','Female', 'Other') default NULL,
           `special_needs` tinyint(4) default '0',
           `yearofstudy` tinyint(4) default NULL,
           `user_deleted` datetime default NULL,
