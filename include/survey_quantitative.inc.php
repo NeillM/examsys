@@ -57,7 +57,7 @@ SQL;
     switch ($q_type) {
       case 'blank':
         $tmp_answer_parts = array();
-        $tmp_answer_parts = explode('|',$tmp_answer);
+        $tmp_answer_parts = json_decode($tmp_answer);
         $i = 0;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
           $i++;

@@ -64,7 +64,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'blank':
-            $parts = explode('|', $current_answer);
+            $parts = json_decode($current_answer);
             foreach ($parts as $part) {
               if ($part == 'u') {
                 $incomplete_screens[$i] = 1;
@@ -931,7 +931,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
 
         if (isset($user_answers[$current_screen][$q_id])) {
-          $blank_user_answers = explode('|', $user_answers[$current_screen][$q_id]);
+          $blank_user_answers = json_decode($user_answers[$current_screen][$q_id]);
         } else {
           $blank_user_answers = array();
         }
@@ -958,12 +958,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               $blank_mark[$blank_count] = $display_option['marks_correct'];
             }
 
-            if ( (isset($blank_user_answers[$blank_count]) and $blank_user_answers[$blank_count] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1) ) {
+            if ( (isset($blank_user_answers[$blank_count - 1]) and $blank_user_answers[$blank_count - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1) ) {
               $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" class=\"unans\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
               $unanswered = true;
             } else {
-              if (isset($blank_user_answers[$blank_count])) {
-                $ans = $blank_user_answers[$blank_count];
+              if (isset($blank_user_answers[$blank_count - 1])) {
+                $ans = $blank_user_answers[$blank_count - 1];
               }
               $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"" . htmlentities($ans). "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
             }
@@ -991,7 +991,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
-            if (isset($blank_user_answers[$part_id]) and $blank_user_answers[$part_id] == 'u' and $screen_pre_submitted == 1) {
+            if (isset($blank_user_answers[$part_id - 1]) and $blank_user_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
               echo "<select name=\"q" . $question_no . "_" . $part_id . "\" class=\"unans\">\n";
               $unanswered = true;
             } else {
@@ -1000,7 +1000,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo "<option value=\"u\"></option>\n";
             shuffle($answer_list);            // Shuffle the answers up.
             for ($i=1; $i<=count($answer_list); $i++) {
-              if (isset($answer_list[$i-1]) and isset($blank_user_answers[$blank_count]) and html_entity_decode(trim($answer_list[$i-1])) == html_entity_decode(trim($blank_user_answers[$blank_count]))) {
+              if (isset($answer_list[$i-1]) and isset($blank_user_answers[$blank_count - 1]) and html_entity_decode(trim($answer_list[$i-1])) == html_entity_decode(trim($blank_user_answers[$blank_count - 1]))) {
                 echo "<option value=\"" . htmlentities(trim($answer_list[$i-1]), ENT_COMPAT, "UTF-8") . "\" selected>" . trim($answer_list[$i-1]) . "</option>\n";
               } else {
                 echo "<option value=\"" . htmlentities(trim($answer_list[$i-1]), ENT_COMPAT, "UTF-8") . "\">" . trim($answer_list[$i-1]) . "</option>\n";

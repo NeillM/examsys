@@ -679,18 +679,18 @@ class ClassTotals {
           }
         }
       } elseif ($question['q_type'] == 'blank') {
-        $user_answers = explode('|', $tmp_user_answer);
-        $count_user_answer = count($user_answers)-1;
+        $user_answers = json_decode($tmp_user_answer);
+        $count_user_answer = count($user_answers);
         for ($a=0; $a<$count_user_answer; $a++) {
           if ($tmp_exclude{$a} == '0') {
             if ($question['display_method'] == 'dropdown') {
               $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
-              $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a+1])));
+              $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a])));
 
               if ($student_answer == $correct_answer) {
                 $tmp_mark += $question['marks_correct'];
                 $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-              } elseif ($user_answers[$a+1] != 'u' and $user_answers[$a+1] != '') {
+              } elseif ($user_answers[$a] != 'u' and $user_answers[$a] != '') {
                 $tmp_mark += $question['marks_incorrect'];
                 $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
               } else {
@@ -700,7 +700,7 @@ class ClassTotals {
               $match = false;
               if (isset($question['correct'][$a])) {
                 foreach ($question['correct'][$a] as $correct_alternative) {
-                  if (strtolower(trim($user_answers[$a+1])) == strtolower(trim($correct_alternative))) {
+                  if (strtolower(trim($user_answers[$a])) == strtolower(trim($correct_alternative))) {
                     $match = true;
                   }
                 }
@@ -709,7 +709,7 @@ class ClassTotals {
               if ($match == true) {
                 $tmp_mark += $question['marks_correct'];
                 $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-              } elseif ($user_answers[$a+1] != 'u' and $user_answers[$a+1] != '') {
+              } elseif ($user_answers[$a] != 'u' and $user_answers[$a] != '') {
                 $tmp_mark += $question['marks_incorrect'];
                 $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
               } else {

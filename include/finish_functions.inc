@@ -1978,16 +1978,16 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         if (isset($paper[$question]['user_answer'])) {
-          $user_choices = explode('|',$paper[$question]['user_answer']);
+          $user_choices = json_decode($paper[$question]['user_answer']);
         } else {
           $user_choices = array('u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u','u');
         }
 
         $blank_details = array();
         $blank_details = explode("[blank",$paper[$question]['option_text'][0]);
-        $no_blanks = count($blank_details);
+        $no_blanks = count($blank_details) - 1;
         echo '<p>' . $blank_details[0];
-        $blank_count = 1;
+        $blank_count = 0;
 
         while ($blank_count < $no_blanks) {
           if (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') {
@@ -1997,10 +1997,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
           }
 
           $answer_options = array();
-          $answer_options = explode("[/blank]",substr($blank_details[$blank_count],(strpos($blank_details[$blank_count],']') + 1)));
+          $answer_options = explode("[/blank]",substr($blank_details[$blank_count + 1],(strpos($blank_details[$blank_count + 1],']') + 1)));
           $answer_list = array();
           $answer_list = explode(',', $answer_options[0]);
-          $exclude_mod = (substr($tmp_exclude, $blank_count-1, 1) == '1') ? ' class="exclude"' : '';
+          $exclude_mod = (substr($tmp_exclude, $blank_count, 1) == '1') ? ' class="exclude"' : '';
           if ($paper[$question]['display_method'] == 'textboxes') {             // Textboxes
             $correct_flag = false;
             foreach ($answer_list as $individual_answer) {
@@ -2009,7 +2009,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               }
             }
             if ($correct_flag == true) {
-              if (substr($tmp_exclude, $blank_count-1, 1) == '0') {
+              if (substr($tmp_exclude, $blank_count, 1) == '0') {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
               }
               $have_answer = true;
@@ -2019,7 +2019,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               if ($user_choices[$blank_count] == 'u') {
                 echo "<input type=\"text\" size=\"20\" name=\"q" . $question . "_" . $blank_count . "\" value=\"" . $string['unanswered'] .  "\" style=\"color: #808080\"$exclude_mod />";
               } else {
-                if (substr($tmp_exclude, $blank_count-1, 1) == '0') {
+                if (substr($tmp_exclude, $blank_count, 1) == '0') {
                   $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 }
                 $have_answer = true;
@@ -2038,7 +2038,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             }
           } else {                                                                // Dropdown menus
             if ($tmp_display_correct_answer == '1') {
-              if (isset($paper[$question]['std'][$blank_count-1])) echo display_std($paper[$question]['std'][$blank_count-1],0);
+              if (isset($paper[$question]['std'][$blank_count])) echo display_std($paper[$question]['std'][$blank_count],0);
             }
             $colormod = (!isset($user_choices[$blank_count]) or $user_choices[$blank_count] == 'u') ? " style=\"color: #808080\"" : '';
             echo "<select name=\"\"{$colormod}{$exclude_mod}>\n";
@@ -2056,17 +2056,17 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             echo "</select>\n";
 
             if (isset($user_choices[$blank_count]) and str_replace('&nbsp;',' ',html_entity_decode(trim($answer_list[0]))) == str_replace('&nbsp;',' ',html_entity_decode(trim($user_choices[$blank_count])))) {
-              if (substr($tmp_exclude,$blank_count-1,1) == '0') {
+              if (substr($tmp_exclude,$blank_count,1) == '0') {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 $have_answer = true;
                 echo display_response($tmp_display_students_response, 'tick');
               }
             } else {
               if (isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
-                if (substr($tmp_exclude,$blank_count-1,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
+                if (substr($tmp_exclude,$blank_count,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 $have_answer = true;
               }
-              if ($tmp_display_students_response == '1' and substr($tmp_exclude,$blank_count-1,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,$blank_count,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
                 echo display_response($tmp_display_students_response, 'cross');
               } else {
                 echo display_response($tmp_display_students_response, 'blank');

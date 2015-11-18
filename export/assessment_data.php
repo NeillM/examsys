@@ -827,9 +827,9 @@ if ($student_no > 0) {
             break;
           case 'blank':
             $correct_parts = explode(',', $question['correct']);
-            $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
-            for ($partID=1; $partID<count($correct_parts); $partID++) {
-              if (substr($tmp_exclude,$partID-1,1) == '0') {
+            $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? json_decode($individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), null);
+            for ($partID=0; $partID < count($correct_parts) - 1; $partID++) {
+              if (substr($tmp_exclude,$partID,1) == '0') {
                 $csv .= ',';
                 if ($tmp_answers[$partID] != 'u') {
                   $csv .= '"' . str_replace("\n", ' ', str_replace("\r", ' ', $tmp_answers[$partID])) . '"';
