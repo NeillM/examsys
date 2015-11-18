@@ -66,8 +66,7 @@
     </xs:group>
     <xs:simpleType name="title">
         <xs:restriction base="xs:string">
-            <xs:minLength value="1"/>
-            <xs:maxLength value="30"/>
+            <xs:pattern value="Mx|Mr|Mrs|Miss|Ms|Dr|Professor"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="forename">
@@ -108,7 +107,7 @@
     </xs:simpleType>
     <xs:simpleType name="gender">
         <xs:restriction base="xs:string">
-            <xs:pattern value="Male|Female"/>
+            <xs:pattern value="Male|Female|Other"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="year">

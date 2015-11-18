@@ -1332,7 +1332,7 @@ QUERY;
           `id` int(11) NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `surname` char(50) default NULL,
-          `title` enum('Dr','Miss','Mr','Mrs','Ms','Professor') default NULL,
+          `title` enum('Dr','Miss','Mr','Mrs','Ms','Professor','Mx') default NULL,
           `student_id` char(10) default NULL,
           `assigned_account` char(10) default NULL,
           `reserved` datetime default NULL,
