@@ -64,4 +64,23 @@ class LabFactory {
     return $lab_object;
   }
   
+  /**
+   * Get lab id from ip address
+   * @param string $address ip address
+   * @return integer|bool lab id or false on error
+   */
+  public function get_lab_from_address($address){
+    $lab_results = $this->db->prepare("SELECT lab FROM client_identifiers WHERE address = ?");
+    $lab_results->bind_param("s", $address);
+    $lab_results->execute();
+    $lab_results->store_result();
+    $lab_results->bind_result($lab);
+    $lab_results->fetch();
+    if ($lab_results->num_rows() > 0) {
+      $lab_results->close();
+      return $lab;
+    }
+    $lab_results->close();
+    return false;
+  }
 }

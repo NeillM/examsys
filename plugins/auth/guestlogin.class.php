@@ -60,52 +60,17 @@ class guestlogin_auth extends outline_authentication {
     $config = Config::get_instance();
 
     $this->savetodebug('Button Check');
-    $labs_list = '';
-    // detect if we should display login button
-    $paper_match = false;
-    $ip_match = false;
-    $query = "SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1', '2') AND labs != ''";
-    $results = $this->db->prepare($query);
-    if ($this->db->error) {
-      try {
-        $e = $this->db->error;
-        $en = $this->db->errno;
-        throw new Exception("MySQL error $e <br /> Query:<br /> $query", $en);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-      }
+    // Check client address of current user is in a lab.
+    $address = NetworkUtils::get_client_address();
+    $labfactory = new LabFactory($this->db);
+    $lab = false;
+    $lab = $labfactory->get_lab_from_address($address);
+    // Check lab of current user is running an exam.
+    $paper = false;
+    if ($lab) {
+      $paper = PaperUtils::paper_available_in_lab_now($lab, $this->db);
     }
-    $results->execute();
-    $results->store_result();
-    $results->bind_result($labs);
-    while ($results->fetch()) {
-      $paper_match = true;
-      $query = "SELECT address FROM client_identifiers WHERE lab IN ($labs)";
-      $sub_results = $this->db->prepare($query);
-      if ($this->db->error) {
-        try {
-          $e = $this->db->error;
-          $en = $this->db->errno;
-          throw new Exception("MySQL error $e <br /> Query:<br /> $query", $en);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $sub_results->execute();
-      $sub_results->store_result();
-      $sub_results->bind_result($address);
-      while ($sub_results->fetch()) {
-        $labs_list = $labs_list . ' ' . $address;
-        if (NetworkUtils::get_client_address() == $address) $ip_match = true;
-      }
-      $sub_results->close();
-    }
-    $results->close();
-
-    $this->savetodebug('Status paper_match:' . var_export($paper_match, true) . ' ip_match:' . var_export($ip_match, true) . ' ip address:' . var_export(NetworkUtils::get_client_address(), true) . ' <br /> ' . $labs . ' ' . $labs_list);
-    if ($paper_match === true and $ip_match === true) {
+    if ($paper === true and $lab) {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'button';

@@ -694,4 +694,30 @@ Class PaperUtils {
     return false;
   }
   
+  /**
+   * Checks is a paper is available in the specidiced lab
+   * Only Summative and progressive papers checked.
+   * @param integer $lab - lab id
+   * @param mysqli $db
+   * @return bool true if paper available 
+   */
+  static function paper_available_in_lab_now($lab, $db) {
+    $results = $db->prepare("SELECT labs 
+      FROM properties 
+      WHERE start_date < DATE_ADD(NOW(), interval 15 minute)
+      AND end_date > NOW()
+      AND paper_type IN ('1','2')
+      AND labs != ''");
+    $results->execute();
+    $results->bind_result($labs);
+    while ($results->fetch()) {
+      $labs_array = explode(',', $labs);
+      if(in_array($lab, $labs_array)) {
+        $results->close();
+        return true;
+      }
+    }
+    $results->close();
+    return false;
+  }
 }
