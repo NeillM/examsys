@@ -702,20 +702,19 @@ Class PaperUtils {
    * @return bool true if paper available 
    */
   static function paper_available_in_lab_now($lab, $db) {
-    $results = $db->prepare("SELECT labs 
+    $results = $db->prepare("SELECT NULL 
       FROM properties 
       WHERE start_date < DATE_ADD(NOW(), interval 15 minute)
       AND end_date > NOW()
       AND paper_type IN ('1','2')
-      AND labs != ''");
+      AND labs REGEXP ?");
+    $lab_regexp = "(^|,)(" . $lab . ")(,|$)";
+    $results->bind_param('s', $lab_regexp);
     $results->execute();
-    $results->bind_result($labs);
-    while ($results->fetch()) {
-      $labs_array = explode(',', $labs);
-      if(in_array($lab, $labs_array)) {
-        $results->close();
-        return true;
-      }
+    $results->store_result();
+    if ($results->num_rows() > 0) {
+      $results->close();
+      return true;
     }
     $results->close();
     return false;
