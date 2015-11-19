@@ -65,12 +65,7 @@ class guestlogin_auth extends outline_authentication {
     $labfactory = new LabFactory($this->db);
     $lab = false;
     $lab = $labfactory->get_lab_from_address($address);
-    // Check lab of current user is running an exam.
-    $paper = false;
     if ($lab) {
-      $paper = PaperUtils::paper_available_in_lab_now($lab, $this->db);
-    }
-    if ($paper === true and $lab) {
       $this->savetodebug('Adding New Button');
       $newbutton = new displaystdformobjbutton();
       $newbutton->type = 'button';
