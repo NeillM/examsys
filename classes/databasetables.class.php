@@ -308,7 +308,8 @@ QUERY;
           `hostname` char(255) default NULL,
           `low_bandwidth` tinyint(4) default '0',
           PRIMARY KEY (`id`),
-          KEY `lab` (`lab`)
+          KEY `lab` (`lab`),
+          KEY `address_idx` (`address`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
