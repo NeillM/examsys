@@ -72,7 +72,8 @@ Class UserUtils {
       }
 
       // Force valid value for gender or default to NULL
-      if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
+      $genders = array('male', 'female', 'other');
+      if (!in_array(strtolower($gender), $genders)) {
         $gender = null;
       }
 
@@ -207,7 +208,8 @@ Class UserUtils {
 
     // If updating the gender. Force valid value for gender or default to NULL
     if ($current['gender'] != $gender) {
-        if (strtolower($gender) != 'male' and strtolower($gender) != 'female') {
+        $genders = array('male', 'female', 'other');
+        if (!in_array(strtolower($gender), $genders)) {
             $gender = null;
         }
     }
