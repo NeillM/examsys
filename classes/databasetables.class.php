@@ -905,7 +905,8 @@ QUERY;
           KEY `paper_owner` (`paper_ownerID`),
           KEY `question_type` (`paper_type`),
           KEY `crypt_name_idx` (`crypt_name`),
-          KEY `idx_owner_deleted` (`paper_ownerID`,`deleted`)
+          KEY `idx_owner_deleted` (`paper_ownerID`,`deleted`),
+          KEY `date_idx` (`start_date`, `end_date`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
