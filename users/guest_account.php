@@ -30,32 +30,23 @@ require_once '../include/auth.inc';
 
 $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_student_user'), $configObject->get('cfg_db_student_passwd'), $configObject->get('cfg_db_database'));
 
-// Check that the client address of the current user is within the exam lab.
-$paper_match = false;
-$lab_match = false;
-$results = $mysqli->prepare("SELECT labs FROM properties WHERE start_date < DATE_ADD(NOW(), interval 15 minute) AND end_date > NOW() AND paper_type IN ('1','2') AND labs != ''");
-$results->execute();
-$results->store_result();
-$results->bind_result($labs);
-while ($results->fetch()) {
-  $paper_match = true;
-  $sub_results = $mysqli->prepare("SELECT address FROM client_identifiers WHERE lab IN ($labs)");
-  $sub_results->execute();
-  $sub_results->store_result();
-  $sub_results->bind_result($address);
-  while ($sub_results->fetch()) {
-    if (NetworkUtils::get_client_address() == $address) $lab_match = true;
-  }
-  $sub_results->close();
+// Check client address of current user is in a lab.
+$address = NetworkUtils::get_client_address();
+$labfactory = new LabFactory($mysqli);
+$lab = false;
+$lab = $labfactory->get_lab_from_address($address);
+// Check lab of current user is running an exam.
+$paper = false;
+if ($lab) {
+  $paper = PaperUtils::paper_available_in_lab_now($lab, $mysqli);
 }
-$results->close();
 
-if ($paper_match == false) {
-  $notice->access_denied($mysqli, $string, $string['cannotfindexams'], false, true);
-} elseif ($lab_match == false) {
+if (!$lab) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/page_not_found.png', '#C00000', true, true);
-}
+} elseif ($paper === false) {
+  $notice->access_denied($mysqli, $string, $string['cannotfindexams'], false, true);
+} 
 ?>
 <!DOCTYPE html>
 <html>
