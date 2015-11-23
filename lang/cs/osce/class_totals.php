@@ -38,4 +38,6 @@ $string['marking4'] = array('Nedostatečně', 'Dostatečně', 'Dobře', 'Chvalit
 $string['marking5'] = array('Nepostačující', 'Postačující');
 $string['marking6'] = array('NEUSPĚL', 'NA HRANĚ', 'USPĚL', 'USPĚL S VYZNAMENÁNÍM');
 $string['marking7'] = array('Neuspěl', 'Uspěl');
+$string['publishmarks'] = 'Publish Marks';
+$string['gradepublish'] = 'Marks Published';
 ?>

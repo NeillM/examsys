@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<{{ name }}>
+{% for key,item in response %}
+	<assessment id="{{key}}">
+	{% for itemkey,itemval in item %}
+	<gradeitem>
+			<userid>{{itemkey}}</userid>
+			<username>{{itemval.username}}</username>
+			<raw_grade>{{itemval.raw_grade}}</raw_grade>
+			<adjusted_grade>{{itemval.adjusted_grade}}</adjusted_grade>
+			<classification>{{itemval.classification}}</classification>
+		</gradeitem>
+	{% endfor %}
+</assessment>
+{% endfor %}
+<{{ name }}/>

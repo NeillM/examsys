@@ -280,4 +280,6 @@ $string['tooltip_formula'] = 'Kliknij na link by uzyskać więcej informacji z s
 // Textbox
 $string['reminders'] = 'Przypomnienia';
 $string['reminder_no'] = 'Przypomnienie #%d';
+// Published
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 ?>

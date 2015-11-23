@@ -111,4 +111,6 @@ $string['markingcalcquestions'] = 'Ocenianie pytania obliczeniowego';
 $string['viewstudentnote'] = 'Przejżyj notatkę studenta...';
 $string['viewaccessibility'] = 'Przejżyj ustawienie dostępu...';
 $string['resitcandidate'] = 'Przesadź kandydata';
+$string['publishmarks'] = 'Publish Marks';
+$string['gradepublish'] = 'Marks Published';
 ?>

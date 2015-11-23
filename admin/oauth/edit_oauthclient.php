@@ -61,6 +61,16 @@ if (isset($_POST['submit'])) {
     } else {
         $oauth->set_permission('modulemanagement/unenrol', $client, false);
     }
+    if (isset($_POST['assessmentmanagement/schedule'])) {
+        $oauth->set_permission('assessmentmanagement/schedule', $client, true);
+    } else {
+        $oauth->set_permission('assessmentmanagement/schedule', $client, false);
+    }  
+    if (isset($_POST['gradebook'])) {
+        $oauth->set_permission('gradebook', $client, true);
+    } else {
+        $oauth->set_permission('gradebook', $client, false);
+    }
     
     header("location: list_oauthclient.php", true, 303);
     exit();

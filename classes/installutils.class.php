@@ -565,7 +565,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE objectives ADD CONSTRAINT objectives_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE modules_student ADD CONSTRAINT modules_student_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE users_metadata ADD CONSTRAINT users_metadata_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
-    
+    $alter[] = "ALTER TABLE gradebook_user ADD CONSTRAINT gradebook_user_fk0 FOREIGN KEY (paperid) REFERENCES gradebook_paper(paperid)";
+
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);
         $res->execute();
@@ -578,6 +579,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * Load default data needed for rogo to function
    */
   static function loadData() {
+    global $timezone_array;
     // Add 3 academic sessions to the the new user started.
     $calendaryear = date('Y');
     $previouscalendaryear = date('Y') - 1;
@@ -593,7 +595,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->execute();
     $insert->close();
     // Add user psermissions.
-    $permissions = array('modulemanagement/create' => 'Create/Update a module',
+    $permissions = array('assessmentmanagement/create' => 'Create/Update paper',
+        'assessmentmanagement/delete' => 'Delete a paper',
+        'assessmentmanagement/schedule' => 'SChedule a summative assessment',
+        'gradebook' => 'Gradebook',
+        'modulemanagement/create' => 'Create/Update a module',
         'modulemanagement/delete' => 'Delete a module',
         'modulemanagement/enrol' => 'Enrol Users onto a module',
         'modulemanagement/update' => 'Update a module',
@@ -610,7 +616,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $insert->bind_param('ss', $permission, $description);
         $insert->execute();
         $insert->close();
-    } 
+    }
+    // Save json encoded list of timezones.
+    $encoded_timezones = json_encode($timezone_array);
+    $configObject = \Config::get_instance();
+    $configObject->set_db_object(self::$db);
+    $configObject->set_setting('timezones', $encoded_timezones);
   }
   
   /**

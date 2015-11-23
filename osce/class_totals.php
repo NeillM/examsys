@@ -81,6 +81,7 @@ if ($borderline_method) {
 $distinction_mark = $propertyObj->get_distinction_mark();
 
 set_classification($propertyObj->get_marking(), $user_results, $passmark, $user_no, $string);
+$report->set_user_results($user_results);
 $report->sort_results();
 $user_results = array_csort($user_results, $sortby, $ordering);
 
@@ -129,7 +130,15 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/popup_menu.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>    
+  <script>   
+
+    function popupPublishMarks() {
+      var winwidth = 785;
+      var winheight = 150;
+      templatewin = window.open("../reports/publishmarks.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      templatewin.moveTo(screen.width/2-350,screen.height/2-275);
+    } 
+    
     function setVars(metadataID, currentUserID) {
       $('#metadataID').val(metadataID);
       $('#userID').val(currentUserID);
@@ -333,6 +342,24 @@ echo draw_toprightmenu();
     echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
   }
   echo "</table>\n";
+  
+  $finished = false;
+  if ($propertyObj->get_end_date() <= time()) {
+    $finished = true;
+  }
+  if ($finished and !$report->paper_graded()) {
+    if (isset($_POST['publishmarks']) and $_POST['publishmarks'] == 'yes') {
+        $report->create_gradebook();
+        $report->store_grades();
+        echo '<p>' . $string['gradepublish'] . '</p>';
+    } else {
+        echo "<div>\n";
+        echo "<form name=\"theform\" method=\"post\">\n";
+        echo "<input type=\"button\" value=\"" . $string['publishmarks'] . "\" onclick=\"popupPublishMarks();\" style=\"margin:10px; width:160px\" />\n";
+        echo '<input type="hidden" name="publishmarks" value="" />';
+        echo "</form>\n</div>\n";
+    }
+  }
   
   $mysqli->close();
 ?>

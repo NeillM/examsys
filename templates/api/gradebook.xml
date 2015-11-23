@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<{{ name }}>
+    {% for key,item in response %}
+    <paper id="{{key}}">
+		{% for itemkey,itemval in item %}
+		<gradeitem>
+			<userid>{{itemkey}}</userid>
+			<username>{{itemval.username}}</username>
+			<grade>{{itemval.grade}}</grade>
+		</gradeitem>
+		{% endfor %}
+    </paper>
+    {% endfor %}
+<{{ name }}/>

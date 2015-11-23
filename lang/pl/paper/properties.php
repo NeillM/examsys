@@ -61,6 +61,7 @@ $string['displaycalculator'] = 'Kalkulator ekranowy';
 $string['audio'] = 'Audio'; //cognate
 $string['demosoundclip'] = 'testowy plik dźwiękowy';
 $string['marking'] = 'Punktacja';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 $string['overallclassification'] = 'Klasyfikacja całościowa';
 $string['markingguidance'] = 'Wytyczne oceny dla egzaminatora';
 $string['overallclass1'] = '&lt;Automatyczna&gt;';

@@ -53,5 +53,6 @@ $string['marking4'] = array('Niezdany', 'Na granicy niezdania', 'Na granicy zdan
 $string['marking5'] = array('Niesatysfakcjonujący', 'Kompetentny');
 $string['marking6'] = array('Jednoznacznie niezdany', 'Na granicy', 'Jednoznacznie zdany', 'Wyróżniająco zdany');
 $string['marking7'] = array('Niezdany', 'Zdany');
-
+$string['publishmarks'] = 'Publish Marks';
+$string['gradepublish'] = 'Marks Published';
 ?>

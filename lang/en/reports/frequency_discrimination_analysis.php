@@ -64,4 +64,6 @@ $string['abstain'] = 'Abstain';
 $string['unmarkedscripts'] = '%d unmarked scripts';
 $string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
 $string['keywordwarning'] = '<strong>Warning:</strong> Keyword-based questions cannot be analysed in this report.';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
+$string['paperlockedclick'] ='Click for more details';
 ?>

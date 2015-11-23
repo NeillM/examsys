@@ -64,4 +64,6 @@ $string['abstain'] = 'Zdrželo se';
 $string['unmarkedscripts'] = '%d neohodnocených skript';
 $string['randomwarning'] = '<strong>Varování:</strong> Úlohy na základě Náhodného bloku nemohou být analyzována.';
 $string['keywordwarning'] = '<strong>Varování:</strong> Úlohy na základě Klíčového slova nemohou být analyzována.';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
+$string['paperlockedclick'] ='Click for more details';
 ?>

@@ -61,6 +61,7 @@ $string['displaycalculator'] = 'display calculator';
 $string['audio'] = 'Audio';
 $string['demosoundclip'] = 'demo sound clip';
 $string['marking'] = 'Marking';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 $string['overallclassification'] = 'Overall Classification';
 $string['markingguidance'] = 'Examiner Marking Guidance';
 $string['overallclass1'] = '&lt;Automatic&gt;';

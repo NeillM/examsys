@@ -78,9 +78,10 @@ class ClassTotals {
   private $question_statuses;
   private $marking_overrides;
   private $string;
-
-	private $unmarked_enhancedcalc = false;
-	private $unmarked_textbox = false;
+  private $marking_complete;
+  private $percent_decimals;
+  private $unmarked_enhancedcalc = false;
+  private $unmarked_textbox = false;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string) {
     $this->db                 = $db;
@@ -110,8 +111,9 @@ class ClassTotals {
     $this->user_no            = 0;
     $this->marking_overrides  = array();
     $this->string             = $string;
-		$unmarked_calculation			= false;
-		$unmarked_textbox					= false;
+    $unmarked_calculation	  = false;
+    $unmarked_textbox		  = false;
+    $this->percent_decimals   = $this->config->get('percent_decimals');
 
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
@@ -266,24 +268,34 @@ class ClassTotals {
     return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
   }
 
-	/**
-	 * Works out if marks need scaling (monkey mark or standards setting) and will apply necessary conversions.
-	 */
-	 private function adjust_marks() {
-    $user_no = count($this->user_results);
+    /**
+    * Works out if marks need scaling (monkey mark or standards setting) and will apply necessary conversions.
+    */
+    private function adjust_marks() {
+        $user_no = count($this->user_results);
 
-    if ($this->marking == '1') {                              // Monkey mark
-      for ($i=0; $i<$user_no; $i++) {
-        $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
-      }
-    } elseif ($this->marking{0} == '2') {                     // Standards Setting
-      $this->set_ss_pass();
+        if ($this->marking == '1') {                              // Monkey mark
+            for ($i=0; $i<$user_no; $i++) {
+                $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
+            }
+        } elseif ($this->marking{0} == '2') {                     // Standards Setting
+            $this->set_ss_pass();
 
-      for ($i=0; $i<$user_no; $i++) {
-        $this->user_results[$i]['percent'] = $this->crankMark($this->user_results[$i]['percent']);
-      }
+            for ($i=0; $i<$user_no; $i++) {
+                $this->user_results[$i]['percent'] = $this->crankMark($this->user_results[$i]['percent']);
+            }
+        }
+        
+        for ($i=0; $i<$user_no; $i++) {
+            if (round($this->user_results[$i]['percent'], $this->percent_decimals) < $this->pass_mark) {
+                $this->user_results[$i]['classification'] = 'Fail';
+            } elseif (round($this->user_results[$i]['percent'], $this->percent_decimals) >= $this->distinction_mark) {
+                $this->user_results[$i]['classification'] = 'Distinction';
+            } else {
+                $this->user_results[$i]['classification'] = 'Pass';
+            }
+        }
     }
-  }
 
 	/**
 	 * Load question data for a random question.
@@ -1304,7 +1316,7 @@ class ClassTotals {
     $old_duration         = 0;
     $old_metadataID       = 0;
     $user_duration        = 0;
-    $marking_complete     = 1;
+    $this->marking_complete     = 1;
     $tmp_mark             = 0;
     $tmp_user_mark_array  = array();
     $log_data             = array();
@@ -1342,11 +1354,11 @@ class ClassTotals {
         }
 
         // Write the user results for the user that was iterated over previously using $old_metadataID
-        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
+        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $this->marking_complete);
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
         $user_duration = 0;
-        $marking_complete = 1;
+        $this->marking_complete = 1;
       } else if (!$old_metadataID) {
         // This is the first record being iterated over so $old_metadataID is set to 0.
         if (isset($this->user_modules[$userID]['idMod'])) {
@@ -1365,11 +1377,11 @@ class ClassTotals {
 
       if (($q_type == 'textbox') and !is_numeric($mark)) {
 			  $this->unmarked_textbox = true;
-        $marking_complete = 0;
+        $this->marking_complete = 0;
       }
       if ($q_type == 'enhancedcalc' and !is_numeric($mark)) {
 			  $this->unmarked_enhancedcalc = true;
-        $marking_complete = 0;
+        $this->marking_complete = 0;
       }
       $old_duration   = $duration;
       $old_screen     = $screen;
@@ -1385,7 +1397,7 @@ class ClassTotals {
     if ($old_metadataID != 0) {
       if ($this->repmodule == '' or (isset($this->user_modules[$userID]['idMod']) and $this->user_modules[$userID]['idMod'] == $this->repmodule)) {
         $user_duration += $old_duration;
-        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
+        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $this->marking_complete);
       }
     }
 
@@ -1506,6 +1518,7 @@ class ClassTotals {
         $this->user_results[$user_no]['roles']            = 'Student';
         $this->user_results[$user_no]['late']             = true;
         $this->user_results[$user_no]['rank']             = 99999999999;
+        $this->user_results[$user_no]['classification']   = '';
         $user_no++;
       }
     }
@@ -1561,10 +1574,7 @@ class ClassTotals {
    * Creates an array of basic statistics on the cohort performance.
    */
   public function generate_stats() {
-		$configObject = Config::get_instance();
-		$percent_decimals = $configObject->get('percent_decimals');
-
-		// Generate summary statistics.
+    // Generate summary statistics.
     $this->set_user_no();
     $mark_total    = 0;
     $percent_total = 0;
@@ -1588,15 +1598,15 @@ class ClassTotals {
     for ($i=0; $i<$this->user_no; $i++) {
       if (isset($this->user_results[$i]['percent']) and $this->user_results[$i]['questions'] >= $this->question_no and $this->user_results[$i]['visible']) {
         $this->stats['completed_no']++;
-        $median_mark_array[] = round($this->user_results[$i]['mark'], $percent_decimals);
-        $median_percent_array[] = round($this->user_results[$i]['percent'], $percent_decimals);
+        $median_mark_array[] = round($this->user_results[$i]['mark'], $this->percent_decimals);
+        $median_percent_array[] = round($this->user_results[$i]['percent'], $this->percent_decimals);
 
-        $mark_total += round($this->user_results[$i]['mark'], $percent_decimals);
-        $percent_total += round($this->user_results[$i]['percent'], $percent_decimals);  // Round to the precision being displayed on screen.
+        $mark_total += round($this->user_results[$i]['mark'], $this->percent_decimals);
+        $percent_total += round($this->user_results[$i]['percent'], $this->percent_decimals);  // Round to the precision being displayed on screen.
       }
       if (isset($this->user_results[$i]['mark']) and $this->user_results[$i]['visible']) {
-			  $tmp_mark = round($this->user_results[$i]['mark'], $percent_decimals);
-				$tmp_percent = round($this->user_results[$i]['percent'], $percent_decimals);
+			  $tmp_mark = round($this->user_results[$i]['mark'], $this->percent_decimals);
+				$tmp_percent = round($this->user_results[$i]['percent'], $this->percent_decimals);
 
 				$marks_data[] = $tmp_percent;
 				if ($tmp_percent < $this->pass_mark) $this->stats['failures']++;
@@ -1627,7 +1637,7 @@ class ClassTotals {
     $xmean_percent_total = 0;
     for ($i=0; $i<$this->user_no; $i++) {
       if (isset($this->user_results[$i]['questions']) and $this->user_results[$i]['questions'] >= $this->question_no and $this->user_results[$i]['visible'] and $this->stats['completed_no'] > 0) {
-			  $tmp_percent = round($this->user_results[$i]['percent'], $percent_decimals);
+			  $tmp_percent = round($this->user_results[$i]['percent'], $this->percent_decimals);
 
         $xmean_total += (($this->user_results[$i]['mark'] - ($mark_total / $this->stats['completed_no'])) * ($this->user_results[$i]['mark'] - ($mark_total / $this->stats['completed_no'])));
         $xmean_percent_total += (($tmp_percent - ($percent_total / $this->stats['completed_no'])) * ($tmp_percent - ($percent_total / $this->stats['completed_no'])));
@@ -1737,6 +1747,39 @@ class ClassTotals {
       }
       $result->close();
     }
+  }
+  
+  /**
+   * @brief Store exam grades
+   * @return bool
+   */
+  public function create_gradebook() {
+    $gradebook = new gradebook($this->db);
+    return $gradebook->create_gradebook($this->paperID);
+  }
+  
+  /**
+   * @brief Store exam grades
+   * @return void
+   */
+  public function store_grades() {
+    $gradebook = new gradebook($this->db);
+    for ($student = 0; $student < $this->user_no; $student++) {
+        $userid = $this->user_results[$student]['userID'];
+        $mark = $this->user_results[$student]['mark'];
+        $adjusted = MathsUtils::formatNumber($this->user_results[$student]['percent'], $this->percent_decimals);
+        $classification = $this->user_results[$student]['classification'];
+        $gradebook->store_grade($userid, $this->paperID, $mark, $adjusted, $classification);
+    }
+  }
+  
+  /**
+   * @brief Check if paper already graded
+   * @return bool true if graded
+   */
+  public function paper_graded() {
+    $gradebook = new gradebook($this->db);
+    return $gradebook->paper_graded($this->paperID);
   }
 
   /**

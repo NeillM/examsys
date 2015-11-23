@@ -203,7 +203,7 @@ function hidden_edit_fields() {
   return $html;
 }
 
-function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id, $paper_count, &$string) {
+function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id, $paper_count, &$string, $graded) {
   $html = '';
 
   if ($mode == $string['edit']) {
@@ -214,6 +214,9 @@ function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $check
     if ($disabled != '') {
       if ($locked != '' or $checkout_author == '') {
         $value = $string['limitedsave'];
+        if ($graded) {
+            $save_disabled = ' disabled="disabled"';
+        }
       } elseif ($checkout_author != $userID) {
         $save_disabled = ' disabled="disabled"';
         $name = 'bogus';

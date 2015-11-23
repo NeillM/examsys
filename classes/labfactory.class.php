@@ -69,7 +69,7 @@ class LabFactory {
    * @param string $address ip address
    * @return integer|bool lab id or false on error
    */
-  public function get_lab_from_address($address){
+  public function get_lab_from_address($address) {
     $lab_results = $this->db->prepare("SELECT lab FROM client_identifiers WHERE address = ?");
     $lab_results->bind_param("s", $address);
     $lab_results->execute();
@@ -81,6 +81,25 @@ class LabFactory {
       return $lab;
     }
     $lab_results->close();
+  }
+  
+  /**
+   * Get the lab id
+   * @param string $name lab name 
+   * @return int|bool id of lab or false
+  */
+  public function get_lab_id($name) {
+    $result = $this->db->prepare("SELECT id FROM labs WHERE name = ?");
+    $result->bind_param('s', $name);
+    $result->execute();
+    $result->bind_result($id);
+    $result->store_result();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+        $result->close();
+        return $id; 
+    }
+    $result->close();
     return false;
   }
 }
