@@ -696,7 +696,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             if (this.retry()) {
               return;
             } else  {
-              saveFail();
+              saveFail('fail');
               return;
             }
           },
@@ -712,14 +712,19 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               if (this.retry()) {
                 return;
               } else  {
-                saveFail(textStatus);
+                // errorThrown is the HTTP response.
+                if (errorThrown != '') {
+                    saveFail('http: ' + errorThrown);
+                } else {
+                     saveFail(textStatus);
+                }
                 return;
               }
             }
             saveFail(textStatus);
             return;
           },
-          success: function (ret_data, jqXHR, textStatus) {
+          success: function (ret_data, textStatus, jqXHR) {
             if (ret_data == randomPageID) {
               $('#save_failed').val('');
               <?php // Cache the form data to look for changes on next auto save ?>
@@ -730,7 +735,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             if (this.retry()) {
               return;
             } else  {
-              saveFail();
+              // marking_funcions.inc record_marks failed after retry.
+              saveFail('record marks failure');
               return;
             }
           },
