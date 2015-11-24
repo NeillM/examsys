@@ -340,7 +340,11 @@ echo "<div id=\"menu1\">\n";
     echo "<div class=\"menuitem cascade\" id=\"reports\"><a href=\"#\" onclick=\"showAssStatsMenu(false, event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</a></div>\n";
   } elseif ($properties->get_paper_type() == '4') {
     echo "<div class=\"menuitem cascade\" id=\"reports\"><a href=\"#\" onclick=\"showAssStatsMenu(false, event); return false;\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . "\" />" . $string['reports'] . "</a></div>\n";
-    echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"" . $string['importoscemarks'] . "\" />" . $string['importoscemarks'] . "</a></div>\n";
+    $gradebook = new gradebook($mysqli);
+    $graded = $gradebook->paper_graded($paperID);
+    if (!$graded) {
+      echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/osce_marks.php?paperID=$paperID&module=" . $module . "&folder=" . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"" . $string['importoscemarks'] . "\" />" . $string['importoscemarks'] . "</a></div>\n";
+    }
     if (strpos($checklist, 'mapping') !== false) {
       echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_session.php?paperID=$paperID&paper_title=" . $properties->get_paper_title() . "&sd=" . $properties->get_start_date() . "&ed=" . $properties->get_end_date() . "&module=" . $module . "&folder=" . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small.png\" alt=\"" . $string['mappedobjectives'] . "\" />" . $string['mappedobjectives'] . "</a></div>\n";
     }
