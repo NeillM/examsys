@@ -682,10 +682,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
           data: $('#qForm').serialize(),
           dataType: 'html',
           timeout: <?php
-											// Set the time out of one requst to be the maximum total time plus 5s for network latency
-											// PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
-											// weird happens.
-											echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
+            // Set the time out of one requst to be the maximum total time plus 5s for network latency
+            // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
+            // weird happens.
+            echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
                    ?>,
           cache: false,
           tryCount : 0,
