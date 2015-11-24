@@ -706,17 +706,17 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               // We have timed out either  the server has gone away or somthing went wrong in the network
               // Get the user to retry
               ?>
-              saveFail();
+              saveFail(textStatus);
               return;
             } else if (textStatus == 'error') {
               if (this.retry()) {
                 return;
               } else  {
-                saveFail();
+                saveFail(textStatus);
                 return;
               }
             }
-            saveFail();
+            saveFail(textStatus);
             return;
           },
           success: function (ret_data, jqXHR, textStatus) {
@@ -768,16 +768,16 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     }
   }
 
-  var saveFail = function () {
+  var saveFail = function (textStatus) {
     <?php // Re-register the autosave timer ?>
     startAutoSave();
 
     current_val =  $('#save_failed').val();
     unix_now = Math.round($.now() / 1000);
     if (current_val == '') {
-      $('#save_failed').val(unix_now);
+      $('#save_failed').val(unix_now  + '-' + textStatus);
     } else {
-      $('#save_failed').val(current_val + '\n' + unix_now);
+      $('#save_failed').val(current_val + '\n' + unix_now + '-' + textStatus);
     }
 
     $('#saveError').fadeIn('fast');
