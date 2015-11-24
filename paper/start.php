@@ -701,24 +701,15 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             }
           },
           error: function(xhr, textStatus, errorThrown) {
-            if (textStatus == 'timeout' ) {
-              <?php
-              // We have timed out either  the server has gone away or somthing went wrong in the network
-              // Get the user to retry
-              ?>
-              saveFail(textStatus);
-              return;
-            } else if (textStatus == 'error') {
+            if (textStatus == 'error') {
               if (this.retry()) {
                 return;
-              } else  {
+              } else {
                 // errorThrown is the HTTP response.
                 if (errorThrown != '') {
                     saveFail('http: ' + errorThrown);
-                } else {
-                     saveFail(textStatus);
+                    return;
                 }
-                return;
               }
             }
             saveFail(textStatus);
