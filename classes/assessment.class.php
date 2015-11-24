@@ -37,6 +37,12 @@ class assessment {
     
     // Supported time zones.
     private $timezones;
+    
+    // Supported cohort sizes
+    private $cohort_sizes;
+    
+    // Max paper duration
+    private $max_duration;
        
     // Paper type name and keys
     private $type;
@@ -67,6 +73,8 @@ class assessment {
         $configObject->load_settings('core');
         $settings = (object) $configObject->get_setting('core');
         $this->timezones = $settings->timezones;
+        $this->cohort_sizes = $settings->cohort_sizes;
+        $this->max_duration = $settings->max_duration;
     }
     
     /**
@@ -81,7 +89,7 @@ class assessment {
      * @param string $session - Academic session the paper is relevant to
      * @param array $modules - Modules that have the paper available to them
      * @param string $timezone - timezone paper is being taken in
-     * @return integer - id of new assessment
+     * @return integer|bool - id of new assessment or false on error
      */
     public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration = 'NULL', $session, $modules, $timezone = '') {
        
@@ -97,10 +105,9 @@ class assessment {
             $default_calc = 0;
         }
         // Enforce Interface boundaries.
-        // Move to cfg db table when we have one.
         if ($duration != 'NULL') {
-            if ($duration > 779) {
-                $duration = 779;
+            if ($duration > $this->max_duration) {
+                $duration = $this->max_duration;
             } elseif ($duration < 0) {
                 $duration = 0;
             }
@@ -111,14 +118,10 @@ class assessment {
                 $enddate = NULL;
             }
         } 
-        // Set timezone if not supplied.
-        if ($timezone == '') {
-            $timezone = $this->server_timezone;
-        }
-        // Verify timezone id supported.
+        // Verify timezone is supported, revert to server timezone if not.
         $decode_timezones = json_decode($this->timezones, true);
         if (!array_key_exists($timezone, $decode_timezones)) {
-            return false;
+            $timezone = $this->server_timezone;
         }
         $timestamp = time();
         $result = $this->db->prepare("INSERT INTO properties (paper_title,
@@ -179,22 +182,17 @@ class assessment {
      */
     public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration = 'NULL', $session, $modules, $timezone = '') {       
         // Enforce Interface boundaries.
-        // Move to cfg db table when we have one.
         if ($duration != 'NULL') {
-            if ($duration > 779) {
-                $duration = 779;
+            if ($duration > $this->max_duration) {
+                $duration = $this->max_duration;
             } elseif ($duration < 0) {
                 $duration = 0;
             }
         }        
-        // Set timezone if not supplied.
-        if ($timezone == '') {
-            $timezone = $this->server_timezone;
-        }
-        // Verify timezone id supported.
+        // Verify timezone is supported, revert to server timezone if not.
         $decode_timezones = json_decode($this->timezones, true);
         if (!array_key_exists($timezone, $decode_timezones)) {
-            return false;
+            $timezone = $this->server_timezone;
         }
         $result = $this->db->prepare("UPDATE properties SET paper_title = ?,
                     start_date = ?,
@@ -250,9 +248,8 @@ class assessment {
             return false;
         }
         // Enforce cohort size interface restrictions
-        // Move to cfg db table when we have one.
-        $cohorts_sizearray = array('0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500');
-        if (!in_array($cohort_size, $cohorts_sizearray)) {
+        $decode_cohort_sizes = json_decode($this->cohort_sizes, true);
+        if (!in_array($cohort_size, $decode_cohort_sizes)) {
             $cohort_size = '<whole cohort>';
         }
         // Enforce sittings interface restrictions
