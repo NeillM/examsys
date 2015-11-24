@@ -472,7 +472,7 @@ echo draw_toprightmenu(30);
   $scatter_data = '';
 
   echo "<tbody>\n";
-
+  $guestusers = false;
   for ($i=0; $i<$user_no; $i++) {
     extract($user_results[$i]);
 
@@ -559,6 +559,7 @@ echo draw_toprightmenu(30);
           echo "<td class=\"$class tmpacc $role_css\">Mr</td>";
           echo "<td class=\"$class tmpacc $role_css\">Guest</td>";
           echo "<td class=\"$class tmpacc $role_css\">" . str_replace('User','Account #',$user_results[$i]['surname']);
+          $guestusers = true;
         } else {
           echo "<td class=\"$class $role_css\">" . $user_results[$i]['title'] . "</td>";
           echo "<td class=\"$class $role_css\">" . $user_results[$i]['surname'] . "</td>";
@@ -963,7 +964,7 @@ echo draw_toprightmenu(30);
     if ($propertyObj->get_end_date() <= time()) {
         $finished = true;
     }
-    if ($finished and !$unmarked_questions and $summative and !$late_answers and !$report->paper_graded()) {
+    if (!$guestusers and $finished and !$unmarked_questions and $summative and !$late_answers and !$report->paper_graded()) {
         if (isset($_POST['publishmarks']) and $_POST['publishmarks'] == 'yes') {
             $report->create_gradebook();
             $report->store_grades();
