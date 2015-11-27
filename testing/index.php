@@ -71,6 +71,7 @@ require '../include/sysadmin_auth.inc';
 		<li><a href="database_structure.php">Database structure</a></li>
         <li><a href="help_test.php">Help page consistency test</a></li>
 		<li><a href="online_help_gaps.php">Online Help gaps</a></li>
+        <li><a href="syntax_test.php">Coding standards test</a></li>
 	</ol>
   
   <h2>Post-Installation Tests</h2>
