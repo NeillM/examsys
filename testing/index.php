@@ -25,6 +25,9 @@
 */
 
 require '../include/sysadmin_auth.inc';
+
+$langpack = new \langpack();
+$strings = $langpack->get_all_strings('testing/index');
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,7 +35,7 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>Rog&#333;: Test Suite</title>
+	<title>Rog&#333;: <?php echo $strings['testsuite'] ?></title>
 
 	<style>
 		.content {font-size:80%}
@@ -59,26 +62,26 @@ require '../include/sysadmin_auth.inc';
   
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a></div>
-    <div class="page_title">Testing</div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $strings['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $strings['administrativetools'] ?></a></div>
+    <div class="page_title"><?php echo $strings['testing'] ?></div>
   </div>
 
-  <h2>Development Tests</h2>
+  <h2><?php echo $strings['developmenttests'] ?></h2>
 	<ol>
-		<li><a href="lang_test.php">Language translations</a></li>
-		<li><a href="database_grants.php">Database grants</a></li>
-		<li><a href="database_indexes.php">Database indexes</a></li>
-		<li><a href="database_structure.php">Database structure</a></li>
-        <li><a href="help_test.php">Help page consistency test</a></li>
-		<li><a href="online_help_gaps.php">Online Help gaps</a></li>
-        <li><a href="syntax_test.php">Coding standards test</a></li>
+		<li><a href="lang_test.php"><?php echo $strings['languagetranslations'] ?></a></li>
+		<li><a href="database_grants.php"><?php echo $strings['databasegrants'] ?></a></li>
+		<li><a href="database_indexes.php"><?php echo $strings['databasindexes'] ?></a></li>
+		<li><a href="database_structure.php"><?php echo $strings['databasstructure'] ?></a></li>
+        <li><a href="help_test.php"><?php echo $strings['helpconsistency'] ?></a></li>
+		<li><a href="online_help_gaps.php"><?php echo $strings['helpgaps'] ?></a></li>
+        <li><a href="syntax_test.php"><?php echo $strings['coding'] ?></a></li>
 	</ol>
   
-  <h2>Post-Installation Tests</h2>
+  <h2><?php echo $strings['posttests'] ?></h2>
 	<ol>
-		<li><a href="class_totals_with_script.php">Summative Exam check</a></li>
-    <li><a href="checkenhancedcalc.php">Check enhancedcalc setup</a></li>
-    <li><a href="test_email.php">Check email sending</a></li>
+		<li><a href="class_totals_with_script.php"><?php echo $strings['summativecheck'] ?></a></li>
+    <li><a href="checkenhancedcalc.php"><?php echo $strings['calccheck'] ?></a></li>
+    <li><a href="test_email.php"><?php echo $strings['emailcheck'] ?></a></li>
 	</ol>
   
 </div>

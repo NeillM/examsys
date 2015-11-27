@@ -82,4 +82,15 @@ class langpack {
         }
         return $strings;
     }
+    
+    /**
+     * Get the value of all strings for the component.
+     * @param string $component lang file component name
+     * @return array list of translated values
+     */
+    public function get_all_strings($component) {
+        $filename = $this->get_filename($component);
+        include $filename;
+        return $string;
+    }
 }
