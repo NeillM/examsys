@@ -89,6 +89,7 @@ class langpack {
      * @return array list of translated values
      */
     public function get_all_strings($component) {
+        $string = array();
         $filename = $this->get_filename($component);
         include $filename;
         return $string;
