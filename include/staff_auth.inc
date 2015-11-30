@@ -27,7 +27,7 @@
 require_once 'staff_student_auth.inc';
 $userObject = UserObject::get_instance();
 
-if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron'))) {
+if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Standards Setter'))) {
   // Current user is not Staff, External Examiner or the system cron so display warning and exit.
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);

@@ -791,7 +791,8 @@ class UserObject extends RogoStaticSingleton {
       $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
     } elseif ($this->has_role('Student')) {
       $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);
-    } elseif ($this->has_role('External Examiner')) {
+    //} elseif ($this->has_role('External Examiner')) {
+    } elseif ($this->has_role(array('External Examiner', 'Standards Setter'))) {  
       $result = $this->db->change_user($cfg_db_external_user, $cfg_db_external_passwd, $cfg_db_database);
     } elseif ($this->has_role('Invigilator')) {
       $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);

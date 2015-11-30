@@ -115,6 +115,25 @@ if (!isset($staff_modules)){
   $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
 }
 
+$checklist = '';
+if (count($modules_array) > 0) {
+  $modules_array = array_keys($modules_array);
+  $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $modules_array) . ")");
+  $stmt->execute();
+  $stmt->bind_result($tmp_checklist);
+  $check = array();
+  while ($stmt->fetch()) {
+    if ($tmp_checklist != '') {
+      $tmp = explode(',', $tmp_checklist);
+      foreach ($tmp as $c => $type) {
+        $check[] = $type;
+      }
+    }
+  }
+  $checklist = implode(',', $check);
+  $stmt->close();
+}
+
 function format_color($color) {
   return '<div style="background-color:' . $color . '; border:1px solid #C0C0C0; width:50px; height:15px"></div>';
 }
@@ -1218,6 +1237,11 @@ if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '6
   echo '<tr><td id="tab3" style="display:none">' . $string['feedback'] . '</td></tr>';
   echo '<tr><td id="tab4" style="display:none">' . $string['reviewerstab'] . '</td></tr>';
 }
+if ((strpos($checklist, 'stdset') !== false) && ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '6')) {
+  echo '<tr><td id="tab11" class="tab" onclick="buttonclick(\'standardssetters\',\'tab11\')">' . $string['standardssetterstab'] . '</td></tr>';
+} else {
+  echo '<tr><td id="tab11" style="display:none">' . $string['standardssetterstab'] . '</td></tr>';
+}
 if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
   echo '<tr><td id="tab5" class="tab" onclick="buttonclick(\'rubric\',\'tab5\')">' . $string['rubrictab'] . '</td></tr>';
 } else {
@@ -2255,6 +2279,158 @@ SQL;
   }
   $external_details->close();
   echo "<input type=\"hidden\" name=\"examiner_no\" id=\"examiner_no\" value=\"$examiner_no\" /></div></td>\n</tr>\n";
+  ?>
+</table>
+</td>
+</tr>
+</table>
+
+<table id="standardssetters" class="tabsection" style="display: none">
+<tr><td class="tabtitle"><img src="../artwork/reviewers_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['standardssettersheading']; ?></td></tr>
+<tr><td style="vertical-align:bottom"><div id="standardssetters_list" style="height:543px;">
+<table cellspacing="0" cellpadding="2" border="0" style="width:100%">
+<tr><td class="headbar">&nbsp;<?php echo $string['standardssetters']; ?></td></tr>
+<tr><td><?php echo $string['deadline']; ?>&nbsp;
+<?php
+    // Split the end date
+    if ($properties->get_internal_review_deadline() == '') {
+      $split_year = 0;
+      $split_month = 0;
+      $split_day = 0;
+    } else {
+      $internal_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_internal_review_deadline(), $local_time);
+      $internal_review_deadline->setTimezone($local_time);
+
+      $split_year = $internal_review_deadline->format('Y');
+      $split_month = $internal_review_deadline->format('m');
+      $split_day = $internal_review_deadline->format('d');
+    }
+
+    // Available to Day
+    echo "<select id=\"int_tday2\" name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    for ($i = 1; $i < 32; $i++) {
+      if ($i < 10) {
+        if ($i == $split_day) {
+          echo "<option value=\"0$i\" selected>";
+        } else {
+          echo "<option value=\"0$i\">";
+        }
+      } else {
+        if ($i == $split_day) {
+          echo "<option value=\"$i\" selected>";
+        } else {
+          echo "<option value=\"$i\">";
+        }
+      }
+      if ($i < 10) echo '0';
+      echo "$i</option>\n";
+    }
+    echo "</select>\n";
+    // Available to Month
+    echo "<select id=\"int_tmonth2\" name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+    for ($i=0; $i<12; $i++) {
+      $trans_month = mb_substr($string[$months[$i]],0,3,'UTF-8');
+      if (($split_month-1) == $i) {
+        if ($i < 9) {
+          echo "<option value=\"0" . ($i+1) . "\" selected>$trans_month</option>\n";
+        } else {
+          echo "<option value=\"" . ($i+1) . "\" selected>$trans_month</option>\n";
+        }
+      } else {
+        if ($i < 9) {
+          echo "<option value=\"0" . ($i+1) . "\">$trans_month</option>\n";
+        } else {
+          echo "<option value=\"" . ($i+1) . "\">$trans_month</option>\n";
+        }
+      }
+    }
+    echo "</select>\n";
+     // Available to Year
+     echo "<select id=\"int_tyear2\" name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+     if ($split_year < date('Y') and $split_year > 1999) {
+       $start_year = $split_year;
+     } else {
+       $start_year = date('Y');
+     }
+     for ($i = $start_year; $i < (date('Y')+2); $i++) {
+       if ($i == $split_year) {
+         echo "<option value=\"$i\" selected>$i</option>\n";
+       } else {
+         echo "<option value=\"$i\">$i</option>\n";
+       }
+     }
+?>
+</td></tr>
+  <?php
+  echo "<tr><td><div style=\"width:700px; height:488px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+
+  // Get all users for teams within the schools of the current user
+  // Also get all admin users for those schools
+  $school_sql = '';
+  $admin_school_sql = '';
+  $schools = getSchools($staff_modules, $mysqli);
+
+  if (count($schools) > 0) {
+    $schools_list = implode(',', $schools);
+    if ($userObject->has_role('SysAdmin')) {
+      $school_sql = '';
+    } else {
+      $school_sql = "AND schoolid IN ($schools_list)";
+    }
+    $admin_school_sql = <<< SQL
+UNION SELECT DISTINCT users.id, title, initials, surname, first_names
+FROM users, admin_access
+WHERE users.id = admin_access.userID AND admin_access.schools_id IN ($schools_list)
+SQL;
+  }
+
+  // Make sure that current reviewers always appear on the list
+  $current_internals = $properties->get_internal_reviewers();
+  $current_internals_sql = '';
+  if (count($properties->get_internal_reviewers()) > 0) {
+    $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ')';
+  }
+
+  $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE roles != 'Left' AND users.id = modules_staff.memberID AND modules.id = modules_staff.idMod $school_sql $admin_school_sql $current_internals_sql AND user_deleted IS NULL ORDER BY surname, initials";
+  $internal_details = $mysqli->prepare($query);
+  $internal_details->execute();
+  $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
+  $internal_no = 0;
+  while ($internal_details->fetch()) {
+    $match = false;
+    foreach ($current_internals as $reviewerID => $reviewer_name) {
+      if ($internal_id == $reviewerID) $match = true;
+    }
+    if ($match) {
+      echo "<div class=\"r2\" id=\"2divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+    } else {
+      echo "<div class=\"r1\" id=\"2divinternal$internal_no\"><input type=\"checkbox\" onclick=\"toggle('divinternal$internal_no')\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+    }
+    $internal_no++;
+  }
+  $internal_details->close();
+  echo "<input type=\"hidden\" id=\"internal_no2\" name=\"internal_no\" value=\"$internal_no\" /></div></td></tr>";
+
+  /*echo "<td><div style=\"width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%\">";
+  $current_externals = $properties->get_externals();
+  $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = 'External Examiner' AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
+  $external_details->execute();
+  $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
+  $examiner_no = 0;
+  while ($external_details->fetch()) {
+    $match = false;
+    foreach ($current_externals as $reviewerID => $reviewer_name) {
+      if ($external_id == $reviewerID) $match = true;
+    }
+    if ($match) {
+      echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+    } else {
+      echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" onclick=\"toggle('divexaminer$examiner_no')\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+    }
+    $examiner_no++;
+  }
+  $external_details->close();
+  echo "<input type=\"hidden\" name=\"examiner_no\" id=\"examiner_no\" value=\"$examiner_no\" /></div></td>\n */
   ?>
 </table>
 </td>
