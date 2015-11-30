@@ -351,7 +351,8 @@ class RAF {
 	 * IMPORT: Insert a single question into the database.
    * @param array $q - Array holding all the information to create the question.
 	 */
-	private function write_question($q) {
+  private function write_question($q) {
+    $configObject = Config::get_instance();
 		// Stop SQL errors with ENUM fields and old data which may be blank.
 		if ($q['bloom'] == '') 					$q['bloom'] = null;  
 		if ($q['q_option_order'] == '') $q['q_option_order'] = 'display order';
