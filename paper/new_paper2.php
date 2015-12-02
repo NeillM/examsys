@@ -341,7 +341,6 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select><select id=\"fmonth\" name=\"fmonth\" class=\"datecopy\">\n";
     $current_month = (date('n') + 1);
-    //$current_month = 11; //===================================
     if ($current_month > 12) $current_month = 1;
     $months = array('', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
     for ($i=1; $i<=12; $i++) {
@@ -407,6 +406,7 @@ if ($_POST['paper_type'] == 'summative') {
       }
     }
     echo "</select>";
+
     // Available to Year
     if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
       $target_year = $date_array['year'] + 1;
