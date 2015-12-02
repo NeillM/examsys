@@ -409,12 +409,15 @@ if ($_POST['paper_type'] == 'summative') {
 
     // Available to Year
     if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
-      $target_year = $date_array['year'] + 1;
+      $target_year = $date_array['year'];
+      if ($current_month == 1) {
+          $target_year += 1;
+      }
     } else {
       $target_year = $date_array['year']+20;
     }
     echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
-    for ($i = $date_array['year']; $i < $target_year+1; $i++) {
+    for ($i = $date_array['year']; $i < $date_array['year']+21; $i++) {
       if ($i == $target_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
       } else {
