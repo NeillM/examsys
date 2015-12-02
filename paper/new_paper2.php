@@ -190,7 +190,7 @@ require '../lang/' . $language. '/include/timezones.inc';
     echo "Error, no paper name.";
     exit;
   }
-  
+
   if ($_POST['paper_type'] == 'formative' or $_POST['paper_type'] == 'progress' or $_POST['paper_type'] == 'summative') {
     $default_calc = 1;
   } else {
@@ -313,7 +313,7 @@ if ($_POST['paper_type'] == 'summative') {
     echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['summativeexamdetails'] . "</td></tr>\n";
   }
   if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
- 
+
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
     $module_details = module_utils::get_full_details_by_ID($_POST['module'], $mysqli);
@@ -341,6 +341,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select><select id=\"fmonth\" name=\"fmonth\" class=\"datecopy\">\n";
     $current_month = (date('n') + 1);
+    //$current_month = 11; //===================================
     if ($current_month > 12) $current_month = 1;
     $months = array('', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
     for ($i=1; $i<=12; $i++) {
@@ -375,7 +376,7 @@ if ($_POST['paper_type'] == 'summative') {
     }
     echo "</select>\n</td>";
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
-    
+
     // Available to Day
     $current_day = date('j');
     echo "<select id=\"tday\" name=\"tday\" class=\"datecopy\">\n";
@@ -408,13 +409,13 @@ if ($_POST['paper_type'] == 'summative') {
     echo "</select>";
     // Available to Year
     if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
-      $target_year = $date_array['year'];
+      $target_year = $date_array['year'] + 1;
     } else {
       $target_year = $date_array['year']+20;
     }
     echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
-    for ($i = $date_array['year']; $i < ($date_array['year']+21); $i++) {
-      if ($i == $target_year + 1) {
+    for ($i = $date_array['year']; $i < $target_year+1; $i++) {
+      if ($i == $target_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
       } else {
         echo "<option value=\"$i\">$i</option>\n";
