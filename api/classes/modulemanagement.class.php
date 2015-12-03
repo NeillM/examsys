@@ -122,7 +122,7 @@ class modulemanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist',
             'module_not_created', 'module_already_exists', 'faculty_not_supplied'));
         $faculty = true;
-        if (isset($params['id']) and $params['id'] !== '') {
+        if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
             if ($moduleid) {
                 $details = \module_utils::get_full_details_by_ID($params['id'], $this->db);
@@ -132,7 +132,7 @@ class modulemanagement extends \api\abstractmanagement {
             $moduleid = false;
         }
         // Get school id if school name provided.
-        if (isset($params['school']) and $params['school'] !== '') {
+        if (!empty($params['school'])) {
             $schoolid = \SchoolUtils::school_name_exists($params['school'], $this->db);
             if (!$schoolid) {
                 if (isset($params['faculty']) and $params['faculty'] !== '') {
@@ -148,17 +148,17 @@ class modulemanagement extends \api\abstractmanagement {
         
         if ($faculty) {
             // Get module code if not provided.
-            if ($moduleid and (!isset($params['modulecode']) or $params['modulecode'] === '')) {
+            if ($moduleid and (empty($params['modulecode']))) {
                 $params['modulecode'] = $details['modulecode'];
             }
             
             // Get name if not provided.
-            if ($moduleid and (!isset($params['name']) or $params['name'] === '')) {
+            if ($moduleid and (empty($params['name']))) {
                 $params['name'] = $details['name'];
             }
             
             // Get student management system if not provided.
-            if ($moduleid and (!isset($params['sms']) or $params['sms'] == '')) {
+            if ($moduleid and (empty($params['sms']))) {
                 $params['sms'] = $details['sms'];
             }
             
@@ -179,7 +179,7 @@ class modulemanagement extends \api\abstractmanagement {
             } else {
                 $moduleid = \module_utils::get_idMod($params['modulecode'], $this->db);
                 if (!$moduleid) {
-                    if (!isset($params['sms']) or $params['sms'] === '') {
+                    if (empty($params['sms'])) {
                         $params['sms'] = 'rogo webservice';
                     }
                     $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],
@@ -208,7 +208,7 @@ class modulemanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_deleted_inuse', 'module_not_deleted',
             'module_does_not_exist'));
-        if (isset($params['id']) and $params['id'] !== '') {
+        if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } else {
             $params['id'] = false;

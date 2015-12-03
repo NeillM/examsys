@@ -56,7 +56,7 @@ class schoolmanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
             , 'school_created', 'school_alreads_exists', 'faculty_not_supplied'));
         $faculty = true;
-        if (isset($params['id']) and $params['id'] !== '') {
+        if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
             if ($schoolid) {
                 $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
@@ -67,12 +67,12 @@ class schoolmanagement extends \api\abstractmanagement {
         }
         
         // Get name if not provided.
-        if ($schoolid and (!isset($params['name']) or $params['name'] === '')) {
+        if ($schoolid and (empty($params['name']))) {
             $params['name'] = $details['name'];
         }
         
         // Get faculty if provided.
-        if (isset($params['faculty']) and $params['faculty'] !== '') {
+        if (!empty($params['faculty'])) {
             $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
             if (!$facultyid) {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
@@ -130,7 +130,7 @@ class schoolmanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_deleted_inuse', 'school_not_deleted'
             , 'school_does_not_exist'));
-        if (isset($params['id']) and $params['id'] !== '') {
+        if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
         } else {
             $params['id'] = false;

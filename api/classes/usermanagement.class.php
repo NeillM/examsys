@@ -95,7 +95,7 @@ class usermanagement extends \api\abstractmanagement {
         $staffroles = array('Staff', 'Inactive Staff');
         $roles = array_merge($studentroles, $staffroles);
         
-        if (isset($params['id']) and $params['id'] !== '') {
+        if (!empty($params['id'])) {
             $userid = \UserUtils::userid_exists($params['id'], $this->db);
             if ($userid) {
                 $details = \UserUtils::get_full_details_by_ID($params['id'], $this->db);
@@ -181,7 +181,7 @@ class usermanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_paper_exists' ,'user_not_deleted',
             'user_does_not_exist'));
-        if (isset($params['id']) and $params['id'] !== '') {
+        if (!empty($params['id'])) {
             $userid = \UserUtils::userid_exists($params['id'], $this->db);
         } else {
             $params['id'] = false;

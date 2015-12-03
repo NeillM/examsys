@@ -71,7 +71,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'create', $params['nodeid'], $error);
         } 
-        if (isset($params['id']) and $params['id'] != '') {
+        if (!empty($params['id'])) {
             $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
             // Get current paper properties.
             if ($paperid) {
@@ -82,7 +82,7 @@ class assessmentmanagement extends \api\abstractmanagement {
         }
         
         // Get title if not provided.
-        if ($paperid and (!isset($params['title']) or $params['title'] === '')) {
+        if ($paperid and (empty($params['title']))) {
             $params['title'] = $details['title'];
             $uniquetitle = true;
         } else {
@@ -93,7 +93,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             }
         }
         // Get owner if not provided.
-        if ($paperid and (!isset($params['owner']) or $params['owner'] === '')) {
+        if ($paperid and (empty($params['owner']))) {
             $params['owner'] = $details['owner'];
             $userid = true;
             $staff = true;
@@ -110,7 +110,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             }
         }
         // Get session if not provided.
-        if ($paperid and (!isset($params['session']) or $params['session'] === '')) {
+        if ($paperid and (empty($params['session']))) {
             $params['session'] = $details['session'];
             $validsession = true;
         } else {
@@ -123,12 +123,12 @@ class assessmentmanagement extends \api\abstractmanagement {
         }
         // Get start datetime if not provided.
         $dateformat = 'Y-m-d H:i:s';
-        if ($paperid and (!isset($params['startdatetime']) or $params['startdatetime'] === '')) {
+        if ($paperid and (empty($params['startdatetime']))) {
             $start = $details['startdatetime'];
         } else {
             $start = date($dateformat, strtotime($params['startdatetime']));
         }
-        if ($paperid and (!isset($params['enddatetime']) or $params['enddatetime'] === '')) {
+        if ($paperid and (empty($params['enddatetime']))) {
             $end = $details['enddatetime'];
         } else {
             $end = date($dateformat, strtotime($params['enddatetime']));
@@ -156,7 +156,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             if (count($error) > 0) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
             } else {
-                if ($paperid and (!isset($params['labs']) or $params['labs'] === '')) {
+                if ($paperid and (empty($params['labs']))) {
                     $params['labs'] = $details['labs'];
                 } else {
                     // Check labs.
@@ -184,7 +184,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                         $labs = '';
                     }
                 }
-                if ($paperid and (!isset($params['duration']) or $params['duration'] === '')) {
+                if ($paperid and (empty($params['duration']))) {
                     $params['duration'] = $details['duration'];   
                 }       
                 $paper = new \assessment($this->db, $configObject);
@@ -297,7 +297,7 @@ class assessmentmanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_deleted_inuse', 'paper_not_deleted'
             , 'paper_does_not_exist'));
-        if (isset($params['id']) and $params['id'] != '') {
+        if (!empty($params['id'])) {
             $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
         }
         if ($paperid) {
