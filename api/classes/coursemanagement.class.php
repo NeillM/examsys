@@ -39,7 +39,10 @@ class coursemanagement extends \api\abstractmanagement {
         'OK' => 100,
         'COURSE_NOT_DELETED' => 300,
         'COURSE_DOES_NOT_EXIST' => 301,
-        'COURSE_NOT_DELETED_INUSE' => 302
+        'COURSE_NOT_DELETED_INUSE' => 302,
+        'COURSE_INVALID_FACULTY' => 303,
+        'COURSE_NOT_UPDATED' => 304,
+        'COURSE_NOT_CREATED' => 305
     );
     
     /**
@@ -93,12 +96,12 @@ class coursemanagement extends \api\abstractmanagement {
                 if ($courseid) {
                     $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $this->db);
                     if ($update) {
-                        $data = array('status' => 'OK', 'id' => $params['id']);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                     } else {
-                        $data = array('status' => $strings['course_not_updated'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['COURSE_NOT_UPDATED'], 'status' => $strings['course_not_updated'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['course_does_not_exist'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null);
                 }
             // Create Course.
             } else {
@@ -106,16 +109,16 @@ class coursemanagement extends \api\abstractmanagement {
                 if (!$courseid) {
                     $id = \CourseUtils::add_course($schoolid, $params['name'], $params['description'], $this->db);
                     if ($id) {
-                        $data = array('status' => 'OK', 'id' => $id);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
                     } else {
-                        $data = array('status' => $strings['course_not_created'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['COURSE_NOT_CREATED'], 'status' => $strings['course_not_created'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['course_already_exists'], 'id' => $courseid);
+                    $data = array('statuscode' => $this->statuscodes['COURSE_ALREADY_EXISTS'], 'status' => $strings['course_already_exists'], 'id' => $courseid);
                 }
             }
         } else {
-            $data = array('status' => $strings['faculty_not_supplied'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }

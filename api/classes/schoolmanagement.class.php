@@ -31,6 +31,20 @@ class schoolmanagement extends \api\abstractmanagement {
      * Language pack component.
      */
     private $langcomponent = 'api/schoolmanagement';
+    
+    /**
+     * Status codes
+     */
+    private $statuscodes = array(
+        'OK' => 100,
+        'SCHOOL_NOT_DELETED' => 600,
+        'SCHOOL_DOES_NOT_EXIST' => 601,
+        'SCHOOL_NOT_UPDATED' => 602,
+        'SCHOOL_NOT_CREATED' => 603,
+        'SCHOOL_NOT_DELETED_INUSE' => 604
+        'SCHOOL_FACULTY_INVALID' => 605
+        'SCHOOL_ALREADY_EXISTS' => 606
+    );
         
     /**
      * Create/Update school
@@ -76,12 +90,12 @@ class schoolmanagement extends \api\abstractmanagement {
                 if ($schoolid) {
                     $update = \SchoolUtils::update_school($params['id'], $facultyid, $params['name'], $this->db);
                     if ($update) {
-                        $data = array('status' => 'OK', 'id' => $params['id']);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                     } else {
-                        $data = array('status' => $strings['school_not_updated'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['school_does_not_exist'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);
                 }
             // Create school.
             } else {
@@ -89,19 +103,19 @@ class schoolmanagement extends \api\abstractmanagement {
                 if (!$schoolid) {
                     $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db);
                     if ($id) {
-                        $data = array('status' => 'OK', 'id' => $id);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
                     } else {
-                        $data = array('status' => $strings['school_created'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_CREATED'], 'status' => $strings['school_not_created'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['school_alreads_exists'], 'id' => $schoolid);
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_ALREADY_EXISTS'], 'status' => $strings['school_already_exists'], 'id' => $schoolid);
                 }
             }
         } else {
             if (!$schoolid) {
-                $data = array('status' => $strings['school_does_not_exist'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);
             } else {
-                $data = array('status' => $strings['faculty_not_supplied'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
             }
         }
         return $this->get_response($data, 'create', $params['nodeid']);
@@ -125,17 +139,17 @@ class schoolmanagement extends \api\abstractmanagement {
             // Only delete school if it contains no modules or courses.
             $inuse = \SchoolUtils::school_in_use($params['id'], $this->db);
             if ($inuse) {
-                $data = array('status' => $strings['school_not_deleted_inuse'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_DELETED_INUSE'], 'status' => $strings['school_not_deleted_inuse'], 'id' => null);
             } else {
                 $deleted = \SchoolUtils::delete_school($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    $data = array('status' => $strings['school_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_DELETED'], 'status' => $strings['school_not_deleted'], 'id' => null);
                 }
             }
         } else {
-             $data = array('status' => $strings['school_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

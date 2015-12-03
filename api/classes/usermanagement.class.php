@@ -31,6 +31,21 @@ class usermanagement extends \api\abstractmanagement {
      * Language pack component.
      */
     private $langcomponent = 'api/usermanagement';
+    
+    /**
+     * Status codes
+     */
+    private $statuscodes = array(
+        'OK' => 100,
+        'USER_NOT_DELETED' => 700,
+        'USER_DOES_NOT_EXIST' => 701,
+        'USER_NOT_UPDATED' => 702,
+        'USER_NOT_CREATED' => 703,
+        'USER_NOT_DELETED_INUSE' => 704'
+        'USER_INVALID_COURSE' => 705'
+        'USER_ALREADY_EXISTS' => 706'
+        'USER_INVALID_ROLE' => 707
+    );
         
     /**
      * Enrol users onto modules.
@@ -101,10 +116,10 @@ class usermanagement extends \api\abstractmanagement {
         } 
         
         if (!$userid and $params['id']) {
-            $data = array('status' => $strings['user_does_not_exist'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
         } else {
             if (!in_array($params['role'], $roles)) {
-                $data = array('status' => $strings['user_invalid_role'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['USER_INVALID_ROLE'], 'status' => $strings['user_invalid_role'], 'id' => null);
             } else {
                 // Students.
                 if (in_array($params['role'], $studentroles)) {
@@ -127,9 +142,9 @@ class usermanagement extends \api\abstractmanagement {
                                     $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
                         if ($update) {
                             $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
-                            $data = array('status' => 'OK', 'id' => $params['id']);
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                         } else {
-                            $data = array('status' => $strings['user_not_updated'], 'id' => null);
+                            $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
                         }
                     // Create.
                     } else {
@@ -138,19 +153,19 @@ class usermanagement extends \api\abstractmanagement {
                             $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
                         if ($id) {
                             $error = $this->user_modules($id, $params['modules'], $params['role']);
-                            $data = array('status' => 'OK', 'id' => $id, 'error' => $error);
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
                         } else {
                             // Check if user exists, otherwise throw generic error.
                             $userid = \UserUtils::username_exists($params['username'], $this->db);
                             if ($userid) {
-                                $data = array('status' => $strings['user_already_exists'], 'id' => $userid);
+                                $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userid);
                             } else {
-                                $data = array('status' => $strings['user_not_created'], 'id' => null);
+                                $data = array('statuscode' => $this->statuscodes['USER_NOT_CREATED'], 'status' => $strings['user_not_created'], 'id' => null);
                             }
                         }
                     } 
                 } else {
-                    $data = array('status' => $strings['course_does_not_exist'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null);
                 }
             }
         }
@@ -175,17 +190,17 @@ class usermanagement extends \api\abstractmanagement {
             // Only delete user they have taken no papers
             $inuse = \UserUtils::user_paper_started($params['id'], $this->db);
             if ($inuse) {
-                $data = array('status' => $strings['user_paper_exists'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['USER_NOT_DELETED_INUSE'], 'status' => $strings['user_paper_exists'], 'id' => null);
             } else {
                 $deleted = \UserUtils::delete_userID($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    $data = array('status' => $strings['user_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['USER_NOT_DELETED'], 'status' => $strings['user_not_deleted'], 'id' => null);
                 }
             }
         } else {
-             $data = array('status' => $strings['user_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }  
