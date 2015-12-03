@@ -86,10 +86,15 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['title'] = $details['title'];
             $uniquetitle = true;
         } else {
-            // Check paper title.
-            $uniquetitle = \Paper_utils::is_paper_title_unique($params['title'], $this->db);
-            if (!$uniquetitle) {
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
+            // If updating and not changing the title do not check.
+            if ($paperid and $params['title'] === $details['title']) {
+                $uniquetitle = true;
+            } else {
+                // Check paper title.
+                $uniquetitle = \Paper_utils::is_paper_title_unique($params['title'], $this->db);
+                if (!$uniquetitle) {
+                    $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
+                }
             }
         }
         // Get owner if not provided.
@@ -104,7 +109,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                 $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
             }
             // Check owners role.
-            $staff = \UserUtils::has_user_role($userid, 'Staff', $this->db);
+            $staff = \UserUtils::has_user_role($params['owner'], 'Staff', $this->db);
             if ($uniquetitle and $userid and !$staff) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
             }
@@ -239,7 +244,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
         }
         // Check owners role.
-        $staff = \UserUtils::has_user_role($userid, 'Staff', $this->db);
+        $staff = \UserUtils::has_user_role($params['owner'], 'Staff', $this->db);
         if ($uniquetitle and $userid and !$staff) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
         }
