@@ -234,10 +234,10 @@ class ldap_auth extends outline_authentication {
         return $authobj;
       }
     } else {
-      $this->savetodebug('Couldnt Bind to ldap server');
+      $this->savetodebug('Could not Bind to ldap server');
       $authobj->fail($this->number);
 
-      $this->set_error('Couldnt bind to ldap server');
+      $this->set_error('Could not bind to ldap server');
 
       return $authobj;
     }
