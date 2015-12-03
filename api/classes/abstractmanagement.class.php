@@ -74,6 +74,7 @@ abstract class abstractmanagement {
      */
     public function get_response($data, $action, $nodeid = null, $error = null) {
         return $response = array(
+            "statuscode" => $data['statuscode'],
             "status" => $data['status'],
             "id" => $data['id'],
             "error" => $error,

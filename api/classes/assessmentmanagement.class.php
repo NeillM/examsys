@@ -33,6 +33,27 @@ class assessmentmanagement extends \api\abstractmanagement {
     private $langcomponent = 'api/assessmentmanagement';
     
     /**
+     * Status codes
+     */
+    private $statuscodes = array(
+        'OK' => 100,
+        'PAPER_NOT_DELETED' => 200,
+        'PAPER_DOES_NOT_EXIST' => 201,
+        'PAPER_NOT_DELETED_INUSE' => 202,
+        'PAPER_NOT_CREATED' => 203,
+        'PAPER_NOT_SCHEDULED' => 204,
+        'PAPER_INVALID_TITLE' => 205,
+        'PAPER_INVALID_OWNER' => 206,
+        'PAPER_INVALID_ROLE' => 207,
+        'PAPER_INVALID_YEAR' => 208,
+        'PAPER_INVALID_PAPER' => 209,
+        'PAPER_INVALID_MODULES' => 210,
+        'PAPER_INVALID_START' => 211,
+        'PAPER_NOT_UPDATED' => 210,
+        'PAPER_SCHEDULE_SUMMATIVE' => 211
+    );
+    
+    /**
      * Create/Update assessment
      * @param array $parms create assessment parameters
      * @return assessment id and status
@@ -47,7 +68,7 @@ class assessmentmanagement extends \api\abstractmanagement {
         $configObject = \Config::get_instance();
         // Error if trying to create a suimmative exam when they are set to be scheduled only.
         if ($configObject->get('cfg_summative_mgmt') and $params['type'] == 'summative') {
-            $data = array('status' => $strings['paper_scheduled_summative'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'create', $params['nodeid'], $error);
         } 
         if (isset($params['id']) and $params['id'] != '') {
@@ -68,7 +89,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Check paper title.
             $uniquetitle = \Paper_utils::is_paper_title_unique($params['title'], $this->db);
             if (!$uniquetitle) {
-                $data = array('status' => $strings['paper_title_inuse'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
             }
         }
         // Get owner if not provided.
@@ -80,12 +101,12 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Check owner exists.
             $userid = \UserUtils::userid_exists($params['owner'], $this->db);
             if ($uniquetitle and !$userid) {
-                $data = array('status' => $strings['paper_owner_does_not_exist'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
             }
             // Check owners role.
             $staff = \UserUtils::has_user_role($userid, 'Staff', $this->db);
             if ($uniquetitle and $userid and !$staff) {
-                $data = array('status' => $strings['paper_owner_role_invalid'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
             }
         }
         // Get session if not provided.
@@ -97,7 +118,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $yearutils = new \yearutils($this->db);
             $validsession = array_key_exists($params['session'], $yearutils->get_supported_years());
             if (!$validsession) {
-                $data = array('status' => $strings['paper_calendar_year_invalid'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
             }
         }
         // Get start datetime if not provided.
@@ -115,7 +136,7 @@ class assessmentmanagement extends \api\abstractmanagement {
         // Check start/enddates
         if ($end <= $start) {
             $validstart = false;
-            $data = array('status' => $strings['paper_startdate_invalid'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null);
         } else {
             $validstart = true;
         }
@@ -133,7 +154,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                 }
             }
             if (count($error) > 0) {
-                $data = array('status' => $strings['paper_module_error'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
             } else {
                 if ($paperid and (!isset($params['labs']) or $params['labs'] === '')) {
                     $params['labs'] = $details['labs'];
@@ -173,21 +194,21 @@ class assessmentmanagement extends \api\abstractmanagement {
                         $id = $paper->update($params['id'], $params['title'], $params['owner'], $start,
                             $end, $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
                         if ($id) {
-                            $data = array('status' => 'OK', 'id' => $paperid, 'error' => $error);
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $paperid, 'error' => $error);
                         } else {
-                            $data = array('status' => $strings['paper_not_updated'], 'id' => null);
+                            $data = array('statuscode' => $this->statuscodes['PAPER_NOT_UPDATED'], 'status' => $strings['paper_not_updated'], 'id' => null);
                         }
                     } else {
-                        $data = array('status' => $strings['paper_does_not_exist'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_PAPER'], 'status' => $strings['paper_does_not_exist'], 'id' => null);
                     }
                 // Create exam.
                 } else {
                     $id = $paper->create($params['title'], $params['type'], $params['owner'], $start,
                         $end, $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
                     if ($id) {
-                        $data = array('status' => 'OK', 'id' => $id, 'error' => $error);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
                     } else {
-                        $data = array('status' => $strings['paper_not_created'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
                     }
                 }
             }
@@ -210,23 +231,23 @@ class assessmentmanagement extends \api\abstractmanagement {
         // Check paper title.
         $uniquetitle = \Paper_utils::is_paper_title_unique($params['title'], $this->db);
         if (!$uniquetitle) {
-            $data = array('status' => $strings['paper_title_inuse'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
         }
         // Check owner exists.
         $userid = \UserUtils::userid_exists($params['owner'], $this->db);
         if ($uniquetitle and !$userid) {
-            $data = array('status' => $strings['paper_owner_does_not_exist'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
         }
         // Check owners role.
         $staff = \UserUtils::has_user_role($userid, 'Staff', $this->db);
         if ($uniquetitle and $userid and !$staff) {
-            $data = array('status' => $strings['paper_owner_role_invalid'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
         }
         // Check session.
         $yearutils = new \yearutils($this->db);
         $validsession = array_key_exists($params['session'], $yearutils->get_supported_years());
         if (!$validsession) {
-            $data = array('status' => $strings['paper_calendar_year_invalid'], 'id' => null);
+            $data = array('statuscode' =>$this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
         }
         if ($uniquetitle and $userid and $staff and $validsession) {
             // Check modules
@@ -254,14 +275,14 @@ class assessmentmanagement extends \api\abstractmanagement {
                 $params['month'] = ltrim($params['month'], '-');
                 $id = $paper->schedule($paperid, $params['month'], $params['barriers'], $params['cohort_size'], $params['notes'], $params['sittings'], $params['campus']);
                 if ($id) {
-                    $data = array('status' => 'OK', 'id' => $paperid, 'error' => $error);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $paperid, 'error' => $error);
                 } else {
-                    $data = array('status' => $strings['paper_not_scheduled'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['PAPER_NOT_SCHEDULED'], 'status' => $strings['paper_not_scheduled'], 'id' => null);
                     // Not scheduled so remove new properties entry from db.
                     \Paper_utils::complete_delete_paper($paperid, $this->db);
                 }
             } else {
-                $data = array('status' => $strings['paper_not_created'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
             }
         }
         return $this->get_response($data, 'schedule', $params['nodeid'], $error);
@@ -283,17 +304,17 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Only delete assessment if no one has taken the paper.
             $inuse = \Paper_utils::paper_taken($params['id'], $this->db);
             if ($inuse) {
-                $data = array('status' => $strings['paper_not_deleted_inuse'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED_INUSE'], 'status' => $strings['paper_not_deleted_inuse'], 'id' => null);
             } else {
                 $deleted = \Paper_utils::delete_paper($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    $data = array('status' => $strings['paper_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED'], 'status' => $strings['paper_not_deleted'], 'id' => null);
                 }
             }
         } else {
-             $data = array('status' => $strings['paper_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['PAPER_DOES_NOT_EXIST'], 'status' => $strings['paper_does_not_exist'], 'id' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }
