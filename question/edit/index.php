@@ -536,15 +536,8 @@ if ($critical_error == '') {
   $banner_spacer = '';
   $editor = $question->get_checkout_author_name();
   $q_disabled = check_edit_rights($question->id, $question->get_checkout_author_id(), $editor, $question->get_checkout_time('timestamp'), $question->get_locked(), $mysqli, $userObject);
-  $gradebook = new gradebook($mysqli);
-  $graded = $gradebook->paper_graded($paper_id);
-  
-  if ($graded) {
-    $banner_spacer = ' class="banner-spaced"';
-?>
-    <div class="yellowwarn" style="vertical-align:middle; font-size:90%"><img src="../../artwork/paper_locked_padlock.png" width="32" height="32" alt="Locked" style="float:left" /><div style="float:left">&nbsp;&nbsp;<?php echo $string['paperpublishedwarning'] ?></div></div> 
-<?php
-  } else if ($q_disabled != '') {
+
+  if ($q_disabled != '') {
     $banner_spacer = ' class="banner-spaced"';
 
     if ($q_disabled == 'locked') {
@@ -691,7 +684,7 @@ echo render_objectives_mapping_form($mysqli, $paper_id, $string);
 
     <div id="button-bar">
 <?php
-echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_correction(), $userObject->get_user_ID(), $question->get_checkout_author_id(), $paper_id, $paper_count, $string, $graded);
+echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_correction(), $userObject->get_user_ID(), $question->get_checkout_author_id(), $paper_id, $paper_count, $string);
 ?>
       <input type="hidden" name="q_id" value="<?php echo $question->id ?>" />
       <input name="checkout_author" value="<?php echo $userObject->get_user_ID() ?>" type="hidden" />

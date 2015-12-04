@@ -267,6 +267,4 @@ $string['tooltip_formula'] = 'Pro další podrobnosti klikněte na Odkaz v nápo
 // Textbox
 $string['reminders'] = 'Upomínky';
 $string['reminder_no'] = 'Upomínka #%d';
-// Published
-$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 ?>
