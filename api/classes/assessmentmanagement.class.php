@@ -66,7 +66,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             , 'paper_module_error'));
         $error = array();
         $configObject = \Config::get_instance();
-        // Error if trying to create a suimmative exam when they are set to be scheduled only.
+        // Error if trying to create a summative exam when they are set to be scheduled only.
         if ($configObject->get('cfg_summative_mgmt') and $params['type'] == 'summative') {
             $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'create', $params['nodeid'], $error);
@@ -105,12 +105,12 @@ class assessmentmanagement extends \api\abstractmanagement {
         } else {
             // Check owner exists.
             $userid = \UserUtils::userid_exists($params['owner'], $this->db);
-            if ($uniquetitle and !$userid) {
+            if (empty($data) and !$userid) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
             }
             // Check owners role.
             $staff = \UserUtils::has_user_role($params['owner'], 'Staff', $this->db);
-            if ($uniquetitle and $userid and !$staff) {
+            if (empty($data) and !$staff) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
             }
         }
@@ -122,7 +122,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Check session.
             $yearutils = new \yearutils($this->db);
             $validsession = array_key_exists($params['session'], $yearutils->get_supported_years());
-            if (!$validsession) {
+            if (empty($data) and !$validsession) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
             }
         }
@@ -139,13 +139,13 @@ class assessmentmanagement extends \api\abstractmanagement {
             $end = date($dateformat, strtotime($params['enddatetime']));
         }
         // Check start/enddates
-        if ($end <= $start) {
+        if (empty($data) and $end <= $start) {
             $validstart = false;
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null);
         } else {
             $validstart = true;
         }
-        if ($uniquetitle and $userid and $staff and $validsession and $validstart) {
+        if (empty($data)) {
             // Check modules
             $modulesarray = array();
             if (count($params['modules']) > 0) {
@@ -240,21 +240,21 @@ class assessmentmanagement extends \api\abstractmanagement {
         }
         // Check owner exists.
         $userid = \UserUtils::userid_exists($params['owner'], $this->db);
-        if ($uniquetitle and !$userid) {
+        if (empty($data) and !$userid) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
         }
         // Check owners role.
         $staff = \UserUtils::has_user_role($params['owner'], 'Staff', $this->db);
-        if ($uniquetitle and $userid and !$staff) {
+        if (empty($data) and !$staff) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
         }
         // Check session.
         $yearutils = new \yearutils($this->db);
         $validsession = array_key_exists($params['session'], $yearutils->get_supported_years());
-        if (!$validsession) {
+        if (empty($data) and !$validsession) {
             $data = array('statuscode' =>$this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
         }
-        if ($uniquetitle and $userid and $staff and $validsession) {
+        if (empty($data)) {
             // Check modules
             $modulesarray = array();
             if (count($params['modules']) > 0) {
