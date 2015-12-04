@@ -25,11 +25,13 @@
  */
 class gradebook {
     
-    // @brief The db connection.
+    /**
+     * The db connection
+     */
     private $db;
     
     /**
-     * @brief Constructor
+     * Constructor
      * @param object $db
      * @return void 
      */
@@ -38,12 +40,12 @@ class gradebook {
     }
     
     /**
-     * @brief Check if the paper has been graded.
+     * Check if the paper has been graded.
      * @param integer $userid 
      * @param integer $paperid 
-     * @return bool ture if already graded
+     * @return bool true if already graded
      */
-    public function paper_graded ($paperid) {
+    public function paper_graded($paperid) {
         $result = $this->db->prepare("SELECT count(paperid) FROM gradebook_paper WHERE paperid = ?");
         $result->bind_param('i', $paperid);
         $result->execute();
@@ -58,7 +60,7 @@ class gradebook {
     }
     
     /**
-     * @brief Store grade in gradebook.
+     * Store grade in gradebook.
      * @param integer $userid 
      * @param integer $paperid 
      * @param integer $grade - raw grade
@@ -66,7 +68,7 @@ class gradebook {
      * @param integer $classification 
      * @return bool true if grade added to gradebook
      */
-    public function store_grade ($userid, $paperid, $grade, $adjusted, $classification) {
+    public function store_grade($userid, $paperid, $grade, $adjusted, $classification) {
         
         $student = \UserUtils::has_user_role($userid, 'Student', $this->db);
         if ($student) {
@@ -74,6 +76,9 @@ class gradebook {
             $sqluser->bind_param('iiids', $paperid, $userid, $grade, $adjusted, $classification);
             $sqluser->execute();
             $sqluser->close();
+            if ($this->db->errno != 0) {
+                return false;
+            }
             return true;
         } else {
             return false;
@@ -82,7 +87,7 @@ class gradebook {
     }
     
     /**
-     * @brief Create a gradebook for the paper
+     * Create a gradebook for the paper
      * @param integer $paperid 
      * @return bool true if created 
      */
@@ -92,6 +97,9 @@ class gradebook {
             $sqlpaper->bind_param('i', $paperid);
             $sqlpaper->execute();
             $sqlpaper->close();
+            if ($this->db->errno != 0) {
+                return false;
+            }
             return true;
         } else {
             return false;
@@ -99,9 +107,9 @@ class gradebook {
     }
     
     /**
-     * @brief Get the gradebook for a paper
+     * Get the gradebook for a paper
      * @param int $paperid 
-     * @return  
+     * @return array|bool gradebook for paper or false  
      */
     public function get_paper_gradebook($paperid) {
         if ($this->paper_graded($paperid)) {
@@ -124,9 +132,9 @@ class gradebook {
     }
     
     /**
-     * @brief Get the gradebook for a modle
+     * Get the gradebook for a modle
      * @param int $moduleid 
-     * @return  
+     * @return array|bool gradebook for module or false
      */
     public function get_module_gradebook($moduleid) {
         $sql = $this->db->prepare("SELECT

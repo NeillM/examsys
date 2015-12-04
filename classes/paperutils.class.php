@@ -762,6 +762,7 @@ Class PaperUtils {
    * Get paper properties
    * @param integer $id paper id
    * @param mysqli $db 
+   * @return array|bool array of paper details or false on error
    */
   static function get_paper_properties($id, $db) {
     $result = $db->prepare("SELECT paper_title, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration FROM properties WHERE property_id = ?");

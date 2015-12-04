@@ -1385,7 +1385,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $graded = $gradebook->paper_graded($paperID);
     $published = "";
     if ($graded) {
-        $sum_disabled = ' disabled';
+        $sum_disabled = "disabled=\"disabled\"";
         $published = "disabled=\"disabled\"";
     }
     if ($graded) {
@@ -1498,9 +1498,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
           echo ' checked ';
        }
        if ($neg_marking) {
-        echo ' disabled';
+          echo ' disabled';
        } else {
-        echo ' ' . $published;
+          echo ' ' . $published;
        }
        if ($neg_marking) {
          echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';

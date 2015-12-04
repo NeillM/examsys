@@ -203,6 +203,20 @@ function hidden_edit_fields() {
   return $html;
 }
 
+/**
+ * Render save buttons on question add/edit screen
+ * @param string $mode add/edit question
+ * @param string $disabled is the question disabled
+ * @param string $locked is the question locked
+ * @param string $allow_correct can the question be corrected
+ * @param integer $userID logged in users id
+ * @param integer $checkout_author userid of user with current question checkout lock
+ * @param integer $paper_id paper user is editing question on
+ * @param integer $paper_count number of papers using the question beining edited
+ * @param array $string translated language strings
+ * @param bool $graded has the paper the user is editing the question on been graded
+ * @return string html for save button 
+ */
 function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $checkout_author, $paper_id, $paper_count, &$string, $graded) {
   $html = '';
 
