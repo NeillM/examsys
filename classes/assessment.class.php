@@ -15,14 +15,42 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Oauth package
+* Assessment package
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2015 onwards The University of Nottingham
 */
 
 /**
- * Encryption helper class.
- * Interfaces with the vendor/bshaffer/oauth2-server-php
+ * Formative paper type
+ */
+define('TYPE_FORMATIVE', 0);
+/**
+ * Progress paper type
+ */
+define('TYPE_PROGESSS', 1);
+/**
+ * Summative paper type
+ */
+define('TYPE_SUMMATIVE', 2);
+/**
+ * Survety paper type
+ */
+define('TYPE_SURVEY', 3);
+/**
+ * OSCE paper type
+ */
+define('TYPE_OSCE', 4);
+/**
+ * Offline paper type
+ */
+define('TYPE_OFFLINE', 5);
+/**
+ * Peer revoew paper type
+ */
+define('TYPE_PEERREVIEW', 6);
+
+/**
+ * Assessment helper class.
  */
 class assessment {
     
@@ -46,7 +74,10 @@ class assessment {
        
     // Paper type name and keys
     private $type;
- 
+        
+    // Maximum number of exam sittings
+    private $max_sittings;
+    
     /**
      * Language pack component.
      */
@@ -56,29 +87,29 @@ class assessment {
      * @brief Constuctor
      * @param mysqli $db 
      * @param object $configObject 
-     * @return  
      */
     function __construct($db, $configObject) {
         $this->db = $db;
         $this->summative_mgmt = $configObject->get('cfg_summative_mgmt');
         $this->server_timezone = $configObject->get('cfg_timezone');
-        $this->type = array('formative' => 0,
-            'progress' => 1,
-            'summative' => 2,
-            'survey' => 3,
-            'osce' => 4,
-            'offline' => 5,
-            'peer_review' => 6);
+        $this->type = array('formative' => TYPE_FORMATIVE,
+            'progress' => TYPE_PROGESSS,
+            'summative' => TYPE_SUMMATIVE,
+            'survey' => TYPE_SURVEY,
+            'osce' => TYPE_OSCE,
+            'offline' => TYPE_OFFLINE,
+            'peer_review' => TYPE_PEERREVIEW);
         $configObject->set_db_object($db);
         $configObject->load_settings('core');
         $settings = (object) $configObject->get_setting('core');
         $this->timezones = $settings->timezones;
         $this->cohort_sizes = $settings->cohort_sizes;
         $this->max_duration = $settings->max_duration;
+        $this->max_sittings = $settings->max_sittings;
     }
     
     /**
-     * @brief Create an assesment
+     * Create an assesment
      * @param string $papertitle - New paper title
      * @param string $papertype - Type of paper
      * @param integer $paperowner - Owner of paper
@@ -91,14 +122,46 @@ class assessment {
      * @param string $timezone - timezone paper is being taken in
      * @return integer|bool - id of new assessment or false on error
      */
-    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration = 'NULL', $session, $modules, $timezone = '') {
+    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone = '') {
        
+        // Check title is unique.
+        $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
+        if (!$uniquetitle) {
+            throw new Exception('NON_UNIQUE_TITLE');
+        }
+        // Check paper type is valid.
+        if (!array_key_exists($papertype, $this->type)) {
+            throw new Exception('INVALID_PAPER_TYPE');
+        }
+        // Check owner exists.
+        $userid = UserUtils::userid_exists($paperowner, $this->db);
+        if (!$userid) {
+            throw new Exception('INVALID_USER');
+        } else {
+            // Check owners role.
+            $staff = UserUtils::has_user_role($paperowner, 'Staff', $this->db);
+            if (!$staff) {
+                throw new Exception('INVALID_ROLE');
+            }
+        }
+        // Check session.
+        $yearutils = new yearutils($this->db);
+        $validsession = array_key_exists($session, $yearutils->get_supported_years());
+        if (!$validsession) {
+             throw new Exception('INVALID_SESSION');
+        }
+        // Check startdate and enddate
+        if ($papertype != 'summative' and $enddate <= $startdate) {
+            throw new Exception('INVALID_DATES');
+        }
+        // Set the summative rubric
         if ($papertype == 'summative') {
-            $langpack = new \langpack();
+            $langpack = new langpack();
             $default_rubric = $langpack->get_string($this->langcomponent, 'summative_rubric');
         } else {
             $default_rubric = '';
         }
+        // Set calulator on/off
         if ($papertype == 'formative' or $papertype == 'progress' or $papertype == 'summative') {
             $default_calc = 1;
         } else {
@@ -112,6 +175,7 @@ class assessment {
                 $duration = 0;
             }
         } 
+        // Summative exams do not have a start/end date if centrally scheduled.
         if ($papertype == 'summative') {
             if ($this->summative_mgmt) {
                 $startdate = NULL;
@@ -180,15 +244,44 @@ class assessment {
      * @param string $timezone - timezone paper is being taken in
      * @return bool - true on success
      */
-    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration = 'NULL', $session, $modules, $timezone = '') {       
+    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone = '') {
+        
+        // Check title is unique.
+        $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
+        if (!$uniquetitle) {
+            throw new Exception('NON_UNIQUE_TITLE');
+        }
+        // Check owner exists.
+        $userid = UserUtils::userid_exists($paperowner, $this->db);
+        if (!$userid) {
+            throw new Exception('INVALID_USER');
+        } else {
+            // Check owners role.
+            $staff = UserUtils::has_user_role($paperowner, 'Staff', $this->db);
+            if (!$staff) {
+                throw new Exception('INVALID_ROLE');
+            }
+        }
+        // Check session.
+        $yearutils = new yearutils($this->db);
+        $validsession = array_key_exists($session, $yearutils->get_supported_years());
+        if (!$validsession) {
+             throw new Exception('INVALID_SESSION');
+        }
+        // Check startdate and enddate
+        if ($enddate <= $startdate) {
+            throw new Exception('INVALID_DATES');
+        }   
         // Enforce Interface boundaries.
-        if ($duration != 'NULL') {
+        if (!empty($duration)) {
             if ($duration > $this->max_duration) {
                 $duration = $this->max_duration;
             } elseif ($duration < 0) {
                 $duration = 0;
             }
-        }        
+        } else {
+            $duration = null;
+        }      
         // Verify timezone is supported, revert to server timezone if not.
         $decode_timezones = json_decode($this->timezones, true);
         if (!array_key_exists($timezone, $decode_timezones)) {
@@ -244,7 +337,7 @@ class assessment {
      */
     public function schedule($paperid, $month, $barriers = 0, $cohort_size = '<whole cohort>', $notes = '', $sittings = 1, $campus = '') {
         // Check paper is summative.
-        if (Paper_utils::get_paper_type($paperid, $this->db) != 2) {
+        if (Paper_utils::get_paper_type($paperid, $this->db) != TYPE_SUMMATIVE) {
             return false;
         }
         // Enforce cohort size interface restrictions
@@ -253,9 +346,8 @@ class assessment {
             $cohort_size = '<whole cohort>';
         }
         // Enforce sittings interface restrictions
-        // Move to cfg db table when we have one.
-        if ($sittings > 6) {
-            $sittings = 6;
+        if ($sittings > $this->max_sittings) {
+            $sittings = $this->max_sittings;
         } elseif ($sittings < 1) {
             $sittings = 1;
         }

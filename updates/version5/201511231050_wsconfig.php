@@ -13,6 +13,7 @@ if ($updater_utils->check_version("6.1.0")) {
         $configObject->set_setting('timezones', $encoded_timezones);
         $configObject->set_setting('cohort_sizes', $encoded_cohorts);
         $configObject->set_setting('max_duration', 779);
+        $configObject->set_setting('max_sittings', 6);
         $updater_utils->record_update('rogo1559_wsconfig');
     }
 }

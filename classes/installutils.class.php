@@ -626,6 +626,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('timezones', $encoded_timezones);
     $configObject->set_setting('cohort_sizes', $encoded_cohorts);
     $configObject->set_setting('max_duration', 779);
+    $configObject->set_setting('max_sittings', 6);
   }
   
   /**
