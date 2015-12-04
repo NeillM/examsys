@@ -119,7 +119,8 @@ class Config extends RogoStaticSingleton {
     $currentsetting = $this->get_setting($component, $setting);
     $this->cache_setting($setting, $value, $component);
 
-    if ($currentsetting) {      $this->update_setting($setting, $value, $component);
+    if ($currentsetting) {
+      $this->update_setting($setting, $value, $component);
     } else {
       $this->insert_setting($setting, $value, $component);
     }
@@ -167,17 +168,15 @@ class Config extends RogoStaticSingleton {
    * @param string $setting The name of the config setting (Optional)
    */
   public function get_setting($component, $setting = null) {
-    if ($setting) {
-        $cachedsetting = $this->get_setting_from_cache($component, $setting);
-        if ($cachedsetting) {
-          return $cachedsetting;
-        }
-    } else {
-        $this->load_settings($component);
-        $cachedsetting = $this->get_setting_from_cache($component);
-        if ($cachedsetting) {
-          return $cachedsetting;
-        }
+    $cachedsetting = $this->get_setting_from_cache($component, $setting);
+    if ($cachedsetting) {
+      return $cachedsetting;
+    }
+
+    $this->load_settings($component);
+    $cachedsetting = $this->get_setting_from_cache($component, $setting);
+    if ($cachedsetting) {
+      return $cachedsetting;
     }
     return null;
   }
@@ -192,7 +191,7 @@ class Config extends RogoStaticSingleton {
     if (is_string($component)) {
       if (is_string($setting) && isset($this->settings[$component]) && isset($this->settings[$component][$setting])) {
         return $this->settings[$component][$setting];
-      } elseif (isset($this->settings[$component]) && empty($setting)) {
+      } else if (isset($this->settings[$component]) && empty($setting)) {
         return $this->settings[$component];
       }
     }

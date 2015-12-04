@@ -111,8 +111,6 @@ class ClassTotals {
     $this->user_no            = 0;
     $this->marking_overrides  = array();
     $this->string             = $string;
-    $unmarked_calculation	  = false;
-    $unmarked_textbox		  = false;
     $this->percent_decimals   = $this->config->get('percent_decimals');
 
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
@@ -1765,11 +1763,11 @@ class ClassTotals {
   public function store_grades() {
     $gradebook = new gradebook($this->db);
     for ($student = 0; $student < $this->user_no; $student++) {
-        $userid = $this->user_results[$student]['userID'];
-        $mark = $this->user_results[$student]['mark'];
-        $adjusted = MathsUtils::formatNumber($this->user_results[$student]['percent'], $this->percent_decimals);
-        $classification = $this->user_results[$student]['classification'];
-        $gradebook->store_grade($userid, $this->paperID, $mark, $adjusted, $classification);
+      $userid = $this->user_results[$student]['userID'];
+      $mark = $this->user_results[$student]['mark'];
+      $adjusted = MathsUtils::formatNumber($this->user_results[$student]['percent'], $this->percent_decimals);
+      $classification = $this->user_results[$student]['classification'];
+      $gradebook->store_grade($userid, $this->paperID, $mark, $adjusted, $classification);
     }
   }
   
