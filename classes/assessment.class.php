@@ -178,13 +178,13 @@ class assessment {
             $default_calc = 0;
         }
         // Enforce Interface boundaries.
-        if ($duration != 'NULL') {
+        if (!empty($duration)) {
             if ($duration > $this->max_duration) {
                 $duration = $this->max_duration;
             } elseif ($duration < 0) {
                 $duration = 0;
             }
-        } 
+        }
         $timestamp = time();
         $result = $this->db->prepare("INSERT INTO properties (paper_title,
                     start_date,
@@ -286,9 +286,7 @@ class assessment {
             } elseif ($duration < 0) {
                 $duration = 0;
             }
-        } else {
-            $duration = null;
-        }      
+        }   
         $result = $this->db->prepare("UPDATE properties SET paper_title = ?,
                     start_date = ?,
                     end_date = ?,

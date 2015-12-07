@@ -110,7 +110,7 @@ $app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $rende
     $response = 'assessmentManagementResponse';
     $operations = array('create', 'schedule', 'delete');
     $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
-        'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone');
+        'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
     $xsd = 'managementrequest';
     process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);    
 });
