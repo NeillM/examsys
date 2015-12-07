@@ -14,16 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Context\Step\Given,
-    Behat\Behat\Context\Step\When,
-    Behat\Behat\Context\Step\Then,
-    Behat\Behat\Exception\PendingException;
+namespace testing\behat\steps\frontend;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
-use testing\behat\rogo_test;
 
 /**
  * Basic core step definitions.
@@ -33,7 +26,7 @@ use testing\behat\rogo_test;
  * @package testing
  * @subpackage behat
  */
-class core_basic extends rogo_test {
+trait basic {
   /**
    * Click on an element on the page.
    *
@@ -48,6 +41,8 @@ class core_basic extends rogo_test {
   }
 
   /**
+   * Checks for the presense of text.
+   * 
    * @Then /^I should see "([^"]*)" "([^"]*)"$/
    */
   public function i_should_see($content, $selector) {

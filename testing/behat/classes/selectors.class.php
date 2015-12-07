@@ -16,6 +16,8 @@
 
 namespace testing\behat;
 
+use \Behat\Mink\Session;
+
 /**
  * Used to define things that behat can select in Rogo
  * 
@@ -90,7 +92,7 @@ XPATH
    * @param \testing\behat\Behat\Mink\Session $session The mink session
    * @return void
    */
-  public static function register_rogo_selectors(Behat\Mink\Session $session) {
+  public static function register_rogo_selectors(Session $session) {
     foreach (self::get_selectors() as $name => $xpath) {
       $session->getSelectorsHandler()->getSelector('named_exact')->registerNamedXpath($name, $xpath);
       $session->getSelectorsHandler()->getSelector('named_partial')->registerNamedXpath($name, $xpath);

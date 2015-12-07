@@ -1,5 +1,0 @@
-
-Suggested folders:
-
-* core
-* question

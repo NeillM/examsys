@@ -22,7 +22,7 @@ use coding_exception,
     Exception;
 
 /**
- * All Rogo behat test definitions should extend this class.
+ * All Rogo behat test definitions should extend this class if they wish to do browser based tests.
  *
  * It should contain only utility functions we wish all Rogo
  * behat tests to have access to.

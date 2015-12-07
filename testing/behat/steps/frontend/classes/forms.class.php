@@ -14,16 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Context\Step\Given,
-    Behat\Behat\Context\Step\When,
-    Behat\Behat\Context\Step\Then,
-    Behat\Behat\Exception\PendingException;
+namespace testing\behat\steps\frontend;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
-use testing\behat\rogo_test;
 
 /**
  * Authentication step definitions.
@@ -33,7 +26,7 @@ use testing\behat\rogo_test;
  * @package testing
  * @subpackage behat
  */
-class core_forms extends rogo_test {
+trait forms {
   /**
    * Fill in a form field.
    *
@@ -50,6 +43,4 @@ class core_forms extends rogo_test {
     }
     $element->setValue($value);
   }
-
-
 }

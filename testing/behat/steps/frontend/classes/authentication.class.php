@@ -14,16 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Context\Step\Given,
-    Behat\Behat\Context\Step\When,
-    Behat\Behat\Context\Step\Then,
-    Behat\Behat\Exception\PendingException;
+namespace testing\behat\steps\frontend;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
-use testing\behat\rogo_test;
 
 /**
  * Authentication step definitions.
@@ -33,7 +26,7 @@ use testing\behat\rogo_test;
  * @package testing
  * @subpackage behat
  */
-class core_authentication extends rogo_test {
+trait authentication {
   /**
    * Log the user into Rogo.
    *
@@ -44,12 +37,8 @@ class core_authentication extends rogo_test {
   public function i_login_as($username) {
     // Goto the base Rogo path.
     $this->getSession()->visit($this->locatePath('/'));
-    // Setup the steps.
-    $steps = array(
-      new Given('I set the field "ROGO_USER" to "' . $username . '"'),
-      new Given('I set the field "ROGO_PW" to "' . $username . '"'),
-      new Given('I click "rogo-login-form-std" "button"'),
-    );
-    return $steps;
+    $this->i_set_field("ROGO_USER", $username);
+    $this->i_set_field("ROGO_PW", $username);
+    $this->i_click("rogo-login-form-std", "button");
   }
 }

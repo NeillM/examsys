@@ -14,16 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use Behat\Behat\Context\ClosuredContextInterface,
-    Behat\Behat\Context\TranslatedContextInterface,
-    Behat\Behat\Context\BehatContext,
-    Behat\Behat\Context\Step\Given,
-    Behat\Behat\Context\Step\When,
-    Behat\Behat\Context\Step\Then,
-    Behat\Behat\Exception\PendingException;
+namespace testing\behat\steps\database;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
-use testing\behat\rogo_test;
 
 /**
  * Core steps that add data into the Rogo database.
@@ -33,7 +26,7 @@ use testing\behat\rogo_test;
  * @package testing
  * @subpackage behat
  */
-class core_datageneration extends rogo_test {
+trait datageneration {
   /**
    * Maps the types that can be passed to exist to a data generator.
    *

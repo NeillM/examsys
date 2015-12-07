@@ -40,18 +40,24 @@ class environment {
 
     $config = array(
       'default' => array(
-        'paths' => array(
-          'features' => $basedir . DIRECTORY_SEPARATOR . 'features',
-          'bootstrap' => $basedir . DIRECTORY_SEPARATOR . 'definitions',
+        'autoload' => array(
+          $basedir . DIRECTORY_SEPARATOR . 'contexts',
         ),
-        'context' => array(
-          'class' => 'rogo_behat_base',
+        'suites' => array(
+          'frontend' => array(
+            'contexts' => array(
+              'RogoBehatFrontend',
+            ),
+            'paths' => array(
+              $basedir . DIRECTORY_SEPARATOR . 'features',
+            ),
+          ),
         ),
-        'formatter' => array(
-          'name' => 'progress',
+        'formatters' => array(
+          'progress' => null,
         ),
         'extensions' => array(
-          'Behat\MinkExtension\Extension' => array(
+          'Behat\MinkExtension' => array(
             'base_url' => self::get_behat_website(),
             'goutte' => null,
             'selenium2' => null

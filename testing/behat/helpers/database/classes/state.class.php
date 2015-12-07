@@ -14,40 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use Behat\Behat\Event\SuiteEvent,
-    Behat\Behat\Event\FeatureEvent;
-use testing\behat\rogo_test,
-    testing\behat\environment,
-    testing\behat\help,
-    testing\behat\selectors;
-use testing\datagenerator\loader;
+namespace testing\behat\helpers\database;
+
+use Config,
+    mysqli,
+    Exception;
 
 /**
- * This class should define all the pre and post hooks for Rogo behat tests.
+ * Helpers for resetting the Rogo database state during behat tests.
  *
- * This includes:
- * - cleaning up the database
- * - cleaning up the user data directories
- *
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
  * @subpackage behat
  */
-class core_hooks extends rogo_test {
+class state {
   /** @var mysqli A Rogo database connection. */
   private static $db;
-  /** @var Config A copy of the Rogo configuration object. */
-  private static $rogo_config;
-  /** @var Config A copy of the Rogo configuration object that is not setup for behat. */
-  private static $default_config;
   /** @var array Stores an array of tables per named transaction that can be used to detect changes if a transaction fails. */
   private static $tablestates = array();
   /** @var array Stores a list of temporary tables we have created to backup Rogo data in. */
   private static $temptables = array();
   /** @var string Stores the database schema we connect to. */
   private static $schema;
-  /** Stores if the setup function for the first scenario to be run has been completed. */
-  private static $firstscenariosetup = false;
 
   /** The name of the transaction used for a scenario. */
   const TRANSACTION_SCENARIO = 'behatscenario';
@@ -55,20 +44,13 @@ class core_hooks extends rogo_test {
   const TRANSACTION_SUITE = 'behatsuite';
   /** The name of the transaction used for the feature. */
   const TRANSACTION_FEATURE = 'behatfeature';
-  
-  /**
-   * Actions to perform before the suite is run.
-   *
-   * @BeforeSuite
-   */
-  public static function setup(SuiteEvent $event) {
-    self::check_config();
-    // Setup the config for behat and store a cloned instance of it.
-    $config = Config::get_instance();
-    self::$default_config = clone($config);
-    $config->use_behat_site();
-    self::$rogo_config = clone($config);
 
+  /**
+   * Connects to a Rogo database.
+   *
+   * @param Config $config
+   */
+  public static function connect(Config $config) {
     // Create a database connection.
     $host = $config->get('cfg_db_host');
     $username = $config->get('cfg_behat_db_user');
@@ -76,157 +58,20 @@ class core_hooks extends rogo_test {
     $port = $config->get('cfg_db_port');
     self::$schema = $config->get('cfg_db_database');
     self::$db = new mysqli($host, $username, $password, self::$schema, $port);
-    // Let the data generators have the database connection.
-    loader::set_database(self::$db);
-
-    // Ensure the directories are empty.
-    self::reset_directories();
-
-    // Test that the website is running.
-    if (!environment::is_server_running()) {
-      $message = environment::get_behat_website() . ' is not available. '
-          . 'Please ensure that the correct url is configured and the server is running.'
-          . PHP_EOL . 'See ' . help::DOCUMENTATION . ' for mor information.';
-      throw new Exception($message);
-    }
-
-    self::save_database_state(self::TRANSACTION_SUITE);
   }
 
   /**
-   * Actions to perform before every Feature.
+   * Returns the database connection object.
    *
-   * @BeforeFeature
+   * @return mysqli
    */
-  public static function setup_feature(FeatureEvent $event) {
-    self::check_config();
-    self::save_database_state(self::TRANSACTION_FEATURE);
+  public static function get_db() {
+    return self::$db;
   }
 
-  /**
-   * Actions to perform before every scenario.
-   *
-   * @BeforeScenario
-   */
-  public function setup_scenario($event) {
-    self::check_config();
-    self::save_database_state(self::TRANSACTION_SCENARIO);
-
-    $session = $this->getSession();
-
-    if (self::is_first_scenario()) {
-      selectors::register_rogo_selectors($session);
-    }
-
-    // Reset the session.
-    $session->reset();
-
-    if (self::is_first_scenario()) {
-      // This should be the last thing done in this method.
-      self::$firstscenariosetup = true;
-    }
-  }
-
-  /**
-   * Cleanup up Rogo after a scenario has been run.
-   *
-   * @AfterScenario
-   */
-  public function teardown_scenario($event) {
-    // Reset the config object.
-    Config::set_mock_instance(clone(self::$rogo_config));
-    // Rollback any database changes.
-    self::rollback_database_state(self::TRANSACTION_SCENARIO);
-    // Ensure the directories are empty.
-    self::reset_directories();
-  }
-
-  /**
-   * Clean up Rogo after a feature file has been run.
-   *
-   * @AfterFeature
-   */
-  public static function teardown_feature(FeatureEvent $event) {
-    // Reset the config object.
-    Config::set_mock_instance(clone(self::$rogo_config));
-    // Rollback any database changes.
-    self::rollback_database_state(self::TRANSACTION_FEATURE);
-    // Ensure the directories are empty.
-    self::reset_directories();
-  }
-  
-  /**
-   * Clean up Rogo after the suite has finished running.
-   *
-   * @AfterSuite
-   */
-  public static function teardown(SuiteEvent $event) {
-    // Reset the config object.
-    Config::set_mock_instance(clone(self::$rogo_config));
-    // Rollback any database changes.
-    self::rollback_database_state(self::TRANSACTION_SUITE);
-    // Ensure the directories are empty.
-    self::reset_directories();
-    // Close the database connection.
+  public static function close_db() {
     self::$db->close();
-  }
-
-  /**
-   * Returns whether the first scenario of the suite is running
-   * @return bool
-   */
-  protected static function is_first_scenario() {
-    return !(self::$firstscenariosetup);
-  }
-
-  /**
-   * Clear the contents of the Rogo directories.
-   */
-  public static function reset_directories() {
-    $mediadirectory = rogo_directory::get_directory('media');
-    $mediadirectory->clear();
-    $qtiimportdirectory = rogo_directory::get_directory('qti_import');
-    $qtiimportdirectory->clear();
-    $qtiexportdirectory = rogo_directory::get_directory('qti_export');
-    $qtiexportdirectory->clear();
-    $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
-    $emailtemplatesdirectory->clear();
-    $photodirectory = rogo_directory::get_directory('user_photo');
-    $photodirectory->clear();
-  }
-
-  /**
-   * Throws an exception if behat is not configured correctly.
-   *
-   * @return void
-   * @throws Exception
-   */
-  public static function check_config() {
-    $config = Config::get_instance();
-    if (!isset(self::$default_config)) {
-      if (!$config->is_behat_configured()) {
-        // Behat has not been configured, we should stop!
-        throw new Exception('Behat is not configured');
-      }
-      // Checking the initial config of the site.
-      return;
-    }
-    // Has the behat access url been configured?
-    $behatwebsite = $config->get('cfg_behat_website');
-    if (empty($behatwebsite)) {
-      throw new Exception('Behat website is not configured');
-    }
-    // Has the behat database been configured, and is it different to the live database?
-    $behatdatabase = $config->get('cfg_db_database');
-    if (empty($behatdatabase) or $behatdatabase === self::$default_config->get('cfg_db_database')) {
-      throw new Exception('Behat database is not configured');
-    }
-    // Has a behat data directory been configured?
-    $behatdatadir = $config->get('cfg_rogo_data');
-    if (empty($behatdatadir) or $behatdatadir === self::$default_config->get('cfg_rogo_data')) {
-      throw new Exception('Behat user data directory is not configured');
-    }
-    // We got this far everything is good.
+    self::$db = null;
   }
 
   /**
@@ -235,7 +80,7 @@ class core_hooks extends rogo_test {
    * @param string $name
    * @throws Exception
    */
-  private static function save_database_state($name) {
+  public static function save_database_state($name) {
     // Check the transaction has not been started already. We would not want to overwrite the save state.
     if (isset(self::$tablestates[$name])) {
       throw new Exception("A state called $name has already been saved.");
@@ -288,7 +133,7 @@ class core_hooks extends rogo_test {
     if ($originalstate['created'] !== $newstate['created']) {
       // The table was deleted and re-created!
     }
-    
+
     if ($originalstate['rows'] == 0 and $newstate['rows'] == 0) {
       self::reset_autoincrement($originalstate['name'], $originalstate['auto_increment'], $newstate['auto_increment']);
       // The table should be reset now.
@@ -335,7 +180,7 @@ class core_hooks extends rogo_test {
    * @param string $name
    * @throws Exception
    */
-  private static function rollback_database_state($name) {
+  public static function rollback_database_state($name) {
     if (!isset(self::$tablestates[$name])) {
       throw new Exception("State $name has not been saved.");
     }
@@ -364,8 +209,6 @@ class core_hooks extends rogo_test {
     }
     unset(self::$tablestates[$name]);
   }
-  
-  
 
   /**
    * Gets the full table status information for all the tables in Rogo and returns them as an associative array.
