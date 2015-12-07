@@ -80,10 +80,9 @@ class database {
   /**
    * Gets the database admin username and password.
    *
-   * @param int $trys The number of tries the user has to porovide a correct combination.
    * @return boolean
    */
-  public static function get_db_details($trys = 3) {
+  public static function get_db_details() {
     $config = Config::get_instance();
     cli_utils::prompt('Database setup');
     InstallUtils::$db_admin_username = $config->get('cfg_behat_db_user');
@@ -122,6 +121,8 @@ class database {
   /**
    * Connect to the Rogo database.
    *
+   * @param string $username
+   * @param string $password
    * @return boolean
    */
   public static function connect_database($username, $password) {

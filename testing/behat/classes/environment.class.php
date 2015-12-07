@@ -94,6 +94,24 @@ class environment {
   }
 
   /**
+   * Check if the behat web server instance is running.
+   *
+   * @return boolean
+   */
+  public static function is_server_running() {
+    $return = false;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, self::get_behat_website());
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_exec($curl);
+    if (curl_errno($curl) === 0) {
+      $return = true;
+    }
+    curl_close($curl);
+    return $return;
+  }
+
+  /**
    * Check if the behat database needs refreshing.
    *
    * @return boolean
@@ -150,14 +168,5 @@ class environment {
    */
   protected static function get_rogo_basedir() {
     return dirname(dirname(dirname(__DIR__)));
-  }
-
-  public function initialise() {
-    // We are going to chage the working directory and want to reset it later.
-    $workingdir = getcwd();
-    // Change to the root Rogo directory.
-    chdir(__DIR__ . '/../..');
-    passthru("vendor/", $statuscode);
-    chdir($workingdir);
   }
 }
