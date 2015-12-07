@@ -154,6 +154,16 @@ class assessment {
         if ($papertype != 'summative' and $enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
         }
+        // Verify timezone is supported, revert to server timezone if not.
+        $decode_timezones = json_decode($this->timezones, true);
+        if (!array_key_exists($timezone, $decode_timezones)) {
+            $timezone = $this->server_timezone;
+        }
+        // Set up start date and end date based on timezone.
+        $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
+        $startdate = $datesarray[0];
+        $enddate = $datesarray[1];
+        
         // Set the summative rubric
         if ($papertype == 'summative') {
             $langpack = new langpack();
@@ -175,18 +185,6 @@ class assessment {
                 $duration = 0;
             }
         } 
-        // Summative exams do not have a start/end date if centrally scheduled.
-        if ($papertype == 'summative') {
-            if ($this->summative_mgmt) {
-                $startdate = NULL;
-                $enddate = NULL;
-            }
-        } 
-        // Verify timezone is supported, revert to server timezone if not.
-        $decode_timezones = json_decode($this->timezones, true);
-        if (!array_key_exists($timezone, $decode_timezones)) {
-            $timezone = $this->server_timezone;
-        }
         $timestamp = time();
         $result = $this->db->prepare("INSERT INTO properties (paper_title,
                     start_date,
@@ -271,7 +269,16 @@ class assessment {
         // Check startdate and enddate
         if ($enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
-        }   
+        } 
+        // Verify timezone is supported, revert to server timezone if not.
+        $decode_timezones = json_decode($this->timezones, true);
+        if (!array_key_exists($timezone, $decode_timezones)) {
+            $timezone = $this->server_timezone;
+        }
+        // Set up start date and end date based on timezone.
+        $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
+        $startdate = $datesarray[0];
+        $enddate = $datesarray[1];
         // Enforce Interface boundaries.
         if (!empty($duration)) {
             if ($duration > $this->max_duration) {
@@ -282,11 +289,6 @@ class assessment {
         } else {
             $duration = null;
         }      
-        // Verify timezone is supported, revert to server timezone if not.
-        $decode_timezones = json_decode($this->timezones, true);
-        if (!array_key_exists($timezone, $decode_timezones)) {
-            $timezone = $this->server_timezone;
-        }
         $result = $this->db->prepare("UPDATE properties SET paper_title = ?,
                     start_date = ?,
                     end_date = ?,
@@ -362,5 +364,38 @@ class assessment {
         return $this->db->insert_id;
     }
 
+    /**
+     * Calculate start and end times based on timezone 
+     * @param string $papertype type of paper
+     * @param string $fromdatetime when the assessment starts
+     * @param string $todatetime when the assessment finishes
+     * @param string $timezone timezone assessment is being taken in
+     * @return array start and end times
+     */
+    public function setup_start_end_dates($papertype, $fromdatetime, $todatetime, $timezone) {
+        if (!$this->summative_mgmt or $papertype != 'summative') {
+            
+            $server_timezone = new DateTimeZone($this->server_timezone);
+            $target_timezone = new DateTimeZone($timezone);
+
+            $start_date = new dateTime($fromdatetime, $target_timezone);
+            $start_date->setTimezone($server_timezone);
+
+            $end_date = new dateTime($todatetime, $target_timezone);
+            $end_date->setTimezone($server_timezone);
+
+            if ($timezone < 0) {
+                $start_date->modify("+" . abs($timezone) . " hour");
+                $end_date->modify("+" . abs($timezone) . " hour");
+            } elseif ($timezone > 0) {
+                $start_date->modify("-" . $timezone . " hour");
+                $end_date->modify("-" . $timezone . " hour");
+            }
+            
+            return array($start_date->format("YmdHis"), $end_date->format("YmdHis"));
+        }
+        // Summative exams do not have a start/end date if centrally scheduled.
+        return array(NULL, NULL);
+    }
 }
 

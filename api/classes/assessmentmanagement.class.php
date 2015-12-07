@@ -129,7 +129,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['session'] = $details['session'];
         }
         // Get start datetime if not provided.
-        $dateformat = 'Y-m-d H:i:s';
+        $dateformat = 'YmdHis';
         if ($paperid and (empty($params['startdatetime']))) {
             $start = $details['startdatetime'];
         } else {
