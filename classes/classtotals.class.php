@@ -78,7 +78,6 @@ class ClassTotals {
   private $question_statuses;
   private $marking_overrides;
   private $string;
-  private $marking_complete;
   private $percent_decimals;
   private $unmarked_enhancedcalc = false;
   private $unmarked_textbox = false;
@@ -1314,7 +1313,7 @@ class ClassTotals {
     $old_duration         = 0;
     $old_metadataID       = 0;
     $user_duration        = 0;
-    $this->marking_complete     = 1;
+    $marking_complete     = 1;
     $tmp_mark             = 0;
     $tmp_user_mark_array  = array();
     $log_data             = array();
@@ -1352,11 +1351,11 @@ class ClassTotals {
         }
 
         // Write the user results for the user that was iterated over previously using $old_metadataID
-        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $this->marking_complete);
+        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
         $user_duration = 0;
-        $this->marking_complete = 1;
+        $marking_complete = 1;
       } else if (!$old_metadataID) {
         // This is the first record being iterated over so $old_metadataID is set to 0.
         if (isset($this->user_modules[$userID]['idMod'])) {
@@ -1375,11 +1374,11 @@ class ClassTotals {
 
       if (($q_type == 'textbox') and !is_numeric($mark)) {
 			  $this->unmarked_textbox = true;
-        $this->marking_complete = 0;
+        $marking_complete = 0;
       }
       if ($q_type == 'enhancedcalc' and !is_numeric($mark)) {
 			  $this->unmarked_enhancedcalc = true;
-        $this->marking_complete = 0;
+        $marking_complete = 0;
       }
       $old_duration   = $duration;
       $old_screen     = $screen;
@@ -1395,7 +1394,7 @@ class ClassTotals {
     if ($old_metadataID != 0) {
       if ($this->repmodule == '' or (isset($this->user_modules[$userID]['idMod']) and $this->user_modules[$userID]['idMod'] == $this->repmodule)) {
         $user_duration += $old_duration;
-        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $this->marking_complete);
+        $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
       }
     }
 
