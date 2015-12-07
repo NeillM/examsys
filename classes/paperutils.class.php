@@ -749,13 +749,18 @@ Class PaperUtils {
    * Delete a paper from the database
    * @param integer $id paper id
    * @param mysqli $db 
+   * @return bool true on success, false otherwise
    */
   static function complete_delete_paper($id, $db) {
     $result = $db->prepare("DELETE FROM properties WHERE property_id = ?");
     $result->bind_param('i', $id);
     $result->execute();
     $result->fetch();
+    if ($db->errno != 0) {
+        return false;
+    }
     $result->close();
+    return true;
   }
   
   /**

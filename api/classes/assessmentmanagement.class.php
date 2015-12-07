@@ -265,7 +265,15 @@ class assessmentmanagement extends \api\abstractmanagement {
                 } else {
                     $data = array('statuscode' => $this->statuscodes['PAPER_NOT_SCHEDULED'], 'status' => $strings['paper_not_scheduled'], 'id' => null);
                     // Not scheduled so remove new properties entry from db.
-                    \Paper_utils::complete_delete_paper($paperid, $this->db);
+                    if (!\Paper_utils::complete_delete_paper($paperid, $this->db)) {
+                        // Log warning to system if delete failed, as we want to clean up orhpaned papers.
+                        $type = 'Assessment Management';
+                        $errorstring = 'Error deleting unscheduled paper';
+                        $errorfile = $_SERVER['PHP_SELF'];
+                        $errorline = 268;
+                        $logger = new \logger($this->db);
+                        $logger->record_ws_application_warning($type, $errorstring, $errorfile, $errorline);
+                    }
                 }
             } else {
                 $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
