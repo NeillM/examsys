@@ -25,24 +25,11 @@ namespace api;
 /**
  * Gradebook class
  */
-class gradebook {
+class gradebook extends \api\abstractpublish {
     
-    // The database connection.
-    private $db;
-
     // Language pack component.
     private $langcomponent = 'api/gradebook';
-    
-    /**
-     * @brief Constructor
-     * @param mysqli $mysqli the database connection
-     * @param ojbect $configObject configuration items
-     * @return  
-     */
-    function __construct($mysqli) {
-        $this->db = $mysqli;
-    }
-    
+       
     /**
      * @brief Get data.
      * @param integer $filtername 
