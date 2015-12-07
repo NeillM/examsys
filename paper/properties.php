@@ -1387,8 +1387,6 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($graded) {
         $sum_disabled = "disabled=\"disabled\"";
         $published = "disabled=\"disabled\"";
-    }
-    if ($graded) {
         echo "<tr><td style=\"padding-right:0\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Published\" /></div></td><td colspan=\"3\" style=\"vertical-align:middle; padding-left:0\"><div class=\"yellowwarn\">" . $string['paperpublishedwarning'] . "</div></td></tr>\n";
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";

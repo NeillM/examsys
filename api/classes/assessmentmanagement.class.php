@@ -93,7 +93,7 @@ class assessmentmanagement extends \api\abstractmanagement {
     /**
      * Create/Update assessment
      * @param array $parms create assessment parameters
-     * @return assessment id and status
+     * @return array assessment id and status
      */
     public function create($params) {
         $langpack = new \langpack();
@@ -227,7 +227,7 @@ class assessmentmanagement extends \api\abstractmanagement {
     /**
      * Schedule a summative assessment
      * @param array $parms schedule summative parameters
-     * @return summative assessment id and status
+     * @return array summative assessment id and status
      */
     public function schedule($params) {
         $langpack = new \langpack();
@@ -280,7 +280,7 @@ class assessmentmanagement extends \api\abstractmanagement {
     /**
      * Delete assessment
      * @param array $parms delete assessment parameters
-     * @return assessment id and status
+     * @return array assessment id and status
      */
     public function delete($params) {
         $langpack = new \langpack();
