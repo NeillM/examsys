@@ -21,39 +21,39 @@
 */
 
 /**
- * Formative paper type
- */
-define('TYPE_FORMATIVE', 0);
-/**
- * Progress paper type
- */
-define('TYPE_PROGESSS', 1);
-/**
- * Summative paper type
- */
-define('TYPE_SUMMATIVE', 2);
-/**
- * Survety paper type
- */
-define('TYPE_SURVEY', 3);
-/**
- * OSCE paper type
- */
-define('TYPE_OSCE', 4);
-/**
- * Offline paper type
- */
-define('TYPE_OFFLINE', 5);
-/**
- * Peer revoew paper type
- */
-define('TYPE_PEERREVIEW', 6);
-
-/**
  * Assessment helper class.
  */
 class assessment {
     
+    /**
+     * Formative paper type
+     */
+    const TYPE_FORMATIVE = 0;
+    /**
+     * Progress paper type
+     */
+    const TYPE_PROGESSS = 1;
+    /**
+     * Summative paper type
+     */
+    const TYPE_SUMMATIVE = 2;
+    /**
+     * Survety paper type
+     */
+    const TYPE_SURVEY = 3;
+    /**
+     * OSCE paper type
+     */
+    const TYPE_OSCE = 4;
+    /**
+     * Offline paper type
+     */
+    const TYPE_OFFLINE = 5;
+    /**
+     * Peer revoew paper type
+     */
+    const TYPE_PEERREVIEW = 6;
+
     // DB connection
     private $db;
     
@@ -92,13 +92,13 @@ class assessment {
         $this->db = $db;
         $this->summative_mgmt = $configObject->get('cfg_summative_mgmt');
         $this->server_timezone = $configObject->get('cfg_timezone');
-        $this->type = array('formative' => TYPE_FORMATIVE,
-            'progress' => TYPE_PROGESSS,
-            'summative' => TYPE_SUMMATIVE,
-            'survey' => TYPE_SURVEY,
-            'osce' => TYPE_OSCE,
-            'offline' => TYPE_OFFLINE,
-            'peer_review' => TYPE_PEERREVIEW);
+        $this->type = array('formative' => self::TYPE_FORMATIVE,
+            'progress' => self::TYPE_PROGESSS,
+            'summative' => self::TYPE_SUMMATIVE,
+            'survey' => self::TYPE_SURVEY,
+            'osce' => self::TYPE_OSCE,
+            'offline' => self::TYPE_OFFLINE,
+            'peer_review' => self::TYPE_PEERREVIEW);
         $configObject->set_db_object($db);
         $configObject->load_settings('core');
         $settings = (object) $configObject->get_setting('core');
@@ -337,7 +337,7 @@ class assessment {
      */
     public function schedule($paperid, $month, $barriers = 0, $cohort_size = '<whole cohort>', $notes = '', $sittings = 1, $campus = '') {
         // Check paper is summative.
-        if (Paper_utils::get_paper_type($paperid, $this->db) != TYPE_SUMMATIVE) {
+        if (Paper_utils::get_paper_type($paperid, $this->db) != self::TYPE_SUMMATIVE) {
             return false;
         }
         // Enforce cohort size interface restrictions
