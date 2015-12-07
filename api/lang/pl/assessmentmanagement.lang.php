@@ -31,4 +31,4 @@ $string['paper_not_updated'] = 'Assessment not updated';
 $string['paper_not_scheduled'] = 'Assessment not scheduled';
 $string['paper_module_error'] = 'Module error';
 $string['paper_type_invalid'] = 'Paper type unknown';
-$strings['paper_general_error'] = 'An error occured';
+$string['paper_general_error'] = 'An error occured';
