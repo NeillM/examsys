@@ -236,7 +236,7 @@ ob_start();
     var winwidth = 785;
     var winheight = 150;
     templatewin = window.open("publishmarks.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    templatewin.moveTo(screen.width/2-350,screen.height/2-275);
+    templatewin.moveTo(screen.width/2-390,screen.height/2-75);
   }
   
   function viewProfile() {
