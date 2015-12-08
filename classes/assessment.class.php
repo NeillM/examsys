@@ -288,20 +288,18 @@ class assessment {
             } elseif ($duration < 0) {
                 $duration = 0;
             }
-        }   
-        $result = $this->db->prepare("UPDATE properties SET paper_title = ?,
-                    start_date = ?,
-                    end_date = ?,
-                    timezone = ?,
-                    paper_ownerID = ?,
-                    labs = ?,
-                    exam_duration = ?,
-                    calendar_year = ? 
-                WHERE property_id = ?");
-        $result->bind_param('ssssisiii', $papertitle, $startdate, $enddate, $timezone, $paperowner, $labs, $duration, $session, $id);
-        $result->execute();
-        $result->close();
-        if ($this->db->errno != 0) {
+        }
+        
+        $params = array();
+        $params['paper_title'] = array('s', $papertitle);
+        $params['start_date'] = array('s', $startdate);
+        $params['end_date'] = array('s', $enddate);
+        $params['timezone'] = array('s', $timezone);
+        $params['paper_ownerID'] = array('i', $paperowner);
+        $params['labs'] = array('s', $labs);
+        $params['exam_duration'] = array('i', $duration);
+        $params['calendar_year'] = array('i', $session);
+        if (!$this->db_update_assessment($id, $params)) {
             return false;
         }
         // Update to Modules.
