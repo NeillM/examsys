@@ -228,8 +228,10 @@ class assessment {
 
     /**
      * Update an assesment
+     * This should be used to update the basic information that is required by assessments.
+     * Note: the properties are validated against system rules
+     * Note: the paper type of an assessment cannot be updated
      * 
-     * Note the paper type of an assessment cannot be updated
      * @param integer $id - id of paper
      * @param string $papertitle - New paper title
      * @param integer $paperowner - Owner of paper
@@ -322,6 +324,21 @@ class assessment {
         }
         
         return true;
+    }
+    
+    /**
+     * Update assessment properties
+     * This function should be used to update bulk properties for an assessment.
+     * Note: property validation occurs does not occur in this function.
+     * 
+     * @param integer $id id of assessment
+     * @param array $params properties to update
+     * @return bool true on success false otherwise
+     */
+    public function db_update_assessment($id, $params) {
+        $table = 'properties';
+        $table_idx = 'property_id';
+        return DBUtils::exec_db_update($table, $table_idx, $params, $id, $this->db);
     }
     
     /**
