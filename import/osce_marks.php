@@ -295,6 +295,11 @@ if (!$graded and isset($_POST['submit'])) {
 
 <p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
+<?php
+    if ($graded and isset($_POST['submit'])) {
+        echo '<p>' . $string['gradedmsg'] . '</p>';
+    }
+?>
 </div>
 </td>
 </tr>

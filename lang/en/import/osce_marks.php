@@ -26,4 +26,5 @@ $string['headerrow'] = 'File contains header row';
 $string['import'] = 'Import';
 $string['usernotfound'] = 'username not found!';
 $string['saveerror'] = 'Error saving user data for %s';
+$string['gradedmsg'] = 'Import failed. This OSCE station has already been graded.';
 ?>

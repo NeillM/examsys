@@ -26,4 +26,5 @@ $string['headerrow'] = 'Plik zawiera wiersz nagłówka';
 $string['import'] = 'Importuj';
 $string['usernotfound'] = 'Nie znaleziono nazwy użytkownika!'; 
 $string['saveerror'] = 'Błąd zapisu danych użtykownika dla %s';
+$string['gradedmsg'] = 'Import failed. This OSCE station has already been graded.';
 ?>
