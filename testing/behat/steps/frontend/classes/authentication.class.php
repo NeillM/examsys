@@ -31,7 +31,6 @@ trait authentication {
    * Log the user into Rogo.
    *
    * @Given /^I login as "([^"]*)"$/
-   *
    * @param $username The username to be logged in.
    */
   public function i_login_as($username) {

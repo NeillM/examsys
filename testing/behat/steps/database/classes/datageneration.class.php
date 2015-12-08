@@ -43,8 +43,11 @@ trait datageneration {
 
   /**
    * Adds records to the database using an appropriate data generator.
-   *
+   * 
    * @Given /^the following "([^"]*)" exist:$/
+   * @param string $type The type of data to be generated. It must appear in self::$datagenerator_map
+   * @param TableNode $data The data to be loaded
+   * @throws PendingException if the type is not mapped, or the generator function does not exist
    */
   public function the_following_exist($type, TableNode $data) {
     if (!isset($this->datagenerator_map[$type])) {

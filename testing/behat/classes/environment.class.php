@@ -51,6 +51,24 @@ class environment {
             'paths' => array(
               $basedir . DIRECTORY_SEPARATOR . 'features',
             ),
+            'settings' => array(
+              'filters' => array(
+                'tags' => '~@backend'
+              ),
+            ),
+          ),
+          'backend' => array(
+            'contexts' => array(
+              'RogoBehatBackend',
+            ),
+            'paths' => array(
+              $basedir . DIRECTORY_SEPARATOR . 'features',
+            ),
+            'settings' => array(
+              'filters' => array(
+                'tags' => '@backend'
+              ),
+            ),
           ),
         ),
         'formatters' => array(

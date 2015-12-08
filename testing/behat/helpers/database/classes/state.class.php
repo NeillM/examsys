@@ -69,6 +69,9 @@ class state {
     return self::$db;
   }
 
+  /**
+   * Closes the database connection stored by this class.
+   */
   public static function close_db() {
     self::$db->close();
     self::$db = null;
@@ -159,10 +162,11 @@ class state {
   }
 
   /**
+   * Sets the autoincrement of a table to its original value if it has been modified.
    *
    * @param string $table The name of a mysql
-   * @param int $originalincrement
-   * @param int $currentincrement
+   * @param int $originalincrement The value that we expect the table to have
+   * @param int $currentincrement The value the table currently has
    */
   private static function reset_autoincrement($table, $originalincrement, $currentincrement) {
     if ($originalincrement != $currentincrement) {
@@ -177,7 +181,7 @@ class state {
   /**
    * Undo any database changes made since the state was saved.
    *
-   * @param string $name
+   * @param string $name The name of a saved database state.
    * @throws Exception
    */
   public static function rollback_database_state($name) {
@@ -233,5 +237,31 @@ class state {
     }
     $query->close();
     return $return;
+  }
+
+  /**
+   * Start a database transaction using a defined name.
+   *
+   * @param string $name the name of the database transaction.
+   * @throws Exception
+   */
+  public function start_transaction($name) {
+    $started = self::$db->savepoint($name);
+    if ($started === false) {
+      throw new Exception("Could not start a transaction called: $name");
+    }
+  }
+
+  /**
+   * Rollback the database to a savepoint, or entirely if no prameters are passed.
+   *
+   * @param string $name the name of the savepoint to rollback to (optional)
+   * @throws Exception
+   */
+  public function rollback_transaction($name = null) {
+    $rolledback = self::$db->rollback(null, $name);
+    if ($rolledback === false) {
+      throw new Exception("Failed to rollback to $name");
+    }
   }
 }

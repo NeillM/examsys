@@ -18,13 +18,14 @@
 require_once dirname(dirname(dirname(__DIR__))) . '/include/autoload.inc.php';
 autoloader::init();
 
-use testing\behat\rogo_test;
+use testing\behat\rogo_unit_test;
 
 /**
- * This is the frontend context for Rogo.
+ * This is the backend context for Rogo.
  *
- * It is designed to be used by Behat tests that test Rogo via it's own UI.
- * It will use Mink to run the tests via a web browser.
+ * It is designed to be used by Behat tests that should be
+ * performed as Unit tests rather than UI based tests. It is not suitiable
+ * for testing code that uses database transactions.
  *
  * Please do not add setps to it directly.
  * Steps should be included in traits in the \testing\behat\steps\ namespace
@@ -35,8 +36,9 @@ use testing\behat\rogo_test;
  * @package testing
  * @subpackage behat
  */
-class RogoBehatFrontend extends rogo_test {
-  use \testing\behat\hooks\frontend_hooks,
+class RogoBehatBackend extends rogo_unit_test {
+  use \testing\behat\steps\backend\include_backend,
       \testing\behat\steps\database\datageneration,
-      \testing\behat\steps\frontend\include_frontend;
+      \testing\behat\hooks\backend;
+
 }

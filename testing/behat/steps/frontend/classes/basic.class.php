@@ -29,8 +29,11 @@ use Behat\Gherkin\Node\PyStringNode,
 trait basic {
   /**
    * Click on an element on the page.
-   *
+   * 
    * @Given /^I click "([^"]*)" "([^"]*)"$/
+   * @param string $name The value to be searched for
+   * @param string $selector The type of selector
+   * @throws Exception
    */
   public function i_click($name, $selector) {
     $element = $this->find($selector, $name);
@@ -44,6 +47,9 @@ trait basic {
    * Checks for the presense of text.
    * 
    * @Then /^I should see "([^"]*)" "([^"]*)"$/
+   * @param string $content
+   * @param string $selector
+   * @throws Exception
    */
   public function i_should_see($content, $selector) {
     $element = $this->find($selector, $content);
