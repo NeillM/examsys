@@ -129,16 +129,12 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['session'] = $details['session'];
         }
         // Get start datetime if not provided.
-        $dateformat = 'YmdHis';
         if ($paperid and (empty($params['startdatetime']))) {
-            $start = $details['startdatetime'];
-        } else {
-            $start = date($dateformat, strtotime($params['startdatetime']));
+            $params['startdatetime'] = $details['startdatetime'];
         }
+        // Get end datetime if not provided.
         if ($paperid and (empty($params['enddatetime']))) {
-            $end = $details['enddatetime'];
-        } else {
-            $end = date($dateformat, strtotime($params['enddatetime']));
+            $params['enddatetime'] = $details['enddatetime'];
         }
 
         // Check modules
@@ -192,8 +188,8 @@ class assessmentmanagement extends \api\abstractmanagement {
             if ($params['id']) {
                 if ($paperid) {
                     try {
-                        $id = $paper->update($params['id'], $params['title'], $params['owner'], $start,
-                            $end, $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
+                        $id = $paper->update($params['id'], $params['title'], $params['owner'], $params['startdatetime'],
+                            $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
                         if ($id) {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);
                         } else {
@@ -208,8 +204,8 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Create exam.
             } else {
                 try {
-                    $id = $paper->create($params['title'], $params['type'], $params['owner'], $start,
-                        $end, $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
+                    $id = $paper->create($params['title'], $params['type'], $params['owner'], $params['startdatetime'],
+                        $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
                     if ($id) {
                         $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
                     } else {
