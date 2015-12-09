@@ -55,7 +55,8 @@ Class DBUtils {
    * Execute database update command 
    * @param string $table The table being updated
    * @param string $table_idx The index of the table to use to update
-   * @param string $params The columns to update and the values to use
+   * @param array $params The columns to update and the values to use. The array has the following strucutre:
+   *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
    * @param string $id The value of the table index to use
    * @param mysqli $db db connection
    * @return bool true on success false otherwise
@@ -76,6 +77,12 @@ Class DBUtils {
     $bind_values = array();
     foreach ($values as $idx => $val) {
         $bind_types[] = $val[0];
+        // Check valid bind_param type.
+        if (preg_match('/^(i|d|s|b)$/', $val[0])) {
+            $bind_types[] = $val[0];
+        } else {
+            return false;
+        }
         $bind_values[] = $val[1];
     }
     $bind_types = implode('', $bind_types);

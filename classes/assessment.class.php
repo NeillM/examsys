@@ -330,7 +330,8 @@ class assessment {
      * Note: property validation occurs does not occur in this function.
      * 
      * @param integer $id id of assessment
-     * @param array $params properties to update
+     * @param array $params properties to update. The array has the following strucutre:
+     *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
      * @return bool true on success false otherwise
      */
     public function db_update_assessment($id, $params) {
