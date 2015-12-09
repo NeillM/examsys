@@ -122,7 +122,7 @@ class assessment {
      * @param string $timezone - timezone paper is being taken in
      * @return integer|bool - id of new assessment or false on error
      */
-    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone = '') {
+    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone) {
        
         // Check title is unique.
         $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
@@ -244,7 +244,7 @@ class assessment {
      * @param string $timezone - timezone paper is being taken in
      * @return bool - true on success
      */
-    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone = '') {
+    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone) {
         
         // Check title is unique.
         $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
