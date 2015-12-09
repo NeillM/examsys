@@ -270,7 +270,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                         $type = 'Assessment Management';
                         $errorstring = 'Error deleting unscheduled paper';
                         $errorfile = $_SERVER['PHP_SELF'];
-                        $errorline = 268;
+                        $errorline = __LINE__ - 5;
                         $logger = new \logger($this->db);
                         $logger->record_ws_application_warning($type, $errorstring, $errorfile, $errorline);
                     }
