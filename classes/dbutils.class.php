@@ -76,7 +76,6 @@ Class DBUtils {
     $bind_types = array();
     $bind_values = array();
     foreach ($values as $idx => $val) {
-        $bind_types[] = $val[0];
         // Check valid bind_param type.
         if (preg_match('/^(i|d|s|b)$/', $val[0])) {
             $bind_types[] = $val[0];
