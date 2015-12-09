@@ -344,7 +344,7 @@ class assessment {
      * @param integer $paperid paper id
      * @param integer $month the month the exam should be scheduled in
      * @param integer $barriers are barrier required
-     * @param integer $cohort_size size of cohort taking the exam in a sitting
+     * @param string $cohort_size size of cohort taking the exam in a sitting
      * @param string $notes misc notes on paper
      * @param integer $sittings number of sittings required for all cohort to take exam
      * @param string $campus the camps where the exam should be taken

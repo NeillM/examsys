@@ -41,7 +41,6 @@ class gradebook {
     
     /**
      * Check if the paper has been graded.
-     * @param integer $userid 
      * @param integer $paperid 
      * @return bool true if already graded
      */
