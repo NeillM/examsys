@@ -770,10 +770,10 @@ Class PaperUtils {
    * @return array|bool array of paper details or false on error
    */
   static function get_paper_properties($id, $db) {
-    $result = $db->prepare("SELECT paper_title, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration FROM properties WHERE property_id = ?");
+    $result = $db->prepare("SELECT paper_title, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration, timezone FROM properties WHERE property_id = ?");
     $result->bind_param('i', $id);
     $result->execute();
-    $result->bind_result($title, $owner, $session, $startdatetime, $enddatetime, $labs, $duration);
+    $result->bind_result($title, $owner, $session, $startdatetime, $enddatetime, $labs, $duration, $timezone);
     $result->fetch();
     if ($db->errno != 0) {
         $result->close();
@@ -786,7 +786,8 @@ Class PaperUtils {
                     'startdatetime' => $startdatetime,
                     'enddatetime' => $enddatetime,
                     'labs' => $labs,
-                    'duration' => $duration);
+                    'duration' => $duration,
+                    'timezone' => $timezone);
     return $details;
   }
 

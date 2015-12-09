@@ -116,27 +116,32 @@ class assessmentmanagement extends \api\abstractmanagement {
             $paperid = false;
         }
         
-        // Get title if not provided.
-        if ($paperid and (empty($params['title']))) {
-            $params['title'] = $details['title'];
+        if ($paperid) {
+            // Get title if not provided.
+            if (empty($params['title'])) {
+                $params['title'] = $details['title'];
+            }
+            // Get owner if not provided.
+            if (empty($params['owner'])) {
+                $params['owner'] = $details['owner'];
+            }
+            // Get session if not provided.
+            if (empty($params['session'])) {
+                $params['session'] = $details['session'];
+            }
+            // Get start datetime if not provided.
+            if (empty($params['startdatetime'])) {
+                $params['startdatetime'] = $details['startdatetime'];
+            }
+            // Get end datetime if not provided.
+            if (empty($params['enddatetime'])) {
+                $params['enddatetime'] = $details['enddatetime'];
+            }
+             // Get end timezone if not provided.
+            if (empty($params['timezone'])) {
+                $params['timezone'] = $details['timezone'];
+            }
         }
-        // Get owner if not provided.
-        if ($paperid and (empty($params['owner']))) {
-            $params['owner'] = $details['owner'];
-        }
-        // Get session if not provided.
-        if ($paperid and (empty($params['session']))) {
-            $params['session'] = $details['session'];
-        }
-        // Get start datetime if not provided.
-        if ($paperid and (empty($params['startdatetime']))) {
-            $params['startdatetime'] = $details['startdatetime'];
-        }
-        // Get end datetime if not provided.
-        if ($paperid and (empty($params['enddatetime']))) {
-            $params['enddatetime'] = $details['enddatetime'];
-        }
-
         // Check modules
         $modulesarray = array();
         if (count($params['modules']) > 0) {
