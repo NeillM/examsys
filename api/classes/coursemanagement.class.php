@@ -48,9 +48,10 @@ class coursemanagement extends \api\abstractmanagement {
     /**
      * Create/Update course
      * @param array $params course creation parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and course id
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_updated', 'course_does_not_exist'
             , 'course_not_created', 'course_already_exists', 'faculty_not_supplied'));
@@ -126,9 +127,10 @@ class coursemanagement extends \api\abstractmanagement {
     /**
      * Delete course
      * @param array $parms delete course parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return success status and course id 
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_deleted_inuse', 'course_not_deleted'
             , 'course_does_not_exist'));

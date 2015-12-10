@@ -168,7 +168,7 @@ $app->error(function (\Exception $e) use ($render, $langpack) {
 function process ($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli) {
     // Check for auth tokens
     $client_id = $oauth->check_auth();
-    
+    $user_id = $oauth->get_client_user($client_id);
     //Check Permissions
     foreach ($operations as $operation) {
         $perm[$operation] = $oauth->check_permissions($request . '/' . $operation, $client_id);
@@ -187,7 +187,7 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
         
         // XML.
         if ($data[0] == 'OK') {
-            $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm);
+            $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm, $user_id);
             $template = 'api/success.xml';
         } else {
             $responsedata = $data[1];

@@ -52,13 +52,14 @@ class modulemanagement extends \api\abstractmanagement {
     /**
      * Enrol student on a Module.
      * @param array $params module enrol parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return array - success status and enrolment id
      */
-    public function enrol($params) {
+    public function enrol($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_not_enrolled', 'user_does_not_exist', 'user_already_enrolled'));
-        $userid = \UserUtils::userid_exists($params['userid'], $this->db);
-        if ($userid) {
+        $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
+        if ($userexists) {
             $yearutils = new \yearutils($this->db);
             if ($params['session'] == '') {
                 $session = $yearutils->get_current_session();
@@ -87,13 +88,14 @@ class modulemanagement extends \api\abstractmanagement {
     /**
      * UnEnrol student on a Module.
      * @param array $params module enrol parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return array - success status and enrolment id
      */
-    public function unenrol($params) {
+    public function unenrol($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_not_unenrolled', 'user_does_not_exist'));
-        $userid = \UserUtils::userid_exists($params['userid'], $this->db);
-        if ($userid) {
+        $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
+        if ($userexists) {
             $yearutils = new \yearutils($this->db);
             if ($params['session'] == '') {
                 $session = $yearutils->get_current_session();
@@ -115,9 +117,10 @@ class modulemanagement extends \api\abstractmanagement {
     /**
      * Create/Update module
      * @param array $params module creation parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and module id
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist',
             'module_not_created', 'module_already_exists', 'faculty_not_supplied'));
@@ -202,9 +205,10 @@ class modulemanagement extends \api\abstractmanagement {
     /**
      * Delete module
      * @param array $parms delete module parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return success status and module id
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_deleted_inuse', 'module_not_deleted',
             'module_does_not_exist'));

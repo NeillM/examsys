@@ -46,9 +46,10 @@ class facultymanagement extends \api\abstractmanagement {
     /**
      * Create/Update faculty
      * @param array $params faculty creation parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and faculty id
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_updated', 'faculty_does_not_exist'
             , 'faculty_not_created', 'faculty_already_exists'));
@@ -100,9 +101,10 @@ class facultymanagement extends \api\abstractmanagement {
     /**
      * Delete faculty
      * @param array $parms delete faculty parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return success status and faculty id 
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_deleted_inuse', 'faculty_not_deleted'
             , 'faculty_does_not_exist'));

@@ -248,6 +248,7 @@ class oauth {
         $result = $this->db->prepare("SELECT user_id FROM oauth_clients WHERE client_id = ?");
         $result->bind_param('s', $client);
         $result->execute();
+        $result->store_result();
         $result->bind_result($userid);
         $result->fetch();
         if ($result->num_rows == 0) {

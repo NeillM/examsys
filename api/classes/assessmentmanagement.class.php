@@ -93,9 +93,10 @@ class assessmentmanagement extends \api\abstractmanagement {
     /**
      * Create/Update assessment
      * @param array $parms create assessment parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return array assessment id and status
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_scheduled_summative', 'paper_does_not_exist',
             'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error',));
@@ -194,7 +195,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                 if ($paperid) {
                     try {
                         $id = $paper->update($params['id'], $params['title'], $params['owner'], $params['startdatetime'],
-                            $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
+                            $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $userid);
                         if ($id) {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);
                         } else {
@@ -228,9 +229,10 @@ class assessmentmanagement extends \api\abstractmanagement {
     /**
      * Schedule a summative assessment
      * @param array $parms schedule summative parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return array summative assessment id and status
      */
-    public function schedule($params) {
+    public function schedule($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_not_scheduled', 'paper_invalid_module'));
         $error = array();
@@ -289,9 +291,10 @@ class assessmentmanagement extends \api\abstractmanagement {
     /**
      * Delete assessment
      * @param array $parms delete assessment parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return array assessment id and status
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_deleted_inuse', 'paper_not_deleted'
             , 'paper_does_not_exist'));

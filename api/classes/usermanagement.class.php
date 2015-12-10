@@ -41,9 +41,9 @@ class usermanagement extends \api\abstractmanagement {
         'USER_DOES_NOT_EXIST' => 701,
         'USER_NOT_UPDATED' => 702,
         'USER_NOT_CREATED' => 703,
-        'USER_NOT_DELETED_INUSE' => 704'
-        'USER_INVALID_COURSE' => 705'
-        'USER_ALREADY_EXISTS' => 706'
+        'USER_NOT_DELETED_INUSE' => 704,
+        'USER_INVALID_COURSE' => 705,
+        'USER_ALREADY_EXISTS' => 706,
         'USER_INVALID_ROLE' => 707
     );
         
@@ -82,29 +82,30 @@ class usermanagement extends \api\abstractmanagement {
     /**
      * Create/Update user
      * @param array $params create user params
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and user id
      */ 
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_does_not_exist'
             , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists'));
         $error = array();
-        $userid = false;
+        $userexists = false;
         // Student and Staff users only.
         $studentroles = array('Student', 'Left', 'Graduate');
         $staffroles = array('Staff', 'Inactive Staff');
         $roles = array_merge($studentroles, $staffroles);
         
         if (!empty($params['id'])) {
-            $userid = \UserUtils::userid_exists($params['id'], $this->db);
-            if ($userid) {
+            $userexists = \UserUtils::userid_exists($params['id'], $this->db);
+            if ($userexists) {
                 $details = \UserUtils::get_full_details_by_ID($params['id'], $this->db);
             }
         } else {
             $params['id'] = false;
         }
         
-        if ($userid) {
+        if ($userexists) {
             // Set defaults if not provided.
             $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
                 'gender', 'year', 'role', 'studentid', 'initials');
@@ -115,7 +116,7 @@ class usermanagement extends \api\abstractmanagement {
             }
         } 
         
-        if (!$userid and $params['id']) {
+        if (!$userexists and $params['id']) {
             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
         } else {
             if (!in_array($params['role'], $roles)) {
@@ -156,9 +157,9 @@ class usermanagement extends \api\abstractmanagement {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
                         } else {
                             // Check if user exists, otherwise throw generic error.
-                            $userid = \UserUtils::username_exists($params['username'], $this->db);
-                            if ($userid) {
-                                $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userid);
+                            $userexists = \UserUtils::username_exists($params['username'], $this->db);
+                            if ($userexists) {
+                                $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userexists);
                             } else {
                                 $data = array('statuscode' => $this->statuscodes['USER_NOT_CREATED'], 'status' => $strings['user_not_created'], 'id' => null);
                             }
@@ -175,18 +176,19 @@ class usermanagement extends \api\abstractmanagement {
     /**
      * Delete user
      * @param array $parms delete user parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return  
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_paper_exists' ,'user_not_deleted',
             'user_does_not_exist'));
         if (!empty($params['id'])) {
-            $userid = \UserUtils::userid_exists($params['id'], $this->db);
+            $userexists = \UserUtils::userid_exists($params['id'], $this->db);
         } else {
             $params['id'] = false;
         }
-        if ($userid) {
+        if ($userexists) {
             // Only delete user they have taken no papers
             $inuse = \UserUtils::user_paper_started($params['id'], $this->db);
             if ($inuse) {

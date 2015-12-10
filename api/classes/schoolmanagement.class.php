@@ -41,17 +41,18 @@ class schoolmanagement extends \api\abstractmanagement {
         'SCHOOL_DOES_NOT_EXIST' => 601,
         'SCHOOL_NOT_UPDATED' => 602,
         'SCHOOL_NOT_CREATED' => 603,
-        'SCHOOL_NOT_DELETED_INUSE' => 604
-        'SCHOOL_FACULTY_INVALID' => 605
+        'SCHOOL_NOT_DELETED_INUSE' => 604,
+        'SCHOOL_FACULTY_INVALID' => 605,
         'SCHOOL_ALREADY_EXISTS' => 606
     );
         
     /**
      * Create/Update school
      * @param array $params school creation parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and school id
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
             , 'school_created', 'school_alreads_exists', 'faculty_not_supplied'));
@@ -124,9 +125,10 @@ class schoolmanagement extends \api\abstractmanagement {
     /**
      * Delete school
      * @param array $parms delete school parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return success status and school id
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_deleted_inuse', 'school_not_deleted'
             , 'school_does_not_exist'));

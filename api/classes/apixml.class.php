@@ -70,9 +70,10 @@ class apixml extends \api\apiabstract {
      * @param array $actions possible actions
      * @param object $xml xml data
      * @param array $task user permissions
+     * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $xml, $perms) {
+    public function parse($tasktype, $fields, $actions, $xml, $perms, $userid) {
         $langpack = new \langpack();
         $response = array();
         $xpath = new \DOMXPath($xml); 
@@ -115,7 +116,7 @@ class apixml extends \api\apiabstract {
                         $response[] = &$tasktype->get_response($data, $action);
                     }
                 } else {
-                    $response[] = &$tasktype->$action($params);
+                    $response[] = &$tasktype->$action($params, $userid);
                 }
             }
         }

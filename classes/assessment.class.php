@@ -242,45 +242,79 @@ class assessment {
      * @param string $session - Academic session the paper is relevant to
      * @param array $modules - Modules that have the paper available to them
      * @param string $timezone - timezone paper is being taken in
+     * @param integer $userid - rogo user id of change implementor
      * @return bool - true on success
      */
-    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone) {
+    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid) {
         
-        // Check title is unique.
-        $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
-        if (!$uniquetitle) {
-            throw new Exception('NON_UNIQUE_TITLE');
-        }
-        // Check owner exists.
-        $userid = UserUtils::userid_exists($paperowner, $this->db);
-        if (!$userid) {
-            throw new Exception('INVALID_USER');
-        } else {
-            // Check owners role.
-            $staff = UserUtils::has_user_role($paperowner, 'Staff', $this->db);
-            if (!$staff) {
-                throw new Exception('INVALID_ROLE');
+        $changes = array();
+        $params = array();
+        $details = Paper_utils::get_paper_properties($id, $this->db);
+        if ($papertitle != $details['title']) {
+            // Check title is unique.
+            $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
+            if (!$uniquetitle) {
+                throw new Exception('NON_UNIQUE_TITLE');
             }
+            $params['paper_title'] = array('s', $papertitle);
+            $changes[] = array('old'=>$details['title'], 'new'=>$papertitle, 'part'=>'name');
         }
-        // Check session.
-        $yearutils = new yearutils($this->db);
-        $validsession = array_key_exists($session, $yearutils->get_supported_years());
-        if (!$validsession) {
-             throw new Exception('INVALID_SESSION');
+
+        if ($paperowner != $details['owner']) {
+            // Check owner exists.
+            $userexists = UserUtils::userid_exists($paperowner, $this->db);
+            if (!$userexists) {
+                throw new Exception('INVALID_USER');
+            } else {
+                // Check owners role.
+                $staff = UserUtils::has_user_role($paperowner, 'Staff', $this->db);
+                if (!$staff) {
+                    throw new Exception('INVALID_ROLE');
+                }
+            }
+            $params['paper_ownerID'] = array('i', $paperowner);
+            $changes[] = array('old'=>$details['owner'], 'new'=>$paperowner, 'part'=>'owner');
         }
+        
+        if ($session != $details['session']) {
+            // Check session.
+            $yearutils = new yearutils($this->db);
+            $validsession = array_key_exists($session, $yearutils->get_supported_years());
+            if (!$validsession) {
+                 throw new Exception('INVALID_SESSION');
+            }
+            $params['calendar_year'] = array('i', $session);
+            $changes[] = array('old'=>$details['session'], 'new'=>$session, 'part'=>'session');
+        }
+        
         // Check startdate and enddate
         if ($enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
-        } 
-        // Verify timezone is supported, revert to server timezone if not.
-        $decode_timezones = json_decode($this->timezones, true);
-        if (!array_key_exists($timezone, $decode_timezones)) {
-            $timezone = $this->server_timezone;
+        }
+        if ($startdate != $details['startdatetime']) {
+            $params['start_date'] = array('s', $startdate);
+            $changes[] = array('old'=>$details['startdatetime'], 'new'=>$startdate, 'part'=>'startdate');
+        }
+        if ($enddate != $details['enddatetime']) {
+            $params['end_date'] = array('s', $enddate);
+            $changes[] = array('old'=>$details['enddatetime'], 'new'=>$enddate, 'part'=>'enddate');
         }
         // Set up start date and end date based on timezone.
         $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
         $startdate = $datesarray[0];
         $enddate = $datesarray[1];
+        
+        
+        // Verify timezone is supported, revert to server timezone if not.
+        $decode_timezones = json_decode($this->timezones, true);
+        if (!array_key_exists($timezone, $decode_timezones)) {
+            $timezone = $this->server_timezone;
+        }
+        if ($timezone != $details['timezone']) {
+            $params['timezone'] = array('s', $timezone);
+            $changes[] = array('old'=>$details['timezone'], 'new'=>$timezone, 'part'=>'timezone');
+        }
+        
         // Enforce Interface boundaries.
         if (!empty($duration)) {
             if ($duration > $this->max_duration) {
@@ -289,19 +323,28 @@ class assessment {
                 $duration = 0;
             }
         }
-        
-        $params = array();
-        $params['paper_title'] = array('s', $papertitle);
-        $params['start_date'] = array('s', $startdate);
-        $params['end_date'] = array('s', $enddate);
-        $params['timezone'] = array('s', $timezone);
-        $params['paper_ownerID'] = array('i', $paperowner);
-        $params['labs'] = array('s', $labs);
-        $params['exam_duration'] = array('i', $duration);
-        $params['calendar_year'] = array('i', $session);
-        if (!$this->db_update_assessment($id, $params)) {
-            return false;
+        if ($duration != $details['duration']) {
+            $params['exam_duration'] = array('i', $duration);
+            $changes[] = array('old'=>$details['duration'], 'new'=>$duration, 'part'=>'duration');
         }
+
+        if ($labs != $details['labs']) {
+            $params['labs'] = array('s', $labs);
+            $changes[] = array('old'=>$details['labs'], 'new'=>$labs, 'part'=>'labs');
+        }
+
+        // Update if changes made.
+        if (count($changes) > 0) {
+            if (!$this->db_update_assessment($id, $params)) {
+                return false;
+            }
+            // Log changes.
+            $logger = new Logger($this->db);
+            foreach ($changes as $change) {
+                $logger->track_change('Paper', $id, $userid, $change['old'], $change['new'], $change['part']);
+            }
+        }
+        
         // Update to Modules.
         $current_modules = Paper_utils::get_modules($id, $this->db);
         foreach ($modules as $module) {
