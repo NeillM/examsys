@@ -67,6 +67,32 @@ class api {
     }
 
     /**
+     * Get the user agent of the request.
+     * @return string - user agent 
+     */
+    public function get_user_agent() {
+        return $this->app->request->headers->get('USER_AGENT');
+    }
+    
+    /**
+     * Get a parameter of the request.
+     * @param $parameter string parameter name
+     * @return string - parameter 
+     */
+    public function get_parameter($parameter) {
+        return $this->app->request->params($parameter);
+    }
+    
+     /**
+     * Get the path of the request.
+     * @return string - path 
+     */
+    public function get_path() {
+        return $this->app->request->getPath();
+    }
+    
+    
+    /**
      * Get the media type of the request.
      * @return string|bool - media type if valid, false otherwise
      */
