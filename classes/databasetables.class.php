@@ -867,15 +867,15 @@ QUERY;
           `paper_type` enum('0','1','2','3','4','5','6') default NULL,
           `paper_prologue` text,
           `paper_postscript` text,
-          `bgcolor` varchar(20) default NULL,
-          `fgcolor` varchar(20) default NULL,
-          `themecolor` varchar(20) default NULL,
-          `labelcolor` varchar(20) default NULL,
-          `fullscreen` enum('0','1') NOT NULL default '0',
-          `marking` char(60) default NULL,
-          `bidirectional` enum('0','1') NOT NULL default '0',
-          `pass_mark` tinyint(4) default NULL,
-          `distinction_mark` tinyint(4) default NULL,
+          `bgcolor` varchar(20) DEFAULT 'white',
+          `fgcolor` varchar(20) default 'black',
+          `themecolor` varchar(20) default '#316AC5',
+          `labelcolor` varchar(20) default '#C00000',
+          `fullscreen` enum('0','1') NOT NULL default '1',
+          `marking` char(60) default '1',
+          `bidirectional` enum('0','1') NOT NULL default '1',
+          `pass_mark` tinyint(4) default '40',
+          `distinction_mark` tinyint(4) default '70',
           `paper_ownerID` int(10) unsigned default NULL,
           `folder` varchar(255) default NULL,
           `labs` text,
@@ -884,17 +884,17 @@ QUERY;
           `exam_duration` smallint(6) default NULL,
           `deleted` datetime default NULL,
           `created` datetime default NULL,
-          `random_mark` float default NULL,
-          `total_mark` mediumint(9) default NULL,
-          `display_correct_answer` enum('0','1') default NULL,
-          `display_question_mark` enum('0','1') default NULL,
-          `display_students_response` enum('0','1') default NULL,
-          `display_feedback` enum('0','1') default NULL,
-          `hide_if_unanswered` enum('0','1') default NULL,
+          `random_mark` float default 0,
+          `total_mark` mediumint(9) default 0,
+          `display_correct_answer` enum('0','1') default '1',
+          `display_question_mark` enum('0','1') default '1',
+          `display_students_response` enum('0','1') default '1',
+          `display_feedback` enum('0','1') default '1',
+          `hide_if_unanswered` enum('0','1') default '0',
           `calendar_year` INT(4),
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
-          `sound_demo` enum('0','1') default NULL,
+          `sound_demo` enum('0','1') default '0',
           `latex_needed` tinyint(4) default '0',
           `password` char(255) default NULL,
           `retired` datetime default NULL,
@@ -1449,6 +1449,25 @@ QUERY;
             description varchar(255) NOT NULL,
             PRIMARY KEY (action)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['gradebook_paper'] = <<<QUERY
+        CREATE TABLE gradebook_paper (
+            paperid int(8) NOT NULL,
+            timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`paperid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['gradebook_user'] = <<<QUERY
+        CREATE TABLE gradebook_user (
+            paperid int(8) NOT NULL,
+            userid int(10) NOT NULL,
+            raw_grade int(3) DEFAULT NULL,
+            adjusted_grade float DEFAULT NULL,
+            classification varchar(50) DEFAULT NULL,
+            PRIMARY KEY (paperid, userid)
+        )  ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
 $this->tableList['oauth_clients'] = <<<QUERY

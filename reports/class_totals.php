@@ -232,6 +232,13 @@ ob_start();
     templatewin.moveTo(screen.width/2-350,screen.height/2-275);
   }
 
+  function popupPublishMarks() {
+    var winwidth = 785;
+    var winheight = 150;
+    templatewin = window.open("publishmarks.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    templatewin.moveTo(screen.width/2-390,screen.height/2-75);
+  }
+  
   function viewProfile() {
     $('#menudiv').hide();
     if ($('#reassign').val() == 'n') {
@@ -465,7 +472,7 @@ echo draw_toprightmenu(30);
   $scatter_data = '';
 
   echo "<tbody>\n";
-
+  $guestusers = false;
   for ($i=0; $i<$user_no; $i++) {
     extract($user_results[$i]);
 
@@ -552,6 +559,7 @@ echo draw_toprightmenu(30);
           echo "<td class=\"$class tmpacc $role_css\">Mr</td>";
           echo "<td class=\"$class tmpacc $role_css\">Guest</td>";
           echo "<td class=\"$class tmpacc $role_css\">" . str_replace('User','Account #',$user_results[$i]['surname']);
+          $guestusers = true;
         } else {
           echo "<td class=\"$class $role_css\">" . $user_results[$i]['title'] . "</td>";
           echo "<td class=\"$class $role_css\">" . $user_results[$i]['surname'] . "</td>";
@@ -590,13 +598,13 @@ echo draw_toprightmenu(30);
        			
 				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
 				
-        if (round($user_results[$i]['percent'], $percent_decimals) < $pass_mark) {
+        if ($user_results[$i]['classification'] == 'Fail') {
           echo "<td class=\"mk $class fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
           echo $user_results[$i]['mark'] . "</td>";
           echo "<td class=\"$class fail r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class fail $role_css\">&nbsp;" . $string['fail'] . "</td>";
         } else {
-          if (round($user_results[$i]['percent'], $percent_decimals) >= $distinction_mark) {
+          if ($user_results[$i]['classification'] == 'Distinction') {
             echo "<td class=\"mk $class dist r $role_css\">";
             if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
             echo $user_results[$i]['mark'] . "</td>";
@@ -937,6 +945,37 @@ echo draw_toprightmenu(30);
         echo '<input type="hidden" name="subject" value="" />';
         echo "</form>\n</div>\n";
       }
+      
+    }
+    
+    $unmarked_questions = false;
+    $summative = false;
+    $late_answers = false;
+    if ($report->unmarked_textbox() or $report->unmarked_enhancedcalc()) {
+        $unmarked_questions = true;
+    }
+    if ($paper_type == 2 or $paper_type = 4) {
+        $summative = true;
+    }
+    if (count($log_late) > 0) {
+        $late_answers = true;
+    }
+    $finished = false;
+    if ($propertyObj->get_end_date() <= time()) {
+        $finished = true;
+    }
+    if (!$guestusers and $finished and !$unmarked_questions and $summative and !$late_answers and !$report->paper_graded()) {
+        if (isset($_POST['publishmarks']) and $_POST['publishmarks'] == 'yes') {
+            $report->create_gradebook();
+            $report->store_grades();
+            echo '<p>' . $string['gradepublish'] . '</p>';
+        } else {
+            echo "<div>\n";
+            echo "<form name=\"theform\" method=\"post\">\n";
+            echo "<input type=\"button\" value=\"" . $string['publishmarks'] . "\" onclick=\"popupPublishMarks();\" style=\"margin:10px; width:160px\" />\n";
+            echo '<input type="hidden" name="publishmarks" value="" />';
+            echo "</form>\n</div>\n";
+        }
     }
     echo "</table>\n";
   } else {

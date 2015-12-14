@@ -17,7 +17,7 @@
 include 'commonapi.lang.php';
 
 $string['school_not_updated'] = 'School not updated';
-$string['school_alreads_exists'] = 'School already exists';
-$string['school_created'] = ' School created';
+$string['school_already_exists'] = 'School already exists';
+$string['school_not_created'] = 'School not created';
 $string['school_not_deleted'] = 'School not deleted';
 $string['school_not_deleted_inuse'] = 'School not deleted, as in use by a course or module';

@@ -109,11 +109,12 @@ class api {
      * @param array $actions possible actions
      * @param object $body request body
      * @param array $perms user permissions
+     * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $body, $perms) {
+    public function parse($tasktype, $fields, $actions, $body, $perms, $userid) {
         $api = new \api\apixml($body);
-        return $api->parse($tasktype, $fields, $actions, $body, $perms);
+        return $api->parse($tasktype, $fields, $actions, $body, $perms, $userid);
     }
     
 }

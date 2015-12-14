@@ -357,19 +357,78 @@ class PaperProperties {
   public function save() {
     $configObject = Config::get_instance();
     $userObject   = UserObject::get_instance();
-
+    $gradebook = new gradebook($this->db);
+    $graded = $gradebook->paper_graded($this->property_id);
+    // Set common updates parameters.
+    $params = array();
+    $params['display_correct_answer'] = array('s', $this->display_correct_answer);
+    $params['display_students_response'] = array('s', $this->display_students_response);
+    $params['display_question_mark'] = array('s', $this->display_question_mark);
+    $params['display_feedback'] = array('s', $this->display_feedback);
+    $params['external_review_deadline'] = array('s', $this->external_review_deadline);
+    $params['internal_review_deadline'] = array('s', $this->internal_review_deadline);
+    $params['recache_marks'] = array('i', $this->recache_marks);
+    
+    // Set update parameters.
     if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
-      $result = $this->db->prepare("UPDATE properties SET marking = ?, pass_mark = ?, distinction_mark = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, external_review_deadline = ?, internal_review_deadline = ?, recache_marks = ? WHERE property_id = ?");
-      $result->bind_param('siissssssii', $this->marking, $this->pass_mark, $this->distinction_mark, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->external_review_deadline, $this->internal_review_deadline, $this->recache_marks, $this->property_id);
-		} elseif ($configObject->get('cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
-      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, rubric = ?, calculator = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ? WHERE property_id = ?");
-      $result->bind_param('ssssssssssiississsssssssii', $this->paper_title, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->rubric, $this->calculator, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->property_id);
+      if (!$graded) {
+        $params['marking'] = array('s', $this->marking);
+        $params['pass_mark'] = array('i', $this->pass_mark);
+        $params['distinction_mark'] = array('i', $this->distinction_mark);
+      }
+    } elseif ($configObject->get('cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
+        $params['paper_title'] = array('s', $this->paper_title);
+        $params['paper_prologue'] = array('s', $this->paper_prologue);
+        $params['paper_postscript'] = array('s', $this->paper_postscript);
+        $params['bgcolor'] = array('s', $this->bgcolor);
+        $params['fgcolor'] = array('s', $this->fgcolor);
+        $params['themecolor'] = array('s', $this->themecolor);
+        $params['labelcolor'] = array('s', $this->labelcolor);
+        $params['fullscreen'] = array('s', $this->fullscreen);
+        $params['marking'] = array('s', $this->marking);
+        $params['bidirectional'] = array('s', $this->bidirectional);
+        $params['pass_mark'] = array('i', $this->pass_mark);
+        $params['distinction_mark'] = array('i', $this->distinction_mark);
+        $params['folder'] = array('s',$this->folder);
+        $params['rubric'] = array('s',$this->rubric);
+        $params['calculator'] = array('i',$this->calculator);
+        $params['hide_if_unanswered'] = array('s',$this->hide_if_unanswered);
+        $params['sound_demo'] = array('s',$this->sound_demo);
+        $params['password'] = array('s',$this->password);
     } else {
-      $result = $this->db->prepare("UPDATE properties SET paper_title = ?, paper_type = ?, start_date = ?, end_date = ?, timezone = ?, paper_prologue = ?, paper_postscript = ?, bgcolor = ?, fgcolor = ?, themecolor = ?, labelcolor = ?, fullscreen = ?, marking = ?, bidirectional = ?, pass_mark = ?, distinction_mark = ?, folder = ?, labs = ?, rubric = ?, calculator = ?, exam_duration = ?, display_correct_answer = ?, display_students_response = ?, display_question_mark = ?, display_feedback = ?, hide_if_unanswered = ?, calendar_year = ?, external_review_deadline = ?, internal_review_deadline = ?, sound_demo = ?, password = ?, recache_marks = ?, deleted = ? WHERE property_id = ?");
-      $result->bind_param('ssssssssssssssiisssiissssssssssisi', $this->paper_title, $this->paper_type, $this->raw_start_date, $this->raw_end_date, $this->timezone, $this->paper_prologue, $this->paper_postscript, $this->bgcolor, $this->fgcolor, $this->themecolor, $this->labelcolor, $this->fullscreen, $this->marking, $this->bidirectional, $this->pass_mark, $this->distinction_mark, $this->folder, $this->labs, $this->rubric, $this->calculator, $this->exam_duration, $this->display_correct_answer, $this->display_students_response, $this->display_question_mark, $this->display_feedback, $this->hide_if_unanswered, $this->calendar_year, $this->external_review_deadline, $this->internal_review_deadline, $this->sound_demo, $this->password, $this->recache_marks, $this->deleted, $this->property_id);
+      $params['paper_title'] = array('s', $this->paper_title);
+      $params['paper_type'] = array('s', $this->paper_type);
+      $params['paper_prologue'] = array('s', $this->paper_prologue);
+      $params['paper_postscript'] = array('s', $this->paper_postscript);
+      $params['bgcolor'] = array('s', $this->bgcolor);
+      $params['fgcolor'] = array('s', $this->fgcolor);
+      $params['themecolor'] = array('s', $this->themecolor);
+      $params['labelcolor'] = array('s', $this->labelcolor);
+      $params['fullscreen'] = array('s', $this->fullscreen);
+      $params['bidirectional'] = array('s', $this->bidirectional);
+      $params['folder'] = array('s', $this->folder);
+      $params['labs'] = array('s', $this->labs);
+      $params['rubric'] = array('s', $this->rubric);
+      $params['calculator'] = array('i', $this->calculator);
+      $params['hide_if_unanswered'] = array('s', $this->hide_if_unanswered);
+      $params['sound_demo'] = array('s', $this->sound_demo);
+      $params['password'] = array('s', $this->password);
+      $params['deleted'] = array('s', $this->deleted);
+      if (!$graded) {
+        $params['start_date'] = array('s', $this->raw_start_date);
+        $params['end_date'] = array('s', $this->raw_end_date);
+        $params['timezone'] = array('s', $this->timezone);
+        $params['marking'] = array('s', $this->marking);
+        $params['pass_mark'] = array('i', $this->pass_mark);
+        $params['distinction_mark'] = array('i',  $this->distinction_mark);
+        $params['exam_duration'] = array('i', $this->exam_duration);
+        $params['calendar_year'] = array('i', $this->calendar_year);
+      }
     }
-    $result->execute();
-    $result->close();
+
+    // Udpate assessment properties.
+    $assessment = new assessment($this->db, $configObject);
+    $assessment->db_update_assessment($this->property_id, $params);
 
     // Record any changes
    	$logger = new Logger($this->db);

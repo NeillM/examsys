@@ -174,7 +174,7 @@ class Config extends RogoStaticSingleton {
     }
 
     $this->load_settings($component);
-    $cachedsetting = $this->get_setting_from_cache($component);
+    $cachedsetting = $this->get_setting_from_cache($component, $setting);
     if ($cachedsetting) {
       return $cachedsetting;
     }

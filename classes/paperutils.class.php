@@ -425,6 +425,11 @@ Class PaperUtils {
     $update->bind_param('i', $paperID);
     $update->execute();
     $update->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return true;
+    
   }
 
   public function type_to_name($type, $string) {
@@ -719,4 +724,71 @@ Class PaperUtils {
     $results->close();
     return false;
   }
+
+  /**
+  * Get the paper type of the paper.
+  * @param integer $id - paper id
+  * @param mysqli $db 
+  * @return integer|bool paper type or false on error
+  */
+  static function get_paper_type($id, $db) {
+    $result = $db->prepare("SELECT paper_type FROM properties WHERE property_id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->bind_result($paper_type);
+    $result->fetch();
+    if ($db->errno != 0) {
+        $result->close();
+        return false;
+    }
+    $result->close();
+    return $paper_type;
+  }
+  
+  /**
+   * Delete a paper from the database
+   * @param integer $id paper id
+   * @param mysqli $db 
+   * @return bool true on success, false otherwise
+   */
+  static function complete_delete_paper($id, $db) {
+    $result = $db->prepare("DELETE FROM properties WHERE property_id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->fetch();
+    if ($db->errno != 0) {
+        return false;
+    }
+    $result->close();
+    return true;
+  }
+  
+  /**
+   * Get paper properties
+   * @param integer $id paper id
+   * @param mysqli $db 
+   * @return array|bool array of paper details or false on error
+   */
+  static function get_paper_properties($id, $db) {
+    $result = $db->prepare("SELECT paper_title, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration, timezone FROM properties WHERE property_id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->bind_result($title, $owner, $session, $startdatetime, $enddatetime, $labs, $duration, $timezone);
+    $result->fetch();
+    if ($db->errno != 0) {
+        $result->close();
+        return false;
+    }
+    $result->close();
+    $details = array('title' => $title,
+                    'owner' => $owner,
+                    'session' => $session,
+                    'startdatetime' => $startdatetime,
+                    'enddatetime' => $enddatetime,
+                    'labs' => $labs,
+                    'duration' => $duration,
+                    'timezone' => $timezone);
+    return $details;
+  }
+
 }

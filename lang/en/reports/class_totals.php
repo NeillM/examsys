@@ -111,4 +111,6 @@ $string['markingcalcquestions'] = 'Marking Calculation Questions';
 $string['viewstudentnote'] = 'View student note...';
 $string['viewaccessibility'] = 'View accessibility settings...';
 $string['resitcandidate'] = 'Resit candidate';
+$string['publishmarks'] = 'Publish Marks';
+$string['gradepublish'] = 'Marks Published';
 ?>

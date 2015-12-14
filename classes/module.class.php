@@ -696,6 +696,7 @@ Class module {
         UNION SELECT NULL FROM modules_student WHERE idMod = ?");
     $result->bind_param('ii', $id, $id);
     $result->execute();
+    $result->store_result();
     $result->fetch();
     if ($result->num_rows > 0) {
         $result->close();

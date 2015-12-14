@@ -54,9 +54,10 @@ abstract class apiabstract {
      * @param array $actions possible actions
      * @param object $body request body
      * @param string $task the task to be carried out
+     * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    abstract protected function parse($tasktype, $fields, $actions, $body, $task);
+    abstract protected function parse($tasktype, $fields, $actions, $body, $task, $userid);
     
     /**
      * The request data.

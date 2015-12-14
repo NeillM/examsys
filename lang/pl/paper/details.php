@@ -29,6 +29,7 @@ $string['modified'] = 'Zmodyfikowano';
 $string['passmark'] = 'Liczba punktów<br />na zaliczenie';
 $string['randommark'] = "punktów na 'chybił-trafił'";
 $string['screen'] = 'Ekran';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 $string['paperlockedwarning'] = '<strong>Arkusz zablokowany</strong>&nbsp;&nbsp;&nbsp;Ten arkusz jest teraz zablokowany i nie może być modyfikowany.';
 $string['paperlockedclick'] ='Kliknij po więcej informacji';
 $string['earlywarning'] = '<strong>Ostrzeżenie dot. czasu/daty</strong>&nbsp;&nbsp;&nbsp;Ten arkusz planowany jest na wcześniej niż %sam';

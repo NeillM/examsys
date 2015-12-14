@@ -36,18 +36,20 @@ abstract class abstractmanagement {
      * 
      * Operation to create an academic construct such as a module or school.
      * @param array $params - parametes in request
+     * @param integer $userid rogo user id linked to web service client
      * @return array response to operation, id of construct or error message.
      */
-    abstract public function create($params);
+    abstract public function create($params, $userid);
     
     /**
      * Abstract delete function
      * 
      * Operation to delete an academic construct such as a module or school.
      * @param array $params - parametes in request
+     * @param integer $userid rogo user id linked to web service client
      * @return array response to operation, id of construct or error message.
      */
-    abstract public function delete($params);
+    abstract public function delete($params, $userid);
     
     /**
      * The database connection.
@@ -74,6 +76,7 @@ abstract class abstractmanagement {
      */
     public function get_response($data, $action, $nodeid = null, $error = null) {
         return $response = array(
+            "statuscode" => $data['statuscode'],
             "status" => $data['status'],
             "id" => $data['id'],
             "error" => $error,

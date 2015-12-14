@@ -33,11 +33,23 @@ class facultymanagement extends \api\abstractmanagement {
     private $langcomponent = 'api/facultymanagement';
        
     /**
+     * Status codes
+     */
+    private $statuscodes = array(
+        'OK' => 100,
+        'FACUTLY_NOT_DELETED' => 400,
+        'FACUTLY_DOES_NOT_EXIST' => 401,
+        'FACUTLY_NOT_UPDATED' => 402,
+        'FACUTLY_NOT_CREATED' => 403
+    );
+    
+    /**
      * Create/Update faculty
      * @param array $params faculty creation parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and faculty id
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_updated', 'faculty_does_not_exist'
             , 'faculty_not_created', 'faculty_already_exists'));
@@ -61,12 +73,12 @@ class facultymanagement extends \api\abstractmanagement {
             if ($facultyid) {
                 $update = \FacultyUtils::update_faculty($params['id'], $params['name'],  $this->db);
                 if ($update) {
-                    $data = array('status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    $data = array('status' => $strings['faculty_not_updated'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null);
                 }
             } else {
-                $data = array('status' => $strings['faculty_does_not_exist'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null);
             }
         // Create faculty.
         } else {
@@ -74,9 +86,9 @@ class facultymanagement extends \api\abstractmanagement {
             if (!$facultyid) {
                 $id = \FacultyUtils::add_faculty($params['name'], $this->db);
                 if ($id) {
-                    $data = array('status' => 'OK', 'id' => $id);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
                 } else {
-                    $data = array('status' => $strings['faculty_not_created'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_CREATED'], 'status' => $strings['faculty_not_created'], 'id' => null);
                 }
             } else {
                 $data = array('status' => $strings['faculty_already_exists'], 'id' => $facultyid);
@@ -89,9 +101,10 @@ class facultymanagement extends \api\abstractmanagement {
     /**
      * Delete faculty
      * @param array $parms delete faculty parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return success status and faculty id 
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_deleted_inuse', 'faculty_not_deleted'
             , 'faculty_does_not_exist'));
@@ -108,13 +121,13 @@ class facultymanagement extends \api\abstractmanagement {
             } else {
                 $deleted = \FacultyUtils::delete_faculty($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    $data = array('status' => $strings['faculty_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_DELETED'], 'status' => $strings['faculty_not_deleted'], 'id' => null);
                 }
             }
         } else {
-             $data = array('status' => $strings['faculty_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

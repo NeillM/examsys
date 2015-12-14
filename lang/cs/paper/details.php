@@ -29,6 +29,7 @@ $string['modified'] = 'Upraveno';
 $string['passmark'] = 'Potřebná známka';
 $string['randommark'] = 'Náhodná známka';
 $string['screen'] = 'Obrazovka';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 $string['paperlockedwarning'] = '<strong>Uzamčený dokument</strong>&nbsp;&nbsp;&nbsp;Tento dokument je v současnosti uzamčen a nelze jej upravovat.';
 $string['paperlockedclick'] ='Pro více informací klikněte ZDE.';
 $string['earlywarning'] = '<strong>Varování: Čas/Datum </strong>&nbsp;&nbsp;&nbsp;Začátek tohoto dokumentu je naplánován před %sam';

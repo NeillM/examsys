@@ -139,4 +139,20 @@ Class Logger {
     $result->close();
   }
 
+  /**
+   * Record web service warning
+   * @param $string $type type of web service
+   * @param $string $errorstring the error
+   * @param $string $errorfile the file
+   * @param integer $errorline the line number
+   */
+  public function record_ws_application_warning($type, $errorstring, $errorfile, $errorline) {
+    $log_error = $this->_mysqli->prepare("INSERT INTO sys_errors (id, occurred, userID, auth_user, errtype, errstr, errfile, errline) 
+        VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?)");
+    $userid = 0;
+    $errortype = 'Application Warning';
+    $log_error->bind_param('isssss', $userid, $type, $errortype, $errorstring, $errorfile, $errorline);
+    $log_error->execute();
+    $log_error->close();
+  }
 }

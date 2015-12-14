@@ -957,6 +957,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css"/>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
@@ -1379,9 +1380,18 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($properties->get_paper_type() != '3') {
       echo "<tr><td colspan=\"4\" class=\"headbar\">&nbsp;" . $string['marking'] . "</td></tr>\n";
     }
+    
+    $gradebook = new gradebook($mysqli);
+    $graded = $gradebook->paper_graded($paperID);
+    $published = "";
+    if ($graded) {
+        $sum_disabled = "disabled=\"disabled\"";
+        $published = "disabled=\"disabled\"";
+        echo "<tr><td style=\"padding-right:0\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Published\" /></div></td><td colspan=\"3\" style=\"vertical-align:middle; padding-left:0\"><div class=\"yellowwarn\">" . $string['paperpublishedwarning'] . "</div></td></tr>\n";
+    }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     if ($properties->get_paper_type() == '4') {    // OSCE Stations
-      echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\">\n<select name=\"pass_mark\" id=\"pass_mark\">\n";
+      echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\">\n<select name=\"pass_mark\" id=\"pass_mark\" $published>\n";
       if ($properties->get_pass_mark() == 102) {
         echo "<option value=\"102\">N/A</option>";
       } else {
@@ -1413,7 +1423,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
       <?php
       } else {
-        echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\">";
+        echo "<tr><td align=\"right\" valign=\"top\"><nobr>" . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\" $published>";
         ?>
           <option value="5"<?php if ($properties->get_marking() == '5') echo ' selected'; ?> />N/A</option>
           <option value="7"<?php if ($properties->get_marking() == '7') echo ' selected'; ?> /><?php echo $string['overallclass5']; ?></option>
@@ -1470,9 +1480,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo $string['singlereview'] . '</td></tr>';
     } elseif ($properties->get_paper_type() != '3') {
-      echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\"";
-      if ($properties->get_paper_type() == '3') echo ' disabled';
-      echo '>';
+      echo "<tr><td align=\"right\" valign=\"top\">" . $string['passmark'] . "&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\" $published>";
       for ($i=0; $i<=100; $i++) {
         if ($i == $properties->get_pass_mark()) {
           echo "<option value=\"$i\" selected>$i%</option>\n";
@@ -1482,13 +1490,15 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
       echo "</select></td><td rowspan=\"2\" style=\"text-align:right\" valign=\"top\">" . $string['method'] . "&nbsp;</td><td rowspan=\"2\">";
     ?>
-       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> /><?php echo $string['noadjustment'] ?><br />
+       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) echo ' checked'; ?> <?php echo $published ?>/><?php echo $string['noadjustment'] ?><br />
        <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
        if ($properties->get_marking() == MARK_RANDOM) {
-          echo ' checked';
+          echo ' checked ';
        }
        if ($neg_marking) {
-        echo ' disabled';
+          echo ' disabled';
+       } else {
+          echo ' ' . $published;
        }
        if ($neg_marking) {
          echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
@@ -1513,8 +1523,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       if (count($std_set_array) > 0) {
         echo "<input type=\"radio\" id=\"marking3\" name=\"marking\" value=\"" . MARK_STD_SET . "\"";
         if (substr($properties->get_marking(), 0, 1) == MARK_STD_SET) echo ' checked';
-        echo " />";
-        echo $string['stdset'] . ' <select name="std_set">';
+        echo " $published/>";
+        echo $string['stdset'] . ' <select name="std_set" ' . $published . '>';
         foreach ($std_set_array as $std_set_line) {
           $std_set_title = $std_set_line['title'];
           $std_set_surname = $std_set_line['surname'];
@@ -1537,7 +1547,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       }
     }
     if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') {
-      echo "<tr><td align=\"right\" valign=\"top\">" . $string['distinction'] . "</td><td><select name=\"distinction_mark\">";
+      echo "<tr><td align=\"right\" valign=\"top\">" . $string['distinction'] . "</td><td><select name=\"distinction_mark\" $published>";
       echo "<option value=\"127\" selected>N/A</option>\n";    // N/A = 127 which should be impossible to ever get.
       for ($i=0; $i<=100; $i++) {
         if ($i == $properties->get_distinction_mark()) {

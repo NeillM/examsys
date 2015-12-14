@@ -53,4 +53,6 @@ $string['marking4'] = array('Fail', 'Borderline Fail', 'Borderline pass', 'Pass'
 $string['marking5'] = array('Unsatisfactory', 'Competent');
 $string['marking6'] = array('Clear FAIL', 'BORDERLINE', 'Clear PASS', 'Honours PASS');
 $string['marking7'] = array('Fail', 'Pass');
+$string['publishmarks'] = 'Publish Marks';
+$string['gradepublish'] = 'Marks Published';
 ?>

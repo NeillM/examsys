@@ -33,11 +33,25 @@ class coursemanagement extends \api\abstractmanagement {
     private $langcomponent = 'api/coursemanagement';
     
     /**
+     * Status codes
+     */
+    private $statuscodes = array(
+        'OK' => 100,
+        'COURSE_NOT_DELETED' => 300,
+        'COURSE_DOES_NOT_EXIST' => 301,
+        'COURSE_NOT_DELETED_INUSE' => 302,
+        'COURSE_INVALID_FACULTY' => 303,
+        'COURSE_NOT_UPDATED' => 304,
+        'COURSE_NOT_CREATED' => 305
+    );
+    
+    /**
      * Create/Update course
      * @param array $params course creation parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return - success status and course id
      */
-    public function create($params) {
+    public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_updated', 'course_does_not_exist'
             , 'course_not_created', 'course_already_exists', 'faculty_not_supplied'));
@@ -83,12 +97,12 @@ class coursemanagement extends \api\abstractmanagement {
                 if ($courseid) {
                     $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $this->db);
                     if ($update) {
-                        $data = array('status' => 'OK', 'id' => $params['id']);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                     } else {
-                        $data = array('status' => $strings['course_not_updated'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['COURSE_NOT_UPDATED'], 'status' => $strings['course_not_updated'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['course_does_not_exist'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null);
                 }
             // Create Course.
             } else {
@@ -96,16 +110,16 @@ class coursemanagement extends \api\abstractmanagement {
                 if (!$courseid) {
                     $id = \CourseUtils::add_course($schoolid, $params['name'], $params['description'], $this->db);
                     if ($id) {
-                        $data = array('status' => 'OK', 'id' => $id);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
                     } else {
-                        $data = array('status' => $strings['course_not_created'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['COURSE_NOT_CREATED'], 'status' => $strings['course_not_created'], 'id' => null);
                     }
                 } else {
-                    $data = array('status' => $strings['course_already_exists'], 'id' => $courseid);
+                    $data = array('statuscode' => $this->statuscodes['COURSE_ALREADY_EXISTS'], 'status' => $strings['course_already_exists'], 'id' => $courseid);
                 }
             }
         } else {
-            $data = array('status' => $strings['faculty_not_supplied'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
@@ -113,9 +127,10 @@ class coursemanagement extends \api\abstractmanagement {
     /**
      * Delete course
      * @param array $parms delete course parameters
+     * @param integer $userid rogo user id linked to web service client
      * @return success status and course id 
      */
-    public function delete($params) {
+    public function delete($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_deleted_inuse', 'course_not_deleted'
             , 'course_does_not_exist'));
@@ -129,17 +144,17 @@ class coursemanagement extends \api\abstractmanagement {
             // Only delete course if it contains no users.
             $users = \CourseUtils::count_users_on_course($details['name'], $this->db);
             if (isset($users) and $users > 0) {
-                $data = array('status' => $strings['course_not_deleted_inuse'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['COURSE_NOT_DELETED_INUSE'], 'status' => $strings['course_not_deleted_inuse'], 'id' => null);
             } else {
                 $deleted = \CourseUtils::delete_course_by_id($params['id'],$this->db);
                 if ($deleted) {
-                    $data = array('status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    $data = array('status' => $strings['course_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['COURSE_NOT_DELETED'], 'status' => $strings['course_not_deleted'], 'id' => null);
                 }
             }
         } else {
-             $data = array('status' => $strings['course_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

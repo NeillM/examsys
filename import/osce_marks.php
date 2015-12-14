@@ -215,7 +215,9 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   echo "</ol>\n";
 }
 
-if (isset($_POST['submit'])) {
+$gradebook = new gradebook($mysqli);
+$graded = $gradebook->paper_graded($paperID);
+if (!$graded and isset($_POST['submit'])) {
   if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
     if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_osce_marks.csv"))  {
       echo uploadError($_FILES['csvfile']['error']);
@@ -293,6 +295,11 @@ if (isset($_POST['submit'])) {
 
 <p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
 </form>
+<?php
+    if ($graded and isset($_POST['submit'])) {
+        echo '<p>' . $string['gradedmsg'] . '</p>';
+    }
+?>
 </div>
 </td>
 </tr>

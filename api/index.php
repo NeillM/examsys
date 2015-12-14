@@ -104,7 +104,42 @@ $app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $la
     $xsd = 'managementrequest';
     process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
+// Assessment management request
+$app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
+    $request = 'assessmentmanagement';
+    $response = 'assessmentManagementResponse';
+    $operations = array('create', 'schedule', 'delete');
+    $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
+        'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
+    $xsd = 'managementrequest';
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);    
+});
+// Gradebook consumption request
+$app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) use($mysqli, $oauth, $render, $langpack) {
+    // Check for auth tokens
+    $client_id = $oauth->check_auth();
+    
+    //Check Permission
+    if (!$oauth->check_permissions('gradebook', $client_id)) {
+        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+    } else {
+    
+        $response = array();
+        $gradebook = new \api\gradebook($mysqli);
 
+        // Process the request.
+        $request = $gradebook->get($filtername, $filterid);
+        $response = $request[1];
+        if ($request[0] == 'OK') {
+            $template = 'api/' . $filtername . '_gradebook.xml';
+        } else {
+            $template = 'api/error.xml';
+        }
+    
+        // Render response.
+        $render->render_xml($template, 'gradebookResponse', $response);
+    }
+});
 // 404 error handling.
 $app->notFound(function () use ($render, $langpack) {
     $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
@@ -133,7 +168,7 @@ $app->error(function (\Exception $e) use ($render, $langpack) {
 function process ($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli) {
     // Check for auth tokens
     $client_id = $oauth->check_auth();
-    
+    $user_id = $oauth->get_client_user($client_id);
     //Check Permissions
     foreach ($operations as $operation) {
         $perm[$operation] = $oauth->check_permissions($request . '/' . $operation, $client_id);
@@ -152,7 +187,7 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
         
         // XML.
         if ($data[0] == 'OK') {
-            $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm);
+            $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm, $user_id);
             $template = 'api/success.xml';
         } else {
             $responsedata = $data[1];

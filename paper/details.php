@@ -948,23 +948,27 @@ function check_latex_random($q_ids, $mysqli) {
     <th class="m vert_div">&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
     <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
-  <?php
-
-  if ($properties->get_summative_lock()) {
-    echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
-  } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
-    $tmp_hour = date("G", $properties->get_start_date());
-    if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['farfuturewarning'], $properties->get_display_start_date());
-      echo "</td></tr>\n";
-    } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
-      echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
-      printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
-      echo "</td></tr>\n";
+   <?php
+    $gradebook = new gradebook($mysqli);
+    $graded = $gradebook->paper_graded($paperID);
+    if ($graded) {
+      echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Published\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperpublishedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
+    } else {
+      if ($properties->get_summative_lock()) {
+        echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
+      } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
+        $tmp_hour = date("G", $properties->get_start_date());
+        if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
+          echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+          printf($string['farfuturewarning'], $properties->get_display_start_date());
+          echo "</td></tr>\n";
+        } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
+          echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
+          printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
+          echo "</td></tr>\n";
+        }
+      }
     }
-  }
-
 	if ($properties->get_calendar_year() !== null) {
 		$tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
 		

@@ -115,9 +115,13 @@ class oauth {
      * @return void 
      */
     public function set_permission($action, $client, $access) {
-        $result = $this->db->prepare("UPDATE  webservice_permissions SET access = ? WHERE client_id = ? AND action = ?");
+        $result = $this->db->prepare("UPDATE webservice_permissions SET access = ? WHERE client_id = ? AND action = ?");
         $result->bind_param('iss', $access, $client, $action);
         $result->execute();
+        // If adding permision insert on failed update.
+        if ($access == true and $this->db->affected_rows == 0) {
+            $this->add_permission($action, $client, $access);
+        }
         $result->close();
     }
     
@@ -244,6 +248,7 @@ class oauth {
         $result = $this->db->prepare("SELECT user_id FROM oauth_clients WHERE client_id = ?");
         $result->bind_param('s', $client);
         $result->execute();
+        $result->store_result();
         $result->bind_result($userid);
         $result->fetch();
         if ($result->num_rows == 0) {
