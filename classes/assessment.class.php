@@ -199,26 +199,21 @@ class assessment {
             }
         }
         $timestamp = time();
-        $result = $this->db->prepare("INSERT INTO properties (paper_title,
-                    start_date,
-                    end_date,
-                    timezone,
-                    paper_type,
-                    paper_ownerID,
-                    labs,
-                    rubric, 
-                    calculator,
-                    exam_duration,
-                    created,
-                    calendar_year) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $result->bind_param('sssssissiiii', $papertitle, $startdate, $enddate, $timezone, $papertype, $paperowner, $labs, $default_rubric, $default_calc, $duration, $timestamp, $session);
-        $result->execute();
-        $result->close();
-        if ($this->db->errno != 0) {
-            return false;
-        }
-        $property_id = $this->db->insert_id;
+        $params = array(
+            'paper_title' => array('s', $papertitle),
+            'start_date' => array('s', $startdate),
+            'end_date' => array('s', $enddate),
+            'timezone' => array('s', $timezone),
+            'paper_type' => array('s', $papertype),
+            'paper_ownerID' => array('i', $paperowner),
+            'labs' => array('s', $labs),
+            'rubric' => array('s', $default_rubric),
+            'calculator' => array('i', $default_calc),
+            'exam_duration' => array('i', $duration),
+            'created' => array('i', $timestamp),
+            'calendar_year' => array('i', $session)
+        );
+        $property_id = $this->db_insert_assessment($params);;
         if ($property_id) {
             // Add to Modules.
             foreach ($modules as $module) {
@@ -229,13 +224,12 @@ class assessment {
             }
             
             // Crypt name generation.
-            $crypt_name = $property_id . $timestamp . $paperowner; 
-            
-            $result = $this->db->prepare("UPDATE properties SET crypt_name = ? WHERE property_id = ?");
-            $result->bind_param('si', $crypt_name, $property_id);
-            $result->execute();
-            $result->close();
-        } 
+            $crypt_name = $property_id . $timestamp . $paperowner;
+            $update_params = array('crypt_name' => array('s', $crypt_name));
+            $this->db_update_assessment($property_id, $update_params)
+        } else {
+            return false;
+        }
         return $property_id;
     }
 

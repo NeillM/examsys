@@ -421,15 +421,13 @@ Class PaperUtils {
   * @return void
   */
   public function delete_paper($paperID, $db) {
-    $update = $db->prepare("UPDATE properties SET deleted = NOW(), paper_ownerID = -1 WHERE property_id = ?");
-    $update->bind_param('i', $paperID);
-    $update->execute();
-    $update->close();
-    if ($db->errno != 0) {
-      return false;
-    }
-    return true;
-    
+    $assessment = new assessment($db, $configObject);
+    $now = time();
+    $update_params = array(
+      'deleted' => array('s', $now),
+      'paper_ownerID' => array('i', -1)
+    );
+    return $assessment->db_update_assessment($paperID, $update_params);
   }
 
   public function type_to_name($type, $string) {
