@@ -109,6 +109,19 @@ class assessment {
     }
     
     /**
+     * Get the numeric value of the paper type
+     * @param string $type paper type
+     * @return int|bool value or false on error
+     */
+    public function get_type_value($type) {
+        if (array_key_exists($type, $this->type)) {
+            return $this->type[$type];
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Create an assesment
      * @param string $papertitle - New paper title
      * @param string $papertype - Type of paper
@@ -130,7 +143,7 @@ class assessment {
             throw new Exception('NON_UNIQUE_TITLE');
         }
         // Check paper type is valid.
-        if (!array_key_exists($papertype, $this->type)) {
+        if (!in_array($papertype, $this->type)) {
             throw new Exception('INVALID_PAPER_TYPE');
         }
         // Check owner exists.
@@ -151,7 +164,7 @@ class assessment {
              throw new Exception('INVALID_SESSION');
         }
         // Check startdate and enddate
-        if ($papertype != 'summative' and $enddate <= $startdate) {
+        if ($papertype != self::TYPE_SUMMATIVE and $enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
         }
         // Verify timezone is supported, revert to server timezone if not.
@@ -165,14 +178,14 @@ class assessment {
         $enddate = $datesarray[1];
         
         // Set the summative rubric
-        if ($papertype == 'summative') {
+        if ($papertype == self::TYPE_SUMMATIVE) {
             $langpack = new langpack();
             $default_rubric = $langpack->get_string($this->langcomponent, 'summative_rubric');
         } else {
             $default_rubric = '';
         }
         // Set calulator on/off
-        if ($papertype == 'formative' or $papertype == 'progress' or $papertype == 'summative') {
+        if ($papertype == self::TYPE_FORMATIVE or $papertype == self::TYPE_PROGESSS or $papertype == self::TYPE_SUMMATIVE) {
             $default_calc = 1;
         } else {
             $default_calc = 0;
@@ -199,10 +212,10 @@ class assessment {
                     created,
                     calendar_year) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $result->bind_param('sssssissiiii', $papertitle, $startdate, $enddate, $timezone, $this->type[$papertype], $paperowner, $labs, $default_rubric, $default_calc, $duration, $timestamp, $session);
+        $result->bind_param('sssssissiiii', $papertitle, $startdate, $enddate, $timezone, $papertype, $paperowner, $labs, $default_rubric, $default_calc, $duration, $timestamp, $session);
         $result->execute();
         $result->close();
-        if ($db->errno != 0) {
+        if ($this->db->errno != 0) {
             return false;
         }
         $property_id = $this->db->insert_id;
@@ -210,7 +223,7 @@ class assessment {
             // Add to Modules.
             foreach ($modules as $module) {
                 $result = $this->db->prepare("INSERT INTO properties_modules (property_id, idMod) VALUES (?, ?)");
-                $result->bind_param(ii, $property_id, $module);
+                $result->bind_param('ii', $property_id, $module);
                 $result->execute();
                 $result->close();
             }
@@ -394,21 +407,29 @@ class assessment {
      * @param string $campus the camps where the exam should be taken
      * @return integer|bool schedule id or false if error
      */
-    public function schedule($paperid, $month, $barriers = 0, $cohort_size = '<whole cohort>', $notes = '', $sittings = 1, $campus = '') {
+    public function schedule($paperid, $month, $barriers, $cohort_size, $notes, $sittings, $campus) {
         // Check paper is summative.
         if (Paper_utils::get_paper_type($paperid, $this->db) != self::TYPE_SUMMATIVE) {
             return false;
         }
-        // Enforce cohort size interface restrictions
+        // Enforce cohort size interface restrictions.
         $decode_cohort_sizes = json_decode($this->cohort_sizes, true);
         if (!in_array($cohort_size, $decode_cohort_sizes)) {
             $cohort_size = '<whole cohort>';
         }
-        // Enforce sittings interface restrictions
-        if ($sittings > $this->max_sittings) {
-            $sittings = $this->max_sittings;
-        } elseif ($sittings < 1) {
+        // Enforce sittings interface restrictions.
+        if (!empty($sittings)) {
+            if ($sittings > $this->max_sittings) {
+                $sittings = $this->max_sittings;
+            } elseif ($sittings < 1) {
+                $sittings = 1;
+            }
+        } else {
             $sittings = 1;
+        }
+        // Default no barriers.
+        if (empty($barriers)) {
+            $barriers = 0;
         }
         $result = $this->db->prepare("INSERT INTO scheduling (paperID, period, barriers_needed, cohort_size, notes, sittings, campus)
             VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -430,7 +451,7 @@ class assessment {
      * @return array start and end times
      */
     public function setup_start_end_dates($papertype, $fromdatetime, $todatetime, $timezone) {
-        if (!$this->summative_mgmt or $papertype != 'summative') {
+        if (!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) {
             
             $server_timezone = new DateTimeZone($this->server_timezone);
             $target_timezone = new DateTimeZone($timezone);

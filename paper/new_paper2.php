@@ -26,6 +26,9 @@ require '../include/staff_auth.inc';
 require '../config/campuses.inc';
 require_once '../include/sort.inc';
 require '../lang/' . $language. '/include/timezones.inc';
+
+$assessment = new assessment($mysqli, $configObject);
+$papertype = $assessment->get_type_value($_POST['paper_type']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,11 +38,6 @@ require '../lang/' . $language. '/include/timezones.inc';
 
   <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
 <?php
-  // Delete any half completed papers owned by current user.
-  $result = $mysqli->prepare("DELETE FROM properties WHERE deleted='0000-00-00 00:00:00' AND paper_ownerID = ?");
-  $result->bind_param('i', $userObject->get_user_ID());
-  $result->execute();
-
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $unique = Paper_utils::is_paper_title_unique($_POST['paper_name'], $mysqli);
 
@@ -112,37 +110,37 @@ require '../lang/' . $language. '/include/timezones.inc';
 </tr>
 <tr>
 <?php
-  if ($_POST['paper_type'] == 'formative') {
+  if ($papertype == $assessment::TYPE_FORMATIVE) {
     echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\" style=\"background-color:#FFBD69\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('formative')\" onmouseover=\"over('formative')\" onmouseout=\"out('formative')\" id=\"formative\"><img src=\"../artwork/formative.png\" width=\"48\" height=\"48\" alt=\"Formative Self-Assessment\" /><br />" . $string['formative self-assessment'] . "</td>";
   }
-  if ($_POST['paper_type'] == 'progress') {
+  if ($$papertype == $assessment::TYPE_PROGRESS) {
     echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\" style=\"background-color:#FFBD69\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('progress')\" onmouseover=\"over('progress')\" onmouseout=\"out('progress')\" id=\"progress\"><img src=\"../artwork/progress.png\" width=\"48\" height=\"48\" alt=\"Progress Test\" /><br />" . $string['progress test'] . "</td>";
   }
-  if ($_POST['paper_type'] == 'summative') {
+  if ($papertype == $assessment::TYPE_SUMMATIVE) {
     echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\" style=\"background-color:#FFBD69\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('summative')\" onmouseover=\"over('summative')\" onmouseout=\"out('summative')\" id=\"summative\"><img src=\"../artwork/summative.png\" width=\"48\" height=\"48\" alt=\"Summative Exam\" /><br />" . $string['summative exam'] . "</td>";
   }
-  if ($_POST['paper_type'] == 'survey') {
+  if ($papertype == $assessment::TYPE_SURVEY) {
     echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\" style=\"background-color:#FFBD69\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('survey')\" onmouseover=\"over('survey')\" onmouseout=\"out('survey')\" id=\"survey\"><img src=\"../artwork/survey.png\" width=\"48\" height=\"48\" alt=\"Survey\" /><br />" . $string['survey'] . "</td>";
   }
-  if ($_POST['paper_type'] == 'osce') {
+  if ($papertype == $assessment::TYPE_OSCE) {
     echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\" style=\"background-color:#FFBD69\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('osce')\" onmouseover=\"over('osce')\" onmouseout=\"out('osce')\" id=\"osce\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"OSCE\" /><br />" . $string['osce station'] . "</td>";
   }
-  if ($_POST['paper_type'] == 'offline') {
+  if ($papertype == $assessment::TYPE_OFFLINE) {
     echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\" style=\"background-color:#FFBD69\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('offline')\" onmouseover=\"over('offline')\" onmouseout=\"out('offline')\" id=\"offline\"><img src=\"../artwork/offline.png\" width=\"48\" height=\"48\" alt=\"Offline\" /><br />" . $string['offline paper'] . "</td>";
   }
-  if ($_POST['paper_type'] == 'peer_review') {
+  if ($papertype == $assessment::TYPE_PEERREVIEW) {
     echo "<td class=\"icon\" onclick=\"activate('peer_review')\" onmouseover=\"over('peer_review')\" onmouseout=\"out('peer_review')\" id=\"peer_review\" style=\"background-color:#FFBD69\"><img src=\"../artwork/peer_review.png\" width=\"48\" height=\"48\" alt=\"Peer Review\" /><br />" . $string['peer review'] . "</td>";
   } else {
     echo "<td class=\"icon\" onclick=\"activate('peer_review')\" onmouseover=\"over('peer_review')\" onmouseout=\"out('peer_review')\" id=\"peer_review\"><img src=\"../artwork/peer_review.png\" width=\"48\" height=\"48\" alt=\"Peer Review\" /><br />" . $string['peer review'] . "</td>";
@@ -167,17 +165,8 @@ require '../lang/' . $language. '/include/timezones.inc';
 
 <?php
 } else {
-  $paper_types = array('formative'=>0, 'progress'=>1, 'summative'=>2, 'survey'=>3, 'osce'=>4, 'offline'=>5, 'peer_review'=>6);
-  if ($_POST['paper_type'] == 'summative') {
-    $default_rubric = $string['msg6'];
-  } else {
-    $default_rubric = '';
-  }
-
-  // Create the new paper.
-  $yearutils = new yearutils($mysqli);
-  $session = $yearutils->get_current_session();
-
+  
+  // Setup the new paper.
   if (isset($_POST['folder'])) {
     $folder = $_POST['folder'];
   } else {
@@ -191,22 +180,15 @@ require '../lang/' . $language. '/include/timezones.inc';
     exit;
   }
 
-  if ($_POST['paper_type'] == 'formative' or $_POST['paper_type'] == 'progress' or $_POST['paper_type'] == 'summative') {
-    $default_calc = 1;
+  
+  if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
+    // Scheduled summative paper defaults.
+    $startdate = '';
+    $enddate = '';
   } else {
-    $default_calc = 0;
+    $startdate = '20100101090000';
+    $enddate = '20250101090000';
   }
-
-  if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
-    // Summative paper so set null dates
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, NULL, NULL, 'Europe/London', ?, '', '', 'white', 'black', '#316AC5', '#C00000', '1', '1', '1', 40, 70, ?, ?, '', ?, ?, NULL, '00000000000000', NOW(), 0, 0, '1', '1', '1', '1', '0', ?, NULL, NULL, '0', 0, '', NULL, NULL, 0)");
-  } else {
-    $result = $mysqli->prepare("INSERT INTO properties VALUES (NULL, ?, '20100101090000', '20250101090000', 'Europe/London', ?, '', '', 'white', 'black', '#316AC5', '#C00000', '1', '1', '1', 40, 70, ?, ?, '', ?, ?, NULL, '00000000000000', NOW(), 0, 0, '1', '1', '1', '1', '0', ?, NULL, NULL, '0', 0, '', NULL, NULL, 0)");
-  }
-  $result->bind_param('sssssis', $paper_name, $paper_types[$_POST['paper_type']], $userObject->get_user_ID(), $folder, $default_rubric, $default_calc, $session);
-  $result->execute();
-  $property_id = $mysqli->insert_id;
-  $result->close();
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -217,7 +199,7 @@ require '../lang/' . $language. '/include/timezones.inc';
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  if ($paper_types[$_POST['paper_type']] == '2' or $paper_types[$_POST['paper_type']] == '4' or $paper_types[$_POST['paper_type']] == '5') {
+  if ($papertype == $assessment::TYPE_SUMMATIVE or $papertype == $assessment::TYPE_OSCE or $papertype == $assessment::TYPE_OFFLINE) {
 ?>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
@@ -296,7 +278,7 @@ require '../lang/' . $language. '/include/timezones.inc';
 </script>
 <body>
 <?php
-if ($_POST['paper_type'] == 'summative') {
+if ($papertype == $assessment::TYPE_SUMMATIVE) {
   echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkSummativeForm()">';
 } else {
   echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkForm()">';
@@ -307,23 +289,23 @@ if ($_POST['paper_type'] == 'summative') {
 <td>
 <?php
   echo "<table width=\"100%\" border=\"0\">\n";
-  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $papertype != $assessment::TYPE_SUMMATIVE) {
     echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['availability'] . "</td></tr>\n";
   } else {
     echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['summativeexamdetails'] . "</td></tr>\n";
   }
-  if ($_POST['paper_type'] == 'summative' or $_POST['paper_type'] == 'osce' or $_POST['paper_type'] == 'offline') {
+  if ($papertype == $assessment::TYPE_SUMMATIVE or $papertype == $assessment::TYPE_OSCE or $papertype== $assessment::TYPE_OFFLINE) {
 
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
     $module_details = module_utils::get_full_details_by_ID($_POST['module'], $mysqli);
-    echo $yearutils->get_calendar_year_dropdown_options($paper_types[$_POST['paper_type']], $yearutils->get_current_session($module_details['academic_year_start']), $string);
+    echo $yearutils->get_calendar_year_dropdown_options($papertype, $yearutils->get_current_session($module_details['academic_year_start']), $string);
     echo "</select></td>\n";
   } else {
     echo "<input type=\"hidden\" name=\"session\" value=\"\" />\n";
   }
 
-  if (!$configObject->get('cfg_summative_mgmt') or $_POST['paper_type'] != 'summative') {
+  if (!$configObject->get('cfg_summative_mgmt') or $papertype != $assessment::TYPE_SUMMATIVE) {
     echo "</tr><tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
     $date_array = getdate();
 
@@ -486,9 +468,9 @@ if ($_POST['paper_type'] == 'summative') {
   echo "</table>\n";
 
   echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #295AAD; border-left:1px solid #295AAD; border-right:1px solid #295AAD\">" . $string['modules'] . "</div>";
-  if ($configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative') {
+  if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
     echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
-  } else if ($_POST['paper_type'] == 'osce' or (!$configObject->get('cfg_summative_mgmt') and $_POST['paper_type'] == 'summative')) {
+  } else if ($papertype == $assessment::TYPE_OSCE or (!$configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE)) {
     echo "<div style=\"display:block; background-color:white; height:310px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   } else {
     echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
@@ -516,9 +498,11 @@ if ($_POST['paper_type'] == 'summative') {
   echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" />\n";
   echo "<input type=\"hidden\" name=\"paper_type\" id=\"paper_type\" value=\"" . $_POST['paper_type'] . "\" />\n";
   echo "<input type=\"hidden\" name=\"paper_name\" id=\"paper_name\" value=\"" . $_POST['paper_name'] . "\" />\n";
-  echo "<input type=\"hidden\" name=\"property_id\" value=\"$property_id\" />\n";
   echo "<input type=\"hidden\" name=\"current_year\" id=\"current_year\" value=\"year1\" />\n";
   echo "<input type=\"hidden\" name=\"folder\" value=\"" . $_POST['folder'] . "\" />\n";
+  echo "<input type=\"hidden\" name=\"startdate\" value=\"" . $startdate . "\" />\n";
+  echo "<input type=\"hidden\" name=\"enddate\" value=\"" . $enddate . "\" />\n";
+  echo "<input type=\"hidden\" name=\"paper_owner\" value=\"" . $userObject->get_user_ID() . "\" />\n";
 ?>
 <div style="text-align:right"><input type="submit" name="submit2" value="<?php echo $string['finish']; ?>" class="ok" /></div>
 
