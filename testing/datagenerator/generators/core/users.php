@@ -129,11 +129,11 @@ class users extends generator {
     'Zbyšek'
   );
   /** @var string[] An array of titles that can be used for users. */
-  protected static $titles = array('Dr', 'Miss', 'Mr', 'Mrs', 'Prof');
+  protected static $titles = array('Dr', 'Miss', 'Mr', 'Mrs', 'Mx', 'Prof');
   /** @var string[] All the valid roles for a user. */
   protected static $roles = array(0 => 'Student', 'Staff', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Invigilator', 'Inactive Staff');
   /** @var string[] Possible genders. */
-  protected static $gender = array('Female', 'Male');
+  protected static $gender = array('Female', 'Male', 'Other');
   /** @var string[] possible years of study. */
   protected static $yearofstudy = array('0', '1', '2', '3', '4', '5');
   /** @var string[] Possible values for the grade field. */
