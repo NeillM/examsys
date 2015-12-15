@@ -48,7 +48,7 @@ class database {
     InstallUtils::$cfg_rogo_data = $config->get('cfg_behat_data');
     $connected = self::get_db_details();
     if (!$connected) {
-      throw new Exception('Could not connexct to database. Aborting.');
+      throw new Exception('Could not connect to database. Aborting.');
     }
 
     // Preset the database usernames to the details of the live site.
