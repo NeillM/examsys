@@ -611,11 +611,53 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 		}
   }
 
-  $addPaper = $db->prepare("INSERT INTO properties VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, NULL, 0)");
-  $addPaper->bind_param('ssssssssssssisiiisssiidisssssssssis', $_POST['new_paper'], $tmp_start_date, $tmp_end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $userID, $folder, $labs, $rubric, $calculator, $tmp_exam_duration, $tmp_random_mark, $tmp_total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $new_calendar_year, $tmp_external_review_deadline, $tmp_internal_review_deadline, $sound_demo, $latex_needed, $password);
-  $addPaper->execute();
-  $new_paper_id = $db->insert_id;
-  $addPaper->close();
+  $assessment = new assessment($db, $configObject);
+  $created = time();
+  $params = array(
+    'paper_title' => array('s', $_POST['new_paper']),
+    'start_date' => array('s', $tmp_start_date),
+    'end_date' => array('s', $tmp_end_date),
+    'timezone' => array('s', $timezone),
+    'paper_type' => array('s', $paper_type),
+    'paper_prologue' => array('s', $paper_prologue),
+    'paper_postscript' => array('s', $paper_postscript),
+    'bgcolor' => array('s', $bgcolor),
+    'fgcolor' => array('s', $fgcolor),
+    'themecolor' => array('s', $themecolor),
+    'labelcolor' => array('s', $labelcolor),
+    'fullscreen' => array('s', $fullscreen),
+    'marking' => array('s', $marking),
+    'bidirectional' => array('s', $bidirectional),
+    'pass_mark' => array('i', $pass_mark),
+    'distinction_mark' => array('i', $distinction_mark),
+    'paper_ownerID' => array('i', $userID),
+    'folder' => array('s', $folder),
+    'labs' => array('s', $labs),
+    'rubric' => array('s', $rubric),
+    'calculator' => array('i', $calculator),
+    'exam_duration' => array('i', $tmp_exam_duration),
+    'deleted' => array('s', NULL),
+    'created' => array('s', $created),
+    'random_mark' => array('d', $tmp_random_mark),
+    'total_mark' => array('i', $tmp_total_mark),
+    'display_correct_answer' => array('s', $display_correct_answer),
+    'display_question_mark' => array('s', $display_question_mark),
+    'display_students_response' => array('s', $display_students_response),
+    'display_feedback' => array('s', $display_feedback),
+    'hide_if_unanswered' => array('s', $hide_if_unanswered),
+    'calendar_year' => array('i', $new_calendar_year),
+    'external_review_deadline' => array('s', $tmp_external_review_deadline),
+    'internal_review_deadline' => array('s', $tmp_internal_review_deadline),
+    'sound_demo' => array('s', $sound_demo),
+    'latex_needed' => array('i', $latex_needed),
+    'password' => array('s', $password),
+    'retired' => array('s', NULL),
+    'recache_marks' => array('i', 0)
+  );
+  $new_paper_id = $assessment->db_insert_assessment($params);
+  $update_params = array('crypt_name' => array('s', $new_paper_id . $created . $userID));
+  $assessment->db_update_assessment($new_paper_id, $update_params);
+  
 
   // Get the old reviewers and populate the new paper with.
   $result2 = $db->prepare("SELECT reviewerID, type FROM properties_reviewers WHERE paperID = ?");
@@ -634,34 +676,16 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   // Set the modules on the new paper
   Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
-  if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
+  if ($paper_type == $assessment::TYPE_SUMMATIVE and $configObject->get('cfg_summative_mgmt')) {
     if (isset($_POST['barriers_needed'])) {
       $barriers_needed = 1;
     } else {
       $barriers_needed = 0;
     }
-
-    $result = $db->prepare("INSERT INTO scheduling VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('isissis', $new_paper_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
-    $result->execute();
-    $result->close();
+    $assessment->schedule($new_paper_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
   }
 
-  // Query the database to get the creation date and then set crypt_name.
-  $result2 = $db->prepare("SELECT property_id, UNIX_TIMESTAMP(created), paper_ownerID FROM properties WHERE property_id = ?");
-  $result2->bind_param('i', $new_paper_id);
-  $result2->execute();
-  $result2->store_result();
-  $result2->bind_result($property_id, $created, $paper_ownerID);
-  $result2->fetch();
-  $result2->close();
 
-  $hash = $property_id . $created . $paper_ownerID;
-
-  $update = $db->prepare("UPDATE properties SET crypt_name = ? WHERE property_id = ?");
-  $update->bind_param('si', $hash, $property_id);
-  $update->execute();
-  $update->close();
 
   return $new_paper_id;
 }

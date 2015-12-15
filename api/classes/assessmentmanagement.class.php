@@ -277,7 +277,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                         $errorfile = $_SERVER['PHP_SELF'];
                         $errorline = __LINE__ - 5;
                         $logger = new \logger($this->db);
-                        $logger->record_ws_application_warning($type, $errorstring, $errorfile, $errorline);
+                        $logger->record_application_warning($userid, $type, $errorstring, $errorfile, $errorline);
                     }
                 }
             } else {

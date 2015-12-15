@@ -50,23 +50,24 @@ for ($i=0; $i<$_POST['module_no']; $i++) {
   }
 }
 
+if (isset($_POST['timezone'])) {
+    $timezone = $_POST['timezone'];
+} else {
+    $timezone = $configObject->get('cfg_timezone');
+}
+if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
+    $duration = 0;
+    if (isset($_POST['duration_hours'])) {
+        $duration += ($_POST['duration_hours'] * 60);
+    }
+    if (isset($_POST['duration_mins'])) {
+        $duration += $_POST['duration_mins'];
+    }
+} else {
+    $duration = NULL;
+}
+    
 try {
-    if (isset($_POST['timezone'])) {
-        $timezone = $_POST['timezone'];
-    } else {
-        $timezone = $configObject->get('cfg_timezone');
-    }
-    if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
-        $duration = 0;
-        if (isset($_POST['duration_hours'])) {
-            $duration += ($_POST['duration_hours'] * 60);
-        }
-        if (isset($_POST['duration_mins'])) {
-            $duration += $_POST['duration_mins'];
-        }
-    } else {
-        $duration = NULL;
-    }
     $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $_POST['startdate'], $_POST['enddate'], '', $duration, $session, $modules, $timezone);
 
     if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
@@ -78,7 +79,13 @@ try {
         $assessment->schedule($property_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
     }
 } catch (Exception $e) {
-    var_dump($e->getMessage());
+    $log = new logger($mysqli);
+    // Log warning to system.
+    $type = 'Paper Creation';
+    $errorstring = $e->getMessage();
+    $errorfile = $_SERVER['PHP_SELF'];
+    $errorline = __LINE__ - 17;
+    $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
 }
 ?>
 <!DOCTYPE html>
