@@ -19,6 +19,8 @@ namespace testing\behat;
 /**
  * Stores information about the commands needed to run behat.
  *
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
  * @category behat
  */

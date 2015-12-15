@@ -23,6 +23,8 @@ use InstallUtils,
 /**
  * This class is used to manage the database used for Rogo behat testing.
  *
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
  * @category behat
  */

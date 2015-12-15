@@ -38,6 +38,7 @@ use Config as RogoConfig,
  * - cleaning up the database
  * - cleaning up the user data directories
  *
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
  * @subpackage behat

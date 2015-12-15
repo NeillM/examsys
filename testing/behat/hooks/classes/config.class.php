@@ -29,6 +29,7 @@ use Config as RogoConfig,
  * These hooks assume that all tested database calls during tests will be within the scope of the
  * transactions these hooks set and that the tested code will not use transactions.
  *
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
  * @subpackage behat

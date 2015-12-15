@@ -19,7 +19,7 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
 /**
- * Authentication step definitions.
+ * Step definitions for interacting with web forms.
  *
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
