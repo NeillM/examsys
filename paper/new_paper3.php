@@ -29,8 +29,6 @@ $assessment = new assessment($mysqli, $configObject);
 
 $paper_name = check_var('paper_name', 'POST', true, false, true);
 $paper_type = check_var('paper_type', 'POST', true, false, true);
-$startdate = check_var('startdate', 'POST', true, false, true);
-$enddate = check_var('enddate', 'POST', true, false, true);
 $paper_owner = check_var('paper_owner', 'POST', true, false, true);
 $session = $_POST['session'];
 if (empty($session)) {
@@ -44,20 +42,40 @@ $modules = array();
 $first = true;
 for ($i=0; $i<$_POST['module_no']; $i++) {
   if (isset($_POST['mod' . $i])) {
-    $module_code = module_utils::get_moduleid_from_id($_POST['mod' . $i], $mysqli);
     if ($first == true) {
       $first_module = $_POST['mod' . $i];
       $first = false;
     }
-    $modules[$_POST['mod' . $i]] = $module_code;
+    $modules[] = $_POST['mod' . $i];
   }
 }
 
 try {
-    $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $startdate, $enddate, '', NULL, $session, $modules, $_POST['timezone']);
+    if (isset($_POST['timezone'])) {
+        $timezone = $_POST['timezone'];
+    } else {
+        $timezone = $configObject->get('cfg_timezone');
+    }
+    if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
+        $duration = 0;
+        if (isset($_POST['duration_hours'])) {
+            $duration += ($_POST['duration_hours'] * 60);
+        }
+        if (isset($_POST['duration_mins'])) {
+            $duration += $_POST['duration_mins'];
+        }
+    } else {
+        $duration = NULL;
+    }
+    $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $_POST['startdate'], $_POST['enddate'], '', $duration, $session, $modules, $timezone);
 
     if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
-        $assessment->schedule($property_id, $_POST['period'], $_POST['barriers_needed'], $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
+        if (isset($_POST['barriers_needed'])) {
+            $barriers_needed = 1;
+        } else {
+            $barriers_needed = 0;
+        }
+        $assessment->schedule($property_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
     }
 } catch (Exception $e) {
     var_dump($e->getMessage());

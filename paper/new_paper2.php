@@ -299,6 +299,7 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
     echo "<tr><td style=\"width:140px; text-align:right; vertical-align:top\">" . $string['academicsession'] . "</td><td>";
     echo "<select name=\"session\">\n";
     $module_details = module_utils::get_full_details_by_ID($_POST['module'], $mysqli);
+    $yearutils = new yearutils($mysqli);
     echo $yearutils->get_calendar_year_dropdown_options($papertype, $yearutils->get_current_session($module_details['academic_year_start']), $string);
     echo "</select></td>\n";
   } else {

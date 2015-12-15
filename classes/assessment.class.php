@@ -81,7 +81,7 @@ class assessment {
     /**
      * Language pack component.
      */
-    private $langcomponent = 'classes/assessmentmanagement';
+    private $langcomponent = 'classes/assessment';
 
     /**
      * @brief Constuctor
