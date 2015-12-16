@@ -43,13 +43,52 @@ class api {
     private $langcomponent = 'api/api';
     
     /**
+     * The log file.
+     */
+    private $logfile;
+    
+    /**
      * Constructor
      * @param object $app the slim application
+     * @param mysqli $db db connection
+     * @param object $configObject configutations
      */
-    public function __construct($app) {
+    public function __construct($app, $db, $configObject) {
         $this->app = $app;
+        // Get configs.
+        $configObject->set_db_object($db);
+        $configObject->load_settings('core');
+        $settings = (object) $configObject->get_setting('core');
+        if (property_exists($settings, 'apilogfile')) {
+            $this->logfile = $settings->apilogfile;
+        } else {
+            $this->logfile = '';
+        }
     }
-       
+    
+    /**
+     * Log api request to file 
+     */
+    public function log_request() {
+        if ($this->logfile != '') {
+            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nUser Agent: " . $this->get_user_agent() .
+            "\nAccess Token: " . $this->get_parameter('access_token') .
+            "\nResource Path: " . $this->get_path() . "\n\n" . $this->get_body();
+            file_put_contents($this->logfile , $updatelog, FILE_APPEND);
+        }
+    }
+    
+    /**
+     * Log api response to file 
+     * @param string $xml xml string to log
+     */
+    public function log_response($xml) {
+        if ($this->logfile != '') {
+            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\n" . $xml;
+            file_put_contents($this->logfile , $updatelog, FILE_APPEND);
+        }
+    }
+    
     /**
      * Set the header for the response.
      * @param string $type - header type

@@ -36,7 +36,7 @@ $render = new render($configObject);
 $langpack = new \langpack();
 
 // Set up api.
-$api = new \api\api($app);
+$api = new \api\api($app, $mysqli, $configObject);
 $api->set_header();
 
 // Request oauth token.
@@ -44,85 +44,75 @@ $app->post('/requesttoken', function() use($oauth) {
     $oauth->request_token();
 });
 
-// Get configs.
-$configObject->set_db_object($mysqli);
-$configObject->load_settings('core');
-$settings = (object) $configObject->get_setting('core');
-if (property_exists($settings, 'apilogfile')) {
-    $logfile = $settings->apilogfile;
-} else {
-    $logfile = '';
-}
-
 // Enrolment request.
-$app->post('/modulemanagement/enrol', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {
+$app->post('/modulemanagement/enrol', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'modulemanagement';
     $response = 'moduleManagementEnrolResponse';
     $operations = array('enrol', 'unenrol');
     $fields = array('userid', 'attempt', 'moduleid', 'session');
     $xsd = 'enrolrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
 // Module management request.
-$app->post('/modulemanagement', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {
+$app->post('/modulemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'modulemanagement';
     $response = 'moduleManagementResponse';
     $operations = array('create', 'delete');
     $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms');
     $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
 // Course management request.
-$app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {
+$app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'coursemanagement';
     $response = 'courseManagementResponse';
     $operations = array('create', 'delete');
     $fields = array('id', 'name', 'description', 'school', 'faculty');
     $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
 // School management request.
-$app->post('/schoolmanagement', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {
+$app->post('/schoolmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'schoolmanagement';
     $response = 'schoolManagementResponse';
     $operations = array('create', 'delete');
     $fields = array('id', 'name', 'faculty');
     $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
 // Faculty management request.
-$app->post('/facultymanagement', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {
+$app->post('/facultymanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
     $request = 'facultymanagement';
     $response = 'facultyManagementResponse';
     $operations = array('create', 'delete');
     $fields = array('id', 'name');
     $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 
 // User management request.
-$app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {  
+$app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
     $request = 'usermanagement';
     $response = 'userManagementResponse';
     $operations = array('create', 'delete');
     $fields = array('id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
         'course', 'gender', 'year', 'role', 'studentid', 'modules');
     $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
 });
 // Assessment management request
-$app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $render, $langpack, $logfile) {  
+$app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
     $request = 'assessmentmanagement';
     $response = 'assessmentManagementResponse';
     $operations = array('create', 'schedule', 'delete');
     $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
         'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
     $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile);    
+    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);    
 });
 /**
  * Gradebook consumption request
@@ -132,23 +122,19 @@ $app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $rende
  * @param object $api - api object
  * @param object $render - render object
  * @param object $langpack - language object
- * @param string $logfile - file to log to
  */
-$app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) use($mysqli, $oauth, $api, $render, $langpack, $logfile) {
+$app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) use($mysqli, $oauth, $api, $render, $langpack) {
     // Check for auth tokens
     $client_id = $oauth->check_auth();
     
     // Log request.
-    if ($logfile != '') {
-        $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nUser Agent: " . $api->get_user_agent() .
-        "\nAccess Token: " . $api->get_parameter('access_token') .
-        "\nResource Path: " . $api->get_path();
-        file_put_contents($logfile, $updatelog, FILE_APPEND);
-    }
+    $api->log_request();
     
     //Check Permission
     if (!$oauth->check_permissions('gradebook', $client_id)) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')), $logfile);
+        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+        $api->log_response($response_xml);
+        echo $response_xml;
     } else {
     
         $response = array();
@@ -164,7 +150,9 @@ $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) u
         }
     
         // Render response.
-        $render->render_xml($template, 'gradebookResponse', $response, $logfile);
+        $response_xml = $render->render_xml($template, 'gradebookResponse', $response);
+        $api->log_response($response_xml);
+        echo $response_xml;
     }
 });
 /**
@@ -173,19 +161,15 @@ $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) u
  * @param object $render - render object
  * @param object $api - api object
  * @param object $langpack - language object
- * @param string $logfile - file to log to
  */
-$app->notFound(function () use ($render, $api, $langpack, $logfile) {
+$app->notFound(function () use ($render, $api, $langpack) {
     
     // Log request.
-    if ($logfile != '') {
-        $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nUser Agent: " . $api->get_user_agent() .
-        "\nResource Path: " . $api->get_path() .
-        "\nAccess Token: " . $api->get_parameter('access_token') . "\n\n" . $api->get_body();
-        file_put_contents($logfile, $updatelog, FILE_APPEND);
-    }
+    $api->log_request();
     
-    $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')), $logfile);
+    $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
+    $api->log_response($response_xml);
+    echo $response_xml;
 });
 /**
  * 500 error handling.
@@ -193,19 +177,15 @@ $app->notFound(function () use ($render, $api, $langpack, $logfile) {
  * @param object $render - render object
  * @param object $api - api object
  * @param object $langpack - language object
- * @param string $logfile - file to log to
  */
-$app->error(function (\Exception $e) use ($render, $api, $langpack, $logfile) {
+$app->error(function (\Exception $e) use ($render, $api, $langpack) {
     
     // Log request.
-    if ($logfile != '') {
-        $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nUser Agent: " . $api->get_user_agent() .
-        "\nResource Path: " . $api->get_path() .
-        "\nAccess Token: " . $api->get_parameter('access_token') . "\n\n" . $api->get_body();
-        file_put_contents($logfile, $updatelog, FILE_APPEND);
-    }
+    $api->log_request();
     
-    $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')), $logfile);
+    $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
+    $api->log_response($response_xml);
+    echo $response_xml;
 });
 
 /**
@@ -222,9 +202,8 @@ $app->error(function (\Exception $e) use ($render, $api, $langpack, $logfile) {
  * @param object $render - render object
  * @param string $xsd - xsd filename
  * @param mysqli $mysqli - db connection 
- * @param string $logfile - file to log to
  */
-function process ($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli, $logfile) {
+function process ($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli) {
     // Check for auth tokens
     $client_id = $oauth->check_auth();
     $user_id = $oauth->get_client_user($client_id);
@@ -234,16 +213,13 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
     }
 
     // Log request.
-    if ($logfile != '') {
-        $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nUser Agent: " . $api->get_user_agent() .
-        "\nResource Path: " . $api->get_path() .
-        "\nAccess Token: " . $api->get_parameter('access_token') . "\n\n" . $api->get_body();
-        file_put_contents($logfile, $updatelog, FILE_APPEND);
-    }
+    $api->log_request();
     
     // Check media type - only text/xml supported currently.
     if (!$api->get_mediatype()) {
-        $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')), $logfile);
+        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+        $api->log_response($response_xml);
+        echo $response_xml;
     } else {
         $responsedata = array();
         $classname = '\\api\\' . $request;
@@ -262,7 +238,9 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
         }
         
         // Render response.
-        $render->render_xml($template, $response, $responsedata, $logfile);
+        $response_xml = $render->render_xml($template, $response, $responsedata);
+        $api->log_response($response_xml);
+        echo $response_xml;
     }
 }
 

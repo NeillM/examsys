@@ -48,17 +48,11 @@ class render {
      * @param string $template - template location
      * @param string $reponsename - response name
      * @param array $response - response data
-     * @param string $logfile - name of file to log xml to
-     * @return void
+     * @return $string xml response
      */
-    public function render_xml($template, $reponsename, $response, $logfile = '') {
+    public function render_xml($template, $reponsename, $response) {
         $data = array('name' => $reponsename, 'response' => $response);
-        $xml = $this->twig->render($template, $data);
-        if ($logfile != '') {
-            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\n" . $xml;
-            file_put_contents($logfile, $updatelog, FILE_APPEND);
-        }
-        echo $xml;
+        return $this->twig->render($template, $data);
     }
     
     /**
