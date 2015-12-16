@@ -128,12 +128,12 @@ $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) u
     $client_id = $oauth->check_auth();
     
     // Log request.
-    $api->log_request();
+    $apiid = $api->log_request();
     
     //Check Permission
     if (!$oauth->check_permissions('gradebook', $client_id)) {
         $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
-        $api->log_response($response_xml);
+        $api->log_response($apiid, $response_xml);
         echo $response_xml;
     } else {
     
@@ -151,7 +151,7 @@ $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) u
     
         // Render response.
         $response_xml = $render->render_xml($template, 'gradebookResponse', $response);
-        $api->log_response($response_xml);
+        $api->log_response($apiid, $response_xml);
         echo $response_xml;
     }
 });
@@ -165,10 +165,10 @@ $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) u
 $app->notFound(function () use ($render, $api, $langpack) {
     
     // Log request.
-    $api->log_request();
+    $apiid = $api->log_request();
     
     $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
-    $api->log_response($response_xml);
+    $api->log_response($apiid, $response_xml);
     echo $response_xml;
 });
 /**
@@ -181,10 +181,10 @@ $app->notFound(function () use ($render, $api, $langpack) {
 $app->error(function (\Exception $e) use ($render, $api, $langpack) {
     
     // Log request.
-    $api->log_request();
+    $apiid = $api->log_request();
     
     $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
-    $api->log_response($response_xml);
+    $api->log_response($apiid, $response_xml);
     echo $response_xml;
 });
 
@@ -213,12 +213,12 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
     }
 
     // Log request.
-    $api->log_request();
+    $apiid = $api->log_request();
     
     // Check media type - only text/xml supported currently.
     if (!$api->get_mediatype()) {
         $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
-        $api->log_response($response_xml);
+        $api->log_response($apiid, $response_xml);
         echo $response_xml;
     } else {
         $responsedata = array();
@@ -239,7 +239,7 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
         
         // Render response.
         $response_xml = $render->render_xml($template, $response, $responsedata);
-        $api->log_response($response_xml);
+        $api->log_response($apiid, $response_xml);
         echo $response_xml;
     }
 }

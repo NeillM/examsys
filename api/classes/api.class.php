@@ -68,23 +68,29 @@ class api {
     
     /**
      * Log api request to file 
+     * @return string unique id for the request
      */
     public function log_request() {
+        $id = uniqid('', true);
         if ($this->logfile != '') {
-            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nUser Agent: " . $this->get_user_agent() .
+            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nApi Log Id: " . $id .
+            "\nUser Agent: " . $this->get_user_agent() .
             "\nAccess Token: " . $this->get_parameter('access_token') .
             "\nResource Path: " . $this->get_path() . "\n\n" . $this->get_body();
             file_put_contents($this->logfile , $updatelog, FILE_APPEND);
         }
+        return $id;
     }
     
     /**
      * Log api response to file 
+     * @param string $id unique id linking to the request for this response
      * @param string $xml xml string to log
      */
-    public function log_response($xml) {
+    public function log_response($id, $xml) {
         if ($this->logfile != '') {
-            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\n" . $xml;
+            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nApi Log Id: " . $id .
+            "\n\n" . $xml;
             file_put_contents($this->logfile , $updatelog, FILE_APPEND);
         }
     }
