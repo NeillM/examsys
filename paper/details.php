@@ -1188,14 +1188,14 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
-	if (!$properties->get_summative_lock()) {
-		if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
+    if (!$properties->get_summative_lock()) {
+        if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
             $update_params = array(
             'marking' => array('s', 0)
             );
             $assessment->db_update_assessment($paperID, $update_params);
-		}
-	}
+        }
+    }
 ?>
 </table>
 
