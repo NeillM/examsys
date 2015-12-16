@@ -491,11 +491,11 @@ if ($tmp_method == 'Ebel') {
 if (isset($_POST['alterpassmark']) and $_POST['alterpassmark'] == 1) {
   if ($tmp_method == 'Angoff (Yes/No)' or $tmp_method = 'Modified Angoff') {
     $pass_mark = round($total_rating / $total_parts);
-
-    $std_query = $mysqli->prepare("UPDATE properties SET pass_mark = ? WHERE property_id = ?");
-    $std_query->bind_param('ii', $pass_mark, $paperID);
-    $std_query->execute();
-    $std_query->close();
+    $assessment = new assessment($mysqli, $configObject);
+    $update_params = array(
+        'pass_mark' => array('i', $pass_mark)
+    );
+    $assessment->db_update_assessment($paperID, $update_params);
   }
 }
 

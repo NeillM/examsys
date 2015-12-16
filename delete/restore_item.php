@@ -61,10 +61,12 @@ for ($i=0; $i<count($items); $i++) {
     }
     $result->close();
     
-    $restore = $mysqli->prepare("UPDATE properties SET deleted = NULL, paper_title = ? WHERE property_id = ?");
-    $restore->bind_param('si', $new_title, $item_id);
-    $restore->execute();  
-    $restore->close();
+    $assessment = new assessment($mysqli, $configObject);
+    $update_params = array(
+      'deleted' => array('s', NULL),
+      'paper_title' => array('s', $new_title)
+    );
+    $assessment->db_update_assessment($item_id, $update_params);
     
     $result = $mysqli->prepare("SELECT question, deleted FROM (papers, questions) WHERE paper = ? AND papers.question = questions.q_id");
     $result->bind_param('i', $item_id);

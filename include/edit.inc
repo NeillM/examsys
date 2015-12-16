@@ -258,10 +258,13 @@ function insert_into_papers($p_id, $q_id, $db) {
   if ($screen == 0) $screen++;
 
   // Force random mark to recalculate.
-  $result = $db->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?");
-  $result->bind_param('i', $p_id);
-  $result->execute();
-  $result->close();
+  $assessment = new assessment($db, $configObject);
+  $update_params = array(
+    'random_mark' => array('d', NULL),
+    'total_mark' => array('i', NULL)
+  );
+  $assessment->db_update_assessment($p_id, $update_params);
+
 
   if ($result = $db->prepare("INSERT INTO papers VALUES (NULL, ?, ?, ?, ?)")) {
     $result->bind_param('iiii', $p_id, $q_id, $screen, $display_pos);

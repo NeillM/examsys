@@ -72,10 +72,12 @@ if (isset($_POST['questions'])) {
 }
 
 // Retire the paper itself
-$result = $mysqli->prepare("UPDATE properties SET retired = NOW() WHERE property_id = ?");
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->close();
+$assessment = new assessment($mysqli, $configObject);
+$now = time();
+$update_params = array(
+    'retired' => array('s', $now)
+);
+$assessment->db_update_assessment($paperID, $update_params);
 
 $logger->track_change('paper', $paperID, $userObject->get_user_ID(), '', '', 'retired');
 
