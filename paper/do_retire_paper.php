@@ -73,7 +73,7 @@ if (isset($_POST['questions'])) {
 
 // Retire the paper itself
 $assessment = new assessment($mysqli, $configObject);
-$now = time();
+$now = date("Y-m-d H:i:s");
 $update_params = array(
     'retired' => array('s', $now)
 );

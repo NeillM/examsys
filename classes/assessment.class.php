@@ -198,7 +198,7 @@ class assessment {
                 $duration = 0;
             }
         }
-        $timestamp = time();
+        $timestamp = date("Y-m-d H:i:s");
         $params = array(
             'paper_title' => array('s', $papertitle),
             'start_date' => array('s', $startdate),
@@ -226,7 +226,7 @@ class assessment {
             // Crypt name generation.
             $crypt_name = $property_id . $timestamp . $paperowner;
             $update_params = array('crypt_name' => array('s', $crypt_name));
-            $this->db_update_assessment($property_id, $update_params)
+            $this->db_update_assessment($property_id, $update_params);
         } else {
             return false;
         }

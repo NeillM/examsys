@@ -422,7 +422,7 @@ Class PaperUtils {
   */
   public function delete_paper($paperID, $db) {
     $assessment = new assessment($db, $configObject);
-    $now = time();
+    $now = date("Y-m-d H:i:s");
     $update_params = array(
       'deleted' => array('s', $now),
       'paper_ownerID' => array('i', -1)

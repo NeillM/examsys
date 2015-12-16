@@ -612,7 +612,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   }
 
   $assessment = new assessment($db, $configObject);
-  $created = time();
+  $created = date("Y-m-d H:i:s");
   $params = array(
     'paper_title' => array('s', $_POST['new_paper']),
     'start_date' => array('s', $tmp_start_date),

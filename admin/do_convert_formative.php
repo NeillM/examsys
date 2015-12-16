@@ -41,7 +41,7 @@ $result->execute();
 $result->close();
 
 // Set start/end dates and the type to 0 (i.e. formative).
-$now = time();
+$now = date("Y-m-d H:i:s");
 $assessment = new assessment($mysqli, $configObject);
 $update_params = array(
     'start_date' => array('s', $now),
