@@ -124,35 +124,40 @@ $app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $rende
  * @param object $langpack - language object
  */
 $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) use($mysqli, $oauth, $api, $render, $langpack) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    
     // Log request.
     $apiid = $api->log_request();
     
-    //Check Permission
-    if (!$oauth->check_permissions('gradebook', $client_id)) {
-        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+    // Check for auth tokens
+    $client_id = $oauth->check_auth();
+    if ($client_id == 'INVALID_TOKEN') {
+        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
         $api->log_response($apiid, $response_xml);
         echo $response_xml;
     } else {
-    
-        $response = array();
-        $gradebook = new \api\gradebook($mysqli);
-
-        // Process the request.
-        $request = $gradebook->get($filtername, $filterid);
-        $response = $request[1];
-        if ($request[0] == 'OK') {
-            $template = 'api/' . $filtername . '_gradebook.xml';
+        //Check Permission
+        if (!$oauth->check_permissions('gradebook', $client_id)) {
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+            $api->log_response($apiid, $response_xml);
+            echo $response_xml;
         } else {
-            $template = 'api/error.xml';
+        
+            $response = array();
+            $gradebook = new \api\gradebook($mysqli);
+
+            // Process the request.
+            $request = $gradebook->get($filtername, $filterid);
+            $response = $request[1];
+            if ($request[0] == 'OK') {
+                $template = 'api/' . $filtername . '_gradebook.xml';
+            } else {
+                $template = 'api/error.xml';
+            }
+        
+            // Render response.
+            $response_xml = $render->render_xml($template, 'gradebookResponse', $response);
+            $api->log_response($apiid, $response_xml);
+            echo $response_xml;
         }
-    
-        // Render response.
-        $response_xml = $render->render_xml($template, 'gradebookResponse', $response);
-        $api->log_response($apiid, $response_xml);
-        echo $response_xml;
     }
 });
 /**
@@ -204,43 +209,52 @@ $app->error(function (\Exception $e) use ($render, $api, $langpack) {
  * @param mysqli $mysqli - db connection 
  */
 function process ($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli) {
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    $user_id = $oauth->get_client_user($client_id);
-    //Check Permissions
-    foreach ($operations as $operation) {
-        $perm[$operation] = $oauth->check_permissions($request . '/' . $operation, $client_id);
-    }
-
     // Log request.
     $apiid = $api->log_request();
     
-    // Check media type - only text/xml supported currently.
-    if (!$api->get_mediatype()) {
-        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+    // Check for auth tokens
+    $client_id = $oauth->check_auth();
+    if ($client_id == 'INVALID_TOKEN') {
+        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
         $api->log_response($apiid, $response_xml);
         echo $response_xml;
     } else {
-        $responsedata = array();
-        $classname = '\\api\\' . $request;
-        $requestobject = new $classname($mysqli);
-
-        // Process the request.
-        $data = $api->process($request, $xsd);
-        
-        // XML.
-        if ($data[0] == 'OK') {
-            $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm, $user_id);
-            $template = 'api/success.xml';
-        } else {
-            $responsedata = $data[1];
-            $template = 'api/error.xml';
+        //Check Permissions
+        foreach ($operations as $operation) {
+            $perm[$operation] = $oauth->check_permissions($request . '/' . $operation, $client_id);
         }
+
+        // Log request.
+        $apiid = $api->log_request();
         
-        // Render response.
-        $response_xml = $render->render_xml($template, $response, $responsedata);
-        $api->log_response($apiid, $response_xml);
-        echo $response_xml;
+        // Check media type - only text/xml supported currently.
+        if (!$api->get_mediatype()) {
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+            $api->log_response($apiid, $response_xml);
+            echo $response_xml;
+        } else {
+            $responsedata = array();
+            $classname = '\\api\\' . $request;
+            $requestobject = new $classname($mysqli);
+
+            // Process the request.
+            $data = $api->process($request, $xsd);
+            
+            // XML.
+            $user_id = $oauth->get_client_user($client_id);
+            if ($data[0] == 'OK') {
+                $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm, $user_id);
+                $template = 'api/success.xml';
+            } else {
+                $responsedata = $data[1];
+                $template = 'api/error.xml';
+            }
+            
+            // Render response.
+            $response_xml = $render->render_xml($template, $response, $responsedata);
+            $api->log_response($apiid, $response_xml);
+            echo $response_xml;
+        }
     }
 }
 
