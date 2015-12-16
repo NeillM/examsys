@@ -25,10 +25,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-function modulo($n,$b) {
-    return $n-$b*floor($n/$b);
-}
-
 $assessment = new assessment($mysqli, $configObject);
 
 $paper_name = check_var('paper_name', 'POST', true, false, true);
@@ -72,8 +68,7 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
     $end_date = NULL;
 } else {
     $duration = NULL;
-    
-    if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
+    if ((bool) date('L', strtotime($_POST['fyear'] . '-01-01'))) {
         $leap = true;
     } else {
         $leap = false;
