@@ -105,6 +105,16 @@ abstract class rogo_directory {
     }
     return true;
   }
+  
+  /**
+   * Delete the contents of the directory.
+   * This should probably only be used by automatic test setup/teardown functions.
+   * 
+   * @return boolean true if all the contents were deleted, false otherwise.
+   */
+  public function clear() {
+    return $this->recursive_delete($this->location());
+  }
 
   /**
    * Create the directory if it does not exist.
@@ -114,6 +124,50 @@ abstract class rogo_directory {
     if (!file_exists($directory)) {
       mkdir($directory, $this->filepermissions, true);
     }
+  }
+
+  /**
+   * Deletes the contents of a directory recursively, or delete a file.
+   *
+   * @param string $location The location to the directory.
+   * @return boolean true if all the contents were deleted, false otherwise.
+   */
+  protected function recursive_delete($location) {
+    if (!is_writable($location)) {
+      // We cannot do any deletion.
+      return false;
+    }
+    if (!is_dir($location)) {
+      // A file has been passed, delete it.
+      return unlink($location);
+    }
+    // A directory has been passed, delete its contents.
+    $success = true;
+    // If the directory has no trailing slash add one.
+    if (substr($location, -1) !== DIRECTORY_SEPARATOR) {
+      $location .= DIRECTORY_SEPARATOR;
+    }
+    $directory = dir($location);
+    $entry = $directory->read();
+    // Loop through all the entries in the directory.
+    while ($entry !== false) {
+      if ($entry == '.' || $entry == '..') {
+        // We should not try to delete the current and parent directory links.
+        $entry = $directory->read();
+        continue;
+      }
+      $deleted = $this->recursive_delete($location . $entry);
+      $success = $success && $deleted;
+      if ($deleted && is_dir($location . $entry)) {
+        // Delete the directory now as its contents have been removed.
+        $diredeleted = rmdir($location . $entry);
+        $success = $success && $diredeleted;
+      }
+      // Get the next entry.
+      $entry = $directory->read();
+    }
+    $directory->close();
+    return $success;
   }
 
   /**

@@ -181,3 +181,7 @@ tools/mee/mee/images/pspbrwse.jbf
 *.phprj
 
 /vendor/
+composer.phar
+testing/behat/config/behat.yml
+config/behat.xml
+testing/behat/config/version.php

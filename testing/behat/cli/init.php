@@ -1,0 +1,92 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file is used to install and upgrade behat for Rogo.
+ *
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 The University of Nottingham
+ * @package testing
+ * @category behat
+ */
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+require_once dirname(dirname(dirname(__DIR__))) . '/include/autoload.inc.php';
+autoloader::init();
+
+use testing\behat\help,
+    testing\behat\environment,
+    testing\behat\database;
+
+// Lets look to see what arguments have been passed.
+$options = 'h';
+$longoptions = array(
+  'clean',
+  'help',
+);
+
+$optionslist = getopt($options, $longoptions);
+
+if (isset($optionslist['h']) or isset($optionslist['help'])) {
+  // Display some help information.
+  cli_utils::prompt(help::init_help());
+  exit(0);
+}
+
+// Load the behat config file.
+try {
+  $config = Config::get_instance();
+  $config->use_behat_site();
+} catch (Exception $e) {
+  cli_utils::prompt($e->getMessage());
+  cli_utils::prompt(help::error());
+  exit(0);
+}
+
+// Setup some variables that are needed by scripts that are included further down.
+$cfg_web_root = get_root_path() . '/';
+$cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
+
+// Ensure any caches are cleared.
+if (function_exists('opcache_reset')) {
+    opcache_reset();
+}
+
+chdir(__DIR__);
+
+try {
+  // Ensure composer and it's dependancies are installed and upto date.
+  composer_utils::setup();
+  // The composer autoloader may not have been generated before this point so we should ensure it is.
+  autoloader::init();
+  // Create the behat.yml file.
+  environment::build_config();
+  // Create the database.
+  if (isset($optionslist['clean']) or environment::upgrade_needed()) {
+    database::install_database();
+    // Store the version of Rogo that behat is initialised for.
+    environment::save_version();
+  } else {
+    cli_utils::prompt('Database does not need updating.');
+  }
+  // Display the command to run tests.
+  cli_utils::prompt(help::run_help());
+} catch (Exception $e) {
+  cli_utils::prompt($e->getMessage());
+  cli_utils::prompt(help::error());
+}
+
+exit(0);

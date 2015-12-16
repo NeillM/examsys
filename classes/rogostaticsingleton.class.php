@@ -52,10 +52,14 @@ Class RogoStaticSingleton {
   }
 
   /**
-  * sets the Mock instance to return. ONLY used for unit testing 
-  * 
+  * Sets the Mock instance to return. ONLY used for behat and unit testing.
+  *
+  * @param object
   */
   public static function set_mock_instance($obj) {
+    if (!($obj instanceof static::$class_name)) {
+      throw new \testing\invalid_rogosingleton_object();
+    }
     static::$inst = $obj;
   }
 
