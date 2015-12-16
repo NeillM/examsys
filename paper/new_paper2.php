@@ -179,16 +179,6 @@ $papertype = $assessment->get_type_value($_POST['paper_type']);
     echo "Error, no paper name.";
     exit;
   }
-
-  
-  if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
-    // Scheduled summative paper defaults.
-    $startdate = '';
-    $enddate = '';
-  } else {
-    $startdate = '20100101090000';
-    $enddate = '20250101090000';
-  }
 ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -501,8 +491,6 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
   echo "<input type=\"hidden\" name=\"paper_name\" id=\"paper_name\" value=\"" . $_POST['paper_name'] . "\" />\n";
   echo "<input type=\"hidden\" name=\"current_year\" id=\"current_year\" value=\"year1\" />\n";
   echo "<input type=\"hidden\" name=\"folder\" value=\"" . $_POST['folder'] . "\" />\n";
-  echo "<input type=\"hidden\" name=\"startdate\" value=\"" . $startdate . "\" />\n";
-  echo "<input type=\"hidden\" name=\"enddate\" value=\"" . $enddate . "\" />\n";
   echo "<input type=\"hidden\" name=\"paper_owner\" value=\"" . $userObject->get_user_ID() . "\" />\n";
 ?>
 <div style="text-align:right"><input type="submit" name="submit2" value="<?php echo $string['finish']; ?>" class="ok" /></div>

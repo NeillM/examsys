@@ -25,6 +25,10 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
+function modulo($n,$b) {
+    return $n-$b*floor($n/$b);
+}
+
 $assessment = new assessment($mysqli, $configObject);
 
 $paper_name = check_var('paper_name', 'POST', true, false, true);
@@ -63,12 +67,34 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
     if (isset($_POST['duration_mins'])) {
         $duration += $_POST['duration_mins'];
     }
+    
+    $start_date = NULL;
+    $end_date = NULL;
 } else {
     $duration = NULL;
+    
+    if ((modulo($_POST['fyear'],4) == 0 and modulo($_POST['fyear'],100) != 0) or modulo($_POST['fyear'],400) == 0) {
+        $leap = true;
+    } else {
+        $leap = false;
+    }
+
+    if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
+    if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
+    if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
+
+    $start_date = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
+
+
+    if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
+    if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
+    if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
+
+    $end_date = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
 }
     
 try {
-    $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $_POST['startdate'], $_POST['enddate'], '', $duration, $session, $modules, $timezone);
+    $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $start_date, $end_date, '', $duration, $session, $modules, $timezone);
 
     if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
         if (isset($_POST['barriers_needed'])) {
