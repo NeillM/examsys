@@ -41,11 +41,14 @@ $result->execute();
 $result->close();
 
 // Set start/end dates and the type to 0 (i.e. formative).
-$result = $mysqli->prepare("UPDATE properties SET start_date = NOW(), end_date = NOW(), paper_type = '0' WHERE property_id = ?");
-$result->bind_param('i', $paperid);
-$result->execute();  
-$result->close();
-
+$now = date("Y-m-d H:i:s");
+$assessment = new assessment($mysqli, $configObject);
+$update_params = array(
+    'start_date' => array('s', $now),
+    'end_date' => array('s', $now),
+    'paper_type' => array('s' , $assessment::TYPE_FORMATIVE)
+);
+$assessment->db_update_assessment($paperid, $update_params);
 $mysqli->close();
 ?>
 <!DOCTYPE html>

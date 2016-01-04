@@ -81,7 +81,7 @@ class assessment {
     /**
      * Language pack component.
      */
-    private $langcomponent = 'classes/assessmentmanagement';
+    private $langcomponent = 'classes/assessment';
 
     /**
      * @brief Constuctor
@@ -109,6 +109,19 @@ class assessment {
     }
     
     /**
+     * Get the numeric value of the paper type
+     * @param string $type paper type
+     * @return int|bool value or false on error
+     */
+    public function get_type_value($type) {
+        if (array_key_exists($type, $this->type)) {
+            return $this->type[$type];
+        } else {
+            return false;
+        }
+    }
+    
+    /**
      * Create an assesment
      * @param string $papertitle - New paper title
      * @param string $papertype - Type of paper
@@ -130,7 +143,7 @@ class assessment {
             throw new Exception('NON_UNIQUE_TITLE');
         }
         // Check paper type is valid.
-        if (!array_key_exists($papertype, $this->type)) {
+        if ($this->get_type_value($this->type) === false) {
             throw new Exception('INVALID_PAPER_TYPE');
         }
         // Check owner exists.
@@ -151,7 +164,7 @@ class assessment {
              throw new Exception('INVALID_SESSION');
         }
         // Check startdate and enddate
-        if ($papertype != 'summative' and $enddate <= $startdate) {
+        if ($papertype != self::TYPE_SUMMATIVE and $enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
         }
         // Verify timezone is supported, revert to server timezone if not.
@@ -165,14 +178,14 @@ class assessment {
         $enddate = $datesarray[1];
         
         // Set the summative rubric
-        if ($papertype == 'summative') {
+        if ($papertype == self::TYPE_SUMMATIVE) {
             $langpack = new langpack();
             $default_rubric = $langpack->get_string($this->langcomponent, 'summative_rubric');
         } else {
             $default_rubric = '';
         }
         // Set calulator on/off
-        if ($papertype == 'formative' or $papertype == 'progress' or $papertype == 'summative') {
+        if ($papertype == self::TYPE_FORMATIVE or $papertype == self::TYPE_PROGESSS or $papertype == self::TYPE_SUMMATIVE) {
             $default_calc = 1;
         } else {
             $default_calc = 0;
@@ -185,44 +198,38 @@ class assessment {
                 $duration = 0;
             }
         }
-        $timestamp = time();
-        $result = $this->db->prepare("INSERT INTO properties (paper_title,
-                    start_date,
-                    end_date,
-                    timezone,
-                    paper_type,
-                    paper_ownerID,
-                    labs,
-                    rubric, 
-                    calculator,
-                    exam_duration,
-                    created,
-                    calendar_year) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $result->bind_param('sssssissiiii', $papertitle, $startdate, $enddate, $timezone, $this->type[$papertype], $paperowner, $labs, $default_rubric, $default_calc, $duration, $timestamp, $session);
-        $result->execute();
-        $result->close();
-        if ($db->errno != 0) {
-            return false;
-        }
-        $property_id = $this->db->insert_id;
+        $timestamp = date("Y-m-d H:i:s");
+        $params = array(
+            'paper_title' => array('s', $papertitle),
+            'start_date' => array('s', $startdate),
+            'end_date' => array('s', $enddate),
+            'timezone' => array('s', $timezone),
+            'paper_type' => array('s', $papertype),
+            'paper_ownerID' => array('i', $paperowner),
+            'labs' => array('s', $labs),
+            'rubric' => array('s', $default_rubric),
+            'calculator' => array('i', $default_calc),
+            'exam_duration' => array('i', $duration),
+            'created' => array('i', $timestamp),
+            'calendar_year' => array('i', $session)
+        );
+        $property_id = $this->db_insert_assessment($params);;
         if ($property_id) {
             // Add to Modules.
             foreach ($modules as $module) {
                 $result = $this->db->prepare("INSERT INTO properties_modules (property_id, idMod) VALUES (?, ?)");
-                $result->bind_param(ii, $property_id, $module);
+                $result->bind_param('ii', $property_id, $module);
                 $result->execute();
                 $result->close();
             }
             
             // Crypt name generation.
-            $crypt_name = $property_id . $timestamp . $paperowner; 
-            
-            $result = $this->db->prepare("UPDATE properties SET crypt_name = ? WHERE property_id = ?");
-            $result->bind_param('si', $crypt_name, $property_id);
-            $result->execute();
-            $result->close();
-        } 
+            $crypt_name = $property_id . $timestamp . $paperowner;
+            $update_params = array('crypt_name' => array('s', $crypt_name));
+            $this->db_update_assessment($property_id, $update_params);
+        } else {
+            return false;
+        }
         return $property_id;
     }
 
@@ -370,7 +377,7 @@ class assessment {
     /**
      * Update assessment properties
      * This function should be used to update bulk properties for an assessment.
-     * Note: property validation occurs does not occur in this function.
+     * Note: property validation does not occur in this function.
      * 
      * @param integer $id id of assessment
      * @param array $params properties to update. The array has the following strucutre:
@@ -384,6 +391,20 @@ class assessment {
     }
     
     /**
+     * Insert assessment 
+     * This function should be used to insert all properties for an assessment.
+     * Note: property validation does not occur in this function.
+     * 
+     * @param array $params properties to insert. The array has the following strucutre:
+     *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
+     * @return bool true on success false otherwise
+     */
+    public function db_insert_assessment($params) {
+        $table = 'properties';
+        return DBUtils::exec_db_insert($table, $params, $this->db);
+    }
+    
+    /**
      * Schedule a summative assessment 
      * @param integer $paperid paper id
      * @param integer $month the month the exam should be scheduled in
@@ -394,21 +415,25 @@ class assessment {
      * @param string $campus the camps where the exam should be taken
      * @return integer|bool schedule id or false if error
      */
-    public function schedule($paperid, $month, $barriers = 0, $cohort_size = '<whole cohort>', $notes = '', $sittings = 1, $campus = '') {
+    public function schedule($paperid, $month, $barriers, $cohort_size, $notes, $sittings, $campus) {
         // Check paper is summative.
         if (Paper_utils::get_paper_type($paperid, $this->db) != self::TYPE_SUMMATIVE) {
             return false;
         }
-        // Enforce cohort size interface restrictions
+        // Enforce cohort size interface restrictions.
         $decode_cohort_sizes = json_decode($this->cohort_sizes, true);
         if (!in_array($cohort_size, $decode_cohort_sizes)) {
             $cohort_size = '<whole cohort>';
         }
-        // Enforce sittings interface restrictions
-        if ($sittings > $this->max_sittings) {
-            $sittings = $this->max_sittings;
-        } elseif ($sittings < 1) {
+        // Enforce sittings interface restrictions.
+        if (empty($sittings) or $sittings < 1) {
             $sittings = 1;
+        } elseif ($sittings > $this->max_sittings) {
+            $sittings = $this->max_sittings;
+        }
+        // Default no barriers.
+        if (empty($barriers)) {
+            $barriers = 0;
         }
         $result = $this->db->prepare("INSERT INTO scheduling (paperID, period, barriers_needed, cohort_size, notes, sittings, campus)
             VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -430,7 +455,7 @@ class assessment {
      * @return array start and end times
      */
     public function setup_start_end_dates($papertype, $fromdatetime, $todatetime, $timezone) {
-        if (!$this->summative_mgmt or $papertype != 'summative') {
+        if (!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) {
             
             $server_timezone = new DateTimeZone($this->server_timezone);
             $target_timezone = new DateTimeZone($timezone);

@@ -102,8 +102,10 @@ class assessmentmanagement extends \api\abstractmanagement {
             'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error',));
         $error = array();
         $configObject = \Config::get_instance();
+        $paper = new \assessment($this->db, $configObject);
+        $papertype = $paper->get_type_value($params['type']);
         // Error if trying to create a summative exam when they are set to be scheduled only.
-        if ($configObject->get('cfg_summative_mgmt') and $params['type'] == 'summative') {
+        if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
             $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'create', $params['nodeid'], $error);
         } 
@@ -189,7 +191,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             if ($paperid and (empty($params['duration']))) {
                 $params['duration'] = $details['duration'];   
             }       
-            $paper = new \assessment($this->db, $configObject);
+            
             // Update exam.
             if ($params['id']) {
                 if ($paperid) {
@@ -210,7 +212,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Create exam.
             } else {
                 try {
-                    $id = $paper->create($params['title'], $params['type'], $params['owner'], $params['startdatetime'],
+                    $id = $paper->create($params['title'], $papertype, $params['owner'], $params['startdatetime'],
                         $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
                     if ($id) {
                         $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
@@ -236,7 +238,8 @@ class assessmentmanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_not_scheduled', 'paper_invalid_module'));
         $error = array();
-        $params['type'] = 'summative';
+        $paper = new \assessment($this->db, $configObject);
+        $papertype = $paper::TYPE_SUMMATIVE;
 
         // Check modules
         $modulesarray = array();
@@ -254,10 +257,9 @@ class assessmentmanagement extends \api\abstractmanagement {
         $start = '';
         $end = '';
         $configObject = \Config::get_instance();
-        $paper = new \assessment($this->db, $configObject);
         // Create.
         try {
-            $paperid = $paper->create($params['title'], $params['type'], $params['owner'], $start,
+            $paperid = $paper->create($params['title'], $papertype, $params['owner'], $start,
                 $end, $labs, $params['duration'], $params['session'], $modulesarray);
             if ($paperid) {
                 // Schedule.
@@ -275,7 +277,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                         $errorfile = $_SERVER['PHP_SELF'];
                         $errorline = __LINE__ - 5;
                         $logger = new \logger($this->db);
-                        $logger->record_ws_application_warning($type, $errorstring, $errorfile, $errorline);
+                        $logger->record_application_warning($userid, $type, $errorstring, $errorfile, $errorline);
                     }
                 }
             } else {
@@ -307,7 +309,8 @@ class assessmentmanagement extends \api\abstractmanagement {
             if ($inuse) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED_INUSE'], 'status' => $strings['paper_not_deleted_inuse'], 'id' => null);
             } else {
-                $deleted = \Paper_utils::delete_paper($params['id'], $this->db);
+                $details = \Paper_utils::get_paper_properties($params['id'], $this->db);
+                $deleted = \Paper_utils::delete_paper($params['id'], $details['owner'], $this->db);
                 if ($deleted) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {

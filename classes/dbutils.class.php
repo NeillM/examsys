@@ -101,6 +101,56 @@ Class DBUtils {
     }
     return true;
   }
+  
+  /**
+   * Execute database insert command 
+   * @param string $table The table being updated
+   * @param array $params The columns to update and the values to use. The array has the following strucutre:
+   *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
+   * @param mysqli $db db connection
+   * @return bool true on success false otherwise
+   */
+  static function exec_db_insert($table, $params, $db) {
+    $command = 'INSERT INTO ' . $table . ' (';
+    // Generate list of selected data to insert.
+    $selection = '';
+    $properties = array_keys($params);
+    foreach ($properties as $prop) {
+        $selection .= $prop . ', ';
+    }
+    $selection = rtrim($selection, ', ');
+    $selection .= ') VALUES (';
+    $values = array_values($params);
+    // Get bind types and values
+    $bind_types = array();
+    $bind_values = array();
+    foreach ($values as $idx => $val) {
+        // Check valid bind_param type.
+        if (preg_match('/^(i|d|s|b)$/', $val[0])) {
+            $bind_types[] = $val[0];
+        } else {
+            return false;
+        }
+        $bind_values[] = $val[1];
+        $selection .= '?, ';
+    }
+    $selection = rtrim($selection, ', ');
+    $selection .= ')';
+    $bind_types = implode('', $bind_types);
+    $bind_values_ref = array();
+    foreach ($bind_values as $key => $value)  {
+        $bind_values_ref[$key] = &$bind_values[$key]; 
+    }
+    // Run generated query.
+    $result = $db->prepare($command . $selection);
+    call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
+    $result->execute();
+    $result->close();
+    if ($db->errno != 0) {
+        return false;
+    }
+    return $db->insert_id;
+  }
 }
 
 ?>

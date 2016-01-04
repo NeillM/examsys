@@ -78,7 +78,7 @@ while ($result->fetch()) {
     //delete the paper if it is not on any other modules
     $tmp_paper_modules = Paper_utils::get_modules($paperID, $mysqli);
     if ( count($tmp_paper_modules) == 0) {
-      Paper_utils::delete_paper($paperID, $mysqli);
+      Paper_utils::delete_paper($paperID, -1, $mysqli);
     }
 }
 $result->close();

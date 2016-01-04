@@ -417,19 +417,18 @@ Class PaperUtils {
   /**
   * Delete a paper (Note: sets the deleted field we don't actuality delete the row form the papers table)
   * @param $paperID the id of the paper or property_id
+  * @param $owner the owner we want to set the deleted paper to
   * @param $db Database connection
   * @return void
   */
-  public function delete_paper($paperID, $db) {
-    $update = $db->prepare("UPDATE properties SET deleted = NOW(), paper_ownerID = -1 WHERE property_id = ?");
-    $update->bind_param('i', $paperID);
-    $update->execute();
-    $update->close();
-    if ($db->errno != 0) {
-      return false;
-    }
-    return true;
-    
+  public function delete_paper($paperID, $owner, $db) {
+    $assessment = new assessment($db, $configObject);
+    $now = date("Y-m-d H:i:s");
+    $update_params = array(
+      'deleted' => array('s', $now),
+      'paper_ownerID' => array('i', $owner)
+    );
+    return $assessment->db_update_assessment($paperID, $update_params);
   }
 
   public function type_to_name($type, $string) {

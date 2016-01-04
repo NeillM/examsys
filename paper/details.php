@@ -42,6 +42,8 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 $mediadirectory = rogo_directory::get_directory('media');
 
+$assessment = new assessment($mysqli, $configObject);
+
 // Unlock code - emergency use only!
 // Can only unlock if current user is SysAdmin!
 if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role('SysAdmin')) {
@@ -51,10 +53,11 @@ if (isset($_GET['unlock']) and $_GET['unlock'] == '1' and $userObject->has_role(
   $tmp_end_date = $tmp_date->format('Ymd' . '100000');
 
   // Update the paper date so that it does not immediately re-lock
-  $editPaper = $mysqli->prepare("UPDATE properties SET start_date = ?, end_date = ? WHERE property_id = ?");
-  $editPaper->bind_param('ssi', $tmp_start_date, $tmp_end_date, $paperID);
-  $editPaper->execute();
-  $editPaper->close();
+  $update_params = array(
+    'start_date' => array('s', $tmp_start_date),
+    'end_date' => array('s', $tmp_end_date)
+  );
+  $assessment->db_update_assessment($paperID, $update_params);
 
   // Update the questions to take lock off
   $editPaper = $mysqli->prepare("UPDATE questions INNER JOIN papers ON questions.q_id = papers.question AND paper = ? SET questions.locked = NULL");
@@ -864,10 +867,12 @@ function check_latex_random($q_ids, $mysqli) {
     }
 		
     if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
-      $result = $mysqli->prepare("UPDATE properties SET random_mark = ?, total_mark = ?, latex_needed = ? WHERE property_id = ?");
-      $result->bind_param('diii', $total_random_mark, $total_marks, $latex, $paperID);
-      $result->execute();
-      $result->close();
+      $update_params = array(
+        'random_mark' => array('d', $total_random_mark),
+        'total_mark' => array('i', $total_marks),
+        'latex_needed' => array('i', $latex)
+      );
+      $assessment->db_update_assessment($paperID, $update_params);
 
       // Update standard set as marks has changed.
       $no_reviews = 0;
@@ -1183,14 +1188,14 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
 
-	if (!$properties->get_summative_lock()) {
-		if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
-			$editPaper = $mysqli->prepare("UPDATE properties SET marking = 0 WHERE property_id = ?");
-			$editPaper->bind_param('i', $paperID);
-			$editPaper->execute();
-			$editPaper->close();
-		}
-	}
+    if (!$properties->get_summative_lock()) {
+        if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
+            $update_params = array(
+            'marking' => array('s', 0)
+            );
+            $assessment->db_update_assessment($paperID, $update_params);
+        }
+    }
 ?>
 </table>
 
