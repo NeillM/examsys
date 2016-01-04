@@ -43,13 +43,58 @@ class api {
     private $langcomponent = 'api/api';
     
     /**
+     * The log file.
+     */
+    private $logfile;
+    
+    /**
      * Constructor
      * @param object $app the slim application
+     * @param mysqli $db db connection
+     * @param object $configObject configutations
      */
-    public function __construct($app) {
+    public function __construct($app, $db, $configObject) {
         $this->app = $app;
+        // Get configs.
+        $configObject->set_db_object($db);
+        $configObject->load_settings('core');
+        $settings = (object) $configObject->get_setting('core');
+        if (property_exists($settings, 'apilogfile')) {
+            $this->logfile = $settings->apilogfile;
+        } else {
+            $this->logfile = '';
+        }
     }
-       
+    
+    /**
+     * Log api request to file 
+     * @return string unique id for the request
+     */
+    public function log_request() {
+        $id = uniqid('', true);
+        if ($this->logfile != '') {
+            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nApi Log Id: " . $id .
+            "\nUser Agent: " . $this->get_user_agent() .
+            "\nAccess Token: " . $this->get_parameter('access_token') .
+            "\nResource Path: " . $this->get_path() . "\n\n" . $this->get_body();
+            file_put_contents($this->logfile , $updatelog, FILE_APPEND);
+        }
+        return $id;
+    }
+    
+    /**
+     * Log api response to file 
+     * @param string $id unique id linking to the request for this response
+     * @param string $xml xml string to log
+     */
+    public function log_response($id, $xml) {
+        if ($this->logfile != '') {
+            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nApi Log Id: " . $id .
+            "\n\n" . $xml;
+            file_put_contents($this->logfile , $updatelog, FILE_APPEND);
+        }
+    }
+    
     /**
      * Set the header for the response.
      * @param string $type - header type
@@ -66,6 +111,32 @@ class api {
         return $this->app->request->getBody();
     }
 
+    /**
+     * Get the user agent of the request.
+     * @return string - user agent 
+     */
+    public function get_user_agent() {
+        return $this->app->request->headers->get('USER_AGENT');
+    }
+    
+    /**
+     * Get a parameter of the request.
+     * @param $parameter string parameter name
+     * @return string - parameter 
+     */
+    public function get_parameter($parameter) {
+        return $this->app->request->params($parameter);
+    }
+    
+     /**
+     * Get the path of the request.
+     * @return string - path 
+     */
+    public function get_path() {
+        return $this->app->request->getPath();
+    }
+    
+    
     /**
      * Get the media type of the request.
      * @return string|bool - media type if valid, false otherwise

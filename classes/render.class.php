@@ -48,11 +48,11 @@ class render {
      * @param string $template - template location
      * @param string $reponsename - response name
      * @param array $response - response data
-     * @return void
+     * @return $string xml response
      */
     public function render_xml($template, $reponsename, $response) {
         $data = array('name' => $reponsename, 'response' => $response);
-        echo $this->twig->render($template, $data);
+        return $this->twig->render($template, $data);
     }
     
     /**

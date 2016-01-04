@@ -153,8 +153,7 @@ class oauth {
     public function check_auth() {
         $verify = $this->server->verifyResourceRequest(\OAuth2\Request::createFromGlobals());
         if (!$verify) {
-            $this->server->getResponse()->send('xml');
-            die;
+            return 'INVALID_TOKEN';
         } 
         $token = $this->server->getAccessTokenData(\OAuth2\Request::createFromGlobals());
         return $token['client_id'];
