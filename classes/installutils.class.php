@@ -1505,8 +1505,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     global $string;
     $configObject = Config::get_instance();
     $errors = array();
-    
-    $server = preg_split("/[\/ ]/",$_SERVER['SERVER_SOFTWARE']);
+
+    if (!empty($_SERVER['SERVER_SOFTWARE'])) {
+      $server = preg_split("/[\/ ]/", $_SERVER['SERVER_SOFTWARE']);
+    } else {
+      $server = array('');
+    }
     // Apache
     if ($server[0] == 'Apache') {
         $apache = $server[1];
