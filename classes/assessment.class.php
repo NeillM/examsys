@@ -143,7 +143,7 @@ class assessment {
             throw new Exception('NON_UNIQUE_TITLE');
         }
         // Check paper type is valid.
-        if (!in_array($papertype, $this->type)) {
+        if ($this->get_type_value($this->type) === false) {
             throw new Exception('INVALID_PAPER_TYPE');
         }
         // Check owner exists.
@@ -426,14 +426,10 @@ class assessment {
             $cohort_size = '<whole cohort>';
         }
         // Enforce sittings interface restrictions.
-        if (!empty($sittings)) {
-            if ($sittings > $this->max_sittings) {
-                $sittings = $this->max_sittings;
-            } elseif ($sittings < 1) {
-                $sittings = 1;
-            }
-        } else {
+        if (empty($sittings) or $sittings < 1) {
             $sittings = 1;
+        } elseif ($sittings > $this->max_sittings) {
+            $sittings = $this->max_sittings;
         }
         // Default no barriers.
         if (empty($barriers)) {

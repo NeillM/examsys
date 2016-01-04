@@ -309,7 +309,8 @@ class assessmentmanagement extends \api\abstractmanagement {
             if ($inuse) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED_INUSE'], 'status' => $strings['paper_not_deleted_inuse'], 'id' => null);
             } else {
-                $deleted = \Paper_utils::delete_paper($params['id'], $this->db);
+                $details = \Paper_utils::get_paper_properties($params['id'], $this->db);
+                $deleted = \Paper_utils::delete_paper($params['id'], $details['owner'], $this->db);
                 if ($deleted) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {

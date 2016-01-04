@@ -46,7 +46,7 @@ $assessment = new assessment($mysqli, $configObject);
 $update_params = array(
     'start_date' => array('s', $now),
     'end_date' => array('s', $now),
-    'paper_type' => array('s' , '0')
+    'paper_type' => array('s' , $assessment::TYPE_FORMATIVE)
 );
 $assessment->db_update_assessment($paperid, $update_params);
 $mysqli->close();

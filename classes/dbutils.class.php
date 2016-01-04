@@ -103,7 +103,7 @@ Class DBUtils {
   }
   
   /**
-   * Execute database update command 
+   * Execute database insert command 
    * @param string $table The table being updated
    * @param array $params The columns to update and the values to use. The array has the following strucutre:
    *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
