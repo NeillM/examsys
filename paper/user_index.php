@@ -153,8 +153,9 @@ $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], 
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
 if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
-  $lab_name = $lab_object->get_name();
   $lab_id   = $lab_object->get_id();
+} else {
+  $lab_id = null;
 }
 
 $property_id        = $propertyObj->get_property_id();
