@@ -23,7 +23,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../config/campuses.inc';
 require_once '../include/sort.inc';
 require '../lang/' . $language. '/include/timezones.inc';
 ?>
@@ -472,11 +471,15 @@ if ($_POST['paper_type'] == 'summative') {
     echo '</select></td></tr>';
 
     echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td colspan="5"><select name="campus">';
+    $configObject->set_db_object($mysqli);
+    $configObject->load_settings('core');
+    $settings = (object) $configObject->get_setting('core');
+    $cfg_campus_list = json_decode($settings->campuses, true);
     foreach ($cfg_campus_list as $campus) {
-      if ($campus == $cfg_campus_default) {
-        echo "<option value=\"$campus\" selected>$campus</option>";
+      if ($campus['default']) {
+        echo "<option value=\"" . $campus['name'] . "\" selected>" . $campus['name'] . "</option>";
       } else {
-        echo "<option value=\"$campus\">$campus</option>";
+        echo "<option value=\"" . $campus['name'] . "\">" . $campus['name'] . "</option>";
       }
     }
     echo '</select></td></tr>';

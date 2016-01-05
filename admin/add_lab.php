@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
-require '../config/campuses.inc';
 
 $bad_addresses = array();
 if (isset($_POST['submit'])) {
@@ -159,11 +158,15 @@ if (count($bad_addresses) > 0) {
 <div><input type="text" size="40" maxlength="255" name="lab_name" id="lab_name" value="" required /></div>
 <?php
   echo "<br /><div>" . $string['campus'] . "</div>\n<div><select name=\"campus\">\n";
+  $configObject->set_db_object($mysqli);
+  $configObject->load_settings('core');
+  $settings = (object) $configObject->get_setting('core');
+  $cfg_campus_list = json_decode($settings->campuses, true);
   foreach ($cfg_campus_list as $choice) {
-	  if ($configObject->get('cfg_campus_default')) {
-			echo "<option value=\"$choice\" selected>$choice</option>\n";
+	  if ($choice['default']) {
+			echo "<option value=\"" . $choice['name'] . "\" selected>" . $choice['name'] . "</option>\n";
 		} else {
-			echo "<option value=\"$choice\">$choice</option>\n";
+			echo "<option value=\"" . $choice['name'] . "\">" . $choice['name'] . "</option>\n";
 		}
 	}
   echo "</select></div>\n";

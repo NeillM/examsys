@@ -24,7 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
-require '../config/campuses.inc';
 
 $lab_id = check_var('labID', 'REQUEST', true, false, true);
 
@@ -177,11 +176,15 @@ if (isset($_POST['submit'])) {
   echo "</textarea></td><td style=\"width:50px\"></td><td style=\"vertical-align:top\">\n";
   echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"name\" value=\"$name\" required /></div>\n";
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
+  $configObject->set_db_object($mysqli);
+  $configObject->load_settings('core');
+  $settings = (object) $configObject->get_setting('core');
+  $cfg_campus_list = json_decode($settings->campuses, true);
   foreach ($cfg_campus_list as $choice) {
-    if ($campus == $choice) {
-      echo "<option value=\"$choice\" selected>$choice</option>\n";
+    if ($campus == $choice['name']) {
+      echo "<option value=\"" . $choice['name'] . "\" selected>" . $choice['name'] . "</option>\n";
     } else {
-      echo "<option value=\"$choice\">$choice</option>\n";
+      echo "<option value=\"" . $choice['name'] . "\">" . $choice['name'] . "</option>\n";
     }
   }
   echo "</select></div>\n";
