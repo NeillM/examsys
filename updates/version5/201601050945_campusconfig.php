@@ -1,8 +1,9 @@
 <?php
-require $cfg_web_root . 'config/campuses.inc';
 
 if ($updater_utils->check_version("6.1.0")) {
-
+	
+	require $cfg_web_root . 'config/campuses.inc';
+	
     if (!$updater_utils->has_updated('rogo1605_campusconfig')) {
         // Save json encoded list of campuses.
         $campusarray = array();

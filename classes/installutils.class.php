@@ -648,7 +648,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('max_duration', 779);
     $configObject->set_setting('max_sittings', 6);
     // Campuses
-    $campuses = json_encode(array('name' => 'Main Campus', 'default' => true));
+    $campuses = json_encode(array(array('name' => 'Main Campus', 'default' => true)));
     $configObject->set_setting('campuses', $campuses);
   }
   
