@@ -1,26 +1,28 @@
 <?php
 
 if ($updater_utils->check_version("6.1.0")) {
-	
-	require $cfg_web_root . 'config/campuses.inc';
-	
     if (!$updater_utils->has_updated('rogo1605_campusconfig')) {
-        // Save json encoded list of campuses.
-        $campusarray = array();
-		$i = 0;
-        foreach ($cfg_campus_list as $value) {
-            if ($value == 'cfg_campus_default') {
-                $default = true;
+
+		require $cfg_web_root . 'config/campuses.inc';
+
+        $createsql = "CREATE TABLE campus (
+			id int(8) NOT NULL AUTO_INCREMENT,
+			name VARCHAR(80) NOT NULL UNIQUE,
+			isdefault BOOLEAN NOT NULL default false,
+			PRIMARY KEY (`id`),
+			INDEX `campus_idx` (`name`)
+		)";
+        $updater_utils->execute_query($createsql, true);
+		foreach ($cfg_campus_list as $value) {
+            if ($value == $cfg_campus_default) {
+                $default = 1;
             } else {
-                $default = false;
+                $default = 0;
             }
-            $campusarray[] = array('id' => $i, 'name' => $value, 'default' => $default);
-			$i++;
+            $insertsql = "INSERT INTO campus (name, isdefault) VALUES (\"" . $value . "\"," . $default . ")";
+			$updater_utils->execute_query($insertsql, true);
         }
-        $encoded_campuses = json_encode($campusarray);
-        $configObject = Config::get_instance();
-        $configObject->set_db_object($mysqli);
-        $configObject->set_setting('campuses', $encoded_campuses);
         $updater_utils->record_update('rogo1605_campusconfig');
     }
 }
+
