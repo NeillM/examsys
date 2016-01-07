@@ -27,13 +27,14 @@ require '../../include/sysadmin_auth.inc';
 require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
-$configObject->load_settings('core');
-$settings = (object) $configObject->get_setting('core');
-$cfg_campus_list = json_decode($settings->campuses, true);
 $campuses = array();
-foreach ($cfg_campus_list as $campus) {
-	$campuses[$campus['id']] = array($campus['name']);
+$result = $mysqli->prepare("SELECT id, name FROM campus");
+$result->execute();
+$result->bind_result($id, $name);
+while ($result->fetch()) {
+	$campuses[$id] = array($name);
 }
+$result->close();
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');

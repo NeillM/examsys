@@ -29,24 +29,13 @@ require_once '../include/errors.inc';
 
 $campus = check_var('campus', 'POST', true, false, true);
 
-$configObject->load_settings('core');
-$settings = (object) $configObject->get_setting('core');
-$cfg_campus_list = json_decode($settings->campuses, true);
-$updatearray = array();
-$i = 0;
-foreach ($cfg_campus_list as $campusarray) {
-	if ($campus != $campusarray['id']) {
-		$updatearray[] = array('id' => $i, 'name' => $campusarray['name'], 'default' => $campusarray['default']);
-	}
-	$i++;
-}
-if (count($updatearray) > 0) {
-	$encoded_campuses = json_encode($updatearray);
-	$configObject->set_setting('campuses', $encoded_campuses);
-} else {
+$result = $mysqli->prepare("DELETE FROM campus WHERE id = ?");
+$result->bind_param('i', $campus);
+$result->execute();
+$result->close();
+if ($mysqli->errno != 0) {
 	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
 	$notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-
 }
 ?>
 <!DOCTYPE html>

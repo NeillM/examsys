@@ -158,17 +158,17 @@ if (count($bad_addresses) > 0) {
 <div><input type="text" size="40" maxlength="255" name="lab_name" id="lab_name" value="" required /></div>
 <?php
   echo "<br /><div>" . $string['campus'] . "</div>\n<div><select name=\"campus\">\n";
-  $configObject->set_db_object($mysqli);
-  $configObject->load_settings('core');
-  $settings = (object) $configObject->get_setting('core');
-  $cfg_campus_list = json_decode($settings->campuses, true);
-  foreach ($cfg_campus_list as $choice) {
-	  if ($choice['default']) {
-			echo "<option value=\"" . $choice['name'] . "\" selected>" . $choice['name'] . "</option>\n";
-		} else {
-			echo "<option value=\"" . $choice['name'] . "\">" . $choice['name'] . "</option>\n";
-		}
-	}
+  $result = $mysqli->prepare("SELECT name, isdefault FROM campus");
+  $result->execute();
+  $result->bind_result($name, $isdefault);
+  while ($result->fetch()) {
+    if ($isdefault) {
+      echo "<option value=\"" . $name . "\" selected>" . $name . "</option>\n";
+    } else {
+      echo "<option value=\"" . $name . "\">" . $name . "</option>\n";
+    }
+  }
+  $result->close();
   echo "</select></div>\n";
 ?>
 <br /><div><?php echo $string['building'] ?></div>

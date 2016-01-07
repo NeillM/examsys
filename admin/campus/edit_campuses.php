@@ -26,56 +26,42 @@ require_once '../../include/errors.inc';
 require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
-$configObject->load_settings('core');
-$settings = (object) $configObject->get_setting('core');
-$cfg_campus_list = json_decode($settings->campuses, true);
-	
 if (isset($_POST['submit'])) {
 	$campus = check_var('campus', 'POST', true, false, true);
 	$default = check_var('default', 'POST', true, false, true);
 	$name = check_var('name', 'POST', true, false, true);
-	$updatearray = array();
-    foreach ($cfg_campus_list as $campusarray) {
-		$campusid = $campusarray['id'];
-		if ($campus == $campusid) {
-			if ($default or $_POST['defaultchk']) {
-				$updatearray[] = array('id' => $campusid, 'name' => $name, 'default' => true);
-			} else {
-				$updatearray[] = array('id' => $campusid, 'name' => $name, 'default' => false);
-			}
-		} else {
-			if ($default or $_POST['defaultchk']) {
-				$newdefault = false;
-			} else {
-				$newdefault = $campusarray['default'];
-			}
-			$updatearray[] = array('id' => $campusid, 'name' => $campusarray['name'], 'default' => $newdefault);
-		}
-	}
-	if (count($updatearray) > 0) {
-		$encoded_campuses = json_encode($updatearray);
-		$configObject->set_setting('campuses', $encoded_campuses);
+	if ($default or $_POST['defaultchk']) {
+
+		$params['name'] = array('s', $name);
+		$params['isdefault'] = array('i', 1);
+		DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
+		
+		$update = $mysqli->prepare("UPDATE campus SET isdefault = 0 WHERE id != ?");
+		$update->bind_param("i", $campus);
+		$update->execute();
+		$update->close();
+
+	} else {
+		$params['name'] = array('s', $name);
+		$params['isdefault'] = array('i', 0);
+		DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
 	}
     header("location: list_campuses.php", true, 303);
     exit();
 } else {
     $campus = check_var('campus', 'GET', true, false, true);
-	foreach ($cfg_campus_list as $campusarray) {
-		$campusid = $campusarray['id'];
-		if ($campus == $campusid) {
-			$campusname = $campusarray['name'];
-			if ($campusarray['default'] === true) {
-				$campusdefault = 1;
-			} else {
-				$campusdefault = 0;
-			}
-			break;
-		}
-	}
-	if (empty($campusname)) {
+	$result = $mysqli->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");
+	$result->bind_param('i', $campus);
+	$result->execute();
+	$result->store_result();
+	$result->bind_result($campusid, $campusname, $isdefault);
+	$result->fetch();
+	if ($result->num_rows == 0) {
+		$result->close();
 		$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
 		$notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 	}
+	$result->close();
 }
 
 $render = new render($configObject);
@@ -124,12 +110,12 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
         <table cellpadding="0" cellspacing="2" border="0">
         <?php 
 			echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"" . $campusname . "\" required /></td></tr>";
-			if ($campusdefault) {
+			if ($isdefault) {
 				echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\" checked disabled/></td></tr>";
 			} else {
 				echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\"/></td></tr>";
 			}
-			echo "<input type=\"hidden\" name=\"default\" id=\"default\" value=\"" . $campusdefault . "\"/>";
+			echo "<input type=\"hidden\" name=\"default\" id=\"default\" value=\"" . $isdefault . "\"/>";
 			echo "<input type=\"hidden\" name=\"campus\" id=\"campus\" value=\"" . $campusid. "\"/>";
         ?>
         </table>

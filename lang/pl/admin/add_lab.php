@@ -37,4 +37,5 @@ $string['badaddressesmsg'] = 'Następujące adresy IP są niepoprawne i nie zost
 $string['backtolabs'] = 'Powrót do listy pracowni';
 $string['noipaddresses'] = 'Nie można utworzyć pracowni gdyż nie podano żadnych adresów IP.';
 $string['nolabname'] = 'Nie mogę utworzyć pracowni bez nazwy.';
+$string['listcampuses'] = 'Campuses';
 ?>

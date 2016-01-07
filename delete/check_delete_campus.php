@@ -29,31 +29,30 @@ require_once '../include/errors.inc';
 
 $campus = check_var('campus', 'GET', true, false, true);
 
-$configObject->load_settings('core');
-$settings = (object) $configObject->get_setting('core');
-$cfg_campus_list = json_decode($settings->campuses, true);
-$error = false;
-$lab = new LabFactory($mysqli);
-$found = false;
-foreach ($cfg_campus_list as $campusarray) {
-	if ($campus == $campusarray['id']) {
-		$found = true;
-		// Do not delete if default.
-		if ($campusarray['default']) {
-			$error = true;
-			$msg = $string['campusisdefault'];
-			$title = $string['cannotdelete'];
-			break;
-		}
-		// Do not delete if in use.
-		if ($lab->check_campus_in_use($campusarray['name'])) {
-			$error = true;
-			$msg = $string['campusisinuse'];
-			$title = $string['cannotdelete'];
-			break;
-		}
-	}
+$result = $mysqli->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");
+$result->bind_param("i" , $campus);
+$result->execute();
+$result->bind_result($id, $name, $isdefault);
+$result->fetch();
+$result->close();
+$found = true;
+if ($db->errno != 0) {
+	$found = false;
 }
+// Do not delete if default.
+if ($isdefault) {
+	$error = true;
+	$msg = $string['campusisdefault'];
+	$title = $string['cannotdelete'];
+}
+// Do not delete if in use.
+$lab = new LabFactory($mysqli);
+if ($lab->check_campus_in_use($name)) {
+	$error = true;
+	$msg = $string['campusisinuse'];
+	$title = $string['cannotdelete'];
+}
+	
 if (!$found) {
 	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
 	$title = $string['pagenotfound'];

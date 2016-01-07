@@ -26,37 +26,35 @@ require_once '../../include/errors.inc';
 require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
-$configObject->load_settings('core');
-$settings = (object) $configObject->get_setting('core');
-$cfg_campus_list = json_decode($settings->campuses, true);
 	
 if (isset($_POST['submit'])) {
 	$name = check_var('name', 'POST', true, false, true);
-	$updatearray = array();
 	$duplicate = false;
-    foreach ($cfg_campus_list as $campusarray) {
-		$campusid = $campusarray['id'];
-		if ($name == $campusarray['name']) {
-			$duplicate = true;
-			break;
-		} else {
-			if (isset($_POST['default'])) {
-				$default = false;
-			} else {
-				$default = $campusarray['default'];
-			}
-			$updatearray[] = array('id' => $campusid, 'name' => $campusarray['name'], 'default' => $default);
-		}
-	}
-	if (!$duplicate) {
+	$result = $mysqli->prepare("SELECT NULL FROM campus WHERE name = ?");
+	$result->bind_param('s', $name);
+	$result->execute();
+	$result->store_result();
+    $result->fetch();
+    if ($result->num_rows > 0) {
+		$result->close();
+		$duplicate = true;
+	} else {
+		$result->close();
+		$result = $mysqli->prepare("INSERT INTO campus (name, isdefault) VALUES (?, ?)");
 		if (isset($_POST['default'])) {
-			$updatearray[] = array('id' => $campusid + 1, 'name' => $name, 'default' => true);
+			$default = 1;
 		} else {
-			$updatearray[] = array('id' => $campusid + 1, 'name' => $name, 'default' => false);
+			$default = 0;
 		}
-		if (count($updatearray) > 0) {
-			$encoded_campuses = json_encode($updatearray);
-			$configObject->set_setting('campuses', $encoded_campuses);
+		$result->bind_param('si', $name, $default);
+		$result->execute();
+		$result->close();
+		if ($mysqli->errno == 0) {
+			$newid = $mysqli->insert_id;
+			$update = $mysqli->prepare("UPDATE campus SET isdefault = 0 WHERE id != ?");
+			$update->bind_param("i", $newid);
+			$update->execute();
+			$update->close();
 			header("location: list_campuses.php", true, 303);
 			exit();
 		}
@@ -113,12 +111,8 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
     <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
         <table cellpadding="0" cellspacing="2" border="0">
         <?php 
-			echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"" . $campusname . "\" required /></td></tr>";
-			if ($campusdefault) {
-				echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"default\" checked /></td></tr>";
-			} else {
-				echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"default\"/></td></tr>";
-			}
+			echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"\" required /></td></tr>";
+			echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"default\"/></td></tr>";
         ?>
         </table>
       <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
