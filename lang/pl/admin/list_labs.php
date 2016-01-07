@@ -21,4 +21,5 @@ $string['vieweditdetails'] = 'Zobacz/edytuj szczegóły';
 $string['deletelab'] = 'Usunąć pracownię?';
 $string['lowbandwidth'] = 'Mała przepustowość';
 $string['computerlabs'] = 'Pracownie komputerowe';
+$string['listcampuses'] = 'Campuses';
 ?>

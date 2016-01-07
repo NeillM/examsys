@@ -14,12 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['machine'] = 'Počítač';
-$string['machines'] = 'Počítače';
-$string['createnewlab'] = 'Nová učebna';
-$string['vieweditdetails'] = 'Zobrazit/Upravit detaily';
-$string['deletelab'] = 'Odstranit učebnu';
-$string['lowbandwidth'] = 'Pomalé připojení';
-$string['computerlabs'] = 'PC učebna';
-$string['listcampuses'] = 'Campuses';
-?>
+$string['campuses'] = "Campuses";
+$string['campus'] = "Campus";
+$string['createnewcampus'] = "Create new Campus";
+$string['viewcampus'] = "View/Edit details";
+$string['deletecampus'] = "Delete Campus";
+$string['computerlabs'] = 'Computer Labs';
