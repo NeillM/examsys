@@ -29,7 +29,7 @@
     $('#menu1b').hide();
   }
   
-  function deleteLab() {
+  function deleteCampus() {
     notice=window.open("../../delete/check_delete_campus.php?campus=" + $('#lineID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     notice.moveTo(screen.width/2-250,screen.height/2-100);
     if (window.focus) {
@@ -40,17 +40,17 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="labform">
+<form name="campusform">
 <div id="menu1a">
-	<div class="menuitem"><a href="add_campuses.php"><img class="sidebar_icon" src="../../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewcampus'] ?></a></div>
+	<div class="menuitem"><a href="add_campuses.php"><img class="sidebar_icon" src="../../artwork/new_campus_16.png" alt="" /><?php echo $string['createnewcampus'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../../artwork/edit_grey.png" alt="" /><?php echo $string['viewcampus'] ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletecampus'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem"><a href="add_campuses.php"><img class="sidebar_icon" src="../../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewcampus'] ?></a></div>
+	<div class="menuitem"><a href="add_campuses.php"><img class="sidebar_icon" src="../../artwork/new_campus_16.png" alt="" /><?php echo $string['createnewcampus'] ?></a></div>
 	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['viewcampus'] ?></a></div>
-	<div class="menuitem" onclick="deleteLab()"><img class="sidebar_icon" src="../../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletecampus'] ?></a></div>
+	<div class="menuitem" onclick="deleteCampus()"><img class="sidebar_icon" src="../../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletecampus'] ?></a></div>
 </div>
 
 <input type="hidden" id="lineID" name="lineID" value=""/>
