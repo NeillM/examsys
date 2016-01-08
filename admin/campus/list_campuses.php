@@ -28,11 +28,16 @@ require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
 $campuses = array();
-$result = $mysqli->prepare("SELECT id, name FROM campus");
+$result = $mysqli->prepare("SELECT id, name, isdefault FROM campus");
 $result->execute();
-$result->bind_result($id, $name);
+$result->bind_result($id, $name, $isdefault);
 while ($result->fetch()) {
-	$campuses[$id] = array($name);
+	if ($isdefault) {
+		$isdefault = "<img src=\"../../artwork/tick.gif\" id=\"yes\" />";
+	} else {
+		$isdefault = "<img src=\"../../artwork/cross.gif\" id=\"no\" />";
+	}
+	$campuses[$id] = array($name, $isdefault);
 }
 $result->close();
 $render = new render($configObject);
@@ -41,7 +46,8 @@ $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $config['rogo_version'] = $configObject->get('rogo_version');
 $lang['title'] = $string['campuses'];
-$header = array(array('class' => 'col10', 'style' => 'width:100%', 'value' => $string['campus']));
+$header = array(array('class' => 'col10', 'style' => 'width:80%', 'value' => $string['campus']),
+array('class' => 'col', 'style' => 'width:20%', 'value' => $string['isdefault']));
 $additionaljs ="
     <script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/list.js\"></script>

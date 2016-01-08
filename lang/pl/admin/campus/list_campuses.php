@@ -20,3 +20,4 @@ $string['createnewcampus'] = "Create new Campus";
 $string['viewcampus'] = "View/Edit details";
 $string['deletecampus'] = "Delete Campus";
 $string['computerlabs'] = 'Computer Labs';
+$string['isdefault'] = "Default Campus?";
