@@ -29,38 +29,38 @@ $campusobj = new campus($mysqli);
 $details = $campusobj->get_campus_details($campus);
 
 if ($details === false) {
-	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-	$title = $string['pagenotfound'];
-	$notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $title = $string['pagenotfound'];
+    $notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
-	$default = check_var('default', 'POST', true, false, true);
-	$name = check_var('name', 'POST', true, false, true);
-	$duplicate = $campusobj->check_campus_name_inuse($name);
+    $default = check_var('default', 'POST', true, false, true);
+    $name = check_var('name', 'POST', true, false, true);
+    $duplicate = $campusobj->check_campus_name_inuse($name);
     if (!$duplicate or $name == $details['campusname']) {
-		if ($default or $_POST['defaultchk']) {
+        if ($default or $_POST['defaultchk']) {
 
-			$params['name'] = array('s', $name);
-			$params['isdefault'] = array('i', 1);
-			DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
-			
-			$update = $mysqli->prepare("UPDATE campus SET isdefault = 0 WHERE id != ?");
-			$update->bind_param("i", $campus);
-			$update->execute();
-			$update->close();
+            $params['name'] = array('s', $name);
+            $params['isdefault'] = array('i', 1);
+            DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
+            
+            $update = $mysqli->prepare("UPDATE campus SET isdefault = 0 WHERE id != ?");
+            $update->bind_param("i", $campus);
+            $update->execute();
+            $update->close();
 
-		} else {
-			$params['name'] = array('s', $name);
-			$params['isdefault'] = array('i', 0);
-			DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
-		}
-		header("location: list_campuses.php", true, 303);
-		exit();
-	}
+        } else {
+            $params['name'] = array('s', $name);
+            $params['isdefault'] = array('i', 0);
+            DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
+        }
+        header("location: list_campuses.php", true, 303);
+        exit();
+    }
 }
 
 $render = new render($configObject);
@@ -106,21 +106,21 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
 <br />
 <div align="center">
 <?php
-	if ($duplicate and isset($_POST['submit'])) {
-		echo $notice->info_strip($string['duplicate'], 100);
-	}
+    if ($duplicate and isset($_POST['submit'])) {
+        echo $notice->info_strip($string['duplicate'], 100);
+    }
 ?>
     <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
         <table cellpadding="0" cellspacing="2" border="0">
         <?php 
-			echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"" . $details['campusname'] . "\" required /></td></tr>";
-			if ($details['isdefault']) {
-				echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\" checked disabled/></td></tr>";
-			} else {
-				echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\"/></td></tr>";
-			}
-			echo "<input type=\"hidden\" name=\"default\" id=\"default\" value=\"" . $details['isdefault'] . "\"/>";
-			echo "<input type=\"hidden\" name=\"campus\" id=\"campus\" value=\"" . $details['campusid']. "\"/>";
+            echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"" . $details['campusname'] . "\" required /></td></tr>";
+            if ($details['isdefault']) {
+                echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\" checked disabled/></td></tr>";
+            } else {
+                echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\"/></td></tr>";
+            }
+            echo "<input type=\"hidden\" name=\"default\" id=\"default\" value=\"" . $details['isdefault'] . "\"/>";
+            echo "<input type=\"hidden\" name=\"campus\" id=\"campus\" value=\"" . $details['campusid']. "\"/>";
         ?>
         </table>
       <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>

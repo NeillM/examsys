@@ -1544,13 +1544,13 @@ $this->tableList['oauth_jwt'] = <<<QUERY
 QUERY;
 
 $this->tableList['campus'] = <<<QUERY
-		CREATE TABLE campus (
-			id int(8) NOT NULL AUTO_INCREMENT,
-			name VARCHAR(80) NOT NULL UNIQUE,
-			isdefault BOOLEAN NOT NULL default false,
-			PRIMARY KEY (`id`),
-			INDEX `campus_idx` (`name`)
-		) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+        CREATE TABLE campus (
+            id int(8) NOT NULL AUTO_INCREMENT,
+            name VARCHAR(80) NOT NULL UNIQUE,
+            isdefault BOOLEAN NOT NULL default false,
+            PRIMARY KEY (`id`),
+            INDEX `campus_idx` (`name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
   }
   

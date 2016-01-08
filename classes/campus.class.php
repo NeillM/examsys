@@ -36,62 +36,62 @@ class campus {
         $this->db = $db;
     }
    
-	/**
-	 * Get details of campus 
-	 * @param integer $id campus id
-	 * @return array|bool of details or false on error
-	 */
-	public function get_campus_details($id) {
-		$result = $this->db->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");
-		$result->bind_param('i', $id);
-		$result->execute();
-		$result->store_result();
-		$result->bind_result($campusid, $campusname, $isdefault);
-		$result->fetch();
-		if ($result->num_rows > 0) {
-			$result->close();
-			return array('campusid' => $campusid, 'campusname' => $campusname, 'isdefault' => $isdefault);
-		}
-		$result->close();
-		return false;
-	}
-	
-	/**
-	 * Check is campus name is in use
-	 * @param string $name name of campus
-	 * @return bool true if in use
-	 */
-	public function check_campus_name_inuse($name) {
-		$result = $this->db->prepare("SELECT NULL FROM campus WHERE name = ?");
-		$result->bind_param('s', $name);
-		$result->execute();
-		$result->store_result();
-		$result->fetch();
-		if ($result->num_rows > 0) {
-			$result->close();
-			return true;
-		}
-		$result->close();
-		return false;
-	}
-	
-	/**
-	 * Check if the provided campus has labs associated with it
-	 * @param string $campus - name of campus
-	 * @return bool true labs associated with campus, false otherwise
-	*/
-	public function check_campus_in_use($campus) {
-		$result = $this->db->prepare("SELECT NULL FROM labs WHERE campus = ?");
-		$result->bind_param('s', $campus);
-		$result->execute();
-		$result->store_result();
-		$result->fetch();
-		if ($result->num_rows > 0) {
-			$result->close();
-			return true;
-		}
-		$result->close();
-		return false;
-	}
+    /**
+     * Get details of campus 
+     * @param integer $id campus id
+     * @return array|bool of details or false on error
+     */
+    public function get_campus_details($id) {
+        $result = $this->db->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($campusid, $campusname, $isdefault);
+        $result->fetch();
+        if ($result->num_rows > 0) {
+            $result->close();
+            return array('campusid' => $campusid, 'campusname' => $campusname, 'isdefault' => $isdefault);
+        }
+        $result->close();
+        return false;
+    }
+    
+    /**
+     * Check is campus name is in use
+     * @param string $name name of campus
+     * @return bool true if in use
+     */
+    public function check_campus_name_inuse($name) {
+        $result = $this->db->prepare("SELECT NULL FROM campus WHERE name = ?");
+        $result->bind_param('s', $name);
+        $result->execute();
+        $result->store_result();
+        $result->fetch();
+        if ($result->num_rows > 0) {
+            $result->close();
+            return true;
+        }
+        $result->close();
+        return false;
+    }
+    
+    /**
+     * Check if the provided campus has labs associated with it
+     * @param string $campus - name of campus
+     * @return bool true labs associated with campus, false otherwise
+    */
+    public function check_campus_in_use($campus) {
+        $result = $this->db->prepare("SELECT NULL FROM labs WHERE campus = ?");
+        $result->bind_param('s', $campus);
+        $result->execute();
+        $result->store_result();
+        $result->fetch();
+        if ($result->num_rows > 0) {
+            $result->close();
+            return true;
+        }
+        $result->close();
+        return false;
+    }
 }
 

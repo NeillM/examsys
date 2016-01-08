@@ -32,12 +32,12 @@ $result = $mysqli->prepare("SELECT id, name, isdefault FROM campus");
 $result->execute();
 $result->bind_result($id, $name, $isdefault);
 while ($result->fetch()) {
-	if ($isdefault) {
-		$isdefault = "<img src=\"../../artwork/tick.gif\" id=\"yes\" />";
-	} else {
-		$isdefault = "<img src=\"../../artwork/cross.gif\" id=\"no\" />";
-	}
-	$campuses[$id] = array($name, $isdefault);
+    if ($isdefault) {
+        $isdefault = "<img src=\"../../artwork/tick.gif\" id=\"yes\" />";
+    } else {
+        $isdefault = "<img src=\"../../artwork/cross.gif\" id=\"no\" />";
+    }
+    $campuses[$id] = array($name, $isdefault);
 }
 $result->close();
 $render = new render($configObject);

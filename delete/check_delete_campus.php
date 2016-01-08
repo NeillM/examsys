@@ -32,26 +32,26 @@ $campusobj = new campus($mysqli);
 $details = $campusobj->get_campus_details($campus);
 $found = true;
 if ($details === false) {
-	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-	$title = $string['pagenotfound'];
-	$notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $title = $string['pagenotfound'];
+    $notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $error = false;
 // Do not delete if default.
 if ($details['isdefault']) {
-	$error = true;
-	$msg = $string['campusisdefault'];
-	$title = $string['cannotdelete'];
+    $error = true;
+    $msg = $string['campusisdefault'];
+    $title = $string['cannotdelete'];
 }
 // Do not delete if in use.
 if (!$error and $campusobj->check_campus_in_use($details['campusname'])) {
-	$error = true;
-	$msg = $string['campusisinuse'];
-	$title = $string['cannotdelete'];
+    $error = true;
+    $msg = $string['campusisinuse'];
+    $title = $string['cannotdelete'];
 }
 if ($error) {
-	$notice->display_notice($title, $msg, '../artwork/page_not_found.png');
-	exit;
+    $notice->display_notice($title, $msg, '../artwork/page_not_found.png');
+    exit;
 }
 
 ?>
