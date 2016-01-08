@@ -26,20 +26,12 @@ require_once '../../include/errors.inc';
 require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
+$campusobj = new campus($mysqli);
 	
 if (isset($_POST['submit'])) {
 	$name = check_var('name', 'POST', true, false, true);
-	$duplicate = false;
-	$result = $mysqli->prepare("SELECT NULL FROM campus WHERE name = ?");
-	$result->bind_param('s', $name);
-	$result->execute();
-	$result->store_result();
-    $result->fetch();
-    if ($result->num_rows > 0) {
-		$result->close();
-		$duplicate = true;
-	} else {
-		$result->close();
+	$duplicate = $campusobj->check_campus_name_inuse($name);
+    if (!$duplicate) {
 		$result = $mysqli->prepare("INSERT INTO campus (name, isdefault) VALUES (?, ?)");
 		if (isset($_POST['default'])) {
 			$default = 1;

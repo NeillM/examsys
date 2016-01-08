@@ -28,35 +28,26 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
 
 $campus = check_var('campus', 'GET', true, false, true);
-
-$result = $mysqli->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");
-$result->bind_param("i" , $campus);
-$result->execute();
-$result->bind_result($id, $name, $isdefault);
-$result->fetch();
-$result->close();
+$campusobj = new campus($mysqli);
+$details = $campusobj->get_campus_details($campus);
 $found = true;
-if ($db->errno != 0) {
-	$found = false;
+if ($details === false) {
+	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+	$title = $string['pagenotfound'];
+	$notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }
+$error = false;
 // Do not delete if default.
-if ($isdefault) {
+if ($details['isdefault']) {
 	$error = true;
 	$msg = $string['campusisdefault'];
 	$title = $string['cannotdelete'];
 }
 // Do not delete if in use.
-$lab = new LabFactory($mysqli);
-if ($lab->check_campus_in_use($name)) {
+if (!$error and $campusobj->check_campus_in_use($details['campusname'])) {
 	$error = true;
 	$msg = $string['campusisinuse'];
 	$title = $string['cannotdelete'];
-}
-	
-if (!$found) {
-	$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-	$title = $string['pagenotfound'];
-	$notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 if ($error) {
 	$notice->display_notice($title, $msg, '../artwork/page_not_found.png');

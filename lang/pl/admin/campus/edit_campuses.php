@@ -22,3 +22,4 @@ $string['campuses'] = "Campuses";
 $string['createnewcampus'] = "Create new Campus";
 $string['viewcampus'] = "View/Edit details";
 $string['deletecampus'] = "Delete Campus";
+$string['duplicate'] = 'Campus name already in use. Please choose another.';
