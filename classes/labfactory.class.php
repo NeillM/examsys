@@ -102,5 +102,4 @@ class LabFactory {
     $result->close();
     return false;
   }
-  
 }

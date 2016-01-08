@@ -639,8 +639,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
 	// Add default campus
 	$insert = self::$db->prepare("INSERT INTO campus (name, isdefault) VALUES ('Main Campus', 1)");
-    $insert->execute();
-    $insert->close();
+	$insert->execute();
+	$insert->close();
     // Save json encoded list of timezones.
     $encoded_timezones = json_encode($timezone_array);
     $encoded_cohorts = json_encode(array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
