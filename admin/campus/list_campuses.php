@@ -27,19 +27,15 @@ require '../../include/sysadmin_auth.inc';
 require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
-$campuses = array();
-$result = $mysqli->prepare("SELECT id, name, isdefault FROM campus");
-$result->execute();
-$result->bind_result($id, $name, $isdefault);
-while ($result->fetch()) {
-    if ($isdefault) {
-        $isdefault = "<img src=\"../../artwork/tick.gif\" id=\"yes\" />";
+$campusobj = new campus($mysqli);
+$campuses = $campusobj->get_all_campus_details();
+foreach ($campuses as $key => $campus) {
+    if ($campus['isdefault']) {
+        $campuses[$key]['isdefault'] = "<img src=\"../../artwork/tick.gif\" id=\"yes\" />";
     } else {
-        $isdefault = "<img src=\"../../artwork/cross.gif\" id=\"no\" />";
+        $campuses[$key]['isdefault'] = "<img src=\"../../artwork/cross.gif\" id=\"no\" />";
     }
-    $campuses[$id] = array($name, $isdefault);
 }
-$result->close();
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu(744);
 $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');

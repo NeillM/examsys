@@ -16,4 +16,3 @@
 
 $string['campusclientdel'] = 'Campus Deleted';
 $string['campusdelsuccess'] = 'Campus successfully deleted.';
-?>

@@ -37,9 +37,30 @@ class campus {
     }
    
     /**
+     * Get details for all campus 
+     * @return array|bool details or false on error
+     */
+    public function get_all_campus_details() {
+        $result = $this->db->prepare("SELECT id, name, isdefault FROM campus");
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($campusid, $campusname, $isdefault);
+        $campuses = array();
+        if ($result->num_rows > 0) {
+            while ($result->fetch()) {
+                $campuses[$campusid] = array('campusname' => $campusname, 'isdefault' => $isdefault);
+            }
+            $result->close();
+            return $campuses;
+        }
+        $result->close();
+        return false;
+    }
+    
+    /**
      * Get details of campus 
      * @param integer $id campus id
-     * @return array|bool of details or false on error
+     * @return array|bool details or false on error
      */
     public function get_campus_details($id) {
         $result = $this->db->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");

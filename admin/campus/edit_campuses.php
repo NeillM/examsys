@@ -38,11 +38,10 @@ require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
-    $default = check_var('default', 'POST', true, false, true);
     $name = check_var('name', 'POST', true, false, true);
     $duplicate = $campusobj->check_campus_name_inuse($name);
     if (!$duplicate or $name == $details['campusname']) {
-        if ($default or $_POST['defaultchk']) {
+        if ($details['isdefault'] or $_POST['defaultchk']) {
 
             $params['name'] = array('s', $name);
             $params['isdefault'] = array('i', 1);
@@ -106,7 +105,7 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
 <br />
 <div align="center">
 <?php
-    if ($duplicate and isset($_POST['submit'])) {
+    if (isset($_POST['submit']) and $duplicate) {
         echo $notice->info_strip($string['duplicate'], 100);
     }
 ?>
@@ -119,7 +118,6 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
             } else {
                 echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\"/></td></tr>";
             }
-            echo "<input type=\"hidden\" name=\"default\" id=\"default\" value=\"" . $details['isdefault'] . "\"/>";
             echo "<input type=\"hidden\" name=\"campus\" id=\"campus\" value=\"" . $details['campusid']. "\"/>";
         ?>
         </table>

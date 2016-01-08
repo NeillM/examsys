@@ -50,7 +50,7 @@ if (!$error and $campusobj->check_campus_in_use($details['campusname'])) {
     $title = $string['cannotdelete'];
 }
 if ($error) {
-    $notice->display_notice($title, $msg, '../artwork/page_not_found.png');
+    $notice->display_notice($title, $msg, '../artwork/exclamation_red_bg.png');
     exit;
 }
 

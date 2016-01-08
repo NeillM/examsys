@@ -16,6 +16,7 @@
 
 /**
 * 
+* Renders the options right hand panel on the campus admin screen
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @version 1.0
 * @copyright Copyright (c) 2016 The University of Nottingham

@@ -176,17 +176,15 @@ if (isset($_POST['submit'])) {
   echo "</textarea></td><td style=\"width:50px\"></td><td style=\"vertical-align:top\">\n";
   echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"name\" value=\"$name\" required /></div>\n";
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
-  $result = $mysqli->prepare("SELECT name FROM campus");
-  $result->execute();
-  $result->bind_result($name);
-  while ($result->fetch()) {
-    if ($campus == $name) {
-      echo "<option value=\"" . $name . "\" selected>" . $name . "</option>\n";
+  $campusobj = new campus($mysqli);
+  $campuses = $campusobj->get_all_campus_details();
+  foreach ($campuses as $key => $campusarray) {
+    if ($campus == $campusarray['campusname']) {
+      echo "<option value=\"" . $campusarray['campusname'] . "\" selected>" . $campusarray['campusname'] . "</option>\n";
     } else {
-      echo "<option value=\"" . $name . "\">" . $name. "</option>\n";
+      echo "<option value=\"" . $campusarray['campusname'] . "\">" . $campusarray['campusname']. "</option>\n";
     }
   }
-  $result->close();
   echo "</select></div>\n";
   echo "<br /><div><strong>" . $string['building'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"building\" value=\"$building\" required /></div>\n";
   echo "<br /><div><strong>" . $string['roomnumber'] . "</strong></div>\n<div><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"room_no\" value=\"$room_no\" required /></div>\n";

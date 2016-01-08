@@ -346,7 +346,7 @@ QUERY;
         CREATE TABLE `labs` (
           `id` smallint(5) unsigned NOT NULL auto_increment,
           `name` varchar(255) default NULL,
-          `campus` varchar(255) default NULL,
+          `campus` int(8) NOT NULL,
           `building` varchar(255) default NULL,
           `room_no` varchar(255) default NULL,
           `timetabling` text,

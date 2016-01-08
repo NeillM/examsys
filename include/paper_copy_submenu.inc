@@ -182,15 +182,13 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
 <?php
   $next_flag = 1;
   echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td><select name="campus">';
-  $configObject->set_db_object($mysqli);
-  $configObject->load_settings('core');
-  $settings = (object) $configObject->get_setting('core');
-  $cfg_campus_list = json_decode($settings->campuses, true);
-  foreach ($cfg_campus_list as $campus) {
-    if ($campus['default']) {
-      echo "<option value=\"" . $campus['name'] . "\" selected>" . $campus['name']. "</option>";
+  $campusobj = new campus($mysqli);
+  $campuses = $campusobj->get_all_campus_details();
+  foreach ($campuses as $key => $campusarray) {
+    if ($campusarray['isdefault']) {
+      echo "<option value=\"" . $campusarray['campusname'] . "\" selected>" . $campusarray['campusname'] . "</option>";
     } else {
-      echo "<option value=\"" . $campus['name'] . "\">" . $campus['name'] . "</option>";
+      echo "<option value=\"" . $campusarray['campusname'] . "\">" . $campusarray['campusname'] . "</option>";
     }
   }
   echo '</select></td><td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';

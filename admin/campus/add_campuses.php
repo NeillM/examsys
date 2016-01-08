@@ -95,7 +95,7 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
 
 <br />
 <?php
-    if ($duplicate and isset($_POST['submit'])) {
+    if (isset($_POST['submit']) and $duplicate) {
         echo $notice->info_strip($string['duplicate'], 100);
     }
 ?>

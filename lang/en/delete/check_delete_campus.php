@@ -20,4 +20,3 @@ $string['msg'] = 'Are you sure you wish to delete this campus?';
 $string['campusisdefault'] = 'Cannot delete campus as it is the default, please re-assign default before deleting this campus.';
 $string['campusisinuse'] = 'Cannot delete campus as it is in use, please re-assign labs before deleting this campus.';
 $string['cannotdelete'] = 'Cannot delete campus';
-?>
