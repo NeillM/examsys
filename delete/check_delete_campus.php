@@ -44,7 +44,7 @@ if ($details['isdefault']) {
     $title = $string['cannotdelete'];
 }
 // Do not delete if in use.
-if (!$error and $campusobj->check_campus_in_use($details['campusname'])) {
+if (!$error and $campusobj->check_campus_in_use($details['campusid'])) {
     $error = true;
     $msg = $string['campusisinuse'];
     $title = $string['cannotdelete'];

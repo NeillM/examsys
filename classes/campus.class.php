@@ -98,12 +98,12 @@ class campus {
     
     /**
      * Check if the provided campus has labs associated with it
-     * @param string $campus - name of campus
+     * @param string $id - id of campus
      * @return bool true labs associated with campus, false otherwise
     */
-    public function check_campus_in_use($campus) {
-        $result = $this->db->prepare("SELECT NULL FROM labs WHERE campus = ?");
-        $result->bind_param('s', $campus);
+    public function check_campus_in_use($id) {
+        $result = $this->db->prepare("SELECT NULL FROM labs WHERE id = ?");
+        $result->bind_param('i', $id);
         $result->execute();
         $result->store_result();
         $result->fetch();

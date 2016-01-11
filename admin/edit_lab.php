@@ -27,7 +27,8 @@ require '../include/errors.inc';
 
 $lab_id = check_var('labID', 'REQUEST', true, false, true);
 
-$results = $mysqli->prepare("SELECT name, campus, building, room_no, timetabling, it_support, plagarism FROM labs WHERE id = ? LIMIT 1");
+$results = $mysqli->prepare("SELECT labs.name, campus.name, building, room_no, timetabling, it_support, plagarism FROM
+    labs, campus WHERE labs.campus = campus.id AND labs.id = ? LIMIT 1");
 $results->bind_param('i', $lab_id);
 $results->execute();
 $results->store_result();
@@ -87,7 +88,7 @@ if (isset($_POST['submit'])) {
 
   // Edit Lab table.
   $result = $mysqli->prepare("UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?");
-  $result->bind_param('sssssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
+  $result->bind_param('sisssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
   $result->execute();
   $result->close();
 
@@ -179,10 +180,10 @@ if (isset($_POST['submit'])) {
   $campusobj = new campus($mysqli);
   $campuses = $campusobj->get_all_campus_details();
   foreach ($campuses as $key => $campusarray) {
-    if ($campus == $campusarray['campusname']) {
-      echo "<option value=\"" . $campusarray['campusname'] . "\" selected>" . $campusarray['campusname'] . "</option>\n";
+    if ($campus == $key) {
+      echo "<option value=\"" . $key . "\" selected>" . $campusarray['campusname'] . "</option>\n";
     } else {
-      echo "<option value=\"" . $campusarray['campusname'] . "\">" . $campusarray['campusname']. "</option>\n";
+      echo "<option value=\"" . $key . "\">" . $campusarray['campusname']. "</option>\n";
     }
   }
   echo "</select></div>\n";

@@ -122,7 +122,8 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <?php
   // Get computer lab information.
   $lab_details = array($string['default']=>array('-1'=>$string['alllabs']));
-  $stmt = $mysqli->prepare("SELECT id, building, room_no, campus FROM labs WHERE room_no != '' ORDER BY campus, building, room_no");
+  $stmt = $mysqli->prepare("SELECT labs.id, building, room_no, campus.name FROM labs, campus
+    WHERE labs.campus = campus.id AND room_no != '' ORDER BY campus, building, room_no");
   $stmt->execute();
   $stmt->bind_result($id, $building, $room_no, $campus);
   while ($stmt->fetch()) {
@@ -344,7 +345,8 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 
   // Get computer lab info
   $lab_details = array($string['default']=>array('-1'=>$string['alllabs']));
-  $stmt = $mysqli->prepare("SELECT id, building, room_no, campus FROM labs ORDER BY campus, building, room_no");
+  $stmt = $mysqli->prepare("SELECT labs.id, building, room_no, campus.name FROM labs, campus
+    WHERE labs.campus = campus.id ORDER BY campus, building, room_no");
   $stmt->execute();
   $stmt->bind_result($id, $building, $room_no, $campus);
   while ($stmt->fetch()) {

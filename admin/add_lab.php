@@ -38,7 +38,7 @@ if (isset($_POST['submit'])) {
   $plagarism = $_POST['plagarism'];
 
   $result = $mysqli->prepare("INSERT INTO labs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
-  $result->bind_param('sssssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
+  $result->bind_param('sisssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
   $result->execute();
   $labID = $mysqli->insert_id;
   $result->close();
@@ -162,9 +162,9 @@ if (count($bad_addresses) > 0) {
   $campuses = $campusobj->get_all_campus_details();
   foreach ($campuses as $key => $campusarray) {
     if ($campusarray['isdefault']) {
-      echo "<option value=\"" . $campusarray['campusname'] . "\" selected>" . $campusarray['campusname'] . "</option>\n";
+      echo "<option value=\"" . $key . "\" selected>" . $campusarray['campusname'] . "</option>\n";
     } else {
-      echo "<option value=\"" . $campusarray['campusname'] . "\">" . $campusarray['campusname'] . "</option>\n";
+      echo "<option value=\"" . $key . "\">" . $campusarray['campusname'] . "</option>\n";
     }
   }
   echo "</select></div>\n";

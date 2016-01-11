@@ -293,7 +293,8 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
 
   $current_labs = explode(',', $labs);
 
-  $result = $db->prepare("SELECT labs.id, name, campus, COUNT(client_identifiers.id) FROM labs, client_identifiers WHERE labs.id = client_identifiers.lab GROUP BY client_identifiers.lab ORDER BY campus, name");
+  $result = $db->prepare("SELECT labs.id, labs.name, campus.name, COUNT(client_identifiers.id) FROM labs, client_identifiers, campus
+    WHERE labs.id = client_identifiers.lab AND labs.campus = campus.id GROUP BY client_identifiers.lab ORDER BY campus.name, labs.name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
   $lab_no = 0;
