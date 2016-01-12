@@ -696,7 +696,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             if (this.retry()) {
               return;
             } else  {
-              saveFail('fail', this.url, ret_data);
+              saveFail('fail', this.url, '');
               return;
             }
           },
@@ -707,12 +707,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               } else {
                 // errorThrown is the HTTP response.
                 if (errorThrown != '') {
-                    saveFail('http: ' + errorThrown, this.url, ret_data);
+                    saveFail('http: ' + errorThrown, this.url, '');
                     return;
                 }
               }
             }
-            saveFail(textStatus, this.url, ret_data);
+            saveFail(textStatus, this.url, '');
             return;
           },
           success: function (ret_data, textStatus, jqXHR) {
