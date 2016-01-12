@@ -1111,6 +1111,8 @@ QUERY;
           `ipaddress` varchar(100) DEFAULT NULL,
           `failed` int(4) unsigned NOT NULL DEFAULT '0',
           `status` varchar(50) DEFAULT NULL,
+          `request_url` varchar(255) DEFAULT NULL,
+          `response_data` varchar(50) DEFAULT NULL,
           PRIMARY KEY (`id`),
           KEY `idx_paperID` (`paperID`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
