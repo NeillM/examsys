@@ -696,7 +696,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             if (this.retry()) {
               return;
             } else  {
-              saveFail('fail');
+              saveFail('fail', this.url, '');
               return;
             }
           },
@@ -707,12 +707,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               } else {
                 // errorThrown is the HTTP response.
                 if (errorThrown != '') {
-                    saveFail('http: ' + errorThrown);
+                    saveFail('http: ' + errorThrown, this.url, '');
                     return;
                 }
               }
             }
-            saveFail(textStatus);
+            saveFail(textStatus, this.url, '');
             return;
           },
           success: function (ret_data, textStatus, jqXHR) {
@@ -727,7 +727,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               return;
             } else  {
               // marking_funcions.inc record_marks failed after retry.
-              saveFail('record marks failure');
+              saveFail('record_marks', this.url, ret_data);
               return;
             }
           },
@@ -765,16 +765,16 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     }
   }
 
-  var saveFail = function (textStatus) {
+  var saveFail = function (textStatus, url, ret_data) {
     <?php // Re-register the autosave timer ?>
     startAutoSave();
 
     current_val =  $('#save_failed').val();
     unix_now = Math.round($.now() / 1000);
     if (current_val == '') {
-      $('#save_failed').val(unix_now  + '-' + textStatus);
+      $('#save_failed').val(unix_now  + '-' + textStatus + '-' + url + '-' + ret_data);
     } else {
-      $('#save_failed').val(current_val + '\n' + unix_now + '-' + textStatus);
+      $('#save_failed').val(current_val + '\n' + unix_now + '-' + textStatus + '-' + url + '-' + ret_data);
     }
 
     $('#saveError').fadeIn('fast');

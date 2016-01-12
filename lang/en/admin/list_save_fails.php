@@ -21,4 +21,6 @@ $string['client'] = 'Client';
 $string['datetime'] = 'Date/Time';
 $string['screen'] = 'Screen';
 $string['status'] = 'Status';
+$string['request'] = 'Request URL';
+$string['response'] = 'Response Data';
 ?>
