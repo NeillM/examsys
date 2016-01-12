@@ -21,4 +21,6 @@ $string['client'] = 'Użytkownik';
 $string['datetime'] = 'Data/Czas';
 $string['screen'] = 'Ekran';
 $string['status'] = 'Status';
+$string['request'] = 'Request URL';
+$string['response'] = 'Response Data';
 ?>

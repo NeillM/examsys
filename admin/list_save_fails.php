@@ -78,16 +78,18 @@ echo draw_toprightmenu();
   <th class="col"><?php echo $string['client'] ?></th>
   <th class="col"><?php echo $string['datetime'] ?></th>
   <th class="col"><?php echo $string['status'] ?></th>
+  <th class="col"><?php echo $string['request'] ?></th>
+  <th class="col"><?php echo $string['response'] ?></th>
 </tr>
 </thead>
 <tbody>
 <?php
-$result = $mysqli->prepare("SELECT surname, title, initials, userID, paperID, screen, ipaddress, FROM_UNIXTIME(failed, '%d/%m/%Y %H:%i:%s'), paper_title, status FROM save_fail_log, users, properties WHERE save_fail_log.userID = users.id AND save_fail_log.paperID = properties.property_id ORDER BY failed");
+$result = $mysqli->prepare("SELECT surname, title, initials, userID, paperID, screen, ipaddress, FROM_UNIXTIME(failed, '%d/%m/%Y %H:%i:%s'), paper_title, status, request_url, response_data FROM save_fail_log, users, properties WHERE save_fail_log.userID = users.id AND save_fail_log.paperID = properties.property_id ORDER BY failed");
 $result->execute();
 $result->store_result();
-$result->bind_result($surname, $title, $initials, $userID, $paperID, $screen, $ipaddress, $failed, $paper_title, $status);
+$result->bind_result($surname, $title, $initials, $userID, $paperID, $screen, $ipaddress, $failed, $paper_title, $status, $request, $response);
 while ($result->fetch()) {
-  echo "<tr class=\"l\"><td>$title $initials $surname</td><td><a href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></td><td>$screen</td><td>$ipaddress</td><td>$failed</td><td>$status</td></tr>\n";
+  echo "<tr class=\"l\"><td>$title $initials $surname</td><td><a href=\"../paper/details.php?paperID=$paperID\">$paper_title</a></td><td>$screen</td><td>$ipaddress</td><td>$failed</td><td>$status</td><td>$request</td><td>$response</td></tr>\n";
 }
 ?>
 </tbody>
