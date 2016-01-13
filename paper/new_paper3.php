@@ -33,7 +33,7 @@ $paper_owner = check_var('paper_owner', 'POST', true, false, true);
 $session = $_POST['session'];
 if (empty($session)) {
   $yearutils = new yearutils($mysqli);
-  $session = $yearutils->get_current_session();  
+  $session = $yearutils->get_current_session();
 }
 $papertype = $assessment->get_type_value($paper_type);
 
@@ -63,7 +63,7 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
     if (isset($_POST['duration_mins'])) {
         $duration += $_POST['duration_mins'];
     }
-    
+
     $start_date = NULL;
     $end_date = NULL;
 } else {
@@ -87,7 +87,7 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
 
     $end_date = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
 }
-    
+
 try {
     $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $start_date, $end_date, '', $duration, $session, $modules, $timezone);
 
@@ -100,6 +100,7 @@ try {
         $assessment->schedule($property_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
     }
 } catch (Exception $e) {
+    echo "Error code: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
     $log = new logger($mysqli);
     // Log warning to system.
     $type = 'Paper Creation';
@@ -107,6 +108,7 @@ try {
     $errorfile = $_SERVER['PHP_SELF'];
     $errorline = __LINE__ - 17;
     $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
+    exit;
 }
 ?>
 <!DOCTYPE html>
