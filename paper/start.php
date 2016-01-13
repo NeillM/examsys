@@ -712,7 +712,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
                 }
               }
             }
-            // Just use se the xhr status as the response
+            // Just use the xhr status.
             saveFail(textStatus + ': ' + xhr.status, this.url, '');
             return;
           },
@@ -726,7 +726,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             }
             if (this.retry()) {
               return;
-            } else  {
+            } else {
               // marking_funcions.inc record_marks failed after retry.
               saveFail('record_marks', this.url, ret_data);
               return;
