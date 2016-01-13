@@ -142,10 +142,7 @@ class assessment {
         if (!$uniquetitle) {
             throw new Exception('NON_UNIQUE_TITLE');
         }
-        // Check paper type is valid.
-        if ($this->get_type_value($papertype) === false) {
-            throw new Exception('INVALID_PAPER_TYPE');
-        }
+
         // Check owner exists.
         $userid = UserUtils::userid_exists($paperowner, $this->db);
         if (!$userid) {
