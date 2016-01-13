@@ -35,8 +35,15 @@ if (empty($session)) {
   $yearutils = new yearutils($mysqli);
   $session = $yearutils->get_current_session();
 }
-$papertype = $assessment->get_type_value($paper_type);
 
+try {
+    $papertype = $assessment->get_type_value($paper_type);
+} catch (Exception $e) {
+    $errorstring = $e->getMessage();
+    $errorline = __LINE__ - 4;
+    $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
+    $notice->display_notice_and_exit($mysqli, $string['papertypenotfound'], $msg, $string['papertypenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+}
 // Process the posted modules
 $modules = array();
 $first = true;
@@ -100,15 +107,15 @@ try {
         $assessment->schedule($property_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
     }
 } catch (Exception $e) {
-    echo "Error code: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
     $log = new logger($mysqli);
     // Log warning to system.
     $type = 'Paper Creation';
     $errorstring = $e->getMessage();
     $errorfile = $_SERVER['PHP_SELF'];
-    $errorline = __LINE__ - 17;
+    $errorline = __LINE__ - 15;
     $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
-    exit;
+    $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
+    $notice->display_notice_and_exit($mysqli, $string['papertypenotfound'], $msg, $string['papertypenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
