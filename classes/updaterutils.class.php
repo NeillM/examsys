@@ -344,11 +344,17 @@ Class UpdaterUtils {
     $configObject = Config::get_instance();
     $cfg_version = $configObject->get('rogo_version');
     $code_version = $configObject->getxml('version');
-    
-    if ($cfg_version < $version and $code_version >= $version) {
-        return true;
+    $dev_system = $configObject->get('cfg_dev_system');
+
+    if ($dev_system) {
+      // A dev system may need to upgrade even if the config file has been updated.
+      $run_update = ($cfg_version <= $version and $code_version >= $version);
+    } else {
+      // Production systems should not run update files for versions that were built if the config file is
+      // for that version of Rogo, as they should have already been run.
+      $run_update = ($cfg_version < $version and $code_version >= $version);
     }
-    return false;
+    return $run_update;
   }
 
   /**
