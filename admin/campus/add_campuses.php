@@ -41,15 +41,15 @@ if (isset($_POST['submit'])) {
         $result->bind_param('si', $name, $default);
         $result->execute();
         $result->close();
-        if ($mysqli->errno == 0) {
+        if ($mysqli->errno == 0 and $default == 1) {
             $newid = $mysqli->insert_id;
             $update = $mysqli->prepare("UPDATE campus SET isdefault = 0 WHERE id != ?");
             $update->bind_param("i", $newid);
             $update->execute();
             $update->close();
-            header("location: list_campuses.php", true, 303);
-            exit();
         }
+        header("location: list_campuses.php", true, 303);
+        exit();
     }
 }
 
@@ -57,7 +57,7 @@ $render = new render($configObject);
 $toprightmenu = draw_toprightmenu(744);
 $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
-$lang['title'] = $string['addycampus'];
+$lang['title'] = $string['addcampus'];
 $additionaljs = "
     <script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
