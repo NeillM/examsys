@@ -705,14 +705,15 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               if (this.retry()) {
                 return;
               } else {
-                // errorThrown is the HTTP response.
+                // Status is the response code and errorThrown is the HTTP response text.
                 if (errorThrown != '') {
-                    saveFail('http: ' + errorThrown, this.url, '');
+                    saveFail(textStatus + ': ' + xhr.status + ': ' + errorThrown, this.url, '');
                     return;
                 }
               }
             }
-            saveFail(textStatus, this.url, '');
+            // Just use se the xhr status as the response
+            saveFail(textStatus + ': ' + xhr.status, this.url, '');
             return;
           },
           success: function (ret_data, textStatus, jqXHR) {
