@@ -32,4 +32,5 @@ $string['itsupport'] = 'Wsparcie IT';
 $string['plagarism'] = 'Plagiatorstwo';
 $string['ipaddresses'] = 'Adresy IP';
 $string['edit'] = 'Edytuj';
+$string['listcampuses'] = 'Campuses';
 ?>

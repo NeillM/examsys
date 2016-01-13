@@ -24,11 +24,11 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.inc';
-require '../config/campuses.inc';
 
 $lab_id = check_var('labID', 'REQUEST', true, false, true);
 
-$results = $mysqli->prepare("SELECT name, campus, building, room_no, timetabling, it_support, plagarism FROM labs WHERE id = ? LIMIT 1");
+$results = $mysqli->prepare("SELECT labs.name, campus.name, building, room_no, timetabling, it_support, plagarism FROM
+    labs, campus WHERE labs.campus = campus.id AND labs.id = ? LIMIT 1");
 $results->bind_param('i', $lab_id);
 $results->execute();
 $results->store_result();
@@ -88,7 +88,7 @@ if (isset($_POST['submit'])) {
 
   // Edit Lab table.
   $result = $mysqli->prepare("UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?");
-  $result->bind_param('sssssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
+  $result->bind_param('sisssssi', $_POST['name'], $_POST['campus'], $_POST['building'], $_POST['room_no'], $_POST['timetabling'], $_POST['it_support'], $_POST['plagarism'], $lab_id);
   $result->execute();
   $result->close();
 
@@ -177,11 +177,13 @@ if (isset($_POST['submit'])) {
   echo "</textarea></td><td style=\"width:50px\"></td><td style=\"vertical-align:top\">\n";
   echo "<div><strong>" . $string['name'] . "</strong></div>\n<div><input type=\"text\" size=\"40\" maxlength=\"255\" name=\"name\" value=\"$name\" required /></div>\n";
   echo "<br /><div><strong>" . $string['campus'] . "</strong></div>\n<div><select name=\"campus\">\n";
-  foreach ($cfg_campus_list as $choice) {
-    if ($campus == $choice) {
-      echo "<option value=\"$choice\" selected>$choice</option>\n";
+  $campusobj = new campus($mysqli);
+  $campuses = $campusobj->get_all_campus_details();
+  foreach ($campuses as $key => $campusarray) {
+    if ($campus == $key) {
+      echo "<option value=\"" . $key . "\" selected>" . $campusarray['campusname'] . "</option>\n";
     } else {
-      echo "<option value=\"$choice\">$choice</option>\n";
+      echo "<option value=\"" . $key . "\">" . $campusarray['campusname']. "</option>\n";
     }
   }
   echo "</select></div>\n";

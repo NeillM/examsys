@@ -21,4 +21,5 @@ $string['vieweditdetails'] = 'View/Edit Details';
 $string['deletelab'] = 'Delete Lab';
 $string['lowbandwidth'] = 'Low Bandwidth';
 $string['computerlabs'] = 'Computer Labs';
+$string['listcampuses'] = 'Campuses';
 ?>

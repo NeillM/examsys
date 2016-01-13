@@ -23,7 +23,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../config/campuses.inc';
 require_once '../include/sort.inc';
 require '../lang/' . $language. '/include/timezones.inc';
 
@@ -445,11 +444,13 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
     echo '</select></td></tr>';
 
     echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td colspan="5"><select name="campus">';
-    foreach ($cfg_campus_list as $campus) {
-      if ($campus == $cfg_campus_default) {
-        echo "<option value=\"$campus\" selected>$campus</option>";
+    $campusobj = new campus($mysqli);
+    $campuses = $campusobj->get_all_campus_details();
+    foreach ($campuses as $key => $campusarray) {
+      if ($campusarray['isdefault']) {
+        echo "<option value=\"" . $campusarray['campusname'] . "\" selected>" . $campusarray['campusname'] . "</option>";
       } else {
-        echo "<option value=\"$campus\">$campus</option>";
+        echo "<option value=\"" . $campusarray['campusname'] . "\">" . $campusarray['campusname'] . "</option>";
       }
     }
     echo '</select></td></tr>';

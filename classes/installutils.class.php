@@ -586,7 +586,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE modules_student ADD CONSTRAINT modules_student_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE users_metadata ADD CONSTRAINT users_metadata_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE gradebook_user ADD CONSTRAINT gradebook_user_fk0 FOREIGN KEY (paperid) REFERENCES gradebook_paper(paperid)";
-
+    $alter[] = "ALTER TABLE labs ADD CONSTRAINT labs_fk0 FOREIGN KEY (campus) REFERENCES campus(id)";
+    
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);
         $res->execute();
@@ -637,6 +638,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $insert->execute();
         $insert->close();
     }
+    // Add default campus
+    $insert = self::$db->prepare("INSERT INTO campus (name, isdefault) VALUES ('Main Campus', 1)");
+    $insert->execute();
+    $insert->close();
     // Save json encoded list of timezones.
     $encoded_timezones = json_encode($timezone_array);
     $encoded_cohorts = json_encode(array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
@@ -785,7 +790,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_db_staff_passwd = gen_password() . gen_password();
     self::generateUserName('cfg_db_external_user', self::$cfg_db_basename . '_ext');
     self::$cfg_db_external_passwd  = gen_password() . gen_password();
-    self::generateUserName('cfg_db_external_passwd', self::$cfg_db_basename . '_sys');
+    self::generateUserName('cfg_db_sysadmin_user', self::$cfg_db_basename . '_sys');
     self::$cfg_db_sysadmin_passwd = gen_password() . gen_password();
     self::generateUserName('cfg_db_webservice_user', self::$cfg_db_basename . '_web');
     self::$cfg_db_webservice_passwd = gen_password() . gen_password();
@@ -1898,8 +1903,8 @@ CONFIG;
     $config = str_replace('{cfg_db_sct_passwd}', self::$cfg_db_sct_passwd, $config);
     $config = str_replace('{cfg_db_inv_user}', self::$cfg_db_inv_user, $config);
     $config = str_replace('{cfg_db_inv_passwd}', self::$cfg_db_inv_passwd, $config);
-    $config = str_replace('{cfg_db_webservice_user}', self::$cfg_db_sysadmin_user, $config);
-    $config = str_replace('{cfg_db_webservice_passwd}', self::$cfg_db_sysadmin_passwd, $config);
+    $config = str_replace('{cfg_db_webservice_user}', self::$cfg_db_webservice_user, $config);
+    $config = str_replace('{cfg_db_webservice_passwd}', self::$cfg_db_webservice_passwd, $config);
     $config = str_replace('{cfg_cron_user}', self::$cfg_cron_user, $config);
     $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
 

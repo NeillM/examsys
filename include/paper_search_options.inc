@@ -168,7 +168,8 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/sear
 <?php
   $old_campus = '';
 
-  $result = $mysqli->prepare("SELECT DISTINCT id, name, campus FROM labs ORDER BY campus, name");
+  $result = $mysqli->prepare("SELECT DISTINCT labs.id, labs.name, campus.name FROM labs, campus
+    WHERE labs.campus = campus.id ORDER BY campus.name, labs.name");
   $result->execute();
   $result->bind_result($lab_id, $lab_name, $campus);
   while ($result->fetch()) {

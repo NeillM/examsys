@@ -27,7 +27,8 @@ require_once '../include/errors.inc';
 
 $lab_id = check_var('labID', 'GET', true, false, true);
 
-$results = $mysqli->prepare("SELECT name, campus, building, room_no, timetabling, it_support, plagarism FROM labs WHERE id = ? LIMIT 1");
+$results = $mysqli->prepare("SELECT labs.name, campus.name, building, room_no, timetabling, it_support, plagarism FROM
+    labs, campus WHERE labs.campus = campus.id AND labs.id = ? LIMIT 1");
 $results->bind_param('i', $lab_id);
 $results->execute();
 $results->store_result();
