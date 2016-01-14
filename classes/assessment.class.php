@@ -143,7 +143,7 @@ class assessment {
             throw new Exception('NON_UNIQUE_TITLE');
         }
 
-        if (!is_int($papertype)){
+        if (!in_array($papertype, $this->type, true)){
             throw new InvalidArgumentException('create() function in assesment.class only accepts integer $papertype. Input was: '.$papertype);
         }
         // Check owner exists.
