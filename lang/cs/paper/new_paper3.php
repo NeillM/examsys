@@ -15,6 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once '../lang/' . $language . '/include/paper_types.inc';
-$string['papertypenotfound'] = 'Paper Type could not find.';
+$string['papertypenotfound'] = 'Paper type could not be found.';
 
 ?>
