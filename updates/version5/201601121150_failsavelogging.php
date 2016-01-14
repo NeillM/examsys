@@ -9,6 +9,7 @@ if ($updater_utils->check_version("6.1.0")) {
         $altersql = "ALTER TABLE save_fail_log
             ADD COLUMN `request_url` VARCHAR(255) NULL DEFAULT NULL,
             ADD COLUMN `response_data` VARCHAR(50) NULL DEFAULT NULL";
+        $updater_utils->execute_query($altersql, true);
         $updater_utils->record_update('rogo1607_addtionalfailsavelogging');
     }
 }
