@@ -124,7 +124,7 @@ class assessment {
     /**
      * Create an assesment
      * @param string $papertitle - New paper title
-     * @param string $papertype - Type of paper
+     * @param int $papertype - Type of paper
      * @param integer $paperowner - Owner of paper
      * @param string $startdate - Start date of paper
      * @param string $enddate  - End date of paper
@@ -143,6 +143,9 @@ class assessment {
             throw new Exception('NON_UNIQUE_TITLE');
         }
 
+        if (!is_int($papertype)){
+            throw new InvalidArgumentException('create() function in assesment.class only accepts integer $papertype. Input was: '.$papertype);
+        }
         // Check owner exists.
         $userid = UserUtils::userid_exists($paperowner, $this->db);
         if (!$userid) {
