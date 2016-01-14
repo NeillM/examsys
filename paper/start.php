@@ -705,14 +705,15 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               if (this.retry()) {
                 return;
               } else {
-                // errorThrown is the HTTP response.
+                // Status is the response code and errorThrown is the HTTP response text.
                 if (errorThrown != '') {
-                    saveFail('http: ' + errorThrown, this.url, '');
+                    saveFail(textStatus + ': ' + xhr.status, this.url, errorThrown);
                     return;
                 }
               }
             }
-            saveFail(textStatus, this.url, '');
+            // Just use the xhr status.
+            saveFail(textStatus + ': ' + xhr.status, this.url, '');
             return;
           },
           success: function (ret_data, textStatus, jqXHR) {
@@ -725,9 +726,19 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             }
             if (this.retry()) {
               return;
-            } else  {
+            } else {
               // marking_funcions.inc record_marks failed after retry.
-              saveFail('record_marks', this.url, ret_data);
+              if (ret_data == 'ERROR' || Number.isInteger(ret_data)) {
+                saveFail('record_marks', this.url, ret_data);
+              } else {
+                  htmlstart = ret_data.indexOf("<title>") + 7; 
+                  htmlend = ret_data.indexOf("</title>"); 
+                  htmltitle = ret_data.substring(htmlstart, htmlend);
+                  if (htmltitle == '') {
+                      htmltitle = 'html response';
+                  }
+                  saveFail('record_marks', this.url, htmltitle);
+              }
               return;
             }
           },

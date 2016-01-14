@@ -114,7 +114,7 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
       foreach ($failures as $failure) {
         $parts = explode('-', $failure);
         $stmt = $db->prepare("INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('iiisis', $userObject->get_user_ID(), $paper_id, $screen_no, $ipaddress, $parts[0], $parts[1], $parts[2], $parts[3]);
+        $stmt->bind_param('iiisisss', $userObject->get_user_ID(), $paper_id, $screen_no, $ipaddress, $parts[0], $parts[1], $parts[2], $parts[3]);
         $stmt->execute();
         $stmt->close();
       }
