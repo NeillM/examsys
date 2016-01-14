@@ -96,6 +96,7 @@ Class user_notices extends RogoStaticSingleton {
   /**
    * This function will output a message to the user and exit php;
    *
+   * @param mysqli $mysqli      - gloable database object
    * @param string $title       - string title to display
    * @param string $msg         - string the message displayed on screen
    * @param string $reason      - string the message displayed in the database
