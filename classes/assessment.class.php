@@ -144,7 +144,7 @@ class assessment {
         }
 
         if (!in_array($papertype, $this->type, true)){
-            throw new InvalidArgumentException('create() function in assesment.class only accepts integer $papertype. Input was: '.$papertype);
+            throw new Exception('INVALID_PAPER_TYPE');   
         }
         // Check owner exists.
         $userid = UserUtils::userid_exists($paperowner, $this->db);
