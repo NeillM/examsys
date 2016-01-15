@@ -728,7 +728,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               return;
             } else {
               // marking_funcions.inc record_marks failed after retry.
-              if (ret_data == 'ERROR' || Number.isInteger(ret_data)) {
+              if (ret_data == 'ERROR' || (!isNaN(parseFloat(ret_data)) && isFinite(ret_data))) {
                 saveFail('record_marks', this.url, ret_data);
               } else {
                   htmlstart = ret_data.indexOf("<title>") + 7; 
