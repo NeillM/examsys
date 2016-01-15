@@ -40,7 +40,7 @@ $papertype = $assessment->get_type_value($paper_type);
 if ($papertype === false) {
     $errorline = __LINE__ - 2;
     $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['papertypenotfound'];
-    $notice->display_notice_and_exit($mysqli, " $paper_type " . $string['papertypenotfound'], $string['papertypenotfound'], $msg, '../artwork/page_not_found.png', '#C00000', true, true);
+    $notice->display_notice_and_exit($mysqli, "$paper_type" . $string['papertypenotfound'], $string['papertypenotfound'], $msg, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 // Process the posted modules
 $modules = array();
@@ -113,7 +113,7 @@ try {
     $errorline = __LINE__ - 15;
     $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
     $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
-    $notice->display_notice_and_exit($mysqli, $string['papertypenotfound'], $string['papertypenotfound'], $msg, '../artwork/page_not_found.png', '#C00000', true, true);
+    $notice->display_notice($string['papertypenotfound'], $msg, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
