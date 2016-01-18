@@ -42,4 +42,5 @@ $string['type'] = 'Typ';
 $string['author'] = 'Autor';
 $string['to'] = 'do';
 $string['module'] = 'Modul:';
-?>
+$string['notonmodules'] = 'No results';
+$string['notonmodulesmessage'] = 'You are not in any module teams. No results can be returned.';
