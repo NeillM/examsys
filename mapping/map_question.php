@@ -147,7 +147,17 @@ if (isset($_POST['submit'])) {
 
   echo "<div id=\"obj_form\">\n";
   echo "<form method=\"post\">";
-  echo render_objectives_mapping_form($mysqli, $paperID, $string);
+  try {
+    echo render_objectives_mapping_form($mysqli, $paperID, $string);
+  } catch(Exception $e) {
+  $title = $string['objectives_error'];
+  if (isset($string[$e->getMessage()])) {
+    $message = $string[$e->getMessage()];
+  } else {
+    $message = $e->getMessage();
+  }
+  display_error($title, $message, false);
+}
   echo "<br />";
   echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";

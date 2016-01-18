@@ -29,6 +29,8 @@ require '../../lang/' . $language . '/question/sct_shared.php';
 require '../../lang/' . $language . '/question/info.php';
 require '../../lang/' . $language . '/question/edit/likert_scales.php';
 
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/errors/mapping.php';
+
 $string['edit'] = 'Edytuj';
 $string['add'] = 'Dodaj';
 $string['type'] = 'Typ';

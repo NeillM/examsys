@@ -27,6 +27,7 @@ require_once '../../include/edit.inc';
 require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
+require_once '../include/errors.inc';
 
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
@@ -676,7 +677,17 @@ echo render_comments($comments, $string);
 
       <div id="mapping" class="tab-area" style="padding-left:10px; padding-right:10px">
 <?php
-echo render_objectives_mapping_form($mysqli, $paper_id, $string);
+try {
+  echo render_objectives_mapping_form($mysqli, $paper_id, $string);
+} catch(Exception $e) {
+  $title = $string['objectives_error'];
+  if (isset($string[$e->getMessage()])) {
+    $message = $string[$e->getMessage()];
+  } else {
+    $message = $e->getMessage();
+  }
+  display_error($title, $message, false);
+}
 ?>
 
       </div>

@@ -244,6 +244,21 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id) {
 $objsBySession_cache = array();
 $vle_api_cache = array(); // Cache the vle api to save some queries
 
+/**
+ * Get any mapped objectives for a question.
+ *
+ * @global type $objsBySession_cache
+ * @global array $vle_api_cache
+ * @global type $configObject
+ * @param int $thisModuleid
+ * @param string $session The academic session of the objectives, in the form YYYY/YY i.e. 2015/16
+ * @param int $paperID
+ * @param int $questionID
+ * @param mysqli $db
+ * @param string $scope
+ * @return array
+ * @throws Exception if the objectives API gives an error.
+ */
 function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $scope = 'latest') {
   global $objsBySession_cache, $vle_api_cache,  $configObject;
   $original_thisModuleid = $thisModuleid;
@@ -268,7 +283,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
         $vle->setMappingLevel($map_level);
         $resp = $vle->getObjectives($thisModuleid, $session);
 				if ($resp == 'error') {
-          return 'error';
+          throw new Exception('could_not_retrive_objectives');
         }
         if ($resp != '') {
           $objsBySession_cache[$thisModuleid][$session] = $resp;
