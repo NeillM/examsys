@@ -24,7 +24,7 @@
  * Assessment helper class.
  */
 class assessment {
-    
+
     /**
      * Formative paper type
      */
@@ -56,28 +56,28 @@ class assessment {
 
     // DB connection
     private $db;
-    
+
     // Cenrtalised summative management?
     private $summative_mgmt;
-    
+
     // Server time zone.
     private $server_timezone;
-    
+
     // Supported time zones.
     private $timezones;
-    
+
     // Supported cohort sizes
     private $cohort_sizes;
-    
+
     // Max paper duration
     private $max_duration;
-       
+
     // Paper type name and keys
     private $type;
-        
+
     // Maximum number of exam sittings
     private $max_sittings;
-    
+
     /**
      * Language pack component.
      */
@@ -85,8 +85,8 @@ class assessment {
 
     /**
      * @brief Constuctor
-     * @param mysqli $db 
-     * @param object $configObject 
+     * @param mysqli $db
+     * @param object $configObject
      */
     function __construct($db, $configObject) {
         $this->db = $db;
@@ -107,7 +107,7 @@ class assessment {
         $this->max_duration = $settings->max_duration;
         $this->max_sittings = $settings->max_sittings;
     }
-    
+
     /**
      * Get the numeric value of the paper type
      * @param string $type paper type
@@ -120,11 +120,11 @@ class assessment {
             return false;
         }
     }
-    
+
     /**
      * Create an assesment
      * @param string $papertitle - New paper title
-     * @param string $papertype - Type of paper
+     * @param int $papertype - Type of paper
      * @param integer $paperowner - Owner of paper
      * @param string $startdate - Start date of paper
      * @param string $enddate  - End date of paper
@@ -136,15 +136,15 @@ class assessment {
      * @return integer|bool - id of new assessment or false on error
      */
     public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone) {
-       
+
         // Check title is unique.
         $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
         if (!$uniquetitle) {
             throw new Exception('NON_UNIQUE_TITLE');
         }
-        // Check paper type is valid.
-        if ($this->get_type_value($this->type) === false) {
-            throw new Exception('INVALID_PAPER_TYPE');
+
+        if (!in_array($papertype, $this->type, true)){
+            throw new Exception('INVALID_PAPER_TYPE');   
         }
         // Check owner exists.
         $userid = UserUtils::userid_exists($paperowner, $this->db);
@@ -176,7 +176,7 @@ class assessment {
         $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
         $startdate = $datesarray[0];
         $enddate = $datesarray[1];
-        
+
         // Set the summative rubric
         if ($papertype == self::TYPE_SUMMATIVE) {
             $langpack = new langpack();
@@ -222,7 +222,7 @@ class assessment {
                 $result->execute();
                 $result->close();
             }
-            
+
             // Crypt name generation.
             $crypt_name = $property_id . $timestamp . $paperowner;
             $update_params = array('crypt_name' => array('s', $crypt_name));
@@ -238,7 +238,7 @@ class assessment {
      * This should be used to update the basic information that is required by assessments.
      * Note: the properties are validated against system rules
      * Note: the paper type of an assessment cannot be updated
-     * 
+     *
      * @param integer $id - id of paper
      * @param string $papertitle - New paper title
      * @param integer $paperowner - Owner of paper
@@ -253,7 +253,7 @@ class assessment {
      * @return bool - true on success
      */
     public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid) {
-        
+
         $changes = array();
         $params = array();
         $details = Paper_utils::get_paper_properties($id, $this->db);
@@ -282,7 +282,7 @@ class assessment {
             $params['paper_ownerID'] = array('i', $paperowner);
             $changes[] = array('old'=>$details['owner'], 'new'=>$paperowner, 'part'=>'owner');
         }
-        
+
         if ($session != $details['session']) {
             // Check session.
             $yearutils = new yearutils($this->db);
@@ -293,7 +293,7 @@ class assessment {
             $params['calendar_year'] = array('i', $session);
             $changes[] = array('old'=>$details['session'], 'new'=>$session, 'part'=>'session');
         }
-        
+
         // Check startdate and enddate
         if ($enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
@@ -310,8 +310,8 @@ class assessment {
         $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
         $startdate = $datesarray[0];
         $enddate = $datesarray[1];
-        
-        
+
+
         // Verify timezone is supported, revert to server timezone if not.
         $decode_timezones = json_decode($this->timezones, true);
         if (!array_key_exists($timezone, $decode_timezones)) {
@@ -321,7 +321,7 @@ class assessment {
             $params['timezone'] = array('s', $timezone);
             $changes[] = array('old'=>$details['timezone'], 'new'=>$timezone, 'part'=>'timezone');
         }
-        
+
         // Enforce Interface boundaries.
         if (!empty($duration)) {
             if ($duration > $this->max_duration) {
@@ -351,7 +351,7 @@ class assessment {
                 $logger->track_change('Paper', $id, $userid, $change['old'], $change['new'], $change['part']);
             }
         }
-        
+
         // Update to Modules.
         $current_modules = Paper_utils::get_modules($id, $this->db);
         foreach ($modules as $module) {
@@ -370,15 +370,15 @@ class assessment {
                 $result->close();
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Update assessment properties
      * This function should be used to update bulk properties for an assessment.
      * Note: property validation does not occur in this function.
-     * 
+     *
      * @param integer $id id of assessment
      * @param array $params properties to update. The array has the following strucutre:
      *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
@@ -389,12 +389,12 @@ class assessment {
         $table_idx = 'property_id';
         return DBUtils::exec_db_update($table, $table_idx, $params, $id, $this->db);
     }
-    
+
     /**
-     * Insert assessment 
+     * Insert assessment
      * This function should be used to insert all properties for an assessment.
      * Note: property validation does not occur in this function.
-     * 
+     *
      * @param array $params properties to insert. The array has the following strucutre:
      *    key - the database field name [0] - The type of the value passed [1] - The value to be set in the database
      * @return bool true on success false otherwise
@@ -403,9 +403,9 @@ class assessment {
         $table = 'properties';
         return DBUtils::exec_db_insert($table, $params, $this->db);
     }
-    
+
     /**
-     * Schedule a summative assessment 
+     * Schedule a summative assessment
      * @param integer $paperid paper id
      * @param integer $month the month the exam should be scheduled in
      * @param integer $barriers are barrier required
@@ -447,7 +447,7 @@ class assessment {
     }
 
     /**
-     * Calculate start and end times based on timezone 
+     * Calculate start and end times based on timezone
      * @param string $papertype type of paper
      * @param string $fromdatetime when the assessment starts
      * @param string $todatetime when the assessment finishes
@@ -456,7 +456,7 @@ class assessment {
      */
     public function setup_start_end_dates($papertype, $fromdatetime, $todatetime, $timezone) {
         if (!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) {
-            
+
             $server_timezone = new DateTimeZone($this->server_timezone);
             $target_timezone = new DateTimeZone($timezone);
 
@@ -473,7 +473,7 @@ class assessment {
                 $start_date->modify("-" . $timezone . " hour");
                 $end_date->modify("-" . $timezone . " hour");
             }
-            
+
             return array($start_date->format("YmdHis"), $end_date->format("YmdHis"));
         }
         // Summative exams do not have a start/end date if centrally scheduled.

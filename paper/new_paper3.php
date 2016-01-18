@@ -33,10 +33,15 @@ $paper_owner = check_var('paper_owner', 'POST', true, false, true);
 $session = $_POST['session'];
 if (empty($session)) {
   $yearutils = new yearutils($mysqli);
-  $session = $yearutils->get_current_session();  
+  $session = $yearutils->get_current_session();
 }
-$papertype = $assessment->get_type_value($paper_type);
 
+$papertype = $assessment->get_type_value($paper_type);
+if ($papertype === false) {
+    $errorline = __LINE__ - 2;
+    $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['papertypenotfound'];
+    $notice->display_notice_and_exit($mysqli, "$paper_type" . $string['papertypenotfound'], $string['papertypenotfound'], $msg, '../artwork/page_not_found.png', '#C00000', true, true);
+}
 // Process the posted modules
 $modules = array();
 $first = true;
@@ -63,7 +68,7 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
     if (isset($_POST['duration_mins'])) {
         $duration += $_POST['duration_mins'];
     }
-    
+
     $start_date = NULL;
     $end_date = NULL;
 } else {
@@ -87,7 +92,7 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
 
     $end_date = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
 }
-    
+
 try {
     $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $start_date, $end_date, '', $duration, $session, $modules, $timezone);
 
@@ -105,8 +110,10 @@ try {
     $type = 'Paper Creation';
     $errorstring = $e->getMessage();
     $errorfile = $_SERVER['PHP_SELF'];
-    $errorline = __LINE__ - 17;
+    $errorline = __LINE__ - 15;
     $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
+    $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
+    $notice->display_notice_and_exit(null, $string['papertypenotfound'], $msg, '', '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>

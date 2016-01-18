@@ -96,6 +96,7 @@ Class user_notices extends RogoStaticSingleton {
   /**
    * This function will output a message to the user and exit php;
    *
+   * @param mysqli|null $mysqli - gloable database object for add log data into database, if null, exception message will only be displayed then exit 
    * @param string $title       - string title to display
    * @param string $msg         - string the message displayed on screen
    * @param string $reason      - string the message displayed in the database
@@ -106,8 +107,8 @@ Class user_notices extends RogoStaticSingleton {
    *
    */
   public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true) {
-    $userObj = UserObject::get_instance();
     if (!is_null($mysqli)) {
+      $userObj = UserObject::get_instance();  
       if ($userObj !== null and $userObj->get_user_ID() > 0) {
         $logger = new Logger($mysqli);
         $logger->record_access_denied($userObj->get_user_ID(), $title, $reason); // Record attempt in access denied log against userID.
