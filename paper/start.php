@@ -728,9 +728,12 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
               return;
             } else {
               // marking_funcions.inc record_marks failed after retry.
-              if (ret_data == 'ERROR' || Number.isInteger(ret_data)) {
+              // red_data can be ERROR, a random generated number or a html page.
+              if (ret_data == 'ERROR' || (!isNaN(parseFloat(ret_data)) && isFinite(ret_data))) {
+                // record the returned random number or ERROR.
                 saveFail('record_marks', this.url, ret_data);
               } else {
+                  // Strip out the title of the html as thats is all we are interested in.
                   htmlstart = ret_data.indexOf("<title>") + 7; 
                   htmlend = ret_data.indexOf("</title>"); 
                   htmltitle = ret_data.substring(htmlstart, htmlend);
