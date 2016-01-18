@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/errors/mapping.php';
+
 $string['objectives'] = 'Objectives';
 $string['objectivemapping'] = 'Objective Mapping';
 $string['noneabove'] = 'None of the Above';

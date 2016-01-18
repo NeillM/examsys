@@ -29,6 +29,8 @@ require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/sc
 require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/info.php';
 require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/edit/likert_scales.php';
 
+require $configObject->get('cfg_web_root') . 'lang/' . $language . '/errors/mapping.php';
+
 $string['edit'] = 'Edit';
 $string['add'] = 'Add';
 $string['type'] = 'Type';
