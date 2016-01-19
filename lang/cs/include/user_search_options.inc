@@ -32,6 +32,7 @@ $string['staffsysadmin'] = 'Zaměstnanec (SysAdmin)';
 $string['staffstudent'] = 'Zaměstnanec a Student'; 
 $string['inactivestaff'] = 'Neaktivní zaměstnanec' ;
 $string['externalexaminers'] = 'Externí recenzenti';
+$string['staffstandardssetter'] = 'Staff (Standards Setter)';
 $string['invigilators'] = 'Dohlížející osoba';
 $string['back'] = 'Zpět';
 $string['search'] = 'Hledat';

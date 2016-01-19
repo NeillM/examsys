@@ -32,6 +32,7 @@ $string['staffsysadmin'] = 'Staff (SysAdmin)';
 $string['staffstudent'] = 'Staff and Student';
 $string['inactivestaff'] = 'Inactive Staff';
 $string['externalexaminers'] = 'External Examiners';
+$string['staffstandardssetter'] = 'Staff (Standards Setter)';
 $string['invigilators'] = 'Invigilators';
 $string['back'] = 'Back';
 $string['search'] = 'Search';

@@ -1,18 +1,18 @@
 <?php
-// This file is part of Rogō
+// This file is part of RogÅ
 //
-// Rogō is free software: you can redistribute it and/or modify
+// RogÅ is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogō is distributed in the hope that it will be useful,
+// RogÅ is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with RogÅ.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  *
@@ -566,9 +566,9 @@ Class module {
    */
   public function modules_allow_timing($module_ids, $db) {
     if (count($module_ids) == 0) {
-		  return false;
-		}
-		// Only allow timing if ALL the modules of the paper allow
+      return false;
+    }
+    // Only allow timing if ALL the modules of the paper allow
     $mod_id_list = implode(',', $module_ids);
 
     $stmt = $db->prepare("SELECT id FROM modules WHERE id IN ($mod_id_list) AND timed_exams = 0");

@@ -43,16 +43,27 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
   } else {
     $title_class = 'greylink';
   }
+
+  // Take Standards Setter straight to Standards Setter section
+  # @TODO: Check standard setting is enabled on paper
+  # if (strpos($checklist, 'stdset') !== false) {
+  if ($userObj->has_role('Standards Setter')) {
+    $href = "../std_setting/index.php?paperID=" . $property_id . "&folder=$folder&module=$module";
+  } else {
+    $href = "../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module";
+  }
+
+
   if ($paper_ownerID == $userObj->get_user_ID() or $userObj->has_role(array('Admin', 'SysAdmin')) or ($icon_type != '2' and $icon_type != '4')) {
-    echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon($icon_type, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
-    echo "<div class=\"file_details\"><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"$title_class\">" . $paper_title . '</a>';
+    echo "<a class=\"blacklink\" href=\"" . $href . "\">" . Paper_utils::displayIcon($icon_type, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
+    echo "<div class=\"file_details\"><a href=\"" . $href . "\" class=\"$title_class\">" . $paper_title . '</a>';
     if ($password != '') {
       echo ' <img src="../artwork/key.png" width="16" height="16" alt="Key" />';
     }
     echo '<br />';
   } else {
-		echo "<a class=\"blacklink\" href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
-		echo "<div class=\"file_details\"><a href=\"../paper/details.php?paperID=" . $property_id . "&folder=$folder&module=$module\" class=\"blacklink\">" . $paper_title . '</a><br />';
+		echo "<a class=\"blacklink\" href=\"" . $href . "\">" . Paper_utils::displayIcon(2, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
+		echo "<div class=\"file_details\"><a href=\"" . $href . "\" class=\"blacklink\">" . $paper_title . '</a><br />';
   }
   if ($retired == '') {
     echo '  <span class="grey">';

@@ -43,6 +43,7 @@ if (isset($_POST['submit'])) {
     case 'Technical Staff':
     case 'NHS Lecturer':
     case 'NHS Admin':
+    case 'Standards Setter':
       $tmp_roles = 'Staff';
       break;
     case 'Invigilator':

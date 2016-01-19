@@ -25,6 +25,9 @@
 ?>
 <div id="left-sidebar" style="overflow:visible" class="sidebar">
 <?php
+  
+if(!$userObject->has_role('Standards Setter')) {
+
   $add_member = false;
   
   if ($_GET['module'] != '0') {
@@ -37,39 +40,40 @@
 	  echo "<div class=\"menuitem cascade\"><a href=\"#\" onclick=\"showMenu('popup0','general','search',myOptions0,myURLs0,event)\" id=\"search\"><img class=\"sidebar_icon\" src=\"" . $configObject->get('cfg_root_path') . "/artwork/xmag.png\" alt=\"Search\" />" . $string['search'] . "</a></div>";
 
   // Get members of current team.
-  if (!isset($_GET['type']) and $_GET['module'] != '0') {
-    $team_members = module_utils::get_staff_members($module, $mysqli);
+    if (!isset($_GET['type']) and $_GET['module'] != '0') {
+      $team_members = module_utils::get_staff_members($module, $mysqli);
 
-    $tmp_html = '';
-    if ($userObject->has_role('Demo')) {
-      $i = 0;
-    }
-    if (count($team_members) == 0) {
-      $tmp_html = '<br /><div>' . $string['noteammembers'] . '</div>';
-    } else {
-      $tmp_html = '<ul type="square" style="line-height:155%; margin-top:4px; margin-bottom:4px; margin-left:26px; padding-left:0">';
-    }
-    foreach ($team_members as $team_member) {
+      $tmp_html = '';
       if ($userObject->has_role('Demo')) {
-        $tmp_html .= "<li><span style=\"color:black\">" . demo_replace_name($i) . "</span></li>\n";
-        $i++;
-      } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
-        $tmp_html .= "<li><a style=\"color:black\" href=\"../users/details.php?userID=" . $team_member['userID'] . "&module=$module\">" . $team_member['surname'] . ", " . $team_member['initials'] . ". " . $team_member['title'] . "</a></li>\n";
-      } else {
-        $tmp_html .= "<li><span style=\"color:black\">" . $team_member['surname'] . ", " . $team_member['initials'] . ". " . $team_member['title'] . "</span></li>\n";
+        $i = 0;
       }
-      if ($team_member['userID'] == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
-    }
-    if (count($team_members) > 0) $tmp_html .= '</ul>';
+      if (count($team_members) == 0) {
+        $tmp_html = '<br /><div>' . $string['noteammembers'] . '</div>';
+      } else {
+        $tmp_html = '<ul type="square" style="line-height:155%; margin-top:4px; margin-bottom:4px; margin-left:26px; padding-left:0">';
+      }
+      foreach ($team_members as $team_member) {
+        if ($userObject->has_role('Demo')) {
+          $tmp_html .= "<li><span style=\"color:black\">" . demo_replace_name($i) . "</span></li>\n";
+          $i++;
+        } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+          $tmp_html .= "<li><a style=\"color:black\" href=\"../users/details.php?userID=" . $team_member['userID'] . "&module=$module\">" . $team_member['surname'] . ", " . $team_member['initials'] . ". " . $team_member['title'] . "</a></li>\n";
+        } else {
+          $tmp_html .= "<li><span style=\"color:black\">" . $team_member['surname'] . ", " . $team_member['initials'] . ". " . $team_member['title'] . "</span></li>\n";
+        }
+        if ($team_member['userID'] == $userObject->get_user_ID() and $module_details['add_team_members'] == 1) $add_member = true;
+      }
+      if (count($team_members) > 0) $tmp_html .= '</ul>';
 
-    echo '<br /><br />';
-    if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
-      echo '<div style="float:left; width:225px; font-size:170%"><div style="float:left">' . $string['teammembers'] . '</div><div style="float:right"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" id="addteammember" /></div></div>';
-    } else {
-      echo '<div style="float:left; width:225px; font-size:170%">' . $string['teammembers'] . '</div>';
+      echo '<br /><br />';
+      if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
+        echo '<div style="float:left; width:225px; font-size:170%"><div style="float:left">' . $string['teammembers'] . '</div><div style="float:right"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" id="addteammember" /></div></div>';
+      } else {
+        echo '<div style="float:left; width:225px; font-size:170%">' . $string['teammembers'] . '</div>';
+      }
+      echo '<div style="height:78%; overflow:auto; clear:left" id="list">';
+      echo "$tmp_html</div>\n";
     }
-    echo '<div style="height:78%; overflow:auto; clear:left" id="list">';
-    echo "$tmp_html</div>\n";
   }
 }
 ?>
@@ -78,7 +82,11 @@
 
 
 <?php
+
+if(!$userObject->has_role('Standards Setter')) {
   makeMenu(array($string['questions']=>"{$configObject->get('cfg_root_path')}/question/search.php?module=$module",$string['papers']=>"{$configObject->get('cfg_root_path')}/paper/search.php?module=$module",$string['people']=>"{$configObject->get('cfg_root_path')}/users/search.php?module=$module"));
 
   hideMenuScript($menuNo);
+}
+
 ?>

@@ -54,9 +54,29 @@ $external_allowed_pages = array(
                               "$cfg_root_path/ajax/reports/getAccessibility.php"=>1,
                               "$cfg_root_path/osce/form.php"=>1
                             );
+
+$standards_setter_allowed_pages = array(
+                                      "$cfg_root_path/index.php"=>1,
+                                      "$cfg_root_path/module/index.php"=>1,
+                                      "$cfg_root_path/paper/type.php"=>1,
+                                      "$cfg_root_path/std_setting/index.php"=>1,
+                                      "$cfg_root_path/std_setting/individual_review.php"=>1,
+                                      "$cfg_root_path/std_setting/hofstee.php"=>1,
+                                      "$cfg_root_path/std_setting/get_group.php"=>1,
+                                      "$cfg_root_path/std_setting/group_set_angoff.php"=>1,
+                                      "$cfg_root_path/delete/check_delete_review.php"=>1,
+                                      "$cfg_root_path/delete/do_delete_review.php"=>1
+                            );
+
+$standards_setter_allowed_pages = array_merge($external_allowed_pages, $standards_setter_allowed_pages);                           
+
 if ($userObject->has_role('External Examiner')) {
   if (!isset($external_allowed_pages[$_SERVER['PHP_SELF']])) {
     header("location: " . $configObject->get('cfg_root_path') . "/reviews/");
+  }
+} elseif($userObject->has_role('Standards Setter')) {
+  if (!isset($standards_setter_allowed_pages[$_SERVER['PHP_SELF']])) {
+    header("location: " . $configObject->get('cfg_root_path') . "/");
   }
 }
 
