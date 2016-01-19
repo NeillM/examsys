@@ -134,6 +134,13 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   }
 
   if (isset($_POST['submit'])) {
+    if (!$userObject->has_role('SysAdmin') and empty($staff_modules)) {
+      // The user cannot see any papers if they are not on any teams and they are not a SysAdmin.
+      $title = $string['notonmodules'];
+      $message = $string['notonmodulesmessage'];
+      $icon = '/artwork/exclamation_red_bg.png';
+      $notice->display_notice_and_exit($mysqli, $title, $message, $message, $icon, 'black', false);
+    }
 	  if ($type_problem) {
       echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />";
       if (isset($_REQUEST['module'])) {
