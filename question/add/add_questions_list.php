@@ -191,7 +191,15 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       $teams = $userObject->get_staff_modules();
       $module_id_list = implode(',', array_keys($teams));
 
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules, modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? AND (ownerID = ? OR modules.id IN ($module_id_list)) AND deleted IS NULL ORDER BY $sortby $ordering");
+      $sql = "SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name "
+          . "FROM (questions, question_statuses, questions_modules, modules) "
+          . "WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? "
+          . "AND (ownerID = ?";
+      if (!empty($module_id_list)) {
+        $sql .= " OR modules.id IN ($module_id_list)";
+      }
+      $sql .= ") AND deleted IS NULL ORDER BY $sortby $ordering";
+      $result = $mysqli->prepare($sql);
       $result->bind_param('si', $_GET['status'], $userObject->get_user_ID());
       break;
     case 'keyword':
