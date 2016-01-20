@@ -32,13 +32,14 @@ class CM_NLE implements iCMAPI {
 
   /**
    * Return objectives from the University of Nottingham Medical School Networked Learning Environment
-   * @param $moduleID
-   * @param $session
+   * @param string $moduleID The module code to be looked up
+   * @param int $session The year that the academic year starts in.
    * @return mixed Array of session and objective data in format required by Rogō
    */
   public function getObjectives($moduleID, $session) {
     $configObject = Config::get_instance();
-    $objectives = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$session");
+    $nle_year = (string)$session . '/' . substr((string)$session, -2);
+    $objectives = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$nle_year");
     $objectives->execute();
     return $objectives->getResponseBody();
   }

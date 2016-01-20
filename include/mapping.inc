@@ -251,7 +251,7 @@ $vle_api_cache = array(); // Cache the vle api to save some queries
  * @global array $vle_api_cache
  * @global type $configObject
  * @param int $thisModuleid
- * @param string $session The academic session of the objectives, in the form YYYY/YY i.e. 2015/16
+ * @param int $session The year in which the academic year starts
  * @param int $paperID
  * @param int $questionID
  * @param mysqli $db
