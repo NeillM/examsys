@@ -246,7 +246,17 @@ HTML;
   return $html;
 }
 
+/**
+ * Inserts a question into a paper.
+ *
+ * @param int $p_id The id of the Rogo paper the question should be inserted into.
+ * @param int $q_id The id of the question that should be inserted.
+ * @param mysqli $db The database connection for Rogo
+ * @return int The id of the record that links the question to the paper.
+ */
 function insert_into_papers($p_id, $q_id, $db) {
+  $configObject = Config::get_instance();
+  
   $result = $db->prepare("SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $p_id);
   $result->execute();
