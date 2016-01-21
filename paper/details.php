@@ -41,7 +41,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 $mediadirectory = rogo_directory::get_directory('media');
-
+$configObject = Config::get_instance();
 $assessment = new assessment($mysqli, $configObject);
 
 // Unlock code - emergency use only!

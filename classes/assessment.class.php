@@ -210,7 +210,7 @@ class assessment {
             'rubric' => array('s', $default_rubric),
             'calculator' => array('i', $default_calc),
             'exam_duration' => array('i', $duration),
-            'created' => array('i', $timestamp),
+            'created' => array('s', $timestamp),
             'calendar_year' => array('i', $session)
         );
         $property_id = $this->db_insert_assessment($params);;
