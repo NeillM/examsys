@@ -32,18 +32,20 @@ class CM_UoNCM implements iCMAPI {
   private $_sess_year;
   private $_module_id;
   private $_mapping_level = self::LEVEL_SESSION;
+  private $_moodle_base_url;
 
   /**
    * Return objectives from the University of Nottingham Curriculum Mapping system
-   * @param $moduleID
-   * @param $session
+   * @param string $moduleID the module code
+   * @param int $session The year the academic year starts in
    * @return mixed Array of session and objective data in format required by Rogō
    */
   public function getObjectives($moduleID, $session) {
     $configObject = Config::get_instance();
-    $this->_sess_year = strstr($session, '/', true);
+    $this->_sess_year = $session;
     $this->_root_url = $configObject->get('cfg_cmap_url') . "/" . $this->_sess_year . "/index.php/";
     $this->_module_id = $moduleID;
+    $this->_moodle_base_url = $configObject->get('cfg_moodle_base_url') . '/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
     $req = new RestRequest($this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attribute&attrib=code&output=module_session_obs");
     $req->execute();
 
@@ -261,7 +263,7 @@ class CM_UoNCM implements iCMAPI {
         'identifier' => $group['@attributes']['id'],
         'GUID' => $group['@attributes']['id'],
         'class_code' => '',
-        'title' => ($group['group_title'] == '') ? 'No group' : $group['group_title'],
+        'title' => ($group['title'] == '') ? 'No group' : $group['title'],
         'occurrance' => '',
         'calendar_year' => $calendar_year,
         'VLE' => 'UoNCM',
