@@ -32,6 +32,7 @@ class CM_UoNCM implements iCMAPI {
   private $_sess_year;
   private $_module_id;
   private $_mapping_level = self::LEVEL_SESSION;
+  private $_moodle_base_url;
 
   /**
    * Return objectives from the University of Nottingham Curriculum Mapping system
@@ -44,6 +45,7 @@ class CM_UoNCM implements iCMAPI {
     $this->_sess_year = $session;
     $this->_root_url = $configObject->get('cfg_cmap_url') . "/" . $this->_sess_year . "/index.php/";
     $this->_module_id = $moduleID;
+    $this->_moodle_base_url = $configObject->get('cfg_moodle_base_url') . '/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
     $req = new RestRequest($this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attribute&attrib=code&output=module_session_obs");
     $req->execute();
 
