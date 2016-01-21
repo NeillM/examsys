@@ -261,7 +261,7 @@ class CM_UoNCM implements iCMAPI {
         'identifier' => $group['@attributes']['id'],
         'GUID' => $group['@attributes']['id'],
         'class_code' => '',
-        'title' => ($group['group_title'] == '') ? 'No group' : $group['group_title'],
+        'title' => ($group['title'] == '') ? 'No group' : $group['title'],
         'occurrance' => '',
         'calendar_year' => $calendar_year,
         'VLE' => 'UoNCM',
