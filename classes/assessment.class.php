@@ -32,7 +32,7 @@ class assessment {
     /**
      * Progress paper type
      */
-    const TYPE_PROGESSS = 1;
+    const TYPE_PROGRESS = 1;
     /**
      * Summative paper type
      */
@@ -93,7 +93,7 @@ class assessment {
         $this->summative_mgmt = $configObject->get('cfg_summative_mgmt');
         $this->server_timezone = $configObject->get('cfg_timezone');
         $this->type = array('formative' => self::TYPE_FORMATIVE,
-            'progress' => self::TYPE_PROGESSS,
+            'progress' => self::TYPE_PROGRESS,
             'summative' => self::TYPE_SUMMATIVE,
             'survey' => self::TYPE_SURVEY,
             'osce' => self::TYPE_OSCE,
@@ -185,7 +185,7 @@ class assessment {
             $default_rubric = '';
         }
         // Set calulator on/off
-        if ($papertype == self::TYPE_FORMATIVE or $papertype == self::TYPE_PROGESSS or $papertype == self::TYPE_SUMMATIVE) {
+        if ($papertype == self::TYPE_FORMATIVE or $papertype == self::TYPE_PROGRESS or $papertype == self::TYPE_SUMMATIVE) {
             $default_calc = 1;
         } else {
             $default_calc = 0;
