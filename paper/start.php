@@ -1031,9 +1031,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   echo "<div id=\"maincontent\">\n";
 
   if ($current_screen < $no_screens) {
-    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . $url_mod . "\">";
+    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . $url_mod . "\" autocomplete=\"off\">";
   } else {
-    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\">";
+    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'] . $url_mod . "\" autocomplete=\"off\">";
   }
   echo $hidden_html;
   ?>

@@ -87,7 +87,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   $stmt->fetch();
   $stmt->close();
 
-  echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
+  echo "<form name=\"theform\" method=\"post\" action=\"\" autocomplete=\"off\">\n";
   echo "<input type=\"hidden\" name=\"screen\" value=\"1\" />\n";
   echo "<table class=\"header\">\n";
   echo "<tr><th colspan=\"7\" style=\"font-size:160%; font-weight:bold\">&nbsp;$paper_title</th></tr>\n";

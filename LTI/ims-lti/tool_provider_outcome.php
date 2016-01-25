@@ -28,7 +28,7 @@ if (get_magic_quotes_gpc()) $sourcedid = stripslashes($sourcedid);
 
 ?>
 <p>
-<form method="POST">
+<form method="POST" autocomplete="off">
 Service URL: <input type="text" name="url" size="100" disabled="true" value="<?php echo(htmlentities($_REQUEST['url']));?>"/></br>
 lis_result_sourcedid: <input type="text" name="sourcedid" disabled="true" size="100" value="<?php echo(htmlentities($sourcedid));?>"/></br>
 OAuth Consumer Key: <input type="text" name="key" disabled="true" size="80" value="<?php echo(htmlentities($_REQUEST['key']));?>"/></br>

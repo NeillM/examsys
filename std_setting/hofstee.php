@@ -183,7 +183,7 @@ if (isset($_POST['submit'])) {
 	echo draw_toprightmenu();
 ?>
 <div id="content">
-<form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" method="post" autocomplete="off">
 <?php
 	$results_cache = new ResultsCache($mysqli);
 	$marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));

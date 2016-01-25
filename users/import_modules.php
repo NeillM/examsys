@@ -219,7 +219,7 @@ ini_set("auto_detect_line_endings", true);
 <div><?php echo $string['msg2']; ?></div>
 <br />
 <div align="center">
-<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" autocomplete="off">
 <?php
 if ($file_problem) {
   echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</div>';

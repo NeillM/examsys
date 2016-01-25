@@ -78,7 +78,7 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
 </head>
 
 <body>
-<form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?mod=' . $module ?>">
+<form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?mod=' . $module ?>" autocomplete="off">
 <?php
 
   $year_parts = explode('/',$session);

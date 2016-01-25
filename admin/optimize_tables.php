@@ -78,7 +78,7 @@
     ob_end_flush();
   } else {
 ?>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <blockquote>
 <div><strong><?php echo $string['tables']; ?></strong></div>
 <?php

@@ -126,7 +126,7 @@ $render = new \html_renderer();
       </div>
       <br />
       <div class="ims_settings">
-        <form id="theform" name="ims_settings" method="post">
+        <form id="theform" name="ims_settings" method="post" autocomplete="off">
           <table>
             <?php
             $render->heading('h2', $string['imstitle'], $string['pluginname_desc'], false, true);

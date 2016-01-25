@@ -52,7 +52,7 @@ require '../../include/staff_auth.inc';
 </head>
 
 <body>
-<form method="post" name="myform" action="add_questions_list.php?type=keyword" target="keywordlist">
+<form method="post" name="myform" action="add_questions_list.php?type=keyword" target="keywordlist" autocomplete="off">
 <?php
   $keyword_no = 0;
   

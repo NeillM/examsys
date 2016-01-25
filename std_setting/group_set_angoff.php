@@ -163,7 +163,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
 
 ?>
   <div id="maincontent">
-	<form method="post" name="questions" action="record_review.php?group=true">
+	<form method="post" name="questions" action="record_review.php?group=true" autocomplete="off">
  
   <?php
   echo "\n<div class=\"head_title\">\n";

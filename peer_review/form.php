@@ -342,7 +342,7 @@ if (isset($_POST['submit'] )) {
 <body>
 
   <?php
-  echo "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\">\n";
+  echo "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'] . "\" autocomplete=\"off\">\n";
 
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
   echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>'.$string['Reviewer'].':</strong> ' . $userObject->get_title() . ' ' . $userObject->get_surname() . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$string['Group'].':</strong> ';

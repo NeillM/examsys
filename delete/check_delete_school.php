@@ -53,7 +53,7 @@ $mysqli->close();
 <p><?php echo $string['msg'] ?></p>
 
 <div class="button_bar">
-<form action="do_delete_school.php" method="post">
+<form action="do_delete_school.php" method="post" autocomplete="off">
 <input type="hidden" name="schoolID" value="<?php echo $schoolID ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>

@@ -90,7 +90,7 @@ if (isset($_POST) and count($_POST) > 0) {
     if (time() < $start_date or time() > $end_date) {
       echo "<html><head>\n<title>" . $string['Access Denied'] . "</title>\n<style type=\"text/css\">\nbody {font-size:120%;font-family:Arial,sans-serif;background-color:#FCFCFC;color:#575757}\nh1 {font-weight:normal;color:#C00000;font-size:140%}\n</style></head>\n<body style=\"font-family:Arial,sans-serif\"><div style=\"position:absolute;left:10px;top:10px\"><img src=\"../artwork/summative_scheduling.png\" width=\"48\" height=\"48\" /></div>\n";
       echo "<h1 style=\"margin-left:60px\">" . $string['Access Denied'] . "</h1>\n";
-      echo "<hr size=\"1\" align=\"left\" width=\"500\" noshade=\"noshade\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0;height:1px;border:0\" />\n<p style=\"margin-left:60px\">" . $string['paperavailable'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['from'] . " - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>" . $string['to'] . " - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form><input type=\"button\" value=\"&lt; Back\" style=\"width:100px\" name=\"back\" onclick=\"history.back();\"></form></p>\n</body>\n</html>";
+      echo "<hr size=\"1\" align=\"left\" width=\"500\" noshade=\"noshade\" style=\"margin-left:60px;color:#C0C0C0;background-color:#C0C0C0;height:1px;border:0\" />\n<p style=\"margin-left:60px\">" . $string['paperavailable'] . "</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['from'] . " - " . date('d/m/Y H:i',$start_date) . "</li>\n<li>" . $string['to'] . " - " . date('d/m/Y H:i',$end_date) . "</li>\n</ul>\n<br /><p style=\"margin-left:60px\"v><form autocomplete=\"off\"><input type=\"button\" value=\"&lt; Back\" style=\"width:100px\" name=\"back\" onclick=\"history.back();\"></form></p>\n</body>\n</html>";
       $mysqli->close();
       exit;
     }
@@ -230,7 +230,7 @@ if (isset($_POST) and count($_POST) > 0) {
   </head>
 
   <body>
-  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" id="osceform" name="osceform">
+  <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" id="osceform" name="osceform" autocomplete="off">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
 $photodirectory = rogo_directory::get_directory('user_photo');

@@ -64,7 +64,7 @@ $oauth->delete_auth($id, $type);
 <p><?php echo $string['oauthkeysuccess']; ?><p>
 
 <div class="button_bar">
-  <form action="" method="get">
+  <form action="" method="get" autocomplete="off">
     <input type="button" name="ok" value="OK" class="ok" onclick="javascript:window.close();"/>
   </form>
 </div>

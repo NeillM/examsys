@@ -214,7 +214,7 @@ MESSAGE;
     <div class="page_title"><?php echo $string['createnewuser'] ?></div>
   </div>
 
-<form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 
 <table border="0" cellspacing="0" cellpadding="3" class="dialog_table">
 <tr><td class="dialog_header" style="border-bottom: 1px solid #95AEC8; line-height:170%" colspan="2"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" style="float:left; padding-right:8px" /><?php echo $string['createnewuser'] ?></td></tr>
@@ -247,14 +247,14 @@ foreach ($titles as $tmp_title) {
 <tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
-<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" required />
+<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($_POST['password'])) {
     echo $_POST['password'];
   } else {
     echo gen_password();
   }
-?>" size="12" required /></td></tr>
+?>" size="12" autocomplete="off" required /></td></tr>
 <tr><td class="field"><?php echo $string['yearofstudy'] ?></td><td>
 <select id="new_yos" name="new_year">
 <?php

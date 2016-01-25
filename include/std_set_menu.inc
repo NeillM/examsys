@@ -64,7 +64,7 @@ if (isset($_GET['folder'])) {
   }
 </script>
 
-<form name="StdSetMenu" action="">
+<form name="StdSetMenu" action="" autocomplete="off">
 
 
 <div class="submenuheading"><?php echo $string['individualrating'] ?></div>

@@ -64,7 +64,7 @@ $mysqli->close();
 <p><?php printf($string['msg1'], $grid_name) ?></p>
 
 <div class="button_bar">
-<form action="do_delete_ebel_template.php" method="post">
+<form action="do_delete_ebel_template.php" method="post" autocomplete="off">
 <input type="hidden" name="gridID" value="<?php echo $_GET['gridID'] ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
 </form>

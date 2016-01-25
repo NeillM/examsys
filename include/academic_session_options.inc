@@ -37,7 +37,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 <div id="menu1a">
 
 	<div class="menuitem"><a href="add_academic_session.php"><img class="sidebar_icon" src="../artwork/add_sessions_16.png" alt="<?php echo $string['createsession'] ?>" /><?php echo $string['createsession'] ?></a></div>

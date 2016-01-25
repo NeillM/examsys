@@ -61,7 +61,7 @@ $mysqli->close();
 <div><strong><?php echo $string['msg'] ?></strong></div>
 <br />
 <div class="button_bar">
-<form action="do_clear_lti.php" method="post">
+<form action="do_clear_lti.php" method="post" autocomplete="off">
 <input type="hidden" name="userID" value="<?php echo $userID ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['clearlti'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" />
 </form>

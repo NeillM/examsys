@@ -63,7 +63,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="<?php echo $configObject->get('cfg_root_path') ?>/css/login_form.css" />
 </head>
 <body>
-<form method="post" id="theform" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+<form method="post" id="theform" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
     <div class="mainbox">
 
         <img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />

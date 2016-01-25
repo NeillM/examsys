@@ -60,7 +60,7 @@ $mysqli->close();
 <br />
 
 <div style="text-align:right">
-<form action="do_retire_paper.php" method="post">
+<form action="do_retire_paper.php" method="post" autocomplete="off">
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />

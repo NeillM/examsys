@@ -182,7 +182,7 @@ ini_set("auto_detect_line_endings", true);
 <br />
 
 <div align="center">
-<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" autocomplete="off">
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
 <br />
 <p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" id="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" /></p>

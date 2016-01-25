@@ -210,7 +210,7 @@ if (isset($_POST['submit'])) {
   </script>
 </head>
 <body>
-<form name="teamform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form name="teamform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
 <?php
   // Get existing modules for the user in passed calendar year.

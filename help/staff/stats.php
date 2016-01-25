@@ -74,7 +74,7 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
 <?php
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
 
-  echo "<tr><td colspan=\"3\" style=\"margin-bottom:5px\">\n<form action=\"\" method=\"post\">" . $string['dates'] . " ";
+  echo "<tr><td colspan=\"3\" style=\"margin-bottom:5px\">\n<form action=\"\" method=\"post\" autocomplete=\"off\">" . $string['dates'] . " ";
     // Split the end date
     $split_year = substr($start_date,0,4);
     $split_month = substr($start_date,4,2);

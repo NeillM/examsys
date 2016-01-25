@@ -24,7 +24,7 @@
 
 ?>
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 <div id="menu1a">
 	<div class="menuitem"><a href="add_ref_material.php?module=<?php echo $_GET['module']; ?>"><img class="sidebar_icon" src="../artwork/ref_16.png" alt="" /><?php echo $string['creatematerial'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editmaterial'] ?></div>

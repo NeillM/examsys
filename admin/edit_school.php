@@ -139,7 +139,7 @@ $result->close();
 
   <br />
   <div align="center">
-  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid ?>">
+  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid ?>" autocomplete="off">
 <?php
   if (isset($error) and $error = 'duplicate') {
 ?>

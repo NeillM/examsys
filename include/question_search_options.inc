@@ -107,7 +107,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
+<form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get" autocomplete="off">
 
 <table cellpadding="4" cellspacing="0" border="0" style="width:210px">
 <tr><td>

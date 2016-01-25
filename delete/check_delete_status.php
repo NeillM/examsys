@@ -58,7 +58,7 @@ if ($q_count == 0) {
     <p><?php echo $string['msg'] ?></p>
     <br />
     <div class="button_bar">
-    <form action="do_delete_status.php" method="post">
+    <form action="do_delete_status.php" method="post" autocomplete="off">
       <input type="hidden" name="status_id" value="<?php echo $_GET['id']; ?>" />
       <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
@@ -69,7 +69,7 @@ if ($q_count == 0) {
     <p><?php echo $string['questionassigned'] ?></p>
     <br />
     <div class="button_bar">
-    <form action="do_delete_status.php" method="post">
+    <form action="do_delete_status.php" method="post" autocomplete="off">
       <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>

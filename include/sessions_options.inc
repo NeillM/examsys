@@ -98,7 +98,7 @@ if ($vle_api != '') {
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 
 <div id="menu1a">
 <div class="menuitem"><a href="#" onclick="hideSessCopyMenu(event); addSession(); return false;"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><?php echo $string['createsession'] ?></a></div>

@@ -115,7 +115,7 @@ $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'of
 </head>
 
 <body>
-<form id="theform" name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();">
+<form id="theform" name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();" autocomplete="off">
 <div style="text-align:center; border:solid 1px #295AAD; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>

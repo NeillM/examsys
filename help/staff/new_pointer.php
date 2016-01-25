@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
 
     <p style="margin-left:20px" class="key"><?php echo $string['msg'] ?></p>
     
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="Page Title..." required /></p>
 
 <div id="pointertoc" style="margin-left:20px; padding:2px; border:#C0C0C0 solid 1px; width:400px; height:500px; overflow-y:scroll">

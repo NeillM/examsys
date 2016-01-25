@@ -103,7 +103,7 @@ if (!isset($_POST['submit'])) {
 <body>
 
 <?php
-  echo "<form style=\"width:100%; height:100%;\" method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\">\n";
+  echo "<form style=\"width:100%; height:100%;\" method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\" autocomplete=\"off\">\n";
 ?>
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/copy_onto_paper.png" width="32" height="32 alt="<?php echo $string['copyontopaper']; ?>" /></td><td class="midblue_header" style="background-color:white; font-size:150%; font-weight:bold; border-bottom:1px solid #CCD9EA"><?php echo $string['copyontopaper']; ?></td></tr>

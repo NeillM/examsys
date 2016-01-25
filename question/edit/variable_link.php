@@ -107,7 +107,7 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
 </head>
 
 <body>
-<form name="myform" action="" method="post">
+<form name="myform" action="" method="post" autocomplete="off">
 <table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; width:100%">
 <tr>
 <td colspan="2" class="title"><?php echo $string['variablelink']; ?></td>

@@ -279,7 +279,7 @@ if (count($moduleIDs) > 0) {
 
 <div id="left-sidebar" class="sidebar">
 
-<form name="PapersMenu" action="">
+<form name="PapersMenu" action="" autocomplete="off">
 <input type="hidden" id="questionNo" name="questionNo" value="" />
 <input type="hidden" id="questionID" name="questionID" value="" />
 <input type="hidden" id="pID" name="pID" value="" />

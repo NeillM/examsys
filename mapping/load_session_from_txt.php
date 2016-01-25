@@ -146,7 +146,7 @@ if (isset($_POST['submit'])) {
 <p><?php echo $string['msg']; ?></p>
 
 <div align="center">
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" autocomplete="off">
 
 <table cellpadding="3" cellspacing="0" border="0" style="text-align:left">
 <tr>

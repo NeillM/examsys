@@ -91,7 +91,7 @@
 </script>
 
 <div class="popup" style="top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
-<form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%">
+<form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%" autocomplete="off">
 
 <div style="background-color:#F2B100; height:6px"></div>
 

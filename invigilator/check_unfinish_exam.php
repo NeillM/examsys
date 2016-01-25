@@ -51,7 +51,7 @@ $name = $user_details['title'] . ' ' . $user_details['first_name'] . ' ' . $user
   <p><?php echo $string['msg']; ?></p>
 
   <div class="button_bar">
-  <form action="do_unfinish_exam.php" method="post">
+  <form action="do_unfinish_exam.php" method="post" autocomplete="off">
   <input type="hidden" name="userID" value="<?php echo $userID ?>" />
   <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
   <input class="ok" type="submit" name="submit" value=" <?php echo $string['ok'] ?> " /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel'] ?> " onclick="javascript:window.close();" />

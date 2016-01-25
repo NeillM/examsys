@@ -38,7 +38,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 <div id="menu1a">
 	<?php
 	if ($faculties > 0) {

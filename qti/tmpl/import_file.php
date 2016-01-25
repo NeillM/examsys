@@ -87,7 +87,7 @@ echo "</div>";
 		<td class="dialog_body" colspan="2"> 
 			
 			<div style="padding-top:16px;padding-left:16px;padding-right:16px;">
-				<form id="file_form" action="import.php?<?php echo $_SERVER['QUERY_STRING'];?>" method="post" enctype="multipart/form-data">
+				<form id="file_form" action="import.php?<?php echo $_SERVER['QUERY_STRING'];?>" method="post" enctype="multipart/form-data" autocomplete="off">
 				<table width="100%" cellspacing="0" cellpadding="10">
 					<tr>
 						<td>

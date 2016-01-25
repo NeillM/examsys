@@ -96,7 +96,7 @@ if (!isset($_POST['submit'])) {
 
 <body>
 <?php
-  echo "<form method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\">\n";
+  echo "<form method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\" autocomplete=\"off\">\n";
 ?>  
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">

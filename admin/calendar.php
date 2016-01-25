@@ -355,7 +355,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   $stmt->close();
 ?>
 
-<form action="" method="get" id="theform">
+<form action="" method="get" id="theform" autocomplete="off">
 <table class="header">
 <tr><th>
 <?php

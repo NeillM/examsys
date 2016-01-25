@@ -412,7 +412,7 @@ function check_ebel_distinction_type($reviewID, $db) {
 		echo draw_toprightmenu(99);
   }
 
-  echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\">\n";
+  echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\" autocomplete=\"off\">\n";
 
   $reviews = array();
   

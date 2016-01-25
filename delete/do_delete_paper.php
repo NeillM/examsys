@@ -82,7 +82,7 @@ $mysqli->close();
 <p><?php echo $string['msg']; ?></p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='../module/index.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>'; window.close();" />
 </form>
 </div>

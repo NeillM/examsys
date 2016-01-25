@@ -48,7 +48,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 <br />
 
 <div id="menu1a">

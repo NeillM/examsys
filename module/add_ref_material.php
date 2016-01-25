@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
   <div class="page_title"><?php echo $string['newreferencematerial'] ?></div>
 </div>
 
-<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" charset="UTF-8" autocomplete="off">
 <br />
 <table border="0" style="text-align:left; margin-left:auto; margin-right:auto; font-size:80%">
 <tr><td><?php echo $string['name']; ?> <input type="text" name="title" size="40" required autofocus />&nbsp;&nbsp;&nbsp;<?php echo $string['width']; ?> <select name="width"><?php

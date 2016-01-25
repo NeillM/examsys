@@ -361,7 +361,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
 ?>
 <div id="content">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:<?php echo $bg_color; ?>; width:100%; line-height:175%; padding-bottom:10px">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post" autocomplete="off">
 <?php
   if ($user_details['gender'] == 'Male') {
     $generic_icon = '../artwork/user_male_64.png';
@@ -727,7 +727,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Admin_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=admin\" method=\"post\">";
+  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=admin\" method=\"post\" autocomplete=\"off\">";
 
   echo drawTabs('Admin', 1, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
@@ -800,7 +800,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left; display:none\">\n";
   }
-  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=accessibility\" method=\"post\">";
+  echo "<form name=\"accessibility\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=accessibility\" method=\"post\" autocomplete=\"off\">";
   echo drawTabs('Accessibility', 1, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo "<tr><td align=\"center\"><table cellspacing=\"1\" cellpadding=\"1\" border=\"0\" style=\"padding-top:20px; text-align:left\">";
@@ -1016,7 +1016,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
   } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Metadata_tab\" style=\"width:100%; display:none\">\n";
   }
-  echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=metadata\" method=\"post\">";
+  echo "<form name=\"metadata\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=metadata\" method=\"post\" autocomplete=\"off\">";
   echo drawTabs('Metadata', 5, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['moduleid'] . "</td><td class=\"coltitle\">" . $string['academicyear'] . "</td><td class=\"coltitle\">" . $string['type'] . "</td><td class=\"coltitle\">" . $string['value'] . "</td><td class=\"coltitle\" style=\"width:30%\">&nbsp;</td></tr>\n";
   $stmt = $mysqli->prepare("SELECT modules.id, modules.moduleID, fullname, calendar_year, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND userID = ?");

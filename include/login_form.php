@@ -86,7 +86,7 @@ $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_
 <?php
   }
 ?>
-<form method="post" id="theform">
+<form method="post" id="theform" autocomplete="off">
     <div class="mainbox">
 
         <img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
@@ -114,7 +114,7 @@ HTML;
       if (isset($displaystdformobj->disablerequired) and $displaystdformobj->disablerequired == true) {
         $required = '';
       } else {
-        $required = 'required';
+        $required = 'required="required"';
       }
 
       ?>
@@ -122,11 +122,11 @@ HTML;
           <table>
               <tr>
                   <td><?php echo $string['username']; ?></td>
-                  <td><input type="text" name="ROGO_USER" id="username" maxlength="60" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" <?php echo $required; ?> /></td>
+                  <td><input type="text" name="ROGO_USER" id="username" maxlength="60" value="<?php if (isset($_GET['guest_username'])) echo $_GET['guest_username']; ?>" class="field" autocomplete="off" <?php echo $required; ?> /></td>
               </tr>
               <tr>
                   <td><?php echo $string['password']; ?></td>
-                  <td><input type="password" name="ROGO_PW" maxlength="60" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" <?php echo $required; ?> /></td>
+                  <td><input type="password" name="ROGO_PW" maxlength="60" value="<?php if (isset($_GET['guest_password'])) echo $_GET['guest_password']; ?>" class="field" autocomplete="off" <?php echo $required; ?> /></td>
               </tr>
 <?php
 

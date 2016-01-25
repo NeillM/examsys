@@ -107,7 +107,7 @@ if (isset($_POST['submit'])) {
 
 <body>
 <h1><?php echo $string['editkeyword']; ?></h1>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <div><input type="text" style="width:99%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" required autofocus /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
 <div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
 </form>

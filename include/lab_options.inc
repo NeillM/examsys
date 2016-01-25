@@ -41,7 +41,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="labform">
+<form name="labform" autocomplete="off">
 <div id="menu1a">
 	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['vieweditdetails'] ?></div>

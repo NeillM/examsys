@@ -90,7 +90,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <table class="header">
   <tr>
   <th colspan="6">
-  <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
   &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php if (isset($_GET['searchterm'])) echo 'value="' . $_GET['searchterm'] . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
   <select name="searchtype">
     <option value="%"><?php echo $string['anytype']; ?></option>
@@ -168,7 +168,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   }
   echo '</tr>';
 
-  echo "<form name=\"theform\" method=\"post\" action=\"\">\n";
+  echo "<form name=\"theform\" method=\"post\" action=\"\" autocomplete=\"off\">\n";
   echo '<input type="hidden" name="screen" value="1" />';
 
   if (isset($_GET['search']) or isset($_GET['sortby'])) {

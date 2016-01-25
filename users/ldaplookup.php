@@ -149,7 +149,7 @@ if (isset($_POST['submit'])) {
 
     if (!isset($output->lookupdatas)) {
       ?>
-    <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+    <form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 			<div style="text-align:center">
 				<table style="text-align:left">
 					<?php
@@ -257,7 +257,7 @@ if (isset($_POST['submit'])) {
 ?>
 <body>
 
-<form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form method="post" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 	<div style="text-align:center">
 		<table style="text-align:left">
 			<tr>

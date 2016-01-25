@@ -266,7 +266,7 @@ if (isset($_POST['submit'])) {
 
 <body>
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate']; ?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate']; ?>" autocomplete="off">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32 alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['uniqueanswers']; ?></td></tr>
   </table>

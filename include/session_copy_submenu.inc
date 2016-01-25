@@ -100,7 +100,7 @@ function get_existing_years($db, $idMod) {
 <?php
 	} else {
 ?>
-	<form action="copy_year.php" method="post" onsubmit="return checkCopyYearForm()">
+	<form action="copy_year.php" method="post" onsubmit="return checkCopyYearForm()" autocomplete="off">
 		<table width="100%">
 			<tr>
 				<td width="50%"><?php echo $string['msg5']; ?></td>

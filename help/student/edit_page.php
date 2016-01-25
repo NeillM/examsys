@@ -92,7 +92,7 @@ if (isset($_POST['save_changes'])) {
     <?php $help_system->display_toc($pageid); ?>
   </div>
   <div id="contents">
-<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>">
+<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>" autocomplete="off">
 <?php
   if ($page_details['page_type'] == 'pointer') {
     $edit_id = $page_details['body'];

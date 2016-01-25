@@ -52,7 +52,7 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 
 <div class="submenuheading" id="currentmodule"><?php echo $string['currentmodule']; ?></div>
 <div id="menu1a">

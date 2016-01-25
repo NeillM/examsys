@@ -122,7 +122,7 @@ if (isset($_POST['submit'])) {
 	echo draw_toprightmenu(233);
 ?>
 <div id="content">
-<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />

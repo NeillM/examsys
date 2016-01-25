@@ -48,7 +48,7 @@ $mysqli->close();
 <div><strong><?php echo $string['msg'] ?></strong></div>
 <br />
 <div class="button_bar">
-<form action="do_delete_course.php" method="post">
+<form action="do_delete_course.php" method="post" autocomplete="off">
 <input type="hidden" name="courseID" value="<?php echo $courseID ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" />
 </form>

@@ -83,9 +83,9 @@
 <div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:346px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
 if ($configObject->get('cfg_summative_mgmt')) {
-  echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()">';
+  echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()" autocomplete="off">';
 } else {
-  echo '<form method="post" action="../paper/copy.php">';
+  echo '<form method="post" action="../paper/copy.php" autocomplete="off">';
 }
 ?>
 <div id="table1div" style="width:100%">

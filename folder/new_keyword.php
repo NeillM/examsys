@@ -137,7 +137,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 
 <body>
 <h1><?php echo $string['newkeyword']; ?></h1>
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <?php
 if ($exists) {
 ?>

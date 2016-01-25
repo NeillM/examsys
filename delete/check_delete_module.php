@@ -55,7 +55,7 @@ $mysqli->close();
 <p><?php echo sprintf($string['msg'], $moduleid) ?></p>
 
 <div class="button_bar">
-<form action="do_delete_module.php" method="post">
+<form action="do_delete_module.php" method="post" autocomplete="off">
 <input type="hidden" name="idMod" value="<?php echo $_GET['idMod']; ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>

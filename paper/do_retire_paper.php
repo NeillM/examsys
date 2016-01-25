@@ -115,7 +115,7 @@ $mysqli->close();
 <td><p><?php echo $string['msg']; ?><p>
 
 <div style="text-align:center">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="window.close();" />
 </form>
 </div>

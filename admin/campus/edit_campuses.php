@@ -109,7 +109,7 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
         echo $notice->info_strip($string['duplicate'], 100);
     }
 ?>
-    <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
         <?php 
             echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"" . $details['campusname'] . "\" required /></td></tr>";

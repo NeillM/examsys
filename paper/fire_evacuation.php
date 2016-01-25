@@ -144,7 +144,7 @@ if ($is_question_preview_mode == false) {
   </style>
 </head>
 <body>
-  <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true">
+  <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true" autocomplete="off">
 
   <p style="font-size:200%; color:#008000"><?php echo $string['top_msg'] ?></p>
   <p class="norun"><?php echo $string['donotrun'] ?></p>

@@ -277,7 +277,7 @@ if ($type == 'all') {
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="PapersMenu" action="">
+<form name="PapersMenu" action="" autocomplete="off">
 
 <div id="menu2a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play_grey.png" alt="<?php echo $string['quickview'] ?>" /><?php echo $string['quickview'] ?></div>

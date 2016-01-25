@@ -144,7 +144,7 @@ if (isset($_POST['submit'])) {
   echo "<p><input type=\"button\" value=\"" . $string['back'] . "\" name=\"back\" id=\"back\" class=\"ok\" /></p>";
 } else {
 ?>
-  <form name="templateform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] ?>">
+  <form name="templateform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] ?>" autocomplete="off">
 
     <table cellpadding="1" cellspacing="0" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
     <tr>

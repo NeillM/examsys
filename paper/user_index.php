@@ -336,7 +336,7 @@ if ($exam_duration !== null) {
 	echo draw_toprightmenu(14);
 ?>
 <br clear="all" />
-<form name="theform">
+<form name="theform" autocomplete="off">
 <?php
 if ($textsize > 120) {
   $table_width = 90;

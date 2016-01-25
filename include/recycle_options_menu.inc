@@ -32,7 +32,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="PapersMenu" action="">
+<form name="PapersMenu" action="" autocomplete="off">
 <div id="menu1a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></div>
 </div>

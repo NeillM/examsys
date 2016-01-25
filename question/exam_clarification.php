@@ -133,7 +133,7 @@ exit();
 </head>
 
 <body>
-<form name="myform" id="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form name="myform" id="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 <h1 class="dkblue_header"><?php echo sprintf($string['questionscreen'], $questionNo, $screenNo); ?></h1>
 <textarea class="mceEditor" id="msg" name="msg" cols="80" rows="4" style="width:100%; height:340px"><?php echo htmlspecialchars($msg, ENT_NOQUOTES); ?></textarea><br />
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" class="cancel" /></div>

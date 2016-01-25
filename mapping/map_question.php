@@ -146,7 +146,7 @@ if (isset($_POST['submit'])) {
   display_q($configObject, $_GET['q_id'], $mysqli);
 
   echo "<div id=\"obj_form\">\n";
-  echo "<form method=\"post\">";
+  echo "<form method=\"post\" autocomplete=\"off\">";
   try {
     echo render_objectives_mapping_form($mysqli, $paperID, $string);
   } catch(Exception $e) {

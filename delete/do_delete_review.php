@@ -98,7 +98,7 @@ $result->close();
 <p>Standards setting review successfully deleted.<p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.opener.top.location.reload(); window.close();" />
 </form>
 </div>

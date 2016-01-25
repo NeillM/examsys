@@ -68,7 +68,7 @@ $mysqli->close();
 ?>
 <p>
 <div class="button_bar">
-<form action="do_delete_user.php" method="post">
+<form action="do_delete_user.php" method="post" autocomplete="off">
 <input type="hidden" name="id" value="<?php echo $_GET['id']; ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>

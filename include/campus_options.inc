@@ -41,7 +41,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="campusform">
+<form name="campusform" autocomplete="off">
 <div id="menu1a">
 	<div class="menuitem"><a href="add_campuses.php"><img class="sidebar_icon" src="../../artwork/new_campus_16.png" alt="" /><?php echo $string['createnewcampus'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../../artwork/edit_grey.png" alt="" /><?php echo $string['viewcampus'] ?></div>

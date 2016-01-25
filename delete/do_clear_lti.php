@@ -74,7 +74,7 @@ $mysqli->close();
 <p><?php echo $string['msg'] ?><p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="<?php echo $string['ok'] ?>" class="ok" />
 </form>
 </div>

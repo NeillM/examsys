@@ -56,7 +56,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <p><?php echo $string['msg'] ?></p>
 
 <div class="button_bar">
-<form action="do_delete_q_pointer.php" method="post">
+<form action="do_delete_q_pointer.php" method="post" autocomplete="off">
 <input type="hidden" name="module" value="<?php echo $_GET['module'] ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder'] ?>" />
 <input type="hidden" name="scrOfY" value="<?php echo $_GET['scrOfY'] ?>" />

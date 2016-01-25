@@ -309,7 +309,7 @@ if (isset($_GET['submit'])) {
   }
 ?>
 
-<form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>?sortby=<?php echo $sortby; ?>&order=<?php echo $ordering; ?>">
+<form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>?sortby=<?php echo $sortby; ?>&order=<?php echo $ordering; ?>" autocomplete="off">
 
 <div class="head_title">
 <div style="float:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
