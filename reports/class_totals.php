@@ -832,7 +832,13 @@ echo draw_toprightmenu(30);
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
-      $emailtemplatedir = rogo_directory::get_directory('email_templates');
+      $emailtemplatedir = rogo_directory::get_directory('email_templates');    
+      if (!$emailtemplatedir->check_permissions()) {
+          $errorline = __LINE__ - 2;
+          $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['filepermission'];
+          $notice->display_notice_and_exit($mysqli, $string['filepermission'], $msg, $string['filepermission'], '../artwork/access_denied.png', '#C00000', true, true);
+      }
+
       $file = fopen($emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt"), "w");
       fwrite($file, $userObject->get_email() . "\n");
       fwrite($file, $_POST['ccaddress'] . "\n");
