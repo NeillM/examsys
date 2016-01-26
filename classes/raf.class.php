@@ -228,8 +228,8 @@ class RAF {
 		$zip->addFile($this->json_filename, 'raf.json');
     $mediadirectory = rogo_directory::get_directory('media');
 		foreach ($this->media as $media_filename) {
-			if (file_exists($mediadirectory->fullname($media_filename))) {
-				$zip->addFile($mediadirectory->fullname($media_filename), $media_filename);
+			if (file_exists($mediadirectory->fullpath($media_filename))) {
+				$zip->addFile($mediadirectory->fullpath($media_filename), $media_filename);
 			}
 		}
 		$zip->close();
@@ -297,7 +297,7 @@ class RAF {
 			while (false !== ($entry = readdir($handle))) {
 				if ($entry != '.' and $entry != '..' and $entry != 'raf.json') {
 					$new_media = unique_filename($entry);
-					rename($tmp_path . $this->userID . '/' . $entry, $mediadirectory->fullname($new_media));
+					rename($tmp_path . $this->userID . '/' . $entry, $mediadirectory->fullpath($new_media));
 					$this->data = str_replace($entry, $new_media, $this->data);
 				}
 			}
