@@ -121,7 +121,7 @@ $mysqli->close();
 <p><?php echo $string['msg']; ?></p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <?php
 if ($parent == '') {
   echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" onclick=\"javascript:self.opener.location.href='../index.php';window.close();\" />\n";

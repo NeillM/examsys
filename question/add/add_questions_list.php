@@ -103,7 +103,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   
   $moduleObj = new module();
 
-  echo "<form name=\"theform\">\n";
+  echo "<form name=\"theform\" autocomplete=\"off\">\n";
   ?>
   <input type="hidden" name="screen" value="1" />
   <table class="header">

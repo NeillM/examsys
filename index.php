@@ -178,7 +178,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 ?>
 
 <div id="content">
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <?php
   // -- Create new folder ---------------------------------------------------
   $duplicate_folder = false;

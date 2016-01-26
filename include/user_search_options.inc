@@ -169,7 +169,7 @@ if (isset($username) and $search_surname == '' and $search_username == '' and $s
 }
 ?>
 <div id="left-sidebar" class="sidebar">
-<form name="PapersMenu" action="search.php" method="get">
+<form name="PapersMenu" action="search.php" method="get" autocomplete="off">
 <br />
 
 <table cellpadding="0" cellspacing="0" border="0" style="width:210px; font-size:110%">

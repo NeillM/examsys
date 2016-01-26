@@ -101,7 +101,7 @@ $time_range = range(0, 30, 1);
   </script>
 </head>
 <body onload="<?php echo $onload; ?>">
-<form id="extend_time_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+<form id="extend_time_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
     <p>&nbsp;<?php echo $title . ' ' . $initials . ' ' . $surname; ?></p>
 
     <div style="text-align:center">

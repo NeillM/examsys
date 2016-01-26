@@ -288,7 +288,7 @@ if (!$graded and isset($_POST['submit'])) {
 <div style="text-align:center"><img src="../artwork/osce_import.png" width="386" height="139" style="border:1px solid black" alt="<?php echo $string['import']; ?>" /></div>
 
 <div align="center">
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
+<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data" autocomplete="off">
 
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" /><br />
 <input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>

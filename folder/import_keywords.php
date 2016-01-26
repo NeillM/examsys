@@ -128,7 +128,7 @@ if (isset($_POST['submit'])) {
 
 
 <div align="center">
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php if (isset($_GET['paperID'])) echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data">
+<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php if (isset($_GET['paperID'])) echo $_GET['paperID']; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>" enctype="multipart/form-data" autocomplete="off">
 
 <?php
 if ($file_problem) {

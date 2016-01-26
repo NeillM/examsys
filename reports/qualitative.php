@@ -57,7 +57,7 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
 
   $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-  echo "<form name=\"analyse\" method=\"get\" action=\"" . $_SERVER['PHP_SELF'] . "\">";
+  echo "<form name=\"analyse\" method=\"get\" action=\"" . $_SERVER['PHP_SELF'] . "\" autocomplete=\"off\">";
   echo "<table class=\"header\" style=\"font-size:90%\">\n";
   echo "<tr><th style=\"width:75%; vertical-align: top\">";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';

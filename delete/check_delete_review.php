@@ -63,7 +63,7 @@ $mysqli->close();
 <p><?php printf($string['confirmmsg'], $std_set_date); ?></p>
 
 <div class="button_bar">
-<form action="do_delete_review.php" method="post">
+<form action="do_delete_review.php" method="post" autocomplete="off">
 <input type="hidden" name="std_setID" value="<?php echo $std_setID; ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />
 </form>

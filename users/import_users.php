@@ -118,7 +118,7 @@ ob_start();
 <br />
 <br />
 <div style="text-align:center">
-<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data">
+<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" autocomplete="off">
 <?php
 if ($file_problem) {
   echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;' . $string['specifyfile'] . '</div>';

@@ -135,7 +135,7 @@ if (isset($_POST['submit'])) {
 	echo draw_toprightmenu(231);
 ?>
 <div id="content">
-<form id="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?labID=' . $_GET['labID']; ?>" method="post">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?labID=' . $_GET['labID']; ?>" method="post" autocomplete="off">
 
 <?php
   $ip_no = 0;

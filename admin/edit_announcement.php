@@ -124,7 +124,7 @@ SCRIPT;
   <div class="page_title"><?php echo $string['editannouncement']; ?></div>
 </div>
 
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
 <table class="tblform">
 <tr>

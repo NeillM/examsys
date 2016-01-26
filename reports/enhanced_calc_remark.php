@@ -131,7 +131,7 @@ $q_marks = array_flip($marks_arr);
 
 <body>
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $paperID; ?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&paperID=' . $paperID; ?>" autocomplete="off">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/enhancedcalc_override.gif" width="32" height="32" alt="Correct" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA; text-align: left"><strong><?php echo $string['useranswers']; ?></strong></td></tr>
   </table>

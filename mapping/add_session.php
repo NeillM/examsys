@@ -207,7 +207,7 @@ if (isset($_POST['Save'])) {
 </div>
 <br />
 <?php
-  echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:85%; text-align:left\">\n";
+  echo "<form id=\"theform\" name=\"editObj\" action=\"" . $_SERVER['PHP_SELF'] . "?module=" . $_GET['module'] . "&folder=\" method=\"post\" autocomplete=\"off\">\n<div align=\"center\"><table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:85%; text-align:left\">\n";
   echo "<tr><td style=\"width:92px\" class=\"field\">" . $string['title'] . "</td><td><input type=\"text\" name=\"session_title\" id=\"session_title\" size=\"60\" value=\"\" required autofocus /></td></tr>\n";
 
   echo '<tr><td class="field">' . $string['session'] . '</td><td>';

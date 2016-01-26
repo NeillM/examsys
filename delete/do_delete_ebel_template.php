@@ -77,7 +77,7 @@ $mysqli->close();
 <p>Grid template successfully deleted.<p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='/admin/list_ebel_grids.php'; window.close();" />
 </form>
 </div>

@@ -98,7 +98,7 @@ function quick_links() {
 
   <body>
   <div class="title"><?php echo $paper_title; ?></div>
-  <form>
+  <form autocomplete="off">
   
   <?php
   

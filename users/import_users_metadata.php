@@ -200,7 +200,7 @@ if (!$module_details) {
 <div style="text-align:center">
 <img src="../artwork/user_metadata_sheet.png" width="328" height="159" style="border:1px solid #808080" alt="" />
 <br />
-<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?module=' . $_GET['module']; ?>" enctype="multipart/form-data">
+<form name="import" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?module=' . $_GET['module']; ?>" enctype="multipart/form-data" autocomplete="off">
 <table style="margin-left:auto; margin-right:auto; text-align:left">
 <tr><td><?php echo $string['year']; ?></td><td><select name="session">
 <?php

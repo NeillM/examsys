@@ -120,7 +120,7 @@ if (isset($_POST['submit'])) {
 
         <br />
             <div align="center">
-                <form id="theform" name="edit_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?year=' . $year ?>">
+                <form id="theform" name="edit_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?year=' . $year ?>" autocomplete="off">
                     <table cellpadding="0" cellspacing="2" border="0">
                         <tr><td class="field"><?php echo $string['academicyear'] ?></td><td><input type="text" size="30" maxlength="30" id="academic_year" name="academic_year" value="<?php echo $curr_academic_year ?>" required /></td></tr>
                         <tr><td class="field"><?php echo $string['calstatus'] ?></td><td><input type="checkbox" id="cal_status" name="cal_status" value="" <?php if($curr_cal_status) echo " checked" ?> /></td></tr>

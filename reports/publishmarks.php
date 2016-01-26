@@ -50,7 +50,7 @@ require '../include/staff_auth.inc';
 
 <body>
 <p><?php echo $string['publishmarkscheck'] ?></p>
-<form name="templateform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form name="templateform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
 <tr>

@@ -658,7 +658,7 @@ $result->close();
 
 <body>
 <div id="maincontent">
-<form name="theform">
+<form name="theform" autocomplete="off">
 
 <div class="head_title" style="font-size:90%">
 <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>

@@ -77,7 +77,7 @@ $started = $dateObj->format($display_format);
 <br />
 
 <div style="text-align:right">
-<form action="do_reset_timer.php" method="post">
+<form action="do_reset_timer.php" method="post" autocomplete="off">
 <input type="hidden" name="metadataID" value="<?php echo $metadataID; ?>" />
 <input type="hidden" name="userID" value="<?php echo $userID; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />

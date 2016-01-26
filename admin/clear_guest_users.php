@@ -88,7 +88,7 @@ require '../include/sidebar_menu.inc';
     }
   }
 ?>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <blockquote>
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:100%">
 <tr><th><?php echo $string['clear'] ?></th><th><?php echo $string['user'] ?></th><th><?php echo $string['surname'] ?></th><th><?php echo $string['firstnames'] ?></th><th><?php echo $string['title'] ?></th><th><?php echo $string['studentid'] ?></th><th><?php echo $string['datereserved'] ?></th><th><?php echo $string['assessmenttaken'] ?></th></tr>

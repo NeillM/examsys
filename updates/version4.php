@@ -135,7 +135,7 @@ if (!isset($_POST['update'])) {
     <?php
   }else {
     ?>
-  <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+  <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" autocomplete="off">
       <div><?php printf($string['msg1'], $version); ?></div>
       <table class="h">
           <tr>
@@ -150,8 +150,8 @@ if (!isset($_POST['update'])) {
       <div><?php echo $string['msg2']; ?></div>
       <br/>
 
-      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2"/></div>
-      <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass"/>
+      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2" autocomplete="off"/></div>
+      <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass" autocomplete="off"/>
       </div>
 
       <table class="h">

@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
   </head>
 <body>
   <div class="dialog_header"><?php echo $string['addevent'] ?></div>
-  <form name="theform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" style="padding:10px">
+  <form name="theform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" style="padding:10px" autocomplete="off">
     
   <table style="width:99%">
     <tr>

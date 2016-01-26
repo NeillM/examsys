@@ -112,7 +112,7 @@ $result->close();
 </div>
 
 <div id="form" style="margin: 15px">
-  <form id="the_form" action="./" method="post">
+  <form id="the_form" action="./" method="post" autocomplete="off">
   <dl class="form">
     <dt><label for="period">Select time period:</label></dt>
     <dd>

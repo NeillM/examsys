@@ -35,7 +35,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-    <form name="myform">
+    <form name="myform" autocomplete="off">
         <br/>
         <div id="menu1a">
             <div class="menuitem"><a href="list_oauthclient.php"><img class="sidebar_icon" src="../../artwork/lti_key_16.png" alt="<?php echo $string['listoauthclient'] ?>" /><?php echo $string['listoauthclient'] ?></a></div>

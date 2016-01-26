@@ -48,7 +48,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/sear
 
 <div id="left-sidebar" class="sidebar">
 <div style="padding-right:16px">
-<form name="PapersMenu" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form name="PapersMenu" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 
 <div><strong><?php echo $string['wordorphrase']; ?></strong><br /><input type="text" name="searchterm" id="searchterm" size="25" style="width:98%" value="<?php if (isset($_POST['searchterm'])) echo $_POST['searchterm']; ?>" /></div>
 

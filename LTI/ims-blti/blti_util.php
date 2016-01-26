@@ -146,9 +146,9 @@ function postLaunchHTML($newparms, $endpoint, $debug=false, $iframeattr=false) {
     global $last_base_string;
     $r = "<div id=\"ltiLaunchFormSubmitArea\">\n";
     if ( $iframeattr ) {
-        $r = "<form action=\"".$endpoint."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" method=\"post\" target=\"basicltiLaunchFrame\" encType=\"application/x-www-form-urlencoded\">\n" ;
+        $r = "<form action=\"".$endpoint."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" method=\"post\" target=\"basicltiLaunchFrame\" encType=\"application/x-www-form-urlencoded\" autocomplete=\"off\">\n" ;
     } else {
-        $r = "<form action=\"".$endpoint."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" method=\"post\" encType=\"application/x-www-form-urlencoded\">\n" ;
+        $r = "<form action=\"".$endpoint."\" name=\"ltiLaunchForm\" id=\"ltiLaunchForm\" method=\"post\" encType=\"application/x-www-form-urlencoded\" autocomplete=\"off\">\n" ;
     }
     $submit_text = $newparms['ext_submit'];
     foreach($newparms as $key => $value ) {

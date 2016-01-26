@@ -578,7 +578,7 @@ if ($critical_error != '') {
   $query_string .= ($module != '') ? '&amp;module=' . $module : '';
 
 ?>
-	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput">
+	<form id="edit_form" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . $query_string ?>" enctype="multipart/form-data" class="clearinput" autocomplete="off">
 <?php
   if ($show_media_upload) {
     $upload_file = "../../include/question/addedit/media_upload/media_upload_{$question->get_type()}.php";

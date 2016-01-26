@@ -1816,7 +1816,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 	echo draw_toprightmenu(154);
 ?>
 <div id="content">
-<form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
+<form name="theform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post" autocomplete="off">
 <?php
   // Get some paper properties
   $paper_title = $propertyObj->get_paper_title();

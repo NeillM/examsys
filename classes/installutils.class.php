@@ -143,7 +143,7 @@ Class InstallUtils {
         });
       });
     </script>
-    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
 
       <table class="h"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" /></div>

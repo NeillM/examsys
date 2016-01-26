@@ -70,7 +70,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
 
 
 <div style="text-align:center; padding-top:5px">
-<form>
+<form autocomplete="off">
 <input type="button" style="width:120px" name="ok" onclick="javascript:window.close();" value="<?php echo $string['close']; ?>" />
 </form>
 </div>

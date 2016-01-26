@@ -74,7 +74,7 @@ foreach ($keyword_names as $keyword_name) {
 <p><?php printf($string['msg'], $keywordss); ?></p>
 
 <div class="button_bar">
-<form action="do_delete_team_keyword.php" method="post">
+<form action="do_delete_team_keyword.php" method="post" autocomplete="off">
 <input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />

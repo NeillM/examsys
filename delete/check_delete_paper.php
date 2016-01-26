@@ -54,7 +54,7 @@ $mysqli->close();
 <p><?php echo $string['msg'] ?><p>
 
 <div class="button_bar">
-<form action="do_delete_paper.php" method="post">
+<form action="do_delete_paper.php" method="post" autocomplete="off">
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />

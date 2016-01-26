@@ -193,7 +193,7 @@ if (isset($_POST['Submit'])) {
   if ($unique_name) {
   ?>
     <body onload="closeWindow();">
-    <form>
+    <form autocomplete="off">
       <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
     </form>
     </body>
@@ -235,7 +235,7 @@ if ($unique_name) {
 }
 ?>
 <body>
-<form id="theform" name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>">
+<form id="theform" name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>" autocomplete="off">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
 <tr>
 <td style="width:48px; background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" /></td><td style="background-color:white; text-align:left">&nbsp;&nbsp;<span class="midblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['folderproperties']; ?></span></td>

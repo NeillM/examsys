@@ -134,7 +134,7 @@ $render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additi
 
 <br />
 <div align="center">
-    <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
             <tr><td class="field"><?php echo $string['username'] ?></td><td>
             <select name="userid" id="userid"  required>

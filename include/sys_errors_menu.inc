@@ -35,7 +35,7 @@
 	<div id="sys_errors_menu" class="menuitem"><a href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
 </div>
 
-<form name="errorsMenu">
+<form name="errorsMenu" autocomplete="off">
 <input type="hidden" name="lineID" id="lineID" value="" />
 </form>
 </div>

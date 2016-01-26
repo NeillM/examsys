@@ -81,7 +81,7 @@ $mysqli->close();
 <td><p>Paper successfully converted.<p>
 
 <div style="text-align:center">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="    OK    " onclick="javascript:self.opener.location.href='summative_scheduling.php'; window.close();" />
 </form>
 </div>

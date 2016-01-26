@@ -67,7 +67,7 @@ if (!isset($_POST['create'])) {
     $("#create_form").validate();
   });
 </script>
-  <form id="create_form" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+  <form id="create_form" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" autocomplete="off">
       <p><?php echo $string['msg1']; ?></p>
       <div><label for="tag"><?php echo $string['tag']; ?></label> <input type="text" value="" id="tag" name="tag" class="required" minlength="2" /></div>
 

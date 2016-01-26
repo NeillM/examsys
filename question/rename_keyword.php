@@ -78,7 +78,7 @@
   </style>
 </head>
 <body>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <h1>Rename</h1>
 <?php
   $keyword_details = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id=?");

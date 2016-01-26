@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
   echo "Email sent, please check your inbox.";
 } else {
 ?>
-  <form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+  <form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
     <input type="text" name="email" style="width: 250px" placeholder="email address" required /> <input type="submit" name="submit" value="Send" class="ok" /> 
   </form>
 <?php

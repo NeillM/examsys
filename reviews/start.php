@@ -510,7 +510,7 @@ if ($current_screen < $no_screens) {
 } else {
   echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'];
 }
-echo '" onsubmit="return confirmSubmit()">';   // Warning message only in linear navigation mode.
+echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning message only in linear navigation mode.
 ?>
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">

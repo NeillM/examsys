@@ -126,7 +126,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
   </div>
   <br />
   <div align="center">
-  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?courseID=' . $courseID ?>">
+  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?courseID=' . $courseID ?>" autocomplete="off">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_course == false) {

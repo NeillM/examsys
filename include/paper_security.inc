@@ -223,7 +223,7 @@ function render_password_form($string) {
     $url .= '?' . $_SERVER['QUERY_STRING'];
   }
 
-  $html = "<form action=\"$url\" method=\"post\">";
+  $html = "<form action=\"$url\" method=\"post\" autocomplete=\"off\">";
   $html .= "<p style=\"margin-left:70px\">";
   $html .= "      <input type=\"password\" name=\"paperpwd\" id=\"paperpwd\" /><br />";
   $html .= "      <input type=\"submit\" value=\"{$string['ok']}\" class=\"ok\" style=\"width:100px\" />";

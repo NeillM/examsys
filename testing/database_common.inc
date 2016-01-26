@@ -40,7 +40,7 @@ function get_tables($db_name, $db) {
 function display_form() {
   $html = '';
   
-  $html .= "<form method=\"post\" action=\"". $_SERVER['PHP_SELF'] . "\">\n";
+  $html .= "<form method=\"post\" action=\"". $_SERVER['PHP_SELF'] . "\" autocomplete=\"off\">\n";
 
   $html .= <<<END
   <table>

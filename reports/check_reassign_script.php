@@ -177,7 +177,7 @@ if ($target_userID == '') {
   $result->close();
 }
 
-echo "<p>" . str_replace('user','Temporary Account ',$temp_username) . " " . $string['msg3'] . ":</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID\">\n<table border=\"0\" style=\"width:100%\">\n";
+echo "<p>" . str_replace('user','Temporary Account ',$temp_username) . " " . $string['msg3'] . ":</p>\n<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?userID=$userID&paperID=$paperID\" autocomplete=\"off\">\n<table border=\"0\" style=\"width:100%\">\n";
 echo "<tr><th>" . $string['Title'] . "</th><th>" . $string['Last Name'] . "</th><th>" . $string['First Names'] . "</th><th>" . $string['Student ID'] . "</th><th></th></tr>\n";
 echo "<tr><td><input type=\"text\" name=\"title\" value=\"$temp_title\" size=\"5\" /></td><td><input type=\"text\" name=\"surname\" value=\"$temp_surname\" size=\"15\" /></td><td><input type=\"text\" name=\"first_names\" value=\"$temp_first_names\" size=\"15\" /></td><td><input type=\"text\" name=\"student_id\" value=\"$temp_student_id\" size=\"6\" /></td><td><input type=\"submit\" name=\"submit\" value=\"" . $string['search'] . "\" style=\"width:80px\" /></tr>\n";
 echo "</table>\n</form>\n";

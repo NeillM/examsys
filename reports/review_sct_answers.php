@@ -217,7 +217,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
   }
 ?>
 </table>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>">
+<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?paperID=' . $paperID; ?>" autocomplete="off">
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" class="ok" style="width:250px" /></div>
 </form>
 </div>

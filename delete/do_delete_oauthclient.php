@@ -63,7 +63,7 @@ $oauth->delete_oauthclient($client);
 <p><?php echo $string['oauthclientdelsuccess']; ?><p>
 
 <div class="button_bar">
-  <form action="" method="get">
+  <form action="" method="get" autocomplete="off">
     <input type="button" name="ok" value="OK" class="ok" onclick="javascript:window.close();"/>
   </form>
 </div>

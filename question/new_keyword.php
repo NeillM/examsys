@@ -117,7 +117,7 @@ require '../include/errors.inc';
 
 <body onload="document.myform.new_keyword.focus();">
 <h1>New Keyword</h1>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <div><input type="text" style="width:100%" name="new_keyword" onkeypress="illegalChar(event.keyCode)" /></div>
 <div align="right"><input type="submit" name="ok" value="OK" style="width:80px" />&nbsp;<input type="button" name="cancel" value="Cancel" style="width:80px" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
 </form>

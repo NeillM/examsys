@@ -110,7 +110,7 @@ $mysqli->close();
 <p><?php echo $string['msg']; ?><p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="OK" class="ok" onclick="window.opener.location.reload(); window.close();" />
 </form>
 </div>

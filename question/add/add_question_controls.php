@@ -88,7 +88,7 @@ require '../../include/staff_auth.inc';
 
 <body>
 <?php
-  echo "<form name=\"theform\" method=\"post\" action=\"do_add_questions.php?paperID=" . $_GET['paperID'] . "&display_pos=" . $_GET['display_pos'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&scrOfY=" . $_GET['scrOfY'] . "&max_screen=" . $_GET['max_screen'] . "\">\n";
+  echo "<form name=\"theform\" method=\"post\" action=\"do_add_questions.php?paperID=" . $_GET['paperID'] . "&display_pos=" . $_GET['display_pos'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&scrOfY=" . $_GET['scrOfY'] . "&max_screen=" . $_GET['max_screen'] . "\" autocomplete=\"off\">\n";
   echo "<div align=\"right\">" . $string['screen'] . "&nbsp;<select name=\"screen\">\n";
 
   $max_screen = $_GET['max_screen'];

@@ -321,7 +321,7 @@ require_once 'summary_report.inc';
 </table>
 </div>
 
-<form>
+<form autocomplete="off">
 <input type="hidden" id="userID" value="" />
 <input type="hidden" id="scrOfY" value="" />
 </form>

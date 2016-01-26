@@ -128,7 +128,7 @@ function showForm($error) {
     window.resizeTo(500,500);
     window.moveTo(winx,winy);
 </script>
-<form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
+<form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>" autocomplete="off">
 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size:100%">
 <tr><td style="background-color:white; width:65px"><img src="large_captivate_icon.png" width="56" height="56" border="0" alt="Image" /></td><td style="width:85%; background-color:white; text-align:left; font-size:140%; font-weight:bold">&nbsp;New Captivate Tutorial</td></tr>
 </table>

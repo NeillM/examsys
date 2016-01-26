@@ -231,7 +231,7 @@ if ($candidate_no == 0) {
 
 $half_marks = true;
 ?>
-<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id'] ?>&amp;startdate=<?php echo $startdate ?>&amp;enddate=<?php echo $enddate ?>&amp;module=<?php echo $_GET['module'] ?>&amp;folder=<?php echo $_GET['folder'] ?>&amp;phase=<?php echo $phase ?>&amp;action=mark&amp;qNo=<?php echo $_GET['qNo'] ?>" method="post">
+<form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>?paperID=<?php echo $paperID; ?>&amp;q_id=<?php echo $_GET['q_id'] ?>&amp;startdate=<?php echo $startdate ?>&amp;enddate=<?php echo $enddate ?>&amp;module=<?php echo $_GET['module'] ?>&amp;folder=<?php echo $_GET['folder'] ?>&amp;phase=<?php echo $phase ?>&amp;action=mark&amp;qNo=<?php echo $_GET['qNo'] ?>" method="post" autocomplete="off">
 <input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID() ?>" />
 <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
 <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />

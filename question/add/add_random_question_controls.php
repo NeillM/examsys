@@ -86,7 +86,7 @@ require '../../include/staff_auth.inc';
 </head>
 <body>
 
-<form name="theform" method="post" action="do_add_random_questions.php?q_no=<?php echo $_GET['q_no']; ?>">
+<form name="theform" method="post" action="do_add_random_questions.php?q_no=<?php echo $_GET['q_no']; ?>" autocomplete="off">
 <div style="text-align:right"><input type="hidden" name="questions_to_add" id="questions_to_add" size="100" value="" /><input type="submit" name="submit" value="Add Questions" />
 <input type="hidden" name="questionlist" value="<?php if(isset($_GET['questionlist'])) echo $_GET['questionlist']; ?>" />
 <input type="hidden" name="question_no" value="<?php if(isset($_GET['question_no'])) echo $_GET['question_no']; ?>" />

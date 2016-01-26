@@ -62,7 +62,7 @@ $mysqli->close();
 <p>Announcement successfully deleted.</p>
 
 <div class="button_bar">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="cancel" value="OK" class="ok" onclick="window.close();" />
 </form>
 </div>

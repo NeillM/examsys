@@ -145,7 +145,7 @@ $parts = count($folders_array) - 1;
 	echo draw_toprightmenu();
 ?>
 <div id="content">
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post">
+<form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post" autocomplete="off">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php

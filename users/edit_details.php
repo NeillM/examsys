@@ -155,7 +155,7 @@ if ($user_details['gender'] == 'Male') {
   </table>
   <br />
   
-  <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post" enctype="multipart/form-data">
+  <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post" enctype="multipart/form-data" autocomplete="off">
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
   echo "<tr><td>" . $string['name'] . "</td><td>";

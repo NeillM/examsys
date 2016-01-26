@@ -85,7 +85,7 @@ echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-
 echo "</div><div class=\"page_title\">" . $string['importraf'] . "</div>";
 echo "</div>";
 ?>
-<form name="myform" id="myform" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" enctype="multipart/form-data">
+<form name="myform" id="myform" method="post" action="<?php echo $_SERVER['REQUEST_URI']; ?>" enctype="multipart/form-data" autocomplete="off">
 <table cellspacing="0" cellpadding="10" border="0" style="margin-top:70px; width:500px; text-align:left" class="dialog_border"> 
 	<tr> 
 		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/raf_file.png" width="48" height="48" /></td><td class="dialog_header" style="width:445px"><?php echo $string['importraf'] ?></td> 

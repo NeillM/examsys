@@ -101,7 +101,7 @@ $papertype = $assessment->get_type_value($_POST['paper_type']);
 </head>
 
 <body onload="warning();">
-<form name="theform" action="new_paper2.php" method="post">
+<form name="theform" action="new_paper2.php" method="post" autocomplete="off">
 <div style="text-align:center; border:solid 1px #295AAD; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
@@ -268,9 +268,9 @@ $papertype = $assessment->get_type_value($_POST['paper_type']);
 <body>
 <?php
 if ($papertype == $assessment::TYPE_SUMMATIVE) {
-  echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkSummativeForm()">';
+  echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkSummativeForm()" autocomplete="off">';
 } else {
-  echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkForm()">';
+  echo '<form name="myform" action="new_paper3.php" method="post" onsubmit="return checkForm()" autocomplete="off">';
 }
 ?>
 <table border="0" cellpadding="0" cellspacing="4" style="width:100%">

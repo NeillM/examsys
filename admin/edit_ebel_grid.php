@@ -132,7 +132,7 @@ if (isset($_POST['submit'])) {
   </div>   
 
   <blockquote>
-  <form id="theform" name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>">
+  <form id="theform" name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" autocomplete="off">
  
     <table cellpadding="5" cellspacing="0" border="0">
     <tr><td style="text-align:right"><?php echo $string['templatename']; ?></td><td colspan="3"><input type="text" name="name" size="40" maxlength="255" value="<?php echo $name; ?>" required /></td></tr>

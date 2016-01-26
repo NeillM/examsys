@@ -64,7 +64,7 @@ $mysqli->close();
 <p><strong><?php echo $string['msg2']; ?> '<?php echo $lab_name; ?>'?</strong></p>
 
 <div class="button_bar">
-<form action="do_delete_lab.php" method="post">
+<form action="do_delete_lab.php" method="post" autocomplete="off">
 <input type="hidden" name="labID" value="<?php echo $_GET['labID']; ?>" />
 <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
 </form>

@@ -21,7 +21,7 @@ $oauth_consumer_secret = $_REQUEST['secret'];
 if (strlen($oauth_consumer_secret) < 1 ) $oauth_consumer_secret = 'secret';
 ?>
 <p>
-<form method="POST">
+<form method="POST" autocomplete="off">
 Service URL: <input type="text" name="url" size="80" disabled="true" value="<?php echo($_REQUEST['url']);?>"/></br>
 lis_result_sourcedid: <input type="text" name="id" disabled="true" size="100" value="<?php echo($_REQUEST['id']);?>"/></br>
 OAuth Consumer Key: <input type="text" name="key" disabled="true" size="80" value="<?php echo($_REQUEST['key']);?>"/></br>

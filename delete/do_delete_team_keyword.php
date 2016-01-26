@@ -84,7 +84,7 @@ foreach ($keyword_list as $individualID) {
 <p><?php echo $string['msg']; ?><p>
 
 <div style="text-align:center">
-<form action="" method="get">
+<form action="" method="get" autocomplete="off">
 <input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="javascript:self.opener.location.href='<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php?moduleid=<?php echo $_POST['moduleID']; ?>';window.close();" />
 </form>
 </div>

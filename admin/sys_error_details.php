@@ -114,7 +114,7 @@ $variables = unserialize(base64_decode($variables));
 </table>
 </div>
 <br />
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>?errorID=<?php echo $_GET['errorID']; ?>" method="post" name="myform">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>?errorID=<?php echo $_GET['errorID']; ?>" method="post" name="myform" autocomplete="off">
 <div style="text-align:center"><input type="button" name="close" id="cancel" value="<?php echo $string['close']; ?>" style="width:100px" onclick="javascript:window.close();" />&nbsp;&nbsp;
 <?php
 if ($fixed == '') {

@@ -286,7 +286,7 @@ END;
     $msg = 'First time configuration. Please select the paper you wish to use in this external tool link.';
     echo $notice->info_strip($msg, 100);
     
-    echo '<form method="post">';
+    echo '<form method="post" autocomplete="off">';
 
     foreach ($data as $v) {
       $moduleid = $v[1];

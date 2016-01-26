@@ -30,7 +30,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 <div id="menu1a">
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails'] ?></div>
 </div>

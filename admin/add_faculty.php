@@ -88,7 +88,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 
 <body>
 <h1><?php echo $string['addfaculty'] ?></h1>
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <div><?php
 if ($duplicate) {
   echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" id="add_faculty" name="add_faculty" value="' . $_POST['add_faculty'] . '" maxlength="80" required autofocus />';

@@ -217,7 +217,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   </div>
   <br />
   <div align="center">
-  <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>">
+  <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>" autocomplete="off">
     <table cellpadding="0" cellspacing="1" border="0" style="text-align:left">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $module['moduleid'] ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $module['fullname'] ?>" required /></td></tr>

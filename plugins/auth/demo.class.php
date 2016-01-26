@@ -209,7 +209,7 @@ if($stfsel === '' and $stusel === '') $stfsel = ' checked';
         $content1 =<<<HTML
 <div id="content">
 <br/>
-    <form method="post" name="newUser" onsubmit="return checkForm()" action="$_SERVER[PHP_SELF]">
+    <form method="post" name="newUser" onsubmit="return checkForm()" action="$_SERVER[PHP_SELF]" autocomplete="off">
         <div align="center">
             <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
                 <tr>

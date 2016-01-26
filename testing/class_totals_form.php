@@ -55,7 +55,7 @@ require '../include/sysadmin_auth.inc';
 
 
 <div id="form">
-  <form id="the_form" action="class_totals.php" method="post">
+  <form id="the_form" action="class_totals.php" method="post" autocomplete="off">
   <dl class="form">
     <dt>Username:</dt>
     <dd><input type="text" id="username" name="username" class="required" /></dd>

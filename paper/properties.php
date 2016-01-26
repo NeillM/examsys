@@ -893,7 +893,7 @@ if (isset($_POST['Submit'])) {
       });
     </script></head>
     <body>
-    <form>
+    <form autocomplete="off">
       <br />&nbsp;<div align="center"><input type="button" id="home" name="home" value="   OK   " /></div>
     </form>
   </body>
@@ -1195,7 +1195,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
     </script>
 </head>
 <body>
-<form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 <?php
   require '../tools/colour_picker/colour_picker.inc';
 ?>

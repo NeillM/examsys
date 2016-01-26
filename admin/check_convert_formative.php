@@ -56,7 +56,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
 <td><p><?php echo $string['msg']; ?></p>
 <br />
 <div style="text-align: right">
-<form action="do_convert_formative.php" method="post">
+<form action="do_convert_formative.php" method="post" autocomplete="off">
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
 <input type="submit" name="submit" value="<?php echo $string['convert']; ?>" class="ok" />&nbsp;
 <input type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />

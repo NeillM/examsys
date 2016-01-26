@@ -77,7 +77,7 @@ if (isset($_POST['save_changes'])) {
     <?php $help_system->display_toc($id); ?>
   </div>
   <div id="contents">
-<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
   <tr>
   <td style="padding-left:20px"><input type="text" style="font-family:Verdana,sans-serif; color:#295AAD; font-size:160%; border:1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="<?php echo $string['pagetitle']; ?>" required /></td>

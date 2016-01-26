@@ -39,7 +39,7 @@
 </script>
 
 <div id="left-sidebar" class="sidebar">
-<form name="myform">
+<form name="myform" autocomplete="off">
 
 <div class="submenuheading" id="papertasks"><?php echo $string['examtasks'] ?></div>
 

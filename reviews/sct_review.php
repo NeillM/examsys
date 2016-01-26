@@ -156,7 +156,7 @@ require '../config/start.inc';
   echo '<tr><td><div style="margin-left:0;font-size:180%;color:white;font-weight:bold">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
   
-  echo "<form name=\"myform\" action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\">\n";
+  echo "<form name=\"myform\" action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\" autocomplete=\"off\">\n";
   echo "<br />\n";
   
   echo "<div class=\"key\">" . $string['top_msg'] . "</div>\n<br />\n";

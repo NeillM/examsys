@@ -936,7 +936,7 @@ echo draw_toprightmenu(30);
     } else {
       if ($paper_type < 2) {
         echo "<div>\n";
-        echo "<form name=\"theform\" method=\"post\">\n";
+        echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
         echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';
@@ -971,7 +971,7 @@ echo draw_toprightmenu(30);
             echo '<p>' . $string['gradepublish'] . '</p>';
         } else {
             echo "<div>\n";
-            echo "<form name=\"theform\" method=\"post\">\n";
+            echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
             echo "<input type=\"button\" value=\"" . $string['publishmarks'] . "\" onclick=\"popupPublishMarks();\" style=\"margin:10px; width:160px\" />\n";
             echo '<input type="hidden" name="publishmarks" value="" />';
             echo "</form>\n</div>\n";

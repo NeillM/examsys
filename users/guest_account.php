@@ -78,7 +78,7 @@ if (isset($_POST['submit'])) {
   $stmt->execute();
   $stmt->close();
 
-  echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/paper/index.php">';
+  echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/paper/index.php" autocomplete="off">';
   echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
   echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
   echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #7F9DB9 solid; background-color:#EEF4FF">';
@@ -157,7 +157,7 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-<form name="theform" id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form name="theform" id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <div style="text-align:center">
 <table cellpadding="0" cellspacing="0" style="text-align:left; margin-left:auto; margin-right:auto; width:450px; border:1px #7F9DB9 solid; background-color:#EEF4FF">
 <tr><td class="topbar" style="padding-left:6px; width:60px"><img src="../artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px"><?php echo $string['guestaccountreg']; ?></td></tr>

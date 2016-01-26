@@ -59,7 +59,7 @@ $mysqli->close();
 ?>
 
 <div class="button_bar">
-<form action="do_delete_session.php" method="post">
+<form action="do_delete_session.php" method="post" autocomplete="off">
 <input type="hidden" name="moduleID" value="<?php echo $_GET['moduleID']; ?>" />
 <input type="hidden" name="session" value="<?php echo $_GET['session']; ?>" />
 <input type="hidden" name="identifier" value="<?php echo $_GET['identifier']; ?>" />

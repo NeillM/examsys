@@ -481,7 +481,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
                   <?php
                   if ($allow_timing) {
                   ?>
-                  <form id="start_exam_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+                  <form id="start_exam_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
                     <input name="paper_id" type="hidden" value="<?php echo $property_id; ?>" />
                     <?php
                       if ($exam_started) {

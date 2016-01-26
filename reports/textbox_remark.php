@@ -104,7 +104,7 @@ if (isset($_POST['submit'])) {
   <div id="content">
     
 <?php
-  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\">\n";
+  echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $module . "&folder=" . $_GET['folder'] . "\" method=\"post\" autocomplete=\"off\">\n";
   echo "<div class=\"head_title\">";
   echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';

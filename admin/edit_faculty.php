@@ -103,7 +103,7 @@ if (isset($_POST['submit'])) {
 
 <body>
 <h1><?php echo $string['editfaculty']; ?></h1>
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <div>
 <?php
 if ($duplicate) {

@@ -95,7 +95,7 @@ if ($row_no == 0) {
 </head>
 
 <body>
-<form name="myform" id="myform" action="do_reassign_log_late.php" method="post">
+<form name="myform" id="myform" action="do_reassign_log_late.php" method="post" autocomplete="off">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
   $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);

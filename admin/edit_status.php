@@ -158,7 +158,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
       <div class="page_title"><?php echo $title ?></div>
     </div>
 
-    <form id="theform" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+    <form id="theform" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
 <?php
 
   if (isset($error) and $error = 'duplicate') {

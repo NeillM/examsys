@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
   </script>
   </head>
   <body>
-  <form>
+  <form autocomplete="off">
     <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok'] ?>" onclick="window.close();" /></div>
   </form>
   <?php
@@ -101,7 +101,7 @@ if (isset($_POST['submit'])) {
 
 <body>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform" autocomplete="off">
 
 <?php
   echo '<div><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];

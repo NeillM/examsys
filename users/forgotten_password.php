@@ -143,7 +143,7 @@ EMAIL;
 </head>
 
 <body>
-<form id="forgotten_pw" name="forgotten_pw" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+<form id="forgotten_pw" name="forgotten_pw" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
 	<br />
 	<div align="center">
   	<table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">

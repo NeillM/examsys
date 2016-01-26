@@ -74,7 +74,7 @@ if (isset($_POST['submit'])) {
   <?php
     }
   ?>
-  <form>
+  <form autocomplete="off">
     <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
   </form>
   <?php
@@ -133,7 +133,7 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="theform" id="theform">
+<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="theform" id="theform" autocomplete="off">
 <?php
 	$disabled = '';
 	$note_details = array('note_id'=>0, 'note'=>'');
