@@ -1,0 +1,5 @@
+campus:
+  -
+    id: 1
+    name: "Main Campus"
+    isdefault: 1

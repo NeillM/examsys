@@ -14,19 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace testing\behat;
+namespace testing\unittest;
 use InstallUtils,
     Config,
     cli_utils,
     mysqli;
 
 /**
- * This class is used to manage the database used for Rogo behat testing.
+ * This class is used to manage the database used for Rogo unit testing.
  *
- * @author Neill Magill <neill.magill@nottingham.ac.uk>
- * @copyright Copyright (c) 2015 The University of Nottingham
+ * Based on /testing/behat/classes/database.php by Neill Magill <neill.magill@nottingham.ac.uk>
+ * 
+ * @author Dr Joseph baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 The University of Nottingham
  * @package testing
- * @category behat
+ * @category unittest
  */
 class database {
   /**
@@ -36,16 +38,15 @@ class database {
    */
   public static function install_database() {
     $config = Config::get_instance();
-    $config->use_behat_site();
+    $config->use_phpunit_site();
     InstallUtils::$cli = true;
-    InstallUtils::$behat_install = true;
+    InstallUtils::$phpunit_install = true;
     // Check that the php environment is setup correctly.
     InstallUtils::checkSoftware();
     // Setup the InstallUtils class for installation.
     InstallUtils::$cfg_db_basename = $config->get('cfg_db_database');
     InstallUtils::$cfg_db_name = $config->get('cfg_db_database');
     InstallUtils::$cfg_web_host = $config->get('cfg_web_host');
-    InstallUtils::$cfg_rogo_data = $config->get('cfg_behat_data');
     $connected = self::get_db_details();
     if (!$connected) {
       throw new Exception('Could not connect to database. Aborting.');
@@ -70,7 +71,7 @@ class database {
     InstallUtils::$sysadmin_title = 'Miss';
     InstallUtils::$sysadmin_email = 'admin@example.com';
 
-    // Ensure that an existing Rogo behat database and users are deleted.
+    // Ensure that an existing Rogo phpunit database and users are deleted.
     self::drop_db();
 
     // Start installing the base Rogo database.
@@ -89,20 +90,20 @@ class database {
   public static function get_db_details() {
     $config = Config::get_instance();
     cli_utils::prompt('Database setup');
-    InstallUtils::$db_admin_username = $config->get('cfg_behat_db_user');
-    InstallUtils::$db_admin_passwd = $config->get('cfg_behat_db_password');
+    InstallUtils::$db_admin_username = $config->get('cfg_phpunit_db_user');
+    InstallUtils::$db_admin_passwd = $config->get('cfg_phpunit_db_password');
     $connected = self::connect_database(InstallUtils::$db_admin_username, InstallUtils::$db_admin_passwd);
     return $connected;
   }
 
   /**
-   * Drop the behat database and users.
+   * Drop the phpunit database and users.
    */
   public static function drop_db() {
     $config = Config::get_instance();
-    $config->use_behat_site();
+    $config->use_phpunit_site();
     $basedb = $config->get('base_database');
-    // If it exists drop the behat database.
+    // If it exists drop the phpunit database.
     $dbname = InstallUtils::$cfg_db_name;
     $dbaccesspoint = InstallUtils::$cfg_web_host;
     $res = InstallUtils::$db->prepare("SHOW DATABASES LIKE '$dbname'");
@@ -131,7 +132,7 @@ class database {
    */
   public static function connect_database($username, $password) {
     $config = Config::get_instance();
-    $config->use_behat_site();
+    $config->use_phpunit_site();
     InstallUtils::$db = new mysqli($config->get('cfg_db_host'), $username, $password, '', $config->get('cfg_db_port'));
     if (mysqli_connect_error()) {
       InstallUtils::$db = null;

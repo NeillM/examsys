@@ -421,7 +421,7 @@ class assessment {
             return false;
         }
         // Enforce cohort size interface restrictions.
-        $decode_cohort_sizes = json_decode($this->cohort_sizes, true);
+        $decode_cohort_sizes = json_decode($this->cohort_sizes);
         if (!in_array($cohort_size, $decode_cohort_sizes)) {
             $cohort_size = '<whole cohort>';
         }
