@@ -422,7 +422,7 @@ class assessmenttest extends unittestdatabase {
      * Test assessemnt date setup
      * @group assessment
      */
-    public function test_set_updates() {
+    public function test_setup_dates() {
         $assessment = new assessment($this->db, $this->config);
         // Test London.
         $datesarray = $assessment->setup_start_end_dates(0, "2016-01-25 09:00:00", "2016-01-25 12:00:00", "Europe/London");
@@ -436,6 +436,10 @@ class assessmenttest extends unittestdatabase {
         $datesarray = $assessment->setup_start_end_dates(0, "2016-01-25 09:00:00", "2016-01-25 12:00:00", "Pacific/Honolulu");
         $this->assertEquals("20160125190000", $datesarray[0]);
         $this->assertEquals("20160125220000", $datesarray[1]);
+         // Test London non leap year feb 29th.
+        $datesarray = $assessment->setup_start_end_dates(0, "2017-02-29 09:00:00", "2017-02-29 12:00:00", "Europe/London");
+        $this->assertEquals("20170301090000", $datesarray[0]);
+        $this->assertEquals("20170301120000", $datesarray[1]);
         
     }
 }
