@@ -79,7 +79,7 @@ function displayMarks($id, $marks, $override, $user_mark) {
 }
 
 if (isset($_POST['submit'])) {
-  for ($i=1; $i<$_POST['student_no']; $i++) {
+  for ($i=1; $i <= $_POST['student_no']; $i++) {
     if (isset($_POST["override$i"]) and $_POST["override$i"] != 'NULL') {
       $tmp_mark = $_POST["override$i"];
     } elseif (isset($_POST["mark$i"])) {
@@ -89,13 +89,13 @@ if (isset($_POST['submit'])) {
     }
     $logtype = $_POST["logtype$i"];
     $log_id = $_POST["log_id$i"];
-
+ 
     $result = $mysqli->prepare("UPDATE log$logtype SET mark = ?, adjmark = ? WHERE id = ?");
     $result->bind_param('ddi', $tmp_mark, $tmp_mark, $log_id);
     $result->execute();
     $result->close();
   }
-
+  
   header("location: ../reports/textbox_select_q.php?action=finalise&paperID=$paperID&startdate=" . $_POST['startdate'] . "&enddate=" . $_POST['enddate'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&repcourse=" . $_GET['repcourse']);
 	exit();
 } else {
@@ -217,9 +217,8 @@ SQL;
     $result->bind_param('iiss', $paperID, $q_id, $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);
+  $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);  
   while ($result->fetch()) {
-    if (trim($user_answer) != '') {
       if (isset($primary_marks[$log_id]) and $primary_marks[$log_id] === $user_mark) {
         $primary_checked = ' checked';
         $secondary_checked = '';
@@ -233,7 +232,7 @@ SQL;
         $secondary_checked = '';
         $override = true;
       }
-      
+      if (trim($user_answer) != '') {
       echo "<tr class=\"l\"><td class=\"ans\">" . nl2br($user_answer) . "<br />&nbsp;</td>";
 
       if (isset($secondary_marks[$log_id]) and isset($primary_marks[$log_id]) and abs($primary_marks[$log_id] - $secondary_marks[$log_id]) > 1) {
@@ -253,15 +252,16 @@ SQL;
       }
     } else {
       // User answer is blank.
-      $override = false;
+      //$override = false;
       echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td>";
       if (isset($primary_marks[$log_id])) {
-        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" /></td>";
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked/></td>";
       } else {
         echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
       }
       if (isset($secondary_marks[$log_id])) {
-        echo "<td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td>";
+        echo "<td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked/>
+            <input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td>";
       } else {
         echo "<td class=\"secondary noans missing\">&nbsp;</td>";
       }
@@ -271,6 +271,7 @@ SQL;
     $student_no++;
   }
   $result->close();
+  $student_no--;
 ?>
 </table>
 <br />
