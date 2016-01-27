@@ -48,21 +48,21 @@ class assessmenttest extends unittestdatabase {
      * @return dataset
      */
     public function getDataSet() {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . "assessmentTest" . DIRECTORY_SEPARATOR . "assessment.yml");
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "assessmentTest" . DIRECTORY_SEPARATOR . "assessment.yml");
     }
     /**
      * Get expected data set from yml
      * @param string $name fixture file name
      * @return dataset
      */
-    public function getExpectedDataSet($name) {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . "assessmentTest" . DIRECTORY_SEPARATOR . $name . ".yml");
+    public function get_expected_data_set($name) {
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "assessmentTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
      * Test assessemnt type values
      * @group assessment
      */
-    public function testgettypevalue() {
+    public function test_get_type_value() {
         $assessment = new assessment($this->db, $this->config);
         $this->assertEquals($assessment::TYPE_FORMATIVE, $assessment->get_type_value('formative'));
         $this->assertEquals($assessment::TYPE_PROGRESS, $assessment->get_type_value('progress'));
@@ -77,24 +77,24 @@ class assessmenttest extends unittestdatabase {
      * Test assessemnt creation
      * @group assessment
      */
-    public function testcreate() {
+    public function test_create() {
         // Test summative paper creation- SUCCESS.
         $this->assertEquals(1, $this->create_paper("Test create formative", 0));
         // Test properties table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, paper_title, start_date, end_date, exam_duration,
             calendar_year, timezone, paper_ownerID, labs, paper_type FROM properties');
-        $expectedTable = $this->getExpectedDataSet('createproperties')->getTable("properties");  
+        $expectedTable = $this->get_expected_data_set('createproperties')->getTable("properties");  
         $this->assertTablesEqual($expectedTable, $queryTable); 
         // Test properties_modules table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties_modules', 'SELECT * FROM properties_modules');
-        $expectedTable = $this->getExpectedDataSet('createproperties')->getTable("properties_modules");
+        $expectedTable = $this->get_expected_data_set('createproperties')->getTable("properties_modules");
         $this->assertTablesEqual($expectedTable, $queryTable); 
     }
     /**
      * Test unique paper title on paper creation
      * @group assessment
      */
-    public function testcreateuniquepapertitle() {
+    public function test_create_unique_paper_title() {
         $this->create_paper("Test schedule summative", 2);
         try {
             $this->create_paper("Test schedule summative", 2);
@@ -109,7 +109,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid paper type on paper creation
      * @group assessment
      */
-    public function testcreatevalidpapertype() {
+    public function test_create_valid_paper_type() {
         try {
             $this->create_paper("Test schedule summative", 1000);
         } catch (Exception $e) {
@@ -123,7 +123,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid paper owner on paper creation
      * @group assessment
      */
-    public function testcreatevalidowner() {
+    public function test_create_valid_owner() {
         $assessment = new assessment($this->db, $this->config);
         $papertitle = "Test schedule summative";
         $papertype = 2;
@@ -148,7 +148,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid paper owner type on paper creation
      * @group assessment
      */
-    public function testcreatevalidownerrole() {
+    public function test_create_valid_owner_role() {
         $assessment = new assessment($this->db, $this->config);
         $papertitle = "Test schedule summative";
         $paperowner = 3;
@@ -173,7 +173,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid session on paper creation
      * @group assessment
      */
-    public function testcreatevalidsession() {
+    public function test_create_valid_session() {
         $assessment = new assessment($this->db, $this->config);
         $papertitle = "Test schedule summative";
         $paperowner = 1;
@@ -198,7 +198,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid dates on paper creation
      * @group assessment
      */
-    public function testcreatevaliddates() {
+    public function test_create_valid_dates() {
         $assessment = new assessment($this->db, $this->config);
         $papertitle = "Test schedule formative";
         $paperowner = 1;
@@ -223,7 +223,7 @@ class assessmenttest extends unittestdatabase {
      * Test assessemnt update
      * @group assessment
      */
-    public function testupdate() {
+    public function test_update() {
         // Test update paper - SUCCESS
         $papertitle = "Test update summative";
         $id = $this->create_paper($papertitle, 2);
@@ -246,14 +246,14 @@ class assessmenttest extends unittestdatabase {
         $this->assertTrue($assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test schedule table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, start_date, end_date, exam_duration FROM properties');
-        $expectedTable = $this->getExpectedDataSet('updatedproperties')->getTable("properties");
+        $expectedTable = $this->get_expected_data_set('updatedproperties')->getTable("properties");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
     /**
      * Test unique paper title on paper update
      * @group assessment
      */
-    public function testuniqueuniquepapertitle() {
+    public function test_update_unique_paper_title() {
         $papertitle = "Test update summative";
         $id = $this->create_paper($papertitle, 2);
         $this->create_paper("Test schedule summative 2", 2);
@@ -281,7 +281,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid paper owner on paper update
      * @group assessment
      */
-    public function testupdatevalidowner() {
+    public function test_update_valid_owner() {
         $papertitle = "Test update summative";
         $id = $this->create_paper($papertitle, 2);
         $assessment = new assessment($this->db, $this->config);
@@ -307,7 +307,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid paper owner type on paper update
      * @group assessment
      */
-    public function testupdatevalidownerrole() {
+    public function test_update_valid_owner_role() {
         $papertitle = "Test update summative";
         $id = $this->create_paper($papertitle, 2);
         $assessment = new assessment($this->db, $this->config);
@@ -333,7 +333,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid session on paper update
      * @group assessment
      */
-    public function testupdatevalidsession() {
+    public function test_update_valid_session() {
         $papertitle = "Test update summative";
         $id = $this->create_paper($papertitle, 2);
         $assessment = new assessment($this->db, $this->config);
@@ -359,7 +359,7 @@ class assessmenttest extends unittestdatabase {
      * Test valid dates on paper update
      * @group assessment
      */
-    public function testupdatevaliddates() {
+    public function test_update_valid_dates() {
         $papertitle = "Test update summative";
         $id = $this->create_paper($papertitle, 2);
         $assessment = new assessment($this->db, $this->config);
@@ -385,7 +385,7 @@ class assessmenttest extends unittestdatabase {
      * Test assessemnt scheduling
      * @group assessment
      */
-    public function testschedule() {
+    public function test_schedule() {
         $paperid = $this->create_paper("Test schedule summative", 2);
         $month = 1;
         $barriers = 0;
@@ -415,14 +415,14 @@ class assessmenttest extends unittestdatabase {
         $this->assertEquals(4, $assessment->schedule($paperid, $month, $barriers, $cohort_size, $notes, $sittings, $campus));
         // Test schedule table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('scheduling', 'SELECT * FROM scheduling');
-        $expectedTable = $this->getExpectedDataSet('expectedschedule')->getTable("scheduling");
+        $expectedTable = $this->get_expected_data_set('expectedschedule')->getTable("scheduling");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
     /**
      * Test assessemnt date setup
      * @group assessment
      */
-    public function testsetupdates() {
+    public function test_set_updates() {
         $assessment = new assessment($this->db, $this->config);
         // Test London.
         $datesarray = $assessment->setup_start_end_dates(0, "2016-01-25 09:00:00", "2016-01-25 12:00:00", "Europe/London");

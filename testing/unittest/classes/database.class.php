@@ -47,6 +47,7 @@ class database {
     InstallUtils::$cfg_db_basename = $config->get('cfg_db_database');
     InstallUtils::$cfg_db_name = $config->get('cfg_db_database');
     InstallUtils::$cfg_web_host = $config->get('cfg_web_host');
+    InstallUtils::$cfg_rogo_data = $config->get('cfg_phpunit_data');
     $connected = self::get_db_details();
     if (!$connected) {
       throw new Exception('Could not connect to database. Aborting.');

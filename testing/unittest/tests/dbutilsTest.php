@@ -31,7 +31,7 @@ class dbutilstest extends unittestdatabase {
      * @return dataset
      */
     public function getDataSet() {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . "dbutilsTest" . DIRECTORY_SEPARATOR . "campus.yml");
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "dbutilsTest" . DIRECTORY_SEPARATOR . "campus.yml");
     }
     
     /**
@@ -39,20 +39,20 @@ class dbutilstest extends unittestdatabase {
      * @param string $name filename of fixtures
      * @return dataset
      */
-    public function getExpectedDataSet($name) {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . "dbutilsTest" . DIRECTORY_SEPARATOR . $name . ".yml");
+    public function get_expected_data_set($name) {
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "dbutilsTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     
     /**
      * Test generic db insert function
      * @group dbutils
      */
-    public function testexecdbinsert() {
+    public function test_exec_db_insert() {
         $table = 'campus';
         $params = array('name' => array('s', 'Test Campus'), 'isdefault' => array('i', 0));
         $campus = DBUtils::exec_db_insert($table, $params, $this->db);
         $queryTable = $this->getConnection()->createQueryTable('campus', 'SELECT * FROM campus');
-        $expectedTable = $this->getExpectedDataSet('insertcampus')->getTable("campus");
+        $expectedTable = $this->get_expected_data_set('insertcampus')->getTable("campus");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
     
@@ -60,14 +60,14 @@ class dbutilstest extends unittestdatabase {
      * Test generic db upadte function
      * @group dbutils
      */
-    public function testexecdbupdate() {
+    public function test_exec_db_update() {
         $table = 'campus';
         $tableid = 'id';
         $id = 1;
         $params = array('isdefault' => array('i', 0));
         $campus = DBUtils::exec_db_update($table, $tableid, $params, $id, $this->db);
         $queryTable = $this->getConnection()->createQueryTable('campus', 'SELECT * FROM campus');
-        $expectedTable = $this->getExpectedDataSet('updatecampus')->getTable("campus");
+        $expectedTable = $this->get_expected_data_set('updatecampus')->getTable("campus");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
 }

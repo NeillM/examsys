@@ -89,4 +89,12 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
         }
         return $this->conn;
     }
+    
+    /**
+     * Get the fixure directory location for tests. 
+     * @return string path to fixtures directory 
+     */
+    final public function get_base_fixture_directory() {
+        return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR;
+    }
 }

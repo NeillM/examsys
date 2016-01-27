@@ -70,14 +70,12 @@ class Config extends RogoStaticSingleton {
 
     if ($this->is_behat_configured() && $this->is_behat_site()) {
       $this->use_behat_site();
+    } else {
+        $this->load_phpunit_config();
+        if ($this->is_phpunit_configured() && $this->is_phpunit_site()) {
+          $this->use_phpunit_site();
+        }
     }
-    
-    $this->load_phpunit_config();
-    
-    if ($this->is_phpunit_configured() && $this->is_phpunit_site()) {
-      $this->use_phpunit_site();
-    }
-    
   }
 
   /**
@@ -148,16 +146,21 @@ class Config extends RogoStaticSingleton {
     if (empty($phpunitdatabase) or $phpunitdatabase === $this->get('cfg_db_database')) {
       return false;
     }
+    // Has a behat data directory been configured?
+    $phpunitdatadir = $this->get('cfg_phpunit_data');
+    if (empty($phpunitdatadir) or $phpunitdatadir === $this->get('cfg_rogo_data')) {
+      return false;
+    }
     // We got this far everything is good.
     return true;
   }
 
   /**
-   * Parse the provied url to check if test site
+   * Check url passed in argument matches that of site being accessed.
    * @param $parsedurl url of test site
    * @return bool true on match
    */
-  private function parseurl($parsedurl) {
+  private function checkurl($parsedurl) {
     $parsedurl['port'] = isset($parsedurl['port']) ? $parsedurl['port'] : 80;
     $parsedurl['path'] = rtrim($parsedurl['path'], '/');
 
@@ -191,7 +194,7 @@ class Config extends RogoStaticSingleton {
   protected function is_behat_site() {
     $behaturl = $this->get('cfg_behat_website');
     $parsedurl = parse_url($behaturl . '/');
-    return $this->parseurl($parsedurl);
+    return $this->checkurl($parsedurl);
   }
 
   /**
@@ -200,13 +203,8 @@ class Config extends RogoStaticSingleton {
    * @return boolean
    */
   protected function is_phpunit_site() {
-    // If this is a behaat website we are clearly not a phpunit website.
-    if ($this->is_behat_site()) {
-      return false;
-    }
-    $phpuniturl = $this->get('cfg_phpunit_website');
-    $parsedurl = parse_url($phpuniturl . '/');
-    return $this->parseurl($parsedurl);
+    // Phpunittest does not have a site.
+    return $this->checkurl('');
   }
   
   /**
@@ -248,6 +246,8 @@ class Config extends RogoStaticSingleton {
     // Store the original database name, it is used during behat site installs.
     $this->set('base_database', $this->get('cfg_db_database'));
     $this->set('cfg_db_database', $this->get('cfg_phpunit_db_database'));
+    // Use the correct user data directory.
+    $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
     $this->phpunitsetup = true;
   }
 

@@ -28,7 +28,7 @@ class langpacktest extends PHPUnit_Framework_TestCase {
      * Test get_string
      * @group lang
      */
-    public function testgetstring() {
+    public function test_get_string() {
         $lang = new langpack();
         $component = 'api/usermanagement';
         $name = '404';
@@ -40,7 +40,7 @@ class langpacktest extends PHPUnit_Framework_TestCase {
      * Test get_strings
      * @group lang
      */
-    public function testgetstrings() {
+    public function test_get_strings() {
         $lang = new langpack();
         $component = 'api/usermanagement';
         $names = array('user_invalid_role', 'user_does_not_exist');
@@ -53,7 +53,7 @@ class langpacktest extends PHPUnit_Framework_TestCase {
      * Test get_all_strings
      * @group lang
      */
-    public function testgetallstrings() {
+    public function test_get_all_strings() {
         $lang = new langpack();
         $component = 'classes/assessment';
         $strings = $lang->get_all_strings($component);
