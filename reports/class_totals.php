@@ -940,7 +940,7 @@ echo draw_toprightmenu(30);
       if ($paper_type < 2) {
         echo "<div>\n";
         echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        if ($checkpermission) {
+        if (!$checkpermission) {
             $notice->display_notice($string['filepermission'], $string['filepermission'], '../artwork/exclamation_red_bg.png');
             echo "<input type=\"button\" disabled value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
         } else {
