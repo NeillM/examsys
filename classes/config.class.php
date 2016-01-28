@@ -198,13 +198,18 @@ class Config extends RogoStaticSingleton {
   }
 
   /**
-   * Test if Rogo is being accessed as a phpunit website.
+   * Test if Rogo is being accessed as a phpunit suite.
    *
    * @return boolean
    */
   protected function is_phpunit_site() {
-    // Phpunittest does not have a site.
-    return $this->checkurl('');
+    // If we are on the command line we are the phpunit suite
+    // as we have already confirmed we are not behat.
+    if (php_sapi_name() === 'cli') {
+        return true;
+    } else {
+        return false;
+    }
   }
   
   /**

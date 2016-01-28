@@ -102,8 +102,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'NON_UNIQUE_TITLE') {
                 return;
             }
+            $this->fail('Exception NON_UNIQUE_TITLE expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception NON_UNIQUE_TITLE expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception NON_UNIQUE_TITLE not thrown.');
     }
     /**
      * Test valid paper type on paper creation
@@ -116,8 +117,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_PAPER_TYPE') {
                 return;
             }
+            $this->fail('Exception INVALID_PAPER_TYPE expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_PAPER_TYPE expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_PAPER_TYPE not thrown.');
     }
     /**
      * Test valid paper owner on paper creation
@@ -141,8 +143,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_USER') {
                 return;
             }
+            $this->fail('Exception INVALID_USER expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_USER expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_USER not thrown.');
     }
     /**
      * Test valid paper owner type on paper creation
@@ -166,8 +169,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_ROLE') {
                 return;
             }
+            $this->fail('Exception INVALID_ROLE expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_ROLE expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_ROLE not thrown.');
     }
     /**
      * Test valid session on paper creation
@@ -191,8 +195,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_SESSION') {
                 return;
             }
+            $this->fail('Exception INVALID_SESSION expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_SESSION expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_SESSION not thrown.');
     }
      /**
      * Test valid dates on paper creation
@@ -216,8 +221,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_DATES') {
                 return;
             }
+            $this->fail('Exception INVALID_DATES expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_DATES expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_DATES not thrown.');
     }
     /**
      * Test assessemnt update
@@ -241,12 +247,16 @@ class assessmenttest extends unittestdatabase {
         // Test update summative max duration too large - SUCCESS
         $duration = 1000;
         $this->assertTrue($assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
+        // Test schedule table is as expected.
+        $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, start_date, end_date, exam_duration FROM properties');
+        $expectedTable = $this->get_expected_data_set('updatedproperties')->getTable("properties");
+        $this->assertTablesEqual($expectedTable, $queryTable);
         // Test update summative max duration too small - SUCCESS
         $duration = -1;
         $this->assertTrue($assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test schedule table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, start_date, end_date, exam_duration FROM properties');
-        $expectedTable = $this->get_expected_data_set('updatedproperties')->getTable("properties");
+        $expectedTable = $this->get_expected_data_set('updatedproperties2')->getTable("properties");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
     /**
@@ -274,8 +284,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'NON_UNIQUE_TITLE') {
                 return;
             }
+            $this->fail('Exception NON_UNIQUE_TITLE expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception NON_UNIQUE_TITLE expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception NON_UNIQUE_TITLE not thrown.');
     }
     /**
      * Test valid paper owner on paper update
@@ -300,8 +311,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_USER') {
                 return;
             }
+            $this->fail('Exception INVALID_USER expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_USER expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_USER not thrown.');
     }
     /**
      * Test valid paper owner type on paper update
@@ -326,8 +338,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_ROLE') {
                 return;
             }
+            $this->fail('Exception INVALID_ROLE expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_ROLE expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_ROLE not thrown.');
     }
     /**
      * Test valid session on paper update
@@ -352,8 +365,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_SESSION') {
                 return;
             }
+            $this->fail('Exception INVALID_SESSION expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_SESSION expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_SESSION not thrown.');
     }
      /**
      * Test valid dates on paper update
@@ -378,8 +392,9 @@ class assessmenttest extends unittestdatabase {
             if ($e->getMessage() == 'INVALID_DATES') {
                 return;
             }
+            $this->fail('Exception INVALID_DATES expected but ' . $e->getMessage() . ' thrown instead.');
         }
-        $this->fail('Exception INVALID_DATES expected but ' . $e->getMessage() . ' thrown instead.');
+        $this->fail('Exception INVALID_DATES not thrown.');
     }
     /**
      * Test assessemnt scheduling
