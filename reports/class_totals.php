@@ -836,7 +836,7 @@ echo draw_toprightmenu(30);
       if (!$emailtemplatedir->check_permissions()) {
           $errorline = __LINE__ - 2;
           $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['filepermission'];
-          $notice->display_notice_and_exit($mysqli, $string['filepermission'], $msg, $string['filepermission'], '../artwork/access_denied.png', '#C00000', true, true);
+          $notice->display_notice($string['filepermission'], $msg, '../artwork/exclamation_red_bg.png');
       }
 
       $file = fopen($emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt"), "w");
