@@ -81,7 +81,7 @@ function check_paper_password($paperID, $password, $string, $db, $show_form = fa
     if (!isset($_SESSION['paperpwd']) or $password != $_SESSION['paperpwd']) {
       if ($show_form) {
         $paperproperties = new PaperProperties($db);
-        $decrypt_password = ltrim($paperproperties->decrypt_password($password),$paperID);
+        $decrypt_password = preg_replace("/^$paperID/", '', $paperproperties->decrypt_password($password));
         if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
           $_SESSION['paperpwd'] = $password;
         } else {
