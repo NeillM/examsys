@@ -95,7 +95,6 @@ if (isset($_POST['submit'])) {
     $result->execute();
     $result->close();
   }
-  
   header("location: ../reports/textbox_select_q.php?action=finalise&paperID=$paperID&startdate=" . $_POST['startdate'] . "&enddate=" . $_POST['enddate'] . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&repcourse=" . $_GET['repcourse']);
 	exit();
 } else {
@@ -217,7 +216,7 @@ SQL;
     $result->bind_param('iiss', $paperID, $q_id, $startdate, $enddate);
   }
   $result->execute();
-  $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);  
+  $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);
   while ($result->fetch()) {
       if (isset($primary_marks[$log_id]) and $primary_marks[$log_id] === $user_mark) {
         $primary_checked = ' checked';
