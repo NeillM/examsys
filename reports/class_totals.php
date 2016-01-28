@@ -829,16 +829,13 @@ echo draw_toprightmenu(30);
 
     echo "</tr></table>\n<br />";
 
+    $emailtemplatedir = rogo_directory::get_directory('email_templates');    
+    $checkpermission = $emailtemplatedir->check_permissions();
+      
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
       $emailtemplatedir = rogo_directory::get_directory('email_templates');    
-      if (!$emailtemplatedir->check_permissions()) {
-          $errorline = __LINE__ - 2;
-          $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['filepermission'];
-          $notice->display_notice($string['filepermission'], $msg, '../artwork/exclamation_red_bg.png');
-      }
-
       $file = fopen($emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt"), "w");
       fwrite($file, $userObject->get_email() . "\n");
       fwrite($file, $_POST['ccaddress'] . "\n");
@@ -943,7 +940,12 @@ echo draw_toprightmenu(30);
       if ($paper_type < 2) {
         echo "<div>\n";
         echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
+        if ($checkpermission) {
+            $notice->display_notice($string['filepermission'], $string['filepermission'], '../artwork/exclamation_red_bg.png');
+            echo "<input type=\"button\" disabled value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
+        } else {
+            echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
+        }
         echo '<input type="hidden" name="emailclass" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';
         echo '<input type="hidden" name="ccaddress" value="" />';
