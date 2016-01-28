@@ -101,11 +101,11 @@ function uploadError($errCode) {
  * @param bool    $mandatory    If true then exit if the variable does not exist
  * @param bool    $headers      If true then output HTML header code
  * @param bool    $return_var   If true return the value of the tested variable back
+ * @param int     $type         The type of value that is expected.
  *
- * @return string|null If mandatory is true we return ihe variable if it exsits, it not mandatory we return null
-
+ * @return void|string|null If mandatory is true we return ihe variable if it exsits, it not mandatory we return null
  */
-function check_var($var_name, $method, $mandatory, $headers, $return_var) {
+function check_var($var_name, $method, $mandatory, $headers, $return_var, $type = param::RAW) {
   global $string;
   
   if (is_array($method)) {
@@ -117,42 +117,49 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var) {
       }
     }
     if ($return_var) {
-      return $method[$var_name];
-    }
-  } elseif ($method == 'GET') {
-    if (!isset($_GET[$var_name]) or $_GET[$var_name] === '' ) {
-      if ($mandatory) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
-      } else {
-        return null;
-      }
-    }
-    if ($return_var) {
-      return $_GET[$var_name];
-    }
-  } elseif ($method == 'POST') {
-    if (!isset($_POST[$var_name]) or $_POST[$var_name] === '' ) {
-      if ($mandatory) {
-        display_error($string['fatalerrormsg0'], $var_name, $headers);
-      } else {
-        return null;
-      }
-    }
-    if ($return_var) {
-      return $_POST[$var_name];
-    }
-  } else {
-    if (!isset($_REQUEST[$var_name]) or $_REQUEST[$var_name] === '' ) {
-      if ($mandatory) {
-        display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
-      } else {
-        return null;
-      }
-    }
-    if ($return_var) {
-      return $_REQUEST[$var_name];
+      // Ensure that the value is sanitised.
+      return param::clean($method[$var_name], $type);
+    } else {
+      return;
     }
   }
+
+  switch ($method) {
+    case 'GET':
+      $from = param::FETCH_GET;
+      break;
+    case 'POST':
+      $from = param::FETCH_POST;
+      break;
+    default:
+      $from = param::FETCH_REQUEST;
+  }
+
+  if ($mandatory) {
+    try {
+      $output = param::required($var_name, $type, $from);
+    } catch (MissingParameter $e) {
+      // Only catch exceptions for missing parameters.
+      switch ($method) {
+        case 'GET':
+          display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
+          break;
+        case 'POST':
+          display_error($string['fatalerrormsg0'], $var_name, $headers);
+          break;
+        default:
+          display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
+      }
+    }
+  } else {
+    // The parameter is not required, we may need to return null.
+    $output = param::optional($var_name, null, $type, $from);
+  }
+  // Check if we should return the value.
+  if ($return_var) {
+    return $output;
+  }
+  // We should not return anything.
 }
   
 ?>
