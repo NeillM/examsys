@@ -602,10 +602,6 @@ if (isset($_POST['Submit'])) {
     }
     
     $password = trim($_POST['password']);
-echo "=================================";
-    var_dump("password");
-var_dump($password);
-
     if (!$locked) {
         if ($password != $properties->get_decrypted_password()) {
             $properties->set_password($password);
@@ -1586,7 +1582,6 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 <tr>
 <td style="text-align:center; vertical-align:top">
 <?php
-echo"PPPPPPPPPPPPPPPPP";
     echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
     echo "<tr><td align=\"right\">" . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" onchange=\"getMeta();\"$sum_disabled>\n";
     $yearutils = new yearutils($mysqli);
