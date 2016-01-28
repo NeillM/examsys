@@ -89,7 +89,6 @@ if (isset($_POST['submit'])) {
     }
     $logtype = $_POST["logtype$i"];
     $log_id = $_POST["log_id$i"];
- 
     $result = $mysqli->prepare("UPDATE log$logtype SET mark = ?, adjmark = ? WHERE id = ?");
     $result->bind_param('ddi', $tmp_mark, $tmp_mark, $log_id);
     $result->execute();
