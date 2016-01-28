@@ -10,6 +10,6 @@
     </testsuite>
   </testsuites>
   <php>
-    <const name="PHPUNIT_TESTSUITE" value="true"/>
+    <const name="PHPUNIT_ROGO_TESTSUITE" value="true"/>
   </php>
 </phpunit>

@@ -203,9 +203,8 @@ class Config extends RogoStaticSingleton {
    * @return boolean
    */
   protected function is_phpunit_site() {
-    // If we are on the command line we are the phpunit suite
-    // as we have already confirmed we are not behat.
-    if (php_sapi_name() === 'cli') {
+    // Check if unittest constant has been defined.
+    if (defined('PHPUNIT_ROGO_TESTSUITE') == 1) { 
         return true;
     } else {
         return false;
