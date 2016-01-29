@@ -225,10 +225,13 @@ ob_start();
       return false;
   }
 
-  function popupEmailTemplate() {
+  function popupEmailTemplate(checkpermission) {
     var winwidth = 785;
     var winheight = 550;
-    templatewin = window.open("emailtemplate.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    if(!checkpermission) {
+        winheight = 200;
+    }
+    templatewin = window.open("emailtemplate.php?checkpermission=" + checkpermission ,"templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     templatewin.moveTo(screen.width/2-350,screen.height/2-275);
   }
 
@@ -940,12 +943,7 @@ echo draw_toprightmenu(30);
       if ($paper_type < 2) {
         echo "<div>\n";
         echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        if (!$checkpermission) {
-            $notice->display_notice($string['filepermission'], $string['filepermission'], '../artwork/exclamation_red_bg.png');
-            echo "<input type=\"button\" disabled value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
-        } else {
-            echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
-        }
+        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate($checkpermission);\" style=\"margin:10px; width:160px\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';
         echo '<input type="hidden" name="ccaddress" value="" />';

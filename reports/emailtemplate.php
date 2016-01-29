@@ -23,6 +23,12 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
+
+ if (isset($_GET['checkpermission']) and (!$_GET['checkpermission'])) {
+    $msg = "File:class_totals.php  Line:833  Error:" . $string['filepermission'];
+    $notice->display_notice_and_exit($mysqli, $string['filepermission'], $string['filepermission'], $msg, '../artwork/exclamation_red_bg.png', '#C00000', true, true);
+ }
 
 $emailtemplatedir = rogo_directory::get_directory('email_templates');
 $templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
@@ -74,7 +80,7 @@ if (file_exists($templatefile)) {
 </head>
 
 <body>
-<form name="theform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+<form name="templateform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
 <tr>
