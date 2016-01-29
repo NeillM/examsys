@@ -18,5 +18,6 @@ $string['cc'] = 'Kopie';
 $string['bcc'] = 'Skrytá kopie';
 $string['subject'] = 'Předmět';
 $string['email_class'] = 'Zaslat E-mail';
-$string['cancel'] = 'Zrušit'
+$string['cancel'] = 'Zrušit';
+$string['filepermission'] = 'Could not create file as write permission denied';
 ?>

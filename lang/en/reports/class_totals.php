@@ -113,5 +113,4 @@ $string['viewaccessibility'] = 'View accessibility settings...';
 $string['resitcandidate'] = 'Resit candidate';
 $string['publishmarks'] = 'Publish Marks';
 $string['gradepublish'] = 'Marks Published';
-$string['filepermission'] = 'Could not create file as write permission denied';
 ?>
