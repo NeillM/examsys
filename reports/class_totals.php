@@ -834,11 +834,9 @@ echo draw_toprightmenu(30);
 
     $emailtemplatedir = rogo_directory::get_directory('email_templates');    
     $checkpermission = $emailtemplatedir->check_permissions();
-      
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
-      $emailtemplatedir = rogo_directory::get_directory('email_templates');    
       $file = fopen($emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt"), "w");
       fwrite($file, $userObject->get_email() . "\n");
       fwrite($file, $_POST['ccaddress'] . "\n");
