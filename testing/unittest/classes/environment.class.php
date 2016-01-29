@@ -48,7 +48,7 @@ class environment {
   }
 
   /**
-   * Check if the behat database needs refreshing.
+   * Check if the phpunit database needs refreshing.
    *
    * @return boolean
    */
@@ -61,7 +61,7 @@ class environment {
   }
 
   /**
-   * Gets the location of the file that stores the version of code that behat is setup to run.
+   * Gets the location of the file that stores the version of code that phpunit is setup to run.
    *
    * @return string
    */
@@ -83,7 +83,7 @@ class environment {
   }
 
   /**
-   * Get the version of Rogo that behat is initialised for.
+   * Get the version of Rogo that phpunit is initialised for.
    *
    * @return string
    */

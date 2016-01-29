@@ -27,7 +27,7 @@ namespace testing\unittest;
  * @category unittest
  */
 class help {
-  /** The URL to documentation for behat in Rogo. */
+  /** The URL to documentation for phpunit in Rogo. */
   const DOCUMENTATION = 'https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Unit+testing';
 
   /**
@@ -40,7 +40,7 @@ class help {
   }
 
   /**
-   * The command a user needs to type to run behat tests from the root of Rogo.
+   * The command a user needs to type to run phpunit tests from the root of Rogo.
    *
    * @return string
    */
@@ -49,7 +49,7 @@ class help {
   }
 
   /**
-   * Returns a help message describing how to run the behat test suit.
+   * Returns a help message describing how to run the phpunit test suit.
    * 
    * @return string
    */
@@ -70,7 +70,7 @@ class help {
   }
 
   /**
-   * Help for the behat init script.
+   * Help for the phpunit init script.
    *
    * @return string
    */

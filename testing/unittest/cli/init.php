@@ -77,7 +77,7 @@ try {
   // Create the database.
   if (isset($optionslist['clean']) or environment::upgrade_needed()) {
     database::install_database();
-    // Store the version of Rogo that behat is initialised for.
+    // Store the version of Rogo that phpunit is initialised for.
     environment::save_version();
   } else {
     cli_utils::prompt('Database does not need updating.');

@@ -32,7 +32,7 @@ use InstallUtils,
  */
 class database {
   /**
-   * Creates a Rogo database for behat testing.
+   * Creates a Rogo database for phpunit testing.
    * 
    * @throws Exception
    */
