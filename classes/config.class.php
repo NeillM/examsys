@@ -146,7 +146,7 @@ class Config extends RogoStaticSingleton {
     if (empty($phpunitdatabase) or $phpunitdatabase === $this->get('cfg_db_database')) {
       return false;
     }
-    // Has a behat data directory been configured?
+    // Has a phpunit data directory been configured?
     $phpunitdatadir = $this->get('cfg_phpunit_data');
     if (empty($phpunitdatadir) or $phpunitdatadir === $this->get('cfg_rogo_data')) {
       return false;
@@ -204,11 +204,7 @@ class Config extends RogoStaticSingleton {
    */
   protected function is_phpunit_site() {
     // Check if unittest constant has been defined.
-    if (defined('PHPUNIT_ROGO_TESTSUITE') == 1) { 
-        return true;
-    } else {
-        return false;
-    }
+    return defined('PHPUNIT_ROGO_TESTSUITE');
   }
   
   /**
