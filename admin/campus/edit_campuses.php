@@ -34,7 +34,6 @@ if ($details === false) {
     $notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
@@ -67,24 +66,14 @@ $toprightmenu = draw_toprightmenu(744);
 $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $lang['title'] = $string['editcampus'];
-$additionaljs = "
-    <script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
+$lang['create'] = $string['createnewcampus'];
+$lang['view'] = $string['viewcampus'];
+$lang['delete'] = $string['deletecampus'];
+$additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script>
-    <script>
-        $(function () {
-        $('#theform').validate({
-          errorClass: 'errfield',
-          errorPlacement: function(error,element) {
-            return true;
-          }
-        });
-        $('form').removeAttr('novalidate');
-        $('#cancel').click(function() {
-          history.back();
-        });
-        });
-    </script>";
+    <script type=\"text/javascript\" src=\"js/campuses.js\"></script>
+    <script type=\"text/javascript\" src=\"js/campuses_validate.js\"></script>";
 $addtionalcss = "<style type=\"text/css\">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
@@ -98,7 +87,9 @@ $addtionalcss = "<style type=\"text/css\">
           }
         </style>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['computerlabs'] => "../list_labs.php", $string['campuses'] => "list_campuses.php" );
-$render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $addtionalcss);
+$render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
+$render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang);
+$render->render_admin_content($breadcrumb, $toprightmenu, $lang);
 
 ?>
 
