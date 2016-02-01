@@ -57,7 +57,7 @@ $additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery_tablesor
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php");
 $render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
-$render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, 'admin/options_list.html');
-$render->render_admin_content($breadcrumb, $toprightmenu, $lang);
+$render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options_list.html');
+$render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($oauth, $header);
 $render->render_admin_footer();

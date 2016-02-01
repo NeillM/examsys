@@ -53,8 +53,8 @@ $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/lis
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
  $string['computerlabs'] => "../list_labs.php");
 $render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
-$render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang);
-$render->render_admin_content($breadcrumb, $toprightmenu, $lang);
+$render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
+$render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($campuses, $header);
 $render->render_admin_footer();
                      

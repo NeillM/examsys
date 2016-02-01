@@ -120,8 +120,8 @@ $addtionalcss = "<style type=\"text/css\">
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['oauthkeys'] => "list_oauth.php" , $string['listoauthclient'] => "list_oauthclient.php");
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
-$render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, 'admin/options.html');
-$render->render_admin_content($breadcrumb, $toprightmenu, $lang);
+$render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
+$render->render_admin_content($breadcrumb, $lang);
 ?>
 
 <br />
