@@ -109,8 +109,8 @@ $lang['delete'] = $string['deleteoauthclient'];
 $additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script>
-    <script type=\"text/javascript\" src=\"js/oauthclients.js\"></script>
-    <script type=\"text/javascript\" src=\"js/oauthclients_validate.js\"></script>";
+    <script type=\"text/javascript\" src=\"js/oauthclients.min.js\"></script>
+    <script type=\"text/javascript\" src=\"js/oauthclients_validate.min.js\"></script>";
 $addtionalcss = "<style type=\"text/css\">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}

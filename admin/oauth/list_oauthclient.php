@@ -50,7 +50,7 @@ array('class' => 'col', 'style' => 'width:20%', 'value' => $string['secret']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['uri']));
 $additionaljs ="<script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/list.js\"></script>
-    <script type=\"text/javascript\" src=\"js/oauthclients.js\"></script>";
+    <script type=\"text/javascript\" src=\"js/oauthclients.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
  $string['oauthkeys'] => "list_oauth.php");

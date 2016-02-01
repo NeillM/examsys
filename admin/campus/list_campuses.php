@@ -48,7 +48,7 @@ $header = array(array('class' => 'col10', 'style' => 'width:80%', 'value' => $st
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['isdefault']));
 $additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/list.js\"></script>
-    <script type=\"text/javascript\" src=\"js/campuses.js\"></script>";
+    <script type=\"text/javascript\" src=\"js/campuses.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
  $string['computerlabs'] => "../list_labs.php");
