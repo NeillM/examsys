@@ -22,15 +22,17 @@
 * @package
 */
 
-echo $configObject->get('cfg_js_root');
-
 function draw_toprightmenu($helpID = 1) {
   global $string;
 	
   $configObject = Config::get_instance();
   $userObject		= UserObject::get_instance();
 
-  $html = '';
+  $html = "<script>
+    if (typeof cfgRootPath == 'undefined') {
+      var cfgRootPath = '/rogo';
+    }
+  </script>";
 	
   if ($userObject->is_impersonated()) {
 		$impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
