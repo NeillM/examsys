@@ -170,7 +170,7 @@ if (isset($_POST['submit'])) {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $propertyObj->get_paper_title() . '</a></div></div>';
   echo '<table class="header"><tr><th><div class="page_title">' . $string['finalisemarks'] . ': <span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
 
-  $student_no = 1;
+  $student_no = 0;
 
   // Get student answers
   if ($paper_type == '0') {
@@ -217,6 +217,7 @@ SQL;
   $result->execute();
   $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);
   while ($result->fetch()) {
+      $student_no++;
       if (isset($primary_marks[$log_id]) and $primary_marks[$log_id] === $user_mark) {
         $primary_checked = ' checked';
         $secondary_checked = '';
@@ -264,11 +265,9 @@ SQL;
       }
       echo "<td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
     }
-    echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
-    $student_no++;
+    echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";   
   }
   $result->close();
-  $student_no--;
 ?>
 </table>
 <br />
