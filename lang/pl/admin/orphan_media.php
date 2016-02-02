@@ -1,8 +1,4 @@
-$string['delete'] = 'Delete Files';
-
-+$string['noorphanedfiles'] = 'No Orphaned Files Found';
-
-+$string['toremove'] = 'To Remove:';<?php
+<?php
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
