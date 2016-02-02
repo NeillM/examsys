@@ -225,13 +225,10 @@ ob_start();
       return false;
   }
 
-  function popupEmailTemplate(checkpermission) {
+  function popupEmailTemplate() {
     var winwidth = 785;
     var winheight = 550;
-    if(!checkpermission) {
-        winheight = 200;
-    }
-    templatewin = window.open("emailtemplate.php?checkpermission=" + checkpermission ,"templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    templatewin = window.open("emailtemplate.php?","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     templatewin.moveTo(screen.width/2-350,screen.height/2-275);
   }
 
@@ -833,7 +830,6 @@ echo draw_toprightmenu(30);
     echo "</tr></table>\n<br />";
 
     $emailtemplatedir = rogo_directory::get_directory('email_templates');    
-    $checkpermission = $emailtemplatedir->check_permissions();
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
@@ -941,7 +937,7 @@ echo draw_toprightmenu(30);
       if ($paper_type < 2) {
         echo "<div>\n";
         echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate($checkpermission);\" style=\"margin:10px; width:160px\" />\n";
+        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
         echo '<input type="hidden" name="emailclass" value="" />';
         echo '<input type="hidden" name="emailtemplate" value="" />';
         echo '<input type="hidden" name="ccaddress" value="" />';
