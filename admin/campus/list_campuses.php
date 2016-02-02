@@ -24,7 +24,6 @@
  */
 
 require '../../include/sysadmin_auth.inc';
-require '../../include/campus_options.inc';
 require '../../include/toprightmenu.inc';
 
 $campusobj = new campus($mysqli);
@@ -38,41 +37,24 @@ foreach ($campuses as $key => $campus) {
 }
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu(744);
+$lang['title'] = $string['campuses'];
+$lang['create'] = $string['createnewcampus'];
+$lang['view'] = $string['viewcampus'];
+$lang['delete'] = $string['deletecampus'];
 $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $config['rogo_version'] = $configObject->get('rogo_version');
-$lang['title'] = $string['campuses'];
 $header = array(array('class' => 'col10', 'style' => 'width:80%', 'value' => $string['campus']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['isdefault']));
-$additionaljs ="
-    <script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
+$additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/list.js\"></script>
-    <script>
-        function edit(id) {
-          document.location.href='./edit_campuses.php?campus=' + id;
-        }
-        
-        $(function () {
-          if ($(\"#maindata\").find(\"tr\").size() > 1) {
-            $(\"#maindata\").tablesorter({ 
-              sortList: [[0,0]] 
-            });
-          }
-          
-          $(\".l\").click(function(event) {
-            event.stopPropagation();
-            selLine($(this).attr('id'),event);
-          });
-          
-          $(\".l\").dblclick(function() {
-            edit($(this).attr('id'));
-          });
-        });
-    </script>";
+    <script type=\"text/javascript\" src=\"js/campuses.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
  $string['computerlabs'] => "../list_labs.php");
-$render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $addtionalcss);
+$render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
+$render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
+$render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($campuses, $header);
 $render->render_admin_footer();
                      

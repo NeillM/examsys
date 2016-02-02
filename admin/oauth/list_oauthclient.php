@@ -25,7 +25,6 @@
  */
 
 require '../../include/sysadmin_auth.inc';
-require '../../include/oauthclient_options.inc.php';
 require '../../include/toprightmenu.inc';
 
 $clients = array();
@@ -42,39 +41,22 @@ $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $config['rogo_version'] = $configObject->get('rogo_version');
 $lang['title'] = $string['oauthclients'];
+$lang['create'] = $string['addoauthclient'];
+$lang['view'] = $string['editoauthclient'];
+$lang['delete'] = $string['deleteoauthclient'];
 $header = array(array('class' => 'col10', 'style' => 'width:20%', 'value' => $string['username']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['client']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['secret']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['uri']));
-$additionaljs ="
-    <script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
+$additionaljs ="<script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/list.js\"></script>
-    <script>
-        function edit(id) {
-          document.location.href='./edit_oauthclient.php?client=' + id;
-        }
-        
-        $(function () {
-          if ($(\"#maindata\").find(\"tr\").size() > 1) {
-            $(\"#maindata\").tablesorter({ 
-              sortList: [[0,0]] 
-            });
-          }
-          
-          $(\".l\").click(function(event) {
-            event.stopPropagation();
-            selLine($(this).attr('id'),event);
-          });
-          
-          $(\".l\").dblclick(function() {
-            edit($(this).attr('id'));
-          });
-        });
-    </script>";
+    <script type=\"text/javascript\" src=\"js/oauthclients.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
  $string['oauthkeys'] => "list_oauth.php");
-$render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $addtionalcss);
+$render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
+$render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
+$render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($clients, $header);
 $render->render_admin_footer();
                      

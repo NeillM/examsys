@@ -25,7 +25,6 @@
  */
 
 require '../../include/sysadmin_auth.inc';
-require '../../include/oauth_options.inc.php';
 require '../../include/toprightmenu.inc';
 $oauth = array();
 $result = $mysqli->prepare("SELECT client_id, access_token, username, expires, 'access token' as type FROM
@@ -45,30 +44,20 @@ $config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $config['rogo_version'] = $configObject->get('rogo_version');
 $lang['title'] = $string['oauthkeys'];
+$lang['view'] = $string['listoauthclient'];
+$lang['delete'] = $string['deleteoauthkeys'];
 $header = array(array('class' => 'col10', 'style' => 'width:15%', 'value' => $string['username']),
 array('class' => 'col', 'style' => 'width:15%', 'value' => $string['client']),
 array('class' => 'col', 'style' => 'width:40%', 'value' => $string['token']),
 array('class' => 'col', 'style' => 'width:10%', 'value' => $string['type']),
 array('class' => 'col', 'style' => 'width:10%', 'value' => $string['expires']));
-$additionaljs = "
-    <script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
+$additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/list.js\"></script>
-    <script>
-    $(function () {
-      if ($(\"#maindata\").find(\"tr\").size() > 1) {
-        $(\"#maindata\").tablesorter({ 
-          sortList: [[0,0]] 
-        });
-      }
-      
-      $(\".l\").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-      });
-    });
-    </script>";
+    <script type=\"text/javascript\" src=\"js/oauth.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php");
-$render->render_admin_header($lang, $config, $breadcrumb, $toprightmenu, $additionaljs, $addtionalcss);
+$render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
+$render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options_list.html');
+$render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($oauth, $header);
 $render->render_admin_footer();

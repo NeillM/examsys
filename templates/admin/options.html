@@ -1,0 +1,19 @@
+<body>
+    {{toprightmenu|raw}}
+    <div id="left-sidebar" class="sidebar">
+    <form name="optionsform" autocomplete="off">
+    <div id="menu1a">
+        <div class="menuitem"><a href="{{script}}"><img class="sidebar_icon" src="../../artwork/{{image}}" alt="" />{{lang.create}}</a></div>
+        <div class="grey menuitem"><img class="sidebar_icon" src="../../artwork/edit_grey.png" alt="" />{{lang.view}}</div>
+        <div class="grey menuitem"><img class="sidebar_icon" src="../../artwork/red_cross_grey.png" alt="" />{{lang.delete}}</div>
+    </div>
+
+    <div style="display:none" id="menu1b">
+        <div class="menuitem"><a href="{{script}}"><img class="sidebar_icon" src="../../artwork/{{image}}" alt="{{lang.create}}" />{{lang.create}}</a></div>
+        <div class="menuitem" onclick="viewoption()"><img class="sidebar_icon" src="../../artwork/edit.png" alt="{{lang.view}}" /><a href="" onclick="return false;">{{lang.view}}</a></div>
+        <div class="menuitem" onclick="deleteoption()"><img class="sidebar_icon" src="../../artwork/red_cross.png" alt="{{lang.delete}}" /><a href="" onclick="return false;">{{lang.delete}}</a></div>
+    </div>
+
+    <input type="hidden" id="lineID" name="lineID" value=""/>
+    </form>
+    </div>
