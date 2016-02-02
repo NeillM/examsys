@@ -24,5 +24,8 @@ $string['missingfiles'] = 'Missing Files!';
 $string['cleanupsummary'] = 'Clean-up Summary';
 $string['filedeleted'] = 'Files deleted';
 $string['spacereclaimed'] = 'Space reclaimed';
-$string['deletingfiles'] = 'Deleting Files!';
+$string['deletingfiles'] = 'Files to be deleted';
+$string['delete'] = 'Delete Files';
+$string['noorphanedfiles'] = 'No Orphaned Files Found';
+$string['toremove'] = 'To Remove:';
 ?>
