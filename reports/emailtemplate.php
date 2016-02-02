@@ -25,14 +25,9 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
-try{
-    $emailtemplatedir = rogo_directory::get_directory('email_templates');
-    if (!$emailtemplatedir->check_permissions()) {
-        $error = $string['filepermission'];
-        throw new Exception($error);
-    }
-} catch (Exception $e) {
-    $msg = "File:emailtemplete.php  near Line :29  Error:" . $e->getMessage();
+$emailtemplatedir = rogo_directory::get_directory('email_templates');
+if (!$emailtemplatedir->check_permissions()) {
+    $msg = "File:emailtemplete.php Line :29  Error:" . $string['filepermission'];
     $notice->display_notice_and_exit($mysqli, $string['filepermission'], $string['filepermission'], $msg, '../artwork/exclamation_red_bg.png', '#C00000', true, true);
 }
 
