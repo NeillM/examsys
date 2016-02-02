@@ -228,7 +228,7 @@ ob_start();
   function popupEmailTemplate() {
     var winwidth = 785;
     var winheight = 550;
-    templatewin = window.open("emailtemplate.php?","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    templatewin = window.open("emailtemplate.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     templatewin.moveTo(screen.width/2-350,screen.height/2-275);
   }
 
