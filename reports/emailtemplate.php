@@ -27,7 +27,7 @@ require_once '../include/errors.inc';
 
 $emailtemplatedir = rogo_directory::get_directory('email_templates');
 if (!$emailtemplatedir->check_permissions()) {
-    $msg = "File:emailtemplete.php Line :" . __LINE__ -1 . "  Error:" . $string['filepermission'];
+    $msg = "File:emailtemplete.php Line :" . (__LINE__ -1) . "  Error:" . $string['filepermission'];
     $notice->display_notice_and_exit($mysqli, $string['filepermission'], $string['filepermission'], $msg, '../artwork/exclamation_red_bg.png', '#C00000', true, true);
 }
 
