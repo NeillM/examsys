@@ -25,13 +25,14 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
- if (isset($_GET['checkpermission']) and (!$_GET['checkpermission'])) {
-    $msg = "File:class_totals.php  Line:833  Error:" . $string['filepermission'];
+try{
+    $emailtemplatedir = rogo_directory::get_directory('email_templates');
+} catch (Exception $e) {
+    $msg = "File:emailtemplete.php  Line:29  Error:" . $string['filepermission'] . " Exception:" . $e->getMessage();
     $notice->display_notice_and_exit($mysqli, $string['filepermission'], $string['filepermission'], $msg, '../artwork/exclamation_red_bg.png', '#C00000', true, true);
- }
+}
 
-$emailtemplatedir = rogo_directory::get_directory('email_templates');
-$templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
+ $templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
 $message = '';
 if (file_exists($templatefile)) {
 	$file = fopen($templatefile,'r');
