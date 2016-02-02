@@ -25,4 +25,7 @@ $string['cleanupsummary'] = 'Podsumowanie oczyszczania';
 $string['filedeleted'] = 'Pliki usunięte';
 $string['spacereclaimed'] = 'Odzyskane miejsce';
 $string['deletingfiles'] = 'Usuwanie plików';
+$string['delete'] = 'Delete Files';
+$string['noorphanedfiles'] = 'No Orphaned Files Found';
+$string['toremove'] = 'To Remove:';
 ?>

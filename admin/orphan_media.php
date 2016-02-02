@@ -24,39 +24,6 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
-set_time_limit (0);
-
-// List of files that should be kept
-$exempt = array('formulary.gif', 'formulary.html');
-
-function getImages($html) {
-  $mediadirectory = rogo_directory::get_directory('media');
-  $regexp = '#' . $mediadirectory->url('(.*)') . '#';
-  $regexp = str_replace('&', '&amp;', $regexp);
-  $regexp = str_replace('?', '\?', $regexp);
-
-  $image_array = array();
-  
-  $parts = explode('<img',$html);
-  if (count($parts) > 0) {
-    // Got some images
-    unset($parts[0]);
-    foreach ($parts as $image_line) {
-      $second_split = explode('src="',$image_line);
-      $third_split = explode('"',$second_split[1]);
-      $image_src = $third_split[0];
-      $matches = array();
-      preg_match($regexp, $image_src, $matches);
-      if (!empty($matches[1])) {
-        $image_src = $matches[1];
-      }
-      $image_array[] = $image_src;
-    }
-  }
-  
-  return $image_array;
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -83,8 +50,9 @@ function getImages($html) {
 <?php
   require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu(243);
+
+  echo draw_toprightmenu(243);
+  set_time_limit(0);
 ?>
 
 <div id="content">
@@ -95,108 +63,115 @@ function getImages($html) {
   <div class="page_title"><?php echo $string['removeorphanmedia'] ?></div>
 </div>
 <?php
-$mediadirectory = rogo_directory::get_directory('media');
-
-  $file_array = array();
-  $missing_array = array();
-
-  //- Get all the files from the 'media' directory first. ------------------------------
-  $default_dir = $mediadirectory->location();
-  if (!($dp = opendir($default_dir))) die ("Cannot open $default_dir.");
-  while ($file = readdir($dp)) {
-    // Ignore hidden files
-    if (substr($file, 0, 1) != '.') {
-      $file_array[$file] = 0;
-      if (strpos($file,'.flv') !== false) {
-        // Set FLV files to used to protect them as they are indirectly referenced by SWF files.
-        $file_array[$file] = 1;
+  $mediadirectory = rogo_directory::get_directory('media');
+  if (isset($_POST["submit"]) and isset($_POST["deletefiles"])) {
+    $deletefiles = unserialize(base64_decode(($_POST['deletefiles'])));
+    
+    foreach ($deletefiles as $filename) {
+      $fullpath = $mediadirectory->fullpath($filename);
+      $saved_space += filesize($fullpath);
+      if (!unlink($fullpath)) {
+        echo "<li>" . $string['deletefailed'] . " " . $fullpath . "</li>\n";
+      } else {        
+        echo "<li>" . $string['removed'] . " " . $fullpath . "</li>\n";
+        $deleted_files++;
       }
     }
-  }
-  closedir($dp);
 
-  //- Get all the files from the 'questions' table. ------------------------------------
-  $result = $mysqli->prepare("SELECT q_media FROM questions WHERE q_media != ''");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($q_media);
-  while ($result->fetch()) {
-    if (strlen($q_media) != substr_count($q_media,'|')) {     // Extended matching with no graphics.
-      $tmp_files = explode('|', $q_media);
-      foreach ($tmp_files as $single_file) {
-        if (isset($file_array[$single_file])) {
-          $file_array[$single_file] = 1;
-        } else {
-          $missing_array[] = $single_file;
+    echo "<h1>" . $string['cleanupsummary'] . "</h1>\n";
+    echo '<table cellpadding="4" cellspacing="0" border="0" style="margin-left:10px">';
+    echo "<tr><td style=\"width: 175px\"><strong>" . $string['filedeleted'] . "</strong></td><td>" . number_format($deleted_files) . "</td></tr>\n";
+    echo "<tr><td><strong>" . $string['spacereclaimed'] . "</strong></td><td>" . number_format($saved_space / 1024) . "Kb</td></tr>\n";
+    echo '</table>';
+
+  } else {
+    // List of files that should be kept
+    $exempt = array('formulary.gif', 'formulary.html');
+
+    function getImages($html) {
+      $mediadirectory = rogo_directory::get_directory('media');
+      $regexp = '#' . $mediadirectory->url('(.*)') . '#';
+      $regexp = str_replace('&', '&amp;', $regexp);
+      $regexp = str_replace('?', '\?', $regexp);
+
+      $image_array = array();
+      
+      $parts = explode('<img',$html);
+      if (count($parts) > 0) {
+        // Got some images
+        unset($parts[0]);
+        foreach ($parts as $image_line) {
+          $second_split = explode('src="',$image_line);
+          $third_split = explode('"',$second_split[1]);
+          $image_src = $third_split[0];
+          $matches = array();
+          preg_match($regexp, $image_src, $matches);
+          if (!empty($matches[1])) {
+            $image_src = $matches[1];
+          }
+          $image_array[] = $image_src;
+        }
+      }
+      
+      return $image_array;
+    }
+    
+    $file_array = array();
+    $missing_array = array();
+
+    //- Get all the files from the 'media' directory first. ------------------------------
+    $default_dir = $mediadirectory->location();
+    if (!($dp = opendir($default_dir))) die ("Cannot open $default_dir.");
+    while ($file = readdir($dp)) {
+      // Ignore hidden files
+      if (substr($file, 0, 1) != '.') {
+        $file_array[$file] = 0;
+        if (strpos($file,'.flv') !== false) {
+          // Set FLV files to used to protect them as they are indirectly referenced by SWF files.
+          $file_array[$file] = 1;
         }
       }
     }
-  }
-  $result->close();
-  
-  //- Get all the files from the 'options' table. ------------------------------------
-  $result = $mysqli->prepare("SELECT o_media FROM options WHERE o_media != '' ORDER BY id_num");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($o_media);
-  while ($result->fetch()) {
-    if (isset($file_array[$o_media])) $file_array[$o_media] = 1;
-  }
-  $result->close();
+    closedir($dp);
 
-  //- Check lead-in field for any images (Latex, etc) ---------------------------------
-  $result = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%<img%'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($leadin);
-  while ($result->fetch()) {
-    $images = getImages($leadin);
-    if (count($images) > 0) {
-      foreach($images as $image) {
-        if (isset($file_array[$image])) {
-          $file_array[$image] = 1;
-        } else {
-          $missing_array[] = $image;
+    //- Get all the files from the 'questions' table. ------------------------------------
+    $result = $mysqli->prepare("SELECT q_media FROM questions WHERE q_media != ''");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($q_media);
+    while ($result->fetch()) {
+      if (strlen($q_media) != substr_count($q_media,'|')) {     // Extended matching with no graphics.
+        $tmp_files = explode('|', $q_media);
+        foreach ($tmp_files as $single_file) {
+          if (isset($file_array[$single_file])) {
+            $file_array[$single_file] = 1;
+          } else {
+            $missing_array[] = $single_file;
+          }
         }
       }
     }
-  }
-  $result->close();
+    $result->close();
   
-  //- Check scenario field for any images (Latex, etc) ---------------------------------
-  $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($scenario);
-  while ($result->fetch()) {
-    $images = getImages($scenario);
-    if (count($images) > 0) {
-      foreach($images as $image) {
-        if (isset($file_array[$image])) {
-          $file_array[$image] = 1;
-        } else {
-          $missing_array[] = $image;
-        }
-      }
+    //- Get all the files from the 'options' table. ------------------------------------
+    $result = $mysqli->prepare("SELECT o_media FROM options WHERE o_media != '' ORDER BY id_num");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($o_media);
+    while ($result->fetch()) {
+      if (isset($file_array[$o_media])) $file_array[$o_media] = 1;
     }
-  }
-  $result->close();
-  
-  //- Check correct field for any images (images used as labels in Labelling question) -----------
-  $result = $mysqli->prepare("SELECT correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($correct);
-  while ($result->fetch()) {
-    $parts = explode(';', $correct);
-    if (isset($parts[11])) {
-      $sub_parts = explode('|', $parts[11]);
-      foreach ($sub_parts as $sub_part) {
-        if (strpos($sub_part,'.gif') !== false or strpos($sub_part,'.png') !== false or strpos($sub_part,'.jpg') !== false or strpos($sub_part,'.jpeg') !== false) {
-          $image_parts = explode('$', $sub_part);
-          $image_text = $image_parts[4];
-          $image_filename = explode('~', $image_text);
-          $image = $image_filename[0];
+    $result->close();
+
+    //- Check lead-in field for any images (Latex, etc) ---------------------------------
+    $result = $mysqli->prepare("SELECT leadin FROM questions WHERE leadin LIKE '%<img%'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($leadin);
+    while ($result->fetch()) {
+      $images = getImages($leadin);
+      if (count($images) > 0) {
+        foreach($images as $image) {
           if (isset($file_array[$image])) {
             $file_array[$image] = 1;
           } else {
@@ -205,38 +180,94 @@ $mediadirectory = rogo_directory::get_directory('media');
         }
       }
     }
-  }
-  $result->close();
+    $result->close();
   
-  $tmp_date = mktime(0, 0, 0, date("m"), date("d")-2, date("Y")); 
-  $saved_space = 0;
-  $deleted_files = 0;
-  // Run through the array and remove any files not used.
-  echo "<h1>" . $string['deletingfiles'] . "</h1>\n<ul>\n"; 
-  foreach ($file_array as $filename => $file_used) {
-    $fullpath = $mediadirectory->fullpath($filename);
-    if ($file_used == 0) {
-      $file_date = date("Ymd", filectime($fullpath));
-	    $current_date = date("Ymd",$tmp_date);  
-      if (in_array($filename,$exempt)) {
-        echo "<li>" . $string['notremoving'] .  " $filename <strong>" . $string['inexamptionslist'] . "</strong>.</li>\n";	    
-      } elseif ($file_date < $current_date) {                // Fix for image hotspot and labelling.
-        $saved_space += filesize($fullpath);
-		    if (!unlink($fullpath)) {
-          echo "<li>" . $string['deletefailed'] . " $fullpath</li>\n";
-        } else {        
-          echo "<li>" . $string['removed'] .  " $filename</li>\n";
-          $deleted_files++;
+    //- Check scenario field for any images (Latex, etc) ---------------------------------
+    $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($scenario);
+    while ($result->fetch()) {
+      $images = getImages($scenario);
+      if (count($images) > 0) {
+        foreach($images as $image) {
+          if (isset($file_array[$image])) {
+            $file_array[$image] = 1;
+          } else {
+            $missing_array[] = $image;
+          }
         }
-      } else {
-        echo "<li>" . $string['notremoving'] . " $filename <strong>" . $string['toonew'] .  "</strong>.</li>\n";	    
-	    }
+      }
     }
+    $result->close();
+  
+    //- Check correct field for any images (images used as labels in Labelling question) -----------
+    $result = $mysqli->prepare("SELECT correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($correct);
+    while ($result->fetch()) {
+      $parts = explode(';', $correct);
+      if (isset($parts[11])) {
+        $sub_parts = explode('|', $parts[11]);
+        foreach ($sub_parts as $sub_part) {
+          if (strpos($sub_part,'.gif') !== false or strpos($sub_part,'.png') !== false or strpos($sub_part,'.jpg') !== false or strpos($sub_part,'.jpeg') !== false) {
+            $image_parts = explode('$', $sub_part);
+            $image_text = $image_parts[4];
+            $image_filename = explode('~', $image_text);
+            $image = $image_filename[0];
+            if (isset($file_array[$image])) {
+              $file_array[$image] = 1;
+            } else {
+              $missing_array[] = $image;
+            }
+          }
+        }
+      }
+    }
+    $result->close();
+    $mysqli->close();
+    
+    $tmp_date = mktime(0, 0, 0, date("m"), date("d")-2, date("Y")); 
+    $deletefiles = array();
+    // Run through the array and remove any files not used.
+    echo "<h1>" . $string['deletingfiles'] . "</h1>\n<ul>\n"; 
+    $fileusedcount = 0;
+    foreach ($file_array as $filename => $file_used) {
+      $fullpath = $mediadirectory->fullpath($filename);
+      if ($file_used == 0) {
+        $file_date = date("Ymd", filectime($fullpath));
+        $current_date = date("Ymd",$tmp_date);  
+        if (in_array($filename,$exempt)) {
+          echo "<li>" . $string['notremoving'] .  " $filename <strong>" . $string['inexamptionslist'] . "</strong>.</li>\n";	    
+        } elseif ($file_date < $current_date) {                // Fix for image hotspot and labelling.
+          echo "<li>" . $string['toremove'] .  " $filename</li>\n";
+          $deletefiles[] = $filename;
+        } else {
+          echo "<li>" . $string['notremoving'] . " $filename <strong>" . $string['toonew'] .  "</strong>.</li>\n";	    
+        }
+        $fileusedcount++;
+      }
+    }
+  
+    // Ask for confirmation before deleting files.
+    if (count($deletefiles) > 0) {
+        $serlializedeletefiles = base64_encode(serialize(($deletefiles)));
+?>
+
+  <form id="theform" name="theform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+  <input type="hidden" name="deletefiles" value="<?php echo $serlializedeletefiles; ?>">
+  <input type="submit" class="ok" name="submit" value="<?php echo $string['delete']; ?>">
+
+<?php
   }
+
+  if ($fileusedcount == 0) {
+    echo "<li>" . $string['noorphanedfiles'] . "</li>\n";
+  }
+
   echo "</ul>\n";
   
-  $mysqli->close();
-
   if (count($missing_array) > 0) {
     sort($missing_array);
     echo "<h1>" . $string['missingfiles'] . "</h1>\n<ul>";
@@ -254,6 +285,7 @@ $mediadirectory = rogo_directory::get_directory('media');
   echo "<tr><td style=\"width: 175px\"><strong>" . $string['filedeleted'] . "</strong></td><td>" . number_format($deleted_files) . "</td></tr>\n";
   echo "<tr><td><strong>" . $string['spacereclaimed'] . "</strong></td><td>" . number_format($saved_space / 1024) . "Kb</td></tr>\n";
   echo '</table>';
+}
 ?>
 </div>
 
