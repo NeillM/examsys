@@ -18,5 +18,6 @@ $string['cc'] = 'CC';
 $string['bcc'] = 'BCC';
 $string['subject'] = 'Subject';
 $string['email_class'] = 'Email Class';
-$string['cancel'] = 'Cancel'
+$string['cancel'] = 'Cancel';
+$string['filepermission'] = 'Could not create file as write permission denied';
 ?>

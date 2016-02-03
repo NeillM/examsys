@@ -18,5 +18,6 @@ $string['cc'] = 'DW';
 $string['bcc'] = 'UDW';
 $string['subject'] = 'Temat';
 $string['email_class'] = 'Wyślij do klasy';
-$string['cancel'] = 'Anuluj'
+$string['cancel'] = 'Anuluj';
+$string['filepermission'] = 'Could not create file as write permission denied';
 ?>

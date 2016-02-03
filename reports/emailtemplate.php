@@ -23,9 +23,15 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.inc';
 
 $emailtemplatedir = rogo_directory::get_directory('email_templates');
-$templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
+if (!$emailtemplatedir->check_permissions()) {
+    $msg = "File:emailtemplete.php Line :" . (__LINE__ -1) . "  Error:" . $string['filepermission'];
+    $notice->display_notice_and_exit($mysqli, $string['filepermission'], $string['filepermission'], $msg, '../artwork/exclamation_red_bg.png', '#C00000', true, true);
+}
+
+ $templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
 $message = '';
 if (file_exists($templatefile)) {
 	$file = fopen($templatefile,'r');

@@ -1608,7 +1608,7 @@ class PaperProperties {
     if ($this->password != '') {
         $password = $this->decrypt_password($this->password);
         // Strip of the paper id before returning the password.
-        return ltrim($password, $paperID);
+        return preg_replace("/^$paperID/", '', $password);
     } else {
         return $this->password;
     }
