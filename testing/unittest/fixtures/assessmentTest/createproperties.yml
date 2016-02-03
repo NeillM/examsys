@@ -1,0 +1,16 @@
+properties:
+  -
+    property_id: 1
+    paper_title: "Test create formative"
+    start_date: "2016-01-25 09:00:00"
+    end_date: "2016-01-25 10:00:00"
+    exam_duration: 60
+    calendar_year: 2016
+    timezone: "Europe/London"
+    paper_ownerID: 1
+    labs: "1"
+    paper_type: "0"
+properties_modules:
+  -
+    property_id: 1
+    idMod: 1

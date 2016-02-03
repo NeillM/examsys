@@ -108,6 +108,9 @@ Class InstallUtils {
 
   /** @var bool Stores if this is a behat installation. */
   public static $behat_install = false;
+  
+  /** @var bool Stores if this is a phpunit installation. */
+  public static $phpunit_install = false;
 
   /** @var string The username of the admin account. */
   public static $sysadmin_username;
@@ -805,7 +808,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
     self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
@@ -845,7 +848,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user student user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
@@ -924,7 +927,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user external user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
@@ -999,7 +1002,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user staff user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
@@ -1096,7 +1099,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user SCT user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
@@ -1123,7 +1126,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user Invigilator user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install ) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
@@ -1166,14 +1169,14 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL = array();
     //create 'database user sysadmin user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON " . $dbname . ".* TO '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
     //create 'database user webservice user' and grant permissions
     self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
-    if (self::$db->errno != 0 && !self::$behat_install) {
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
       self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . self::$db->error ));
     }
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".* TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";

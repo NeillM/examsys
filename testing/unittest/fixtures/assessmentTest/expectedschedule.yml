@@ -1,0 +1,37 @@
+scheduling:
+  -
+    id: 1
+    paperID: 1
+    period: 1
+    barriers_needed: 0
+    cohort_size: "11-20"
+    notes: "Some interesting notes on this exam"
+    sittings: 1
+    campus: "Test campus"
+  -
+    id: 2
+    paperID: 3
+    period: 1
+    barriers_needed: 0
+    cohort_size: "<whole cohort>"
+    notes: "Some interesting notes on this exam"
+    sittings: 1
+    campus: "Test campus"
+  -
+    id: 3
+    paperID: 4
+    period: 1
+    barriers_needed: 0
+    cohort_size: "11-20"
+    notes: "Some interesting notes on this exam"
+    sittings: 6
+    campus: "Test campus"
+  -
+    id: 4
+    paperID: 5
+    period: 1
+    barriers_needed: 0
+    cohort_size: "11-20"
+    notes: "Some interesting notes on this exam"
+    sittings: 1
+    campus: "Test campus"

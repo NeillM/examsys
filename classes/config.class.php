@@ -40,9 +40,15 @@ class Config extends RogoStaticSingleton {
   
   /** @var bool Stores if the config object has been setup for behat. */
   protected $behatsetup = false;
+  
+  /** @var bool Stores if the config object has been setup for phpunit. */
+  protected $phpunitsetup = false;
 
   /** The path to the behat config file relative to the root Rogo directory. */
   const BEHAT_CONFIG_FILE = '/config/behat.xml';
+  
+  /** The path to the phpunit config file relative to the root Rogo directory. */
+  const PHP_UNIT_CONFIG_FILE = '/config/phpunit.xml';
 
   function __toString() {
     return "ConfigObject!";
@@ -64,6 +70,11 @@ class Config extends RogoStaticSingleton {
 
     if ($this->is_behat_configured() && $this->is_behat_site()) {
       $this->use_behat_site();
+    } else {
+        $this->load_phpunit_config();
+        if ($this->is_phpunit_configured() && $this->is_phpunit_site()) {
+          $this->use_phpunit_site();
+        }
     }
   }
 
@@ -80,6 +91,22 @@ class Config extends RogoStaticSingleton {
     $data = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
     foreach($data as $setting) {
       $this->data['cfg_behat_' . $setting->getName()] = (string)$setting;
+    }
+  }
+  
+  /**
+   * Loads the phpunit configuration for Rogo.
+   *
+   * @return void
+   */
+  protected function load_phpunit_config() {
+    $file = __DIR__ . '/..' . self::PHP_UNIT_CONFIG_FILE;
+    if (!file_exists($file)) {
+      return;
+    }
+    $data = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
+    foreach($data as $setting) {
+      $this->data['cfg_phpunit_' . $setting->getName()] = (string)$setting;
     }
   }
 
@@ -107,16 +134,33 @@ class Config extends RogoStaticSingleton {
     // We got this far everything is good.
     return true;
   }
-
+  
   /**
-   * Test if Rogo is being accessed as a behat website.
-   *
+   * Checks if all the required phpunit configuration settings are present.
+   * 
    * @return boolean
    */
-  protected function is_behat_site() {
-    $behaturl = $this->get('cfg_behat_website');
+  public function is_phpunit_configured() {
+    // Has the phpunit database been configured, and is it different to the live database?
+    $phpunitdatabase = $this->get('cfg_phpunit_db_database');
+    if (empty($phpunitdatabase) or $phpunitdatabase === $this->get('cfg_db_database')) {
+      return false;
+    }
+    // Has a phpunit data directory been configured?
+    $phpunitdatadir = $this->get('cfg_phpunit_data');
+    if (empty($phpunitdatadir) or $phpunitdatadir === $this->get('cfg_rogo_data')) {
+      return false;
+    }
+    // We got this far everything is good.
+    return true;
+  }
 
-    $parsedurl = parse_url($behaturl . '/');
+  /**
+   * Check url passed in argument matches that of site being accessed.
+   * @param $parsedurl url of test site
+   * @return bool true on match
+   */
+  private function checkurl($parsedurl) {
     $parsedurl['port'] = isset($parsedurl['port']) ? $parsedurl['port'] : 80;
     $parsedurl['path'] = rtrim($parsedurl['path'], '/');
 
@@ -141,7 +185,28 @@ class Config extends RogoStaticSingleton {
 
     return false;
   }
+  
+  /**
+   * Test if Rogo is being accessed as a behat website.
+   *
+   * @return boolean
+   */
+  protected function is_behat_site() {
+    $behaturl = $this->get('cfg_behat_website');
+    $parsedurl = parse_url($behaturl . '/');
+    return $this->checkurl($parsedurl);
+  }
 
+  /**
+   * Test if Rogo is being accessed as a phpunit suite.
+   *
+   * @return boolean
+   */
+  protected function is_phpunit_site() {
+    // Check if unittest constant has been defined.
+    return defined('PHPUNIT_ROGO_TESTSUITE');
+  }
+  
   /**
    * Setup Rogo site to use the the behat database.
    *
@@ -167,6 +232,25 @@ class Config extends RogoStaticSingleton {
     $this->set('cfg_rogo_data', $this->get('cfg_behat_data'));
     $this->behatsetup = true;
   }
+  
+  /**
+   * Setup Rogo site to use the the phpunit database.
+   *
+   * @return void
+   */
+  public function use_phpunit_site() {
+    if ($this->phpunitsetup) {
+      // We do not want to run this code twice.
+      return;
+    }
+    // Store the original database name, it is used during behat site installs.
+    $this->set('base_database', $this->get('cfg_db_database'));
+    $this->set('cfg_db_database', $this->get('cfg_phpunit_db_database'));
+    // Use the correct user data directory.
+    $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
+    $this->phpunitsetup = true;
+  }
+
 
   /**
    * Store the db object to prevent having to pass it as a parameter in methods

@@ -1,0 +1,6 @@
+properties:
+  -
+    property_id: 1
+    start_date: "2016-01-25 09:00:00"
+    end_date: "2016-01-25 10:30:00"
+    exam_duration: 779
