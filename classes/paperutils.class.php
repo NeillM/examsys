@@ -422,6 +422,7 @@ Class PaperUtils {
   * @return void
   */
   public function delete_paper($paperID, $owner, $db) {
+    $configObject = \Config::get_instance();
     $assessment = new assessment($db, $configObject);
     $now = date("Y-m-d H:i:s");
     $update_params = array(

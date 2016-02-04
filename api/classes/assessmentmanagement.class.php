@@ -238,6 +238,7 @@ class assessmentmanagement extends \api\abstractmanagement {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_not_scheduled', 'paper_invalid_module'));
         $error = array();
+        $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
         $papertype = $paper::TYPE_SUMMATIVE;
 
@@ -256,11 +257,10 @@ class assessmentmanagement extends \api\abstractmanagement {
         $labs = '';
         $start = '';
         $end = '';
-        $configObject = \Config::get_instance();
         // Create.
         try {
             $paperid = $paper->create($params['title'], $papertype, $params['owner'], $start,
-                $end, $labs, $params['duration'], $params['session'], $modulesarray);
+                $end, $labs, $params['duration'], $params['session'], $modulesarray, $configObject->get('cfg_timezone'));
             if ($paperid) {
                 // Schedule.
                 $params['month'] = ltrim($params['month'], '-');

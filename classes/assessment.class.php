@@ -143,7 +143,7 @@ class assessment {
             throw new Exception('NON_UNIQUE_TITLE');
         }
 
-        if (!in_array($papertype, $this->type, true)){
+        if (!in_array($papertype, $this->type, true)) {
             throw new Exception('INVALID_PAPER_TYPE');   
         }
         // Check owner exists.
@@ -213,7 +213,7 @@ class assessment {
             'created' => array('s', $timestamp),
             'calendar_year' => array('i', $session)
         );
-        $property_id = $this->db_insert_assessment($params);;
+        $property_id = $this->db_insert_assessment($params);
         if ($property_id) {
             // Add to Modules.
             foreach ($modules as $module) {
