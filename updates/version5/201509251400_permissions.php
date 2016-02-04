@@ -21,6 +21,7 @@ if ($updater_utils->check_version("6.1.0")) {
         
         $insertsql = "INSERT INTO permissions (action, description) VALUES "
             . "('modulemanagement/enrol', 'Enrol Users onto a module'), "
+            . "('modulemanagement/unrol', 'UnEnrol Users from a module'), "
             . "('modulemanagement/create', 'Create/Update a module'), "
             . "('modulemanagement/delete', 'Delete a module'), "
             . "('usermanagement/create', 'Create/Update a user'), "
