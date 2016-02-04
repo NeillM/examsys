@@ -19,6 +19,9 @@ if ($updater_utils->check_version("6.1.0")) {
         $grantsql[] = "GRANT SELECT, INSERT ON " . $cfg_db_database . ".modules_staff TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".users TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $cfg_db_database . ".sid TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON, DELETE " . $cfg_db_database . ".properties TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON, DELETE " . $cfg_db_database . ".properties_modules TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
+        $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON, DELETE " . $cfg_db_database . ".scheduling TO '". $cfg_db_webservice_user . "'@'". $cfg_web_host . "'";
         foreach ($grantsql as $sql) {
             $updater_utils->execute_query($sql, true);
         }
