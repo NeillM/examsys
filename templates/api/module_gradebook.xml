@@ -17,4 +17,4 @@
     {% endfor %}
     </module>
 {% endfor %}
-<{{ name }}/>
+</{{ name }}>
