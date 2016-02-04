@@ -10,4 +10,4 @@
 		{% endfor %}
     </{{ val.node }}>
     {% endfor %}
-<{{ name }}/>
+</{{ name }}>

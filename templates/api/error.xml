@@ -3,4 +3,4 @@
     {% for item in response %}
     <error>{{ item }}</error>
     {% endfor %}
-<{{name}}/>
+</{{name}}>

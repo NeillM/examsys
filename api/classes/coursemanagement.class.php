@@ -42,7 +42,8 @@ class coursemanagement extends \api\abstractmanagement {
         'COURSE_NOT_DELETED_INUSE' => 302,
         'COURSE_INVALID_FACULTY' => 303,
         'COURSE_NOT_UPDATED' => 304,
-        'COURSE_NOT_CREATED' => 305
+        'COURSE_NOT_CREATED' => 305,
+        'COURSE_ALREADY_EXISTS' => 306
     );
     
     /**
