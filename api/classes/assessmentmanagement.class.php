@@ -301,9 +301,11 @@ class assessmentmanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_deleted_inuse', 'paper_not_deleted'
             , 'paper_does_not_exist'));
         if (!empty($params['id'])) {
-            $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
+            $paperexists = \Paper_utils::paper_exists($params['id'], $this->db);
+        } else {
+            $paperexists = false;
         }
-        if ($paperid) {
+        if ($paperexists) {
             // Only delete assessment if no one has taken the paper.
             $inuse = \Paper_utils::paper_taken($params['id'], $this->db);
             if ($inuse) {
