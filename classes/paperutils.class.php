@@ -755,7 +755,14 @@ Class PaperUtils {
     $result = $db->prepare("DELETE FROM properties WHERE property_id = ?");
     $result->bind_param('i', $id);
     $result->execute();
-    $result->fetch();
+    if ($db->errno != 0) {
+        return false;
+    }
+    $result->close();
+    // We should also delete any entries in properties_modules otherwise they will be orphaned.
+    $result = $db->prepare("DELETE FROM properties_modules WHERE property_id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
     if ($db->errno != 0) {
         return false;
     }
