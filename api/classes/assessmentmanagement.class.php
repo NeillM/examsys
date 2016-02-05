@@ -196,7 +196,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             if ($params['id']) {
                 if ($paperid) {
                     try {
-                        $id = $paper->update($params['id'], $params['title'], $params['owner'], $params['startdatetime'],
+                        $id = $paper->update($params['id'], $params['title'], $details['type'], $params['owner'], $params['startdatetime'],
                             $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $userid);
                         if ($id) {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);

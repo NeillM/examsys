@@ -232,7 +232,8 @@ class assessmenttest extends unittestdatabase {
     public function test_update() {
         // Test update paper - SUCCESS
         $papertitle = "Test update summative";
-        $id = $this->create_paper($papertitle, 2);
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
         $paperowner = 1;
         $startdate = "2016-01-25 09:00:00";
@@ -243,17 +244,17 @@ class assessmenttest extends unittestdatabase {
         $modules = array(1);
         $timezone = "Europe/London";
         $userid = 1;
-        $this->assertTrue($assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
+        $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test update summative max duration too large - SUCCESS
         $duration = 1000;
-        $this->assertTrue($assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
+        $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test schedule table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, start_date, end_date, exam_duration FROM properties');
         $expectedTable = $this->get_expected_data_set('updatedproperties')->getTable("properties");
         $this->assertTablesEqual($expectedTable, $queryTable);
         // Test update summative max duration too small - SUCCESS
         $duration = -1;
-        $this->assertTrue($assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
+        $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test schedule table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, start_date, end_date, exam_duration FROM properties');
         $expectedTable = $this->get_expected_data_set('updatedproperties2')->getTable("properties");
@@ -265,8 +266,9 @@ class assessmenttest extends unittestdatabase {
      */
     public function test_update_unique_paper_title() {
         $papertitle = "Test update summative";
-        $id = $this->create_paper($papertitle, 2);
-        $this->create_paper("Test schedule summative 2", 2);
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
+        $this->create_paper("Test schedule summative 2", $papertype);
         $assessment = new assessment($this->db, $this->config);
         $newtitle = "Test schedule summative 2";
         $paperowner = 1;
@@ -279,7 +281,7 @@ class assessmenttest extends unittestdatabase {
         $timezone = "Europe/London";
         $userid = 1;
         try {
-            $assessment->update($id, $newtitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
+            $assessment->update($id, $newtitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
         } catch (Exception $e) {
             if ($e->getMessage() == 'NON_UNIQUE_TITLE') {
                 return;
@@ -294,7 +296,8 @@ class assessmenttest extends unittestdatabase {
      */
     public function test_update_valid_owner() {
         $papertitle = "Test update summative";
-        $id = $this->create_paper($papertitle, 2);
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
         $paperowner = 1000;
         $startdate = "2016-01-25 09:00:00";
@@ -306,7 +309,7 @@ class assessmenttest extends unittestdatabase {
         $timezone = "Europe/London";
         $userid = 1;
         try {
-            $assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
+            $assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
         } catch (Exception $e) {
             if ($e->getMessage() == 'INVALID_USER') {
                 return;
@@ -321,7 +324,8 @@ class assessmenttest extends unittestdatabase {
      */
     public function test_update_valid_owner_role() {
         $papertitle = "Test update summative";
-        $id = $this->create_paper($papertitle, 2);
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
         $paperowner = 3;
         $startdate = "2016-01-25 09:00:00";
@@ -333,7 +337,7 @@ class assessmenttest extends unittestdatabase {
         $timezone = "Europe/London";
         $userid = 1;
         try {
-            $assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
+            $assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
         } catch (Exception $e) {
             if ($e->getMessage() == 'INVALID_ROLE') {
                 return;
@@ -348,7 +352,8 @@ class assessmenttest extends unittestdatabase {
      */
     public function test_update_valid_session() {
         $papertitle = "Test update summative";
-        $id = $this->create_paper($papertitle, 2);
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
         $paperowner = 1;
         $startdate = "2016-01-25 09:00:00";
@@ -360,7 +365,7 @@ class assessmenttest extends unittestdatabase {
         $timezone = "Europe/London";
         $userid = 1;
         try {
-            $assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
+            $assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
         } catch (Exception $e) {
             if ($e->getMessage() == 'INVALID_SESSION') {
                 return;
@@ -375,7 +380,8 @@ class assessmenttest extends unittestdatabase {
      */
     public function test_update_valid_dates() {
         $papertitle = "Test update summative";
-        $id = $this->create_paper($papertitle, 2);
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
         $paperowner = 1;
         $enddate = "2016-01-25 09:00:00";
@@ -387,7 +393,7 @@ class assessmenttest extends unittestdatabase {
         $timezone = "Europe/London";
         $userid = 1;
         try {
-            $assessment->update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
+            $assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid);
         } catch (Exception $e) {
             if ($e->getMessage() == 'INVALID_DATES') {
                 return;
