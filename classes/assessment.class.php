@@ -241,6 +241,7 @@ class assessment {
      *
      * @param integer $id - id of paper
      * @param string $papertitle - New paper title
+     * @param int $papertype - Type of paper
      * @param integer $paperowner - Owner of paper
      * @param string $startdate - Start date of paper
      * @param string $enddate  - End date of paper
@@ -252,7 +253,7 @@ class assessment {
      * @param integer $userid - rogo user id of change implementor
      * @return bool - true on success
      */
-    public function update($id, $papertitle, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid) {
+    public function update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid) {
 
         $changes = array();
         $params = array();
