@@ -164,7 +164,7 @@ class assessmentmanagementtest extends unittestdatabase {
      * Test assessment update
      * @group api
      */
-    public function test_update() {#
+    public function test_update() {
         // Init paper
         $params = array(
             "nodeid" => 1,
@@ -248,6 +248,36 @@ class assessmentmanagementtest extends unittestdatabase {
         $params['startdatetime'] = "2016-05-30T10:00:00";
         $params['enddatetime'] = "2016-05-30T09:00:00";
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessemnt scheduling
+     * @group api
+     */
+    public function test_schedule() {
+        // Test paper schedule- SUCCESS.
+        $responsearray = array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 4,
+            "error" => array(),
+            "node" => 'schedule',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "title" => "Test Summative",
+            "owner" => 1,
+            "session" => 2016,
+            "duration" => 60,
+            "month" => 0,
+            "cohort_size" => "76-100",
+            "sittings" => 1,
+            "barriers" => 1,
+            "campus" => "Free text campus",
+            "notes" => "Free text notes",
+            "modules" => array(array('id' => 0, 'value' => 1)));
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
     }
     /**
      * Test assessemnt deletion
