@@ -138,6 +138,27 @@ class assessmentmanagementtest extends unittestdatabase {
         $params['modules'] = array();
         $params['labs'] = array(array('id' => 0, 'value' => 'Test lab 2'));
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test create summative - ERROR centrally managed
+        $this->config->set('cfg_summative_mgmt', true);
+        $responsearray['statuscode'] = 214;
+        $responsearray['status'] = 'This system is set-up to only allow the scheduling of summative exams';
+        $responsearray['error'] = array();
+        $responsearray['nodeid'] = 10;
+        $responsearray['id'] = null;
+        $params['nodeid'] = 10;
+        $params['modules'] = array();
+        $params['labs'] = array();
+        $params['type'] = 'summative';
+        $params['title'] = "Test summative"; 
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test create summative - success not centrally managed
+        $this->config->set('cfg_summative_mgmt', false);
+        $responsearray['statuscode'] = 100;
+        $responsearray['status'] = 'OK';
+        $responsearray['nodeid'] = 11;
+        $responsearray['id'] = 6;
+        $params['nodeid'] = 11;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
     /**
      * Test assessment update
