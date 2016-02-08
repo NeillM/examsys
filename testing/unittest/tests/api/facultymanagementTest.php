@@ -41,13 +41,13 @@ class facultymanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "facultymanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test course faculty
+     * Test faculty faculty
      * @group api
      */
     public function test_create() {
         $faculty = new \api\facultymanagement($this->db);
         $userid = 1;
-        // Test course creation - SUCCESS
+        // Test faculty creation - SUCCESS
         $responsearray = array(
             "statuscode" => 100,
             "status" => 'OK',
@@ -59,7 +59,7 @@ class facultymanagementtest extends unittestdatabase {
             "nodeid" => 1,
             "name" => 'TEST3');
         $this->assertEquals($responsearray, $faculty->create($params, $userid));
-        // Test course creation - ERROR course already exists
+        // Test faculty creation - ERROR faculty already exists
         $responsearray = array(
             "statuscode" => 405,
             "status" => 'Faculty already exists',
@@ -79,7 +79,7 @@ class facultymanagementtest extends unittestdatabase {
     public function test_update() {
         $faculty = new \api\facultymanagement($this->db);
         $userid = 1;
-        // Test course update - SUCCESS
+        // Test faculty update - SUCCESS
         $responsearray = array(
             "statuscode" => 100,
             "status" => 'OK',
@@ -92,7 +92,7 @@ class facultymanagementtest extends unittestdatabase {
             "id" => 1,
             "name" => 'TEST3');
         $this->assertEquals($responsearray, $faculty->create($params, $userid));
-        // Test course uddate - ERROR course does not exist
+        // Test faculty update - ERROR faculty does not exist
         $responsearray = array(
             "statuscode" => 401,
             "status" => 'Faculty does not exist',
@@ -114,7 +114,7 @@ class facultymanagementtest extends unittestdatabase {
     public function test_delete() {
         $faculty = new \api\facultymanagement($this->db);
         $userid = 1;
-        // Test course deletion - SUCCESS.
+        // Test faculty deletion - SUCCESS.
         $responsearray = array(
             "statuscode" => 100,
             "status" => 'OK',
@@ -126,12 +126,12 @@ class facultymanagementtest extends unittestdatabase {
             "nodeid" => 1,
             "id" => 1);
         $this->assertEquals($responsearray, $faculty->delete($params, $userid));
-        // Check that the remaining faculty are correct, when we delete a course we actually just add a timestamp to the table
+        // Check that the remaining faculty are correct, when we delete a faculty we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
         $querytable = $this->getConnection()->createQueryTable('faculty', 'SELECT id, name FROM faculty WHERE deleted is NULL');
         $expectedtable = $this->get_expected_data_set('deletefaculty')->getTable("faculty");  
         $this->assertTablesEqual($expectedtable, $querytable);
-        // Test deleting a non existance cuoprse.
+        // Test deleting a non existance faculty.
         $responsearray['statuscode'] = 401;
         $responsearray['status'] = 'Faculty does not exist';
         $responsearray['id'] = null;
@@ -139,7 +139,7 @@ class facultymanagementtest extends unittestdatabase {
         $params['nodeid'] = 2;
         $params['id'] = 99;
         $this->assertEquals($responsearray, $faculty->delete($params, $userid));
-        // Test deleting a course in use.
+        // Test deleting a faculty in use.
         $responsearray['statuscode'] = 404;
         $responsearray['status'] = 'Faculty not deleted, as contains schools';
         $responsearray['nodeid'] = 3;
