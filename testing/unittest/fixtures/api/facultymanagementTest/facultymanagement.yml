@@ -1,0 +1,12 @@
+faculty:
+  -
+    id: 1
+    name: "TEST"
+  -
+    id: 2
+    name: "TEST2"
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 2
