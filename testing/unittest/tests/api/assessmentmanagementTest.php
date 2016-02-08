@@ -140,6 +140,95 @@ class assessmentmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
     /**
+     * Test assessment update
+     * @group api
+     */
+    public function test_update() {#
+        // Init paper
+        $params = array(
+            "nodeid" => 1,
+            "title" => "Test Formative",
+            "type" => 'formative',
+            "owner" => 1,
+            "startdatetime" => "2016-05-30T09:00:00",
+            "enddatetime" => "2016-05-30T10:00:00",
+            "session" => 2016,
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
+            "timezone" => "Europe/London");
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $assessment->create($params, $userid);
+        $params = array(
+            "nodeid" => 1,
+            "title" => "Test Formative 2",
+            "type" => 'formative',
+            "owner" => 1,
+            "startdatetime" => "2016-05-30T09:00:00",
+            "enddatetime" => "2016-05-30T10:00:00",
+            "session" => 2016,
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
+            "timezone" => "Europe/London");
+        $assessment->create($params, $userid);
+        // Test paper update - SUCCESS.
+        $responsearray = array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 2,
+            "error" => array(),
+            "node" => 'create',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "title" => "Test Formative 2 update",
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')));
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - EXCEPTION title in use.
+        $responsearray['statuscode'] = 206;
+        $responsearray['status'] = 'Assessment title is already in use';
+        $responsearray['id'] = null;
+        $responsearray['nodeid'] = 2;
+        $params['nodeid'] = 2;
+        $params['id'] = 2;
+        $params['title'] = "Test Formative";
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - EXCEPTION invalid user.
+        $responsearray['statuscode'] = 207;
+        $responsearray['status'] = 'Assessment owner is invalid';
+        $responsearray['nodeid'] = 4;
+        $params['nodeid'] = 4;
+        $params['title'] = "Test Formative 2 update"; 
+        $params['owner'] = 1000;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - EXCEPTION invalid user role.
+        $responsearray['statuscode'] = 208;
+        $responsearray['status'] = 'Assessment owner role is invalid';
+        $responsearray['nodeid'] = 5;
+        $params['nodeid'] = 5; 
+        $params['owner'] = 3;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - EXCEPTION invalid session.
+        $responsearray['statuscode'] = 209;
+        $responsearray['status'] = 'Calendar year invalid';
+        $responsearray['nodeid'] = 6;
+        $params['nodeid'] = 6;
+        $params['owner'] = 1;
+        $params['session'] = 1970;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - EXCEPTION invalid dates.
+        $responsearray['statuscode'] = 212;
+        $responsearray['status'] = 'End date must be after start date';
+        $responsearray['nodeid'] = 7;
+        $params['nodeid'] = 7;
+        $params['session'] = 2016;
+        $params['startdatetime'] = "2016-05-30T10:00:00";
+        $params['enddatetime'] = "2016-05-30T09:00:00";
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
      * Test assessemnt deletion
      * @group api
      */
