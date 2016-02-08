@@ -54,3 +54,18 @@ config:
     component: "core"
     setting: "max_duration"
     value: 779
+users:
+  -
+    id: 1000
+    password: "12345678"
+    surname: "test"
+    username: "unit"
+    roles: "Student"
+    grade: "TEST2"
+  -
+    id: 1
+    password: "87654321"
+    surname: "sysadmin"
+    username: "sysadmin"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
