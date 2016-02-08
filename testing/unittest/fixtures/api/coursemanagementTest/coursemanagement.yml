@@ -1,0 +1,24 @@
+courses:
+  -
+    id: 1
+    name: "TEST"
+    description: "Test course"
+    schoolid: 1
+  -
+    id: 2
+    name: "TEST2"
+    description: "Test course 2"
+    schoolid: 1
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 1
+users:
+  -
+    id: 1000
+    password: "12345678"
+    surname: "test"
+    username: "unit"
+    roles: "Student"
+    grade: "TEST2"
