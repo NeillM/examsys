@@ -47,3 +47,27 @@ log4_overall:
   -
     id: 1
     q_paper: 3
+labs:
+  -
+    id: 1
+    name: "Test lab"
+    campus: 1
+    building: "Test building"
+    room_no: 1
+modules:
+  -
+    id: 1
+    moduleid: "TEST"
+    fullname: "Test module"
+    active: 1
+    schoolid: 1
+    academic_year_start: "07/01"
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 1
+faculty:
+  -
+    id: 1
+    name: "Test faculty"

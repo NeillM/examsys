@@ -188,12 +188,16 @@ class assessmentmanagement extends \api\abstractmanagement {
                     $labs = '';
                 }
             }
-            if ($paperid and (empty($params['duration']))) {
-                $params['duration'] = $details['duration'];   
-            }       
             
+            if (empty($params['duration'])) {
+                if ($paperid) {
+                    $params['duration'] = $details['duration'];   
+                } else {
+                    $params['duration'] = '';
+                }
+            }
             // Update exam.
-            if ($params['id']) {
+            if (!empty($params['id'])) {
                 if ($paperid) {
                     try {
                         $id = $paper->update($params['id'], $params['title'], $details['type'], $params['owner'], $params['startdatetime'],
