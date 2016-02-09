@@ -68,6 +68,21 @@ class modulemanagementtest extends unittestdatabase {
             "session" => 2016,
             "attempt" => 1);
         $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        // Test module enrolment - ERROR module does not exist.
+        $responsearray = array(
+            "statuscode" => 508,
+            "status" => 'User not enrolled',
+            "id" => null,
+            "error" => null,
+            "node" => 'enrol',
+            "nodeid" => 2);
+        $params = array(
+            "nodeid" => 2,
+            "userid" => 1000,
+            "moduleid" => 99,
+            "session" => 2016,
+            "attempt" => 1);
+        $this->assertEquals($responsearray, $module->enrol($params, $userid));
         // Test module enrolment - ERROR invalid user.
         $responsearray = array(
             "statuscode" => 507,
@@ -75,9 +90,9 @@ class modulemanagementtest extends unittestdatabase {
             "id" => null,
             "error" => null,
             "node" => 'enrol',
-            "nodeid" => 2);
+            "nodeid" => 3);
         $params = array(
-            "nodeid" => 2,
+            "nodeid" => 3,
             "userid" => 999,
             "moduleid" => 1,
             "session" => 2016,
