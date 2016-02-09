@@ -89,14 +89,14 @@ class assessmentmanagementtest extends unittestdatabase {
         $params['nodeid'] = 4; 
         $params['title'] = "Test Formative 2"; 
         $params['type'] = "formative";
-        $params['owner'] = 1000;
+        $params['owner'] = 999;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
         // Test paper create - EXCEPTION invalid user role.
         $responsearray['statuscode'] = 208;
         $responsearray['status'] = 'Assessment owner role is invalid';
         $responsearray['nodeid'] = 5;
         $params['nodeid'] = 5; 
-        $params['owner'] = 3;
+        $params['owner'] = 1000;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
         // Test paper create - EXCEPTION invalid session.
         $responsearray['statuscode'] = 209;
@@ -222,14 +222,14 @@ class assessmentmanagementtest extends unittestdatabase {
         $responsearray['nodeid'] = 4;
         $params['nodeid'] = 4;
         $params['title'] = "Test Formative 2 update"; 
-        $params['owner'] = 1000;
+        $params['owner'] = 999;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
         // Test paper update - EXCEPTION invalid user role.
         $responsearray['statuscode'] = 208;
         $responsearray['status'] = 'Assessment owner role is invalid';
         $responsearray['nodeid'] = 5;
         $params['nodeid'] = 5; 
-        $params['owner'] = 3;
+        $params['owner'] = 1000;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
         // Test paper update - EXCEPTION invalid session.
         $responsearray['statuscode'] = 209;

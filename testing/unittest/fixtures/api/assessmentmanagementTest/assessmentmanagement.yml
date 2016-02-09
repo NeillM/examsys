@@ -73,6 +73,14 @@ faculty:
     name: "Test faculty"
 scheduling:
 users:
+  -
+    id: 1000
+    password: "12345678"
+    surname: "test"
+    username: "unit"
+    roles: "Student"
+    grade: "TEST2"
+  -
     id: 1
     password: "87654321"
     surname: "sysadmin"
