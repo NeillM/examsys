@@ -152,7 +152,7 @@ class modulemanagement extends \api\abstractmanagement {
         if ($faculty) {
             // Get module code if not provided.
             if ($moduleid and (empty($params['modulecode']))) {
-                $params['modulecode'] = $details['modulecode'];
+                $params['modulecode'] = $details['moduleid'];
             }
             
             // Get name if not provided.

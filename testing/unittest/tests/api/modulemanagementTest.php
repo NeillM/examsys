@@ -45,6 +45,87 @@ class modulemanagementtest extends unittestdatabase {
      * @group api
      */
     public function test_create() {
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        // Test module create - SUCCESS.
+        $responsearray = array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 4,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "modulecode" => 'TEST4',
+            "name" => 'Test module 4',
+            "school" => 'Test school',
+            "faculty" => 'Test faculty');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+        // Test module create - ERROR module already exists.
+        $responsearray = array(
+            "statuscode" => 505,
+            "status" => 'Module already exists',
+            "id" => 4,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 2);
+        $params = array(
+            "nodeid" => 2,
+            "modulecode" => 'TEST4',
+            "name" => 'Test module 4',
+            "school" => 'Test school',
+            "faculty" => 'Test faculty');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+        // Test module create - ERROR invalid faculty
+        $responsearray = array(
+            "statuscode" => 506,
+            "status" => 'Faculty not supplied',
+            "id" => null,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 3);
+        $params = array(
+            "nodeid" => 3,
+            "modulecode" => 'TEST5',
+            "name" => 'Test module 5',
+            "school" => 'Test school 2',
+            "faculty" => '');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
+     * Test module update
+     * @group api
+     */
+    public function test_update() {
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        // Test module create - SUCCESS.
+        $responsearray = array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 2,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "name" => 'Test module 4');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+        // Test module create - ERROR module does not exist.
+        $responsearray = array(
+            "statuscode" => 501,
+            "status" => 'Module does not exist',
+            "id" => null,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 2);
+        $params = array(
+            "nodeid" => 2,
+            "id" => 99,
+            "name" => 'Test module 4');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**
      * Test module enrolment
