@@ -47,6 +47,11 @@ log4_overall:
   -
     id: 1
     q_paper: 3
+campus:
+  -
+    id: 1
+    name: "Test campus"
+    isdefault: 1
 labs:
   -
     id: 1
