@@ -129,7 +129,7 @@ class assessmenttest extends unittestdatabase {
         $assessment = new assessment($this->db, $this->config);
         $papertitle = "Test schedule summative";
         $papertype = 2;
-        $paperowner = 1000;
+        $paperowner = 999;
         $startdate = "2016-01-25 09:00:00";
         $enddate = "2016-01-25 10:00:00";
         $labs = "1";
@@ -154,7 +154,7 @@ class assessmenttest extends unittestdatabase {
     public function test_create_valid_owner_role() {
         $assessment = new assessment($this->db, $this->config);
         $papertitle = "Test schedule summative";
-        $paperowner = 3;
+        $paperowner = 1000;
         $papertype = 2;
         $startdate = "2016-01-25 09:00:00";
         $enddate = "2016-01-25 10:00:00";
@@ -299,7 +299,7 @@ class assessmenttest extends unittestdatabase {
         $papertype = 2;
         $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
-        $paperowner = 1000;
+        $paperowner = 999;
         $startdate = "2016-01-25 09:00:00";
         $enddate = "2016-01-25 10:30:00";
         $labs = "1";
@@ -327,7 +327,7 @@ class assessmenttest extends unittestdatabase {
         $papertype = 2;
         $id = $this->create_paper($papertitle, $papertype);
         $assessment = new assessment($this->db, $this->config);
-        $paperowner = 3;
+        $paperowner = 1000;
         $startdate = "2016-01-25 09:00:00";
         $enddate = "2016-01-25 10:30:00";
         $labs = "1";
