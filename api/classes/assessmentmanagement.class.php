@@ -103,22 +103,22 @@ class assessmentmanagement extends \api\abstractmanagement {
         $error = array();
         $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
-        $papertype = $paper->get_type_value($params['type']);
-        // Error if trying to create a summative exam when they are set to be scheduled only.
-        if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
-            $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
-            return $this->get_response($data, 'create', $params['nodeid'], $error);
-        } 
         if (!empty($params['id'])) {
             $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
             // Get current paper properties.
             if ($paperid) {
                 $details = \Paper_utils::get_paper_properties($params['id'], $this->db);
             }
+            $papertype = $details['type'];
         } else {
             $paperid = false;
+            $papertype = $paper->get_type_value($params['type']);
         }
-        
+        // Error if trying to create a summative exam when they are set to be scheduled only.
+        if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
+            $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
+            return $this->get_response($data, 'create', $params['nodeid'], $error);
+        } 
         if ($paperid) {
             // Get title if not provided.
             if (empty($params['title'])) {
@@ -188,15 +188,19 @@ class assessmentmanagement extends \api\abstractmanagement {
                     $labs = '';
                 }
             }
-            if ($paperid and (empty($params['duration']))) {
-                $params['duration'] = $details['duration'];   
-            }       
             
+            if (empty($params['duration'])) {
+                if ($paperid) {
+                    $params['duration'] = $details['duration'];   
+                } else {
+                    $params['duration'] = '';
+                }
+            }
             // Update exam.
-            if ($params['id']) {
+            if (!empty($params['id'])) {
                 if ($paperid) {
                     try {
-                        $id = $paper->update($params['id'], $params['title'], $details['type'], $params['owner'], $params['startdatetime'],
+                        $id = $paper->update($params['id'], $params['title'], $papertype, $params['owner'], $params['startdatetime'],
                             $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $userid);
                         if ($id) {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);
@@ -301,9 +305,11 @@ class assessmentmanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_deleted_inuse', 'paper_not_deleted'
             , 'paper_does_not_exist'));
         if (!empty($params['id'])) {
-            $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
+            $paperexists = \Paper_utils::paper_exists($params['id'], $this->db);
+        } else {
+            $paperexists = false;
         }
-        if ($paperid) {
+        if ($paperexists) {
             // Only delete assessment if no one has taken the paper.
             $inuse = \Paper_utils::paper_taken($params['id'], $this->db);
             if ($inuse) {

@@ -690,7 +690,7 @@ Class PaperUtils {
         UNION SELECT NULL FROM log4_overall WHERE q_paper = ?");
     $result->bind_param('ii', $id, $id);
     $result->execute();
-    $result->fetch();
+    $result->store_result();
     if ($result->num_rows > 0) {
         $result->close();
         return true;
