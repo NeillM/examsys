@@ -41,6 +41,100 @@ class modulemanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "modulemanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
+     * Test module creation
+     * @group api
+     */
+    public function test_create() {
+    }
+    /**
+     * Test module enrolment
+     * @group api
+     */
+    public function test_enrol() {
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        // Test module enrolment - SUCCESS.
+        $responsearray = array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 2,
+            "error" => null,
+            "node" => 'enrol',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "userid" => 1000,
+            "moduleid" => 1,
+            "session" => 2016,
+            "attempt" => 1);
+        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        // Test module enrolment - ERROR invalid user.
+        $responsearray = array(
+            "statuscode" => 507,
+            "status" => 'User does not exist',
+            "id" => null,
+            "error" => null,
+            "node" => 'enrol',
+            "nodeid" => 2);
+        $params = array(
+            "nodeid" => 2,
+            "userid" => 999,
+            "moduleid" => 1,
+            "session" => 2016,
+            "attempt" => 1);
+        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+    }
+    /**
+     * Test module un-enrolment
+     * @group api
+     */
+    public function test_unenrol() {
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        // Test module enrolment - SUCCESS.
+        $responsearray = array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 1,
+            "error" => null,
+            "node" => 'unenrol',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "userid" => 1000,
+            "moduleid" => 3,
+            "session" => 2016);
+        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+        // Test module enrolment - ERROR no enrolment to unenrol.
+        $responsearray = array(
+            "statuscode" => 509,
+            "status" => 'User not un-enrolled',
+            "id" => null,
+            "error" => null,
+            "node" => 'unenrol',
+            "nodeid" => 2);
+        $params = array(
+            "nodeid" => 2,
+            "userid" => 1000,
+            "moduleid" => 3,
+            "session" => 2016);
+        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+        // Test module enrolment - ERROR invalid user.
+        $responsearray = array(
+            "statuscode" => 507,
+            "status" => 'User does not exist',
+            "id" => null,
+            "error" => null,
+            "node" => 'unenrol',
+            "nodeid" => 3);
+        $params = array(
+            "nodeid" => 3,
+            "userid" => 999,
+            "moduleid" => 1,
+            "session" => 2016);
+        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+    }
+    /**
      * Test module deletion
      * @group api
      */
