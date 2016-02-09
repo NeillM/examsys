@@ -41,7 +41,7 @@ class facultymanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "facultymanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test faculty faculty
+     * Test faculty creation
      * @group api
      */
     public function test_create() {
