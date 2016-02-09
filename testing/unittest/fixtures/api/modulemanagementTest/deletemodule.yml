@@ -1,0 +1,15 @@
+modules:
+  -
+    id: 2
+    moduleid: "TEST2"
+    fullname: "Test module 2"
+    active: 1
+    schoolid: 1
+    academic_year_start: "07/01"
+  -
+    id: 3
+    moduleid: "TEST3"
+    fullname: "Test module 3"
+    active: 1
+    schoolid: 1
+    academic_year_start: "07/01"
