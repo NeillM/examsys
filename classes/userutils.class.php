@@ -176,7 +176,7 @@ Class UserUtils {
     }
 
     // If updating the forename Force re-build of initials off forenames.
-    if ($current['forname'] != $forname) {
+    if ($current['forename'] != $forname) {
         if ($initials == '') {
           $initial = explode(' ', $forname);
           $initials = '';
