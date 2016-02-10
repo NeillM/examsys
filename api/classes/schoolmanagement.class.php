@@ -55,7 +55,7 @@ class schoolmanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
-            , 'school_created', 'school_alreads_exists', 'faculty_not_supplied'));
+            , 'school_not_created', 'school_already_exists', 'faculty_not_supplied'));
         $faculty = true;
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
@@ -79,7 +79,7 @@ class schoolmanagement extends \api\abstractmanagement {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
             }
         // Get faculty if not provided.           
-        } else if($schoolid) {
+        } else if ($schoolid) {
             $facultyid = $details['faculty'];
         } else {
             $faculty = false;
@@ -113,11 +113,7 @@ class schoolmanagement extends \api\abstractmanagement {
                 }
             }
         } else {
-            if (!$schoolid) {
-                $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);
-            } else {
-                $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
-            }
+            $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
