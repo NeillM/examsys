@@ -40,7 +40,9 @@ class facultymanagement extends \api\abstractmanagement {
         'FACUTLY_NOT_DELETED' => 400,
         'FACUTLY_DOES_NOT_EXIST' => 401,
         'FACUTLY_NOT_UPDATED' => 402,
-        'FACUTLY_NOT_CREATED' => 403
+        'FACUTLY_NOT_CREATED' => 403,
+        'FACUTLY_NOT_DELETED_INUSE' => 404,
+        'FACUTLY_ALREADY_EXISTS' => 405
     );
     
     /**
@@ -91,7 +93,7 @@ class facultymanagement extends \api\abstractmanagement {
                     $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_CREATED'], 'status' => $strings['faculty_not_created'], 'id' => null);
                 }
             } else {
-                $data = array('status' => $strings['faculty_already_exists'], 'id' => $facultyid);
+                $data = array('statuscode' => $this->statuscodes['FACUTLY_ALREADY_EXISTS'], 'status' => $strings['faculty_already_exists'], 'id' => $facultyid);
             }
         }
         
@@ -117,7 +119,7 @@ class facultymanagement extends \api\abstractmanagement {
             // Only delete faculty if it contains no schools.
             $schools = \FacultyUtils::count_schools_in_faculty($params['id'], $this->db);
             if (isset($schools) and $schools > 0) {
-                $data = array('status' => $strings['faculty_not_deleted_inuse'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_DELETED_INUSE'], 'status' => $strings['faculty_not_deleted_inuse'], 'id' => null);
             } else {
                 $deleted = \FacultyUtils::delete_faculty($params['id'], $this->db);
                 if ($deleted) {

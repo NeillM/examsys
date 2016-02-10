@@ -1,0 +1,20 @@
+faculty:
+  -
+    id: 1
+    name: "TEST"
+  -
+    id: 2
+    name: "TEST2"
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 2
+users:
+  -
+    id: 1
+    password: "87654321"
+    surname: "sysadmin"
+    username: "sysadmin"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
