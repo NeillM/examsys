@@ -1,0 +1,16 @@
+campus:
+  -
+    id: 10
+    name: "Test Campus"
+    isdefault: 1
+  -
+    id: 11
+    name: "Test Campus 2"
+    isdefault: 0
+labs:
+  -
+    id: 1
+    name: "Test lab"
+    campus: 10
+    building: "Test building"
+    room_no: 1

@@ -97,4 +97,13 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
     final public function get_base_fixture_directory() {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR;
     }
+    
+    /**
+     * Delete the dataset.
+     * @param dataset $dataset
+     */
+    final public function delete_dataset($dataset) {
+        $delete = new \PHPUnit_Extensions_Database_Operation_DeleteAll;
+        $delete->execute($this->conn, $dataset);
+    }
 }
