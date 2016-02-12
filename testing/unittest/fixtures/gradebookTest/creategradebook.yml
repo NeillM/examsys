@@ -1,0 +1,18 @@
+gradebook_paper:
+  -
+    paperid: 1
+  -
+    paperid: 2
+gradebook_user:
+  -
+    paperid: 1
+    userid: 1000
+    raw_grade: 60
+    adjusted_grade: 62
+    classification: "Pass"
+  -
+    paperid: 2
+    userid: 1000
+    raw_grade: 30
+    adjusted_grade: 32
+    classification: "Fail"
