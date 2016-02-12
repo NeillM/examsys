@@ -685,6 +685,11 @@ Class UserUtils {
       return false;
     }
 
+    // Check is module exists.
+    if(!module_utils::get_moduleid_from_id($idMod, $db)) {
+      return false;
+    }
+    
     $userObject = UserObject::get_instance();
 
     if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
