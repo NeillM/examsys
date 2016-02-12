@@ -32,7 +32,7 @@ class gradebooktest extends unittestdatabase {
     public function getDataSet() {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "gradebookTest" . DIRECTORY_SEPARATOR . "gradebook.yml");
     }
-        /**
+    /**
      * Get expected data set from yml
      * @param string $name fixture file name
      * @return dataset
