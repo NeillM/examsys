@@ -1,0 +1,22 @@
+users:
+  -
+    id: 1
+    password: "87654321"
+    surname: "sysadmin"
+    username: "sysadmin"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
+  -
+    id: 1000
+    password: "12345678"
+    surname: "test"
+    username: "unit"
+    roles: "Student"
+    grade: "TEST2"
+  -
+    id: 1002
+    password: "12345678"
+    surname: "test3"
+    username: "unit3"
+    roles: "Student"
+    grade: "TEST2"

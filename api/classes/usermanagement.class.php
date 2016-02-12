@@ -104,17 +104,18 @@ class usermanagement extends \api\abstractmanagement {
         } else {
             $params['id'] = false;
         }
-        
-        if ($userexists) {
-            // Set defaults if not provided.
-            $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
-                'gender', 'year', 'role', 'studentid', 'initials');
-            foreach ($paramnames as $name) {
-                if (!isset($params[$name]) or $params[$name] === '') {
+        // Set defaults if not provided.
+        $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
+            'gender', 'year', 'role', 'studentid', 'initials');
+        foreach ($paramnames as $name) {
+            if (empty($params[$name])) {
+                if ($userexists) {
                     $params[$name] = $details[$name];
+                } else {
+                    $params[$name] = '';
                 }
             }
-        } 
+        }
         
         if (!$userexists and $params['id']) {
             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
@@ -138,22 +139,26 @@ class usermanagement extends \api\abstractmanagement {
                 if ($course) {
                     // Update.
                     if ($params['id']) {
-                        $update = \UserUtils::update_user($params['id'], $params['username'], $password, $params['title'],
+                        $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
                                     $params['forename'], $params['surname'], $params['email'], $params['course'],
                                     $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
                         if ($update) {
-                            $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
+                            if (!empty($params['modules'])) {
+                                $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
+                            }
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                         } else {
                             $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
                         }
                     // Create.
                     } else {
-                        $id = \UserUtils::create_user($params['username'], $password, $params['title'],
+                        $id = \UserUtils::create_user($params['username'], $params['password'], $params['title'],
                             $params['forename'], $params['surname'], $params['email'], $params['course'],
                             $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
                         if ($id) {
-                            $error = $this->user_modules($id, $params['modules'], $params['role']);
+                            if (!empty($params['modules'])) {
+                                $error = $this->user_modules($id, $params['modules'], $params['role']);
+                            }
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
                         } else {
                             // Check if user exists, otherwise throw generic error.
