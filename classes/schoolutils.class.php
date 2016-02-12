@@ -291,7 +291,7 @@ Class SchoolUtils {
         UNION SELECT NULL FROM modules WHERE schoolid = ?");
     $result->bind_param('ii', $id, $id);
     $result->execute();
-    $result->fetch();
+    $result->store_result();
     if ($result->num_rows > 0) {
         $result->close();
         return true;
