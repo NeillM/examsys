@@ -29,7 +29,7 @@
                             <xs:element name="sittings" type="xs:integer" minOccurs="0"/>
                             <xs:element name="barriers" type="xs:boolean" minOccurs="0"/>
                             <xs:element name="campus" type="campus" minOccurs="0"/>
-                            <xs:element type="modules" name="modules" minOccurs="0"/>
+                            <xs:element type="modules" name="modules"/>
                             <xs:element name="notes" type="notes" minOccurs="0"/>
                         </xs:sequence>
                         <xs:attribute type="xs:string" name="id"/>
