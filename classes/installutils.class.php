@@ -633,8 +633,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         'coursemanagement/delete' => 'Delete a course',
         'schoolmanagement/create' => 'Create/Update a school',
         'schoolmanagement/delete' => 'Delete a school',
-        'modulemanagement/create' => 'Create/Update a faculty',
-        'modulemanagement/delete' => 'Delete a faculty');
+        'facultymanagement/create' => 'Create/Update a faculty',
+        'facultymanagement/delete' => 'Delete a faculty');
     foreach ($permissions as $permission => $description) {
         $insert = self::$db->prepare("INSERT INTO permissions (action, description) VALUES (?, ?)");
         $insert->bind_param('ss', $permission, $description);
