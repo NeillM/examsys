@@ -192,7 +192,22 @@ class assessmentmanagementtest extends unittestdatabase {
             "labs" => array(array('id' => 0, 'value' => 'Test lab')),
             "timezone" => "Europe/London");
         $assessment->create($params, $userid);
-        // Test paper update - SUCCESS.
+        // Test paper update - ERROR invalid paper id.
+        $responsearray = array(
+            "statuscode" => 210,
+            "status" => 'Paper does not exist',
+            "id" => null,
+            "error" => array(),
+            "node" => 'create',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1000,
+            "title" => "Test Formative 2 update",
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')));
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - SUCCESS update title.
         $responsearray = array(
             "statuscode" => 100,
             "status" => 'OK',
@@ -206,6 +221,20 @@ class assessmentmanagementtest extends unittestdatabase {
             "title" => "Test Formative 2 update",
             "modules" => array(array('id' => 0, 'value' => 1)),
             "labs" => array(array('id' => 0, 'value' => 'Test lab')));
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - SUCCESS do not pass labs or title.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "duration" => 90,
+            "modules" => array(array('id' => 0, 'value' => 1)));
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - SUCCESS empty labs non fatal error.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => '')));
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
         // Test paper update - EXCEPTION title in use.
         $responsearray['statuscode'] = 206;
@@ -278,6 +307,28 @@ class assessmentmanagementtest extends unittestdatabase {
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db);
         $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
+        // Test scheduling with invalid modules - non fatal error.
+        $responsearray['statuscode'] = 100;
+        $responsearray['status'] = 'OK';
+        $responsearray['id'] = 5;
+        $responsearray['nodeid'] = 2;
+        $error = array();
+        $error[0] = 'Invalid module 99';
+        $responsearray['error'] = $error;
+        $params['nodeid'] = 2;
+        $params['title'] = "Test Summative 99";
+        $params['modules'] = array(array('id' => 0, 'value' => 99));
+        $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
+        // Test scheduling with duplciate title - fatal error.
+        $responsearray['statuscode'] = 206;
+        $responsearray['status'] = 'Assessment title is already in use';
+        $responsearray['id'] = null;
+        $responsearray['nodeid'] = 3;
+        $responsearray['error'] = array();
+        $params['nodeid'] = 3;
+        $params['title'] = "Test Summative";
+        $params['modules'] = array(array('id' => 0, 'value' => 1));
+        $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
     }
     /**
      * Test assessemnt deletion
@@ -325,6 +376,19 @@ class assessmentmanagementtest extends unittestdatabase {
         $responsearray['nodeid'] = 4;
         $params['nodeid'] = 4;
         $params['id'] = 3;
+        $this->assertEquals($responsearray, $assessment->delete($params, $userid));
+        // Test paper deletion- ERROR no id provided.
+        $responsearray = array(
+            "statuscode" => 202,
+            "status" => 'Paper does not exist',
+            "id" => null,
+            "error" => null,
+            "node" => 'delete',
+            "nodeid" => 1);
+        $params = array(
+            "nodeid" => 1);
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $this->assertEquals($responsearray, $assessment->delete($params, $userid));
     }
     
