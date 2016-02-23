@@ -780,7 +780,7 @@ Class PaperUtils {
     $result = $db->prepare("SELECT paper_title, paper_type, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration, timezone FROM properties WHERE property_id = ?");
     $result->bind_param('i', $id);
     $result->execute();
-    $result->bind_result($title, $owner, $type, $session, $startdatetime, $enddatetime, $labs, $duration, $timezone);
+    $result->bind_result($title, $type, $owner, $session, $startdatetime, $enddatetime, $labs, $duration, $timezone);
     $result->fetch();
     if ($db->errno != 0) {
         $result->close();

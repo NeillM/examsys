@@ -26,6 +26,115 @@ use testing\unittest\unittestdatabase;
  */
 class assessmentmanagementtest extends unittestdatabase {
     /**
+     * Create a response array for creation
+     * @return array the resposne array  
+     */
+    private function create_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 5,
+            "error" => array(),
+            "node" => 'create',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a parameter array for creation
+     * @return array the param array  
+     */
+    private function create_param_array() {
+        return array(
+            "nodeid" => 1,
+            "title" => "Test Formative",
+            "type" => 'formative',
+            "owner" => 1,
+            "startdatetime" => "2016-05-30T09:00:00",
+            "enddatetime" => "2016-05-30T10:00:00",
+            "session" => 2016,
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
+            "timezone" => "Europe/London");
+    }
+    /**
+     * Create a parameter array for updates
+     * @return array the param array  
+     */
+    private function update_param_array() {
+        return array(
+            "nodeid" => 1,
+            "id" => 2,
+            "title" => "Test Formative 2 update",
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')));
+    }
+    /**
+     * Create a response array for updates
+     * @return array the resposne array  
+     */
+    private function update_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 2,
+            "error" => array(),
+            "node" => 'create',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a response array for scheduling
+     * @return array the response array  
+     */
+    private function schedule_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 5,
+            "error" => array(),
+            "node" => 'schedule',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a parameter array for scheduling
+     * @return array the param array  
+     */
+    private function schedule_param_array() {
+        return array(
+            "nodeid" => 1,
+            "title" => "Test Summative",
+            "owner" => 1,
+            "session" => 2016,
+            "duration" => 60,
+            "month" => 0,
+            "cohort_size" => "76-100",
+            "sittings" => 1,
+            "barriers" => 1,
+            "campus" => "Free text campus",
+            "notes" => "Free text notes",
+            "modules" => array(array('id' => 0, 'value' => 1)));
+    }
+    /**
+     * Create a response array for deletion
+     * @return array the response array  
+     */
+    private function delete_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 1,
+            "error" => null,
+            "node" => 'delete',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a parameter array for deletion
+     * @return array the param array  
+     */
+    private function delete_param_array() {
+        return array(
+            "nodeid" => 1,
+            "id" => 1);
+    }
+    /**
      * Get init data set from yml
      * @return dataset
      */
@@ -41,111 +150,173 @@ class assessmentmanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "assessmentmanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test assessment create
+     * Test successful assessment creation
      * @group api
      */
-    public function test_create() {
+    public function test_create_success() {
         // Test paper create- SUCCESS.
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => 4,
-            "error" => array(),
-            "node" => 'create',
-            "nodeid" => 1);
-        $params = array(
-            "nodeid" => 1,
-            "title" => "Test Formative",
-            "type" => 'formative',
-            "owner" => 1,
-            "startdatetime" => "2016-05-30T09:00:00",
-            "enddatetime" => "2016-05-30T10:00:00",
-            "session" => 2016,
-            "modules" => array(array('id' => 0, 'value' => 1)),
-            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
-            "timezone" => "Europe/London");
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db);
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - non unique title
+     * @group api
+     */
+    public function test_create_exception_title() {
         // Test paper create - EXCEPTION title in use.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $params['title'] = "Test create formative"; 
         $responsearray['statuscode'] = 206;
         $responsearray['status'] = 'Assessment title is already in use';
         $responsearray['id'] = null;
-        $responsearray['nodeid'] = 2;
-        $params['nodeid'] = 2; 
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - unknown paper type
+     * @group api
+     */
+    public function test_create_exception_type() {
         // Test paper create- EXCEPTION invalid paper type.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 215;
         $responsearray['status'] = 'Paper type unknown';
-        $responsearray['nodeid'] = 3;
-        $params['nodeid'] = 3; 
+        $responsearray['id'] = null;
         $params['title'] = "Test Formative 2"; 
         $params['type'] = 0;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - invalid user
+     * @group api
+     */
+    public function test_create_exception_user() {
         // Test paper create - EXCEPTION invalid user.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 207;
         $responsearray['status'] = 'Assessment owner is invalid';
-        $responsearray['nodeid'] = 4;
-        $params['nodeid'] = 4; 
+        $responsearray['id'] = null;
         $params['title'] = "Test Formative 2"; 
         $params['type'] = "formative";
         $params['owner'] = 999;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - invalid user role
+     * @group api
+     */
+    public function test_create_exception_role() {
         // Test paper create - EXCEPTION invalid user role.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 208;
         $responsearray['status'] = 'Assessment owner role is invalid';
-        $responsearray['nodeid'] = 5;
-        $params['nodeid'] = 5; 
+        $responsearray['id'] = null;
         $params['owner'] = 1000;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - invalid session
+     * @group api
+     */
+    public function test_create_exception_session() {
         // Test paper create - EXCEPTION invalid session.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 209;
         $responsearray['status'] = 'Calendar year invalid';
-        $responsearray['nodeid'] = 6;
-        $params['nodeid'] = 6; 
+        $responsearray['id'] = null;
         $params['owner'] = 1;
         $params['session'] = 1970;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - invalid dates
+     * @group api
+     */
+    public function test_create_exception_dates() {
         // Test paper create - EXCEPTION invalid dates.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 212;
+        $responsearray['id'] = null;
         $responsearray['status'] = 'End date must be after start date';
-        $responsearray['nodeid'] = 7;
-        $params['nodeid'] = 7;
         $params['session'] = 2016;
         $params['startdatetime'] = "2016-05-30T10:00:00";
         $params['enddatetime'] = "2016-05-30T09:00:00";
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - invalid modules
+     * @group api
+     */
+    public function test_create_exception_modules() {
         // Test paper create - ERROR invalid modules.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 211;
         $responsearray['status'] = 'Module error';
+        $responsearray['id'] = null;
         $error = array();
         $error[0] = 'Invalid module 1000';
         $responsearray['error'] = $error;
-        $responsearray['nodeid'] = 8;
-        $params['nodeid'] = 8;
         $params['startdatetime'] = "2016-05-30T09:00:00";
         $params['enddatetime'] = "2016-05-30T10:00:00";
         $params['modules'] = array(array('id' => 0, 'value' => 1000));
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test exception on assessment creation - invalid labs
+     * @group api
+     */
+    public function test_create_exception_labs() {
         // Test paper create - ERROR invalid labs.
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 100;
         $responsearray['status'] = 'OK';
-        $error[0] = 'Invalid lab Test lab 2';
+        $error[0] = 'Invalid lab Test lab 3';
         $responsearray['error'] = $error;
-        $responsearray['nodeid'] = 9;
-        $responsearray['id'] = 5;
-        $params['nodeid'] = 9;
         $params['modules'] = array();
-        $params['labs'] = array(array('id' => 0, 'value' => 'Test lab 2'));
+        $params['labs'] = array(array('id' => 0, 'value' => 'Test lab 3'));
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test summative central control on assessment creation
+     * @group api
+     */
+    public function test_create_exception_summative() {
         // Test create summative - ERROR centrally managed
+        $params = $this->create_param_array();
+        $responsearray = $this->create_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $this->config->set('cfg_summative_mgmt', true);
         $responsearray['statuscode'] = 214;
         $responsearray['status'] = 'This system is set-up to only allow the scheduling of summative exams';
         $responsearray['error'] = array();
-        $responsearray['nodeid'] = 10;
         $responsearray['id'] = null;
-        $params['nodeid'] = 10;
         $params['modules'] = array();
         $params['labs'] = array();
         $params['type'] = 'summative';
@@ -155,146 +326,245 @@ class assessmentmanagementtest extends unittestdatabase {
         $this->config->set('cfg_summative_mgmt', false);
         $responsearray['statuscode'] = 100;
         $responsearray['status'] = 'OK';
-        $responsearray['nodeid'] = 11;
-        $responsearray['id'] = 6;
-        $params['nodeid'] = 11;
+        $responsearray['id'] = 5;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
     /**
-     * Test assessment update
+     * Test successful assessment update
      * @group api
      */
-    public function test_update() {
-        // Init paper
-        $params = array(
-            "nodeid" => 1,
-            "title" => "Test Formative",
-            "type" => 'formative',
-            "owner" => 1,
-            "startdatetime" => "2016-05-30T09:00:00",
-            "enddatetime" => "2016-05-30T10:00:00",
-            "session" => 2016,
-            "modules" => array(array('id' => 0, 'value' => 1)),
-            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
-            "timezone" => "Europe/London");
+    public function test_update_success() {
+        // Test paper update - SUCCESS update title.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db);
-        $assessment->create($params, $userid);
-        $params = array(
-            "nodeid" => 1,
-            "title" => "Test Formative 2",
-            "type" => 'formative',
-            "owner" => 1,
-            "startdatetime" => "2016-05-30T09:00:00",
-            "enddatetime" => "2016-05-30T10:00:00",
-            "session" => 2016,
-            "modules" => array(array('id' => 0, 'value' => 1)),
-            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
-            "timezone" => "Europe/London");
-        $assessment->create($params, $userid);
-        // Test paper update - SUCCESS.
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => 2,
-            "error" => array(),
-            "node" => 'create',
-            "nodeid" => 1);
-        $params = array(
-            "nodeid" => 1,
-            "id" => 2,
-            "title" => "Test Formative 2 update",
-            "modules" => array(array('id' => 0, 'value' => 1)),
-            "labs" => array(array('id' => 0, 'value' => 'Test lab')));
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessment update exception - invalid paper id
+     * @group api
+     */
+    public function test_update_exception_paper() {
+        // Test paper update - ERROR invalid paper id.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $responsearray['statuscode'] = 210;
+        $responsearray['status'] = 'Paper does not exist';
+        $responsearray['id'] = null;
+        $params['id'] = 1000;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessment update invalid and empty labs.
+     * @group api
+     */
+    public function test_update_exception_labs() {
+        // Test paper update - SUCCESS do not pass labs or title.
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $params = array(
+            "id" => 2,
+            "nodeid" => 1,
+            "duration" => 90,
+            "modules" => array(array('id' => 0, 'value' => 1)));
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Test paper update - SUCCESS empty labs non fatal error.
+        $params = $this->update_param_array();
+        $assessment = new \api\assessmentmanagement($this->db);
+        $params['title'] = "Test Formative 3 update";
+        $params['id'] = 3;
+        $params['labs'] = array(array('id' => 0, 'value' => ''));
+        $responsearray['id'] = 3;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // We have done two updates that we want to check against the db now.
+        // Assesment 2 - Check title / labs have not been changed in the db.
+        // Assessment 3 - Check labs are null in the db.
+        $querytable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, paper_title, start_date, end_date, exam_duration,
+            calendar_year, timezone, paper_ownerID, labs, paper_type FROM properties');
+        $expectedtable = $this->get_expected_data_set('updateassessment')->getTable("properties");  
+        $this->assertTablesEqual($expectedtable, $querytable); 
+    }
+    /**
+     * Test assessment update exception - invalid title
+     * @group api
+     */
+    public function test_update_exception_title() {
         // Test paper update - EXCEPTION title in use.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 206;
         $responsearray['status'] = 'Assessment title is already in use';
         $responsearray['id'] = null;
-        $responsearray['nodeid'] = 2;
-        $params['nodeid'] = 2;
         $params['id'] = 2;
-        $params['title'] = "Test Formative";
+        $params['title'] = "Test create formative 3";
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessment update exception - invalid user
+     * @group api
+     */
+    public function test_update_exception_user() {
         // Test paper update - EXCEPTION invalid user.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 207;
         $responsearray['status'] = 'Assessment owner is invalid';
-        $responsearray['nodeid'] = 4;
-        $params['nodeid'] = 4;
+        $responsearray['id'] = null;
         $params['title'] = "Test Formative 2 update"; 
         $params['owner'] = 999;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessment update exception - invalid user role
+     * @group api
+     */
+    public function test_update_exception_role() {
         // Test paper update - EXCEPTION invalid user role.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 208;
         $responsearray['status'] = 'Assessment owner role is invalid';
-        $responsearray['nodeid'] = 5;
-        $params['nodeid'] = 5; 
+        $responsearray['id'] = null;
         $params['owner'] = 1000;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessment update exception - invalid session
+     * @group api
+     */
+    public function test_update_exception_session() {
         // Test paper update - EXCEPTION invalid session.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 209;
         $responsearray['status'] = 'Calendar year invalid';
-        $responsearray['nodeid'] = 6;
-        $params['nodeid'] = 6;
+        $responsearray['id'] = null;
         $params['owner'] = 1;
         $params['session'] = 1970;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
+     * Test assessment update exception - invalid dates
+     * @group api
+     */
+    public function test_update_exception_dates() {
         // Test paper update - EXCEPTION invalid dates.
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 212;
         $responsearray['status'] = 'End date must be after start date';
-        $responsearray['nodeid'] = 7;
-        $params['nodeid'] = 7;
+        $responsearray['id'] = null;
         $params['session'] = 2016;
         $params['startdatetime'] = "2016-05-30T10:00:00";
         $params['enddatetime'] = "2016-05-30T09:00:00";
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
     /**
-     * Test assessemnt scheduling
+     * Test assessment update central summative control
      * @group api
      */
-    public function test_schedule() {
-        // Test paper schedule- SUCCESS.
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
+    public function test_update_exception_summative() {
+        // Test update summative - ERROR centrally managed
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $this->config->set('cfg_summative_mgmt', true);
+        $summativeparams = array(
             "id" => 4,
+            "nodeid" => 9,
+            "title" => "Test summative 666",
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')));
+        $summativeresponsearray = array(
+            "statuscode" => 214,
+            "status" => 'This system is set-up to only allow the scheduling of summative exams',
+            "id" => null,
             "error" => array(),
-            "node" => 'schedule',
-            "nodeid" => 1);
-        $params = array(
-            "nodeid" => 1,
-            "title" => "Test Summative",
-            "owner" => 1,
-            "session" => 2016,
-            "duration" => 60,
-            "month" => 0,
-            "cohort_size" => "76-100",
-            "sittings" => 1,
-            "barriers" => 1,
-            "campus" => "Free text campus",
-            "notes" => "Free text notes",
-            "modules" => array(array('id' => 0, 'value' => 1)));
+            "node" => 'create',
+            "nodeid" => 9);
+        $assessment->create($summativeparams, $userid);
+        $this->assertEquals($summativeresponsearray, $assessment->create($summativeparams, $userid));
+        // Test create summative - success not centrally managed
+        $this->config->set('cfg_summative_mgmt', false);
+        $summativeresponsearray['statuscode'] = 100;
+        $summativeresponsearray['status'] = 'OK';
+        $summativeresponsearray['nodeid'] = 10;
+        $summativeresponsearray['id'] = 4;
+        $summativeparams['nodeid'] = 10;
+        $this->assertEquals($summativeresponsearray, $assessment->create($summativeparams, $userid));
+    }
+    /**
+     * Test assessemnt scheduling success
+     * @group api
+     */
+    public function test_schedule_success() {
+        // Test paper schedule- SUCCESS.
+        $responsearray = $this->schedule_response_array();
+        $params = $this->schedule_param_array();
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db);
         $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
     }
     /**
-     * Test assessemnt deletion
+     * Test assessemnt scheduling success - non fatal incorrect modules
      * @group api
      */
-    public function test_delete() {
+    public function test_schedule_exception_modules() {
+        // Test scheduling with invalid modules - non fatal error.
+        $responsearray = $this->schedule_response_array();
+        $params = $this->schedule_param_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $responsearray['statuscode'] = 100;
+        $responsearray['status'] = 'OK';
+        $responsearray['id'] = 5;
+        $error = array();
+        $error[0] = 'Invalid module 99';
+        $responsearray['error'] = $error;
+        $params['title'] = "Test Summative 99";
+        $params['modules'] = array(array('id' => 0, 'value' => 99));
+        $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
+        
+    }
+    /**
+     * Test assessemnt scheduling exception invalid title
+     * @group api
+     */
+    public function test_schedule_exception_title() {
+        // Test scheduling with duplciate title - fatal error.
+        $responsearray = $this->schedule_response_array();
+        $params = $this->schedule_param_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $responsearray['statuscode'] = 206;
+        $responsearray['status'] = 'Assessment title is already in use';
+        $responsearray['id'] = null;
+        $responsearray['error'] = array();
+        $params['title'] = "Test create summative";
+        $params['modules'] = array(array('id' => 0, 'value' => 1));
+        $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
+    }
+    /**
+     * Test successful assessement deletion
+     * @group api
+     */
+    public function test_delete_success() {
         // Test paper deletion- SUCCESS.
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => 1,
-            "error" => null,
-            "node" => 'delete',
-            "nodeid" => 1);
-        $params = array(
-            "nodeid" => 1,
-            "id" => 1);
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db);
         $this->assertEquals($responsearray, $assessment->delete($params, $userid));
@@ -303,29 +573,49 @@ class assessmentmanagementtest extends unittestdatabase {
         $querytable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, paper_title, start_date, end_date, exam_duration,
             calendar_year, timezone, paper_ownerID, labs, paper_type FROM properties WHERE deleted is NULL');
         $expectedtable = $this->get_expected_data_set('deleteassessment')->getTable("properties");  
-        $this->assertTablesEqual($expectedtable, $querytable); 
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test assessement deletion exception invalid paper id
+     * @group api
+     */
+    public function test_delete_exception_paper() {
         // Test deleting a non existance paper.
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 202;
         $responsearray['status'] = 'Paper does not exist';
         $responsearray['id'] = null;
-        $responsearray['nodeid'] = 2;
-        $params['nodeid'] = 2;
         $params['id'] = 99;
         $this->assertEquals($responsearray, $assessment->delete($params, $userid));
+        // Test paper deletion- ERROR no id provided.
+        $params = array(
+            "nodeid" => 1);
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $this->assertEquals($responsearray, $assessment->delete($params, $userid));
+    }
+    /**
+     * Test assessement deletion exception paper in use
+     * @group api
+     */
+    public function test_delete_exception_paperinuse() {
         // Test deleting a paper in use - first add an entry in log_metadata.
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
         $responsearray['statuscode'] = 203;
+        $responsearray['id'] = null;
         $responsearray['status'] = 'Assessment not deleted, as has been taken by a user';
-        $responsearray['nodeid'] = 3;
-        $params['nodeid'] = 3;
         $params['id'] = 2;
         $this->assertEquals($responsearray, $assessment->delete($params, $userid));
         // Test deleting a paper in use - second add an entry in log4_overall.
         $responsearray['statuscode'] = 203;
         $responsearray['status'] = 'Assessment not deleted, as has been taken by a user';
-        $responsearray['nodeid'] = 4;
-        $params['nodeid'] = 4;
         $params['id'] = 3;
         $this->assertEquals($responsearray, $assessment->delete($params, $userid));
     }
-    
 }
