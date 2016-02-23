@@ -66,29 +66,20 @@ class assessmentmanagement extends \api\abstractmanagement {
             'paper_owner_does_not_exist', 'paper_title_inuse', 'paper_startdate_invalid', 'paper_general_error','paper_type_invalid'));
         switch ($exception) {
             case 'NON_UNIQUE_TITLE':
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
-                return $data;
+                return array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
             case 'INVALID_PAPER_TYPE':
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_TYPE'], 'status' => $strings['paper_type_invalid'], 'id' => null);
-                return $data;
+                return array('statuscode' => $this->statuscodes['PAPER_INVALID_TYPE'], 'status' => $strings['paper_type_invalid'], 'id' => null);
             case 'INVALID_USER':
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
-                return $data;
+                return array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
             case 'INVALID_ROLE':
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
-                return $data;
+                return array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
             case 'INVALID_SESSION':
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
-                return $data;
+                return array('statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
             case 'INVALID_DATES':
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null);
-                return $data;
-            // @codeCoverageIgnoreStart
+                return array('statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null);
             default:
-                $data = array('statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null);
-                return $data;
+                return array('statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null);
         }
-        // @codeCoverageIgnoreEnd
     }
     
     /**
@@ -207,9 +198,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                         if ($id) {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);
                         } else {
-                            // @codeCoverageIgnoreStart
                             $data = array('statuscode' => $this->statuscodes['PAPER_NOT_UPDATED'], 'status' => $strings['paper_not_updated'], 'id' => null);
-                            // @codeCoverageIgnoreEnd
                         }
                     } catch (\Exception $e) {
                         $data = $this->handle_exception($e->getMessage());
@@ -225,9 +214,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                     if ($id) {
                         $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
                     } else {
-                        // @codeCoverageIgnoreStart
                         $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
-                        // @codeCoverageIgnoreEnd
                     }
                 } catch (\Exception $e) {
                     $data = $this->handle_exception($e->getMessage());
@@ -278,7 +265,6 @@ class assessmentmanagement extends \api\abstractmanagement {
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $paperid, 'error' => $error);
                 } else {
-                    // @codeCoverageIgnoreStart
                     $data = array('statuscode' => $this->statuscodes['PAPER_NOT_SCHEDULED'], 'status' => $strings['paper_not_scheduled'], 'id' => null);
                     // Not scheduled so remove new properties entry from db.
                     if (!\Paper_utils::complete_delete_paper($paperid, $this->db)) {
@@ -290,12 +276,9 @@ class assessmentmanagement extends \api\abstractmanagement {
                         $logger = new \logger($this->db);
                         $logger->record_application_warning($userid, $type, $errorstring, $errorfile, $errorline);
                     }
-                    // @codeCoverageIgnoreEnd
                 }
             } else {
-                // @codeCoverageIgnoreStart
                 $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
-                // @codeCoverageIgnoreEnd
             }
         } catch (\Exception $e) {
             $data = $this->handle_exception($e->getMessage());
@@ -330,9 +313,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                 if ($deleted) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
                 } else {
-                    // @codeCoverageIgnoreStart
                     $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED'], 'status' => $strings['paper_not_deleted'], 'id' => null);
-                    // @codeCoverageIgnoreEnd
                 }
             }
         } else {
