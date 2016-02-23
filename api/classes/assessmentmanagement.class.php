@@ -107,7 +107,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $papertype = $paper->get_type_value($params['type']);
         }
         // Error if trying to create a summative exam when they are set to be scheduled only.
-        if (!$paperid and !empty($papertype)) {
+        if (!empty($papertype)) {
             if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
                 $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
                 return $this->get_response($data, 'create', $params['nodeid'], $error);
@@ -154,12 +154,12 @@ class assessmentmanagement extends \api\abstractmanagement {
         if (count($error) > 0) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
         } else {
-            $labsarray = array();
             if ($paperid and (empty($params['labs']))) {
-                $params['labs'] = $details['labs'];
+                $labs = $details['labs'];
             } else {
                 // Check labs.
                 // Currently we are working with the lab name as there is no lab management web service.
+                $labsarray = array();
                 $labfactory = new \LabFactory($this->db);
                 if (count($params['labs']) > 0) {
                     foreach ($params['labs'] as $lab) {
@@ -176,12 +176,13 @@ class assessmentmanagement extends \api\abstractmanagement {
                         }
                     }
                 }
+                if (count($labsarray) > 0) {
+                    $labs = implode(',', $labsarray);
+                } else {
+                    $labs = '';
+                }
             }
-            if (count($labsarray) > 0) {
-                $labs = implode(',', $labsarray);
-            } else {
-                $labs = '';
-            }
+            
             if (empty($params['duration'])) {
                 if ($paperid) {
                     $params['duration'] = $details['duration'];   
