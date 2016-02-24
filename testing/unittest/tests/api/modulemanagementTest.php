@@ -170,6 +170,15 @@ class modulemanagementtest extends unittestdatabase {
         $module = new \api\modulemanagement($this->db);
         $userid = 1;
         $this->assertEquals($responsearray, $module->create($params, $userid));
+        // Create moudle in new school
+        $responsearray['id'] = 5;
+        $params = array(
+            "nodeid" => 1,
+            "modulecode" => 'TEST5',
+            "name" => 'Test module 5',
+            "school" => 'Test school 2',
+            "faculty" => 'Test faculty');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**
      * Test module creation exception module exists
@@ -213,11 +222,17 @@ class modulemanagementtest extends unittestdatabase {
      * @group api
      */
     public function test_update_success() {
-        // Test module create - SUCCESS.
+        // Test module update name.
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db);
         $userid = 1;
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+        // Test module update module code.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "modulecode" => 'TEST2UPDATE');
         $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**
@@ -246,6 +261,16 @@ class modulemanagementtest extends unittestdatabase {
         $params = $this->enrol_param_array();
         $module = new \api\modulemanagement($this->db);
         $userid = 1;
+        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        // Already enrolled, so just return id of existing enrolment.
+        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        // No session supplied - user current.
+        $responsearray['id'] = 3;
+        $params = array(
+            "nodeid" => 1,
+            "userid" => 1000,
+            "moduleid" => 2,
+            "attempt" => 1);
         $this->assertEquals($responsearray, $module->enrol($params, $userid));
     }
     /**
@@ -290,13 +315,40 @@ class modulemanagementtest extends unittestdatabase {
         $params = $this->unenrol_param_array();
         $module = new \api\modulemanagement($this->db);
         $userid = 1;
+        $this->assertEquals($responsearray, $module->unenrol($params, $userid));   
+    }
+    /**
+     * Test module un-enrolment exception incorrect session supplied
+     * @group api
+     */
+    public function test_unenrol_exception_session() {
+        // Test module unenrolment - wrong session
+        $responsearray = $this->unenrol_response_array();
+        $params = $this->unenrol_param_array();
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 509;
+        $responsearray['status'] = 'User not un-enrolled';
+        $responsearray['id'] = null;
+        $params['session'] = 2015;
+        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+        // No session supplied.
+        $enrolparams = $this->enrol_param_array();
+        $module->enrol($enrolparams, $userid);
+        $responsearray['statuscode'] = 510;
+        $responsearray['status'] = 'Session not supplied';
+        $responsearray['id'] = null;
+        $params = array(
+            "nodeid" => 1,
+            "userid" => 1000,
+            "moduleid" => 1);
         $this->assertEquals($responsearray, $module->unenrol($params, $userid));
     }
     /**
-     * Test module un-enrolment exception no enrolment
+     * Test module un-enrolment exception incorrect module
      * @group api
      */
-    public function test_unenrol_noenrol() {
+    public function test_unenrol_module() {
         // Test module enrolment - ERROR no enrolment to unenrol.
         $responsearray = $this->unenrol_response_array();
         $params = $this->unenrol_param_array();
@@ -355,6 +407,10 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray['status'] = 'Module does not exist';
         $responsearray['id'] = null;
         $params['id'] = 99;
+        $this->assertEquals($responsearray, $module->delete($params, $userid));
+        // Test no module supplied.
+        $params = array(
+            "nodeid" => 1);
         $this->assertEquals($responsearray, $module->delete($params, $userid));
     }
      /**
