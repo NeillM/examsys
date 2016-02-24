@@ -216,7 +216,7 @@ class modulemanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $moduleid = false;
         }
         if ($moduleid) {
              // Only delete module if it contains no enrolments, and no papers
