@@ -158,7 +158,7 @@ class modulemanagement extends \api\abstractmanagement {
             
             // Get name if not provided.
             if ($moduleid and (empty($params['name']))) {
-                $params['name'] = $details['name'];
+                $params['name'] = $details['fullname'];
             }
             
             // Get student management system if not provided.
