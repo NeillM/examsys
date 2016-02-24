@@ -61,7 +61,7 @@ class modulemanagement extends \api\abstractmanagement {
         $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
         if ($userexists) {
             $yearutils = new \yearutils($this->db);
-            if ($params['session'] == '') {
+            if (empty($params['session'])) {
                 $session = $yearutils->get_current_session();
             } else {
                 $session = $params['session'];
