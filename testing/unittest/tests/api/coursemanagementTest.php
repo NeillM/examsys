@@ -178,12 +178,17 @@ class coursemanagementtest extends unittestdatabase {
      * @group api
      */
     public function test_update_success() {
-        // Test course update - SUCCESS
+        // Test course update - SUCCESS description
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $course = new \api\coursemanagement($this->db);
         $userid = 1;
-        $course->create($params, $userid);
+        $this->assertEquals($responsearray, $course->create($params, $userid));
+        // Test course update - SUCCESS name
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1,
+            "name" => 'TESTUPDATE');
         $this->assertEquals($responsearray, $course->create($params, $userid));
     }
     /**
@@ -220,7 +225,7 @@ class coursemanagementtest extends unittestdatabase {
         $this->assertTablesEqual($expectedtable, $querytable);
     }
     /**
-     * Test successful course deletion
+     * Test course deletion exception course does not exist
      * @group api
      */
     public function test_delete_exception_course() {
@@ -234,9 +239,24 @@ class coursemanagementtest extends unittestdatabase {
         $responsearray['id'] = null;
         $params['id'] = 99;
         $this->assertEquals($responsearray, $course->delete($params, $userid));
+        // Test course deletion- ERROR no id provided.
+        $params = array(
+            "nodeid" => 1);
+        $this->assertEquals($responsearray, $course->delete($params, $userid));
+    }
+    /**
+     * Test course deletion exception course in use
+     * @group api
+     */
+    public function test_delete_exception_courseinuse() {
         // Test deleting a course in use.
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
+        $course = new \api\coursemanagement($this->db);
+        $userid = 1;
         $responsearray['statuscode'] = 302;
         $responsearray['status'] = 'Course not deleted, as users enrolled';
+        $responsearray['id'] = null;
         $params['id'] = 2;
         $this->assertEquals($responsearray, $course->delete($params, $userid)); 
     }
