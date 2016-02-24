@@ -170,6 +170,19 @@ class schoolmanagementtest extends unittestdatabase {
         $school = new \api\schoolmanagement($this->db);
         $userid = 1;
         $this->assertEquals($responsearray, $school->create($params, $userid));
+        // Test with no faculty provided i.e. school name update.
+        $responsearray['id'] = 2;
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "name" => 'Test school 2 update');
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+        // Test with no name provided i.e. faculty update.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "faculty" => 'Test faculty 2');
+        $this->assertEquals($responsearray, $school->create($params, $userid));
     }
      /**
      * Test school update exception invalid school
@@ -218,6 +231,10 @@ class schoolmanagementtest extends unittestdatabase {
         $responsearray['status'] = 'School does not exist';
         $responsearray['id'] = null;
         $params['id'] = 99;
+        $this->assertEquals($responsearray, $school->delete($params, $userid));
+        // Test no school id supplued.
+        $params = array(
+            "nodeid" => 1);
         $this->assertEquals($responsearray, $school->delete($params, $userid));
     }
      /**
