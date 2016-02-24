@@ -131,7 +131,7 @@ class schoolmanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $schoolid = false;
         }
         if ($schoolid) {
             // Only delete school if it contains no modules or courses.
