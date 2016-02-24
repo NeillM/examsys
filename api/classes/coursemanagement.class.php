@@ -139,7 +139,7 @@ class coursemanagement extends \api\abstractmanagement {
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
             $details = \CourseUtils::get_course_details_by_id($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $courseid = false;
         }
         if ($courseid) {
             // Only delete course if it contains no users.
