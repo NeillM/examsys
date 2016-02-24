@@ -31,7 +31,7 @@
     <xs:group name="update">
         <xs:sequence>
             <xs:element name="id" type="xs:integer"/>
-            <xs:element name="name" type="faculty" minOccurs="0"/>
+            <xs:element name="name" type="faculty"/>
         </xs:sequence>
     </xs:group>
     <xs:simpleType name="faculty">
