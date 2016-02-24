@@ -112,7 +112,7 @@ class facultymanagement extends \api\abstractmanagement {
         if (isset($params['id']) and $params['id'] !== '') {
             $facultyid = \FacultyUtils::faculty_name_by_id($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $facultyid = false;
         }
         if ($facultyid) {
             // Only delete faculty if it contains no schools.
