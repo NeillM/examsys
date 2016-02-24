@@ -24,3 +24,4 @@ $string['module_not_created'] = 'Module not created';
 $string['module_not_deleted'] = 'Module not deleted';
 $string['module_not_deleted_inuse'] = 'Module not deleted, as linked to a paper or enrolement';
 $string['user_already_enrolled'] = 'User already enrolled';
+$string['session_not_supplied'] = 'Session not supplied';
