@@ -26,7 +26,7 @@ use testing\unittest\unittestdatabase;
  */
 class usermanagementtest extends unittestdatabase {
     /**
-     * Create a response array for creation
+     * Create a student response array for creation
      * @return array the response array  
      */
     private function create_response_array() {
@@ -39,7 +39,7 @@ class usermanagementtest extends unittestdatabase {
             "nodeid" => 1);
     }
     /**
-     * Create a parameter array for creation
+     * Create a student parameter array for creation
      * @return array the param array  
      */
     private function create_param_array() {
@@ -48,7 +48,21 @@ class usermanagementtest extends unittestdatabase {
             "username" => "testy",
             "surname" => "tester",
             "role" => "Student",
-            "course" => "TEST2");
+            "course" => "TEST2",
+            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 1)));
+    }
+    /**
+     * Create a staff parameter array for creation
+     * @return array the param array  
+     */
+    private function create_staff_param_array() {
+        return array(
+            "nodeid" => 1,
+            "username" => "staff",
+            "surname" => "staffy",
+            "role" => "Staff",
+            "course" => "University Lecturer",
+            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 1)));
     }
     /**
      * Create a response array for updates
@@ -71,7 +85,8 @@ class usermanagementtest extends unittestdatabase {
         return array(
             "nodeid" => 1,
             "id" => 1001,
-            "forename" => "test");
+            "forename" => "test",
+            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 2)));
     }
     /**
      * Create a response array for deletion
@@ -111,16 +126,36 @@ class usermanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "usermanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test successful user creation
+     * Test successful student creation
      * @group api
      */
-    public function test_create_success() {
-        // Test user create - SUCCESS.
+    public function test_create_student_success() {
+        // Test s create - SUCCESS.
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $this->assertEquals($responsearray, $user->create($params, $userid));
+        // Check user is enrolled on expected moulde.
+        $querytable = $this->getConnection()->createQueryTable('modules_student', 'SELECT id, userID, idMod FROM modules_student');
+        $expectedtable = $this->get_expected_data_set('createuser')->getTable("modules_student");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test successful staff creation
+     * @group api
+     */
+    public function test_create_staff_success() {
+        // Test s create - SUCCESS.
+        $responsearray = $this->create_response_array();
+        $params = $this->create_staff_param_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        // Check user is enrolled on expected moulde.
+        $querytable = $this->getConnection()->createQueryTable('modules_staff', 'SELECT memberID, idMod FROM modules_staff');
+        $expectedtable = $this->get_expected_data_set('createuser')->getTable("modules_staff");  
+        $this->assertTablesEqual($expectedtable, $querytable);
     }
     /**
      * Test user creation exception user exists
@@ -176,6 +211,25 @@ class usermanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $user->create($params, $userid));
     }
     /**
+     * Test staff creation exception invalid course
+     * @group api
+     */
+    public function test_create_staff_exception_course() {
+        // Test s create - SUCCESS.
+        $responsearray = $this->create_response_array();
+        $params = $this->create_staff_param_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 705;
+        $responsearray['status'] = 'Course does not exist';
+        $responsearray['id'] = null;
+        $params['username'] = 'unknowntest';
+        $params['surname'] = 'unknown';
+        $params['role'] = 'Staff';
+        $params['course'] = 'Invalid';
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+    }
+    /**
      * Test successful user update
      * @group api
      */
@@ -186,6 +240,10 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $this->assertEquals($responsearray, $user->create($params, $userid));
+        // Check user is enrolled on expected moulde.
+        $querytable = $this->getConnection()->createQueryTable('modules_student', 'SELECT id, userID, idMod FROM modules_student');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("modules_student");  
+        $this->assertTablesEqual($expectedtable, $querytable);
     }
      /**
      * Test user update exception user does not exist
@@ -235,6 +293,10 @@ class usermanagementtest extends unittestdatabase {
         $responsearray['status'] = 'User does not exist';
         $responsearray['id'] = null;
         $params['id'] = 99;
+        $this->assertEquals($responsearray, $user->delete($params, $userid));
+        // Test id not supplied.
+        $params = array(
+            "nodeid" => 1);
         $this->assertEquals($responsearray, $user->delete($params, $userid));
     }
     /**
