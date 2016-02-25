@@ -1,0 +1,7 @@
+modules_student:
+  -
+    id: 1
+    idMod: 3
+    UserID: 1000
+    calendar_year: 2016
+    attempt: 1

@@ -46,7 +46,8 @@ class modulemanagement extends \api\abstractmanagement {
         'MODULE_INVALID_FACULTY' => 506,
         'MODULE_INVALID_USER' => 507,
         'MODULE_USER_NOT_ENROLLED' => 508,
-        'MODULE_USER_NOT_UNENROLLED' => 509
+        'MODULE_USER_NOT_UNENROLLED' => 509,
+        'MODULE_SESSION_NOT_SUPPLIED' => 510
     );
            
     /**
@@ -61,7 +62,7 @@ class modulemanagement extends \api\abstractmanagement {
         $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
         if ($userexists) {
             $yearutils = new \yearutils($this->db);
-            if ($params['session'] == '') {
+            if (empty($params['session'])) {
                 $session = $yearutils->get_current_session();
             } else {
                 $session = $params['session'];
@@ -93,20 +94,20 @@ class modulemanagement extends \api\abstractmanagement {
      */
     public function unenrol($params, $userid) {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('user_not_unenrolled', 'user_does_not_exist'));
+        $strings = $langpack->get_strings($this->langcomponent, array('user_not_unenrolled', 'user_does_not_exist', 'session_not_supplied'));
         $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
         if ($userexists) {
             $yearutils = new \yearutils($this->db);
-            if ($params['session'] == '') {
-                $session = $yearutils->get_current_session();
+            if (empty($params['session'])) {
+                $data = array('statuscode' => $this->statuscodes['MODULE_SESSION_NOT_SUPPLIED'], 'status' => $strings['session_not_supplied'], 'id' => null);
             } else {
                 $session = $params['session'];
-            }
-            $ret = \UserUtils::remove_student_from_module($params['userid'], $params['moduleid'], $session, $this->db);
-            if ($ret) {
-                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $ret);
-            } else {
-                $data = array('statuscode' => $this->statuscodes['MODULE_USER_NOT_UNENROLLED'], 'status' => $strings['user_not_unenrolled'], 'id' => null);
+                $ret = \UserUtils::remove_student_from_module($params['userid'], $params['moduleid'], $session, $this->db);
+                if ($ret) {
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $ret);
+                } else {
+                    $data = array('statuscode' => $this->statuscodes['MODULE_USER_NOT_UNENROLLED'], 'status' => $strings['user_not_unenrolled'], 'id' => null);
+                }
             }
         } else {
             $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_USER'], 'status' => $strings['user_does_not_exist'], 'id' => null);
@@ -157,7 +158,7 @@ class modulemanagement extends \api\abstractmanagement {
             
             // Get name if not provided.
             if ($moduleid and (empty($params['name']))) {
-                $params['name'] = $details['name'];
+                $params['name'] = $details['fullname'];
             }
             
             // Get student management system if not provided.
@@ -215,7 +216,7 @@ class modulemanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $moduleid = false;
         }
         if ($moduleid) {
              // Only delete module if it contains no enrolments, and no papers

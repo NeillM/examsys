@@ -1000,6 +1000,7 @@ Class UserUtils {
       $result->bind_param('iii', $userid, $moduleid, $session);
       $result->execute();
       $result->bind_result($id);
+      $result->store_result();
       $result->fetch();
       if ($result->num_rows == 0) {
         $result->close();
