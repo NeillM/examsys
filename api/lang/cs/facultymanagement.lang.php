@@ -21,3 +21,4 @@ $string['faculty_not_created'] = 'Faculty not created';
 $string['faculty_already_exists'] = 'Faculty already exists';
 $string['faculty_not_deleted'] = 'Faculty not deleted';
 $string['faculty_not_deleted_inuse'] = 'Faculty not deleted, as contains schools';
+$string['faculty_name_not_supplied'] = 'Faculty name not supplied';

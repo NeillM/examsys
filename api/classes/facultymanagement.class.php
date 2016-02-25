@@ -42,7 +42,8 @@ class facultymanagement extends \api\abstractmanagement {
         'FACUTLY_NOT_UPDATED' => 402,
         'FACUTLY_NOT_CREATED' => 403,
         'FACUTLY_NOT_DELETED_INUSE' => 404,
-        'FACUTLY_ALREADY_EXISTS' => 405
+        'FACUTLY_ALREADY_EXISTS' => 405,
+        'FACUTLY_NAME_NOT_SUPPLIED' => 406
     );
     
     /**
@@ -54,7 +55,7 @@ class facultymanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_updated', 'faculty_does_not_exist'
-            , 'faculty_not_created', 'faculty_already_exists'));
+            , 'faculty_not_created', 'faculty_already_exists', 'faculty_name_not_supplied'));
         if (isset($params['id']) and $params['id'] !== '') {
             $facultyid = \FacultyUtils::faculty_name_by_id($params['id'], $this->db);
             if ($facultyid) {
@@ -62,41 +63,39 @@ class facultymanagement extends \api\abstractmanagement {
             }
         } else {
             $params['id'] = false;
-            $facultyid = false;
         }
         
-        // Get name if not provided.
-        if ($facultyid and (!isset($params['name']) or $params['name'] === '')) {
-            $params['name'] = $details['name'];
-        }
-            
-        // Update faculty.
-        if ($params['id']) {
-            if ($facultyid) {
-                $update = \FacultyUtils::update_faculty($params['id'], $params['name'],  $this->db);
-                if ($update) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
-                } else {
-                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null);
-                }
-            } else {
-                $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null);
-            }
-        // Create faculty.
+        // Name must be supplied.
+        if (!isset($params['name']) or $params['name'] === '') {
+            $data = array('statuscode' => $this->statuscodes['FACUTLY_NAME_NOT_SUPPLIED'], 'status' => $strings['faculty_name_not_supplied'], 'id' => null);
         } else {
-            $facultyid = \FacultyUtils::facultyid_by_name($params['name'], $this->db);
-            if (!$facultyid) {
-                $id = \FacultyUtils::add_faculty($params['name'], $this->db);
-                if ($id) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
+            // Update faculty.
+            if ($params['id']) {
+                if ($facultyid) {
+                    $update = \FacultyUtils::update_faculty($params['id'], $params['name'],  $this->db);
+                    if ($update) {
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    } else {
+                        $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null);
+                    }
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_CREATED'], 'status' => $strings['faculty_not_created'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null);
                 }
+            // Create faculty.
             } else {
-                $data = array('statuscode' => $this->statuscodes['FACUTLY_ALREADY_EXISTS'], 'status' => $strings['faculty_already_exists'], 'id' => $facultyid);
+                $facultyid = \FacultyUtils::facultyid_by_name($params['name'], $this->db);
+                if (!$facultyid) {
+                    $id = \FacultyUtils::add_faculty($params['name'], $this->db);
+                    if ($id) {
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
+                    } else {
+                        $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_CREATED'], 'status' => $strings['faculty_not_created'], 'id' => null);
+                    }
+                } else {
+                    $data = array('statuscode' => $this->statuscodes['FACUTLY_ALREADY_EXISTS'], 'status' => $strings['faculty_already_exists'], 'id' => $facultyid);
+                }
             }
         }
-        
         return $this->get_response($data, 'create', $params['nodeid']);
     }
     
@@ -113,7 +112,7 @@ class facultymanagement extends \api\abstractmanagement {
         if (isset($params['id']) and $params['id'] !== '') {
             $facultyid = \FacultyUtils::faculty_name_by_id($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $facultyid = false;
         }
         if ($facultyid) {
             // Only delete faculty if it contains no schools.
