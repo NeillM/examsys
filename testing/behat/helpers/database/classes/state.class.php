@@ -245,7 +245,7 @@ class state {
    * @param string $name the name of the database transaction.
    * @throws Exception
    */
-  public function start_transaction($name) {
+  public static function start_transaction($name) {
     $started = self::$db->savepoint($name);
     if ($started === false) {
       throw new Exception("Could not start a transaction called: $name");
@@ -258,7 +258,7 @@ class state {
    * @param string $name the name of the savepoint to rollback to (optional)
    * @throws Exception
    */
-  public function rollback_transaction($name = null) {
+  public static function rollback_transaction($name = null) {
     $rolledback = self::$db->rollback(null, $name);
     if ($rolledback === false) {
       throw new Exception("Failed to rollback to $name");
