@@ -26,6 +26,75 @@ use testing\unittest\unittestdatabase;
  */
 class schoolmanagementtest extends unittestdatabase {
     /**
+     * Create a response array for creation
+     * @return array the response array  
+     */
+    private function create_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 4,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a parameter array for creation
+     * @return array the param array  
+     */
+    private function create_param_array() {
+        return array(
+            "nodeid" => 1,
+            "name" => 'CREATE',
+            "faculty" => 'Test faculty');
+    }
+    /**
+     * Create a response array for updates
+     * @return array the response array  
+     */
+    private function update_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 1,
+            "error" => null,
+            "node" => 'create',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a parameter array for updates
+     * @return array the param array  
+     */
+    private function update_param_array() {
+        return array(
+            "nodeid" => 1,
+            "id" => 1,
+            "name" => 'Test school update',
+            "faculty" => 'Test faculty');
+    }
+    /**
+     * Create a response array for deletion
+     * @return array the response array  
+     */
+    private function delete_response_array() {
+        return array(
+            "statuscode" => 100,
+            "status" => 'OK',
+            "id" => 1,
+            "error" => null,
+            "node" => 'delete',
+            "nodeid" => 1);
+    }
+    /**
+     * Create a parameter array for deletion
+     * @return array the param array  
+     */
+    private function delete_param_array() {
+        return array(
+            "nodeid" => 1,
+            "id" => 1);
+    }
+    /**
      * Get init data set from yml
      * @return dataset
      */
@@ -41,132 +110,151 @@ class schoolmanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "schoolmanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test school create
+     * Test successful school create
      * @group api
      */
-    public function test_create() {
+    public function test_create_success() {
+        // Test school creation - SUCCESS
+        $responsearray = $this->create_response_array();
+        $params = $this->create_param_array();
         $school = new \api\schoolmanagement($this->db);
         $userid = 1;
-        // Test school creation - SUCCESS
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => 4,
-            "error" => null,
-            "node" => 'create',
-            "nodeid" => 1);
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+    /**
+     * Test school create exception invalid school
+     * @group api
+     */
+    public function test_create_exception_school() {
+        // Test school creation - ERROR school already exists
+        $responsearray = $this->create_response_array();
+        $params = $this->create_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 606;
+        $responsearray['status'] = 'School already exists';
+        $responsearray['id'] = 1;
         $params = array(
             "nodeid" => 1,
-            "name" => 'CREATE',
-            "faculty" => 'Test faculty');
-        $this->assertEquals($responsearray, $school->create($params, $userid));
-        // Test school creation - ERROR school already exists
-        $responsearray = array(
-            "statuscode" => 606,
-            "status" => 'School already exists',
-            "id" => 1,
-            "error" => null,
-            "node" => 'create',
-            "nodeid" => 2);
-        $params = array(
-            "nodeid" => 2,
             "name" => 'Test school',
             "faculty" => 'Test faculty');
         $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+     /**
+     * Test school create exception invalid faculty
+     * @group api
+     */
+    public function test_create_exception_faculty() {
          // Test school creation - ERROR faculty not supplied
-        $responsearray = array(
-            "statuscode" => 605,
-            "status" => 'Faculty not supplied',
-            "id" => null,
-            "error" => null,
-            "node" => 'create',
-            "nodeid" => 3);
+        $responsearray = $this->create_response_array();
+        $params = $this->create_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 605;
+        $responsearray['status'] = 'Faculty not supplied';
+        $responsearray['id'] = null;
         $params = array(
-            "nodeid" => 3,
+            "nodeid" => 1,
             "name" => 'CREATE 2',
             "faculty" => '');
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
-     * Test school update
+     * Test successful school update
      * @group api
      */
-    public function test_update() {
+    public function test_update_success() {
+        // Test school update - SUCCESS
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
         $school = new \api\schoolmanagement($this->db);
         $userid = 1;
-        // Test school update - SUCCESS
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => 1,
-            "error" => null,
-            "node" => 'create',
-            "nodeid" => 1);
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+        // Test with no faculty provided i.e. school name update.
+        $responsearray['id'] = 2;
         $params = array(
             "nodeid" => 1,
-            "id" => 1,
-            "name" => 'CREATE2',
-            "faculty" => 'Test faculty');
+            "id" => 2,
+            "name" => 'Test school 2 update');
         $this->assertEquals($responsearray, $school->create($params, $userid));
-        // Test school update - ERROR school does not exist
-        $responsearray = array(
-            "statuscode" => 601,
-            "status" => 'School does not exist',
-            "id" => null,
-            "error" => null,
-            "node" => 'create',
-            "nodeid" => 2);
+        // Test with no name provided i.e. faculty update.
         $params = array(
-            "nodeid" => 2,
-            "id" => 100,
-            "name" => 'CREATE',
-            "faculty" => 'Test faculty');
+            "nodeid" => 1,
+            "id" => 2,
+            "faculty" => 'Test faculty 2');
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+     /**
+     * Test school update exception invalid school
+     * @group api
+     */
+    public function test_update_exception_school() {
+        // Test school update - ERROR school does not exist
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 601;
+        $responsearray['status'] = 'School does not exist';
+        $responsearray['id'] = null;
+        $params['id'] = 100;
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
-     * Test school deletion
+     * Test successful school deletion
      * @group api
      */
-    public function test_delete() {
+    public function test_delete_success() {
+        // Test school deletion - SUCCESS.
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
         $school = new \api\schoolmanagement($this->db);
         $userid = 1;
-        // Test school deletion - SUCCESS.
-        $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => 1,
-            "error" => null,
-            "node" => 'delete',
-            "nodeid" => 1);
-        $params = array(
-            "nodeid" => 1,
-            "id" => 1);
         $this->assertEquals($responsearray, $school->delete($params, $userid));
         // Check that the remaining schools are correct, when we delete a school we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
         $querytable = $this->getConnection()->createQueryTable('schools', 'SELECT id, school, facultyID FROM schools WHERE deleted is NULL');
         $expectedtable = $this->get_expected_data_set('deleteschool')->getTable("schools");  
         $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test school deletion exception invalid school
+     * @group api
+     */
+    public function test_delete_exception_school() {
         // Test deleting a non existance school.
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
         $responsearray['statuscode'] = 601;
         $responsearray['status'] = 'School does not exist';
         $responsearray['id'] = null;
-        $responsearray['nodeid'] = 2;
-        $params['nodeid'] = 2;
         $params['id'] = 99;
         $this->assertEquals($responsearray, $school->delete($params, $userid));
+        // Test no school id supplued.
+        $params = array(
+            "nodeid" => 1);
+        $this->assertEquals($responsearray, $school->delete($params, $userid));
+    }
+     /**
+     * Test school deletion exception in use
+     * @group api
+     */
+    public function test_delete_exception_inuse() {
         // Test deleting a school in use - in a course.
+        $responsearray = $this->delete_response_array();
+        $params = $this->delete_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
         $responsearray['statuscode'] = 604;
         $responsearray['status'] = 'School not deleted, as in use by a course or module';
-        $responsearray['nodeid'] = 3;
-        $params['nodeid'] = 3;
+        $responsearray['id'] = null;
         $params['id'] = 2;
         $this->assertEquals($responsearray, $school->delete($params, $userid));
         // Test deleting a school in use - in a module.
         $responsearray['statuscode'] = 604;
         $responsearray['status'] = 'School not deleted, as in use by a course or module';
-        $responsearray['nodeid'] = 4;
-        $params['nodeid'] = 4;
         $params['id'] = 3;
         $this->assertEquals($responsearray, $school->delete($params, $userid));
     }
