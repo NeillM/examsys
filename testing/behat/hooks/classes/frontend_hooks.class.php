@@ -82,7 +82,7 @@ trait frontend_hooks {
       throw new Exception($message);
     }
 
-    $dataloader = new Default_Loader();
+    $dataloader = new Default_Loader(true);
     $dataloader->load();
     self::$dataloader = $dataloader;
   }
