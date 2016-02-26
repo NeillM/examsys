@@ -35,6 +35,13 @@ modules:
     active: 1
     schoolid: 1
     academic_year_start: "07/01"
+  -
+    id: 2
+    moduleid: "TEST2"
+    fullname: "Test module 2"
+    active: 1
+    schoolid: 1
+    academic_year_start: "07/01"
 schools:
   -
     id: 1
@@ -63,3 +70,5 @@ courses:
     name: "TEST2"
     description: "Test course 2"
     schoolid: 1
+modules_student:
+modules_staff:

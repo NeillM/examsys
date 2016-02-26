@@ -1,0 +1,5 @@
+modules_student:
+  -
+    id: 1
+    userID: 1001
+    idMod: 2

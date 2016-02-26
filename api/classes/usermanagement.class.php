@@ -191,7 +191,7 @@ class usermanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $userexists = \UserUtils::userid_exists($params['id'], $this->db);
         } else {
-            $params['id'] = false;
+            $userexists = false;
         }
         if ($userexists) {
             // Only delete user they have taken no papers
