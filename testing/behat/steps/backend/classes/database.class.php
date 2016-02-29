@@ -47,7 +47,7 @@ trait database {
     $db = state::get_db();
     $result = $db->query($sql);
     if ($result === false) {
-      throw new Exception("$sql failed in testing\behat\steps\backend\database\there_are_records_in_the_table");
+      throw new \Exception("$sql failed in testing\behat\steps\backend\database\there_are_records_in_the_table");
     }
     $row = $result->fetch_object();
     $this->assertEquals($count, $row->count);

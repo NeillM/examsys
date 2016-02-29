@@ -1,0 +1,58 @@
+## Data for the question_statuses table.
+---
+question_statuses:
+  -
+    id: 1
+    name: "Normal"
+    exclude_marking: 0
+    retired: 0
+    is_default: 1
+    change_locked: 1
+    validate: 1
+    display_warning: 0
+    colour: "#000000"
+    display_order: 0
+  -
+    id: 2
+    name: "Retired"
+    exclude_marking: 0
+    retired: 1
+    is_default: 0
+    change_locked: 1
+    validate: 0
+    display_warning: 1
+    colour: "#808080"
+    display_order: 1
+  -
+    id: 3
+    name: "Incomplete"
+    exclude_marking: 0
+    retired: 0
+    is_default: 0
+    change_locked: 0
+    validate: 0
+    display_warning: 1
+    colour: "#000000"
+    display_order: 2
+  -
+    id: 4
+    name: "Experimental"
+    exclude_marking: 1
+    retired: 0
+    is_default: 0
+    change_locked: 0
+    validate: 1
+    display_warning: 0
+    colour: "#808080"
+    display_order: 3
+  -
+    id: 5
+    name: "Beta"
+    exclude_marking: 0
+    retired: 0
+    is_default: 0
+    change_locked: 0
+    validate: 1
+    display_warning: 1
+    colour: "#000000"
+    display_order: 4

@@ -27,7 +27,8 @@ use testing\behat\environment,
     testing\behat\selectors;
 use testing\datagenerator\loader;
 use testing\behat\helpers\rogo\directory,
-    testing\behat\helpers\database\state;
+    testing\behat\helpers\database\state,
+    testing\behat\helpers\database\Default_Loader;
 use Config as RogoConfig,
     Exception;
 
@@ -49,6 +50,9 @@ use Config as RogoConfig,
 trait backend {
   use config;
 
+  /** Stores the dataloader used to initilise the data the  */
+  private static $dataloader;
+
   /**
    * Actions to perform before the suite is run.
    *
@@ -63,13 +67,16 @@ trait backend {
     self::$rogo_config = clone($config);
 
     state::connect($config);
+    state::sanatise_tables();
     // Let the data generators have the database connection.
     loader::set_database(state::get_db());
 
     // Ensure the directories are empty.
     directory::reset_directories();
 
-    state::start_transaction(state::TRANSACTION_SUITE);
+    $dataloader = new Default_Loader();
+    $dataloader->load();
+    self::$dataloader = $dataloader;
   }
 
   /**
@@ -128,10 +135,11 @@ trait backend {
    * @AfterSuite
    */
   public static function teardown(AfterSuiteScope $event) {
-    // Rollback any database changes.
-    state::rollback_transaction(state::TRANSACTION_SUITE);
     // Ensure the directories are empty.
     directory::reset_directories();
+    // Perform the dataloaders teardown.
+    $dataloader = self::$dataloader;
+    $dataloader->clean();
     // Close the database connection.
     state::close_db();
     // Reset the config object.

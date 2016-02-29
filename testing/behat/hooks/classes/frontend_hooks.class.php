@@ -27,7 +27,8 @@ use testing\behat\environment,
     testing\behat\selectors;
 use testing\datagenerator\loader;
 use testing\behat\helpers\rogo\directory,
-    testing\behat\helpers\database\state;
+    testing\behat\helpers\database\state,
+    testing\behat\helpers\database\Default_Loader;
 use Config as RogoConfig,
     Exception;
 
@@ -49,12 +50,15 @@ trait frontend_hooks {
   /** Stores if the setup function for the first scenario to be run has been completed. */
   private static $firstscenariosetup = false;
 
+  /** Stores the dataloader used to initilise the data the  */
+  private static $dataloader;
+
   /**
    * Actions to perform before the suite is run.
    *
    * @BeforeSuite
    */
-  public static function setup(BeforeSuiteScope $event) {
+  public static function setup_suite(BeforeSuiteScope $event) {
     self::check_config();
     // Setup the config for behat and store a cloned instance of it.
     $config = RogoConfig::get_instance();
@@ -63,6 +67,7 @@ trait frontend_hooks {
     self::$rogo_config = clone($config);
 
     state::connect($config);
+    state::sanatise_tables();
     // Let the data generators have the database connection.
     loader::set_database(state::get_db());
 
@@ -77,7 +82,9 @@ trait frontend_hooks {
       throw new Exception($message);
     }
 
-    state::save_database_state(state::TRANSACTION_SUITE);
+    $dataloader = new Default_Loader(true);
+    $dataloader->load();
+    self::$dataloader = $dataloader;
   }
 
   /**
@@ -97,6 +104,7 @@ trait frontend_hooks {
    */
   public function setup_scenario(BeforeScenarioScope $event) {
     self::check_config();
+    self::special_config();
     state::save_database_state(state::TRANSACTION_SCENARIO);
 
     $session = $this->getSession();
@@ -148,10 +156,11 @@ trait frontend_hooks {
    * @AfterSuite
    */
   public static function teardown(AfterSuiteScope $event) {
-    // Rollback any database changes.
-    state::rollback_database_state(state::TRANSACTION_SUITE);
     // Ensure the directories are empty.
     directory::reset_directories();
+    // Perform the dataloaders teardown.
+    $dataloader = self::$dataloader;
+    $dataloader->clean();
     // Close the database connection.
     state::close_db();
     // Reset the config object.
@@ -164,5 +173,21 @@ trait frontend_hooks {
    */
   protected static function is_first_scenario() {
     return !(self::$firstscenariosetup);
+  }
+
+  /**
+   * Sets some values that are usually installed by default.
+   */
+  protected static function special_config() {
+    require __DIR__ . '/../../../../lang/en/include/timezones.inc';
+    $encoded_timezones = json_encode($timezone_array);
+    $encoded_cohorts = json_encode(array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
+        '301-400', '401-500'));
+    $configObject = \Config::get_instance();
+    $configObject->set_db_object(state::get_db());
+    $configObject->set_setting('timezones', $encoded_timezones);
+    $configObject->set_setting('cohort_sizes', $encoded_cohorts);
+    $configObject->set_setting('max_duration', 779);
+    $configObject->set_setting('max_sittings', 6);
   }
 }

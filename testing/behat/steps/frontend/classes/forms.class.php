@@ -39,7 +39,7 @@ trait forms {
   public function i_set_field($field, $value) {
     $element = $this->find('field', $field);
     if (is_null($element)) {
-      throw new Exception("The form field $field could not be found");
+      throw new \Exception("The form field $field could not be found");
     }
     $element->setValue($value);
   }

@@ -1206,60 +1206,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     self::$db->commit();
 
-    //create sysadmin user
-    self::get_sysadmin_details();
-    UserUtils::create_user( self::$sysadmin_username,
-                            self::$sysadmin_password,
-                            self::$sysadmin_title,
-                            self::$sysadmin_first,
-                            self::$sysadmin_last,
-                            self::$sysadmin_email,
-                            'University Lecturer',
-                            '',
-                            '1',
-                            'Staff,SysAdmin',
-                            '',
-                            self::$db
-                          );
+    // Behat loads it's own defaults.
+    if (!self::$behat_install) {
+      self::createDefaultUsers();
+      self::createDefaultFacultiesSchoolsModules();
+      self::createQuestionStatuses();
+    }
 
-    //create cron user
-    UserUtils::create_user( self::$cfg_cron_user,
-                            self::$cfg_cron_passwd,
-                            '',
-                            '',
-                            'cron',
-                            '',
-                            '',
-                            '',
-                            '',
-                            'Staff,SysCron',
-                            '',
-                            self::$db
-                          );
+    //FLUSH PRIVILEGES
+    self::$db->query("FLUSH PRIVILEGES");
+    if (self::$db->errno != 0) {
+      self::logWarning(array('014'=> $string['logwarning20']));
+    }
+    self::$db->commit();
+    self::$db->autocommit(false);
+  }
 
-    //create 100 guest accounts
-    for ($i=1; $i<=100; $i++) {
-      // In the behat site guest users should have a password that matches their username.
-      // If it is live site install the guest should have a random password generated.
-      $guestpassword = (self::$behat_install) ? 'user' . $i : '';
-      UserUtils::create_user( 'user' . $i,
-                              $guestpassword,
-                              'Dr',
-                              'A',
-                              'User' . $i,
-                              '',
-                              'none',
-                              '',
-                              '1',
-                              'Student',
-                              '',
-                              self::$db
-                            );
-     }
-   self::$db->commit();
-
-    //add unknown school & faculty
-
+  /**
+   * Creates the default set of faculties, schools and modules in the Rogo database.
+   *
+   * @return void
+   */
+  protected static function createDefaultFacultiesSchoolsModules() {
+    // Add unknown school & faculty
     $facultyID = FacultyUtils::add_faculty('UNKNOWN Faculty',
       self::$db
     );
@@ -1322,29 +1291,70 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 																'07/01'
                              );
     self::$db->commit();
+  }
 
-    // Create default question statuses
-    $statuses = array(
-      array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
-      array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
-      array('name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
-      array('name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
-      array('name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
-    );
+  /**
+   * Creates the deafult Rogo users in the database:
+   * - The system admin
+   * - The cron user
+   * - 100 guest accounts
+   *
+   * @return void
+   */
+  protected static function createDefaultUsers() {
+    //create sysadmin user
+    self::get_sysadmin_details();
+    UserUtils::create_user( self::$sysadmin_username,
+                            self::$sysadmin_password,
+                            self::$sysadmin_title,
+                            self::$sysadmin_first,
+                            self::$sysadmin_last,
+                            self::$sysadmin_email,
+                            'University Lecturer',
+                            '',
+                            '1',
+                            'Staff,SysAdmin',
+                            '',
+                            self::$db
+                          );
 
-    foreach ($statuses as $data) {
-      $qs = new QuestionStatus(self::$db, $string, $data);
-      $qs->save();
-    }
+    //create cron user
+    UserUtils::create_user( self::$cfg_cron_user,
+                            self::$cfg_cron_passwd,
+                            '',
+                            '',
+                            'cron',
+                            '',
+                            '',
+                            '',
+                            '',
+                            'Staff,SysCron',
+                            '',
+                            self::$db
+                          );
 
-    //FLUSH PRIVILEGES
-    self::$db->query("FLUSH PRIVILEGES");
-    if (self::$db->errno != 0) {
-      self::logWarning(array('014'=> $string['logwarning20']));
+    //create 100 guest accounts
+    for ($i=1; $i<=100; $i++) {
+      // In the behat site guest users should have a password that matches their username.
+      // If it is live site install the guest should have a random password generated.
+      $guestpassword = (self::$behat_install) ? 'user' . $i : '';
+      UserUtils::create_user( 'user' . $i,
+                              $guestpassword,
+                              'Dr',
+                              'A',
+                              'User' . $i,
+                              '',
+                              'none',
+                              '',
+                              '1',
+                              'Student',
+                              '',
+                              self::$db
+                            );
     }
     self::$db->commit();
-    self::$db->autocommit(false);
   }
+
   /**
   * Check that we do not have a config file and that we can write one
   *
@@ -1411,6 +1421,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       return true;
     } else {
       return false;
+    }
+  }
+
+  /**
+   * Create the default question statuses.
+   *
+   * @global type $string Language strings
+   */
+  protected static function createQuestionStatuses() {
+    global $string;
+
+    // Create default question statuses
+    $statuses = array(
+      array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
+      array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
+      array('name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
+      array('name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
+      array('name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
+    );
+
+    foreach ($statuses as $data) {
+      $qs = new QuestionStatus(self::$db, $string, $data);
+      $qs->save();
     }
   }
 

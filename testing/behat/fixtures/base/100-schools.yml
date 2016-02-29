@@ -1,0 +1,13 @@
+## Data for the schools table.
+---
+schools:
+   -
+    id: 1
+    school: "UNKNOWN School"
+    facultyID: 1
+    deleted:
+   -
+    id: 2
+    school: "Training"
+    facultyID: 2
+    deleted:

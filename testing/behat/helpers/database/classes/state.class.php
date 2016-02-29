@@ -56,7 +56,7 @@ class state {
     $username = $config->get('cfg_behat_db_user');
     $password = $config->get('cfg_behat_db_password');
     $port = $config->get('cfg_db_port');
-    self::$schema = $config->get('cfg_db_database');
+    self::$schema = $config->get('cfg_behat_db_database');
     self::$db = new mysqli($host, $username, $password, self::$schema, $port);
   }
 
@@ -245,7 +245,7 @@ class state {
    * @param string $name the name of the database transaction.
    * @throws Exception
    */
-  public function start_transaction($name) {
+  public static function start_transaction($name) {
     $started = self::$db->savepoint($name);
     if ($started === false) {
       throw new Exception("Could not start a transaction called: $name");
@@ -258,10 +258,40 @@ class state {
    * @param string $name the name of the savepoint to rollback to (optional)
    * @throws Exception
    */
-  public function rollback_transaction($name = null) {
+  public static function rollback_transaction($name = null) {
     $rolledback = self::$db->rollback(null, $name);
     if ($rolledback === false) {
       throw new Exception("Failed to rollback to $name");
     }
+  }
+
+  /**
+   * Truncate all the tables in the database.
+   */
+  public static function sanatise_tables() {
+    $tables = self::table_list();
+    foreach ($tables as $table) {
+      self::truncate_table($table[0]);
+    }
+  }
+
+  /**
+   * Truncate an individual table.
+   *
+   * @param string $table the name of a table
+   */
+  protected static function truncate_table($table) {
+    $sql = "TRUNCATE TABLE $table";
+    self::$db->query($sql);
+  }
+
+  /**
+   * Returns an array of all the tables in the database.
+   *
+   * @return array
+   */
+  public static function table_list() {
+    $tablelist = self::$db->query('SHOW TABLES');
+    return $tablelist->fetch_all(MYSQL_NUM);
   }
 }

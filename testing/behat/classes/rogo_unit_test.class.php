@@ -60,7 +60,7 @@ class rogo_unit_test implements Context {
    * @param array $arguments the arguments passed to the function
    */
   public function __call($name, $arguments) {
-    if (method_exists(PHPUnit_Framework_Assert, $name)) {
+    if (method_exists('PHPUnit_Framework_Assert', $name)) {
       return call_user_func_array("PHPUnit_Framework_Assert::$name", $arguments);
     }
     throw new coding_exception("The method $name does not exist");

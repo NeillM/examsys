@@ -230,6 +230,14 @@ class Config extends RogoStaticSingleton {
     }
     // Use the correct user data directory.
     $this->set('cfg_rogo_data', $this->get('cfg_behat_data'));
+    // Fix the password salt for behat tests.
+    $authentication = $this->get('authentication');
+    foreach($authentication as &$authmethod) {
+      if ($authmethod[0] === 'internaldb') {
+        $authmethod[1]['encrypt_salt'] = 'F1rIPkEU8HV7HFnp';
+      }
+    }
+    $this->set('authentication', $authentication);
     $this->behatsetup = true;
   }
   

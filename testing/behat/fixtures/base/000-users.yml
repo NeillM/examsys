@@ -1,0 +1,67 @@
+## Data for the users table.
+---
+users:
+  -
+    password: "$6$mhXXbxFvS7gyxunE1K6.vzaP/.CPWQVaXLKj9Yta6hZzkNt7cCq/vbKo4VjsEQPmRPpxRePdzLq7QEhv8UUKg/"
+    grade: "University Lecturer"
+    surname: "Administrator"
+    initials: "S"
+    title: "Miss"
+    username: "admin"
+    email: "admin@example.com"
+    roles: "Staff,SysAdmin"
+    id: 1
+    first_names: "System"
+    gender:
+    special_needs: 0
+    yearofstudy: 1
+    user_deleted:
+    password_expire:
+  -
+    password: "$6$E69ROIW0uE/NwbcX2qwEvoZ2fCZbnzFWwgLilQ3ObKVhbopGQiPEvn8xsxWlBlY8IRNBrS9Y85YNERQHFEfXE1"
+    grade: ""
+    surname: "cron"
+    initials: ""
+    title: ""
+    username: "cron"
+    email: ""
+    roles: "Staff,SysCron"
+    id: 2
+    first_names: ""
+    gender:
+    special_needs: 0
+    yearofstudy: 0
+    user_deleted:
+    password_expire:
+  -
+    password: "$6$CSYxJpSAVDxgljcEGtjQCrn/RGr7Eot5NtbKSQGbB1v7DionGntBj4yaaQA3oFgvpOF6d5glkFugwKCbvz8tL/"
+    grade: "none"
+    surname: "User1"
+    initials: "A"
+    title: "Dr"
+    username: "user1"
+    email: ""
+    roles: "Student"
+    id: 3
+    first_names: "A"
+    gender:
+    special_needs: 0
+    yearofstudy: 1
+    user_deleted:
+    password_expire:
+  -
+    password: "$6$kd6hln8xqNVHlyIOgxq1EmXRLt4UTG.SH7YT7lziacqKNq6h3f8FXxAo8t5N5tceGinIq5DPsVIFwOEG9DSpc/"
+    grade: "none"
+    surname: "User2"
+    initials: "A"
+    title: "Dr"
+    username: "user2"
+    email: ""
+    roles: "Student"
+    id: 4
+    first_names: "A"
+    gender:
+    special_needs: 0
+    yearofstudy: 1
+    user_deleted:
+    password_expire:

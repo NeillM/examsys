@@ -1,0 +1,39 @@
+## Data for the module table.
+---
+modules:
+  -
+    id: 1
+    moduleid: "TRAIN"
+    fullname: "Training Module"
+    active: 1
+    vle_api: ""
+    checklist: "mapping"
+    sms: ""
+    selfenroll: 0
+    schoolid: 2
+    neg_marking:
+    ebel_grid_template:
+    mod_deleted:
+    timed_exams: 0
+    exam_q_feedback: 1
+    add_team_members: 1
+    map_level: 7
+    academic_year_start: '07/01'
+  -
+    id: 2
+    moduleid: "SYSTEM"
+    fullname: "Online Help"
+    active: 1
+    vle_api: ""
+    checklist: "peer,external,stdset,mapping"
+    sms: ""
+    selfenroll: 0
+    schoolid: 2
+    neg_marking:
+    ebel_grid_template:
+    mod_deleted:
+    timed_exams: 0
+    exam_q_feedback: 1
+    add_team_members: 1
+    map_level: 7
+    academic_year_start: '07/01'
