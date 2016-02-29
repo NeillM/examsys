@@ -6,7 +6,7 @@
  * Time: 13:31
  * To change this template use File | Settings | File Templates.
  */
-class lti_integration_extended  extends lti_integration {
+class lti_default_integration_extended  extends lti_integration {
 
 
   static function user_add($username, $password) {

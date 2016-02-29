@@ -25,7 +25,7 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-class lti_integration_extended extends lti_integration {
+class lti_uon_integration_extended extends lti_integration {
 
   public $description = 'UoN';
 

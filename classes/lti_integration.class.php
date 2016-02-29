@@ -20,22 +20,22 @@ class lti_integration {
   static function load() {
 
     // Load the appropriate LTI integration class (if new one found load that else use this)
-
     $configObject = Config::get_instance();
-
-    if (!is_null($configObject->get('lti_integration')) and $configObject->get('lti_integration') != '' and $configObject->get('lti_integration') != 'default') {
-      $inc_file = $configObject->get('cfg_web_root') . 'plugins/LTI/' . $configObject->get('lti_integration') . '.class.php';
+    $plugin = $configObject->get('lti_integration');
+    if (!empty($plugin) and $plugin != 'default') {
+      $inc_file = $configObject->get('cfg_web_root') . 'plugins/LTI/' . $plugin . '.class.php';
       if (file_exists($inc_file)) {
         require_once $inc_file;
       } else {
         echo "LTI Plugin not found: $inc_file";
         exit;
       }
-      return new lti_integration_extended();
+      $lti = 'lti_' . $plugin . '_integration_extended';
+      return new $lti();
     } else {
       require_once $configObject->get('cfg_web_root') . '/plugins/LTI/' . 'default.class.php';
 
-      return new lti_integration_extended();
+      return new lti_default_integration_extended();
     }
   }
 
