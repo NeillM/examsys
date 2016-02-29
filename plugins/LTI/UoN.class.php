@@ -52,15 +52,18 @@ class lti_uon_integration_extended extends lti_integration {
   }
 
   static function allow_module_self_reg($data) {
-    return true;
+    $configObject=Config::get_instance();
+    return $configObject->get('cfg_lti_allow_module_self_reg');
   }
 
   static function allow_staff_module_register($data) {
-    return true;
+    $configObject=Config::get_instance();
+    return $configObject->get('cfg_lti_allow_staff_module_register');
   }
 
   static function allow_module_create($data) {
-    return true;
+    $configObject=Config::get_instance();
+    return $configObject->get('cfg_lti_allow_module_create');
   }
 
   static function sms_api($data) {
