@@ -172,12 +172,14 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
 
     if ($returned2 === false) {
+      $modid = -1;
       //no context
       $data = $lti_i::module_code_translate($lti->getCourseName(), $lti->get_context_title());
-
       $problem = false;
       foreach ($data as $v) {
-        if (!module_utils::module_exists($v[1], $mysqli) and $lti_i::allow_module_create($v) ) {
+        if (module_utils::module_exists($v[1], $mysqli) and $userObject->is_staff_user_on_module($v[1])) {
+            $modid = module_utils::get_idMod($v[1], $mysqli);
+        } elseif (!module_utils::module_exists($v[1], $mysqli) and $lti_i::allow_module_create($v) ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
             echo "\n</body>\n</html>\n";
@@ -204,7 +206,7 @@ if (!$lti->isInstructor()) {
           if ($modid === false) {
             $problem = true;
           }
-        } elseif (!module_utils::module_exists($v[1], $mysqli) and  !$lti_i::allow_module_create($v)) {
+        } elseif (!module_utils::module_exists($v[1], $mysqli) and !$lti_i::allow_module_create($v)) {
           UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
           exit();
@@ -218,7 +220,7 @@ if (!$lti->isInstructor()) {
           exit();
         }
       }
-      if($problem === false ) {
+      if($problem === false and $modid != -1) {
         $lti->add_lti_context($modid);
       }
       $returned2 = $lti->lookup_lti_context();
