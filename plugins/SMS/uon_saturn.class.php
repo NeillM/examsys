@@ -66,7 +66,7 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
-  function get_module($moduleID) {
+  function get_module($moduleID, $mysqli) {
     $users = array();
 
     // Calculate what the current academic session is.
@@ -99,8 +99,8 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
-  function get_module_info($moduleID) {
-    $xml = $this->get_module($moduleID);
+  function get_module_info($moduleID, $mysqli) {
+    $xml = $this->get_module($moduleID, $mysqli);
 
     if (is_object($xml) and !(isset($xml->ErrorMessage) or isset($xml->Module->Error) or isset($xml->Module->ModuleError))) {
       $moduletitle = (string)$xml->Module->ModuleTitle;
@@ -127,8 +127,8 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
-  function getModuleEnrolements($moduleID) {
-    $xml = $this->get_module($moduleID);
+  function getModuleEnrolements($moduleID, $mysqli) {
+    $xml = $this->get_module($moduleID, $mysqli);
     foreach ($xml->Module->Membership->Student as $sms) {
       $sms->Title = trim($sms->Title);
       $sms->Surname = trim($sms->Surname);
@@ -195,19 +195,14 @@ Class UON_SATURN extends SmsUtils {
     $this->campus = $location;
   }
 
-  function get_module_name($modulecode) {
-    $dat = $this->getModuleEnrolements($modulecode);
+  function get_module_name($modulecode, $mysqli) {
+    $dat = $this->getModuleEnrolements($modulecode, $mysqli);
   }
 
-  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET', $demomode = false) {
+  function update_module_enrolement($module, $idMod, $sms_api, $mysqli, $session = 'NOTSET', $demomode = false) {
 
     $configObject = Config::get_instance();
     
-    // run module enrolement for select code
-    if ($mysqli == 'NOTSET') {
-      global $mysqli;
-    }
-
     $yearutils = new yearutils($mysqli);
     if ($session == 'NOTSET') {
         $session = $yearutils->get_current_session();
