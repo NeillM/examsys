@@ -211,7 +211,7 @@ if (!$lti->isInstructor()) {
         }
         if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
           UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
-          $modid = module_utils::get_idMod($v[1]);
+          $modid = module_utils::get_idMod($v[1], $mysqli);
         } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
