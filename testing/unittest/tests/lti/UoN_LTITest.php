@@ -20,7 +20,7 @@ use testing\unittest\unittestdatabase;
 require_once 'LTI/ims-lti/UoN_LTI.php';
 
 /**
- * Test assessment class
+ * Test uon lti class
  * 
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
@@ -34,14 +34,6 @@ class uonltitest extends unittestdatabase {
      */
     public function getDataSet() {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "lti" . DIRECTORY_SEPARATOR . "uonlti.yml");
-    }
-    /**
-     * Get expected data set from yml
-     * @param string $name fixture file name
-     * @return dataset
-     */
-    public function get_expected_data_set($name) {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "lti" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
      * Test lti context lookup
