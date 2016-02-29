@@ -45,14 +45,7 @@ class lti_integrationtest extends unittestdatabase {
         $c_internal_id = 'B34ADD-UK-AUT1516';
         $course_title = 'Advanced Drug Discovery';
         $exploded = explode('-', $c_internal_id);
-        $expected = array(array('SMS', $exploded[0], 'UK', 'UNKNOWN School', 0, "SATURN MISSING: "));
-        $lti = lti_integration::load();
-        $this->assertEquals($expected, $lti::module_code_translate($this->db, $c_internal_id, $course_title));
-        // 2. Campus.
-        $this->config->set('cfg_sms_api', 'uon_campus');
-        $c_internal_id = 'PHAR4018-UK-AUT1617';
-        $exploded = explode('-', $c_internal_id);
-        $expected = array(array('SMS', $exploded[0], 'UK', 'UNKNOWN School', 0, "MISSING: "));
+        $expected = array(array('SMS', $exploded[0], 'UK', 'UNKNOWN School', 0, "SATURN MISSING:$course_title"));
         $lti = lti_integration::load();
         $this->assertEquals($expected, $lti::module_code_translate($this->db, $c_internal_id, $course_title));
         // Default.
@@ -61,6 +54,6 @@ class lti_integrationtest extends unittestdatabase {
         $c_internal_id = 'PHAR4018';
         $expected = array(array('Manual', $c_internal_id, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$course_title"));
         $lti = lti_integration::load();
-        $this->assertEquals($expected, $lti::module_code_translate($c_internal_id, $course_title));
+        $this->assertEquals($expected, $lti::module_code_translate($this->db, $c_internal_id, $course_title));
     }
 }

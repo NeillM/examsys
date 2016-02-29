@@ -141,7 +141,7 @@ if (!$lti->isInstructor()) {
 
     $returned2 = $lti->lookup_lti_context();
     $mod = $returned2[0];
-    $data = $lti_i::module_code_translate$mysqli, ($mod);
+    $data = $lti_i::module_code_translate($mysqli, $mod);
     foreach ($data as $v) {
       if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
         UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);

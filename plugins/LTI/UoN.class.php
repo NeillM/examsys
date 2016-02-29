@@ -67,7 +67,6 @@ class lti_uon_integration_extended extends lti_integration {
   }
 
   static function sms_api($data) {
-    global $mysqli;
 
     if ($data[0] != 'SMS') {
       return '';
@@ -130,7 +129,7 @@ class lti_uon_integration_extended extends lti_integration {
     return $return;
   }
 
-  static function module_code_translate($c_internal_id, $course_title = ' ') {
+  static function module_code_translate($mysqli, $c_internal_id, $course_title = ' ') {
 
     if (stripos($c_internal_id, ' ') !== false) {
       self::invalid_module_code($c_internal_id, array(), 'initial blank check');
@@ -205,7 +204,7 @@ class lti_uon_integration_extended extends lti_integration {
           $data[$k][5] = "SATURN " . $data[$k][5];
         } else {
           $sms->set_module($v[2]);
-          $returned = $sms->get_module_info($v[1]);
+          $returned = $sms->get_module_info($v[1], $mysqli);
           if ($returned !== false) {
             $data[$k][5] = $returned[1];
             $data[$k][3] = $returned[2];
