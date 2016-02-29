@@ -1,0 +1,56 @@
+modules:
+  -
+    id: 1
+    moduleid: "TEST"
+    fullname: "Test module"
+    active: 1
+    schoolid: 1
+    academic_year_start: "07/01"
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 1
+faculty:
+  -
+    id: 1
+    name: "Test faculty"
+lti_keys:
+  -
+    id: 1
+    oauth_consumer_key: "testkey"
+    secret: "testsecret"
+    name: "test lti"
+lti_context:
+  -
+    lti_context_key: "test:1"
+    c_internal_id: 1
+    updated_on: "2016-02-11 16:29:11"
+  -
+    lti_context_key: "test:2"
+    c_internal_id: 1
+    updated_on: "2016-02-11 17:29:11"
+lti_user:
+  -
+    lti_user_key: "test:1"
+    lti_user_equ: "1000"
+    updated_on: "2016-02-11 16:29:11"
+  -
+    lti_user_key: "test:2"
+    lti_user_equ: "1001"
+    updated_on: "2016-02-11 17:29:11"
+users:
+  -
+    id: 1000
+    password: "12345678"
+    surname: "test"
+    username: "unit"
+    roles: "Student"
+    grade: "TEST2"
+  -
+    id: 1001
+    password: "87654321"
+    surname: "staff"
+    username: "staff"
+    roles: "Staff"
+    grade: "University Lecturer"

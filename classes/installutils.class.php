@@ -590,7 +590,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE users_metadata ADD CONSTRAINT users_metadata_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)";
     $alter[] = "ALTER TABLE gradebook_user ADD CONSTRAINT gradebook_user_fk0 FOREIGN KEY (paperid) REFERENCES gradebook_paper(paperid)";
     $alter[] = "ALTER TABLE labs ADD CONSTRAINT labs_fk0 FOREIGN KEY (campus) REFERENCES campus(id)";
-    
+    $alter[] = "ALTER TABLE lti_context ADD CONSTRAINT lticontext_fk0 FOREIGN KEY (c_internal_id) REFERENCES modules(id)";
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);
         $res->execute();

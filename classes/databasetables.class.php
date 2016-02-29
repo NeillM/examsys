@@ -622,7 +622,7 @@ QUERY;
     $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
           `lti_context_key` VARCHAR(255) NOT NULL,
-          `c_internal_id` VARCHAR(255) NOT NULL,
+          `c_internal_id` int(11) NOT NULL,
           `updated_on` DATETIME NOT NULL,
           PRIMARY KEY (`lti_context_key`),
           KEY `c_internal_id` (`c_internal_id`)

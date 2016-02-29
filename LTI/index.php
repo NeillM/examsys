@@ -200,8 +200,8 @@ if (!$lti->isInstructor()) {
           }
           $sms_api = $lti_i::sms_api($v);
           $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
-          $modcreate = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1, '07/01');
-          if ($modcreate === false) {
+          $modid = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1, '07/01');
+          if ($modid === false) {
             $problem = true;
           }
         } elseif (!module_utils::module_exists($v[1], $mysqli) and  !$lti_i::allow_module_create($v)) {
@@ -211,15 +211,15 @@ if (!$lti->isInstructor()) {
         }
         if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
           UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
+          $modid = module_utils::get_idMod($v[1]);
         } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
           exit();
         }
       }
-      $module_store = $lti_i::module_code_translated_store($data);
       if($problem === false ) {
-        $lti->add_lti_context($module_store);
+        $lti->add_lti_context($modid);
       }
       $returned2 = $lti->lookup_lti_context();
     }
