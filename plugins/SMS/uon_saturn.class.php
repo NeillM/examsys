@@ -66,6 +66,12 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
+  /**
+   * Retrieve the data about the module 
+   * @param string $moduleID modulecode
+   * @param mysqli $mysqli db connection
+   * @return bool|string false on error, otherwise module data
+   */
   function get_module($moduleID, $mysqli) {
     $users = array();
 
@@ -99,6 +105,12 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
+  /**
+   * Get info about module eg school and title
+   * @param string $moduleID the modulecode 
+   * @param mysqli $mysqli db connection
+   * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
+   */
   function get_module_info($moduleID, $mysqli) {
     $xml = $this->get_module($moduleID, $mysqli);
 

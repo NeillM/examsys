@@ -9,51 +9,21 @@
 class lti_default_integration_extended  extends lti_integration {
 
 
-  static function user_add($username, $password) {
-
-    // take user and password and add user to system
-    // do nothing as now handled by authentication stack
-  }
-
-  static function user_time_check($time, $user='') {
+  public function user_time_check($time, $user='') {
 
     // takes laast time logged in and optionally the user and decides if reauthentication should be done (true)
 
     return false;
   }
 
-  static function allow_staff_edit_link() {
-
-    // returns true if staff should be allowed to edit a link (currently not fully coded as of 2012-09)
-    $configObject=Config::get_instance();
-    return false;
-  }
-
-  static function allow_module_self_reg($data) {
-
-    //returns true if you wish to allow self registration on modules that are self reg launched via lti
-
-    $configObject=Config::get_instance();
-    return $configObject->get('cfg_lti_allow_module_self_reg');
-  }
-
-  static function allow_staff_module_register($data) {
-
-    // if this returns true then allow adding staff onto module team if they arent on it and launch via lti says they are teacher (Instructor)
-
-    $configObject=Config::get_instance();
-    return $configObject->get('cfg_lti_allow_staff_module_register');
-  }
-
-  static function allow_module_create($data) {
-
-    // if this returns true then allow the creation of modules via an lti launch, module_code_translate function can convert VLE module into Rogo module(s)
-
-    $configObject=Config::get_instance();
-    return $configObject->get('cfg_lti_allow_module_create');
-  }
-
-  static function module_code_translate($mysqli, $c_internal_id, $course_title = '') {
+  /**
+   * Convert VLE module shortcode into Rogo moduleid 
+   * @param mysqli $mysqli db connection
+   * @param string $moduleshortcode VLE module shortcode
+   * @param string $course_title VLE module title
+   * @return array rogo module information
+   */
+  public function module_code_translate($mysqli, $c_internal_id, $course_title = '') {
 
     // this function translates the incoming course code and course title it returns an array (containing possibly multiple records) of an array containing string if Manual or SMS for sms ones, the module code, a campus code (text) , school as a string (gets lookedup against rogo to get id later, a 1 for self reg enable [0 for disable] and the course title
 

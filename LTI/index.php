@@ -84,7 +84,11 @@ if (!$lti->valid) {
 }
 
 if (!isset($lti_i)) {
-  $lti_i = lti_integration::load();
+  if ($configObject->get('lti_integration') == 'UoN') {
+      $lti_i = new lti_uon_integration_extended();
+  } else {
+      $lti_i = new lti_default_integration_extended();
+  }
 }
 
 if (isset($_REQUEST['paperlinkID'])) {
@@ -108,18 +112,15 @@ if (!$lti->isInstructor()) {
     exit();
   } else {
     //valid data
-    list($c_internal_id, $upd) = $lti->lookup_lti_context();
+    list($moduleshortcode, $upd) = $lti->lookup_lti_context();
     $yearutils = new yearutils($mysqli);
     $session = $yearutils->get_current_session();
 
-    if (is_null($c_internal_id)) {
-   //   $lti_i::invalid_module_code($c_internal_id, $data, 'no returned data');
-    }
-    $data = $lti_i::module_code_translate($mysqli, $c_internal_id);
+    $data = $lti_i->module_code_translate($mysqli, $moduleshortcode);
 
     foreach ($data as $v) {
       $returned_check = module_utils::get_full_details_by_name($v[1], $mysqli);
-      if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and $lti_i::allow_module_self_reg($v)) {
+      if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg($v)) {
         if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1 and !UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli)) {
           // Insert new module enrollment
           UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $v[1], 1, $session, $mysqli);
@@ -141,18 +142,18 @@ if (!$lti->isInstructor()) {
 
     $returned2 = $lti->lookup_lti_context();
     $mod = $returned2[0];
-    $data = $lti_i::module_code_translate($mysqli, $mod);
+    $data = $lti_i->module_code_translate($mysqli, $mod);
     foreach ($data as $v) {
-      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i->allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
         UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
-      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i->allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
         UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
         echo "\n</body>\n</html>\n";
         exit();
       }
     }
 
-    if (!$lti_i::allow_staff_edit_link()) {
+    if (!$lti_i->allow_staff_edit_link()) {
       $_SESSION['lti']['paperlink'] = $returned[0];
       header("location: ../paper/user_index.php?id=" . $returned[0]);
       echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
@@ -174,12 +175,14 @@ if (!$lti->isInstructor()) {
     if ($returned2 === false) {
       $modid = -1;
       //no context
-      $data = $lti_i::module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+      $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
       $problem = false;
       foreach ($data as $v) {
+        // Module exists and staff user is enrolled on it - get module id.
         if (module_utils::module_exists($v[1], $mysqli) and $userObject->is_staff_user_on_module($v[1])) {
             $modid = module_utils::get_idMod($v[1], $mysqli);
-        } elseif (!module_utils::module_exists($v[1], $mysqli) and $lti_i::allow_module_create($v) ) {
+        // Module does not exist and LTI allowed to create modules - create module.
+        } elseif (!module_utils::module_exists($v[1], $mysqli) and $lti_i->allow_module_create($v) ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
             echo "\n</body>\n</html>\n";
@@ -206,15 +209,18 @@ if (!$lti->isInstructor()) {
           if ($modid === false) {
             $problem = true;
           }
-        } elseif (!module_utils::module_exists($v[1], $mysqli) and !$lti_i::allow_module_create($v)) {
+        // Module does not exist and LTI NOT allowed to create modules - display notice.
+        } elseif (!module_utils::module_exists($v[1], $mysqli) and !$lti_i->allow_module_create($v)) {
           UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
           exit();
         }
-        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
+        // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
+        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i->allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
           UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
           $modid = module_utils::get_idMod($v[1], $mysqli);
-        } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
+        // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
+        } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i->allow_staff_module_register($v)) {
           UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
           exit();
@@ -226,18 +232,20 @@ if (!$lti->isInstructor()) {
       $returned2 = $lti->lookup_lti_context();
     }
     $mod = $returned2[0];
-    $data = $lti_i::module_code_translate($mysqli, $mod);
+    $data = $lti_i->module_code_translate($mysqli, $mod);
     foreach ($data as $v) {
-      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i::allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
+      // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
+      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i->allow_staff_module_register($v) and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
         UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
-      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i::allow_staff_module_register($v)) {
+      // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
+      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i->allow_staff_module_register($v)) {
         UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
         echo "\n</body>\n</html>\n";
         exit();
       }
     }
-    list($c_internal_id, $upd) = $returned2;
-    $moduleid = $c_internal_id;
+    list($moduleshortcode, $upd) = $returned2;
+    $moduleid = $moduleshortcode;
     echo <<<END
 <!DOCTYPE html>
 <html>

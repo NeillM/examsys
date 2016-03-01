@@ -58,6 +58,16 @@ class autoloader {
         $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . $classname . '.class.php';
         if (file_exists($filename)) {
             include_once $filename;
+        } else {
+            // Plugins subdir classes.
+            $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
+            $folders = glob($directory, GLOB_ONLYDIR);
+            foreach ($folders as $folder) {
+                $filename = $folder . DIRECTORY_SEPARATOR . strtolower($class) . '.class.php';
+                if (file_exists($filename)) {
+                    include_once $filename;
+                }
+            }
         }
     }
   }

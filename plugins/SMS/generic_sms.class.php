@@ -39,8 +39,12 @@ Class GENERIC_SMS extends SmsUtils {
 //unused function now
   }
 
-// retrieve the data about the module
-  // @param string $moduleID  eg A14ACE
+  /**
+   * Retrieve the data about the module 
+   * @param string $moduleID modulecode
+   * @param mysqli $mysqli db connection
+   * @return bool|string false on error, otherwise module data
+   */
   function get_module($moduleID, $mysqli) {
 
     $configObj = Config::get_instance();
@@ -72,9 +76,12 @@ Class GENERIC_SMS extends SmsUtils {
     }
   }
 
-// get info about module eg school and title
-  // @param string $moduleID the modulecode eg A14ACE
-  // @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
+  /**
+   * Get info about module eg school and title
+   * @param string $moduleID the modulecode 
+   * @param mysqli $mysqli db connection
+   * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
+   */
   function get_module_info($moduleID, $mysqli) { //previous logic included in the retreival of data
     $lookupdata = $this->get_module($moduleID, $mysqli);
 
