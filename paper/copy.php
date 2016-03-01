@@ -612,7 +612,8 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   }
 
   $assessment = new assessment($db, $configObject);
-  $created = date("Y-m-d H:i:s");
+  $unixtime = time();
+  $created = date("Y-m-d H:i:s", $unixtime);
   $params = array(
     'paper_title' => array('s', $_POST['new_paper']),
     'start_date' => array('s', $tmp_start_date),
@@ -655,7 +656,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
     'recache_marks' => array('i', 0)
   );
   $new_paper_id = $assessment->db_insert_assessment($params);
-  $update_params = array('crypt_name' => array('s', $new_paper_id . $created . $userID));
+  $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));
   $assessment->db_update_assessment($new_paper_id, $update_params);
   
 
