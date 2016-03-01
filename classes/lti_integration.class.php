@@ -95,4 +95,11 @@ abstract class lti_integration {
      * @return array rogo module information
      */
     abstract public function module_code_translate($mysqli, $c_internal_id, $course_title = '');
+    
+    /**
+     * Returns the sms url appropriate for the item element
+     * @param array $data module data from module_code_translate
+     * @return string SMS url
+     */
+    abstract public function sms_api($data);
 }

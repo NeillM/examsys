@@ -30,9 +30,12 @@ class lti_default_integration_extended  extends lti_integration {
     return array(array('Manual', $c_internal_id, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$course_title"));
   }
 
-  static function sms_api($data) {
-
-    // this returns the sms url appropriate for the item element (inner array) of the return from module_code_translate function
+  /**
+   * Returns the sms url appropriate for the item element
+   * @param array $data module data from module_code_translate
+   * @return string SMS url
+   */
+  public function sms_api($data) {
 
     if ($data[0] != 'SMS') {
       return '';

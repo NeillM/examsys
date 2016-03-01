@@ -41,7 +41,12 @@ class lti_uon_integration_extended extends lti_integration {
     return false;
   }
 
-  static function sms_api($data) {
+  /**
+   * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
+   * @param array $data module data from module_code_translate
+   * @return string SMS url
+   */
+  public function sms_api($data) {
 
     if ($data[0] != 'SMS') {
       return '';
