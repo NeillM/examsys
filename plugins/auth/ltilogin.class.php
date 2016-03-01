@@ -44,6 +44,7 @@ class ltilogin_auth extends outline_authentication {
     $this->savetodebug('Starting LTI');
     $this->lti->init_lti();
     if (!isset($this->lti_i)) {
+      $configObject = Config::get_instance();
       if ($configObject->get('lti_integration') == 'UoN') {
           $this->lti_i = new lti_uon_integration_extended();
       } else {
