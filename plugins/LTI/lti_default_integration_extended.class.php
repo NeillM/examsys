@@ -43,12 +43,4 @@ class lti_default_integration_extended  extends lti_integration {
     return $SMS->url;
   }
 
-  static function module_code_translated_store($data) {
-
-    // this takes the data array from the module_code_translate function and converts it into a string that it can store in the db for the lti context info and also read through and decode using the module_code_translate function
-
-    return $data[0][1];
-  }
-
-
 }
