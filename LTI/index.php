@@ -115,7 +115,7 @@ if (!$lti->isInstructor()) {
     $returned_check = module_utils::get_full_details_by_name($mod, $mysqli);
     // User not on module, have user details and LTI allows student self reg - enrol student.
     if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $mod, $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg()) {
-      if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1 and !UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $mod, $session, $mysqli)) {
+      if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1) {
         // Insert new module enrollment
         UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $mod, 1, $session, $mysqli);
       }

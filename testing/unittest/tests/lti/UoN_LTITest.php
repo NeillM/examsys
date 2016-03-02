@@ -49,19 +49,4 @@ class uonltitest extends unittestdatabase {
         $expected = array('TEST',"2016-02-11 17:29:11");
         $this->assertEquals($expected, $lti->lookup_lti_context('test:2'));
     }
-    /**
-     * Test lti load
-     * @group lti
-     */
-    public function test_load() {
-        $lti = new UoN_LTI();
-        // UoN.
-        $this->config->set('lti_integration', 'UoN');
-        $lti_i = $lti->load();
-        $this->assertEquals('UoN', $lti_i->ltiintegration);
-        // Default.
-        $this->config->set('lti_integration', 'default');
-        $lti_i = $lti->load();
-        $this->assertEquals('default', $lti_i->ltiintegration);
-    }
 }

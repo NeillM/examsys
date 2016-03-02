@@ -31,16 +31,10 @@ abstract class lti_integration {
     public $config;
 
     /**
-     * @var $ltiintegration LTI type
-     */
-    public $ltiintegration;
-
-    /**
      * Constructor
      */
     public function __construct() {
         $this->config = Config::get_instance();
-        $this->ltiintegration = $this->config->get('lti_integration');
     }
 
     /**
