@@ -1781,11 +1781,8 @@ class ClassTotals {
    * @return bool true if graded
    */
   public function paper_graded() {
-    if ($this->gradebook_enabled) {
       $gradebook = new gradebook($this->db);
       return $gradebook->paper_graded($this->paperID);
-    }
-    return false;
   }
 
   /**
