@@ -84,11 +84,7 @@ if (!$lti->valid) {
 }
 
 if (!isset($lti_i)) {
-  if ($configObject->get('lti_integration') == 'UoN') {
-      $lti_i = new lti_uon_integration_extended();
-  } else {
-      $lti_i = new lti_default_integration_extended();
-  }
+  $lti_i = $lti->load();
 }
 
 if (isset($_REQUEST['paperlinkID'])) {

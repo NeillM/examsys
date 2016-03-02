@@ -237,6 +237,19 @@ class UoN_LTI extends BLTI {
     }
   }
 
+  /**
+   * Load LTI integration based on config 
+   * @return object LTI integration
+   */
+  public function load() {
+      $configObject = Config::get_instance();
+      if ($configObject->get('lti_integration') == 'UoN') {
+          return new lti_uon_integration_extended();
+      } else {
+          return new lti_default_integration_extended();
+      }
+  }
+  
   function get_lti_keys($deleted = false) {
     $dataret = array();
     if ($this->parm['dbtype'] == 'mysqli') {
