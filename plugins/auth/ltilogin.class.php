@@ -86,7 +86,7 @@ class ltilogin_auth extends outline_authentication {
       $result->store_result();
       $result->bind_result($username);
 
-      $authneeded = $this->lti_i->user_time_check($returned[1], $username);
+      $authneeded = $this->lti_i->user_time_check($returned[1]);
       if ($authneeded === true) {
         $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] = true;
         $authobj->fail($this->number);

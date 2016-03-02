@@ -72,42 +72,39 @@ class lti_integrationtest extends unittestdatabase {
      * @group lti 
      */
     public function test_allow_module_self_reg() {
-        $data = array(array('Manual', 'PHAR4018', 'CampusTODO', 'SchoolTODO', 0, "MISSING:Advanced Drug Discovery"));
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
         $this->config->set('cfg_lti_allow_module_self_reg', true);
         $lti = new lti_default_integration_extended();
-        $this->assertTrue($lti->allow_module_self_reg($data));
+        $this->assertTrue($lti->allow_module_self_reg());
         $this->config->set('cfg_lti_allow_module_self_reg', false);
-        $this->assertFalse($lti->allow_module_self_reg($data));
+        $this->assertFalse($lti->allow_module_self_reg());
     }
     /**
      * Test allow staff self reg  
      * @group lti 
      */
     public function test_allow_staff_module_register() {
-        $data = array(array('Manual', 'PHAR4018', 'CampusTODO', 'SchoolTODO', 0, "MISSING:Advanced Drug Discovery"));
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
         $this->config->set('cfg_lti_allow_staff_module_register', true);
         $lti = new lti_default_integration_extended();
-        $this->assertTrue($lti->allow_staff_module_register($data));
+        $this->assertTrue($lti->allow_staff_module_register());
         $this->config->set('cfg_lti_allow_staff_module_register', false);
-        $this->assertFalse($lti->allow_staff_module_register($data));
+        $this->assertFalse($lti->allow_staff_module_register());
     }
     /**
      * Test allow module creation 
      * @group lti 
      */
     public function test_allow_module_create() {
-        $data = array(array('Manual', 'PHAR4018', 'CampusTODO', 'SchoolTODO', 0, "MISSING:Advanced Drug Discovery"));
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
         $this->config->set('cfg_lti_allow_module_create', true);
         $lti = new lti_default_integration_extended();
-        $this->assertTrue($lti->allow_module_create($data));
+        $this->assertTrue($lti->allow_module_create());
         $this->config->set('cfg_lti_allow_module_create', false);
-        $this->assertFalse($lti->allow_module_create($data));
+        $this->assertFalse($lti->allow_module_create());
     }
     /**
      * Test user time check
@@ -118,13 +115,13 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
         $lti = new lti_default_integration_extended();
-        $this->assertFalse($lti->user_time_check('now', ''));
-        $this->assertFalse($lti->user_time_check('2015-02-15 15:28:37', ''));
+        $this->assertFalse($lti->user_time_check('now'));
+        $this->assertFalse($lti->user_time_check('2015-02-15 15:28:37'));
         // UoN.
         $this->config->set('lti_integration', 'UoN');
         $this->config->set('cfg_sms_api', 'uon_saturn');
         $lti = new lti_uon_integration_extended();
-        $this->assertFalse($lti->user_time_check('now', ''));
-        $this->assertTrue($lti->user_time_check('2015-02-15 15:28:37', ''));
+        $this->assertFalse($lti->user_time_check('now'));
+        $this->assertTrue($lti->user_time_check('2015-02-15 15:28:37'));
     }
 }

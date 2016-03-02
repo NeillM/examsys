@@ -54,38 +54,34 @@ abstract class lti_integration {
 
     /**
      * Is student self reg onto module enabled in lti
-     * @param string $data module data
      * @return bool
      */
-    public function allow_module_self_reg($data) {
+    public function allow_module_self_reg() {
         return $this->config->get('cfg_lti_allow_module_self_reg');
     }
 
     /**
      * Is staff self reg onto module enabled in lti
-     * @param string $data module data
      * @return bool
      */
-    public function allow_staff_module_register($data) {
+    public function allow_staff_module_register() {
         return $this->config->get('cfg_lti_allow_staff_module_register');
     }
 
     /**
      * Is module creation enabled in lti
-     * @param string $data module data
      * @return bool
      */
-    public function allow_module_create($data) {
+    public function allow_module_create() {
         return $this->config->get('cfg_lti_allow_module_create');
     }
     
     /**
-     * Check laat time logged in and decide if reauthentication should be done
+     * Check last time logged in and decide if re-authentication should be done
      * @param string $time last time logged in
-     * @param string $user the user
-     * @return  
+     * @return bool true if user require re-authentication 
      */
-    abstract public function user_time_check($time, $user = '');
+    abstract public function user_time_check($time);
     
     /**
      * Convert VLE module shortcode into Rogo moduleid 

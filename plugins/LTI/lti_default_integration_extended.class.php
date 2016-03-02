@@ -1,18 +1,39 @@
 <?php
+
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+
 /**
- * Created by JetBrains PhpStorm.
- * User: cczsa1
- * Date: 17/01/14
- * Time: 13:31
- * To change this template use File | Settings | File Templates.
+ *
+ * Handles UoN LTI Integration in Rogo
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
  */
 class lti_default_integration_extended  extends lti_integration {
 
-
-  public function user_time_check($time, $user='') {
-
+  /**
+   * Check last time logged in and decide if re-authentication should be done
+   * @param string $time last time logged in
+   * @return bool true if user require re-authentication 
+   */
+  public function user_time_check($time) {
     // takes laast time logged in and optionally the user and decides if reauthentication should be done (true)
-
     return false;
   }
 
