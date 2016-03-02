@@ -1918,6 +1918,9 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   
   //gradebook setting
   \$cfg_gradebook_enabled = false;
+  
+  //IMS enterprise setting
+  \$cfg_ims_enabled = false;
   ?>
 CONFIG;
 

@@ -139,7 +139,9 @@ require '../include/sysadmin_auth.inc';
   $menudata['ebelgridtemplates']    = array('list_ebel_grids.php', 'grid_48.png');
   $menudata['faculties']            = array('list_faculties.php', 'faculty.png');
   $menudata['imslti']               = array('../LTI/lti_keys_list.php', 'lti_key_48.png');
-  $menudata['imssettings']          = array('../plugins/ims/ims_settings.php', 'ims_logo.png');
+  if ($configObject->get('cfg_ims_enabled')) { 
+    $menudata['imssettings']          = array('../plugins/ims/ims_settings.php', 'ims_logo.png');
+  }
   $menudata['modules']              = array('list_modules.php', 'modules_icon.png');
   $menudata['announcments']         = array('list_announcements.php', 'news_48.png');
   $menudata['optimizetables']       = array('optimize_tables.php', 'optimize_tables_icon.png');
