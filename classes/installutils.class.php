@@ -1915,6 +1915,9 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
   \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
   \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
+  
+  //gradebook setting
+  \$cfg_gradebook_enabled = false;
   ?>
 CONFIG;
 
