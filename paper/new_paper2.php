@@ -228,6 +228,13 @@ $papertype = $assessment->get_type_value($_POST['paper_type']);
       alert ("<?php echo $string['msg4']; ?>");
       return false;
     }
+    // Check that the end datetime is greater than the start datetime
+    var from = String($('#fyear').val()) + String($('#fmonth').val()) + String($('#fday').val()) + String($('#ftime').val());
+    var to = String($('#tyear').val()) + String($('#tmonth').val()) + String($('#tday').val()) + String($('#ttime').val());
+    if (to <= from) {
+      alert ("<?php echo $string['msg10']; ?>");
+      return false;
+    }
   }
 
   function checkSummativeForm() {

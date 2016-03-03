@@ -44,6 +44,6 @@ $string['mins'] = 'mins';
 $string['msg7'] = 'WARNING: You must specify which date you require the exam to run in.';
 $string['msg8'] = 'WARNING: You must specify a duration in minutes that the exam will last.';
 $string['msg9'] = 'WARNING: You must specify a size for the cohort.';
-
+$string['msg10'] = 'WARNING: End datetime must be after Start datetime';
 $string['na'] = 'N/A';
 ?>
