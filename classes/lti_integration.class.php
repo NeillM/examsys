@@ -14,29 +14,82 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-class lti_integration {
+/**
+* Abstract LTI integration helper
+* 
+* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+* @copyright Copyright (c) 2016 onwards The University of Nottingham
+*/
 
-  public $description = 'Default';
-  static function load() {
+/**
+ * Abstract class for LTI integration.
+ */
+abstract class lti_integration {
+    /**
+     * @var $config Config object
+     */
+    public $config;
 
-    // Load the appropriate LTI integration class (if new one found load that else use this)
-
-    $configObject = Config::get_instance();
-
-    if (!is_null($configObject->get('lti_integration')) and $configObject->get('lti_integration') != '' and $configObject->get('lti_integration') != 'default') {
-      $inc_file = $configObject->get('cfg_web_root') . 'plugins/LTI/' . $configObject->get('lti_integration') . '.class.php';
-      if (file_exists($inc_file)) {
-        require_once $inc_file;
-      } else {
-        echo "LTI Plugin not found: $inc_file";
-        exit;
-      }
-      return new lti_integration_extended();
-    } else {
-      require_once $configObject->get('cfg_web_root') . '/plugins/LTI/' . 'default.class.php';
-
-      return new lti_integration_extended();
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->config = Config::get_instance();
     }
-  }
 
+    /**
+     * Is staff module link editing enabled in lti
+     * @param string $data module data
+     * @return bool
+     */
+    public function allow_staff_edit_link() {
+        return false;
+    }
+
+    /**
+     * Is student self reg onto module enabled in lti
+     * @return bool
+     */
+    public function allow_module_self_reg() {
+        return $this->config->get('cfg_lti_allow_module_self_reg');
+    }
+
+    /**
+     * Is staff self reg onto module enabled in lti
+     * @return bool
+     */
+    public function allow_staff_module_register() {
+        return $this->config->get('cfg_lti_allow_staff_module_register');
+    }
+
+    /**
+     * Is module creation enabled in lti
+     * @return bool
+     */
+    public function allow_module_create() {
+        return $this->config->get('cfg_lti_allow_module_create');
+    }
+    
+    /**
+     * Check last time logged in and decide if re-authentication should be done
+     * @param string $time last time logged in
+     * @return bool true if user require re-authentication 
+     */
+    abstract public function user_time_check($time);
+    
+    /**
+     * Convert VLE module shortcode into Rogo moduleid 
+     * @param mysqli $mysqli db connection
+     * @param string $moduleshortcode VLE module shortcode
+     * @param string $course_title VLE module title
+     * @return array rogo module information
+     */
+    abstract public function module_code_translate($mysqli, $c_internal_id, $course_title = '');
+    
+    /**
+     * Returns the sms url appropriate for the item element
+     * @param array $data module data from module_code_translate
+     * @return string SMS url
+     */
+    abstract public function sms_api($data);
 }

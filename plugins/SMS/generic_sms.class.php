@@ -35,15 +35,18 @@ Class GENERIC_SMS extends SmsUtils {
   public $url;
 
   //used to get user data but no longer used as abstracted out
-  function getUserData($username) {
+  public function getUserData($username) {
 //unused function now
   }
 
-// retrieve the data about the module
-  // @param string $moduleID  eg A14ACE
-  function get_module($moduleID, $sms_api = null) {
+  /**
+   * Retrieve the data about the module 
+   * @param string $moduleID modulecode
+   * @param mysqli $mysqli db connection
+   * @return bool|string false on error, otherwise module data
+   */
+  public function get_module($moduleID, $mysqli) {
 
-    global $mysqli;
     $configObj = Config::get_instance();
     //$lookup = Lookup::get_instance($configObj, $mysqli);
     $lookup = new Lookup($configObj, $mysqli);
@@ -73,11 +76,14 @@ Class GENERIC_SMS extends SmsUtils {
     }
   }
 
-// get info about module eg school and title
-  // @param string $moduleID the modulecode eg A14ACE
-  // @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
-  function get_module_info($moduleID) { //previous logic included in the retreival of data
-    $lookupdata = $this->get_module($moduleID);
+  /**
+   * Get info about module eg school and title
+   * @param string $moduleID the modulecode 
+   * @param mysqli $mysqli db connection
+   * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
+   */
+  public function get_module_info($moduleID, $mysqli) { //previous logic included in the retreival of data
+    $lookupdata = $this->get_module($moduleID, $mysqli);
 
     if ($lookupdata === false) {
       return false;
@@ -97,8 +103,8 @@ Class GENERIC_SMS extends SmsUtils {
   }
 
 //gets a list of enroled users for the module listed
-  function getModuleEnrolements($moduleID) {
-    $lookupdata = $this->get_module($moduleID);
+  public function getModuleEnrolements($moduleID, $mysqli) {
+    $lookupdata = $this->get_module($moduleID, $mysqli);
     foreach ($lookupdata->students as $sms) {
       $sms->Title = trim($sms->title);
       $sms->Surname = trim($sms->surname);
@@ -131,23 +137,23 @@ Class GENERIC_SMS extends SmsUtils {
   }
 
  // appears unused
-  function getStudentSources() {
+  public function getStudentSources() {
     return array('&lt;No lookup&gt;' => '', 'Lookup' => 'lookupclass');
   }
 
   // returns an array with key as display name and value as item to save back to db for use with sms module sources
-  function getModuleSources() {
+  public function getModuleSources() {
     return array('Lookup' => 'lookupclass');
   }
 
 
-  function set_module($location) {
+  public function set_module($location) {
     //unused in generic
   }
 
   //appears pointless and unused
-  function get_module_name($modulecode) {
-    $dat = $this->getModuleEnrolements($modulecode);
+  public function get_module_name($modulecode, $mysqli) {
+    $dat = $this->getModuleEnrolements($modulecode, $mysqli);
   }
 
 
@@ -158,12 +164,7 @@ Class GENERIC_SMS extends SmsUtils {
 // sms_api is the sms api used for the module
 // mysqli is the mysqli object
 // session in the year
-  function update_module_enrolement($module, $idMod, $sms_api, $mysqli = 'NOTSET', $session = 'NOTSET') {
-
-    // run module enrolement for select code
-    if ($mysqli == 'NOTSET') {
-      global $mysqli;
-    }
+  public function update_module_enrolement($module, $idMod, $sms_api, $mysqli, $session = 'NOTSET') {
 
     $yearutils = new yearutils($mysqli);
     if ($session == 'NOTSET') {
@@ -200,7 +201,7 @@ Class GENERIC_SMS extends SmsUtils {
     $student_data->close();
 
     // The replaced_module is handled internally to the new function
-    $lookupdata=$this->get_module($module);
+    $lookupdata=$this->get_module($module, $mysqli);
 
     if((isset($lookupdata->error) and $lookupdata->error != '')) {
       //log the issue
@@ -353,9 +354,9 @@ Class GENERIC_SMS extends SmsUtils {
           //log_error(0, 'CRON JOB', 'Application Warning', $errstr, 'uon_saturn2.class.php', 0, '', null, $variables, null);
           if (PHP_SAPI != 'cli') {
             echo $errstr . "\r\n";
+          }
         }
       }
-
       // Check for any extra students in Rogo but not in SATURN for module
       foreach ($current_users as $username => $individual_user) {
         if ($individual_user['delete'] == 1 and $individual_user['auto_update'] == 1) {

@@ -61,7 +61,7 @@ Abstract Class SmsUtils {
   
   abstract protected function getUserData($username);
   
-  abstract protected function getModuleEnrolements($moduleID);
+  abstract protected function getModuleEnrolements($moduleID, $mysqli);
   
   abstract protected function getStudentSources();
   

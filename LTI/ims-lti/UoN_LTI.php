@@ -237,6 +237,19 @@ class UoN_LTI extends BLTI {
     }
   }
 
+  /**
+   * Load LTI integration based on config 
+   * @return object LTI integration
+   */
+  public function load() {
+      $configObject = Config::get_instance();
+      if ($configObject->get('lti_integration') == 'UoN') {
+          return new lti_uon_integration_extended();
+      } else {
+          return new lti_default_integration_extended();
+      }
+  }
+  
   function get_lti_keys($deleted = false) {
     $dataret = array();
     if ($this->parm['dbtype'] == 'mysqli') {
@@ -551,12 +564,13 @@ class UoN_LTI extends BLTI {
   /**
    * Function to lookup lti context
    * @param bool|string $lti_context_key optional the lti context key
-   * @return array|bool if false else array with context id and last updated time
+   * @return array|bool if false else array with module shortcode and last lti context updated time
    */
   function lookup_lti_context($lti_context_key = false) {
     if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
     if ($this->parm['dbtype'] == 'mysqli') {
-      $sql = "SELECT c_internal_id, updated_on FROM " . $this->parm['table_prefix'] . "lti_context WHERE lti_context_key = ?";
+      $sql = "SELECT m.moduleid, c.updated_on FROM " . $this->parm['table_prefix'] . "lti_context c, " . $this->parm['table_prefix'] . "modules m
+            WHERE c.c_internal_id = m.id AND lti_context_key = ?";
       $stmt = $this->db->prepare($sql);
       $db=$this->db;
       if ($db->error) {
@@ -575,11 +589,11 @@ class UoN_LTI extends BLTI {
       if ($rows < 1) {
         return false;
       }
-      $stmt->bind_result($c_internal_id, $updated_on);
+      $stmt->bind_result($moduleid, $updated_on);
       $stmt->fetch();
       $stmt->close();
     }
-    return (array($c_internal_id, $updated_on));
+    return (array($moduleid, $updated_on));
   }
 
 

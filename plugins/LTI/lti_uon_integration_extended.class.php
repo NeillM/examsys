@@ -25,46 +25,47 @@
  * @copyright Copyright (c) 2013 The University of Nottingham
  * @package
  */
-class lti_integration_extended extends lti_integration {
+class lti_uon_integration_extended extends lti_integration {
 
-  public $description = 'UoN';
+  static private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
+    'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology',
+    'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering',
+    'PC' => 'Chemistry', 'MC' => 'Public Health Medicine & Epidemiology', 'MG' => 'Obstetrics, Midwifery & Gynaecology',
+    'LI' => 'Trent Institute for Health Services Research', 'EV' => 'Structures', 'AB' => 'Classics', 'MR' => 'Pathology',
+    'PS' => 'Computer Science', 'LC' => 'Contemporary Chinese Studies', 'MZ' => 'Medicine', 'TT' => 'PGCE',
+    'AJ' => 'Critical Theory', 'RN' => 'Cultural Studies', 'LE' => 'Economics', 'EE' => 'Electrical & Electronic Engineering',
+    'EZ' => 'Engineering', 'IS' => 'Engineering Surveying & Space Geodesy', 'AE' => 'English', 'AR' => 'Modern Languages',
+    'EP' => 'Manufacturing Engineering & Operational Management', 'AF' => 'French', 'LQ' => 'Sociology',
+    'LG' => 'Geography', 'AG' => 'German', 'BR' => 'Training & Staff Development Unit', 'AS' => 'Portuguese',
+    'AH' => 'History', 'IT' => 'Information Technology', 'RH' => 'Institute of Hearing Research',
+    'NI' => 'Institute of Infections and Immunity', 'LW' => 'Institute of Work, Health & Organizations', 
+    'OI' => 'International Office', 'UL' => 'Language Centre', 'LL' => 'Law', 'PL' => 'Life & Env Sciences',
+    'EM' => 'Materials Engineering & Materials Design', 'PM' => 'Theoretical Mechanics', 'EA' => 'Mechanical Engineering',
+    'AM' => 'Music', 'ZN' => 'Ningbo', 'SHS' => 'Nursing', 'PA' => 'Pharmacy', 'AP' => 'Philosophy', 'PP' => 'Physics',
+    'LD' => 'Politics', 'LP' => 'Psychology', 'AV' => 'Slavonic Studies', 'AT' => 'Theology', 'SV' => 'Vet School');
 
-  static private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies', 'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology', 'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering', 'PC' => 'Chemistry', 'MC' => 'Public Health Medicine & Epidemiology', 'MG' => 'Obstetrics, Midwifery & Gynaecology', 'LI' => 'Trent Institute for Health Services Research', 'EV' => 'Structures', 'AB' => 'Classics', 'MR' => 'Pathology', 'PS' => 'Computer Science', 'LC' => 'Contemporary Chinese Studies', 'MZ' => 'Medicine', 'TT' => 'PGCE', 'AJ' => 'Critical Theory', 'RN' => 'Cultural Studies', 'LE' => 'Economics', 'EE' => 'Electrical & Electronic Engineering', 'EZ' => 'Engineering', 'IS' => 'Engineering Surveying & Space Geodesy', 'AE' => 'English', 'AR' => 'Modern Languages', 'EP' => 'Manufacturing Engineering & Operational Management', 'AF' => 'French', 'LQ' => 'Sociology', 'LG' => 'Geography', 'AG' => 'German', 'BR' => 'Training & Staff Development Unit', 'AS' => 'Portuguese', 'AH' => 'History', 'IT' => 'Information Technology', 'RH' => 'Institute of Hearing Research', 'NI' => 'Institute of Infections and Immunity', 'LW' => 'Institute of Work, Health & Organizations', 'OI' => 'International Office', 'UL' => 'Language Centre', 'LL' => 'Law', 'PL' => 'Life & Env Sciences', 'EM' => 'Materials Engineering & Materials Design', 'PM' => 'Theoretical Mechanics', 'EA' => 'Mechanical Engineering', 'AM' => 'Music', 'ZN' => 'Ningbo', 'SHS' => 'Nursing', 'PA' => 'Pharmacy', 'AP' => 'Philosophy', 'PP' => 'Physics', 'LD' => 'Politics', 'LP' => 'Psychology', 'AV' => 'Slavonic Studies', 'AT' => 'Theology', 'SV' => 'Vet School');
-
-  //REMOVED as no longer used by lti as this is done at the authentication layer
-  static function user_add($username, $password) {
-  }
-
-  static function user_time_check($time, $user = '') {
+  /**
+   * Check last time logged in and decide if re-authentication should be done
+   * @param string $time last time logged in
+   * @return bool true if user require re-authentication 
+   */
+  public function user_time_check($time) {
     $time1 = strtotime($time);
     $time2 = time();
     $timediff = $time2 - $time1;
+    $timediff = $time2 - $time1;
     if ($timediff > (60 * 60 * 24 * 7 * 15)) {
-      //if ($timediff > (60 * 60 * 1)) {
       return true;
     }
-
     return false;
   }
 
-  static function allow_staff_edit_link() {
-    return false;
-  }
-
-  static function allow_module_self_reg($data) {
-    return true;
-  }
-
-  static function allow_staff_module_register($data) {
-    return true;
-  }
-
-  static function allow_module_create($data) {
-    return true;
-  }
-
-  static function sms_api($data) {
-    global $mysqli;
+  /**
+   * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
+   * @param array $data module data from module_code_translate
+   * @return string SMS url
+   */
+  public function sms_api($data) {
 
     if ($data[0] != 'SMS') {
       return '';
@@ -105,41 +106,25 @@ class lti_integration_extended extends lti_integration {
 
   }
 
-  static function module_code_translated_store($data) {
-    $return = '';
-    foreach ($data as $k => $v) {
-      if ($v[2] == '') {
-        $v[2] = 'UK';
-      }
-      $module = $v[1];
-      $replaced_module = str_replace('_UNMC', '', $module);
-      $replaced_module = str_replace('_UNNC', '', $replaced_module);
-      $v[1] = $replaced_module;
+  /**
+   * Convert VLE module shortcode into Rogo moduleid 
+   * @param mysqli $mysqli db connection
+   * @param string $moduleshortcode VLE module shortcode
+   * @param string $course_title VLE module title
+   * @return array rogo module information
+   */
+  public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ') {
 
-      $extra = '';
-      if ($v[0] == 'Manual') {
-        $extra = 'ZZ-';
-      }
-      $return = $return . '-' . $extra . $v[1] . '-' . $v[2];
-    }
-    $return = substr($return, 1);
-
-    return $return;
-  }
-
-  static function module_code_translate($c_internal_id, $course_title = ' ') {
-
-    if (stripos($c_internal_id, ' ') !== false) {
-      self::invalid_module_code($c_internal_id, array(), 'initial blank check');
+    if (stripos($moduleshortcode, ' ') !== false) {
+      self::invalid_module_code($moduleshortcode, array(), 'initial blank check');
     }
 
     // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
     // shortname for real module try XXXXXX-YY-ZZZWWWW  WHERE XXXXXX is saturn code YY is country rest we dont care about.
     // shortname for non module VV-XXXXX-XXXXX-YY-WWWW WHERE XXXXXXXXXX is the fake 'module code'  YYY is country VV is DEPT 2 letter code
     // shortname for metamodules is XXXXXX-YY-XXXXXX-YY-XXXXXXX-YYY-ZZZWWWWW where the set of XXXXXX, YY are unknown
-    // convert vle module format into rogo format
 
-    $exploded = explode('-', $c_internal_id);
+    $exploded = explode('-', $moduleshortcode);
     $length = strlen($exploded[0]);
     $fin = strlen($course_title);
 
@@ -202,7 +187,7 @@ class lti_integration_extended extends lti_integration {
           $data[$k][5] = "SATURN " . $data[$k][5];
         } else {
           $sms->set_module($v[2]);
-          $returned = $sms->get_module_info($v[1]);
+          $returned = $sms->get_module_info($v[1], $mysqli);
           if ($returned !== false) {
             $data[$k][5] = $returned[1];
             $data[$k][3] = $returned[2];
@@ -213,7 +198,7 @@ class lti_integration_extended extends lti_integration {
       }
 
       if ($data[$k][1] == '') {
-        self::invalid_module_code($c_internal_id, $data, 'during loop');
+        self::invalid_module_code($moduleshortcode, $data, 'during loop');
       }
 
       if ($v[2] == 'MY') {
@@ -239,7 +224,7 @@ class lti_integration_extended extends lti_integration {
 
 
     if (count($data) === 0) {
-      self::invalid_module_code($c_internal_id, $data, 'no returned data');
+      self::invalid_module_code($moduleshortcode, $data, 'no returned data');
     }
 
     return $data;
