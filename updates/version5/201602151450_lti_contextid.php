@@ -7,9 +7,9 @@ if ($updater_utils->check_version("6.1.0")) {
         if ($lti_integration == 'UoN') {
             // Update context ids from short codes to module ids.
             $select_sql = "SELECT c.c_internal_id, m.id FROM lti_context c, modules m WHERE
-                (c.c_internal_id like '%-CN' and m.moduleid LIKE '%_UNNC' and SUBSTRING_INDEX(c.c_internal_id, '-', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
-                OR (c.c_internal_id like '%-MY' and m.moduleid LIKE '%_UNMC' and SUBSTRING_INDEX(c.c_internal_id, '-', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
-                OR (c.c_internal_id like '%-UK' and SUBSTRING_INDEX(c.c_internal_id, '-', 1) = m.moduleid);";
+                (m.moduleid LIKE '%_UNNC' and SUBSTRING_INDEX(c.c_internal_id, '-CN', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
+                OR (m.moduleid LIKE '%_UNMC' and SUBSTRING_INDEX(c.c_internal_id, '-MY', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
+                OR (SUBSTRING_INDEX(c.c_internal_id, '-UK', 1) = m.moduleid)";
             $modules = $mysqli->prepare($select_sql);
             $modules->execute();
             $modules->store_result();
