@@ -29,6 +29,11 @@ function error($error, $string, $mysqli, $configObject, $notice) {
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $error, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+// Exit if api not enabled.
+if (!$configObject->get('cfg_api_enabled')) {
+    error($string['pagenotfound'], $string, $mysqli, $configObject, $notice);
+}
+
 if (isset($_POST['submit'])) {
     $authorised = check_var('authorised', 'POST', true, false, true);
     $client_id = check_var('client_id', 'POST', true, false, true);
