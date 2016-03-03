@@ -10,11 +10,10 @@ if ($updater_utils->check_version("6.1.0")) {
             $select_sql = "SELECT c.c_internal_id, m.id FROM lti_context c, modules m WHERE
                 (m.moduleid LIKE '%\_UNNC' and SUBSTRING_INDEX(c.c_internal_id, '-CN', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
                 OR (m.moduleid LIKE '%\_UNMC' and SUBSTRING_INDEX(c.c_internal_id, '-MY', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
-                OR (SUBSTRING_INDEX(c.c_internal_id, '-UK', 1) = m.moduleid) UNION ALL
-                SELECT c.c_internal_id FROM lti_context c, modules m WHERE
-                (m.moduleid LIKE '%\_UNNMC' and SUBSTRING_INDEX (m.moduleid, '_', 1) = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-MY', 1))
+                OR (SUBSTRING_INDEX(c.c_internal_id, '-UK', 1) = m.moduleid)
+                OR ((m.moduleid LIKE '%\_UNNMC' and SUBSTRING_INDEX (m.moduleid, '_', 1) = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-MY', 1))
                 OR (m.moduleid LIKE '%\_UNNC' and SUBSTRING_INDEX (m.moduleid, '_', 1) = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-CN', 1))
-                OR (m.moduleid = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-UK', 1)) AND c_internal_id LIKE 'ZZ-%')";
+                OR (m.moduleid = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-UK', 1)) AND c_internal_id LIKE 'ZZ-%'))";
         } else {
             $select_sql = "SELECT c.c_internal_id, m.id FROM lti_context c, modules m WHERE c.c_internal_id = m.moduleid";
         }
