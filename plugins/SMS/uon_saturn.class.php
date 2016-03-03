@@ -31,7 +31,7 @@ Class UON_SATURN extends SmsUtils {
   public $campus;
   public $url;
 
-  function getUserData($username) {
+  public function getUserData($username) {
     $user = array();
     $sources = $this->getStudentSources();
     foreach ($sources as $name => $source) {
@@ -72,7 +72,7 @@ Class UON_SATURN extends SmsUtils {
    * @param mysqli $mysqli db connection
    * @return bool|string false on error, otherwise module data
    */
-  function get_module($moduleID, $mysqli) {
+  public function get_module($moduleID, $mysqli) {
     $users = array();
 
     // Calculate what the current academic session is.
@@ -111,7 +111,7 @@ Class UON_SATURN extends SmsUtils {
    * @param mysqli $mysqli db connection
    * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
    */
-  function get_module_info($moduleID, $mysqli) {
+  public function get_module_info($moduleID, $mysqli) {
     $xml = $this->get_module($moduleID, $mysqli);
 
     if (is_object($xml) and !(isset($xml->ErrorMessage) or isset($xml->Module->Error) or isset($xml->Module->ModuleError))) {
@@ -139,7 +139,7 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
-  function getModuleEnrolements($moduleID, $mysqli) {
+  public function getModuleEnrolements($moduleID, $mysqli) {
     $xml = $this->get_module($moduleID, $mysqli);
     foreach ($xml->Module->Membership->Student as $sms) {
       $sms->Title = trim($sms->Title);
@@ -172,7 +172,7 @@ Class UON_SATURN extends SmsUtils {
     }
   }
 
-  function getStudentSources() {
+  public function getStudentSources() {
     $configObject = Config::get_instance();
     return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get('cfg_sms_url') .
     '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get('cfg_sms_url') .
@@ -180,7 +180,7 @@ Class UON_SATURN extends SmsUtils {
     '/touchstonestudent.ashx?campus=china');
   }
 
-  function getModuleSources() {
+  public function getModuleSources() {
     $configObject = Config::get_instance();
     return array('UK' => $configObject->get('cfg_sms_url') .
     '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get('cfg_sms_url') .
@@ -189,7 +189,7 @@ Class UON_SATURN extends SmsUtils {
   }
 
 
-  function set_module($location) {
+  public function set_module($location) {
     if ($location == 'MY') {
       $location = 'Malaysia';
     } elseif ($location == 'CN') {
@@ -207,11 +207,11 @@ Class UON_SATURN extends SmsUtils {
     $this->campus = $location;
   }
 
-  function get_module_name($modulecode, $mysqli) {
+  public function get_module_name($modulecode, $mysqli) {
     $dat = $this->getModuleEnrolements($modulecode, $mysqli);
   }
 
-  function update_module_enrolement($module, $idMod, $sms_api, $mysqli, $session = 'NOTSET', $demomode = false) {
+  public function update_module_enrolement($module, $idMod, $sms_api, $mysqli, $session = 'NOTSET', $demomode = false) {
 
     $configObject = Config::get_instance();
     

@@ -35,7 +35,7 @@ Class GENERIC_SMS extends SmsUtils {
   public $url;
 
   //used to get user data but no longer used as abstracted out
-  function getUserData($username) {
+  public function getUserData($username) {
 //unused function now
   }
 
@@ -45,7 +45,7 @@ Class GENERIC_SMS extends SmsUtils {
    * @param mysqli $mysqli db connection
    * @return bool|string false on error, otherwise module data
    */
-  function get_module($moduleID, $mysqli) {
+  public function get_module($moduleID, $mysqli) {
 
     $configObj = Config::get_instance();
     //$lookup = Lookup::get_instance($configObj, $mysqli);
@@ -82,7 +82,7 @@ Class GENERIC_SMS extends SmsUtils {
    * @param mysqli $mysqli db connection
    * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
    */
-  function get_module_info($moduleID, $mysqli) { //previous logic included in the retreival of data
+  public function get_module_info($moduleID, $mysqli) { //previous logic included in the retreival of data
     $lookupdata = $this->get_module($moduleID, $mysqli);
 
     if ($lookupdata === false) {
@@ -103,7 +103,7 @@ Class GENERIC_SMS extends SmsUtils {
   }
 
 //gets a list of enroled users for the module listed
-  function getModuleEnrolements($moduleID, $mysqli) {
+  public function getModuleEnrolements($moduleID, $mysqli) {
     $lookupdata = $this->get_module($moduleID, $mysqli);
     foreach ($lookupdata->students as $sms) {
       $sms->Title = trim($sms->title);
@@ -137,22 +137,22 @@ Class GENERIC_SMS extends SmsUtils {
   }
 
  // appears unused
-  function getStudentSources() {
+  public function getStudentSources() {
     return array('&lt;No lookup&gt;' => '', 'Lookup' => 'lookupclass');
   }
 
   // returns an array with key as display name and value as item to save back to db for use with sms module sources
-  function getModuleSources() {
+  public function getModuleSources() {
     return array('Lookup' => 'lookupclass');
   }
 
 
-  function set_module($location) {
+  public function set_module($location) {
     //unused in generic
   }
 
   //appears pointless and unused
-  function get_module_name($modulecode, $mysqli) {
+  public function get_module_name($modulecode, $mysqli) {
     $dat = $this->getModuleEnrolements($modulecode, $mysqli);
   }
 
@@ -164,7 +164,7 @@ Class GENERIC_SMS extends SmsUtils {
 // sms_api is the sms api used for the module
 // mysqli is the mysqli object
 // session in the year
-  function update_module_enrolement($module, $idMod, $sms_api, $mysqli, $session = 'NOTSET') {
+  public function update_module_enrolement($module, $idMod, $sms_api, $mysqli, $session = 'NOTSET') {
 
     $yearutils = new yearutils($mysqli);
     if ($session == 'NOTSET') {
