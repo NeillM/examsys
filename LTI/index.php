@@ -217,7 +217,8 @@ if (!$lti->isInstructor()) {
           echo "\n</body>\n</html>\n";
           exit();
         }
-        if($problem === false and $modid != -1) {
+        // Only add context if not a metamodule (i.e. only one module to link to) and no issues have occured.
+        if (count($data) == 1 and $problem === false and $modid != -1) {
           $lti->add_lti_context($modid);
         }
       }
