@@ -108,19 +108,25 @@ if (!$lti->isInstructor()) {
     exit();
   } else {
     //valid data
-    list($mod, $upd) = $lti->lookup_lti_context();
+    $returned2 = $lti->lookup_lti_context();
+    if ($returned2 === false) {
+        $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+    } else {
+        $data = array(array('', $returned2[0]));
+    }
     $yearutils = new yearutils($mysqli);
     $session = $yearutils->get_current_session();
 
-    $returned_check = module_utils::get_full_details_by_name($mod, $mysqli);
-    // User not on module, have user details and LTI allows student self reg - enrol student.
-    if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $mod, $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg()) {
-      if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1) {
-        // Insert new module enrollment
-        UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $mod, 1, $session, $mysqli);
+    foreach ($data as $v) {
+      $returned_check = module_utils::get_full_details_by_name($v[1], $mysqli);
+      // User not on module, have user details and LTI allows student self reg - enrol student.
+      if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $v[1], $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg()) {
+        if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1) {
+          // Insert new module enrollment
+          UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $v[1], 1, $session, $mysqli);
+        }
       }
     }
-    
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../paper/user_index.php?id=" . $returned[0]);
     echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
