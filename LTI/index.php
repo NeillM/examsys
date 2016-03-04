@@ -221,19 +221,18 @@ if (!$lti->isInstructor()) {
           $lti->add_lti_context($modid);
         }
       }
-      $returned2 = $lti->lookup_lti_context();
     } else {
         $data = array(array('', $returned2[0]));
-    }
-    foreach ($data as $v) {
-      // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
-      if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1], $mysqli) ) {
-        UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
-      // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
-      } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i->allow_staff_module_register()) {
-        UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
-        echo "\n</body>\n</html>\n";
-        exit();
+        foreach ($data as $v) {
+        // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
+        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1], $mysqli) ) {
+          UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
+        // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
+        } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i->allow_staff_module_register()) {
+          UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
+          echo "\n</body>\n</html>\n";
+          exit();
+        }
       }
     }
     echo <<<END
