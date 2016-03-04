@@ -147,7 +147,7 @@ class lti_uon_integration_extended extends lti_integration {
   }
 
   /**
-   * Process module information from saturn based naming convnetion 
+   * Process module information from campus solutions based naming convnetion 
    * @param mysqli $mysqlidb connection
    * @param string $moduleshortcode module shortcode from VLE
    * @param string $course_title module title from VLE
