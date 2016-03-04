@@ -147,17 +147,6 @@ class lti_uon_integration_extended extends lti_integration {
   }
 
   /**
-   * Process module information from campus solutions based naming convnetion 
-   * @param mysqli $mysqlidb connection
-   * @param string $moduleshortcode module shortcode from VLE
-   * @param string $course_title module title from VLE
-   * @return array rogo module information
-   */
-  private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ') {
-      return array();
-  }
-  
-  /**
    * Check last time logged in and decide if re-authentication should be done
    * @param string $time last time logged in
    * @return bool true if user require re-authentication 
@@ -231,11 +220,8 @@ class lti_uon_integration_extended extends lti_integration {
       self::invalid_module_code($moduleshortcode, array(), 'initial blank check');
     }
 
-    if ($this->config->get('cfg_sms_api') == 'uon_saturn') {
-        $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
-    } else {
-        $data = $this->process_cs_naming_convention($mysqli, $moduleshortcode, $course_title);
-    }
+    $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
+    
     
     // return the data
     // returning an array containing an array, description of inner array
