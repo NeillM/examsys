@@ -222,7 +222,6 @@ class lti_uon_integration_extended extends lti_integration {
 
     $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
     
-    
     // return the data
     // returning an array containing an array, description of inner array
     // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
