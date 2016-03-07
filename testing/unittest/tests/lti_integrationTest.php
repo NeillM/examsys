@@ -48,6 +48,15 @@ class lti_integrationtest extends unittestdatabase {
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+        // UoN meta module.
+        $moduleshortcode = 'CS11JA-CN-AUT-CS11JB-CN-SPR-1213';
+        $moduletitle = '10 Credits Stage 1 Japanese (CS11JA CN AUT) (CS11JB CN SPR) (12-13) [p]';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('SMS', 'CS11JA_UNNC', 'CN', 'UNKNOWN School', 0, "SATURN MISSING:10 Credits Stage 1 Japanese"),
+            array('SMS', 'CS11JB_UNNC', 'CN', 'UNKNOWN School', 0, "SATURN MISSING:10 Credits Stage 1 Japanese"));
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
         // Default.
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');

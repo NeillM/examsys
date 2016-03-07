@@ -108,19 +108,25 @@ if (!$lti->isInstructor()) {
     exit();
   } else {
     //valid data
-    list($mod, $upd) = $lti->lookup_lti_context();
+    $returned2 = $lti->lookup_lti_context();
+    if ($returned2 === false) {
+        $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+    } else {
+        $data = array(array('', $returned2[0]));
+    }
     $yearutils = new yearutils($mysqli);
     $session = $yearutils->get_current_session();
 
-    $returned_check = module_utils::get_full_details_by_name($mod, $mysqli);
-    // User not on module, have user details and LTI allows student self reg - enrol student.
-    if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $mod, $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg()) {
-      if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1) {
-        // Insert new module enrollment
-        UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $mod, 1, $session, $mysqli);
+    foreach ($data as $moduleinfo) {
+      $returned_check = module_utils::get_full_details_by_name($moduleinfo[1], $mysqli);
+      // User not on module, have user details and LTI allows student self reg - enrol student.
+      if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $moduleinfo[1], $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg()) {
+        if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1) {
+          // Insert new module enrollment
+          UserUtils::add_student_to_module_by_name($userObject->get_user_ID(), $moduleinfo[1], 1, $session, $mysqli);
+        }
       }
     }
-    
     $_SESSION['lti']['paperlink'] = $returned[0];
     header("location: ../paper/user_index.php?id=" . $returned[0]);
     echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
@@ -168,15 +174,15 @@ if (!$lti->isInstructor()) {
       $modid = -1;
       //no context
       $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
-      $problem = false;
-      foreach ($data as $v) {
+      foreach ($data as $moduleinfo) {
+        $problem = false;
         // Module exists and staff user is enrolled on it - get module id.
-        if (module_utils::module_exists($v[1], $mysqli) and $userObject->is_staff_user_on_module($v[1])) {
-            $modid = module_utils::get_idMod($v[1], $mysqli);
+        if (module_utils::module_exists($moduleinfo[1], $mysqli) and $userObject->is_staff_user_on_module($moduleinfo[1])) {
+            $modid = module_utils::get_idMod($moduleinfo[1], $mysqli);
         // Module does not exist and LTI allowed to create modules - create module.
-        } elseif (!module_utils::module_exists($v[1], $mysqli) and $lti_i->allow_module_create() ) {
+        } elseif (!module_utils::module_exists($moduleinfo[1], $mysqli) and $lti_i->allow_module_create() ) {
           if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-            UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $v[1], '../artwork/exclamation_64.png','#C00000');
+            UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $moduleinfo[1], '../artwork/exclamation_64.png','#C00000');
             echo "\n</body>\n</html>\n";
             exit();
           }
@@ -187,7 +193,7 @@ if (!$lti->isInstructor()) {
           $neg_marking = 1;
 
           $selfEnroll = 0;
-          if ($v[0] == 'Manual') {
+          if ($moduleinfo[0] == 'Manual') {
             $selfEnroll = 1;
             $peer = 0;
             $external = 0;
@@ -195,43 +201,46 @@ if (!$lti->isInstructor()) {
             $mapping = 0;
             $neg_marking = 1;
           }
-          $sms_api = $lti_i->sms_api($v);
-          $schoolID = SchoolUtils::get_school_id_by_name($v[3], $mysqli);
-          $modid = module_utils::add_modules($v[1], $v[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1, '07/01');
+          $sms_api = $lti_i->sms_api($moduleinfo);
+          $schoolID = SchoolUtils::get_school_id_by_name($moduleinfo[3], $mysqli);
+          $modid = module_utils::add_modules($moduleinfo[1], $moduleinfo[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1, '07/01');
           if ($modid === false) {
             $problem = true;
           }
         // Module does not exist and LTI NOT allowed to create modules - display notice.
-        } elseif (!module_utils::module_exists($v[1], $mysqli) and !$lti_i->allow_module_create()) {
-          UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $v[1], '../artwork/exclamation_64.png','#C00000');
+        } elseif (!module_utils::module_exists($moduleinfo[1], $mysqli) and !$lti_i->allow_module_create()) {
+          UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $moduleinfo[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
           exit();
         }
         // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
-        if (!$userObject->is_staff_user_on_module($v[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($v[1],$mysqli) ) {
-          UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $v[1], $mysqli);
-          $modid = module_utils::get_idMod($v[1], $mysqli);
+        if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1],$mysqli) ) {
+          UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $moduleinfo[1], $mysqli);
+          $modid = module_utils::get_idMod($moduleinfo[1], $mysqli);
         // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
-        } elseif (!$userObject->is_staff_user_on_module($v[1]) and !$lti_i->allow_staff_module_register()) {
-          UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $v[1], '../artwork/exclamation_64.png','#C00000');
+        } elseif (!$userObject->is_staff_user_on_module($moduleinfo[1]) and !$lti_i->allow_staff_module_register()) {
+          UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $moduleinfo[1], '../artwork/exclamation_64.png','#C00000');
+          echo "\n</body>\n</html>\n";
+          exit();
+        }
+        // Only add context if not a metamodule (i.e. only one module to link to) and no issues have occured.
+        if (count($data) == 1 and $problem === false and $modid != -1) {
+          $lti->add_lti_context($modid);
+        }
+      }
+    } else {
+        $data = array(array('', $returned2[0]));
+        foreach ($data as $moduleinfo) {
+        // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
+        if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli) ) {
+          UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $moduleinfo[1], $mysqli);
+        // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
+        } elseif (!$userObject->is_staff_user_on_module($moduleinfo[1]) and !$lti_i->allow_staff_module_register()) {
+          UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $moduleinfo[1], '../artwork/exclamation_64.png','#C00000');
           echo "\n</body>\n</html>\n";
           exit();
         }
       }
-      if($problem === false and $modid != -1) {
-        $lti->add_lti_context($modid);
-      }
-      $returned2 = $lti->lookup_lti_context();
-    }
-    $mod = $returned2[0];
-    // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
-    if (!$userObject->is_staff_user_on_module($mod) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($mod, $mysqli) ) {
-      UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $mod, $mysqli);
-    // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
-    } elseif (!$userObject->is_staff_user_on_module($mod) and !$lti_i->allow_staff_module_register()) {
-      UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $mod, '../artwork/exclamation_64.png','#C00000');
-      echo "\n</body>\n</html>\n";
-      exit();
     }
     echo <<<END
 <!DOCTYPE html>
@@ -268,22 +277,41 @@ END;
     @ob_start();
     
     // If there is a context and therefore a course already selected display that.
-    echo '<h1>' . sprintf($string['module'], $mod) . '</h1>';
+    $modules = '';
+    $exit = 0;
+
+    foreach ($data as $moduleinfo) {
+      $modules = $modules . ', ' . $moduleinfo[1];
+      if ($moduleinfo[1] == '') {
+        $exit = 1;
+      }
+    }
+    $modules = substr($modules, 2);
+    
+    echo '<h1>' . sprintf($string['module'], $modules) . '</h1>';
     $msg = 'First time configuration. Please select the paper you wish to use in this external tool link.';
     echo $notice->info_strip($msg, 100);
     
     echo '<form method="post" autocomplete="off">';
-    list($block_id, $plk) = listtreemodules($mysqli, $mod, $block_id, $plk, true);
+    foreach ($data as $moduleinfo) {
+      $moduleid = $moduleinfo[1];
+
+      list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
+    }
     echo "<br /><div><input type=\"submit\" name=\"submit\" value=\"" . $string['ok'] . "\" class=\"ok\" style=\"margin-left:20px\" /></form></div></form>\n";
     echo '<br />';
-
+    if ($exit == 1) {
+      $plk = 0;
+      $modules = "Undefined Module. Please contact Support.";
+    }
+    
     if ($plk == 0) {
       @ob_clean();
       unset($_SESSION['_lti_context']);
       unset($_SESSION['lti']);
       UserNotices::display_notice($string['NoPapers'], $string['NoPapersDesc'], '../artwork/access_denied.png', '#C00000');
 
-      echo '<p>Module(s): ' . $mod . '</p>';
+      echo '<p>Module(s): ' . $modules . '</p>';
     }
   }
 }

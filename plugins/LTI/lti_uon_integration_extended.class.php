@@ -45,85 +45,17 @@ class lti_uon_integration_extended extends lti_integration {
     'LD' => 'Politics', 'LP' => 'Psychology', 'AV' => 'Slavonic Studies', 'AT' => 'Theology', 'SV' => 'Vet School');
 
   /**
-   * Check last time logged in and decide if re-authentication should be done
-   * @param string $time last time logged in
-   * @return bool true if user require re-authentication 
-   */
-  public function user_time_check($time) {
-    $time1 = strtotime($time);
-    $time2 = time();
-    $timediff = $time2 - $time1;
-    $timediff = $time2 - $time1;
-    if ($timediff > (60 * 60 * 24 * 7 * 15)) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
-   * @param array $data module data from module_code_translate
-   * @return string SMS url
-   */
-  public function sms_api($data) {
-
-    if ($data[0] != 'SMS') {
-      return '';
-    }
-    $SMS = SmsUtils::GetSmsUtils();
-    if ($SMS === false) {
-      $configObject = Config::get_instance();
-      $notice = UserNotices::get_instance();
-      $userObject = UserObject::get_instance();
-
-      $userid = 0;
-      $username = 'PRE LOGIN';
-      if (isset($userObject)) {
-        $userid = $userObject->get_user_ID();
-        $username = $userObject->get_username();
-      }
-			$error_type = 'Notice';
-      $errstr = 'ROGO:SMS not correctly setup';
-      $errfile = 'lti_integration.php';
-      if (is_null($configObject->get('cfg_db_port'))) {
-        $configObject->set('cfg_db_port', 3306);
-      }
-      // Query may fail if we try to insert while another statement is open.
-      // Since we don't have a handle on the original statement, create another DB link
-      $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
-
-      $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-      $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
-      $log_error->execute();
-      $log_error->close();
-			
-      return '';
-    } else {
-      $SMS->set_module($data[2]);
-			
-      return $SMS->url;
-    }
-
-  }
-
-  /**
-   * Convert VLE module shortcode into Rogo moduleid 
-   * @param mysqli $mysqli db connection
-   * @param string $moduleshortcode VLE module shortcode
-   * @param string $course_title VLE module title
+   * Process module information from saturn based naming convnetion 
+   * @param mysqli $mysqlidb connection
+   * @param string $moduleshortcode module shortcode from VLE
+   * @param string $course_title module title from VLE
    * @return array rogo module information
    */
-  public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ') {
-
-    if (stripos($moduleshortcode, ' ') !== false) {
-      self::invalid_module_code($moduleshortcode, array(), 'initial blank check');
-    }
-
+  private function process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title = ' ') {
     // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
     // shortname for real module try XXXXXX-YY-ZZZWWWW  WHERE XXXXXX is saturn code YY is country rest we dont care about.
     // shortname for non module VV-XXXXX-XXXXX-YY-WWWW WHERE XXXXXXXXXX is the fake 'module code'  YYY is country VV is DEPT 2 letter code
     // shortname for metamodules is XXXXXX-YY-XXXXXX-YY-XXXXXXX-YYY-ZZZWWWWW where the set of XXXXXX, YY are unknown
-
     $exploded = explode('-', $moduleshortcode);
     $length = strlen($exploded[0]);
     $fin = strlen($course_title);
@@ -211,9 +143,86 @@ class lti_uon_integration_extended extends lti_integration {
     if (count($data) == 1 and substr($data[0][5], 0, 8) == 'MISSING:' and strlen($data[0][5]) > 9) {
       $data[0][5] = substr($data[0][5], 8);
     }
+    return $data;
+  }
+
+  /**
+   * Check last time logged in and decide if re-authentication should be done
+   * @param string $time last time logged in
+   * @return bool true if user require re-authentication 
+   */
+  public function user_time_check($time) {
+    $time1 = strtotime($time);
+    $time2 = time();
+    $timediff = $time2 - $time1;
+    $timediff = $time2 - $time1;
+    if ($timediff > (60 * 60 * 24 * 7 * 15)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
+   * @param array $data module data from module_code_translate
+   * @return string SMS url
+   */
+  public function sms_api($data) {
+
+    if ($data[0] != 'SMS') {
+      return '';
+    }
+    $SMS = SmsUtils::GetSmsUtils();
+    if ($SMS === false) {
+      $notice = UserNotices::get_instance();
+      $userObject = UserObject::get_instance();
+
+      $userid = 0;
+      $username = 'PRE LOGIN';
+      if (isset($userObject)) {
+        $userid = $userObject->get_user_ID();
+        $username = $userObject->get_username();
+      }
+      $error_type = 'Notice';
+      $errstr = 'ROGO:SMS not correctly setup';
+      $errfile = 'lti_integration.php';
+      if (is_null($this->config->get('cfg_db_port'))) {
+        $this->config->set('cfg_db_port', 3306);
+      }
+      // Query may fail if we try to insert while another statement is open.
+      // Since we don't have a handle on the original statement, create another DB link
+      $mysqli2 = DBUtils::get_mysqli_link($this->config->get('cfg_db_host'), $this->config->get('cfg_db_username'), $this->config->get('cfg_db_passwd'), $this->config->get('cfg_db_database'), $this->config->get('cfg_db_charset'), $notice, $this->config->get('dbclass'), $this->config->get('cfg_db_port'));
+
+      $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
+      $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
+      $log_error->execute();
+      $log_error->close();
+			
+      return '';
+    } else {
+      $SMS->set_module($data[2]);
+			
+      return $SMS->url;
+    }
+
+  }
+
+  /**
+   * Convert VLE module shortcode into Rogo moduleid 
+   * @param mysqli $mysqli db connection
+   * @param string $moduleshortcode VLE module shortcode
+   * @param string $course_title VLE module title
+   * @return array rogo module information
+   */
+  public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ') {
+
+    if (stripos($moduleshortcode, ' ') !== false) {
+      self::invalid_module_code($moduleshortcode, array(), 'initial blank check');
+    }
+
+    $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
+    
     // return the data
-
-
     // returning an array containing an array, description of inner array
     // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
     // second is the module code
@@ -221,7 +230,6 @@ class lti_uon_integration_extended extends lti_integration {
     // fourth is School it belongs to as text
     // fifth is if its self registration module
     // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
-
 
     if (count($data) === 0) {
       self::invalid_module_code($moduleshortcode, $data, 'no returned data');
@@ -231,11 +239,10 @@ class lti_uon_integration_extended extends lti_integration {
   }
 
   static function invalid_module_code($c_internal_id, $data, $location = '') {
-    $configObject = Config::get_instance();
     $notices = UserNotices::get_instance();
     $notices->display_notice("Module code error", "There is a problem with the module code as the 
     translation code has resulted in an error.  Please contact Learning Team Support 
-    <a href=\"mailto:\"" . $configObject->get('support_email') . "\">" . $configObject->get('support_email') . "</a>  
+    <a href=\"mailto:\"" . $this->config->get('support_email') . "\">" . $this->config->get('support_email') . "</a>  
     Please include this debug info below:", '/artwork/access_denied.png', '#C00000');
 
     echo '<p>Incoming Module Code: ' . $c_internal_id . '</p>';
