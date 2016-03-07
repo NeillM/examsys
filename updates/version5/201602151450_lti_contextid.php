@@ -24,10 +24,10 @@ if ($updater_utils->check_version("6.1.0")) {
         // Update context ids from short codes to module ids.
         if ($lti_integration == 'UoN') {
             // Saturn modules and fake modules accounted for. Ignore meta modules.
-            $select_sql = "SELECT c.c_internal_id, m.id FROM lti_context c, modules m WHERE ((LENGTH(c.c_internal_id) - LENGTH(REPLACE(c.c_internal_id, '-', ''))) = 1
-                AND ((m.moduleid LIKE '%\_UNNC' and SUBSTRING_INDEX(c.c_internal_id, '-CN', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
+            $select_sql = "SELECT c.c_internal_id, m.id FROM lti_context c, modules m WHERE
+                ((m.moduleid LIKE '%\_UNNC' and SUBSTRING_INDEX(c.c_internal_id, '-CN', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
                 OR (m.moduleid LIKE '%\_UNMC' and SUBSTRING_INDEX(c.c_internal_id, '-MY', 1) = SUBSTRING_INDEX (m.moduleid, '_', 1))
-                OR (SUBSTRING_INDEX(c.c_internal_id, '-UK', 1) = m.moduleid)))
+                OR (SUBSTRING_INDEX(c.c_internal_id, '-UK', 1) = m.moduleid))
                 OR ((m.moduleid LIKE '%\_UNNMC' and SUBSTRING_INDEX (m.moduleid, '_', 1) = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-MY', 1))
                 OR (m.moduleid LIKE '%\_UNNC' and SUBSTRING_INDEX (m.moduleid, '_', 1) = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-CN', 1))
                 OR (m.moduleid = SUBSTRING_INDEX(SUBSTRING(c_internal_id, 4), '-UK', 1)) AND c_internal_id LIKE 'ZZ-%')";
