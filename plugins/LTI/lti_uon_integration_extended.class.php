@@ -183,7 +183,7 @@ class lti_uon_integration_extended extends lti_integration {
         $userid = $userObject->get_user_ID();
         $username = $userObject->get_username();
       }
-			$error_type = 'Notice';
+      $error_type = 'Notice';
       $errstr = 'ROGO:SMS not correctly setup';
       $errfile = 'lti_integration.php';
       if (is_null($this->config->get('cfg_db_port'))) {

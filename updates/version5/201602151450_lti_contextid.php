@@ -4,6 +4,23 @@ if ($updater_utils->check_version("6.1.0")) {
     if (!$updater_utils->has_updated('rogo1642_lticontextid')) {
         $configObj = Config::get_instance();
         $lti_integration = $configObj->get('lti_integration');
+        // Delete metamodule contet links as they make no sense.
+        if ($lti_integration == 'UoN') {
+            $select_sql = "SELECT c.c_internal_id FROM lti_context c WHERE (LENGTH(c.c_internal_id) - LENGTH(REPLACE(c.c_internal_id, '-', ''))) > 1
+                AND c.c_internal_id NOT LIKE 'ZZ-%'";
+            $modules = $mysqli->prepare($select_sql);
+            $modules->execute();
+            $modules->store_result();
+            $modules->bind_result($id);
+            while ($modules->fetch()) {
+                $delete_sql = "DELETE FROM lti_context WHERE c_internal_id = ?";
+                $delete = $mysqli->prepare($delete_sql);
+                $delete->bind_param('s', $id);
+                $delete->execute();
+                $delete->close();
+            }
+            $modules->close();
+        }
         // Update context ids from short codes to module ids.
         if ($lti_integration == 'UoN') {
             // Saturn modules and fake modules accounted for. Ignore meta modules.
@@ -29,23 +46,6 @@ if ($updater_utils->check_version("6.1.0")) {
             $update->close();
         }
         $modules->close();
-        // Delete metamodule contet links as they make no sense.
-        if ($lti_integration == 'UoN') {
-            $select_sql = "SELECT c.c_internal_id FROM lti_context c WHERE (LENGTH(c.c_internal_id) - LENGTH(REPLACE(c.c_internal_id, '-', ''))) > 1
-                AND c.c_internal_id NOT LIKE 'ZZ-%'";
-            $modules = $mysqli->prepare($select_sql);
-            $modules->execute();
-            $modules->store_result();
-            $modules->bind_result($id);
-            while ($modules->fetch()) {
-                $delete_sql = "DELETE FROM lti_context WHERE c_internal_id = ?";
-                $delete = $mysqli->prepare($delete_sql);
-                $delete->bind_param('s', $id);
-                $delete->execute();
-                $delete->close();
-            }
-            $modules->close();
-        }
         // Add alter context id to be integer
         $altersql = "ALTER TABLE lti_context MODIFY COLUMN `c_internal_id` int(11) NOT NULL";
         $updater_utils->execute_query($altersql, true);
