@@ -100,7 +100,8 @@ abstract class rogo_directory {
    * @return boolean true on correct, false otherwise.
    */
   public function check_permissions() {
-    if (!is_writable($this->location())) {
+    $location = $this->location();
+    if (!is_writable($location) || !is_readable($location)) {
       return false;
     }
     return true;
@@ -121,8 +122,8 @@ abstract class rogo_directory {
    */
   public function create() {
     $directory = $this->location();
-    if (!file_exists($directory)) {
-      mkdir($directory, $this->filepermissions, true);
+    if (!file_exists($directory) && !mkdir($directory, $this->filepermissions, true)) {
+      throw new directory_not_found('rogo_data');
     }
   }
 
@@ -193,7 +194,6 @@ abstract class rogo_directory {
     if (empty(self::$loaded[$type])) {
       // Try to find the directory class.
       if (!class_exists($type)) {
-        var_dump($type);
         throw new directory_not_found($type);
       }
       // Check that it is a valid directory class.
