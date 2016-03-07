@@ -51,6 +51,58 @@ class lti_uon_integration_extended extends lti_integration {
    * @param string $course_title module title from VLE
    * @return array rogo module information
    */
+  private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ') {
+    // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
+    // shortname for real module try XXXXYYYY-Z-AAAA-BBB-CCCC  WHERE XXXXYYYY is the module code, Z is the offering,
+    // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
+    // shortname for metamodules is XXXXYYYY-Z-AAAA-BBB-XXXXYYYY-Z-AAAA-BBB-CCCC where the set of XXXXYYYY-Z-AAAA-BBB are unknown
+    $data = array();
+    $fin = strlen($course_title);
+    if (strpos($course_title, '(') !== false) $fin = strpos($course_title, '(') - 1;
+    $course_title = substr($course_title, 0, $fin);
+    // Regeular expression to match XXXXYYYY-Z-AAAA-BBB occurences in module shortcode, this will also catch meta modules.
+    preg_match_all("/[A-Z]{4}[0-9]{4}[\-][0-9][\-](?:UNNC|UNUK|UNMC)[\-][A-Z]{3}/", $moduleshortcode, $matchedmodules);
+    if (count($matchedmodules) > 0) {
+      foreach ($matchedmodules as $modules) {
+        foreach ($modules as $info) {
+          $exploded = explode('-', $info);
+          if ($exploded[2] != 'UNUK') {
+              $exploded[0] .= '_' . $exploded[2];
+          }
+          $data[] = array('SMS', $exploded[0], $exploded[2], 'UNKNOWN School', 0, "MISSING:$course_title");
+        }
+      }
+    }
+    if (count($data) == 0) {
+      // Fake module.
+      // shortname for non module ZZ-XXXX-YYYY where ZZ is the two letter department code, XXXX is the module name (any length)
+      // YYYY is the campus.
+      preg_match("/^[A-Z][A-Z][\-][A-Z]+[\-](?:UNNC|UNUK|UNMC)$/", $moduleshortcode, $manualmatchedmodules);
+      if (count($manualmatchedmodules) > 0) {
+        foreach ($manualmatchedmodules as $info) {
+          $exploded = explode('-', $info);
+          if ($exploded[2] != 'UNUK') {
+              $exploded[1] .= '_' . $exploded[2];
+          }
+          $schoolname = 'UNKNOWN School';
+          if (isset($this->dept_code[$exploded[0]])) {
+            $schoolname = $this->dept_code[$exploded[0]];
+          }
+          $data[] = array('Manual', $exploded[1], $exploded[2], $schoolname, 1, "MISSING:$course_title");
+        }
+      }
+    }
+ 
+    return $data;
+  }
+
+  /**
+   * Process module information from saturn based naming convnetion 
+   * @param mysqli $mysqlidb connection
+   * @param string $moduleshortcode module shortcode from VLE
+   * @param string $course_title module title from VLE
+   * @return array rogo module information
+   */
   private function process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title = ' ') {
     // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
     // shortname for real module try XXXXXX-YY-ZZZWWWW  WHERE XXXXXX is saturn code YY is country rest we dont care about.
@@ -76,8 +128,8 @@ class lti_uon_integration_extended extends lti_integration {
       }
       $modcode = substr($modcode, 1);
       $schoolname = 'UNKNOWN School';
-      if (isset(self::$dept_code[$exploded[0]])) {
-        $schoolname = self::$dept_code[$exploded[0]];
+      if (isset($this->dept_code[$exploded[0]])) {
+        $schoolname = $this->dept_code[$exploded[0]];
       }
       $selfreg = 1;
       if ($course_title == ' ') {
@@ -130,7 +182,7 @@ class lti_uon_integration_extended extends lti_integration {
       }
 
       if ($data[$k][1] == '') {
-        self::invalid_module_code($moduleshortcode, $data, 'during loop');
+        return false;
       }
 
       if ($v[2] == 'MY') {
@@ -217,11 +269,14 @@ class lti_uon_integration_extended extends lti_integration {
   public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ') {
 
     if (stripos($moduleshortcode, ' ') !== false) {
-      self::invalid_module_code($moduleshortcode, array(), 'initial blank check');
+      return false;
     }
-
-    $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
-    
+    // Different process depending on sms.
+    if ($this->config->get('cfg_sms_api') == 'uon_saturn') {
+      $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
+    } else {
+      $data = $this->process_cs_naming_convention($mysqli, $moduleshortcode, $course_title);
+    }
     // return the data
     // returning an array containing an array, description of inner array
     // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
@@ -232,22 +287,9 @@ class lti_uon_integration_extended extends lti_integration {
     // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
 
     if (count($data) === 0) {
-      self::invalid_module_code($moduleshortcode, $data, 'no returned data');
+      return false;
     }
 
     return $data;
-  }
-
-  static function invalid_module_code($c_internal_id, $data, $location = '') {
-    $notices = UserNotices::get_instance();
-    $notices->display_notice("Module code error", "There is a problem with the module code as the 
-    translation code has resulted in an error.  Please contact Learning Team Support 
-    <a href=\"mailto:\"" . $this->config->get('support_email') . "\">" . $this->config->get('support_email') . "</a>  
-    Please include this debug info below:", '/artwork/access_denied.png', '#C00000');
-
-    echo '<p>Incoming Module Code: ' . $c_internal_id . '</p>';
-    echo "<p>At: $location</p>";
-
-    exit();
   }
 }

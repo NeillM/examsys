@@ -111,6 +111,12 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
     if ($returned2 === false) {
         $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+        if ($data === false) {
+            $notices = UserNotices::get_instance();
+            $notices->display_notice($string['moduletranslateerror'], sprintf($string['moduletranslatemessage'], $configObject->get('support_email'), $configObject->get('support_email')), '/artwork/access_denied.png');
+            echo sprintf($string['moduletranslatecode'], $lti->getCourseName());
+            exit();
+        }
     } else {
         $data = array(array('', $returned2[0]));
     }
@@ -174,6 +180,12 @@ if (!$lti->isInstructor()) {
       $modid = -1;
       //no context
       $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+      if ($data === false) {
+            $notices = UserNotices::get_instance();
+            $notices->display_notice($string['moduletranslateerror'], sprintf($string['moduletranslatemessage'], $configObject->get('support_email'), $configObject->get('support_email')), '/artwork/access_denied.png');
+            echo sprintf($string['moduletranslatecode'], $lti->getCourseName());
+            exit();
+      }
       foreach ($data as $moduleinfo) {
         $problem = false;
         // Module exists and staff user is enrolled on it - get module id.

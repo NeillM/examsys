@@ -26,6 +26,7 @@ $string['NotAddedToModule'] = 'Adding to Module Team is not enabled in the confi
 
 $string['NoModCreateTitle2'] = 'Module Creation not run';
 $string['NoModCreate2'] = 'Module Creation from LTI has not run as the user does not have permission, so we cannot create the module with course code: ';
-
-
+$string['moduletranslateerror'] = 'Module code error';
+$string['moduletranslatemessage'] = 'There is a problem with the module code as the translation code has resulted in an error. Please contact Learning Team Support <a href="mailto:%s">%s</a>';
+$string['moduletranslatecode'] = '<p>Incoming Module Code: %s</p>'
 ?>
