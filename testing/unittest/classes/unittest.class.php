@@ -26,17 +26,19 @@ use org\bovigo\vfs\vfsStream;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class UnitTest extends \PHPUnit_Framework_TestCase {
+abstract class UnitTest extends \PHPUnit_Framework_TestCase {
   /** @var object $default_config config object used during test. */
   public $config;
 
   /** @var object $default_config config object used to reset test. */
   public $default_config;
 
+  /** The name of the Rogo data directory in the virtual file system. */
   const DATA_DIRECTORY = 'data';
-  
+
   /**
    * Set-up config and db connections.
+   * @return void
    */
   public function setUp() {
     parent::setUp();
@@ -49,7 +51,7 @@ class UnitTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * Tear down config object and close db connections.
-   * @return  
+   * @return void
    */
   public function tearDown() {
     // Reset the config object.
