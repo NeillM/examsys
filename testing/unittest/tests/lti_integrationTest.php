@@ -34,6 +34,42 @@ class lti_integrationtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "lti_integrationTest" . DIRECTORY_SEPARATOR . "lti_integration.yml");
     }
     /**
+     * Test sms spi - saturn sms
+     * @group lti
+     */
+    public function test_sms_api_saturn() {
+        // Saturn module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', 'uon_saturn');
+        $data = array('SMS', 'B34ADD', 'UK', 'UNKNOWN School', 0, "SATURN MISSING:Advanced Drug Discovery");
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $expected = '/touchstone.ashx?campus=uk';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+        // Fake module.
+        $data = array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, "Fake module");
+        $expected = '';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+    }
+    /**
+     * Test sms spi - campus sms
+     * @group lti
+     */
+    public function test_sms_api_cs() {
+        // Saturn module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $data = array('SMS', 'COMP1002', 'UNUK', 'UNKNOWN School', 0, "Mathematics for Computer Science");
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $expected = 'LTI';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+        // Fake module.
+        $data = array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, "Fake module");
+        $expected = '';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+    }
+    /**
      * Test module code translate - saturn sms
      * @group lti
      */
@@ -81,7 +117,7 @@ class lti_integrationtest extends unittestdatabase {
         $moduleshortcode = 'COMP1112-3-UNUK-SPR-1617';
         $moduletitle = 'Mathematics for Computer Science';
         $exploded = explode('-', $moduleshortcode);
-        $expected = array(array('SMS', $exploded[0], 'UNUK', 'UNKNOWN School', 0, "MISSING:$moduletitle"));
+        $expected = array(array('SMS', $exploded[0], 'UNUK', 'UNKNOWN School', 0, $moduletitle));
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
@@ -89,8 +125,8 @@ class lti_integrationtest extends unittestdatabase {
         $moduleshortcode = 'COMP1111-2-UNNC-SPR-COMP1112-3-UNUK-SPR-1617';
         $moduletitle = 'Mathematics for Computer Science (COMP1111 CN SPR) (COMP1112 UK SPR) (16-17) [p]';
         $exploded = explode('-', $moduleshortcode);
-        $expected = array(array('SMS', 'COMP1111_UNNC', 'UNNC', 'UNKNOWN School', 0, "MISSING:Mathematics for Computer Science"),
-            array('SMS', 'COMP1112', 'UNUK', 'UNKNOWN School', 0, "MISSING:Mathematics for Computer Science"));
+        $expected = array(array('SMS', 'COMP1111_UNNC', 'UNNC', 'UNKNOWN School', 0, "Mathematics for Computer Science"),
+            array('SMS', 'COMP1112', 'UNUK', 'UNKNOWN School', 0, "Mathematics for Computer Science"));
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
@@ -98,7 +134,7 @@ class lti_integrationtest extends unittestdatabase {
         $moduleshortcode = 'ZZ-FAKE-UNNC';
         $moduletitle = 'Fake module';
         $exploded = explode('-', $moduleshortcode);
-        $expected = array(array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, "MISSING:$moduletitle"));
+        $expected = array(array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, $moduletitle));
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
