@@ -88,7 +88,10 @@ class lti_uon_integration_extended extends lti_integration {
           if (isset($this->dept_code[$exploded[0]])) {
             $schoolname = $this->dept_code[$exploded[0]];
           }
-          $data[] = array('Manual', $exploded[1], $exploded[2], $schoolname, 1, "MISSING:$course_title");
+          if ($course_title == ' ') {
+            $course_title = 'MISSING: ';
+          }
+          $data[] = array('Manual', $exploded[1], $exploded[2], $schoolname, 1, $course_title);
         }
       }
     }
@@ -101,7 +104,7 @@ class lti_uon_integration_extended extends lti_integration {
    * @param mysqli $mysqlidb connection
    * @param string $moduleshortcode module shortcode from VLE
    * @param string $course_title module title from VLE
-   * @return array rogo module information
+   * @return array|bool rogo module information or false on invalid module short code
    */
   private function process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title = ' ') {
     // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
@@ -264,7 +267,7 @@ class lti_uon_integration_extended extends lti_integration {
    * @param mysqli $mysqli db connection
    * @param string $moduleshortcode VLE module shortcode
    * @param string $course_title VLE module title
-   * @return array rogo module information
+   * @return array rogo module information or false on invalid module short code
    */
   public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ') {
 
