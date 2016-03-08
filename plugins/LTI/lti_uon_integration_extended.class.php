@@ -220,7 +220,7 @@ class lti_uon_integration_extended extends lti_integration {
   /**
    * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
    * @param array $data module data from module_code_translate
-   * @return string SMS url
+   * @return string|bool SMS url or false on exception
    */
   public function sms_api($data) {
 
@@ -229,8 +229,8 @@ class lti_uon_integration_extended extends lti_integration {
     }
     $SMS = SmsUtils::GetSmsUtils();
     if ($SMS === false) {
-      // No SMS used to control module creation.
-      return '';
+      // Attempting to create a module not via the SMS - exception.
+      return false;
     } else {
       $SMS->set_module($data[2]);
 			

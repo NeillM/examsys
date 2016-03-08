@@ -62,8 +62,7 @@ class lti_integrationtest extends unittestdatabase {
         $data = array('SMS', 'COMP1002', 'UNUK', 'UNKNOWN School', 0, "Mathematics for Computer Science");
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-        $expected = '';
-        $this->assertEquals($expected, $lti_i->sms_api($data));
+        $this->assertFalse($lti_i->sms_api($data));
         // Fake module.
         $data = array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, "Fake module");
         $expected = '';
