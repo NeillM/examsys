@@ -52,19 +52,12 @@ class lti_default_integration_extended  extends lti_integration {
   }
 
   /**
-   * Returns the sms url appropriate for the item element
+   * Returns the empty string as generic sms does not check against sms for modules also defualt lti only creates manual modules in module_code_translate
    * @param array $data module data from module_code_translate
    * @return string SMS url
    */
   public function sms_api($data) {
-
-    if ($data[0] != 'SMS') {
-      return '';
-    }
-    $SMS = SmsUtils::GetSmsUtils();
-
-    $SMS->set_module($data[2]);
-    return $SMS->url;
+    return '';
   }
 
 }

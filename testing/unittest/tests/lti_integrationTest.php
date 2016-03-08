@@ -69,6 +69,19 @@ class lti_integrationtest extends unittestdatabase {
         $this->assertEquals($expected, $lti_i->sms_api($data));
     }
     /**
+     * Test sms spi - generic sms
+     * @group lti
+     */
+    public function test_sms_api_default() {
+        // Generic module.
+        $this->config->set('lti_integration', 'default');
+        $this->config->set('cfg_sms_api', 'generic_sms');
+        // Fake module.
+        $data = array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, "Fake module");
+        $expected = '';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+    }
+    /**
      * Test module code translate - saturn sms
      * @group lti
      */
@@ -99,7 +112,7 @@ class lti_integrationtest extends unittestdatabase {
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
-        // UoN - saturn - invalid module.
+        // Invalid module.
         $moduleshortcode = 'INVALID';
         $moduletitle = 'Invalid module';
         $lti_i = $lti->load();
