@@ -64,35 +64,32 @@ class lti_uon_integration_extended extends lti_integration {
       $course_title = 'MISSING: ';
     }
     // Regeular expression to match XXXXYYYY-Z-AAAA-BBB occurences in module shortcode, this will also catch meta modules.
-    preg_match_all("/[A-Z]{4}[0-9]{4}[\-][0-9][\-](?:UNNC|UNUK|UNMC)[\-][A-Z]{3}/", $moduleshortcode, $matchedmodules);
-    if (count($matchedmodules) > 0) {
-      foreach ($matchedmodules as $modules) {
-        foreach ($modules as $info) {
-          $exploded = explode('-', $info);
-          if ($exploded[2] != 'UNUK') {
-              $exploded[0] .= '_' . $exploded[2];
-          }
-          $data[] = array('SMS', $exploded[0], $exploded[2], 'UNKNOWN School', 0, $course_title);
+    preg_match_all("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9])-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})/", $moduleshortcode, $info);
+    if (count($info) > 0) {
+      $i = 0;
+      foreach ($info['module'] as $module) {
+        $campus = $info['campus'][$i];
+        if ($campus != 'UNUK') {
+          $module .= '_' . $campus;
         }
+        $data[] = array('SMS', $module, $campus, 'UNKNOWN School', 0, $course_title);
+        $i++;
       }
     }
     if (count($data) == 0) {
       // Fake module.
       // shortname for non module ZZ-XXXX-YYYY where ZZ is the two letter department code, XXXX is the module name (any length)
       // YYYY is the campus.
-      preg_match("/^[A-Z][A-Z][\-][A-Z]+[\-](?:UNNC|UNUK|UNMC)$/", $moduleshortcode, $manualmatchedmodules);
-      if (count($manualmatchedmodules) > 0) {
-        foreach ($manualmatchedmodules as $info) {
-          $exploded = explode('-', $info);
-          if ($exploded[2] != 'UNUK') {
-              $exploded[1] .= '_' . $exploded[2];
-          }
-          $schoolname = 'UNKNOWN School';
-          if (isset($this->dept_code[$exploded[0]])) {
-            $schoolname = $this->dept_code[$exploded[0]];
-          }
-          $data[] = array('Manual', $exploded[1], $exploded[2], $schoolname, 1, $course_title);
+      preg_match("/^(?P<department>[A-Z][A-Z])-(?P<module>[A-Z]+)-(?P<campus>UNNC|UNUK|UNMC)$/", $moduleshortcode, $info);
+      if (count($info) > 0) {
+        if ($info['campus'] != 'UNUK') {
+          $info['module']  .= '_' . $info['campus'];
         }
+        $schoolname = 'UNKNOWN School';
+        if (isset($this->dept_code[$info['department']])) {
+          $schoolname = $this->dept_code[$info['department']];
+        }
+        $data[] = array('Manual', $info['module'] , $info['campus'], $schoolname, 1, $course_title);
       }
     }
  
