@@ -56,13 +56,13 @@ class lti_integrationtest extends unittestdatabase {
      * @group lti
      */
     public function test_sms_api_cs() {
-        // Saturn module.
+        // Campus solutions module.
         $this->config->set('lti_integration', 'UoN');
         $this->config->set('cfg_sms_api', '');
         $data = array('SMS', 'COMP1002', 'UNUK', 'UNKNOWN School', 0, "Mathematics for Computer Science");
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-        $expected = 'LTI';
+        $expected = '';
         $this->assertEquals($expected, $lti_i->sms_api($data));
         // Fake module.
         $data = array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, "Fake module");

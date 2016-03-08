@@ -229,8 +229,8 @@ class lti_uon_integration_extended extends lti_integration {
     }
     $SMS = SmsUtils::GetSmsUtils();
     if ($SMS === false) {
-      // No SMS used to control module creation so return LTI as the source.
-      return 'LTI';
+      // No SMS used to control module creation.
+      return '';
     } else {
       $SMS->set_module($data[2]);
 			
