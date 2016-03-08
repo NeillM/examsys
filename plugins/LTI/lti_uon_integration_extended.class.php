@@ -60,6 +60,9 @@ class lti_uon_integration_extended extends lti_integration {
     $fin = strlen($course_title);
     if (strpos($course_title, '(') !== false) $fin = strpos($course_title, '(') - 1;
     $course_title = substr($course_title, 0, $fin);
+    if ($course_title == ' ') {
+      $course_title = 'MISSING: ';
+    }
     // Regeular expression to match XXXXYYYY-Z-AAAA-BBB occurences in module shortcode, this will also catch meta modules.
     preg_match_all("/[A-Z]{4}[0-9]{4}[\-][0-9][\-](?:UNNC|UNUK|UNMC)[\-][A-Z]{3}/", $moduleshortcode, $matchedmodules);
     if (count($matchedmodules) > 0) {
@@ -69,7 +72,7 @@ class lti_uon_integration_extended extends lti_integration {
           if ($exploded[2] != 'UNUK') {
               $exploded[0] .= '_' . $exploded[2];
           }
-          $data[] = array('SMS', $exploded[0], $exploded[2], 'UNKNOWN School', 0, "MISSING:$course_title");
+          $data[] = array('SMS', $exploded[0], $exploded[2], 'UNKNOWN School', 0, $course_title);
         }
       }
     }
@@ -87,9 +90,6 @@ class lti_uon_integration_extended extends lti_integration {
           $schoolname = 'UNKNOWN School';
           if (isset($this->dept_code[$exploded[0]])) {
             $schoolname = $this->dept_code[$exploded[0]];
-          }
-          if ($course_title == ' ') {
-            $course_title = 'MISSING: ';
           }
           $data[] = array('Manual', $exploded[1], $exploded[2], $schoolname, 1, $course_title);
         }
@@ -229,31 +229,8 @@ class lti_uon_integration_extended extends lti_integration {
     }
     $SMS = SmsUtils::GetSmsUtils();
     if ($SMS === false) {
-      $notice = UserNotices::get_instance();
-      $userObject = UserObject::get_instance();
-
-      $userid = 0;
-      $username = 'PRE LOGIN';
-      if (isset($userObject)) {
-        $userid = $userObject->get_user_ID();
-        $username = $userObject->get_username();
-      }
-      $error_type = 'Notice';
-      $errstr = 'ROGO:SMS not correctly setup';
-      $errfile = 'lti_integration.php';
-      if (is_null($this->config->get('cfg_db_port'))) {
-        $this->config->set('cfg_db_port', 3306);
-      }
-      // Query may fail if we try to insert while another statement is open.
-      // Since we don't have a handle on the original statement, create another DB link
-      $mysqli2 = DBUtils::get_mysqli_link($this->config->get('cfg_db_host'), $this->config->get('cfg_db_username'), $this->config->get('cfg_db_passwd'), $this->config->get('cfg_db_database'), $this->config->get('cfg_db_charset'), $notice, $this->config->get('dbclass'), $this->config->get('cfg_db_port'));
-
-      $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-      $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data, $variables, $backtrace);
-      $log_error->execute();
-      $log_error->close();
-			
-      return '';
+      // No SMS used to control module creation so return LTI as the source.
+      return 'LTI';
     } else {
       $SMS->set_module($data[2]);
 			
