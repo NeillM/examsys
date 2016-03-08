@@ -380,7 +380,7 @@
       break;
   }
     
-  if (($properties->get_paper_type() != '6') && (strpos($checklist, 'stdset') !== false)) {
+  if(($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') && (strpos($checklist, 'stdset') !== false)) {
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/standards_setting_csv.php?',event)\">" . $string['standardssettingcsv'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/standards_setting_full_csv.php?',event)\">" . $string['standardssettingfullcsv'] . "</a></div>\n";
   }
