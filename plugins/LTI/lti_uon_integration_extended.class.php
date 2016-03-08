@@ -27,7 +27,7 @@
  */
 class lti_uon_integration_extended extends lti_integration {
 
-  static private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
+   private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
     'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology',
     'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering',
     'PC' => 'Chemistry', 'MC' => 'Public Health Medicine & Epidemiology', 'MG' => 'Obstetrics, Midwifery & Gynaecology',
@@ -61,7 +61,7 @@ class lti_uon_integration_extended extends lti_integration {
     if (strpos($course_title, '(') !== false) $fin = strpos($course_title, '(') - 1;
     $course_title = substr($course_title, 0, $fin);
     if ($course_title == ' ') {
-      $course_title = 'MISSING: ';
+      $course_title = 'MISSING COURSE TITLE';
     }
     // Regeular expression to match XXXXYYYY-Z-AAAA-BBB occurences in module shortcode, this will also catch meta modules.
     preg_match_all("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9])-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})/", $moduleshortcode, $info);
@@ -78,9 +78,9 @@ class lti_uon_integration_extended extends lti_integration {
     }
     if (count($data) == 0) {
       // Fake module.
-      // shortname for non module ZZ-XXXX-YYYY where ZZ is the two letter department code, XXXX is the module name (any length)
+      // shortname for non module ZZ-XXXX-YYYY where ZZ is the two/three letter department code, XXXX is the module name (any length)
       // YYYY is the campus.
-      preg_match("/^(?P<department>[A-Z][A-Z])-(?P<module>[A-Z]+)-(?P<campus>UNNC|UNUK|UNMC)$/", $moduleshortcode, $info);
+      preg_match("/^(?P<department>[A-Z]{2,3})-(?P<module>[A-Z]+)-(?P<campus>UNNC|UNUK|UNMC)$/", $moduleshortcode, $info);
       if (count($info) > 0) {
         if ($info['campus'] != 'UNUK') {
           $info['module']  .= '_' . $info['campus'];
