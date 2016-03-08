@@ -1917,10 +1917,13 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
   
   //gradebook setting
-  \$cfg_gradebook_enabled = false;
+  \$cfg_gradebook_enabled = true;
   
   //IMS enterprise setting
   \$cfg_ims_enabled = false;
+  
+  //API setting
+  \$cfg_api_enabled = true;
   ?>
 CONFIG;
 
