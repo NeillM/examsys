@@ -1820,7 +1820,7 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist
 
 \$lti_integration = 'default';
-
+\$lti_auth_timeout = 9072000; // length of lti authorisation in seconds
 
 \$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role');
 

@@ -346,6 +346,7 @@ class lti_integrationtest extends unittestdatabase {
         // Default.
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
+        $this->config->set('lti_auth_timeout', '9072000');
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertFalse($lti_i->user_time_check('now'));
