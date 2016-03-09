@@ -137,7 +137,7 @@ QUERY;
 
   // Get which papers a student has taken (for feedback purposes).
   $papers_taken = array();
-  $types = array(0, 1, 2);
+  $types = array(0, 1, 2, 5);
   foreach ($types as $type) {
     $log_query = "SELECT DISTINCT paperID FROM log$type, log_metadata WHERE log$type.metadataID = log_metadata.id AND userID = ?";
     $stmt = $mysqli->prepare($log_query);
@@ -167,7 +167,7 @@ QUERY;
   AND p.property_id = pm.property_id
   AND idMod = ?
   AND NOW() > f.date
-  AND p.paper_type IN ('0', '1', '2', '4')
+  AND p.paper_type IN ('0', '1', '2', '4', '5')
   AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
   AND p.end_date < NOW()
   ORDER BY p.paper_title
