@@ -45,8 +45,6 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
   }
 
   // Take Standards Setter straight to Standards Setter section
-  # @TODO: Check standard setting is enabled on paper
-  # if (strpos($checklist, 'stdset') !== false) {
   if ($userObj->has_role('Standards Setter')) {
     $href = "../std_setting/index.php?paperID=" . $property_id . "&folder=$folder&module=$module";
   } else {

@@ -578,25 +578,6 @@ class PaperProperties {
     $this->internal_reviewers = $internal_list;
   }
 
-  private function load_standards_setters() {
-    
-    // @TODO NEXT: ADD CODE FOR RETRIEVING LIST OF STANDARD SETTERS HERE 
-    $standards_setters_list = array();
-
-    $result = $this->db->prepare($q = "SELECT setterID, title, initials, surname FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? AND group_review = 'No'");    
-    $property_id = $this->get_property_id();
-    $result->bind_param('i', $property_id);
-    $result->execute();
-    $result->bind_result($setterID, $title, $initials, $surname);
-    while ($result->fetch()) {
-      $standards_setters_list[$setterID] = "$title $initials $surname";
-    }
-    $result->close();
-
-    $this->standards_setters = $standards_setters_list;
-
-  }
-
   public function get_summative_lock() {
     if (!isset($this->summative_lock)) {
       $this->load_summative_lock();
@@ -1532,24 +1513,6 @@ class PaperProperties {
    */
   public function set_internal_reviewers($internal_reviewers) {
     $this->internal_reviewers = $internal_reviewers;
-  }
-
-  /**
-   * @return string $standards_setters
-   */
-  public function get_standards_setters() {
-    if (!isset($this->standards_setters)) {
-      $this->load_standards_setters();
-    }
-
-    return $this->standards_setters;
-  }
-
-  /**
-   * @param string $standards_setters
-   */
-  public function set_standards_setters($standards_setters) {
-    $this->standards_setters = $standards_setters;
   }
 
   /**

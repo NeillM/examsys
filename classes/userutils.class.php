@@ -1,18 +1,18 @@
 <?php
-// This file is part of RogÅ
+// This file is part of Rogō
 //
-// RogÅ is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// RogÅ is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with RogÅ.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  *
@@ -254,7 +254,7 @@ Class UserUtils {
       return false;
     }
 
-    $salt = UserUtils::get_salt();
+		$salt = UserUtils::get_salt();
     $encrypt_password = encpw($salt, $username, $password);
 
     $stmt = $db->prepare("UPDATE users SET password = ?, password_expire = NULL WHERE id = ?");

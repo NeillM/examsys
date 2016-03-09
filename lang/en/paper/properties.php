@@ -117,11 +117,6 @@ $string['internalreviewers'] = 'Internal Reviewers';
 $string['externalexaminers'] = 'External Examiners';
 $string['deadline'] = 'Deadline:';
 
-// Standards Setting tab
-$string['standardssetterstab'] = 'Standards Setters';
-$string['standardssettersheading'] = 'Set standards setters and deadlines.';
-$string['standardssetters'] = 'Standards Setters';
-
 // Exam Rubric tab
 $string['rubrictab'] = 'Exam Rubric';
 $string['rubricheading'] = 'Exam rubric displayed to students before they start a summative exam.';
