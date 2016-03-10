@@ -64,7 +64,7 @@ class lti_uon_integration_extended extends lti_integration {
       $course_title = 'MISSING COURSE TITLE';
     }
     // Regeular expression to match XXXXYYYY-Z-AAAA-BBB occurences in module shortcode, this will also catch meta modules.
-    preg_match_all("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9])-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})/", $moduleshortcode, $info);
+    preg_match_all("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})/", $moduleshortcode, $info);
     if (count($info) > 0) {
       $i = 0;
       foreach ($info['module'] as $module) {
