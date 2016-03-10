@@ -39,127 +39,131 @@ $langpack = new \langpack();
 $api = new \api\api($app, $mysqli, $configObject);
 $api->set_header();
 
-// Request oauth token.
-$app->post('/requesttoken', function() use($oauth) {
-    $oauth->request_token();
-});
+// Only routes only available if enabled.
+if ($configObject->get('cfg_api_enabled')) {
 
-// Enrolment request.
-$app->post('/modulemanagement/enrol', function() use($api, $mysqli, $oauth, $render, $langpack) {
-    $request = 'modulemanagement';
-    $response = 'moduleManagementEnrolResponse';
-    $operations = array('enrol', 'unenrol');
-    $fields = array('userid', 'attempt', 'moduleid', 'session');
-    $xsd = 'enrolrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
-});
+    // Request oauth token.
+    $app->post('/requesttoken', function() use($oauth) {
+        $oauth->request_token();
+    });
 
-// Module management request.
-$app->post('/modulemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
-    $request = 'modulemanagement';
-    $response = 'moduleManagementResponse';
-    $operations = array('create', 'delete');
-    $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms');
-    $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
-});
+    // Enrolment request.
+    $app->post('/modulemanagement/enrol', function() use($api, $mysqli, $oauth, $render, $langpack) {
+        $request = 'modulemanagement';
+        $response = 'moduleManagementEnrolResponse';
+        $operations = array('enrol', 'unenrol');
+        $fields = array('userid', 'attempt', 'moduleid', 'session');
+        $xsd = 'enrolrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
+    });
 
-// Course management request.
-$app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
-    $request = 'coursemanagement';
-    $response = 'courseManagementResponse';
-    $operations = array('create', 'delete');
-    $fields = array('id', 'name', 'description', 'school', 'faculty');
-    $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
-});
+    // Module management request.
+    $app->post('/modulemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
+        $request = 'modulemanagement';
+        $response = 'moduleManagementResponse';
+        $operations = array('create', 'delete');
+        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms');
+        $xsd = 'managementrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
+    });
 
-// School management request.
-$app->post('/schoolmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
-    $request = 'schoolmanagement';
-    $response = 'schoolManagementResponse';
-    $operations = array('create', 'delete');
-    $fields = array('id', 'name', 'faculty');
-    $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
-});
+    // Course management request.
+    $app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
+        $request = 'coursemanagement';
+        $response = 'courseManagementResponse';
+        $operations = array('create', 'delete');
+        $fields = array('id', 'name', 'description', 'school', 'faculty');
+        $xsd = 'managementrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
+    });
 
-// Faculty management request.
-$app->post('/facultymanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
-    $request = 'facultymanagement';
-    $response = 'facultyManagementResponse';
-    $operations = array('create', 'delete');
-    $fields = array('id', 'name');
-    $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
-});
+    // School management request.
+    $app->post('/schoolmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
+        $request = 'schoolmanagement';
+        $response = 'schoolManagementResponse';
+        $operations = array('create', 'delete');
+        $fields = array('id', 'name', 'faculty');
+        $xsd = 'managementrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
+    });
 
-// User management request.
-$app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
-    $request = 'usermanagement';
-    $response = 'userManagementResponse';
-    $operations = array('create', 'delete');
-    $fields = array('id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
-        'course', 'gender', 'year', 'role', 'studentid', 'modules');
-    $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
-});
-// Assessment management request
-$app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
-    $request = 'assessmentmanagement';
-    $response = 'assessmentManagementResponse';
-    $operations = array('create', 'schedule', 'delete');
-    $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
-        'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
-    $xsd = 'managementrequest';
-    process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);    
-});
-/**
- * Gradebook consumption request
- * 
- * @param mysqli $mysqli - db connection
- * @param object $oauth - oauth object
- * @param object $api - api object
- * @param object $render - render object
- * @param object $langpack - language object
- */
-$app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) use($mysqli, $oauth, $api, $render, $langpack) {
-    // Log request.
-    $apiid = $api->log_request();
-    
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    if ($client_id == 'INVALID_TOKEN') {
-        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
-        $api->log_response($apiid, $response_xml);
-        echo $response_xml;
-    } else {
-        //Check Permission
-        if (!$oauth->check_permissions('gradebook', $client_id)) {
-            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+    // Faculty management request.
+    $app->post('/facultymanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
+        $request = 'facultymanagement';
+        $response = 'facultyManagementResponse';
+        $operations = array('create', 'delete');
+        $fields = array('id', 'name');
+        $xsd = 'managementrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
+    });
+
+    // User management request.
+    $app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
+        $request = 'usermanagement';
+        $response = 'userManagementResponse';
+        $operations = array('create', 'delete');
+        $fields = array('id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
+            'course', 'gender', 'year', 'role', 'studentid', 'modules');
+        $xsd = 'managementrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
+    });
+    // Assessment management request
+    $app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
+        $request = 'assessmentmanagement';
+        $response = 'assessmentManagementResponse';
+        $operations = array('create', 'schedule', 'delete');
+        $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
+            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
+        $xsd = 'managementrequest';
+        process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);    
+    });
+    /**
+     * Gradebook consumption request
+     * 
+     * @param mysqli $mysqli - db connection
+     * @param object $oauth - oauth object
+     * @param object $api - api object
+     * @param object $render - render object
+     * @param object $langpack - language object
+     */
+    $app->get('/gradebook/:filtername/:filterid', function($filtername, $filterid) use($mysqli, $oauth, $api, $render, $langpack) {
+        // Log request.
+        $apiid = $api->log_request();
+        
+        // Check for auth tokens
+        $client_id = $oauth->check_auth();
+        if ($client_id == 'INVALID_TOKEN') {
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
             $api->log_response($apiid, $response_xml);
             echo $response_xml;
         } else {
-        
-            $response = array();
-            $gradebook = new \api\gradebook($mysqli);
-
-            // Process the request.
-            $request = $gradebook->get($filtername, $filterid);
-            $response = $request[1];
-            if ($request[0] == 'OK') {
-                $template = 'api/' . $filtername . '_gradebook.xml';
+            //Check Permission
+            if (!$oauth->check_permissions('gradebook', $client_id)) {
+                $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+                $api->log_response($apiid, $response_xml);
+                echo $response_xml;
             } else {
-                $template = 'api/error.xml';
+            
+                $response = array();
+                $gradebook = new \api\gradebook($mysqli);
+
+                // Process the request.
+                $request = $gradebook->get($filtername, $filterid);
+                $response = $request[1];
+                if ($request[0] == 'OK') {
+                    $template = 'api/' . $filtername . '_gradebook.xml';
+                } else {
+                    $template = 'api/error.xml';
+                }
+            
+                // Render response.
+                $response_xml = $render->render_xml($template, 'gradebookResponse', $response);
+                $api->log_response($apiid, $response_xml);
+                echo $response_xml;
             }
-        
-            // Render response.
-            $response_xml = $render->render_xml($template, 'gradebookResponse', $response);
-            $api->log_response($apiid, $response_xml);
-            echo $response_xml;
         }
-    }
-});
+    });
+}
 /**
  * 404 error handling.
  *

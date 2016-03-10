@@ -81,6 +81,7 @@ class ClassTotals {
   private $percent_decimals;
   private $unmarked_enhancedcalc = false;
   private $unmarked_textbox = false;
+  private $gradebook_enabled;
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string) {
     $this->db                 = $db;
@@ -111,7 +112,7 @@ class ClassTotals {
     $this->marking_overrides  = array();
     $this->string             = $string;
     $this->percent_decimals   = $this->config->get('percent_decimals');
-
+    $this->gradebook_enabled  = $this->config->get('cfg_gradebook_enabled');
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
 
@@ -1748,11 +1749,14 @@ class ClassTotals {
   
   /**
    * @brief Store exam grades
-   * @return bool
+   * @return bool true on success
    */
   public function create_gradebook() {
-    $gradebook = new gradebook($this->db);
-    return $gradebook->create_gradebook($this->paperID);
+    if ($this->gradebook_enabled) {
+        $gradebook = new gradebook($this->db);
+        return $gradebook->create_gradebook($this->paperID);
+    }
+    return false;
   }
   
   /**
@@ -1760,13 +1764,15 @@ class ClassTotals {
    * @return void
    */
   public function store_grades() {
-    $gradebook = new gradebook($this->db);
-    for ($student = 0; $student < $this->user_no; $student++) {
-      $userid = $this->user_results[$student]['userID'];
-      $mark = $this->user_results[$student]['mark'];
-      $adjusted = MathsUtils::formatNumber($this->user_results[$student]['percent'], $this->percent_decimals);
-      $classification = $this->user_results[$student]['classification'];
-      $gradebook->store_grade($userid, $this->paperID, $mark, $adjusted, $classification);
+    if ($this->gradebook_enabled) {
+        $gradebook = new gradebook($this->db);
+        for ($student = 0; $student < $this->user_no; $student++) {
+          $userid = $this->user_results[$student]['userID'];
+          $mark = $this->user_results[$student]['mark'];
+          $adjusted = MathsUtils::formatNumber($this->user_results[$student]['percent'], $this->percent_decimals);
+          $classification = $this->user_results[$student]['classification'];
+          $gradebook->store_grade($userid, $this->paperID, $mark, $adjusted, $classification);
+        }
     }
   }
   

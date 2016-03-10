@@ -50,6 +50,9 @@ require '../include/staff_auth.inc';
 
 <body>
 <p><?php echo $string['publishmarkscheck'] ?></p>
+<?php
+ if ($configObject->get('cfg_gradebook_enabled')) {
+?>
 <form name="templateform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
@@ -60,6 +63,12 @@ require '../include/staff_auth.inc';
 </tr>
 </table>
 </form>
-
+<?php
+ } else {
+?>
+<p><?php echo $string['cannotpublishmarks'] ?></p>
+<?php
+ }
+?>
 </body>
 </html>
