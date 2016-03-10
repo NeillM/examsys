@@ -34,34 +34,254 @@ class lti_integrationtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "lti_integrationTest" . DIRECTORY_SEPARATOR . "lti_integration.yml");
     }
     /**
-     * Test module code translate
+     * Test sms spi - saturn sms
      * @group lti
      */
-    public function test_module_code_translate() {
-        // UoN.
+    public function test_sms_api_saturn() {
+        // Saturn module.
         $this->config->set('lti_integration', 'UoN');
         $this->config->set('cfg_sms_api', 'uon_saturn');
+        $data = array('SMS', 'B34ADD', 'UK', 'UNKNOWN School', 0, "SATURN MISSING:Advanced Drug Discovery");
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $expected = '/touchstone.ashx?campus=uk';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+        // Fake module.
+        $data = array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, "Fake module");
+        $expected = '';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+    }
+    /**
+     * Test sms spi - campus sms
+     * @group lti
+     */
+    public function test_sms_api_cs() {
+        // Campus solutions module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $data = array('SMS', 'COMP1002', 'UNUK', 'UNKNOWN School', 0, "Mathematics for Computer Science");
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $this->assertFalse($lti_i->sms_api($data));
+        // Fake module.
+        $data = array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, "Fake module");
+        $expected = '';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+    }
+    /**
+     * Test sms spi - generic sms
+     * @group lti
+     */
+    public function test_sms_api_default() {
+        // Generic module.
+        $this->config->set('lti_integration', 'default');
+        $this->config->set('cfg_sms_api', 'generic_sms');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        // Fake module.
+        $data = array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, "Fake module");
+        $expected = '';
+        $this->assertEquals($expected, $lti_i->sms_api($data));
+    }
+    /**
+     * Test module code translate - saturn sms - success
+     * @group lti
+     */
+    public function test_module_code_translate_saturn_success() {
+        // Saturn module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', 'uon_saturn');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
         $moduleshortcode = 'B34ADD-UK-AUT1516';
         $moduletitle = 'Advanced Drug Discovery';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('SMS', $exploded[0], 'UK', 'UNKNOWN School', 0, "SATURN MISSING:$moduletitle"));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - saturn sms - meta module
+     * @group lti
+     */
+    public function test_module_code_translate_saturn_metamodule() {
+        // Meta module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', 'uon_saturn');
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
-        // UoN meta module.
-        $moduleshortcode = 'CS11JA-CN-AUT-CS11JB-CN-SPR-1213';
-        $moduletitle = '10 Credits Stage 1 Japanese (CS11JA CN AUT) (CS11JB CN SPR) (12-13) [p]';
+        $moduleshortcode = 'CS11JA-CN-AUT-CS11JB-MY-SPR-1213';
+        $moduletitle = '10 Credits Stage 1 Japanese (CS11JA CN AUT) (CS11JB MY SPR) (12-13) [p]';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('SMS', 'CS11JA_UNNC', 'CN', 'UNKNOWN School', 0, "SATURN MISSING:10 Credits Stage 1 Japanese"),
-            array('SMS', 'CS11JB_UNNC', 'CN', 'UNKNOWN School', 0, "SATURN MISSING:10 Credits Stage 1 Japanese"));
+            array('SMS', 'CS11JB_UNMC', 'MY', 'UNKNOWN School', 0, "SATURN MISSING:10 Credits Stage 1 Japanese"));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - saturn sms - fake module
+     * @group lti
+     */
+    public function test_module_code_translate_saturn_fakemodule() {
+        // Fake module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', 'uon_saturn');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        // Uknown school.
+        $moduleshortcode = 'ZZ-FAKE-CN';
+        $moduletitle = 'Fake module';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, $moduletitle));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+        // Known school.
+        $moduleshortcode = 'LD-FAKE-CN';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('Manual', 'FAKE_UNNC', 'CN', 'Politics', 1, $moduletitle));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - saturn sms - fake module
+     * @group lti
+     */
+    public function test_module_code_translate_saturn_invalidmodule() {
+        // Invalid module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', 'uon_saturn');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = 'INVALID';
+        $moduletitle = 'Invalid module';
+        $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - saturn sms - not course title
+     * @group lti
+     */
+    public function test_module_code_translate_saturn_nocoursetitle() {
+        // No course title.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', 'uon_saturn');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = 'ZZ-FAKE-CN';
+        $moduletitle = ' ';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, 'MISSING: '));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - campus solutions sms - no modulecode
+     * @group lti
+     */
+    public function test_module_code_translate_cs_nomodulecode() {
+        // Campus solutions module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = ' ';
+        $moduletitle = 'Mathematics for Computer Science';
+        $exploded = explode('-', $moduleshortcode);
+        $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - campus solutions sms - success
+     * @group lti
+     */
+    public function test_module_code_translate_cs_success() {
+        // Campus solutions module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = 'COMP1112-3-UNUK-SPR-1617';
+        $moduletitle = 'Mathematics for Computer Science';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('SMS', $exploded[0], 'UNUK', 'UNKNOWN School', 0, $moduletitle));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - campus solutions sms - not course title
+     * @group lti
+     */
+    public function test_module_code_translate_cs_nocoursetitle() {
+        // No course title.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = 'COMP1112-3-UNUK-SPR-1617';
+        $moduletitle = ' ';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('SMS', $exploded[0], 'UNUK', 'UNKNOWN School', 0, 'MISSING COURSE TITLE'));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - campus solutions sms - meta module
+     * @group lti
+     */
+    public function test_module_code_translate_cs_metamodule() {
+        // Meta module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = 'COMP1111-2-UNNC-SPR-COMP1112-3-UNUK-SPR-1617';
+        $moduletitle = 'Mathematics for Computer Science (COMP1111 CN SPR) (COMP1112 UK SPR) (16-17) [p]';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('SMS', 'COMP1111_UNNC', 'UNNC', 'UNKNOWN School', 0, "Mathematics for Computer Science"),
+            array('SMS', 'COMP1112', 'UNUK', 'UNKNOWN School', 0, "Mathematics for Computer Science"));
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - campus solutions sms - fake module
+     * @group lti
+     */
+    public function test_module_code_translate_cs_fakemodule() {
+        // Fake module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        // Uknown school
+        $moduleshortcode = 'ZZ-FAKE-UNNC';
+        $moduletitle = 'Fake module';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('Manual', 'FAKE_UNNC', 'UNNC', 'UNKNOWN School', 1, $moduletitle));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+        // Known school
+        $moduleshortcode = 'LD-FAKE-UNNC';
+        $exploded = explode('-', $moduleshortcode);
+        $expected = array(array('Manual', 'FAKE_UNNC', 'UNNC', 'Politics', 1, $moduletitle));
+        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - campus solutions sms - invalid module
+     * @group lti
+     */
+    public function test_module_code_translate_cs_invalidmodule() {
+        // Invalid module.
+        $this->config->set('lti_integration', 'UoN');
+        $this->config->set('cfg_sms_api', '');
+        $lti = UoN_LTI::get_instance();
+        $lti_i = $lti->load();
+        $moduleshortcode = 'INVALID';
+        $moduletitle = 'Invalid module';
+        $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
+    }
+    /**
+     * Test module code translate - default sms
+     * @group lti
+     */
+    public function test_module_code_translate_default() {
         // Default.
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
         $moduleshortcode = 'PHAR4018';
+        $moduletitle = 'Advanced Drug Discovery';
         $expected = array(array('Manual', $moduleshortcode, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$moduletitle"));
+        $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
@@ -126,6 +346,7 @@ class lti_integrationtest extends unittestdatabase {
         // Default.
         $this->config->set('cfg_sms_api', 'generic_sms');
         $this->config->set('lti_integration', 'default');
+        $this->config->set('lti_auth_timeout', '9072000');
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertFalse($lti_i->user_time_check('now'));

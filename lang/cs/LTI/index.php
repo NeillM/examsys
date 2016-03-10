@@ -26,4 +26,9 @@ $string['NotAddedToModule'] = 'Přidávání do týmu modulu není v LTI konfigu
 
 $string['NoModCreateTitle2'] = 'Vytvoření modulu nefunguje';
 $string['NoModCreate2'] = 'Tvorba modulu z LTI neběží, jelikož uživatel nevlastní oprávnění, a proto nelze vytvořit modul s kódem kurzu: ';
+$string['moduletranslateerror'] = 'Module code error';
+$string['moduletranslatemessage'] = 'There is a problem with the module code as the translation code has resulted in an error. Please contact Learning Team Support <a href="mailto:%s">%s</a>';
+$string['moduletranslatecode'] = '<p>Incoming Module Code: %s</p>';
+$string['modulecreateerror'] = 'Module creation error';
+$string['modulecreatemessage'] = 'Modules cannot be created that do not exist within the student management system. For further assistance contact: <a href="mailto:%s">%s</a>';
 ?>

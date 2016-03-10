@@ -111,6 +111,11 @@ if (!$lti->isInstructor()) {
     $returned2 = $lti->lookup_lti_context();
     if ($returned2 === false) {
         $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+        if ($data === false) {
+            UserNotices::display_notice($string['moduletranslateerror'], sprintf($string['moduletranslatemessage'], $configObject->get('support_email'), $configObject->get('support_email')), '/artwork/access_denied.png');
+            echo sprintf($string['moduletranslatecode'], $lti->getCourseName());
+            exit();
+        }
     } else {
         $data = array(array('', $returned2[0]));
     }
@@ -174,6 +179,11 @@ if (!$lti->isInstructor()) {
       $modid = -1;
       //no context
       $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
+      if ($data === false) {
+            UserNotices::display_notice($string['moduletranslateerror'], sprintf($string['moduletranslatemessage'], $configObject->get('support_email'), $configObject->get('support_email')), '/artwork/access_denied.png');
+            echo sprintf($string['moduletranslatecode'], $lti->getCourseName());
+            exit();
+      }
       foreach ($data as $moduleinfo) {
         $problem = false;
         // Module exists and staff user is enrolled on it - get module id.
@@ -202,6 +212,11 @@ if (!$lti->isInstructor()) {
             $neg_marking = 1;
           }
           $sms_api = $lti_i->sms_api($moduleinfo);
+          if ($sms_api === false) {
+            UserNotices::display_notice($string['modulecreateerror'], sprintf($string['modulecreatemessage'], $configObject->get('support_email'), $configObject->get('support_email')), '/artwork/access_denied.png');
+            echo sprintf($string['moduletranslatecode'], $moduleinfo[1]);
+            exit(); 
+          }
           $schoolID = SchoolUtils::get_school_id_by_name($moduleinfo[3], $mysqli);
           $modid = module_utils::add_modules($moduleinfo[1], $moduleinfo[5], 1, $schoolID, '', $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, 0, $mysqli, 1, 0, 1, 1, '07/01');
           if ($modid === false) {
