@@ -15,5 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['papertypenotfound'] = 'Paper type could not be found.';
-
+$string['errorcreatingpaper'] = 'Error creating paper';
 ?>

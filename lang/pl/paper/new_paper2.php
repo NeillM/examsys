@@ -44,6 +44,6 @@ $string['mins'] = 'min.';
 $string['msg7'] = 'Uwaga: Musisz określić datę przeprowadzenia egzaminu.';
 $string['msg8'] = 'Uwaga: Musisz określić czas trwania egzaminu (w minutach).';
 $string['msg9'] = 'Uwaga: Musisz określić rozmiar grupy.';
-
+$string['msg10'] = 'WARNING: A paper cannot finish before it starts';
 $string['na'] = 'Brak';
 ?>

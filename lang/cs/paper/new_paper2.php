@@ -41,6 +41,7 @@ $string['hrs'] = 'hodin';
 $string['msg7'] = 'Varování: Je potřeba vyplnit datum konání zkoušky.';
 $string['msg8'] = 'Varování: Je potřeba vyplnit délku trvání zkoušky v minutách.';
 $string['msg9'] = 'Varování: Je potřeba vyplnit velikost skupiny studentů.';
+$string['msg10'] = 'WARNING: A paper cannot finish before it starts';
 $string['duration'] = 'Trvání';
 $string['na'] = 'N/A';
 ?>

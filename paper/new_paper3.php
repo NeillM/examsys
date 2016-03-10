@@ -113,7 +113,7 @@ try {
     $errorline = __LINE__ - 15;
     $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
     $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
-    $notice->display_notice_and_exit(null, $string['papertypenotfound'], $msg, '', '../artwork/page_not_found.png', '#C00000', true, true);
+    $notice->display_notice_and_exit(null, $string['errorcreatingpaper'], $msg, '', '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
