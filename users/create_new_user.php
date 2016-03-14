@@ -43,6 +43,7 @@ if (isset($_POST['submit'])) {
     case 'Technical Staff':
     case 'NHS Lecturer':
     case 'NHS Admin':
+    case 'Standards Setter':
       $tmp_roles = 'Staff';
       break;
     case 'Invigilator':
@@ -275,6 +276,7 @@ foreach ($titles as $tmp_title) {
 <option value="University Lecturer"><?php echo $string['academiclecturer'] ?></option>
 <option value="University Admin"><?php echo $string['administrator'] ?></option>
 <option value="Technical Staff"><?php echo $string['ittechnical'] ?></option>
+<option value="Standards Setter"><?php echo $string['standardssetter'] ?></option>
 </optgroup>
 <optgroup label="<?php echo $string['externalstaff'] ?>">
 <?php

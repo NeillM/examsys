@@ -33,7 +33,7 @@ Class UserUtils {
       return false;
     }
 
-    if (!in_array($role, array('Staff', 'Student', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner'))) {
+    if (!in_array($role, array('Staff', 'Student', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Standards Setter'))) {
       // not a valid role
       return false;
     }

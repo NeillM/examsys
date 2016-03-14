@@ -379,7 +379,15 @@ class UserObject extends RogoStaticSingleton {
   public function load_staff_team_modules() {
     $this->staffTeamModules = array();
 
-    $result = $this->db->prepare("SELECT idMod, moduleID, fullname FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? AND active = 1 AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID");
+    $standards_setter_sql = "";
+
+    // Standards Setter should only see modules that allow standard setting
+    if($this->has_role('Standards Setter')) {
+      $standards_setter_sql = "AND modules.checklist LIKE '%stdset%'";
+    }
+
+    $result = $this->db->prepare("SELECT idMod, moduleID, fullname FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? AND active = 1 AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL $standards_setter_sql ORDER BY modules.moduleID");
+
     $result->bind_param('i', $this->userID);
     $result->execute();
     

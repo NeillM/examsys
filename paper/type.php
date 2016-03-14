@@ -51,7 +51,6 @@ if ($_GET['module'] != '0') {
   $module_details['fullname'] = 'Questions/papers not on any module'; 
   $module_details['checklist'] = '';
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -140,12 +139,12 @@ if ($_GET['module'] != '0') {
 </div>
 
 <?php
-if ($module != 0) {
+if (!$userObject->has_role('Standards Setter') && $module != 0) {
   // Don't want new papers created from the Unassigned folder.
   echo "<br /><div class=\"f\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
 }
 
-if ($_GET['type'] == 2) {
+if (!$userObject->has_role('Standards Setter') && $_GET['type'] == 2) {
   echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"../admin/calendar.php#week" . date("W") . "\"><img src=\"../artwork/calendar_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../admin/calendar.php#week" . date("W") . "\">" . $string['examcalendar'] . "<br />" . date('Y') . "</a></div></div>\n";
 }
 
@@ -180,7 +179,7 @@ if ($results->num_rows > 0) {
 
       echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $display_calendar_year . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
     }
-    display_paper_icon($paper_ownerID, $property_id, $type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
+    display_paper_icon($paper_ownerID, $property_id, $type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject); 
     $old_calendar_year = $calendar_year;
   }
   $results->close();

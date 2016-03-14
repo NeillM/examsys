@@ -25,6 +25,9 @@
 */
 
 ?><div id="left-sidebar" class="sidebar" style="overflow:hidden">
+<?php
+if (!$userObject->has_role('Standards Setter')) {
+?>
 <div id="general">
 	<?php
 		if ($userObject->has_role('SysAdmin')) {
@@ -37,8 +40,6 @@
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /><?php echo $string['mypersonalkeywords'] ?></a></div>
   <div class="menuitem cascade"><a href="#" onclick="showMenu('popup0','general','search',myOptions0,myURLs0,event)" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
 </div>
-
-
 <?php
   // -- Display top 10 recent papers ----------------------------------
   $recent_papers = Paper_utils::get_recent($userObject->get_user_ID(), $mysqli);
@@ -53,14 +54,16 @@
     echo "href=\"" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";
   }
   echo '</ul>';
-
+}
 ?>
 <div id="displaycredits">Rog&#333; <?php echo $configObject->get('rogo_version') ?> - &copy; 2014</div>
 
 </div>
 
 <?php
+if (!$userObject->has_role('Standards Setter')) {
   makeMenu(array($string['questions']=>"{$configObject->get('cfg_root_path')}/question/search.php",$string['papers']=>"{$configObject->get('cfg_root_path')}/paper/search.php",$string['people']=>"{$configObject->get('cfg_root_path')}/users/search.php"));
 
   hideMenuScript($menuNo);
+}  
 ?>

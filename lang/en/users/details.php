@@ -24,6 +24,7 @@ $string['edit'] = 'Edit';
 $string['status'] = 'Status';
 $string['student'] = 'Student';
 $string['Students'] = 'Students';
+$string['standardssetter'] = 'Standards Setter';
 $string['externalexaminer'] = 'External Examiner';
 $string['graduate'] = 'Graduate';
 $string['left'] = 'Left University';

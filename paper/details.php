@@ -84,9 +84,14 @@ if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 
 // Can the user acsess the paper?
 $paper_ownerID = Paper_utils::get_ownerID($paperID, $mysqli);
 
+// This papers' modules
+$paper_modules = array();
+
 $on_staff_module = false;
 if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user_ID()) {
   $on_staff_module = true;
+} elseif($userObject->has_role('Standards Setter')) {
+  // Do nothing
 } else {
   $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
   foreach ($paper_modules as $paper_moduleID => $paper_module) {

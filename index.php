@@ -241,37 +241,40 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   }
   if (count($review_papers) > 0) echo '<br clear="left" />';
 
-  // -- Display personal folders --------------------------------------
-  $module_sql = '';
-  if (count($userObject->get_staff_modules()) > 0) {
-    $module_sql = " OR idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ")";
-  }
-
-  $result = $mysqli->prepare("SELECT DISTINCT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
-  $result->bind_param('i', $userObject->get_user_ID());
-  $result->execute();
-  $result->bind_result($id, $name, $color);
-  $result->store_result();
-
-  echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['myfolders'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
-  while ($result->fetch()) {
-    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"./folder/index.php?folder=$id\"><img src=\"./artwork/" . $color . "_folder.png\"  alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./folder/index.php?folder=$id\">$name</a></div></div>\n";
-  }
-  $result->close();
-
-  if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
-    if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
-      echo "<script>alert(\"" . $string['duplicatefoldername'] . "\")</script>";
-      echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
-    } elseif (!isset($_POST['submit'])) {
-      echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"\" placeholder=\"" . $string['foldername'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
+  if(!$userObject->has_role('Standards Setter')) {
+    // -- Display personal folders --------------------------------------
+    $module_sql = '';
+    if (count($userObject->get_staff_modules()) > 0) {
+      $module_sql = " OR idMod IN (" . implode(',', array_keys($userObject->get_staff_modules())) . ")";
     }
-  }
 
-  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./delete/recycle_list.php\"><img src=\"./artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" /></a></div><div class=\"f_details\"><a href=\"./delete/recycle_list.php\">" . $string['recyclebin'] . "</a></div></div>\n";
+    $result = $mysqli->prepare("SELECT DISTINCT id, name, color FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $module_sql) AND name NOT LIKE '%;%' AND deleted IS NULL ORDER BY name, id");
+    $result->bind_param('i', $userObject->get_user_ID());
+    $result->execute();
+    $result->bind_result($id, $name, $color);
+    $result->store_result();
+
+    echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['myfolders'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+    while ($result->fetch()) {
+      echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"./folder/index.php?folder=$id\"><img src=\"./artwork/" . $color . "_folder.png\"  alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"./folder/index.php?folder=$id\">$name</a></div></div>\n";
+    }
+    $result->close();
+
+    if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
+      if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
+        echo "<script>alert(\"" . $string['duplicatefoldername'] . "\")</script>";
+        echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
+      } elseif (!isset($_POST['submit'])) {
+        echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"\" placeholder=\"" . $string['foldername'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
+      }
+    }
+
+    echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"./delete/recycle_list.php\"><img src=\"./artwork/recycle_bin.png\" alt=\"" . $string['recyclebin'] . "\" /></a></div><div class=\"f_details\"><a href=\"./delete/recycle_list.php\">" . $string['recyclebin'] . "</a></div></div>\n";
 ?>
 <br clear="left" />
 <?php
+  }
+
   echo "<br />\n";
   // -- Display modules ------------------------------------
   echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['mymodules'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
