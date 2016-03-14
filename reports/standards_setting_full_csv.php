@@ -114,6 +114,9 @@ if($stmt) {
 
     // Calculate correct number of spacer columns for incomplete ratings 
     $currentColumnCount = count($ratingColumns);   
+    if(!isset($ratingColumnCount[$q_id])) {
+      $ratingColumnCount[$q_id] = 0;
+    }
     if($currentColumnCount > $ratingColumnCount[$q_id]) {
       $ratingColumnCount[$q_id] = $currentColumnCount;
     }
@@ -182,11 +185,14 @@ if($stmt) {
       $pattern = "/(?<=\[COLSTART_" . $q_id . "_" . $ssq_id . "\])(.*?)(?=\[COLEND_" . $q_id . "_" . $ssq_id . "\])/";
       preg_match($pattern, $csv, $ratingColumn);
 
-      if(!empty($ratingColumn)) {            
+      if(!empty($ratingColumn)) {
+        if(!isset($ratingColumnCount[$q_id])) {
+          $ratingColumnCount[$q_id] = null;
+        }
         if($ratingColumnCount[$q_id] !== (count(explode(",", $ratingColumn[0])))) {
           // Something has gone wrong (eg marks available have been changed) so mark column as incomplete
           $csv = preg_replace($pattern, $string['incomplete'] . $additionalCommas[$q_id], $csv);
-        }
+        }     
       }
    }    
   }
