@@ -32,7 +32,7 @@ $result = $mysqli->prepare("SELECT client_id, client_secret, redirect_uri, usern
 $result->execute();
 $result->bind_result($client_id, $client_secret, $redriect_uri, $username);
 while ($result->fetch()) {
-    $clients[$client_id] = array($username, $client_secret, $client_id, $redriect_uri);
+    $clients[$client_id] = array($username, $client_id, $client_secret, $redriect_uri);
 }
 $result->close();
 $render = new render($configObject);
