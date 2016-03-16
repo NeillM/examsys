@@ -234,6 +234,10 @@ class modulemanagementtest extends unittestdatabase {
             "id" => 2,
             "modulecode" => 'TEST2UPDATE');
         $this->assertEquals($responsearray, $module->create($params, $userid));
+        // Check update occured.
+        $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start FROM modules where id = 2');
+        $expectedtable = $this->get_expected_data_set('updatemodule')->getTable("modules");  
+        $this->assertTablesEqual($expectedtable, $querytable);
     }
     /**
      * Test module update exception module does not exist

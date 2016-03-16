@@ -146,7 +146,7 @@ class modulemanagement extends \api\abstractmanagement {
                 }
             }
         // Get school id if school name not provided.
-        } else if($moduleid) {
+        } elseif($moduleid) {
             $schoolid = $details['schoolid'];
         }
         
@@ -169,7 +169,7 @@ class modulemanagement extends \api\abstractmanagement {
             // Update Module.
             if ($params['id']) {
                 if ($moduleid) {
-                    $update = \module_utils::update_module_by_id($params['id'], $moduleid, 
+                    $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
                         $params['name'], $schoolid, $params['sms'], $this->db);
                     if ($update) {
                         $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
