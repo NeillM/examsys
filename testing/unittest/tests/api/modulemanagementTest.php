@@ -256,6 +256,54 @@ class modulemanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**
+     * Test module update exception module already exists
+     * @group api
+     */
+    public function test_update_exception_moduleexists() {
+        // Test module create - ERROR module does not exist.
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 505;
+        $responsearray['status'] = 'Module already exists';
+        $responsearray['id'] = 3;
+        $params['modulecode'] = 'TEST3';
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
+     * Test module update exception faculty not supplied on school update
+     * @group api
+     */
+    public function test_update_exception_faculty() {
+        // Test module create - ERROR faculty not supplied.
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 506;
+        $responsearray['status'] = 'Faculty not supplied';
+        $responsearray['id'] = null;
+        $params['school'] = 'Test school 2';
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
+     * Test module update exception school not supplied on faculty update
+     * @group api
+     */
+    public function test_update_exception_school() {
+        // Test module create - ERROR faculty not supplied.
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 511;
+        $responsearray['status'] = 'School not supplied';
+        $responsearray['id'] = null;
+        $params['faculty'] = 'Test faculty 2';
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
      * Test successful module enrolment
      * @group api
      */
