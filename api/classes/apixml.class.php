@@ -88,18 +88,19 @@ class apixml extends \api\apiabstract {
                             $childarray = array();
                             foreach ($item->item(0)->childNodes as $childnodes) {
                                 if (!$childnodes->length) {
+                                    $nodevalue = trim($childnodes->nodeValue);
                                     if ($childnodes->hasAttribute('id')) {
                                         $childarray[] = array('id' => $childnodes->getAttribute('id'),
-                                            'name' => $childnodes->nodeName, 'value' => $childnodes->nodeValue);
+                                            'name' => $childnodes->nodeName, 'value' => $nodevalue);
                                     } else {
                                         $childarray[] = array('name' => $childnodes->nodeName,
-                                            'value' => $childnodes->nodeValue);
+                                            'value' => $nodevalue);
                                     }
                                 }
                             }
                             $params[$field] = $childarray;
                         } elseif (!is_null($item->item(0)->nodeValue)) {
-                            $params[$field] = $item->item(0)->nodeValue;
+                            $params[$field] = trim($item->item(0)->nodeValue);
                         }
                     }
                     if ($node->hasAttribute('id')) { 
