@@ -22,6 +22,7 @@ $string['faculty_does_not_exist'] = 'Faculty does not exist';
 $string['paper_does_not_exist'] = 'Paper does not exist';
 $string['enrol_onto_module_fail'] = 'Enrolement onto module %s failed';
 $string['faculty_not_supplied'] = 'Faculty not supplied';
+$string['school_not_supplied'] = 'School not supplied';
 $string['500'] = '500 Internal Error';
 $string['404'] = '404 Page Not Found';
 $string['nopermission'] = 'You do not have permission to run this action';

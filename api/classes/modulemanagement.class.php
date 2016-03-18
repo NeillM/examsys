@@ -47,7 +47,8 @@ class modulemanagement extends \api\abstractmanagement {
         'MODULE_INVALID_USER' => 507,
         'MODULE_USER_NOT_ENROLLED' => 508,
         'MODULE_USER_NOT_UNENROLLED' => 509,
-        'MODULE_SESSION_NOT_SUPPLIED' => 510
+        'MODULE_SESSION_NOT_SUPPLIED' => 510,
+        'MODULE_INVALID_SCHOOL' => 511
     );
            
     /**
@@ -124,7 +125,7 @@ class modulemanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist',
-            'module_not_created', 'module_already_exists', 'faculty_not_supplied'));
+            'module_not_created', 'module_already_exists', 'faculty_not_supplied', 'school_not_supplied'));
         $faculty = true;
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
@@ -146,59 +147,78 @@ class modulemanagement extends \api\abstractmanagement {
                 }
             }
         // Get school id if school name not provided.
-        } else if($moduleid) {
+        } elseif($moduleid) {
             $schoolid = $details['schoolid'];
         }
         
-        if ($faculty) {
-            // Get module code if not provided.
-            if ($moduleid and (empty($params['modulecode']))) {
-                $params['modulecode'] = $details['moduleid'];
-            }
-            
-            // Get name if not provided.
-            if ($moduleid and (empty($params['name']))) {
-                $params['name'] = $details['fullname'];
-            }
-            
-            // Get student management system if not provided.
-            if ($moduleid and (empty($params['sms']))) {
-                $params['sms'] = $details['sms'];
-            }
-            
-            // Update Module.
-            if ($params['id']) {
-                if ($moduleid) {
-                    $update = \module_utils::update_module_by_id($params['id'], $moduleid, 
-                        $params['name'], $schoolid, $params['sms'], $this->db);
-                    if ($update) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'], 'status' => $strings['module_not_updated'], 'id' => null);
-                    }
-                } else {
-                    $data = array('statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'], 'status' => $strings['module_does_not_exist'], 'id' => null);
-                }
-            // Create Module.
-            } else {
-                $moduleid = \module_utils::get_idMod($params['modulecode'], $this->db);
-                if (!$moduleid) {
-                    if (empty($params['sms'])) {
-                        $params['sms'] = 'rogo webservice';
-                    }
-                    $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],
-                        '', false, false, false, false, '', '', $this->db, false, '', '', '', 0);
-                    if ($id) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['MODULE_NOT_CREATED'], 'status' => $strings['module_not_created'], 'id' => null);
-                    }
-                } else {
-                    $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $moduleid);
+        // Cheeck if module code in use.
+        $modcodeinuse = false;
+        if ($moduleid and !empty($params['modulecode'])) {
+            $modid = \module_utils::get_idMod($params['modulecode'], $this->db);
+            // module code in use already
+            if ($modid != false) {
+                if ($modid != $params['id']) {
+                    $modcodeinuse = true;
                 }
             }
+        }
+        
+        if ($modcodeinuse) {
+            $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $modid);
         } else {
-            $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
+            if ($faculty) {
+                // Get module code if not provided.
+                if ($moduleid and empty($params['modulecode'])) {
+                    $params['modulecode'] = $details['moduleid'];
+                }
+                // Get name if not provided.
+                if ($moduleid and (empty($params['name']))) {
+                    $params['name'] = $details['fullname'];
+                }
+                
+                // Get student management system if not provided.
+                if ($moduleid and (empty($params['sms']))) {
+                    $params['sms'] = $details['sms'];
+                }
+                
+                // Update Module.
+                if ($params['id']) {
+                    if ($moduleid) {
+                        if ($schoolid == $details['schoolid'] and isset($params['faculty']) and $params['faculty'] !== '') {
+                            $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null);
+                        } else {
+                            $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
+                                $params['name'], $schoolid, $params['sms'], $this->db);
+                            if ($update) {
+                                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                            } else {
+                                $data = array('statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'], 'status' => $strings['module_not_updated'], 'id' => null);
+                            }
+                        }
+                    } else {
+                        $data = array('statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'], 'status' => $strings['module_does_not_exist'], 'id' => null);
+                    }
+                // Create Module.
+                } else {
+                    $moduleid = \module_utils::get_idMod($params['modulecode'], $this->db);
+                    if (!$moduleid) {
+                        if (empty($params['sms'])) {
+                            $params['sms'] = 'rogo webservice';
+                        }
+                        $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],
+                            '', false, false, false, false, '', '', $this->db, false, '', '', '', 0);
+                        if ($id) {
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
+                        } else {
+                            $data = array('statuscode' => $this->statuscodes['MODULE_NOT_CREATED'], 'status' => $strings['module_not_created'], 'id' => null);
+                        }
+                    } else {
+                        $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $moduleid);
+                    }
+                }
+            } else {
+                $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
+            }
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
