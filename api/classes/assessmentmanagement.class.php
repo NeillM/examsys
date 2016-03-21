@@ -141,14 +141,19 @@ class assessmentmanagement extends \api\abstractmanagement {
             if (empty($params['enddatetime'])) {
                 $params['enddatetime'] = $details['enddatetime'];
             }
-             // Get end timezone if not provided.
+            // Get end timezone if not provided.
             if (empty($params['timezone'])) {
                 $params['timezone'] = $details['timezone'];
+            }
+        } else {
+            // Use system timezone if not provided on creation.
+            if (empty($params['timezone'])) {
+                $params['timezone'] = $configObject->get('cfg_timezone');
             }
         }
         // Check modules
         $modulesarray = array();
-        if (count($params['modules']) > 0) {
+        if (!empty($params['modules'])) {
             foreach ($params['modules'] as $module) {
                 $moduleid = \module_utils::get_moduleid_from_id($module['value'], $this->db);
                 if ($moduleid) {
@@ -168,7 +173,7 @@ class assessmentmanagement extends \api\abstractmanagement {
                 // Currently we are working with the lab name as there is no lab management web service.
                 $labsarray = array();
                 $labfactory = new \LabFactory($this->db);
-                if (count($params['labs']) > 0) {
+                if (!empty($params['labs'])) {
                     foreach ($params['labs'] as $lab) {
                         // We allow empty lab elements so labs so the paper can have all labs removed.
                         if ($lab['value'] != '') {
