@@ -48,6 +48,11 @@ class api {
     private $logfile;
     
     /**
+     * API object.
+     */
+    private $api;
+     
+    /**
      * Constructor
      * @param object $app the slim application
      * @param mysqli $db db connection
@@ -163,13 +168,13 @@ class api {
         $this->set_header($this->get_mediatype());
         // Get body of request.
         $body = $this->get_body();
-        $api = new \api\apixml($body);  
-        // Valdate request
-        $errorresp = $api->validate($folder, $type);
+        $this->api = new \api\apixml($body);  
+        // Valdate request.
+        $errorresp = $this->api->validate($folder, $type);
         if (count($errorresp) > 0) {
             return array('BAD', $errorresp);
         } else {
-            return array('OK', $api->getdata());
+            return array('OK', $this->api->getdata());
         }
     }
     
@@ -178,14 +183,13 @@ class api {
      * @param object $tasktype task object
      * @param array $fields expected fields
      * @param array $actions possible actions
-     * @param object $body request body
      * @param array $perms user permissions
      * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $body, $perms, $userid) {
-        $api = new \api\apixml($body);
-        return $api->parse($tasktype, $fields, $actions, $body, $perms, $userid);
+    public function parse($tasktype, $fields, $actions, $perms, $userid) {
+        // Parse the request.
+        return $this->api->parse($tasktype, $fields, $actions, $perms, $userid);
     }
     
 }

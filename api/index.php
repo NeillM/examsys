@@ -247,7 +247,7 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
             // XML.
             $user_id = $oauth->get_client_user($client_id);
             if ($data[0] == 'OK') {
-                $responsedata = $api->parse($requestobject, $fields, $operations, $data[1], $perm, $user_id);
+                $responsedata = $api->parse($requestobject, $fields, $operations, $perm, $user_id);
                 $template = 'api/success.xml';
             } else {
                 $responsedata = $data[1];
