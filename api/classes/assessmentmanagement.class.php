@@ -263,13 +263,28 @@ class assessmentmanagement extends \api\abstractmanagement {
         $labs = '';
         $start = '';
         $end = '';
+        // Set defaults.
+        if (empty($params['cohort_size'])) {
+            $params['cohort_size'] = '<whole cohort>';
+        }
+        if (empty($params['sittings'])) {
+            $params['sittings'] = NULL;
+        }
+        if (empty($params['barriers'])) {
+            $params['barriers'] = NULL;
+        }
+        if (empty($params['campus'])) {
+            $params['campus'] = NULL;
+        }
+        if (empty($params['notes'])) {
+            $params['notes'] = NULL;
+        }
         // Create.
         try {
             $paperid = $paper->create($params['title'], $papertype, $params['owner'], $start,
                 $end, $labs, $params['duration'], $params['session'], $modulesarray, $configObject->get('cfg_timezone'));
             if ($paperid) {
                 // Schedule.
-                $params['month'] = ltrim($params['month'], '-');
                 $id = $paper->schedule($paperid, $params['month'], $params['barriers'], $params['cohort_size'], $params['notes'], $params['sittings'], $params['campus']);
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $paperid, 'error' => $error);
