@@ -519,6 +519,36 @@ class assessmentmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
     }
     /**
+     * Test assessemnt scheduling success - only required paramaters
+     * @group api
+     */
+    public function test_schedule_success_req() {
+        // Test paper schedule- SUCCESS.
+        $responsearray = $this->schedule_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "title" => "Test Summative",
+            "owner" => 1,
+            "session" => 2016,
+            "duration" => 60,
+            "month" => 0,
+            "modules" => array(array('id' => 0, 'value' => 1)));
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
+        // Check db.
+        $querytable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, paper_title, start_date, end_date, exam_duration,
+            calendar_year, timezone, paper_ownerID, labs, paper_type FROM properties');
+        $expectedtable = $this->get_expected_data_set('scheduleassessment')->getTable("properties");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->getConnection()->createQueryTable('properties_modules', 'SELECT property_id, idMod FROM properties_modules');
+        $expectedtable = $this->get_expected_data_set('scheduleassessment')->getTable("properties_modules");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->getConnection()->createQueryTable('scheduling', 'SELECT * FROM scheduling');
+        $expectedtable = $this->get_expected_data_set('scheduleassessment')->getTable("scheduling");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
      * Test assessemnt scheduling success - non fatal incorrect modules
      * @group api
      */
@@ -537,7 +567,6 @@ class assessmentmanagementtest extends unittestdatabase {
         $params['title'] = "Test Summative 99";
         $params['modules'] = array(array('id' => 0, 'value' => 99));
         $this->assertEquals($responsearray, $assessment->schedule($params, $userid));
-        
     }
     /**
      * Test assessemnt scheduling exception invalid title
