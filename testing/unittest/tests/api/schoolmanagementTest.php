@@ -201,6 +201,22 @@ class schoolmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
+     * Test school update exception no school supplied
+     * @group api
+     */
+    public function test_update_exception_school2() {
+        // Test school update - ERROR school does not exist
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 602;
+        $responsearray['status'] = 'School not updated';
+        $responsearray['id'] = null;
+        $params['name'] = '';
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+    /**
      * Test school update exception invalid faculty
      * @group api
      */

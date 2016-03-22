@@ -69,7 +69,9 @@ class schoolmanagement extends \api\abstractmanagement {
         
         // Get name if not provided.
         if ($schoolid and (empty($params['name']))) {
-            $params['name'] = $details['name'];
+            if (!isset($params['name'])) {
+                $params['name'] = $details['name'];
+            }
         }
         
         // Get faculty if provided.
