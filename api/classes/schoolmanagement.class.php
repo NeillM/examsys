@@ -79,7 +79,7 @@ class schoolmanagement extends \api\abstractmanagement {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
             }
         // Get faculty if not provided.           
-        } else if ($schoolid) {
+        } elseif ($schoolid and !isset($params['faculty'])) {
             $facultyid = $details['faculty'];
         } else {
             $faculty = false;
