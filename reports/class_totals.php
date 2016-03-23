@@ -954,7 +954,7 @@ echo draw_toprightmenu(30);
     if ($report->unmarked_textbox() or $report->unmarked_enhancedcalc()) {
         $unmarked_questions = true;
     }
-    if ($paper_type == 2 or $paper_type = 4) {
+    if ($paper_type == 2 or $paper_type == 4) {
         $summative = true;
     }
     if (count($log_late) > 0) {
