@@ -44,7 +44,8 @@ class usermanagement extends \api\abstractmanagement {
         'USER_NOT_DELETED_INUSE' => 704,
         'USER_INVALID_COURSE' => 705,
         'USER_ALREADY_EXISTS' => 706,
-        'USER_INVALID_ROLE' => 707
+        'USER_INVALID_ROLE' => 707,
+        'USER_NOTHING_UPDATED' => 708
     );
         
     /**
@@ -88,7 +89,7 @@ class usermanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_does_not_exist'
-            , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists'));
+            , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists', 'user_nothing_updated'));
         $error = array();
         $userexists = false;
         // Student and Staff users only.
@@ -112,6 +113,8 @@ class usermanagement extends \api\abstractmanagement {
         // Set defaults if not provided.
         $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
             'gender', 'year', 'role', 'studentid', 'initials');
+        // Count params not provided to check for no update later.
+        $paramcount = 0;
         foreach ($paramnames as $name) {
             if (empty($params[$name])) {
                 if ($userexists) {
@@ -119,7 +122,11 @@ class usermanagement extends \api\abstractmanagement {
                 } else {
                     $params[$name] = '';
                 }
+                $paramcount++;
             }
+        }
+        if (empty($params['modules'])) {
+            $paramcount++;
         }
         
         // If parameter id supplied but not a valid user - exception.
@@ -145,17 +152,23 @@ class usermanagement extends \api\abstractmanagement {
 
                 if ($course) {
                     // Update.
-                    if ($params['id']) {
-                        $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
-                                    $params['forename'], $params['surname'], $params['email'], $params['course'],
-                                    $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
-                        if ($update) {
-                            if (!empty($params['modules'])) {
-                                $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
-                            }
-                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    if ($params['id']) { 
+                        // Error if nothing to update.
+                        if ($paramcount == count($paramnames) + 1) {
+                            $data = array('statuscode' => $this->statuscodes['USER_NOTHING_UPDATED'], 'status' => $strings['user_nothing_updated'], 'id' => null);
                         } else {
-                            $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
+                            // Something to update.
+                            $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
+                                        $params['forename'], $params['surname'], $params['email'], $params['course'],
+                                        $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+                            if ($update) {
+                                if (!empty($params['modules'])) {
+                                    $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
+                                }
+                                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                            } else {
+                                $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
+                            }
                         }
                     // Create.
                     } else {
