@@ -85,6 +85,7 @@ class usermanagementtest extends unittestdatabase {
         return array(
             "nodeid" => 1,
             "id" => 1001,
+            "surname" => "",
             "forename" => "test",
             "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 2)));
     }
@@ -243,6 +244,279 @@ class usermanagementtest extends unittestdatabase {
         // Check user is enrolled on expected moulde.
         $querytable = $this->getConnection()->createQueryTable('modules_student', 'SELECT id, userID, idMod FROM modules_student');
         $expectedtable = $this->get_expected_data_set('updateuser')->getTable("modules_student");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update - blank username
+     * @group api
+     */
+    public function test_update_exception_noupdate() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Username.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "username" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank password
+     * @group api
+     */
+    public function test_update_exception_noupdate2() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Password.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "password" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank title
+     * @group api
+     */
+    public function test_update_exception_noupdate3() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Title.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "title" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank forename
+     * @group api
+     */
+    public function test_update_exception_noupdate4() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Forename.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "forename" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank surname
+     * @group api
+     */
+    public function test_update_exception_noupdate5() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Surname.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "surname" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank email
+     * @group api
+     */
+    public function test_update_exception_noupdate6() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Email.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "email" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank course
+     * @group api
+     */
+    public function test_update_exception_noupdate7() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Course.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "course" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank gender
+     * @group api
+     */
+    public function test_update_exception_noupdate8() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Gender.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "gender" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank year
+     * @group api
+     */
+    public function test_update_exception_noupdate9() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Year.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "year" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank role
+     * @group api
+     */
+    public function test_update_exception_noupdate10() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Role.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "role" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank sid
+     * @group api
+     */
+    public function test_update_exception_noupdate11() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Student id.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "studentid" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update  - blank initials
+     * @group api
+     */
+    public function test_update_exception_noupdate12() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Initials.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "initials" => "");
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update - blank modules
+     * @group api
+     */
+    public function test_update_exception_noupdate13() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Nothing to update';
+        $responsearray['id'] = null;
+        // Modules.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "modules" => array());
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
         $this->assertTablesEqual($expectedtable, $querytable);
     }
     /**
