@@ -208,6 +208,30 @@ class coursemanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $course->create($params, $userid));
     }
     /**
+     * Test course update exception school not supplied on faculty update
+     * @group api
+     */
+    public function test_update_exception_school() {
+        // Test course update - ERROR schhol not supplied.
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $course = new \api\coursemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 307;
+        $responsearray['status'] = 'School not supplied';
+        $responsearray['id'] = null;
+        $params['faculty'] = 'Test faculty 2';
+        $this->assertEquals($responsearray, $course->create($params, $userid));
+        // Check courses table.
+        $querytable = $this->getConnection()->createQueryTable('courses', 'SELECT id, name, description, schoolid FROM courses WHERE id = 1');
+        $expectedtable = $this->get_expected_data_set('updatecourse')->getTable("courses");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+        // Check faculty table.
+        $querytable = $this->getConnection()->createQueryTable('faculty', 'SELECT id, name FROM faculty');
+        $expectedtable = $this->get_expected_data_set('updatecourse')->getTable("faculty");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
      * Test successful course deletion
      * @group api
      */
