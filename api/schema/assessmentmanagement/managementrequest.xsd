@@ -74,7 +74,7 @@
                 <xs:complexType>
                     <xs:simpleContent>
                         <xs:extension base="lab">
-                            <xs:attribute type="xs:string" name="id" use="optional"/>
+                            <xs:attribute type="xs:string" name="id" use="required"/>
                         </xs:extension>
                     </xs:simpleContent>
                 </xs:complexType>
