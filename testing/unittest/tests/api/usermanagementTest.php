@@ -537,6 +537,23 @@ class usermanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $user->create($params, $userid));
     }
     /**
+     * Test user update exception user id = 0
+     * @group api
+     */
+    public function test_update_exception_user2() {
+        // Test user update - ERROR user does not exist
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 701;
+        $responsearray['status'] = 'User does not exist';
+        $responsearray['id'] = null;
+        $params['id'] = '0';
+        $params['surname'] = 'unknown';
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+    }
+    /**
      * Test successful user deletion
      * @group api
      */

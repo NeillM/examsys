@@ -103,7 +103,12 @@ class usermanagement extends \api\abstractmanagement {
                 $details = \UserUtils::get_full_details_by_ID($params['id'], $this->db);
             }
         } else {
-            $params['id'] = false;
+            // Set id to false if not supplied others to 0 if suppleid but invalid.
+            if (isset($params['id'])) {
+                $params['id'] = 0;
+            } else {
+                $params['id'] = false;
+            }
         }
         // Set defaults if not provided.
         $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
@@ -124,7 +129,9 @@ class usermanagement extends \api\abstractmanagement {
             $paramcount++;
         }
         
-        if (!$userexists and $params['id']) {
+        // If parameter id supplied but not a valid user - exception.
+        // If parameter id supplied as 0 - exception.
+        if ((!$userexists and $params['id']) or (!$userexists and $params['id'] === 0)) {
             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
         } else {
             if (!in_array($params['role'], $roles)) {
