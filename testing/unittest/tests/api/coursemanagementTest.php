@@ -232,6 +232,29 @@ class coursemanagementtest extends unittestdatabase {
         $this->assertTablesEqual($expectedtable, $querytable);
     }
     /**
+     * Test course update exception nothing to update
+     * @group api
+     */
+    public function test_update_exception_noupadte() {
+        $responsearray = $this->update_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1,
+            "name" => 'TEST',
+            "description" => 'Test course',
+            "school" => 'Test school');
+        $course = new \api\coursemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 308;
+        $responsearray['status'] = 'Request updates nothing';
+        $responsearray['id'] = null;
+        $this->assertEquals($responsearray, $course->create($params, $userid));
+        // Check courses table.
+        $querytable = $this->getConnection()->createQueryTable('courses', 'SELECT id, name, description, schoolid FROM courses WHERE id = 1');
+        $expectedtable = $this->get_expected_data_set('updatecourse')->getTable("courses");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
      * Test successful course deletion
      * @group api
      */

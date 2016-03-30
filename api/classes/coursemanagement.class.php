@@ -44,7 +44,8 @@ class coursemanagement extends \api\abstractmanagement {
         'COURSE_NOT_UPDATED' => 304,
         'COURSE_NOT_CREATED' => 305,
         'COURSE_ALREADY_EXISTS' => 306,
-        'COURSE_INVALID_SCHOOL' => 307
+        'COURSE_INVALID_SCHOOL' => 307,
+        'COURSE_NOTHING_TO_UPDATE' => 308
     );
     
     /**
@@ -56,12 +57,22 @@ class coursemanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_updated', 'course_does_not_exist'
-            , 'course_not_created', 'course_already_exists', 'faculty_not_supplied', 'school_not_supplied'));
+            , 'course_not_created', 'course_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'course_nothing_to_update'));
         $faculty = true;
         if (isset($params['id']) and $params['id'] !== '') {
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
             if ($courseid) {
                 $details = \CourseUtils::get_course_details_by_id($params['id'], $this->db);
+                // Check if anything has been updated.
+                $change = false;
+                $checkparameter = array('name', 'description');
+                foreach ($checkparameter as $check) {
+                    if (!empty($params[$check])) {
+                        if ($details[$check] != $params[$check]) {
+                            $change = true;
+                        }
+                    }
+                }
             }
         } else {
             $params['id'] = false;
@@ -77,8 +88,14 @@ class coursemanagement extends \api\abstractmanagement {
                     $faculty = false;
                 }
             }
+            // mark something is to be updated.
+            if ($courseid) {
+                if ($details['schoolid'] != $schoolid) {
+                    $change = true;
+                }
+            }
         // Get school id if school name not provided.
-        } else if($courseid) {
+        } elseif($courseid) {
             $schoolid = $details['schoolid'];
         }
         
@@ -97,15 +114,19 @@ class coursemanagement extends \api\abstractmanagement {
             // Update Course.
             if ($params['id']) {
                 if ($courseid) {
-                     if ($schoolid == $details['schoolid'] and isset($params['faculty']) and $params['faculty'] !== '') {
-                        $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null);
-                    } else {
-                        $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $this->db);
-                        if ($update) {
-                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    if ($change) {
+                        if ($schoolid == $details['schoolid'] and isset($params['faculty']) and $params['faculty'] !== '') {
+                            $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null);
                         } else {
-                            $data = array('statuscode' => $this->statuscodes['COURSE_NOT_UPDATED'], 'status' => $strings['course_not_updated'], 'id' => null);
+                            $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $this->db);
+                            if ($update) {
+                                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                            } else {
+                                $data = array('statuscode' => $this->statuscodes['COURSE_NOT_UPDATED'], 'status' => $strings['course_not_updated'], 'id' => null);
+                            }
                         }
+                    } else {
+                        $data = array('statuscode' => $this->statuscodes['COURSE_NOTHING_TO_UPDATE'], 'status' => $strings['course_nothing_to_update'], 'id' => null);
                     }
                 } else {
                     $data = array('statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null);
