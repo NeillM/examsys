@@ -215,10 +215,11 @@ if (isset($_POST['Save'])) {
     $startyear = ( date('Y') - 1 );
     for ($i = 0; $i < 2; $i++){
       $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
+      $tmp_calyear = $startyear + $i;
       if ($tmp_session == $session) {
-        $validfrom .= '<option value="' . $tmp_session . '" selected>' . $tmp_session . '</option>';
+        $validfrom .= '<option value="' . $tmp_calyear . '" selected>' . $tmp_session . '</option>';
       } else {
-        $validfrom .= '<option value="' . $tmp_session . '">' . $tmp_session . '</option>';
+        $validfrom .= '<option value="' . $tmp_calyear . '">' . $tmp_session . '</option>';
       }
     }
     $validfrom .= "</select></td></tr>\n";
