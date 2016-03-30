@@ -31,3 +31,4 @@ $string['calendaryear_tt'] = 'e.g. 2015, 2016';
 $string['academicyear_tt'] = 'e.g. 2015/16, 2015/2016, 15/16, 15-16';
 $string['calendarenabled_tt'] = 'Will the academic session display in the calendar?';
 $string['statenabled_tt'] = 'Will the academic session display in the summative statistics report?';
+$string['invalidcalendaryear'] = 'Invalid calendar year';
