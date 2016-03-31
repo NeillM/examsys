@@ -25,6 +25,7 @@ properties:
     paper_title: "Test"
     start_date: "2016-05-30 09:00:00"
     end_date: "2016-05-30 10:00:00"
+    exam_duration: 0
     calendar_year: 2016
     timezone: "Europe/London"
     paper_ownerID: 1
