@@ -69,7 +69,9 @@ class schoolmanagement extends \api\abstractmanagement {
         
         // Get name if not provided.
         if ($schoolid and (empty($params['name']))) {
-            $params['name'] = $details['name'];
+            if (!isset($params['name'])) {
+                $params['name'] = $details['name'];
+            }
         }
         
         // Get faculty if provided.
@@ -79,7 +81,7 @@ class schoolmanagement extends \api\abstractmanagement {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
             }
         // Get faculty if not provided.           
-        } else if ($schoolid) {
+        } elseif ($schoolid and !isset($params['faculty'])) {
             $facultyid = $details['faculty'];
         } else {
             $faculty = false;

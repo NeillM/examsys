@@ -184,7 +184,7 @@ class schoolmanagementtest extends unittestdatabase {
             "faculty" => 'Test faculty 2');
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
-     /**
+    /**
      * Test school update exception invalid school
      * @group api
      */
@@ -198,6 +198,38 @@ class schoolmanagementtest extends unittestdatabase {
         $responsearray['status'] = 'School does not exist';
         $responsearray['id'] = null;
         $params['id'] = 100;
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+    /**
+     * Test school update exception no school supplied
+     * @group api
+     */
+    public function test_update_exception_school2() {
+        // Test school update - ERROR school does not exist
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 602;
+        $responsearray['status'] = 'School not updated';
+        $responsearray['id'] = null;
+        $params['name'] = '';
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+    /**
+     * Test school update exception invalid faculty
+     * @group api
+     */
+    public function test_update_exception_faculty() {
+        // Test school update - ERROR faculty invalid
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 605;
+        $responsearray['status'] = 'Faculty not supplied';
+        $responsearray['id'] = null;
+        $params['faculty'] = '';
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
