@@ -140,7 +140,7 @@ class modulemanagement extends \api\abstractmanagement {
         if (!empty($params['school'])) {
             $schoolid = \SchoolUtils::school_name_exists($params['school'], $this->db);
             if (!$schoolid) {
-                if (isset($params['faculty']) and $params['faculty'] !== '') {
+                if (!empty($params['faculty'])) {
                     $schoolid = \SchoolUtils::generate_school_id($params['school'], $params['faculty'], $this->db);
                 } else {
                     $faculty = false;
@@ -184,7 +184,8 @@ class modulemanagement extends \api\abstractmanagement {
                 // Update Module.
                 if ($params['id']) {
                     if ($moduleid) {
-                        if ($schoolid == $details['schoolid'] and isset($params['faculty']) and $params['faculty'] !== '') {
+                        // If faculty supplied, school must be supplied.
+                        if (empty($params['school']) and !empty($params['faculty'])) {
                             $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null);
                         } else {
                             $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 

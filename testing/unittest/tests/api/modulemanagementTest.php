@@ -240,6 +240,23 @@ class modulemanagementtest extends unittestdatabase {
         $this->assertTablesEqual($expectedtable, $querytable);
     }
     /**
+     * Test module update, also supplying school and faculty that have not changed
+     * @group api
+     */
+    public function test_update_success2() {
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "modulecode" => 'TEST2UPDATE',
+            "school" => 'Test school',
+            "faculty" => 'Test faculty');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
      * Test module update exception module does not exist
      * @group api
      */
