@@ -26,21 +26,20 @@ namespace api;
  * API XML class
  */
 class apixml extends \api\apiabstract {
-   
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/apixml';
-    
+    /**
+     * XML data string
+     */
+    private $xml;
     /**
      * Constructor
      * @param string $request - the xml request 
      */
     public function __construct($request) {
-        // Enable user error handling
-        libxml_use_internal_errors(true);
-        $this->data = new \DOMDocument();
-        $this->data->loadXML($request);
+        $this->xml = $request;
     }
     
     /**
@@ -50,7 +49,12 @@ class apixml extends \api\apiabstract {
      * @return array - errors
      */
     public function validate($folder, $type) {
-        $schema = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
+        // Enable user error handling.
+        libxml_use_internal_errors(true);
+        // Load dom object.
+        $this->data = new \DOMDocument();
+        $this->data->loadXML($this->xml);
+        $schema = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
         . DIRECTORY_SEPARATOR . $type . '.xsd';
         $errorresp = array();
         if (!$this->data->schemaValidate($schema)) {
@@ -60,6 +64,8 @@ class apixml extends \api\apiabstract {
             }
             libxml_clear_errors();
         }
+        // Disable user error handling.
+        libxml_use_internal_errors(false);
         return $errorresp;
     }
     
@@ -68,15 +74,14 @@ class apixml extends \api\apiabstract {
      * @param object $tasktype task object
      * @param array $fields expected fields
      * @param array $actions possible actions
-     * @param object $xml xml data
      * @param array $task user permissions
      * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $xml, $perms, $userid) {
+    public function parse($tasktype, $fields, $actions, $perms, $userid) {
         $langpack = new \langpack();
         $response = array();
-        $xpath = new \DOMXPath($xml); 
+        $xpath = new \DOMXPath($this->data); 
         foreach ($actions as $action) {
             $parentnode = $xpath->query($action);
             $error = false;
@@ -84,23 +89,25 @@ class apixml extends \api\apiabstract {
                 if ($perms[$action]) {
                     foreach ($fields as $field) {
                         $item = $node->getElementsByTagName($field);
-                        if ($item->item(0)->childNodes->length > 1) {
-                            $childarray = array();
-                            foreach ($item->item(0)->childNodes as $childnodes) {
-                                if (!$childnodes->length) {
-                                    $nodevalue = trim($childnodes->nodeValue);
-                                    if ($childnodes->hasAttribute('id')) {
-                                        $childarray[] = array('id' => $childnodes->getAttribute('id'),
-                                            'name' => $childnodes->nodeName, 'value' => $nodevalue);
-                                    } else {
-                                        $childarray[] = array('name' => $childnodes->nodeName,
-                                            'value' => $nodevalue);
+                        if (!empty($item->item(0))) {
+                            if ($item->item(0)->childNodes->length > 1) {
+                                $childarray = array();
+                                foreach ($item->item(0)->childNodes as $childnode) {
+                                    if ($childnode->nodeType != XML_TEXT_NODE) {
+                                        $nodevalue = trim($childnode->nodeValue);
+                                        if ($childnode->hasAttribute('id')) {
+                                            $childarray[] = array('id' => $childnode->getAttribute('id'),
+                                                'name' => $childnode->nodeName, 'value' => $nodevalue);
+                                        } else {
+                                            $childarray[] = array('name' => $childnode->nodeName,
+                                                'value' => $nodevalue);
+                                        }
                                     }
                                 }
+                                $params[$field] = $childarray;
+                            } elseif (!is_null($item->item(0)->nodeValue)) {
+                                $params[$field] = trim($item->item(0)->nodeValue);
                             }
-                            $params[$field] = $childarray;
-                        } elseif (!is_null($item->item(0)->nodeValue)) {
-                            $params[$field] = trim($item->item(0)->nodeValue);
                         }
                     }
                     if ($node->hasAttribute('id')) { 
@@ -112,12 +119,12 @@ class apixml extends \api\apiabstract {
                 }
                 if ($error) {
                     if ($node->hasAttribute('id')) { 
-                        $response[] = &$tasktype->get_response($data, $action, $node->getAttribute('id'));
+                        $response[] = $tasktype->get_response($data, $action, $node->getAttribute('id'));
                     } else {
-                        $response[] = &$tasktype->get_response($data, $action);
+                        $response[] = $tasktype->get_response($data, $action);
                     }
                 } else {
-                    $response[] = &$tasktype->$action($params, $userid);
+                    $response[] = $tasktype->$action($params, $userid);
                 }
             }
         }

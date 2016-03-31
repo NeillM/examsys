@@ -197,6 +197,8 @@ class assessment {
             } elseif ($duration < 0) {
                 $duration = 0;
             }
+        } else {
+            $duration = NULL;
         }
         $unixtime = time();
         $timestamp = date("Y-m-d H:i:s", $unixtime);
@@ -355,24 +357,25 @@ class assessment {
         }
 
         // Update to Modules.
-        $current_modules = Paper_utils::get_modules($id, $this->db);
-        foreach ($modules as $module) {
-            if (!array_key_exists($module, $current_modules)) {
-                $result = $this->db->prepare("INSERT INTO properties_modules (property_id, idMod) VALUES (?, ?)");
-                $result->bind_param('ii', $id, $module);
-                $result->execute();
-                $result->close();
+        if (count($modules) > 0) {
+            $current_modules = Paper_utils::get_modules($id, $this->db);
+            foreach ($modules as $module) {
+                if (!array_key_exists($module, $current_modules)) {
+                    $result = $this->db->prepare("INSERT INTO properties_modules (property_id, idMod) VALUES (?, ?)");
+                    $result->bind_param('ii', $id, $module);
+                    $result->execute();
+                    $result->close();
+                }
+            }
+            foreach ($current_modules as $index => $value) {
+                if (!in_array($index, $modules)) {
+                    $result = $this->db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod = ?");
+                    $result->bind_param('ii', $id, $module);
+                    $result->execute();
+                    $result->close();
+                }
             }
         }
-        foreach ($current_modules as $index => $value) {
-            if (!in_array($index, $modules)) {
-                $result = $this->db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod = ?");
-                $result->bind_param('ii', $id, $module);
-                $result->execute();
-                $result->close();
-            }
-        }
-
         return true;
     }
 
