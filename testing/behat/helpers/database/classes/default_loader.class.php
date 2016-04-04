@@ -33,9 +33,11 @@ class Default_Loader extends Data_Loader {
     tearDown as public clean;
   }
 
-  /** @var string The location of the base fixtures directory. */
-  protected $fixture_base = __DIR__ . '/../../../fixtures/base/';
-
+  public function __construct($load_help = false) {
+    parent::__construct($load_help);
+    $this->fixture_base = __DIR__ . '/../../../fixtures/base/';
+  }
+  
   /**
    * Create and return the connection to the rogo behat database that PHP unit database extension will use.
    * @return type
