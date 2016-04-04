@@ -28,6 +28,11 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
+if ($userObject->has_role('Invigilator')) {
+  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', '#C00000', true, true);
+}
+
 check_var('id', 'GET', true, false, false);
 
 function load_attempts($test_type, $paperID, $userObj, $db) {
