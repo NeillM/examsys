@@ -28,9 +28,14 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
-if ($userObject->has_role('Invigilator')) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-  $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', '#C00000', true, true);
+
+// Redirect External Exminers and Invigilators to their own areas.
+if ($userObject->has_role('External Examiner')) {
+  header("location: ../reviews/");
+  exit();
+} elseif ($userObject->has_role('Invigilator')) {
+  header("location: ../invigilator/");
+  exit();
 }
 
 check_var('id', 'GET', true, false, false);
