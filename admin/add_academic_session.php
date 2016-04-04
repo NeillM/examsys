@@ -88,6 +88,15 @@ if (isset($_POST['submit'])) {
               history.back();
             });
           });
+          
+          function checkForm() {
+            var year = $('#calendar_year').val();
+            var regexp = /^[1-9][0-9][0-9][0-9]$/; 
+            if (regexp.exec(year) === null) {
+               alert('<?php echo $string['invalidcalendaryear'] ?>');
+               return false;
+            }
+          }
         </script>
     </head>
     <body>
@@ -107,7 +116,7 @@ if (isset($_POST['submit'])) {
 
         <br />
             <div align="center">
-                <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
+                <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" onsubmit="return checkForm()" autocomplete="off">
                     <?php
                         if (isset($error) and $error = 'duplicate') {
                     ?>

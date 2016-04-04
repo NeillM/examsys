@@ -31,3 +31,4 @@ $string['calendaryear_tt'] = 'např. 2015, 2016';
 $string['academicyear_tt'] = 'např. 2015/16, 2015/2016, 15/16, 15-16';
 $string['calendarenabled_tt'] = 'Zobrazí se Akademická relace v Kalendáři?';
 $string['statenabled_tt'] = 'Zobrazí se Akademická relace ve Statistikách?';
+$string['invalidcalendaryear'] = 'Invalid calendar year';
