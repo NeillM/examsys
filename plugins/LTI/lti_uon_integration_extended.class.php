@@ -73,7 +73,7 @@ class lti_uon_integration_extended extends lti_integration {
     }
     if (count($data) == 0) {
       // Fake module.
-      // Regeular expression to match XXXX-YYYY-AAAA-BBB occurences in module shortcode where XXXX-YYYY is the module code,
+      // Regeular expression to match XXXX-YYYY-AAAA-BBBB occurences in module shortcode where XXXX-YYYY is the module code,
       // AAAA is the campus. BBBB is the academic year. We only care about the module code and campus.
       preg_match("/^(?P<module>[A-Z]{4}-[0-9]{4})-(?P<campus>UNNC|UNUK|UNMC)-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
       if (count($info) > 0) {
