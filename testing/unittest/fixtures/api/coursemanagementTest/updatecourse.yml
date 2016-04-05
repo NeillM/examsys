@@ -1,0 +1,15 @@
+courses:
+  -
+    id: 1
+    name: "TEST"
+    description: "Test course"
+    schoolid: 1
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 1
+faculty:
+  -
+    id: 1
+    name: "TEST"
