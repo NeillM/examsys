@@ -43,6 +43,15 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 
 check_var('id', 'GET', true, false, false);
 
+/**
+ * Print random qustion from random block
+ * @param array $questions the papers questions
+ * @param array $question the question we are printing
+ * @param integer $paper_type the paper type
+ * @param array $user_answers the users answers
+ * @param integer $current_screen screen we are printing
+ * @param integer $q_no question we are printing 
+ */
 function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;
 
@@ -100,6 +109,15 @@ function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $c
   echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
 }
 
+/**
+ * Print keyword qustion from keyword block
+ * @param array $questions the papers questions
+ * @param array $question the question we are printing
+ * @param integer $paper_type the paper type
+ * @param array $user_answers the users answers
+ * @param integer $current_screen screen we are printing
+ * @param integer $q_no question we are printing 
+ */
 function keywordQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions, $string;
 
