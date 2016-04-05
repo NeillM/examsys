@@ -134,7 +134,7 @@ if (isset($_POST['submit'])) {
 			$mark = 0;
 			$have_answer = false;
 			$saved_response = '';
-      $user_parts = explode('|', $log_answer);
+      $user_parts = json_decode($log_answer);
 			
 			for ($i = 1; $i <= $no_answers; $i++) {
 				$blank_details = explode("[blank", $new_option_text);
@@ -286,7 +286,7 @@ $unique_list = array_fill_keys($blanks, 0);
 
 foreach ($log_answers as $log_type) {
   foreach ($log_type as $id=>$log_answer) {
-    $parts = explode('|', $log_answer);
+    $parts = json_decode($log_answer);
 
     $word = strtolower(trim($parts[$_GET['blank']]));
 
