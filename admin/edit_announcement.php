@@ -36,8 +36,8 @@ if (isset($_POST['save'])) {
   $news_title = trim($_POST['title']);
   $staff_msg = $_POST['staff_msg'];
   $student_msg = $_POST['student_msg'];
-  $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'] . '00';
-  $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'] . '00';
+  $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
+  $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
   $icon = str_replace('icon', '', $_POST['icon_type']);
   
   $result = $mysqli->prepare("UPDATE announcements SET title = ?, staff_msg = ?, student_msg = ?, icon = ?, startdate = ?, enddate = ? WHERE id = ?");

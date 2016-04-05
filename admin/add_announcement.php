@@ -29,8 +29,8 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   $title = trim($_POST['title']);
   $staff_msg = $_POST['staff_msg'];
   $student_msg = $_POST['student_msg'];
-  $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'] . '00';
-  $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'] . '00';
+  $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
+  $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
   $icon = str_replace('icon', '', $_POST['icon_type']);  // Take the word icon out, store only the number.
   
   $result = $mysqli->prepare("INSERT INTO announcements VALUES (NULL, ?, ?, ?, ?, ?, ?, NULL)");
