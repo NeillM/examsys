@@ -84,4 +84,21 @@ abstract class abstractmanagement {
             "nodeid" => $nodeid);
     }
     
+    /**
+     * Check if the parameters sent to the API will result in an update
+     * @param array $parameters the parameters to check
+     * @param array $current current values
+     * @param array $update request update values
+     * @return bool true if a value has been updated
+     */
+    public function check_if_updated($parameters, $current, $update) {
+        foreach ($parameters as $check) {
+            if (!empty($update[$check])) {
+                if ($current[$check] != $update[$check]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

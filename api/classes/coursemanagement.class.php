@@ -64,15 +64,8 @@ class coursemanagement extends \api\abstractmanagement {
             if ($courseid) {
                 $details = \CourseUtils::get_course_details_by_id($params['id'], $this->db);
                 // Check if anything has been updated.
-                $change = false;
                 $checkparameter = array('name', 'description');
-                foreach ($checkparameter as $check) {
-                    if (!empty($params[$check])) {
-                        if ($details[$check] != $params[$check]) {
-                            $change = true;
-                        }
-                    }
-                }
+                $change = $this->check_if_updated($checkparameter, $details, $params);
             }
         } else {
             $params['id'] = false;
