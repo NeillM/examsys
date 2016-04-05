@@ -29,15 +29,17 @@ abstract class Data_Loader {
   protected $phpunit_db;
 
   /** @var string The location of the base fixtures directory. */
-  protected $fixture_base = __DIR__ . '/../../../fixtures/';
+  protected $fixture_base;
 
   /** @var string The location that the help sql files are located in. */
-  protected $help_base = __DIR__ . '/../../../../../install/';
+  protected $help_base;
   
   /** @var boolean Defines if the Rogo help files should be loaded. */
   protected $load_help;
 
   public function __construct($load_help = false) {
+    $this->fixture_base = __DIR__ . '/../../../fixtures/';
+    $this->help_base = __DIR__ . '/../../../../../install/';
     $this->load_help = $load_help;
   }
 
