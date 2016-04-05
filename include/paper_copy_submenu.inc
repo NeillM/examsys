@@ -181,7 +181,7 @@ if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_m
 <tr>
 <?php
   $next_flag = 1;
-  echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td><select name="campus">';
+  echo '<tr><td style="text-align:right">' . $string['campus'] . '</td><td><select name="campus" style="width:120px">';
   $campusobj = new campus($mysqli);
   $campuses = $campusobj->get_all_campus_details();
   foreach ($campuses as $key => $campusarray) {
