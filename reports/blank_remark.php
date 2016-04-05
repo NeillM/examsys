@@ -136,7 +136,7 @@ if (isset($_POST['submit'])) {
 			$saved_response = '';
       $user_parts = json_decode($log_answer);
 			
-			for ($i = 1; $i <= $no_answers; $i++) {
+			for ($i = 0; $i < $no_answers; $i++) {
 				$blank_details = explode("[blank", $new_option_text);
 				$blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
 				$blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
@@ -287,14 +287,14 @@ $unique_list = array_fill_keys($blanks, 0);
 foreach ($log_answers as $log_type) {
   foreach ($log_type as $id=>$log_answer) {
     $parts = json_decode($log_answer);
-
-    $word = strtolower(trim($parts[$_GET['blank']]));
-
-    if ($word != 'u') {
-      if (isset($unique_list[$word])) {
-        $unique_list[$word]++;
-      } else {
-        $unique_list[$word] = 1;
+    foreach ($parts as $part) {
+      $word = strtolower(trim($part));
+      if ($word != 'u') {
+        if (isset($unique_list[$word])) {
+          $unique_list[$word]++;
+        } else {
+          $unique_list[$word] = 1;
+        }
       }
     }
   }
