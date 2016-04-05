@@ -89,10 +89,11 @@ class apixml extends \api\apiabstract {
                 if ($perms[$action]) {
                     foreach ($fields as $field) {
                         $item = $node->getElementsByTagName($field);
-                        if (!empty($item->item(0))) {
-                            if ($item->item(0)->childNodes->length > 1) {
+                        $item0 = $item->item(0);
+                        if (!empty($item0)) {
+                            if ($item0->childNodes->length > 1) {
                                 $childarray = array();
-                                foreach ($item->item(0)->childNodes as $childnode) {
+                                foreach ($item0->childNodes as $childnode) {
                                     if ($childnode->nodeType != XML_TEXT_NODE) {
                                         $nodevalue = trim($childnode->nodeValue);
                                         if ($childnode->hasAttribute('id')) {
@@ -105,8 +106,8 @@ class apixml extends \api\apiabstract {
                                     }
                                 }
                                 $params[$field] = $childarray;
-                            } elseif (!is_null($item->item(0)->nodeValue)) {
-                                $params[$field] = trim($item->item(0)->nodeValue);
+                            } elseif (!is_null($item0->nodeValue)) {
+                                $params[$field] = trim($item0->nodeValue);
                             }
                         }
                     }

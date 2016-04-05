@@ -45,3 +45,11 @@ properties_modules:
   -
     property_id: 1
     idMod: 1
+users:
+  -
+    id: 1
+    password: "87654321"
+    surname: "sysadmin"
+    username: "sysadmin"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
