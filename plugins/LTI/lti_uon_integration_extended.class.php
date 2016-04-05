@@ -53,9 +53,6 @@ class lti_uon_integration_extended extends lti_integration {
    */
   private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ') {
     // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
-    // shortname for real module try XXXXYYYY-Z-AAAA-BBB-CCCC  WHERE XXXXYYYY is the module code, Z is the offering,
-    // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
-    // shortname for metamodules is XXXXYYYY-Z-AAAA-BBB-XXXXYYYY-Z-AAAA-BBB-CCCC where the set of XXXXYYYY-Z-AAAA-BBB are unknown
     $data = array();
     $fin = strlen($course_title);
     if (strpos($course_title, '(') !== false) $fin = strpos($course_title, '(') - 1;
@@ -63,33 +60,27 @@ class lti_uon_integration_extended extends lti_integration {
     if ($course_title == ' ') {
       $course_title = 'MISSING COURSE TITLE';
     }
-    // Regeular expression to match XXXXYYYY-Z-AAAA-BBB occurences in module shortcode, this will also catch meta modules.
-    preg_match_all("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})/", $moduleshortcode, $info);
+    // Real module.
+    // Regular expression to match XXXXYYYY-Z-AAAA-BBB-CCCC occurences in module shortcode where XXXXYYYY is the module code, Z is the offering,
+    // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
+    preg_match_all("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
     if (count($info) > 0) {
       $i = 0;
-      foreach ($info['module'] as $module) {
-        $campus = $info['campus'][$i];
-        if ($campus != 'UNUK') {
-          $module .= '_' . $campus;
-        }
-        $data[] = array('SMS', $module, $campus, 'UNKNOWN School', 0, $course_title);
-        $i++;
+      if ($info['campus'] != 'UNUK') {
+        $info['module']  .= '_' . $info['campus'];
       }
+      $data[] = array('SMS', $info['module'] , $info['campus'], 'UNKNOWN School', 0, $course_title);
     }
     if (count($data) == 0) {
       // Fake module.
-      // shortname for non module ZZ-XXXX-YYYY where ZZ is the two/three letter department code, XXXX is the module name (any length)
-      // YYYY is the campus.
-      preg_match("/^(?P<department>[A-Z]{2,3})-(?P<module>[A-Z]+)-(?P<campus>UNNC|UNUK|UNMC)$/", $moduleshortcode, $info);
+      // Regeular expression to match XXXX-YYYY-AAAA-BBB occurences in module shortcode where XXXX-YYYY is the module code,
+      // AAAA is the campus. BBBB is the academic year. We only care about the module code and campus.
+      preg_match("/^(?P<module>[A-Z]{4}-[0-9]{4})-(?P<campus>UNNC|UNUK|UNMC)-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
       if (count($info) > 0) {
         if ($info['campus'] != 'UNUK') {
           $info['module']  .= '_' . $info['campus'];
         }
-        $schoolname = 'UNKNOWN School';
-        if (isset($this->dept_code[$info['department']])) {
-          $schoolname = $this->dept_code[$info['department']];
-        }
-        $data[] = array('Manual', $info['module'] , $info['campus'], $schoolname, 1, $course_title);
+        $data[] = array('Manual', $info['module'] , $info['campus'], 'UNKNOWN School', 1, $course_title);
       }
     }
  
