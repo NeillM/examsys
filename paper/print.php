@@ -43,7 +43,7 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 
 check_var('id', 'GET', true, false, false);
 
-function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
+function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions;
 
   $selected_q_id = '';
@@ -58,12 +58,12 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
 
   if ($selected_q_id == '') {
     // Generate a random question ID.
-    $random_q_no = count($random_q_data['options']);
+    $random_q_no = count($question['options']);
     $try = 0;
     $unique = false;
     while ($unique == false and $try < 9999) {
       $selected_no = rand(0,$random_q_no-1);
-      $selected_q_id = $random_q_data['options'][$selected_no]['option_text'];
+      $selected_q_id = $question['options'][$selected_no]['option_text'];
       if (!isset($used_questions[$selected_q_id])) $unique = true;
       $try++;
     }
@@ -100,7 +100,7 @@ function randomQOverwrite(&$questions, $random_q_data, $paper_type, $user_answer
   echo "\n<input type=\"hidden\" name=\"q" . $q_no . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
 }
 
-function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answers, $current_screen, $q_no) {
+function keywordQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no) {
   global $mysqli, $used_questions, $string;
 
   $selected_q_id = '';
@@ -117,7 +117,7 @@ function keywordQOverwrite(&$questions, $random_q_data, $paper_type, $user_answe
     // Generate a random question ID from keywords.
     $question_ids = array();
     $question_data = $mysqli->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
-    $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
+    $question_data->bind_param('i', $question['options'][0]['option_text']);
     $question_data->execute();
     $question_data->bind_result($q_id);
     while ($question_data->fetch()) {
