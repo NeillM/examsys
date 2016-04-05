@@ -28,6 +28,16 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
+
+// Redirect External Exminers and Invigilators to their own areas.
+if ($userObject->has_role('External Examiner')) {
+  header("location: ../reviews/");
+  exit();
+} elseif ($userObject->has_role('Invigilator')) {
+  header("location: ../invigilator/");
+  exit();
+}
+
 check_var('id', 'GET', true, false, false);
 
 function load_attempts($test_type, $paperID, $userObj, $db) {
