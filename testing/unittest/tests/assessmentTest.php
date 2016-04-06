@@ -241,7 +241,7 @@ class assessmenttest extends unittestdatabase {
         $labs = "1";
         $duration = 90;
         $session = 2016;
-        $modules = array(1);
+        $modules = array(2);
         $timezone = "Europe/London";
         $userid = 1;
         $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
@@ -255,9 +255,13 @@ class assessmenttest extends unittestdatabase {
         // Test update summative max duration too small - SUCCESS
         $duration = -1;
         $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
-        // Test schedule table is as expected.
+        // Test properties table is as expected.
         $queryTable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, start_date, end_date, exam_duration FROM properties');
         $expectedTable = $this->get_expected_data_set('updatedproperties2')->getTable("properties");
+        $this->assertTablesEqual($expectedTable, $queryTable);
+        // Test properties_modules table is as expected.
+        $queryTable = $this->getConnection()->createQueryTable('properties_modules', 'SELECT property_id, idMod FROM properties_modules');
+        $expectedTable = $this->get_expected_data_set('updatedproperties2')->getTable("properties_modules");
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
     /**
