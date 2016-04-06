@@ -55,6 +55,7 @@ if (isset($_POST['submit'])) {
 
   // Insert the new IP addresses.
   $addresses = explode('<br />', nl2br($_POST['addresses']));
+  $addresscount = 0;
   foreach ($addresses as $individual_address) {
     $address = trim($individual_address);
 
@@ -75,12 +76,19 @@ if (isset($_POST['submit'])) {
         $result->bind_param('issi', $labID, $address, $hostname, $_POST['low_bandwidth']);
         $result->execute();
         $result->close();
+        $addresscount++;
       } else {
         $bad_addresses[] = $address;
       }
     }
   }
-
+  // Delete lab if no client identifiers assoiciated.
+  if ($addresscount == 0) {
+    $result = $mysqli->prepare("DELETE FROM labs WHERE id = ?");
+    $result->bind_param('i', $labID);
+    $result->execute();
+    $result->close();
+  }
   if (count($bad_addresses) == 0) {
     header("location: list_labs.php");
     exit;
