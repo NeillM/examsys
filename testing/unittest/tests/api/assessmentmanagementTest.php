@@ -342,6 +342,18 @@ class assessmentmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
     /**
+     * Test assessment update startdate
+     * @group api
+     */
+    public function test_update_startdate() {
+        $params = $this->update_param_array();
+        $responsearray = $this->update_response_array();
+        $params['startdatetime'] = "2016-01-25T08:00:00";
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
      * Test assessment update exception - invalid paper id
      * @group api
      */

@@ -163,8 +163,14 @@ class assessment {
         if (!$validsession) {
              throw new Exception('INVALID_SESSION');
         }
+        
+        // Set up start date and end date based on timezone.
+        $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
+        $startdate = $datesarray[0];
+        $enddate = $datesarray[1];
+        
         // Check startdate and enddate
-        if ($papertype != self::TYPE_SUMMATIVE and $enddate <= $startdate) {
+        if ((!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) and $enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
         }
         // Verify timezone is supported, revert to server timezone if not.
@@ -172,10 +178,6 @@ class assessment {
         if (!array_key_exists($timezone, $decode_timezones)) {
             $timezone = $this->server_timezone;
         }
-        // Set up start date and end date based on timezone.
-        $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
-        $startdate = $datesarray[0];
-        $enddate = $datesarray[1];
 
         // Set the summative rubric
         if ($papertype == self::TYPE_SUMMATIVE) {
@@ -297,9 +299,14 @@ class assessment {
             $params['calendar_year'] = array('i', $session);
             $changes[] = array('old'=>$details['session'], 'new'=>$session, 'part'=>'session');
         }
+    
+        // Set up start date and end date based on timezone.
+        $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
+        $startdate = $datesarray[0];
+        $enddate = $datesarray[1];
 
         // Check startdate and enddate
-        if ($enddate <= $startdate) {
+        if ((!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) and $enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
         }
         if ($startdate != $details['startdatetime']) {
@@ -310,12 +317,7 @@ class assessment {
             $params['end_date'] = array('s', $enddate);
             $changes[] = array('old'=>$details['enddatetime'], 'new'=>$enddate, 'part'=>'enddate');
         }
-        // Set up start date and end date based on timezone.
-        $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
-        $startdate = $datesarray[0];
-        $enddate = $datesarray[1];
-
-
+        
         // Verify timezone is supported, revert to server timezone if not.
         $decode_timezones = json_decode($this->timezones, true);
         if (!array_key_exists($timezone, $decode_timezones)) {
