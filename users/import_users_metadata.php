@@ -206,11 +206,10 @@ if (!$module_details) {
 <?php
   $yearutils = new yearutils($mysqli);
   $current_year = $yearutils->get_current_session();
-
-  $parts = explode('/', $current_year);
-  echo "<option value=\"" . ($parts[0]-1) . "/" . ($parts[1]-1) . "\">" . ($parts[0]-1) . "/" . ($parts[1]-1) . "</option>\n";
+  $previous_year = $current_year -1;
+  $next_year = $current_year + 1;  echo "<option value=\"$previous_year\">$previous_year</option>\n";
   echo "<option value=\"$current_year\" selected>$current_year</option>\n";
-  echo "<option value=\"" . ($parts[0]+1) . "/" . ($parts[1]+1) . "\">" . ($parts[0]+1) . "/" . ($parts[1]+1) . "</option>\n";
+  echo "<option value=\"$next_year\">$next_year</option>\n";
 
 ?>
 </select></td></tr>
