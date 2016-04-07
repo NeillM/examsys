@@ -342,6 +342,32 @@ class assessmentmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
     /**
+     * Test assessment update exception - nothing to update
+     * @group api
+     */
+    public function test_update_exception_noupdate() {
+        // Test paper update - ERROR invalid paper id.
+        $params = array(
+            "id" => 1,
+            "nodeid" => 1,
+            "title" => "Test create formative",
+            "owner" => 1,
+            "startdatetime" => "2016-01-25T09:00:00",
+            "enddatetime" => "2016-01-25T10:00:00",
+            "duration" => 60,
+            "session" => 2016,
+            "modules" => array(array('id' => 0, 'value' => 1)),
+            "labs" => array(array('id' => 0, 'value' => 'Test lab')),
+            "timezone" => "Europe/London");
+        $responsearray = $this->update_response_array();
+        $userid = 1;
+        $assessment = new \api\assessmentmanagement($this->db);
+        $responsearray['statuscode'] = 216;
+        $responsearray['status'] = 'Request updates nothing';
+        $responsearray['id'] = null;
+        $this->assertEquals($responsearray, $assessment->create($params, $userid));
+    }
+    /**
      * Test assessment update exception - invalid paper id
      * @group api
      */
