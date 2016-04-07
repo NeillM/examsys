@@ -164,6 +164,23 @@ class facultymanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $faculty->create($params, $userid));
     }
     /**
+     * Test faculty update exception nothing to update
+     * @group api
+     */
+    public function test_update_exception_noupdate() {
+        $responsearray = $this->update_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1,
+            "name" => 'TEST');
+        $faculty = new \api\facultymanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 407;
+        $responsearray['status'] = 'Request updates nothing';
+        $responsearray['id'] = null;
+        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+    }
+    /**
      * Test faculty update exception faculty does not exist
      * @group api
      */

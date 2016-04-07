@@ -43,7 +43,8 @@ class facultymanagement extends \api\abstractmanagement {
         'FACUTLY_NOT_CREATED' => 403,
         'FACUTLY_NOT_DELETED_INUSE' => 404,
         'FACUTLY_ALREADY_EXISTS' => 405,
-        'FACUTLY_NAME_NOT_SUPPLIED' => 406
+        'FACUTLY_NAME_NOT_SUPPLIED' => 406,
+        'FACUTLY_NOTHING_TO_UPDATE' => 407
     );
     
     /**
@@ -55,11 +56,14 @@ class facultymanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_updated', 'faculty_does_not_exist'
-            , 'faculty_not_created', 'faculty_already_exists', 'faculty_name_not_supplied'));
+            , 'faculty_not_created', 'faculty_already_exists', 'faculty_name_not_supplied', 'faculty_nothing_to_update'));
         if (isset($params['id']) and $params['id'] !== '') {
             $facultyid = \FacultyUtils::faculty_name_by_id($params['id'], $this->db);
             if ($facultyid) {
                 $details = \FacultyUtils::get_faculty_details_by_id($params['id'], $this->db);
+                // Check if anything has been updated.
+                $checkparameter = array('name');
+                $change = $this->check_if_updated($checkparameter, $details, $params);
             }
         } else {
             $params['id'] = false;
@@ -72,11 +76,15 @@ class facultymanagement extends \api\abstractmanagement {
             // Update faculty.
             if ($params['id']) {
                 if ($facultyid) {
-                    $update = \FacultyUtils::update_faculty($params['id'], $params['name'],  $this->db);
-                    if ($update) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    if ($change) {
+                        $update = \FacultyUtils::update_faculty($params['id'], $params['name'],  $this->db);
+                        if ($update) {
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                        } else {
+                            $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null);
+                        }
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['FACUTLY_NOTHING_TO_UPDATE'], 'status' => $strings['faculty_nothing_to_update'], 'id' => null);
                     }
                 } else {
                     $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null);
