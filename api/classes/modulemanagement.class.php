@@ -48,7 +48,8 @@ class modulemanagement extends \api\abstractmanagement {
         'MODULE_USER_NOT_ENROLLED' => 508,
         'MODULE_USER_NOT_UNENROLLED' => 509,
         'MODULE_SESSION_NOT_SUPPLIED' => 510,
-        'MODULE_INVALID_SCHOOL' => 511
+        'MODULE_INVALID_SCHOOL' => 511,
+        'MODULE_NOTHING_TO_UPDATE' => 512
     );
            
     /**
@@ -125,12 +126,21 @@ class modulemanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist',
-            'module_not_created', 'module_already_exists', 'faculty_not_supplied', 'school_not_supplied'));
+            'module_not_created', 'module_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'module_nothing_to_update'));
         $faculty = true;
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
             if ($moduleid) {
                 $details = \module_utils::get_full_details_by_ID($params['id'], $this->db);
+                // Check if anything has been updated.
+                if (!empty($params['modulecode'])) {
+                    $params['moduleid'] = $params['modulecode'];
+                }
+                if (!empty($params['name'])) {
+                    $params['fullname'] = $params['name'];
+                }
+                $checkparameter = array('moduleid', 'fullname', 'sms');
+                $change = $this->check_if_updated($checkparameter, $details, $params);
             }
         } else {
             $params['id'] = false;
@@ -144,6 +154,12 @@ class modulemanagement extends \api\abstractmanagement {
                     $schoolid = \SchoolUtils::generate_school_id($params['school'], $params['faculty'], $this->db);
                 } else {
                     $faculty = false;
+                }
+            }
+            // mark something is to be updated.
+            if ($moduleid) {
+                if ($details['schoolid'] != $schoolid) {
+                    $change = true;
                 }
             }
         // Get school id if school name not provided.
@@ -184,17 +200,21 @@ class modulemanagement extends \api\abstractmanagement {
                 // Update Module.
                 if ($params['id']) {
                     if ($moduleid) {
-                        // If faculty supplied, school must be supplied.
-                        if (empty($params['school']) and !empty($params['faculty'])) {
-                            $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null);
-                        } else {
-                            $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
-                                $params['name'], $schoolid, $params['sms'], $this->db);
-                            if ($update) {
-                                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                        if ($change) {
+                            // If faculty supplied, school must be supplied.
+                            if (empty($params['school']) and !empty($params['faculty'])) {
+                                $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null);
                             } else {
-                                $data = array('statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'], 'status' => $strings['module_not_updated'], 'id' => null);
+                                $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
+                                    $params['name'], $schoolid, $params['sms'], $this->db);
+                                if ($update) {
+                                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                                } else {
+                                    $data = array('statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'], 'status' => $strings['module_not_updated'], 'id' => null);
+                                }
                             }
+                        } else {
+                            $data = array('statuscode' => $this->statuscodes['MODULE_NOTHING_TO_UPDATE'], 'status' => $strings['module_nothing_to_update'], 'id' => null);
                         }
                     } else {
                         $data = array('statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'], 'status' => $strings['module_does_not_exist'], 'id' => null);

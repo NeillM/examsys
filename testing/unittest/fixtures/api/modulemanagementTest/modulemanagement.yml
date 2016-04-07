@@ -13,6 +13,7 @@ modules:
     active: 1
     schoolid: 1
     academic_year_start: "07/01"
+    sms: "unittest"
   -
     id: 3
     moduleid: "TEST3"
