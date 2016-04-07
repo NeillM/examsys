@@ -156,7 +156,7 @@ class modulemanagement extends \api\abstractmanagement {
                     $faculty = false;
                 }
             }
-            // mark something is to be updated.
+            // Mark something is to be updated.
             if ($moduleid) {
                 if ($details['schoolid'] != $schoolid) {
                     $change = true;
