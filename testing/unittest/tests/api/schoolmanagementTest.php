@@ -185,6 +185,24 @@ class schoolmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
+     * Test school update exception nothing to update
+     * @group api
+     */
+    public function test_update_exception_noupdate() {
+        $responsearray = $this->update_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1,
+            "name" => 'Test school',
+            "faculty" => 'Test faculty');
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 607;
+        $responsearray['status'] = 'Request updates nothing';
+        $responsearray['id'] = null;
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+    /**
      * Test school update exception invalid school
      * @group api
      */
@@ -214,6 +232,7 @@ class schoolmanagementtest extends unittestdatabase {
         $responsearray['status'] = 'School not updated';
         $responsearray['id'] = null;
         $params['name'] = '';
+        $params['faculty'] = 'Test faculty 2';
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
