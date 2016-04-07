@@ -22,4 +22,4 @@ $string['user_not_created'] = 'User not created';
 $string['user_not_updated'] = 'User not updated';
 $string['user_invalid_role'] = 'User has invalid role';
 $string['user_already_exists'] = 'User already exists';
-$string['user_nothing_updated'] = 'Nothing to update';
+$string['user_nothing_to_update'] = 'Request updates nothing';
