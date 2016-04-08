@@ -912,7 +912,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 		echo "<script>\n";
-		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $mediadirectory->url($q_media) . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
+		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $mediadirectory->url($q_media, false, false, true) . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
 	} else {
@@ -1062,7 +1062,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 					echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
 					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 					echo "<script>\n";
-					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $mediadirectory->url($q_media) . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
+					echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $mediadirectory->url($q_media, false, false, true) . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
 					echo "</script>\n";
 					//<!-- ==================================================== -->
 				} else {
