@@ -29,11 +29,8 @@ require_once '../include/errors.inc';
 require_once '../include/paper_security.inc';
 
 
-// Redirect External Exminers and Invigilators to their own areas.
-if ($userObject->has_role('External Examiner')) {
-  header("location: ../reviews/");
-  exit();
-} elseif ($userObject->has_role('Invigilator')) {
+// Redirect Invigilators to their own areas.
+if ($userObject->has_role('Invigilator')) {
   header("location: ../invigilator/");
   exit();
 }
