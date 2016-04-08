@@ -197,8 +197,8 @@
 
   $checklist = '';
   if (count($moduleIDs) > 0) {
-    $moduleIDs = array_keys($moduleIDs);
-    $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $moduleIDs) . ")");
+    $ids = array_keys($moduleIDs);
+    $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $ids) . ")");
     $stmt->execute();
     $stmt->bind_result($tmp_checklist);
     $check = array();
