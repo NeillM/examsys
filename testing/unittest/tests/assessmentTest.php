@@ -231,6 +231,7 @@ class assessmenttest extends unittestdatabase {
      */
     public function test_update() {
         // Test update paper - SUCCESS
+        $this->config->set('cfg_summative_mgmt', false);
         $papertitle = "Test update summative";
         $papertype = 2;
         $id = $this->create_paper($papertitle, $papertype);
@@ -379,6 +380,7 @@ class assessmenttest extends unittestdatabase {
      * @group assessment
      */
     public function test_update_valid_dates() {
+        $this->config->set('cfg_summative_mgmt', false);
         $papertitle = "Test update summative";
         $papertype = 2;
         $id = $this->create_paper($papertitle, $papertype);
