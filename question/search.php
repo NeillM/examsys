@@ -221,7 +221,7 @@ if (isset($_GET['submit'])) {
     $params .= 'i';
   }
 
-  $searchterm = $_GET['searchterm'];
+  $searchterm = $mysqli->real_escape_string($_GET['searchterm']);
   if ($searchterm == '') {
     $search_string = '';
   } else {
