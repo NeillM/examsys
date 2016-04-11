@@ -64,6 +64,8 @@ require '../include/sidebar_menu.inc';
 </div>
 <?php
   $mediadirectory = rogo_directory::get_directory('media');
+  $deleted_files = 0;
+  $saved_space = 0;
   if (isset($_POST["submit"]) and isset($_POST["deletefiles"])) {
     $deletefiles = unserialize(base64_decode(($_POST['deletefiles'])));
     
