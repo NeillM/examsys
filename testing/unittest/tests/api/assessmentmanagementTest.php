@@ -64,7 +64,7 @@ class assessmentmanagementtest extends unittestdatabase {
             "nodeid" => 1,
             "id" => 2,
             "title" => "Test Formative 2 update",
-            "modules" => array(array('id' => 0, 'value' => 1)),
+            "modules" => array(array('id' => 0, 'value' => 2)),
             "labs" => array(array('id' => 0, 'value' => 'Test lab')));
     }
     /**
@@ -340,6 +340,10 @@ class assessmentmanagementtest extends unittestdatabase {
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db);
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
+        // Check properties_modules.
+        $querytable = $this->getConnection()->createQueryTable('properties_modules', 'SELECT property_id, idMod FROM properties_modules');
+        $expectedtable = $this->get_expected_data_set('updateassessment')->getTable("properties_modules");  
+        $this->assertTablesEqual($expectedtable, $querytable); 
     }
     /**
      * Test assessment update startdate

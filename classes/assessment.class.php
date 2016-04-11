@@ -372,7 +372,7 @@ class assessment {
             foreach ($current_modules as $index => $value) {
                 if (!in_array($index, $modules)) {
                     $result = $this->db->prepare("DELETE FROM properties_modules WHERE property_id = ? and idMod = ?");
-                    $result->bind_param('ii', $id, $module);
+                    $result->bind_param('ii', $id, $index);
                     $result->execute();
                     $result->close();
                 }
