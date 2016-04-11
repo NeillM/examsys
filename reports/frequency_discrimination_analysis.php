@@ -664,11 +664,11 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 
           if ($display_method == 'dropdown') {
             $blank_word = strtolower(trim($blank_options[0]));
-            if (isset($freq_log[$q_id][$i+1][$blank_word])) $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_word];
-            if (isset($top_log[$q_id][$i+1][$blank_word])) $tmp_top_no += $top_log[$q_id][$i+1][$blank_word];
-            if (isset($bottom_log[$q_id][$i+1][$blank_word])) $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_word];
+            if (isset($freq_log[$q_id][$i][$blank_word])) $tmp_correct_no += $freq_log[$q_id][$i][$blank_word];
+            if (isset($top_log[$q_id][$i][$blank_word])) $tmp_top_no += $top_log[$q_id][$i][$blank_word];
+            if (isset($bottom_log[$q_id][$i][$blank_word])) $tmp_bottom_no += $bottom_log[$q_id][$i][$blank_word];
 
-            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $blank_word);
+            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i, $blank_word);
           } else {
             $unique_blank_options = array_intersect_key($blank_options, array_unique(array_map('strtolower', $blank_options)));
             $unique_blank_options = array_map('strtolower', $unique_blank_options);
@@ -681,17 +681,17 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
             $unique_blank_options = array_unique($new_blank_options);
 
             foreach ($unique_blank_options as $blank_option) {
-              if (isset($freq_log[$q_id][$i+1][$blank_option])) {
-                $tmp_correct_no += $freq_log[$q_id][$i+1][$blank_option];
+              if (isset($freq_log[$q_id][$i][$blank_option])) {
+                $tmp_correct_no += $freq_log[$q_id][$i][$blank_option];
               }
-              if (isset($top_log[$q_id][$i+1][$blank_option])) {
-                $tmp_top_no += $top_log[$q_id][$i+1][$blank_option];
+              if (isset($top_log[$q_id][$i][$blank_option])) {
+                $tmp_top_no += $top_log[$q_id][$i][$blank_option];
               }
-              if (isset($bottom_log[$q_id][$i+1][$blank_option])) {
-                $tmp_bottom_no += $bottom_log[$q_id][$i+1][$blank_option];
+              if (isset($bottom_log[$q_id][$i][$blank_option])) {
+                $tmp_bottom_no += $bottom_log[$q_id][$i][$blank_option];
               }
             }
-            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i+1, $unique_blank_options);
+            $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i, $unique_blank_options);
 
           }
           $t = ($user_total != 0) ? number_format(($tmp_correct_no/$user_total)*100,0) : 0;
