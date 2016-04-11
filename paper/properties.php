@@ -1272,9 +1272,9 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
      echo "</td></tr>\n";
      echo "<tr><td align=\"right\" valign=\"top\">" . $string['name'] . "&nbsp;</td><td colspan=\"3\">";
      if (isset($_POST['Submit']) and !$title_unique) {
-       echo "<input type=\"text\" size=\"75\" maxlength=\"255\" class=\"errfield\" value=\"" . $_POST['paper_title'] . "\" name=\"paper_title\"$disabled required />";
+       echo "<input type=\"text\" size=\"75\" maxlength=\"200\" class=\"errfield\" value=\"" . $_POST['paper_title'] . "\" name=\"paper_title\"$disabled required />";
      } else {
-       echo "<input type=\"text\" size=\"75\" maxlength=\"255\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required />";
+       echo "<input type=\"text\" size=\"75\" maxlength=\"200\" value=\"" . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required />";
      }
      echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\"></td></tr>\n";
    ?>

@@ -137,7 +137,7 @@ $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'of
 </table>
 </div>
 <br />
-<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="255" style="width:650px" required />
+<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="200" style="width:650px" required />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
 <?php
 if (isset($_GET['module'])) {

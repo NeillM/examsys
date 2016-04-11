@@ -425,7 +425,10 @@ Class PaperUtils {
     $configObject = \Config::get_instance();
     $assessment = new assessment($db, $configObject);
     $now = date("Y-m-d H:i:s");
+    $details = Paper_utils::get_paper_properties($paperID, $db);
+    $papertitle = $details['title'] . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
     $update_params = array(
+      'paper_title' => array('s',$papertitle),
       'deleted' => array('s', $now),
       'paper_ownerID' => array('i', $owner)
     );
