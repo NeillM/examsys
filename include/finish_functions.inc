@@ -2089,7 +2089,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         if ($paper[$question]['score_method'] == 'Mark per Question' and $have_answer) {
-          $paper[$question]['mark'] = ($paper[$question]['mark'] == ($no_blanks - 1) * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] :  $paper[$question]['marks_incorrect'];
+          $paper[$question]['mark'] = ($paper[$question]['mark'] == $no_blanks * $paper[$question]['marks_correct']) ? $paper[$question]['marks_correct'] :  $paper[$question]['marks_incorrect'];
         }
         break;
       case 'hotspot':
