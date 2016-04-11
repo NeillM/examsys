@@ -121,7 +121,7 @@ function check_datetime($start_date, $end_date, $string, $db) {
 function check_finished($propertyObj, $userObj, $string, $db) {
   $notice = UserNotices::get_instance();
   
-  if ($propertyObj->get_paper_type() != '2') {
+  if ($propertyObj->get_paper_type() != '2' and $propertyObj->get_paper_type() != '1') {
     return true;
   }
   
