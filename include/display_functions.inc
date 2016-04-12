@@ -714,6 +714,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           }
           echo "</td></tr>\n";
         } elseif ($question['display_method'] == 'horizontal') {
+          echo "<div style=\"float:left; margin-right:15px; margin-bottom:15px\">";
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
             echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" checked=\"checked\" />";
           } else {
@@ -721,7 +722,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           }
           if ($display_option['option_text'] != '') echo '&nbsp;' . $display_option['option_text'];
           if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-          echo '&nbsp;&nbsp;';
+          echo "</div>";
         } else {
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
             echo "<option value=\"" . $tmp_part_id . "\" selected>" . $display_option['option_text'] . "</option>\n";
