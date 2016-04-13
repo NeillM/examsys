@@ -134,3 +134,6 @@ config:
     setting: "max_duration"
     value: 779
 properties_modules:
+  -
+    property_id: 1
+    idMod: 1
