@@ -64,5 +64,8 @@ scheduling:
     campus: NULL
 properties_modules:
   -
+    property_id: 1
+    idMod: 1
+  -
     property_id: 5
     idMod: 1
