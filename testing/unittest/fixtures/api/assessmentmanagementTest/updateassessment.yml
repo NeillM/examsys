@@ -45,5 +45,8 @@ properties:
     paper_type: "2"
 properties_modules:
   -
+    property_id: 1
+    idMod: 1
+  -
     property_id: 2
     idMod: 2
