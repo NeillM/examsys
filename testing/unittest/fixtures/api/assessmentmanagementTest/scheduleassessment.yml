@@ -63,5 +63,6 @@ scheduling:
     sittings: 1
     campus: NULL
 properties_modules:
+  -
     property_id: 5
     idMod: 1
