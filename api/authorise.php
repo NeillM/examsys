@@ -21,7 +21,7 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  */
 
-require '../include/sysadmin_auth.inc';
+require '../include/staff_auth.inc';
 require_once '../include/errors.inc';
 
 function error($error, $string, $mysqli, $configObject, $notice) {
@@ -53,6 +53,11 @@ if (isset($_POST['submit'])) {
     }
 } else {
     $client_id = check_var('client_id', 'GET', true, false, true);
+	if (!isset($_GET['state'])) {
+        error('State not supplied.', $string, $mysqli, $configObject, $notice);
+    } else {
+    	$state = $_GET['state'];
+    }
 }
 ?>
 
@@ -93,7 +98,7 @@ if (isset($_POST['submit'])) {
     </div>
     <input type="hidden" id="client_id" name="client_id" value ="<?php echo $client_id; ?>">
     <input type="hidden" id="response_type" name="response_type" value ="code">
-    <input type="hidden" id="state" name="state" value ="xyz">
+    <input type="hidden" id="state" name="state" value ="<?php echo $state; ?>">
 </form>
 </body>
 </html>
