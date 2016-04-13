@@ -481,7 +481,7 @@ class assessment {
                 $end_date->modify("-" . $timezone . " hour");
             }
 
-            return array($start_date->format("YmdHis"), $end_date->format("YmdHis"));
+            return array($start_date->format("Y-m-d H:i:s"), $end_date->format("Y-m-d H:i:s"));
         }
         // Summative exams do not have a start/end date if centrally scheduled.
         return array(NULL, NULL);
