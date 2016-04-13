@@ -81,7 +81,7 @@ class coursemanagement extends \api\abstractmanagement {
                     $faculty = false;
                 }
             }
-            // mark something is to be updated.
+            // Mark something is to be updated.
             if ($courseid) {
                 if ($details['schoolid'] != $schoolid) {
                     $change = true;

@@ -235,7 +235,7 @@ class modulemanagementtest extends unittestdatabase {
             "modulecode" => 'TEST2UPDATE');
         $this->assertEquals($responsearray, $module->create($params, $userid));
         // Check update occured.
-        $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start FROM modules where id = 2');
+        $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start, sms FROM modules where id = 2');
         $expectedtable = $this->get_expected_data_set('updatemodule')->getTable("modules");  
         $this->assertTablesEqual($expectedtable, $querytable);
     }
@@ -254,6 +254,27 @@ class modulemanagementtest extends unittestdatabase {
             "modulecode" => 'TEST2UPDATE',
             "school" => 'Test school',
             "faculty" => 'Test faculty');
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
+     * Test module update exception nothing to update
+     * @group api
+     */
+    public function test_update_exception_noupdate() {
+        $responsearray = $this->update_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "id" => 2,
+            "modulecode" => 'TEST2',
+            "name" => 'Test module 2',
+            "school" => 'Test school',
+            "faculty" => 'Test faculty',
+            "sms" => 'unittest');
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 512;
+        $responsearray['status'] = 'Request updates nothing';
+        $responsearray['id'] = null;
         $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**

@@ -43,7 +43,8 @@ class schoolmanagement extends \api\abstractmanagement {
         'SCHOOL_NOT_CREATED' => 603,
         'SCHOOL_NOT_DELETED_INUSE' => 604,
         'SCHOOL_FACULTY_INVALID' => 605,
-        'SCHOOL_ALREADY_EXISTS' => 606
+        'SCHOOL_ALREADY_EXISTS' => 606,
+        'SCHOOL_NOTHING_TO_UPDATE' => 607
     );
         
     /**
@@ -55,12 +56,15 @@ class schoolmanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
-            , 'school_not_created', 'school_already_exists', 'faculty_not_supplied'));
+            , 'school_not_created', 'school_already_exists', 'faculty_not_supplied' , 'school_nothing_to_update'));
         $faculty = true;
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
             if ($schoolid) {
                 $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
+                // Check if anything has been updated.
+                $checkparameter = array('name');
+                $change = $this->check_if_updated($checkparameter, $details, $params);
             }
         } else {
             $params['id'] = false;
@@ -80,6 +84,12 @@ class schoolmanagement extends \api\abstractmanagement {
             if (!$facultyid) {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
             }
+            // Mark something is to be updated.
+            if ($schoolid) {
+                if ($details['faculty'] != $facultyid) {
+                    $change = true;
+                }
+            }
         // Get faculty if not provided.           
         } elseif ($schoolid and !isset($params['faculty'])) {
             $facultyid = $details['faculty'];
@@ -91,11 +101,15 @@ class schoolmanagement extends \api\abstractmanagement {
             // Update school.
             if ($params['id']) {
                 if ($schoolid) {
+                    if ($change) {
                     $update = \SchoolUtils::update_school($params['id'], $facultyid, $params['name'], $this->db);
-                    if ($update) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                        if ($update) {
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                        } else {
+                            $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null);
+                        }
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOTHING_TO_UPDATE'], 'status' => $strings['school_nothing_to_update'], 'id' => null);
                     }
                 } else {
                     $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);

@@ -255,7 +255,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Username.
         $params = array(
@@ -276,7 +276,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Password.
         $params = array(
@@ -297,7 +297,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Title.
         $params = array(
@@ -318,7 +318,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Forename.
         $params = array(
@@ -339,7 +339,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Surname.
         $params = array(
@@ -360,7 +360,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Email.
         $params = array(
@@ -381,7 +381,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Course.
         $params = array(
@@ -402,7 +402,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Gender.
         $params = array(
@@ -423,7 +423,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Year.
         $params = array(
@@ -444,7 +444,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Role.
         $params = array(
@@ -465,7 +465,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Student id.
         $params = array(
@@ -486,7 +486,7 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Initials.
         $params = array(
@@ -507,13 +507,38 @@ class usermanagementtest extends unittestdatabase {
         $user = new \api\usermanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 708;
-        $responsearray['status'] = 'Nothing to update';
+        $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
         // Modules.
         $params = array(
             "nodeid" => 1,
             "id" => 1002,
             "modules" => array());
+        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
+        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+    /**
+     * Test user update exception nothing to update - no changes
+     * @group api
+     */
+    public function test_update_exception_noupdate14() {
+        $responsearray = $this->update_response_array();
+        $user = new \api\usermanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 708;
+        $responsearray['status'] = 'Request updates nothing';
+        $responsearray['id'] = null;
+        // Modules.
+        $params = array(
+            "nodeid" => 1,
+            "id" => 1002,
+            "password" => "12345678",
+            "surname" => "test3",
+            "username" => "unit3",
+            "roles" => "Student",
+            "course" => "TEST2");
         $this->assertEquals($responsearray, $user->create($params, $userid));
         $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
         $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  

@@ -45,7 +45,7 @@ class usermanagement extends \api\abstractmanagement {
         'USER_INVALID_COURSE' => 705,
         'USER_ALREADY_EXISTS' => 706,
         'USER_INVALID_ROLE' => 707,
-        'USER_NOTHING_UPDATED' => 708
+        'USER_NOTHING_TO_UPDATE' => 708
     );
         
     /**
@@ -89,18 +89,22 @@ class usermanagement extends \api\abstractmanagement {
     public function create($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_does_not_exist'
-            , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists', 'user_nothing_updated'));
+            , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists', 'user_nothing_to_update'));
         $error = array();
         $userexists = false;
         // Student and Staff users only.
         $studentroles = array('Student', 'Left', 'Graduate');
         $staffroles = array('Staff', 'Inactive Staff');
         $roles = array_merge($studentroles, $staffroles);
-        
+        $checkparameter = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
+                    'gender', 'year', 'role', 'studentid', 'initials');
+                    
         if (!empty($params['id'])) {
             $userexists = \UserUtils::userid_exists($params['id'], $this->db);
             if ($userexists) {
                 $details = \UserUtils::get_full_details_by_ID($params['id'], $this->db);
+                 // Check if anything has been updated.
+                $change = $this->check_if_updated($checkparameter, $details, $params);
             }
         } else {
             // Set id to false if not supplied others to 0 if suppleid but invalid.
@@ -110,25 +114,30 @@ class usermanagement extends \api\abstractmanagement {
                 $params['id'] = false;
             }
         }
+
+        if ($userexists) {
+            // Mark something is to be updated.
+            if (!empty($params['modules'])) {
+                $change = true;
+            }
+            
+            // If nothing updated return.
+            if (!$change) {
+                $data = array('statuscode' => $this->statuscodes['USER_NOTHING_TO_UPDATE'], 'status' => $strings['user_nothing_to_update'], 'id' => null);
+                return $this->get_response($data, 'create', $params['nodeid'], $error);
+            }
+        }
+        
         // Set defaults if not provided.
-        $paramnames = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
-            'gender', 'year', 'role', 'studentid', 'initials');
-        // Count params not provided to check for no update later.
-        $paramcount = 0;
-        foreach ($paramnames as $name) {
+        foreach ($checkparameter as $name) {
             if (empty($params[$name])) {
                 if ($userexists) {
                     $params[$name] = $details[$name];
                 } else {
                     $params[$name] = '';
                 }
-                $paramcount++;
             }
         }
-        if (empty($params['modules'])) {
-            $paramcount++;
-        }
-        
         // If parameter id supplied but not a valid user - exception.
         // If parameter id supplied as 0 - exception.
         if ((!$userexists and $params['id']) or (!$userexists and $params['id'] === 0)) {
@@ -153,22 +162,17 @@ class usermanagement extends \api\abstractmanagement {
                 if ($course) {
                     // Update.
                     if ($params['id']) { 
-                        // Error if nothing to update.
-                        if ($paramcount == count($paramnames) + 1) {
-                            $data = array('statuscode' => $this->statuscodes['USER_NOTHING_UPDATED'], 'status' => $strings['user_nothing_updated'], 'id' => null);
-                        } else {
-                            // Something to update.
-                            $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
-                                        $params['forename'], $params['surname'], $params['email'], $params['course'],
-                                        $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
-                            if ($update) {
-                                if (!empty($params['modules'])) {
-                                    $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
-                                }
-                                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
-                            } else {
-                                $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
+                        // Something to update.
+                        $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
+                                    $params['forename'], $params['surname'], $params['email'], $params['course'],
+                                    $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+                        if ($update) {
+                            if (!empty($params['modules'])) {
+                                $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
                             }
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                        } else {
+                            $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
                         }
                     // Create.
                     } else {
