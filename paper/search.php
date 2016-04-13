@@ -52,7 +52,7 @@ $params = '';
 $variables = array();
 if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
   $paper = 'AND paper_title LIKE ?';
-  $variables[] = '%' . $_POST['searchterm'] . '%';
+  $variables[] = '%' . $mysqli->real_escape_string($_POST['searchterm']) . '%';
   $params .= 's';
 } else {
   $paper = '';

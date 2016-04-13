@@ -83,25 +83,28 @@ if (isset($_GET['submit'])) {
     $sections = preg_split('[,.]',$tmp_surname);
     if (count($sections) > 1) {    // Search for initials.
       if (strlen($sections[0]) < strlen($sections[1])) {
-        $initials_sql = " AND initials LIKE '" . trim($sections[0]) . "%'";
+        $tmp_initials = $mysqli->real_escape_string(trim($sections[0]));
+        $initials_sql = " AND initials LIKE '" . $tmp_initials . "%'";
         $tmp_surname = trim($sections[1]);
       } else {
-        $initials_sql = " AND initials LIKE '" . trim($sections[1]) . "%'";
+        $tmp_initials = $mysqli->real_escape_string(trim($sections[1]));
+        $initials_sql = " AND initials LIKE '" . $tmp_initials . "%'";
         $tmp_surname = trim($sections[0]);
       }
     } else {
       $initials_sql = '';
     }
-    $tmp_surname = str_replace('*','%',$tmp_surname);
+    $tmp_surname = $mysqli->real_escape_string(str_replace('*', '%', $tmp_surname));
     $surname_sql = " AND surname LIKE '$tmp_surname'";
   }
   if ($_GET['search_username'] != '') {
-    $tmp_username = str_replace('*', '%', trim($_GET['search_username']));
+    $tmp_username = $mysqli->real_escape_string(str_replace('*', '%', trim($_GET['search_username'])));
     $username_sql = " AND users.username LIKE '$tmp_username'";
   }
 
   if ($_GET['student_id'] != '') {
-    $student_id_sql = " AND student_id = '" . trim($_GET['student_id']) . "'";
+    $tmp_studentid = $mysqli->real_escape_string(trim($_GET['student_id']));
+    $student_id_sql = " AND student_id = '" . $tmp_studentid . "'";
   }
 
   $roles_sql = '';
