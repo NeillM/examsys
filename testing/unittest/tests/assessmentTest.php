@@ -453,20 +453,20 @@ class assessmenttest extends unittestdatabase {
         $assessment = new assessment($this->db, $this->config);
         // Test London.
         $datesarray = $assessment->setup_start_end_dates(0, "2016-01-25 09:00:00", "2016-01-25 12:00:00", "Europe/London");
-        $this->assertEquals("20160125090000", $datesarray[0]);
-        $this->assertEquals("20160125120000", $datesarray[1]);
+        $this->assertEquals("2016-01-25 09:00:00", $datesarray[0]);
+        $this->assertEquals("2016-01-25 12:00:00", $datesarray[1]);
         // Test Kuwait.
         $datesarray = $assessment->setup_start_end_dates(0, "2016-01-25 09:00:00", "2016-01-25 12:00:00", "Asia/Kuwait");
-        $this->assertEquals("20160125060000", $datesarray[0]);
-        $this->assertEquals("20160125090000", $datesarray[1]);
-        // Test Honolulu.
+        $this->assertEquals("2016-01-25 06:00:00", $datesarray[0]);
+        $this->assertEquals("2016-01-25 09:00:00", $datesarray[1]);
+        // Test Honolulu. 
         $datesarray = $assessment->setup_start_end_dates(0, "2016-01-25 09:00:00", "2016-01-25 12:00:00", "Pacific/Honolulu");
-        $this->assertEquals("20160125190000", $datesarray[0]);
-        $this->assertEquals("20160125220000", $datesarray[1]);
+        $this->assertEquals("2016-01-25 19:00:00", $datesarray[0]);
+        $this->assertEquals("2016-01-25 22:00:00", $datesarray[1]);
          // Test London non leap year feb 29th.
         $datesarray = $assessment->setup_start_end_dates(0, "2017-02-29 09:00:00", "2017-02-29 12:00:00", "Europe/London");
-        $this->assertEquals("20170301090000", $datesarray[0]);
-        $this->assertEquals("20170301120000", $datesarray[1]);
+        $this->assertEquals("2017-03-01 09:00:00", $datesarray[0]);
+        $this->assertEquals("2017-03-01 12:00:00", $datesarray[1]);
         
     }
 }
