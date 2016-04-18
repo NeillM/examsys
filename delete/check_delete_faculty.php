@@ -34,6 +34,13 @@ if (!FacultyUtils::faculty_name_by_id($facultyID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
+if (FacultyUtils::count_schools_in_faculty($facultyID, $mysqli) !== 0) {
+  $notice->display_notice($string['cannotdelete'], $string['schoolsattached'], '../artwork/exclamation_64.png', 'black', true, false);
+  echo '<p><button type="button" onclick="javascript:window.close();">' . $string['cancel'] .  '</button></p>';
+  echo "\n</body>\n</html>";
+  exit;
+}
+
 $mysqli->close();
 ?>
 <!DOCTYPE html>

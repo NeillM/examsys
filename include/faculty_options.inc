@@ -39,8 +39,8 @@
   }
   
   function deleteFaculty() {
-    notice=window.open("../delete/check_delete_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-225,screen.height/2-90);
+    notice=window.open("../delete/check_delete_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=450,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    notice.moveTo(screen.width/2-225,screen.height/2-100);
     if (window.focus) {
       notice.focus();
     }
