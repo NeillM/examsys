@@ -383,7 +383,7 @@ class assessmentmanagementtest extends unittestdatabase {
         $responsearray['id'] = null;
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
     }
-	/**
+    /**
      * Test assessment update exception - nothing to update, no modules supplied
      * @group api
      */
