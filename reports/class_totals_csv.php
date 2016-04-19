@@ -154,10 +154,10 @@ if ($cohort_size > 0) {
   $size_msg = ($cohort_size < $user_no) ? $cohort_size . $string['of'] . $user_no : $user_no;
 
   $csv .= $string['cohortsize'] . ",$size_msg,,,,,,,,,,\n";
-  $csv .= $string['failureno'] . "," . $stats['failures'] . ",(" . round($percent_failures) . "% of cohort),,,,,,,,,\n";
-  $csv .= $string['passno'] . "," . $stats['passes'] . ",(" . round($percent_passes) . $string['percentofcohort'] . "),,,,,,,,,\n";
+  $csv .= $string['failureno'] . "," . $stats['failures'] . ",(" . $percent_failures . "% of cohort),,,,,,,,,\n";
+  $csv .= $string['passno'] . "," . $stats['passes'] . ",(" . $percent_passes . $string['percentofcohort'] . "),,,,,,,,,\n";
   if (isset($ss_hon)) {
-    $csv .= $string['distinctionno'] . "," . $stats['honours'] . ",(" . round($percent_honours) . "% of cohort),,,,,,,,,\n";
+    $csv .= $string['distinctionno'] . "," . $stats['honours'] . ",(" . $percent_honours . "% of cohort),,,,,,,,,\n";
   }
   $csv .= $string['totalmarks'] . "," . $report->get_total_marks() . ",,,,,,,,,,\n";
   $csv .= $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
@@ -165,14 +165,14 @@ if ($cohort_size > 0) {
     $csv .= $string['randommark'] . "," . number_format($report->get_total_random_mark(), 2, '.', ',') . ",,,,,,,,,,\n";
   } elseif (substr($marking,0,1) == '2') {
     $csv .= $string['ss'] . "," . round($report->get_ss_pass(), 2) . ",,,,,,,,,,\n";
-    $csv .= $string['ssdistinction'] . "," . round($report->get_ss_hon(), 2) . ",,,,,,,,,,\n";
+    $csv .= $string['ssdistinction'] . "," . MathsUtils::formatNumber($report->get_ss_hon(), 2) . ",,,,,,,,,,\n";
   }
   $csv .= $string['meanmark'] . "," . round($stats['mean_mark'], 1) . "," . MathsUtils::formatNumber($stats['mean_percent'], 1) . "%,,,,,,,,,\n";
   $csv .= $string['medianmark'] . "," . round($stats['median_mark'], 1) . "," . MathsUtils::formatNumber($stats['median_percent'], 1) . "%,,,,,,,,,\n";
   $csv .= $string['stdevmark'] . "," . number_format($stats['stddev_mark'], 2, '.', ',') . "," . MathsUtils::formatNumber($stats['stddev_percent'], 2) . "%,,,,,,,,,\n";
   $csv .= $string['maxmark'] . "," . $stats['max_mark'] . "," . number_format($stats['max_percent']) . "%,,,,,,,,,\n";
   $csv .= $string['maxmark'] . "," . $stats['min_mark'] . "," . number_format($stats['min_percent']) . "%,,,,,,,,,\n";
-  $csv .= $string['range'] . "," . ($stats['range']) . "," . ($stats['range_percent']) . "%,,,,,,,,,\n";
+  $csv .= $string['range'] . "," . $stats['range'] . "," . number_format($stats['range_percent']) . "%,,,,,,,,,\n";
   $avg_time = ($stats['completed_no'] > 0) ? $report->formatsec(round($stats['total_time'] / $stats['completed_no'],0)) : 'n/a';
   $csv .= $string['averagetime'] . "," . $avg_time . ",,,,,,,,,,\n";
   $csv .= $string['excludedquestions'] . "," . $report->get_display_excluded() . ",,,,,,,,,,\n";
