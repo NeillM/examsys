@@ -29,7 +29,7 @@ require_once '../include/errors.inc';
 
 $schoolID = check_var('schoolID', 'POST', true, false, true);
 
-if (!SchoolUtils::schoolid_exists($schoolID, $mysqli)) {
+if (!SchoolUtils::schoolid_exists($schoolID, $mysqli) or SchoolUtils::school_in_use($schoolID, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

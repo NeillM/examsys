@@ -17,4 +17,5 @@
 $string['confirmdelete'] = 'Potwierdzenie usunięcia wskaźnika';
 $string['recyclebin'] = 'Kosz';
 $string['delete'] = 'Usuń';
+$string['cannotdelete'] = 'Unable to delete';
 ?>

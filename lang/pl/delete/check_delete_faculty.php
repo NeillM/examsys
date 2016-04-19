@@ -17,4 +17,5 @@
 require '../lang/' . $language . '/delete/delete.inc';
 
 $string['msg'] = 'Czy na pewno usunąć ten kurs?';
+$string['schoolsattached'] = 'All schools must be removed from the faculty.';
 ?>
