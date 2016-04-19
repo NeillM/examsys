@@ -178,14 +178,14 @@ class assessmentmanagement extends \api\abstractmanagement {
                     $error[$module['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_module'), $module['value']);
                 }
             }
-        }
-        // Mark something is to be updated.
-        if ($paperid) {
-            $current_modules = \Paper_utils::get_modules($params['id'], $this->db);
-            ksort($current_modules);
-            sort($modulesarray);
-            if (array_keys($current_modules) != $modulesarray) {
-                $change = true;
+            // Mark something is to be updated.
+            if ($paperid) {
+                $current_modules = \Paper_utils::get_modules($params['id'], $this->db);
+                ksort($current_modules);
+                sort($modulesarray);
+                if (array_keys($current_modules) != $modulesarray) {
+                    $change = true;
+                }
             }
         }
         
