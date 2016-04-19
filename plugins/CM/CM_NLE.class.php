@@ -39,7 +39,7 @@ class CM_NLE implements iCMAPI {
   public function getObjectives($moduleID, $session) {
     $configObject = Config::get_instance();
     $endyear =  substr((string)$session, -2) + 1;
-	// To create nle year paramerter. Pad 1-9 with leading 0, convert 100 into 00
+    // To create nle year paramerter. Pad 1-9 with leading 0, convert 100 into 00
     if ($endyear == 100) {
       $endyear = "00"; 
     } elseif ($endyear > 0 and $endyear <= 9) {
