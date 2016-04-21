@@ -38,7 +38,9 @@ class CM_NLE implements iCMAPI {
    */
   public function getObjectives($moduleID, $session) {
     $configObject = Config::get_instance();
-    $endyear =  substr((string)$session, -2) + 1;
+    // To create nle year paramerter. End year must be 2 digit.
+    $endyear = $session + 1;
+    $endyear = substr((string)$endyear, -2);
     $nle_year = (string)$session . '/' . $endyear;
     $objectives = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$nle_year");
     $objectives->execute();
