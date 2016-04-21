@@ -994,7 +994,26 @@ class ims_enterprise {
         if (!is_object($node)) {
           continue;
         }
-        $modulecode = (string) $node->sourcedid->id;
+        
+        switch ($this->mapmoduleid) {
+          case 'long':
+            $modulecode = (string) $node->description->long;
+            break;
+          case 'short':
+            $modulecode = (string) $node->description->short;
+            break;
+          case 'full':
+            $modulecode = (string) $node->description->full;
+            break;
+          case 'coursecode':
+            $modulecode = (string) $node->extension->course->code;
+            break;
+          case 'sourcedid':
+          default:
+            $modulecode = (string) $node->sourcedid->id;
+            break;
+        }
+        
         foreach ($node->member as $member) {
           $this->process_member($member, $modulecode);
         }
