@@ -241,14 +241,9 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set('cfg_sms_api', '');
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-        // No school UK
-        $moduleshortcode = 'MUSI-15XY32-UNUK-1516';
-        $moduletitle = 'Fake module';
-        $exploded = explode('-', $moduleshortcode);
-        $expected = array(array('Manual', 'MUSI-15XY32', 'UNUK', 'UNKNOWN School', 1, $moduletitle));
-        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
 		// UnKnown school UK
         $moduleshortcode = 'ZZ-CAREERS-ECON-UK-1617';
+		$moduletitle = 'Fake module';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON', 'UNUK', 'UNKNOWN School', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
@@ -256,12 +251,6 @@ class lti_integrationtest extends unittestdatabase {
         $moduleshortcode = 'LE-CAREERS-ECON-UK-1617';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON', 'UNUK', 'Economics', 1, $moduletitle));
-        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
-		// No school MY
-        $moduleshortcode = 'MUSI-15XY32-UNMC-1516';
-        $moduletitle = 'Fake module';
-        $exploded = explode('-', $moduleshortcode);
-        $expected = array(array('Manual', 'MUSI-15XY32_UNMC', 'UNMC', 'UNKNOWN School', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
 		// UnKnown school MY
         $moduleshortcode = 'ZZ-CAREERS-ECON-MY-1617';
@@ -272,12 +261,6 @@ class lti_integrationtest extends unittestdatabase {
         $moduleshortcode = 'LE-CAREERS-ECON-MY-1617';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON_UNMC', 'UNMC', 'Economics', 1, $moduletitle));
-        $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
-		// No school CN
-        $moduleshortcode = 'MUSI-15XY32-UNNC-1516';
-        $moduletitle = 'Fake module';
-        $exploded = explode('-', $moduleshortcode);
-        $expected = array(array('Manual', 'MUSI-15XY32_UNNC', 'UNNC', 'UNKNOWN School', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
 		// UnKnown school CN
         $moduleshortcode = 'ZZ-CAREERS-ECON-CN-1617';

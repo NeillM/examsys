@@ -63,7 +63,7 @@ class lti_uon_integration_extended extends lti_integration {
     // Module name space.
     // Regular expression to match XXXXYYYY-Z-AAAA-BBB-CCCC occurences in module shortcode where XXXXYYYY is the module code, Z is the offering,
     // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
-    preg_match("/(?P<module>[A-Z]{4}[0-9]{4})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
+    preg_match("/(?P<module>[A-Z]{4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
     if (count($info) > 0) {
       $i = 0;
       if ($info['campus'] != 'UNUK') {
@@ -75,7 +75,7 @@ class lti_uon_integration_extended extends lti_integration {
       // Non module name space.
       // Regeular expression to match ZZZ-XXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYYYY-AAAA-BBBB occurences in module shortcode where XXXX-YYYY is the module code,
       // AAAA is the campus. BBBB is the academic year. ZZZ is the school (this is optional). We only care about the school, module code and campus.
-      preg_match("/^((?P<school>[A-Z]{2,3})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
+      preg_match("/^((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
       if (count($info) > 0) {
         if ($info['campus'] != 'UNUK' and $info['campus'] != 'UK') {
           if ($info['campus'] == 'UNMC' or $info['campus'] == 'MY' ) {
