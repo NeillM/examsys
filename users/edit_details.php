@@ -118,7 +118,8 @@ if (isset($_POST['submit']) and !$errors) {
     <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
     <script>
       $(function () {
-        window.opener.location = window.opener.parent.location.href.replace('&tab=admin', '');;
+        window.opener.location = window.opener.parent.location.href.replace('&tab=admin', '');
+        window.opener.parent.location.reload(true);
         window.close();
       });
     </script>
