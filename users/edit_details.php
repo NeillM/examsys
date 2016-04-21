@@ -52,11 +52,18 @@ if (isset($_POST['submit']) and !$errors) {
   $cfg_web_root = $configObject->get('cfg_web_root');
 
   if (!empty($_FILES['photofile']['name'])) {
+    $photodirectory = rogo_directory::get_directory('user_photo');
+    // First check if the user has an image already, if they do delete it.
+    // This stops an image type of a different type blocking the display of the uploaded image.
+    $student_photo = UserUtils::student_photo_exist($_POST['username']);
+    if ($student_photo !== false) {
+      unlink($photodirectory->fullpath($student_photo));
+    }
+    // Add the file.
     $filename = $_FILES['photofile']['name'];
     $explode = explode('.', $filename);
-    $count = count($explode) - 1;  
+    $count = count($explode) - 1;
     $file_ext = $explode[$count];
-    $photodirectory = rogo_directory::get_directory('user_photo');
 
     if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $photodirectory->fullpath($_POST['username'] . '.' . $file_ext))) {
       log_error($userObject->get_user_ID(), 'Edit User', 'Application Error', 'Error uploading user photo - error: ' . $_FILES['photofile']['error'], $_SERVER['PHP_SELF'], 49, '', null, null, null);
