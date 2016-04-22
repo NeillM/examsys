@@ -262,12 +262,8 @@ class lti_uon_integration_extended extends lti_integration {
       // CS naming convention.
       $data = $this->process_cs_naming_convention($mysqli, $moduleshortcode, $course_title);
     } else {
-      if ($this->config->get('cfg_sms_api') == 'uon_saturn') {
-        // Saturn naming convention.
-        $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
-      } else {
-        $data = array();
-      }
+      // Saturn naming convention.
+      $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
     }
     
     // return the data
