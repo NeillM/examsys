@@ -49,6 +49,10 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
 // Load the behat config file.
 try {
   $config = Config::get_instance();
+  if (!$config->is_behat_configured()) {
+    // Stop if behat is not configured correctly.
+    throw new Exception('Behat not configured correctly.');
+  }
   $config->use_behat_site();
 } catch (Exception $e) {
   cli_utils::prompt($e->getMessage());
