@@ -74,7 +74,7 @@ class Config extends RogoStaticSingleton {
         $this->load_phpunit_config();
         if ($this->is_phpunit_configured() && $this->is_phpunit_site()) {
           $this->use_phpunit_site();
-        } elseif (!$this->is_phpunit_configured() && $this->is_phpunit_site()) {
+        } elseif ($this->is_phpunit_site()) {
            // Stop if phpunit is not configured correctly.
            echo 'Phpunit not configured correctly.';
            exit();
