@@ -51,6 +51,10 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
 // Load the phpunit config file.
 try {
   $config = Config::get_instance();
+  if (!$config->is_phpunit_configured()) {
+  	// Stop if phpunit is not configured correctly.
+    throw new Exception('Phpunit not configured correctly.');
+  }
   $config->use_phpunit_site();
 } catch (Exception $e) {
   cli_utils::prompt($e->getMessage());
