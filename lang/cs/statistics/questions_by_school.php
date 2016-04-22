@@ -35,4 +35,5 @@ $string['textbox'] = 'Textbox';
 $string['true_false'] = 'Ano/Ne';
 $string['area'] = 'Plocha';
 $string['enhancedcalc'] = 'Výpočet';
+$string['flash'] = 'Úloha využívající Flash';
 ?>

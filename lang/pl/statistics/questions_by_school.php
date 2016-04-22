@@ -35,4 +35,5 @@ $string['textbox'] = 'Pytanie półotwarte';
 $string['true_false'] = 'Pytanie typu Prawda/Fałsz'; 
 $string['area'] = 'Pytanie na obrys obszaru';
 $string['enhancedcalc'] = 'Rozszerzone p. obliczeniowe';
+$string['flash'] = 'Pytanie z interfejsem Flash';
 ?>
