@@ -28,7 +28,7 @@ abstract class rogo_directory {
   /** @var int The file permissions to be used by the directory. */
   protected $filepermissions = 0744;
 
-  /** 
+  /**
    * An array of rogo_directory objects, the key should match the type
    * that would cause it to be loaded.
    *
