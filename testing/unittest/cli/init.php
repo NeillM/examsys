@@ -52,7 +52,7 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
 try {
   $config = Config::get_instance();
   if (!$config->is_phpunit_configured()) {
-  	// Stop if phpunit is not configured correctly.
+    // Stop if phpunit is not configured correctly.
     throw new Exception('Phpunit not configured correctly.');
   }
   $config->use_phpunit_site();
