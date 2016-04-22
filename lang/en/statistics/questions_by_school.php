@@ -35,4 +35,5 @@ $string['textbox'] = 'Textbox';
 $string['true_false'] = 'True/False';
 $string['area'] = 'Area';
 $string['enhancedcalc'] = 'Calculation';
+$string['flash'] = 'Flash Interface';
 ?>
