@@ -31,7 +31,7 @@ class langpacktest extends UnitTest {
      * @group lang
      */
     public function test_get_string() {
-        $lang = new langpack();
+        $lang = new \langpack();
         $component = 'api/usermanagement';
         $name = '404';
         $string = $lang->get_string($component, $name);
@@ -43,7 +43,7 @@ class langpacktest extends UnitTest {
      * @group lang
      */
     public function test_get_strings() {
-        $lang = new langpack();
+        $lang = new \langpack();
         $component = 'api/usermanagement';
         $names = array('user_invalid_role', 'user_does_not_exist');
         $strings = $lang->get_strings($component, $names);
@@ -56,7 +56,7 @@ class langpacktest extends UnitTest {
      * @group lang
      */
     public function test_get_all_strings() {
-        $lang = new langpack();
+        $lang = new \langpack();
         $component = 'classes/assessment';
         $strings = $lang->get_all_strings($component);
         $this->assertEquals('This is a closed-book examination and students may not refer to any other source or person in taking this paper.'
