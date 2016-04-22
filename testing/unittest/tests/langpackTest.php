@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace testing\unittest;
+
 /**
  * Test langpack class
  * 
@@ -22,7 +24,7 @@
  * @copyright Copyright (c) 2015 onwards The University of Nottingham
  * @package tests
  */
-class langpacktest extends PHPUnit_Framework_TestCase {
+class langpacktest extends UnitTest {
 
     /**
      * Test get_string
