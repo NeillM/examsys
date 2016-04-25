@@ -225,10 +225,8 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set('cfg_sms_api', '');
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-        $moduleshortcode = '!COMP-15XY32-UNUK-SPR-1617';
+        $moduleshortcode = '!COMP-15XY32-UNUK-1617';
         $moduletitle = 'Mathematics for Computer Science (COMP 1111) (COMP 1112) (16-17)';
-        $lti = UoN_LTI::get_instance();
-        $lti_i = $lti->load();
         $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
     /**
