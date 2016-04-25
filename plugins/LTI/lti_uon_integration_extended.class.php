@@ -26,8 +26,11 @@
  * @package
  */
 class lti_uon_integration_extended extends lti_integration {
-
-   private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
+    
+  const CS_MODULE_SPACE = "/(?P<module>[A-Z]{4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/";
+  const CS_NON_MODULE_SPACE = "/^((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/";
+  
+  private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
     'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology',
     'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering',
     'PC' => 'Chemistry', 'MC' => 'Public Health Medicine & Epidemiology', 'MG' => 'Obstetrics, Midwifery & Gynaecology',
@@ -63,7 +66,7 @@ class lti_uon_integration_extended extends lti_integration {
     // Module name space.
     // Regular expression to match XXXXYYYY-Z-AAAA-BBB-CCCC occurences in module shortcode where XXXXYYYY is the module code, Z is the offering,
     // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
-    preg_match("/(?P<module>[A-Z]{4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
+    preg_match(self::CS_MODULE_SPACE, $moduleshortcode, $info);
     if (count($info) > 0) {
       $i = 0;
       if ($info['campus'] != 'UNUK') {
@@ -75,7 +78,7 @@ class lti_uon_integration_extended extends lti_integration {
       // Non module name space.
       // Regeular expression to match ZZZ-XXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYYYY-AAAA-BBBB occurences in module shortcode where XXXX-YYYY is the module code,
       // AAAA is the campus. BBBB is the academic year. ZZZ is the school (this is optional). We only care about the school, module code and campus.
-      preg_match("/^((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/", $moduleshortcode, $info);
+      preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode, $info);
       if (count($info) > 0) {
         if ($info['campus'] != 'UNUK' and $info['campus'] != 'UK') {
           if ($info['campus'] == 'UNMC' or $info['campus'] == 'MY' ) {
@@ -253,12 +256,16 @@ class lti_uon_integration_extended extends lti_integration {
     if (stripos($moduleshortcode, ' ') !== false) {
       return false;
     }
-    // Different process depending on sms.
-    if ($this->config->get('cfg_sms_api') == 'uon_saturn') {
-      $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
-    } else {
+    
+    // Different process depending on naming convention.
+    if (preg_match(self::CS_MODULE_SPACE, $moduleshortcode) or preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode)) {
+      // CS naming convention.
       $data = $this->process_cs_naming_convention($mysqli, $moduleshortcode, $course_title);
+    } else {
+      // Saturn naming convention.
+      $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
     }
+    
     // return the data
     // returning an array containing an array, description of inner array
     // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
