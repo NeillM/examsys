@@ -766,7 +766,14 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
       case 'textbox':
         $qid = 'q' . $question_no;
         if (isset($_POST[$qid])) {
-          $saved_response = $_POST[$qid];
+          if (!is_array($settings)) {
+            $settings = json_decode($settings, true);
+          }
+          if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+            $saved_response = htmlspecialchars($_POST[$qid]);
+          } else {
+            $saved_response = $_POST[$qid];
+          }
         } else {
           $saved_response = '';
         }
