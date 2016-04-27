@@ -60,18 +60,18 @@ class oauth {
         $password = $configObject->get('cfg_db_sysadmin_passwd');
         // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
         $this->storage = new \OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
-
-        // Pass a storage object or array of storage objects to the OAuth2 server class
-        $this->server = new \OAuth2\Server($this->storage, array(
+        // Config options for server.
+        $config = array(
             'access_lifetime' => $configObject->get('cfg_oauth_access_lifetime'),
             'refresh_token_lifetime' => $configObject->get('cfg_oauth_refresh_token_lifetime'),
             'always_issue_new_refresh_token' => $configObject->get('cfg_oauth_always_issue_new_refresh_token')
-        ));
-
+        );
+        // Pass a storage object or array of storage objects to the OAuth2 server class
+        $this->server = new \OAuth2\Server($this->storage, $config);
         // Add the "Authorization Code" grant type 
         $this->server->addGrantType(new \OAuth2\GrantType\AuthorizationCode($this->storage));
         // Add the "Refresh Token" grant type
-        $this->server->addGrantType(new \OAuth2\GrantType\RefreshToken($this->storage));
+        $this->server->addGrantType(new \OAuth2\GrantType\RefreshToken($this->storage, $config));
     }
     
     /**
