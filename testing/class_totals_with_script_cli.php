@@ -26,6 +26,7 @@
 */
 
 include_once '../include/load_config.php';
+require_once 'classes/class_totals.php';
 
 $cfg_web_host = $configObject->get('cfg_web_host');
 $support_email = $configObject->get('support_email');
