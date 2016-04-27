@@ -942,8 +942,8 @@ class ims_enterprise {
    * @return string
    */
   protected function detect_recstatus($node) {
-   $recstatus = (string) $node['recstatus'];
-   if (!isset($recstatus)) {
+    $recstatus = (string) $node['recstatus'];
+    if (!isset($recstatus)) {
       return self::RECORD_CREATE;
     }
     if (!in_array($recstatus, array(self::RECORD_CREATE, self::RECORD_UPDATE, self::RECORD_DELETE))) {
