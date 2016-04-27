@@ -479,7 +479,7 @@ Class UserUtils {
    * @param integer $tmp_userID - UserID of the member of staff.
    * @param int $idMod          - The id of the team (module).
    * @param object $db          - Database connection.
-   *
+   * @return bool true on success, false otherwise
    */
   static function remove_staff_from_module($tmp_userID, $idMod, $db) {
     if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
@@ -487,6 +487,10 @@ Class UserUtils {
       $stmt->bind_param('ii', $tmp_userID, $idMod);
       $stmt->execute();
       $stmt->close();
+      if ($db->errno != 0) {
+        return false;
+      }
+      return true;
     }
   }
 
@@ -661,12 +665,14 @@ Class UserUtils {
    * @param int $attempt Attempt number
    * @param mysqli $db database connection.
    * @param bool $auto_update
+   * @return bool|int false / enrolment id
    */
   public static function remove_student_from_module_by_modulecode($tmp_userID, $modulename, $session, $db) {
     $moduleid = module_utils::get_idMod($modulename, $db);
     if ($moduleid !== false) {
-      self::remove_student_from_module($tmp_userID, $moduleid, $session, $db);
+      return self::remove_student_from_module($tmp_userID, $moduleid, $session, $db);
     }
+    return false;
   }
 
   /**
