@@ -29,6 +29,7 @@ class lti_uon_integration_extended extends lti_integration {
     
   const CS_MODULE_SPACE = "/(?P<module>[A-Z]{4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/";
   const CS_NON_MODULE_SPACE = "/^((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/";
+  const CS_META_MODULE_CHECK = "/^!((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/";
   
   private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
     'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology',
@@ -62,6 +63,10 @@ class lti_uon_integration_extended extends lti_integration {
     $course_title = substr($course_title, 0, $fin);
     if ($course_title == ' ') {
       $course_title = 'MISSING COURSE TITLE';
+    }
+    // Meta modules not supported.
+    if (preg_match(self::CS_META_MODULE_CHECK, $moduleshortcode)) {
+        return $data;
     }
     // Module name space.
     // Regular expression to match XXXXYYYY-Z-AAAA-BBB-CCCC occurences in module shortcode where XXXXYYYY is the module code, Z is the offering,
@@ -258,7 +263,8 @@ class lti_uon_integration_extended extends lti_integration {
     }
     
     // Different process depending on naming convention.
-    if (preg_match(self::CS_MODULE_SPACE, $moduleshortcode) or preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode)) {
+    if (preg_match(self::CS_MODULE_SPACE, $moduleshortcode) or preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode)
+        or preg_match(self::CS_META_MODULE_CHECK, $moduleshortcode)) {
       // CS naming convention.
       $data = $this->process_cs_naming_convention($mysqli, $moduleshortcode, $course_title);
     } else {
