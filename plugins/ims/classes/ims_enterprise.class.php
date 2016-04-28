@@ -1043,25 +1043,25 @@ class ims_enterprise {
     $userid = \UserUtils::studentid_exists($studentid, $this->db);
     $session = substr((string) $member->role->timeframe->begin, -10, 4);
     $attempt = (string) $member->extension->attempt;
-
+    $action = 'added to';
     if ($status == self::ROLE_STATUS_ACTIVE && $role === 'Student') {
       $this->log_line("Adding user $userid to module $modulecode");
       $success = \UserUtils::add_student_to_module_by_name($userid, $modulecode, $attempt, $session, $this->db, 1);
     } else if ($status == self::ROLE_STATUS_ACTIVE) {
-
       $success = \UserUtils::add_staff_to_module_by_modulecode($userid, $modulecode, $this->db);
     } else if ($status == self::ROLE_STATUS_INACTIVE && $role === 'Staff') {
-      \UserUtils::remove_staff_from_module_by_modulecode($userid, $modulecode, $this->db);
+      $success = \UserUtils::remove_staff_from_module($userid, $modulecode, $this->db);
+      $action = 'removed from';
     } else if ($status == self::ROLE_STATUS_INACTIVE && $role === 'Student') {
-      // TODO We need the attempt and session before can remove a student from a module.
       $session = substr((string) $member->role->timeframe->begin, 0, 4);
-      \UserUtils::remove_student_from_module_by_modulecode($userid, $modulecode, $session, $this->db);
+      $success = \UserUtils::remove_student_from_module_by_modulecode($userid, $modulecode, $session, $this->db);
+      $action = 'removed from';
     }
 
     if ($success) {
-      $this->log_line('User (' . $username . ') added to Module ' . $modulecode . ' as a ' . $role);
+      $this->log_line('User (' . $username . ') ' . $action . ' Module ' . $modulecode . ' as a ' . $role);
     } else {
-      $this->log_line('User (' . $username . ') could not be added to Module ' . $modulecode . ' as a ' . $role);
+      $this->log_line('User (' . $username . ') could not be ' . $action . ' Module ' . $modulecode . ' as a ' . $role);
     }
   }
 
