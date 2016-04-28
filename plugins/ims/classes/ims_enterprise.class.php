@@ -938,17 +938,14 @@ class ims_enterprise {
 
   /**
    * Check whether the recstatus is valid
-   * @param string $node
-   * @return string
+   * @param SimpleXMLElement $node xml node
+   * @return string status code
    */
   protected function detect_recstatus($node) {
-
-    if (!array_key_exists('recstatus', $node)) {
+    if (is_null($node['recstatus'])) {
       return self::RECORD_CREATE;
     }
-
     $recstatus = (string) $node['recstatus'];
-
     if (!in_array($recstatus, array(self::RECORD_CREATE, self::RECORD_UPDATE, self::RECORD_DELETE))) {
       $recstatus = self::RECORD_UNDEFINED;
     }
@@ -960,13 +957,14 @@ class ims_enterprise {
    * @param stdClass $person
    */
   protected function delete_user($person) {
-    if ($userid = \UserUtils::username_exists($person->username, $this->db)) {
+    $userid = \UserUtils::username_exists($person->username, $this->db);
+    if ($userid !== false) {
         if (\UserUtils::user_paper_started($userid, $this->db)) {
           $this->log_line("Can not delete user '$person->username' (ID number $person->idnumber) - This user has already started at least one paper.");
           return;
         }
       try {
-        \UserUtils::delete_userID($userid);
+        \UserUtils::delete_userID($userid, $this->db);
         $this->log_line("Deleted user '$person->username' (ID number $person->idnumber).");
       } catch (Exception $ex) {
         $this->log_line("Error deleting '$person->username' (ID number $person->idnumber).");
