@@ -44,7 +44,7 @@ if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string, $phase) {
+function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
     $html = '<select id="mark' . $id . '" name="mark' . $id . '" ><option value="NULL"></option>';
 
     $inc = 1;
@@ -406,7 +406,7 @@ $half_marks = true;
       if ($answer_no != 1 and $answer_no <= $result->num_rows) {
         echo '<input type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '" value="' . $string['previous'] . '" />';
       }
-      if (($phase == 1 and $answer_no != $result->num_rows) or ($phase == 2 and $answer_no != $out_of)) { 
+      if ($answer_no != $result->num_rows) { 
         echo '<input type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['next'] . '" />';
       } else {
         echo '<input type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['finish'] . '" />';
