@@ -54,7 +54,7 @@ class yearutils {
      * @param rogo db $mysqli
      */
     function __construct($mysqli) {
-        global $configObject;
+        $configObject = Config::get_instance();
 
         $this->mysqli = $mysqli;
         // Start of academic year (mm/dd)
