@@ -938,14 +938,14 @@ class ims_enterprise {
 
   /**
    * Check whether the recstatus is valid
-   * @param string $node
-   * @return string
+   * @param SimpleXMLElement $node xml node
+   * @return string status code
    */
   protected function detect_recstatus($node) {
-    $recstatus = (string) $node['recstatus'];
-    if (!isset($recstatus)) {
+    if (is_null($node['recstatus'])) {
       return self::RECORD_CREATE;
     }
+    $recstatus = (string) $node['recstatus'];
     if (!in_array($recstatus, array(self::RECORD_CREATE, self::RECORD_UPDATE, self::RECORD_DELETE))) {
       $recstatus = self::RECORD_UNDEFINED;
     }
