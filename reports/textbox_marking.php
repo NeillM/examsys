@@ -33,7 +33,7 @@ $q_id       = check_var('q_id', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
 $enddate    = check_var('enddate', 'GET', true, false, true);
 $phase      = check_var('phase', 'GET', true, false, true);
-
+$marked     = ''; // init hiden marked
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 $paper_type = $properties->get_paper_type();
 $paper_title = $properties->get_paper_title();
@@ -48,7 +48,7 @@ function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_user
   $html = '<select id="mark' . $id . '" name="mark' . $id . '" ><option value="NULL"></option>';
   $inc = 1;
   if ($halfmarks == true) $inc = 0.5;
-  for ($i=0; $i<=$marks; $i+=$inc) {
+  for ($i = 0; $i <= $marks; $i+=$inc) {
     $display_i = $i;
     if ($i == 0.5) {
       $display_i = '&#189;';
@@ -90,7 +90,7 @@ HTML;
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.textbox.js"></script>
+  <script type="text/javascript" src="../js/jquery.textbox.js"></script> <!-- save marking in here -->
   <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
@@ -123,7 +123,13 @@ echo draw_toprightmenu();
 $candidate_no = 0;
 if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
   // Get how many students took the paper.
-  $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
+  $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm "
+          . "INNER JOIN users u "
+          . "ON lm.userID = u.id "
+          . "WHERE lm.paperID = ? AND "
+          . "DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? "
+          . "AND lm.started <= ? "
+          . "AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
   $result->bind_param('iss', $paperID, $startdate, $enddate);
   $result->execute();
   $result->bind_result($tmp_userID);
@@ -133,15 +139,17 @@ if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
   $result->close();
 }
 
-if ($phase == 2) {
-  // Get the usernames of papers to second mark.
-  $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
-}
-
 if (isset($state['hidemarked']) and $state['hidemarked'] == 'true') {
     $marked = 'AND t.mark is NULL';
 } else {
     $marked = '';
+}
+
+$studentstr = '';
+if ($phase == 2) {
+  $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
+  $students = array_keys($remark_array);
+  $studentstr = 'AND u.id IN (' .  implode(',', $students) . ')';
 }
 
 if ($paper_type == '0') {
@@ -156,7 +164,7 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, r
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
-  AND lm.started <= ? $marked
+  AND lm.started <= ? $marked $studentstr
 UNION ALL
 SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
   FROM (log1 l, log_metadata lm, users u)
@@ -167,7 +175,7 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, r
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
-  AND lm.started <= ? $marked
+  AND lm.started <= ? $marked $studentstr
 SQL;
   $result = $mysqli->prepare($sql);
   $result->bind_param('iiissiiiss', $phase, $paperID, $q_id, $startdate, $enddate, $phase, $paperID, $q_id, $startdate, $enddate);
@@ -182,7 +190,7 @@ AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
-AND lm.started <= ? $marked
+AND lm.started <= ? $marked $studentstr
 SQL;
   $result = $mysqli->prepare($sql);
   $result->bind_param('iiiss', $phase, $paperID, $q_id, $startdate, $enddate);
@@ -204,8 +212,8 @@ if (!isset($_GET['phase'])) {
   $tmp_phase = '&phase=2';
 }
 $phase_description .= ' Q' . $_GET['qNo'];
-$out_of = ($phase == 2) ? count($remark_array) : $candidate_no;
-$phase_description .= ': <span style="font-weight: normal">' . number_format($result->num_rows) . ' ' . $string['candidates'] . '</span>';
+$out_of = $result->num_rows;
+$phase_description .= ': <span style="font-weight: normal">' . number_format($out_of) . ' ' . $string['candidates'] . '</span>';
 
 echo "<div class=\"head_title\">\n";
 echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
@@ -373,11 +381,11 @@ $half_marks = true;
       }
 
       echo '<div class="student-answer-block' . $style . '">';
-
-      $out_of = ($phase == 2) ? count($remark_array) : $result->num_rows;
+            
+      $out_of = $result->num_rows;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
-      
       echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
+ 
       if (count($reminders) > 0) {
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
@@ -396,7 +404,7 @@ $half_marks = true;
       if ($answer_no != 1 and $answer_no <= $result->num_rows) {
         echo '<input type="submit" id="prev_' . $answer_no . '" class="tbmark ok" data-id="' . $answer_no . '" value="' . $string['previous'] . '" />';
       }
-      if (($phase == 1 and $answer_no != $result->num_rows) or ($phase == 2 and $answer_no != count($remark_array))) {
+      if ($answer_no != $out_of) { 
         echo '<input type="submit" id="next_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['next'] . '" />';
       } else {
         echo '<input type="submit" id="finish_' . $answer_no . '" class="tbmark ok" style="float:right; margin-right: -5px" data-id="' . $answer_no . '" value="' . $string['finish'] . '" />';

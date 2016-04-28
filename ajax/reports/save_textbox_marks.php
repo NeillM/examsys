@@ -53,23 +53,6 @@ QUERY;
     if ($result) {
       $result->bind_param('iiiidsiiisidss', $paperID, $q_id, $log_id, $marker_id, $mark, $comments, $phase, $log, $user_id, $reminders, $marker_id, $mark, $comments, $reminders);
       $result2 = $result->execute();
-      if ($result !== false) {
-        $status = 'OK';
-      }
-      $result->close();
-    }
-  } catch (exception $ex) {
-    // No need to do anything
-  }
-} else {
-  $sql = <<< QUERY
-DELETE FROM textbox_marking WHERE answer_id = ? AND phase = ?
-QUERY;
-  try {
-    $result = $mysqli->prepare($sql);
-    if ($result) {
-      $result->bind_param('ii', $log_id, $phase);
-      $result2 = $result->execute();
       if ($result2 !== false) {
         $status = 'OK';
       }
@@ -78,6 +61,8 @@ QUERY;
   } catch (exception $ex) {
     // No need to do anything
   }
+} else {
+    $status = 'OK';
 }
 
 echo $status;
