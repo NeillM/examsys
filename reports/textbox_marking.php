@@ -46,22 +46,20 @@ if (!QuestionUtils::question_exists_on_paper($q_id, $paperID, $mysqli)) {
 
 function displayMarks($id, $default, $log_record_id, $log, $halfmarks, $tmp_username, $marks, $string) {
   $html = '<select id="mark' . $id . '" name="mark' . $id . '" ><option value="NULL"></option>';
-
   $inc = 1;
-  if ($halfmarks == true)
-      $inc = 0.5;
+  if ($halfmarks == true) $inc = 0.5;
   for ($i = 0; $i <= $marks; $i+=$inc) {
-      $display_i = $i;
-      if ($i == 0.5) {
-          $display_i = '&#189;';
-      } elseif ($i - floor($i) > 0) {
-          $display_i = floor($i) . '&#189;';
-      }
-      if ($i == $default and is_numeric($default)) {
-          $html .= "<option value=\"$i\" selected>$display_i</option>";
-      } else {
-          $html .= "<option value=\"$i\">$display_i</option>";
-      }
+    $display_i = $i;
+    if ($i == 0.5) {
+      $display_i = '&#189;';
+    } elseif ($i - floor($i) > 0) {
+      $display_i = floor($i) . '&#189;';
+    }
+    if ($i == $default and is_numeric($default)) {
+      $html .= "<option value=\"$i\" selected>$display_i</option>";
+    } else {
+      $html .= "<option value=\"$i\">$display_i</option>";
+    }
   }
   $html .= <<< HTML
 </select>&nbsp;<span style="color:black">{$string['marks']}</span><br />&nbsp;
