@@ -587,14 +587,15 @@ class ims_enterprise {
     $school = $this->get_related_node_by_setting($this->schoolsource, $node, self::GROUP_SCHOOL);
     $schoolid = \SchoolUtils::school_name_exists($school, $this->db);
 
-    if (empty($schoolid)) {
+    $recstatus = $this->detect_recstatus($node);
+    if (empty($schoolid) and $recstatus != self::RECORD_DELETE) {
       $this->log_line('The xml file is missing the school for modules');
       return;
     }
-
-    $this->log_line('School ID: ' . $schoolid . ', School Name: ' . $school);
-    $group->school = $schoolid;
-    $recstatus = $this->detect_recstatus($node);
+    if (!empty($schoolid)) {
+      $this->log_line('School ID: ' . $schoolid . ', School Name: ' . $school);
+      $group->school = $schoolid;
+    }
     if (empty($group->modulecode)) {
       $this->log_line('Error: Unable to find module code in \'group\' element.');
 
@@ -671,7 +672,9 @@ class ims_enterprise {
     $timed_exams = 1;
     $exam_q_feedback = 1;
     $add_team_members = 1;
-    $schoolid = $group->school;
+    if ($recstatus != self::RECORD_DELETE) {
+      $schoolid = $group->school;
+    }
     $fullname = $group->full;
     $academic_year_start = substr($group->startdate, 0, 2) . '/' . substr($group->startdate, -2, 2);
     $ebel_grid_template = 0;
