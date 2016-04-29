@@ -579,6 +579,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_success() {
         // Test paper schedule- SUCCESS.
+        $this->config->set('cfg_summative_mgmt', true);
         $responsearray = $this->schedule_response_array();
         $params = $this->schedule_param_array();
         $userid = 1;
@@ -591,6 +592,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_success_req() {
         // Test paper schedule- SUCCESS.
+        $this->config->set('cfg_summative_mgmt', true);
         $responsearray = $this->schedule_response_array();
         $params = array(
             "nodeid" => 1,
@@ -621,6 +623,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_exception_modules() {
         // Test scheduling with invalid modules - non fatal error.
+        $this->config->set('cfg_summative_mgmt', true);
         $responsearray = $this->schedule_response_array();
         $params = $this->schedule_param_array();
         $userid = 1;
