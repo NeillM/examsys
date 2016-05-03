@@ -725,7 +725,7 @@ class ims_enterprise {
         $update['add_team_members'] = $add_team_members;
         $update['map_level'] = 0;
         $update['academic_year_start'] = $academic_year_start;
-        $updated = \module_utils::update_module_by_code($moduleid, $update, $this->db);
+        $updated = \module_utils::update_module_by_code($modulecode, $update, $this->db);
         $this->log_line('Updated module: ' . $modulecode);
         return $updated;
     }
