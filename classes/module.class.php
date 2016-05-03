@@ -256,22 +256,24 @@ Class module {
 
     if ($res === true ) {
       // Log any changes
-      $logger = new Logger($db);
       $userObject = UserObject::get_instance();
-      foreach ($modinfo as $key => $val) {
-        $key = strtolower($key);
-        if ($key == 'idmod') {
-          continue;
-        }
-        if ($orig_modinfo[$key] != $val) {
-
-          $logger->track_change( 'Module',
-                                  $modinfo['idMod'],
-                                  $userObject->get_user_ID(),
-                                  $orig_modinfo[$key],
-                                  $modinfo[$key],
-                                  $string[$lang_mappings[$key]]
-                               );
+      // We only log if change is made via UI.
+      if (!is_null($userObject)) {
+        $logger = new Logger($db);
+        foreach ($modinfo as $key => $val) {
+          $key = strtolower($key);
+          if ($key == 'idmod') {
+            continue;
+          }
+          if ($orig_modinfo[$key] != $val) {
+            $logger->track_change( 'Module',
+              $modinfo['idMod'],
+              $userObject->get_user_ID(),
+              $orig_modinfo[$key],
+              $modinfo[$key],
+              $string[$lang_mappings[$key]]
+            );
+          }
         }
       }
     }
