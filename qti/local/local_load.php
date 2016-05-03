@@ -720,7 +720,9 @@ class IE_Local_Load extends IE_Main {
     $store->scenario = $q_row['scenario'];
 
     // size of text box stored as 100x30 in sm
-    list($store->columns, $store->rows) = explode('x', $q_row['display_method']);
+    $settings = json_decode($q_row['settings']);
+    $store->columns = $settings->columns;
+    $store->rows = $settings->rows;
 
     $store->editor = $o_rows[0]['option_text'];
     $store->marks_correct = $o_rows[0]['marks_correct'];
