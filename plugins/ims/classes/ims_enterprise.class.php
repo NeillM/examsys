@@ -171,7 +171,6 @@ class ims_enterprise {
         $this->log_line('File is new.  Starting to process it!');
         $fileisnew = true;
       }
-      //$this->cache_group_relationships($this->filename); //TODO weigh up using this vs xml lookups on the fly.
       if ($fileisnew) {
         try {
           $this->process_properties_tag();
@@ -238,38 +237,6 @@ class ims_enterprise {
       }
     }
     return $xml;
-  }
-
-  /**
-   * Cache group relationships in an array
-   */
-  protected function cache_group_relationships() {
-    $xml = get_xml_reader();
-    while ($xml->read()) {
-      if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
-        $this->cache_group($xml->expand());
-      }
-    }
-    $xml->close();
-  }
-
-  /**
-   * Cache group
-   * @param stdClass $domnode
-   */
-  protected function cache_group($domnode) {
-    $node = $this->get_xml_element($domnode);
-
-    $sourcedid = (string) $node->sourcedid->id;
-    $type = $this->get_group_type($node);
-    $short = (string) $node->description->short;
-    $full = (string) $node->description->long;
-    if (property_exists($node, 'relationship')) {
-      $relation = (string) $node->relationship->sourcedid->id;
-    } else {
-      $relation = '';
-    }
-    $this->grouprelationships[$type][$sourcedid] = array('short' => $short, 'full' => $full, 'relation' => $relation);
   }
 
   /**
