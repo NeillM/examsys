@@ -208,11 +208,8 @@ class ims_enterprise {
       return true;
     }
     $this->log_line("Processing properties tag");
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'properties' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         $target = (string) $node->target;
@@ -223,7 +220,7 @@ class ims_enterprise {
       }
     }
     $xml->close();
-    throw new \exception("Target not found: IMS Settings restrict processing to " . $this->restricttarget . " as target"
+    throw new \Exception("Target not found: IMS Settings restrict processing to " . $this->restricttarget . " as target"
         . "\nEither change your IMS settings or configure your LMS to specify the correct target");
   }
 
@@ -232,28 +229,28 @@ class ims_enterprise {
    * @return \XMLReader
    */
   protected function get_xml_reader() {
-        $xml = new \XMLReader();
-        $xml->open($this->filename);
-        if ($this->validatexml) {
-          $xml->setParserProperty(\XMLReader::VALIDATE, true);
-        }
-        return $xml;
+    $xml = new \XMLReader();
+    $xml->open($this->filename);
+    if ($this->validatexml) {
+      $xml->setParserProperty(\XMLReader::VALIDATE, true);
+      if (!$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
+    }
+    return $xml;
   }
 
   /**
    * Cache group relationships in an array
    */
   protected function cache_group_relationships() {
-    $xml = new \XMLReader();
-    $xml->open($this->filename);
+    $xml = get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $this->cache_group($xml->expand());
       }
     }
+    $xml->close();
   }
 
   /**
@@ -294,11 +291,8 @@ class ims_enterprise {
    * @return void|stdClass
    */
   protected function process_group_faculties () {
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -321,11 +315,8 @@ class ims_enterprise {
    */
   protected function get_node_shortname($nodeid, $type) {
     $nodename = '';
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -351,11 +342,8 @@ class ims_enterprise {
    */
   protected function get_username($nodeid) {
     $username = '';
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'person' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -433,11 +421,8 @@ class ims_enterprise {
    */
   protected function process_group_tags($grouptype) {
     $this->log_line("Processing $grouptype tag");
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -836,11 +821,8 @@ class ims_enterprise {
    */
   protected function process_persons() {
     $this->log_line("Processing persons tag");
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'person' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -969,7 +951,7 @@ class ims_enterprise {
       try {
         \UserUtils::delete_userID($userid, $this->db);
         $this->log_line("Deleted user '$person->username' (ID number $person->idnumber).");
-      } catch (Exception $ex) {
+      } catch (\Exception $ex) {
         $this->log_line("Error deleting '$person->username' (ID number $person->idnumber).");
       }
     } else {
@@ -985,11 +967,8 @@ class ims_enterprise {
    */
   protected function process_memberships() {
     $this->log_line('Processing memberships');
-    $xml = $this->get_xml_reader($this->filename);
+    $xml = $this->get_xml_reader();
     while ($xml->read()) {
-      if (($this->validatexml) && !$xml->isValid()) {
-        throw new \exception('Invalid XML');
-      }
       if ($xml->name === 'membership' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
