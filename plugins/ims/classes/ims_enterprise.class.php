@@ -827,8 +827,21 @@ class ims_enterprise {
     // Get plugin configs.
     $person = new \stdClass();
     $person->idnumber = $this->get_person_studentid($xml);
-    $person->firstname = (string) $node->name->n->given;
-    $person->surname = (string) $node->name->n->family;
+    $firstname = (string) $node->name->n->given;
+    $surname = (string) $node->name->n->family;
+    // fn is mandatory in the dtd so use this if n not provided.
+    if (empty($firstname)) {
+      $fullname = (string) $node->name->fn;
+      $fullnameparts = explode(' ', $fullname);
+      $firstname = $fullnameparts[0];
+    }
+    if (empty($surname)) {
+      $fullname = (string) $node->name->fn;
+      $fullnameparts = explode(' ', $fullname);
+      $surname = $fullnameparts[1];
+    }
+    $person->firstname = $firstname;
+    $person->surname = $surname;
     $person->initials = $this->get_person_initials($xml);
     $person->title = (string) $node->name->n->prefix;
     $gender = (int) $node->demographics->gender;
