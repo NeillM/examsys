@@ -209,6 +209,9 @@ class ims_enterprise {
     $this->log_line("Processing properties tag");
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'properties' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         $target = (string) $node->target;
@@ -232,9 +235,6 @@ class ims_enterprise {
     $xml->open($this->filename);
     if ($this->validatexml) {
       $xml->setParserProperty(\XMLReader::VALIDATE, true);
-      if (!$xml->isValid()) {
-        throw new \Exception('Invalid XML');
-      }
     }
     return $xml;
   }
@@ -260,6 +260,9 @@ class ims_enterprise {
   protected function process_group_faculties () {
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -284,6 +287,9 @@ class ims_enterprise {
     $nodename = '';
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -311,6 +317,9 @@ class ims_enterprise {
     $username = '';
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'person' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -390,6 +399,9 @@ class ims_enterprise {
     $this->log_line("Processing $grouptype tag");
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'group' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -790,6 +802,9 @@ class ims_enterprise {
     $this->log_line("Processing persons tag");
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'person' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
@@ -936,6 +951,9 @@ class ims_enterprise {
     $this->log_line('Processing memberships');
     $xml = $this->get_xml_reader();
     while ($xml->read()) {
+      if ($this->validatexml and !$xml->isValid()) {
+        throw new \Exception('Invalid XML');
+      }
       if ($xml->name === 'membership' && $xml->nodeType === \XMLReader::ELEMENT) {
         $node = $this->get_xml_element($xml->expand());
         if (!is_object($node)) {
