@@ -90,7 +90,8 @@
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT faculty.id, name, COUNT(school) FROM faculty LEFT JOIN schools ON schools.facultyID = faculty.id WHERE faculty.deleted IS NULL GROUP BY name");
+$result = $mysqli->prepare("SELECT faculty.id, name, (COUNT(school) - COUNT(schools.deleted)) FROM faculty LEFT JOIN schools ON schools.facultyID = faculty.id WHERE
+  faculty.deleted IS NULL GROUP BY name");
 $result->execute();
 $result->bind_result($id, $name, $school_no);
 while ($result->fetch()) {
