@@ -25,7 +25,7 @@
   require '../include/sysadmin_auth.inc';
 
 // Check if we have any faculties
-$result = $mysqli->prepare("SELECT COUNT(id) FROM faculty");
+$result = $mysqli->prepare("SELECT COUNT(id) FROM faculty WHERE deleted is NULL");
 $result->execute();
 $result->bind_result($faculties);
 $result->fetch();
@@ -79,14 +79,12 @@ $result->close();
 <?php
   require '../include/school_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+  echo draw_toprightmenu();
   
   $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, (COUNT(modules.id) - COUNT(modules.mod_deleted)) FROM (schools, faculty)
     LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school");
   $result->execute();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
-  $result->store_result();
 ?>
 <div id="content">
 
@@ -109,9 +107,6 @@ $result->close();
 <?php
 
 if ($faculties > 0) {
-  $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, COUNT(modules.id) FROM (schools, faculty) LEFT JOIN modules ON schools.id=modules.schoolid WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school ORDER BY faculty.name, school");
-  $result->execute();
-  $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
   while ($result->fetch()) {
     echo "<tr id=\"$id\" class=\"l\"><td>$school</td><td>$faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
   }
