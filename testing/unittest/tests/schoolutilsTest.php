@@ -60,5 +60,14 @@ class schoolutilstest extends unittestdatabase {
         $expectedtable = $this->get_expected_data_set('updatedschools')->getTable("schools");
         $this->assertTablesEqual($expectedtable, $querytable); 
     }
-    
+    /**
+     * Test checking is school in use
+     * @group school
+     */
+    public function test_school_in_use() {
+        // Check in use.
+        $this->assertTrue(SchoolUtils::school_in_use(1, $this->db));
+        // Check not in use.
+        $this->assertFalse(SchoolUtils::school_in_use(2, $this->db));
+    }
 }

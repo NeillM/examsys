@@ -186,7 +186,7 @@ Class FacultyUtils {
   * @return integer - number of schools in faculty
   */
   static function count_schools_in_faculty($id, $db) {
-    $result = $db->prepare("SELECT count(*) FROM schools WHERE facultyID = ?");
+    $result = $db->prepare("SELECT count(*) FROM schools WHERE facultyID = ? AND deleted is NULL");
     $result->bind_param('i', $id);
     $result->execute();
     $result->bind_result($count);

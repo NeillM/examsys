@@ -1,0 +1,14 @@
+schools:
+  -
+    id: 1
+    school: "test school"
+    facultyID: 1
+  -
+    id: 2
+    school: "test school 2"
+    facultyID: 1
+    deleted: "1983-02-27 10:00:00"
+faculty:
+  -
+    id: 1
+    name: "faculty"

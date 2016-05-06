@@ -288,8 +288,8 @@ Class SchoolUtils {
    * @return bool true if school is in use
    */
   static function school_in_use($id, $db) {
-    $result = $db->prepare("SELECT NULL FROM courses WHERE schoolid = ?
-        UNION SELECT NULL FROM modules WHERE schoolid = ?");
+    $result = $db->prepare("SELECT NULL FROM courses WHERE schoolid = ? AND deleted is NULL
+        UNION SELECT NULL FROM modules WHERE schoolid = ? AND mod_deleted is NULL");
     $result->bind_param('ii', $id, $id);
     $result->execute();
     $result->store_result();
