@@ -61,3 +61,8 @@ modules:
     active: 1
     schoolid: 1
     academic_year_start: "07/01"
+schools:
+  -
+    id: 1
+    school: "Test school"
+    facultyID: 1
