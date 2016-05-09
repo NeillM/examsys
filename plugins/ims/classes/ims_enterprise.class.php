@@ -697,7 +697,7 @@ class ims_enterprise {
         if ($updated) {
           $this->log_line('Updated module: ' . $modulecode);
         } else {
-          $this->log_line('Failed to updated module: ' . $modulecode);
+          $this->log_line('Failed to update module: ' . $modulecode);
         }
         return $updated;
     }
