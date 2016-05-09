@@ -71,22 +71,22 @@
 
 <body>
 <?php
-  require '../include/school_options.inc';
-  require '../include/toprightmenu.inc';
-  echo draw_toprightmenu();
-  
   $result = $mysqli->prepare("SELECT schools.id, schools.school, faculty.name, faculty.deleted, (COUNT(modules.id) - COUNT(modules.mod_deleted)) FROM (schools, faculty)
     LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL GROUP BY faculty.name, school");
   $result->execute();
   $result->store_result();
   $result->bind_result($id, $school, $faculty, $faculty_deleted, $module_no);
+  $faculties = $result->num_rows;
+  require '../include/school_options.inc';
+  require '../include/toprightmenu.inc';
+  echo draw_toprightmenu();
 ?>
 <div id="content">
 
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['schools'] ?> (<?php echo $result->num_rows ?>)</div>
+  <div class="page_title"><?php echo $string['schools'] ?> (<?php echo $faculties ?>)</div>
 </div>
   
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -100,8 +100,7 @@
 
 <tbody>
 <?php
-
-if ($result->num_rows > 0) {
+if ($faculties > 0) {
   while ($result->fetch()) {
     echo "<tr id=\"$id\" class=\"l\"><td>$school</td><td>$faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
   }
