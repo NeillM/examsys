@@ -846,10 +846,10 @@ class ims_enterprise {
     $person->title = (string) $node->name->n->prefix;
     $gender = (int) $node->demographics->gender;
     $person->gender = $this->get_person_gender($gender);
-    if ($this->sourcedidfailback) {
+    $person->username = $this->get_username_from_xml($xml);
+    // If username not found fall back to use the sourcedid.
+    if ($person->username === '' and $this->sourcedidfailback) {
       $person->username = (string) $node->sourcedid->id;
-    } else {
-      $person->username = $this->get_username_from_xml($xml);
     }
 
     $person->email = (string) $node->email;
@@ -1006,10 +1006,10 @@ class ims_enterprise {
    */
   protected function process_member($member, $modulecode) {
     $studentid = (string) $member->role->userid;
-    if ($this->sourcedidfailback) {
-      $username = $studentid;
-    } else {
-      $username = $this->get_username($studentid);
+    $username = $this->get_username($studentid);
+    // If username not found fall back to use the sourcedid.
+    if ($username === '' and $this->sourcedidfailback) {
+      $username = (string) $node->sourcedid->id;
     }
 
     if ($this->capitafix) {
