@@ -105,7 +105,8 @@ Class module {
    * @return boolean - True if module successfully added.
    */
   public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01') {
-
+    // We need the config object.
+    $configObject = Config::get_instance();
     // Return false if missing madatory fields. schoolid is actually a number
     if ($moduleid == '' or $fullname == '' or $schoolID === '') {
       return false;

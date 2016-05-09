@@ -53,3 +53,11 @@ users:
     username: "sysadmin"
     roles: "Staff,SysAdmin"
     grade: "University Lecturer"
+modules:
+  -
+    id: 1
+    moduleid: "TEST"
+    fullname: "Test module"
+    active: 1
+    schoolid: 1
+    academic_year_start: "07/01"
