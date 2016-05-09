@@ -670,7 +670,11 @@ class ims_enterprise {
           $moduleid = \module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll,
               $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $this->db, $sms_import, $timed_exams,
               $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
-          $this->log_line('Created new modulecode: ' . $modulecode);
+          if ($moduleid) {
+            $this->log_line('Created new modulecode: ' . $modulecode);
+          } else {
+            $this->log_line('Failed to created new modulecode: ' . $modulecode);
+          }
           return $moduleid;
         }
         $update = array();
@@ -690,7 +694,11 @@ class ims_enterprise {
         $update['map_level'] = 0;
         $update['academic_year_start'] = $academic_year_start;
         $updated = \module_utils::update_module_by_code($modulecode, $update, $this->db);
-        $this->log_line('Updated module: ' . $modulecode);
+        if ($updated) {
+          $this->log_line('Updated module: ' . $modulecode);
+        } else {
+          $this->log_line('Failed to update module: ' . $modulecode);
+        }
         return $updated;
     }
   }

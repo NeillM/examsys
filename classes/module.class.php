@@ -130,7 +130,6 @@ Class module {
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
-      return "failed at insert";
       return false;
     }
 
