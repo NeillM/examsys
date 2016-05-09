@@ -51,9 +51,11 @@ $sms_connection = SmsUtils::GetSmsUtils();
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 $useObject = new UserObject($configObject, $mysqli);
-
+$sms_url = $configObject->get('cfg_sms_url') . '%';
+// Only include sms integration modules.
 // Do not include deleted modules or non-active modules.
-$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms, academic_year_start FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
+$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms, academic_year_start FROM modules WHERE sms LIKE ? AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
+$module_data->bind_param('s', $sms_url);
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms, $academic_year_start);

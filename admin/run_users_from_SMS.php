@@ -85,8 +85,11 @@ echo draw_toprightmenu();
   </thead>
   
 <?php
+// Only include sms integration modules.
 // Do not include deleted modules or non-active modules.
-$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms != '' AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
+$sms_url = $configObject->get('cfg_sms_url') . '%';
+$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms LIKE ? AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
+$module_data->bind_param('s', $sms_url);
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);

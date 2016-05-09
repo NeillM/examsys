@@ -134,8 +134,9 @@ Class module {
     }
 
     $idMod = $db->insert_id;
-
-    if ($sms_import == 1 and $sms_api != '') {
+    $smsurl = $configObject->get('cfg_sms_url');
+    // If sms import enabled on module and sms_api matches sms integration update enrolements.
+    if ($sms_import == 1 and substr($sms_api, 0, strlen($smsurl)) === $smsurl) {
       $SMS = SmsUtils::GetSmsUtils();
       $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
     }
