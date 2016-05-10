@@ -119,30 +119,6 @@ Class UserUtils {
   }
 
   /**
-   * Update a user's details by using their studentid as unique identifier
-   *
-   * @param string $studentid
-   * @param string $username user username
-   * @param string $password user password
-   * @param string $title user title
-   * @param string $forname user first names
-   * @param string $surname user surname
-   * @param string $email user email address
-   * @param string $course user course
-   * @param string $gender user gender
-   * @param integer $year year of study
-   * @param string $role user role
-   * @param string $sid student id
-   * @param mysqli $db db connection
-   * @param string $initials user initials
-   */
-  static function update_user_by_studentid($studentid, $username, $title, $first_names, $surname, $email, $course, $gender, $year, $role, $db, $initials) {
-    $userID = self::studentid_exists($studentid, $db);
-    $current = self::get_full_details_by_ID($userID, $db);
-    self::update_user($userID, $username, $current['password'], $title, $first_names, $surname, $email, $course, $gender, $year, $role, $studentid, $db, $initials);
-  }
-
-  /**
    * Update existing user.
    * @param integer $id - user id
    * @param string $username - user username
