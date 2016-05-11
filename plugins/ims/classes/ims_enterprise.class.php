@@ -913,8 +913,7 @@ class ims_enterprise {
         }
       } elseif ($userid && $this->createusers) {
         $this->log_line("Updating user '$person->username' (ID number $person->idnumber).");
-        $current = \UserUtils::get_full_details_by_ID($userid, $this->db);
-        \UserUtils::update_user($userid, $person->username, $current['password'], $person->title, $person->firstname,
+        \UserUtils::update_user($userid, $person->username, '', $person->title, $person->firstname,
              $person->surname, $person->email, $person->grade, $person->gender, $person->yearofstudy, $person->role,
              $person->idnumber, $this->db, $person->initials);
         // It is totally wrong to mess with deleted users flag directly in database!!!

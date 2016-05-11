@@ -173,13 +173,14 @@ Class UserUtils {
         $title = self::my_ucwords($title);
     }
 
-    // If updating the password - encrypt.
-    if ($current['password'] != $password) {
+    if ($password == '' or $password == $current['password']) {
+        // Keep current password if the same as the encrypted one supplied or password if not supplied.
+        $encrypt_password = $current['password'];
+    } else {
+        // If updating the password - encrypt.
         $enc = new encryp();
         $salt = UserUtils::get_salt();
         $encrypt_password = $enc->encpw($salt, $username, $password);  // One way encrypt the password.
-    } else {
-        $encrypt_password = $password;
     }
 
     // If updating the gender. Force valid value for gender or default to NULL
