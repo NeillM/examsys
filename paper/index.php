@@ -116,12 +116,12 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);
   exit();
 } elseif ($paper_no == 0) {
-  echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>{$string['exams']}</title>\n";
+  echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />\n<title>{$string['exams']}</title>\n";
   ?>
 <html>
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
 
   <title><?php echo $string['exams']; ?></title>
 
@@ -300,7 +300,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
 <html>
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>"/>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
 
 	<title><?php echo $string['exams']; ?></title>
 

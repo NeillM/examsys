@@ -67,16 +67,14 @@ Class user_notices extends RogoStaticSingleton {
 
     if (file_exists($root . 'config/config.inc.php')) {
       $rp = $configObject->get('cfg_root_path');
-      $cs = $configObject->get('cfg_page_charset');
     } else {          // If we have not installed there is no config.inc.php file.
       $rp = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
-      $cs = 'utf-8';
     }
 
     if ($output_header == true) {
       echo "<html>\n";
       echo "<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
-      echo "<meta http-equiv=\"content-type\" content=\"text/html;charset={$cs}\" />\n";
+      echo "<meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />\n";
       echo "<title>$title</title>\n";
       echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/body.css\" />\n";
       echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/notice.css\" />\n";

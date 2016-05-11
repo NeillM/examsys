@@ -167,7 +167,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
   <title><?php echo $string['usermanagement'] ?></title>
 

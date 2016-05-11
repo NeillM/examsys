@@ -32,7 +32,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 ?>
   <html>
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>OSCE: Marking Form</title>
   <style type="text/css">
     body {font-family:Arial,sans-serif; font-size:90%; color:black}

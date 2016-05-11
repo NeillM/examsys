@@ -31,7 +31,7 @@ require_once '../../plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.p
 
 set_time_limit(0);
 
-//header('Content-Type: text/html; charset=' + $configObject->get('cfg_page_charset'));
+//header('Content-Type: text/html; charset=UTF-8');
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 $startdate = check_var('startdate', 'REQUEST', true, false, true);

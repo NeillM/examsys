@@ -86,7 +86,7 @@ $time_range = range(0, 30, 1);
 
 ?>
 <html>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
 <head>
   <title><?php echo $string['extendtime'] ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
