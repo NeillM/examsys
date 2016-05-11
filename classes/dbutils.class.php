@@ -34,15 +34,18 @@ Class DBUtils {
    * @param string $user Database username
    * @param string $passwd Password for database user
    * @param string $database Initial schema to use
+   * @param object $notice rogo notice object
    * @param string $dbclass Optional class to use, e.g. debugging extension to mysqli
+   * @param integer $port mysql port
    *
    * @return object
    */
-  static function get_mysqli_link($host, $user, $passwd, $database, $charset, $notice, $dbclass = 'mysqli', $port = 3306) {
+  static function get_mysqli_link($host, $user, $passwd, $database, $notice, $dbclass = 'mysqli', $port = 3306) {
 
     @$mysqli = new $dbclass($host, $user, $passwd, $database, $port);
     if ($mysqli->connect_error == '') {
-      $mysqli->set_charset($charset);
+      // As of Rogo 6.1.0 db conenction charset must be UTF8.
+      $mysqli->set_charset('utf8');
     } else {
       $notice->display_notice('Database Error', "Unable to connect to database using $dbclass.", '/artwork/db_no_connect.png', '#C00000');
       exit;
