@@ -900,7 +900,8 @@ class ims_enterprise {
       }
     } else { // Add or update record.
       // If the user exists (matching sourcedid) then we don't need to do anything.
-      if (!$userid = \UserUtils::username_exists($person->username, $this->db) && $this->createusers) {
+      $userid = \UserUtils::username_exists($person->username, $this->db);
+      if (!$userid && $this->createusers) {
         // If they don't exist and haven't a defined username, we log this as a potential problem.
         if ((!isset($person->username)) || (strlen($person->username) == 0)) {
           $this->log_line("Cannot create new user for ID # $person->idnumber - no username listed in IMS data for this person.");
@@ -910,12 +911,11 @@ class ims_enterprise {
               $person->grade, $person->gender, $person->yearofstudy, $person->role, $person->idnumber, $this->db, $person->initials);
           $this->log_line("Created user record (' . $userid . ') for user '$person->username' (ID number $person->idnumber).");
         }
-      } else if ($this->createusers) {
+      } elseif ($userid && $this->createusers) {
         $this->log_line("Updating user '$person->username' (ID number $person->idnumber).");
-
-        \UserUtils::update_user_by_studentid($person->idnumber, $person->username, $person->title, $person->firstname,
-            $person->surname, $person->email, $person->grade, $person->gender, $person->yearofstudy, $person->role,
-            $this->db, $person->initials);
+        \UserUtils::update_user($userid, $person->username, '', $person->title, $person->firstname,
+             $person->surname, $person->email, $person->grade, $person->gender, $person->yearofstudy, $person->role,
+             $person->idnumber, $this->db, $person->initials);
         // It is totally wrong to mess with deleted users flag directly in database!!!
         // There is no official way to undelete user, sorry..
       } else {
