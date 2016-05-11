@@ -41,6 +41,7 @@ $lang['title'] = $string['campuses'];
 $lang['create'] = $string['createnewcampus'];
 $lang['view'] = $string['viewcampus'];
 $lang['delete'] = $string['deletecampus'];
+$config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $config['rogo_version'] = $configObject->get('rogo_version');
 $header = array(array('class' => 'col10', 'style' => 'width:80%', 'value' => $string['campus']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['isdefault']));
