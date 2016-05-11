@@ -63,7 +63,8 @@ if (isset($_POST['submit']) and !$errors) {
     $filename = $_FILES['photofile']['name'];
     $explode = explode('.', $filename);
     $count = count($explode) - 1;
-    $file_ext = $explode[$count];
+    // Ensure the file extenstion is lower case or it will not load on some Operating systems.
+    $file_ext = strtolower($explode[$count]);
 
     if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $photodirectory->fullpath($_POST['username'] . '.' . $file_ext))) {
       log_error($userObject->get_user_ID(), 'Edit User', 'Application Error', 'Error uploading user photo - error: ' . $_FILES['photofile']['error'], $_SERVER['PHP_SELF'], 49, '', null, null, null);
