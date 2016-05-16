@@ -36,6 +36,7 @@ $options = 'h';
 $longoptions = array(
   'clean',
   'help',
+  'update',
 );
 
 $optionslist = getopt($options, $longoptions);
@@ -44,6 +45,13 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
   cli_utils::prompt(help::init_help());
   exit(0);
+}
+
+// Work out what type of composer dependancy installation method we should use.
+if (isset($optionslist['update'])) {
+  $composer_method = composer_utils::UPDATE;
+} else {
+  $composer_method = composer_utils::INSTALL;
 }
 
 // Load the behat config file.
@@ -73,7 +81,7 @@ chdir(__DIR__);
 
 try {
   // Ensure composer and it's dependancies are installed and upto date.
-  composer_utils::setup();
+  composer_utils::setup($composer_method);
   // The composer autoloader may not have been generated before this point so we should ensure it is.
   autoloader::init();
   // Create the behat.yml file.
