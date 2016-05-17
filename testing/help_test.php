@@ -64,7 +64,9 @@ require '../include/sysadmin_auth.inc';
 	$pubs = $help_directory->location();
 	if ($handle = opendir($pubs)) {
 		while (false !== ($file = readdir($handle))) 
-			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[('images/'.$file)] = 1;
+			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") {
+				$avail_images[$file] = 1;
+      }
 		closedir($handle);
 	}
 	
@@ -92,32 +94,31 @@ require '../include/sysadmin_auth.inc';
 	if ($result=='') echo ' - not detected.';
 	echo '<hr>';
 	//incorporated images
+	$helpimage_regexp = '#width="(?<width>.*?)" height="(?<height>.*?)" alt=".*?" src="' . $help_directory->url('(?<filename>.*)') . '"#';
 	foreach ($help_toc as $help_item) {
 		//search for <img scr=
-		$test = explode(' src=',$help_item['body']);
-		if (count($test)>1) {
-			for ($i=1;$i<count($test);$i++) {
-				$code = preg_split("/\'|\"/",$test[$i]);
-				$w=-1;$h=-1;
-				foreach($code as $ci => $cv) {
-					if (trim($cv)=='width=' && $w==-1) $w=$code[$ci+1];
-					if (trim($cv)=='height=' && $h==-1) $h=$code[$ci+1];
+		$test = array(); 
+		$imagecount = preg_match_all($helpimage_regexp, $help_item['body'], $test);
+		if ($imagecount > 0) {
+			for ($i=0; $i < $imagecount; $i++) {
+				$code = $test['filename'][$i];
+				$width = $test['width'][$i];
+				$height = $test['height'][$i];
+				if (!isset($help_img[$code])) {
+					$help_img[$code] = array();
 				}
-				if (!isset($help_img[($code[1])])) $help_img[($code[1])] = Array();
-				if (count($code)>=2) {
-					array_push($help_img[($code[1])],Array($help_item['id'],$w,$h));
-				}
+				array_push($help_img[$code], array($help_item['id'], $width, $height));
 			}
 		}else{
 			//search for background-image: url
-			$test = explode(' url(',$help_item['body']);
+			$test = explode(' url(', $help_item['body']);
 			if (count($test)>1) {
 				for ($i=1;$i<count($test);$i++) {
-					$code = preg_split("/\'|\"/",$test[$i]);
+					$code = preg_split("/\'|\"/", $test[$i]);
 					$w=-2;$h=-2;
 					if (!isset($help_img[$code[1]])) $help_img[$code[1]] = Array();
 					if (count($code)>=2) {
-						array_push($help_img[$code[1]],Array($help_item['id'],$w,$h));
+						array_push($help_img[$code[1]], Array($help_item['id'], $w, $h));
 					}
 				}
 			}
@@ -130,17 +131,8 @@ require '../include/sysadmin_auth.inc';
 	$result_array_3 = Array();
 	$i=0;
 	foreach ($help_img as $img_item => $img_ids) {
-		$path = "../help/".$target."/".$img_item;
-		$img_size = false;
-		if (substr($img_item,0,4)=='http') {
-			$path = '';
-		}
-		if (substr($img_item,0,6)=='../../') {
-			$path = '../'.substr($img_item,6);
-		}elseif (substr($img_item,0,3)=='../') {
-			$path = '../help/'.substr($img_item,3);
-		}
-		if (file_exists ($path)) {
+		$path = $help_directory->fullpath($img_item);
+		if (file_exists($path)) {
 			if (!($img_size = getimagesize($path))) $img_size = false;
 		}
 
@@ -192,9 +184,15 @@ require '../include/sysadmin_auth.inc';
 		$dbresult2->execute(); 
 		$dbresult2->bind_result($id,$del);
 		while ($dbresult2->fetch()) {
-			if ($id!=null && $avail_images[$img_item]<5) $avail_images[$img_item] = ($avail_images[$img_item] * 10 + 1);
-			if ($avail_images[$img_item] == 11) $avail_images[$img_item] = (1*$id+1000);
-			if ($del!=null) $avail_images[$img_item] = (1*$id+2000);
+			if ($id != null && $avail_images[$img_item] < 5) {
+				$avail_images[$img_item] = ($avail_images[$img_item] * 10 + 1);
+			}
+			if ($avail_images[$img_item] == 11) {
+				$avail_images[$img_item] = (1 * $id + 1000);
+			}
+			if ($del != null) {
+				$avail_images[$img_item] = (1 * $id + 2000);
+			}
 		}
   	$dbresult2->close();
 	}
@@ -212,8 +210,9 @@ require '../include/sysadmin_auth.inc';
 	$result = '';
 	foreach ($avail_images as $img_item => $img_use) {
     if ($img_use == 1) {
-      $result .= "<li><a href='../help/$target/$img_item'>$img_item</a></li>";
-      unlink("../help/$target/$img_item");
+      $imgurl = $help_directory->url($img_item);
+      $result .= "<li><a href=\"$imgurl\">$img_item</a></li>";
+      unlink($help_directory->fullpath($img_item));
     }
   }
 	echo '<ol>'.$result.'</ol>';
@@ -223,7 +222,8 @@ require '../include/sysadmin_auth.inc';
 	$result = '';
 	foreach ($avail_images as $img_item => $img_use) {
     if ($img_use >= 2000) {
-      $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-2000)."'>#".($img_use-2000)."</a></li>";
+      $imgurl = $help_directory->url($img_item);
+      $result .= "<li><a href=\"$imgurl\">$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-2000)."'>#".($img_use-2000)."</a></li>";
     }
   }
 	echo '<ol>'.$result.'</ol>';
@@ -233,7 +233,8 @@ require '../include/sysadmin_auth.inc';
 	$result = '';
 	foreach ($avail_images as $img_item => $img_use) {
     if ($img_use>=1000 && $img_use<2000) {
-      $result .= "<li><a href='../help/$target/$img_item'>$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-1000)."'>#".($img_use-1000)."</a></li>";
+      $imgurl = $help_directory->url($img_item);
+      $result .= "<li><a href=\"$imgurl\">$img_item</a> on page: <a href='/help/$target/index.php?id=".($img_use-1000)."'>#".($img_use-1000)."</a></li>";
     }
   }
 	echo '<ol>'.$result.'</ol>';
