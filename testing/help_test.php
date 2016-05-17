@@ -60,10 +60,8 @@ require '../include/sysadmin_auth.inc';
 	
 	//reading image files' names
 	$avail_images = Array();
-	$pubs  = getcwd();
-	$slash = '/';if (strrpos($pubs, '/') < strrpos($pubs, '\\')) $slash = '\\';
-	$pubs  = substr($pubs, 0, strrpos($pubs, $slash));
-	$pubs .= '/help/'.$target.'/images/';
+	$help_directory = rogo_directory::get_directory('help_' . $target);
+	$pubs = $help_directory->location();
 	if ($handle = opendir($pubs)) {
 		while (false !== ($file = readdir($handle))) 
 			if ($file != "" && $file != "." && $file != ".." && $file != ".DS_Store") $avail_images[('images/'.$file)] = 1;

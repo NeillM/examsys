@@ -1483,6 +1483,20 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (!$photodirectory->check_permissions()) {
       $errors['106'] = sprintf($string['errors3'], $photodirectory->location());
     }
+    // Student help images.
+    $studenthelp = rogo_directory::get_directory('help_student');
+    $studenthelp->create();
+    $studenthelp->copy_from_default();
+    if (!$studenthelp->check_permissions()) {
+      $errors['107'] = sprintf($string['errors3'], $studenthelp->location());
+    }
+    // Staff help images.
+    $staffhelp = rogo_directory::get_directory('help_staff');
+    $staffhelp->create();
+    $staffhelp->copy_from_default();
+    if (!$staffhelp->check_permissions()) {
+      $errors['108'] = sprintf($string['errors3'], $staffhelp->location());
+    }
     if (count($errors) > 0) {
       self::displayError($errors);
     }

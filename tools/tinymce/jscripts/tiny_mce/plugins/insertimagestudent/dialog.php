@@ -23,7 +23,6 @@
 */
 
   require  '../../../../../../include/staff_auth.inc';
-  $path = $cfg_web_root . 'help/student/images/';
 
 ?>
 <!DOCTYPE html>
@@ -44,19 +43,20 @@
 <?php
 if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
+    $helpdirectory = rogo_directory::get_directory('help_student');
 
     $filename = $_FILES['FileName']['tmp_name'];
 
     //make the dirs
-    if(!file_exists($path)) {
-      mkdir($path, 0744);
-    }
+    $helpdirectory->create();
+    $realname = $_FILES['FileName']['name'];
+    $path = $helpdirectory->fullpath($realname);
 
     //move orignal file
     $imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
-    $worked = move_uploaded_file($_FILES['FileName']['tmp_name'],$path . $_FILES['FileName']['name']);
+    $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path);
     if (!$worked) {
-      echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
+      echo "Failed to copy file to: " . $path;
       exit;
     }
     if (isset($_POST['border']) and $_POST['border'] == 1) {
@@ -65,7 +65,7 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
       $class = 'class="image_no_brd"';
     }
 
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="./images/' . $_FILES['FileName']['name'] . '" ' . $class . ' />';
+    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="' . $helpdirectory->url($realname) . '" ' . $class . ' />';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
