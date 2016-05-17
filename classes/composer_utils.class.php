@@ -18,18 +18,28 @@
  * This class is used to install and update composer.
  */
 class composer_utils {
+  /** Composer should install dependancies respecting the lock file. */
+  const INSTALL = 1;
+
+  /** Composer should get the laest versions of the depedencies and update the lock file. */
+  const UPDATE = 2;
+
   /**
    * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
    *
    * @return void
    */
-  public static function setup() {
+  public static function setup($method = self::INSTALL) {
     // We are going to chage the working directory and want to reset it later.
     $workingdir = getcwd();
     // Change to the root Rogo directory.
     chdir(__DIR__ . '/..');
     self::install_update();
-    self::update_dependancies();
+    if ($method === self::UPDATE) {
+      self::update_dependancies();
+    } else {
+      self::fetch_dependancies();
+    }
     chdir($workingdir);
   }
 
@@ -51,6 +61,18 @@ class composer_utils {
       if ($statuscode != 0) {
         throw new Exception('Cannot update composer.');
       }
+    }
+  }
+
+  /**
+   * Downloads and installs all the files required by the composer.lock file for the project.
+   *
+   * @return void
+   */
+  protected static function fetch_dependancies() {
+    passthru("php composer.phar install", $statuscode);
+    if ($statuscode != 0) {
+      throw new Exception('Could not install components.');
     }
   }
 

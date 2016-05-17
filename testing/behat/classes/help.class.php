@@ -75,7 +75,8 @@ class help {
   public static function init_help() {
     $message = 'Rogo Behat initialisation script options'
         . PHP_EOL . PHP_EOL . "-h, --help \tDisplay help"
-        . PHP_EOL . "--clean \tForce a database install";
+        . PHP_EOL . "--clean \tForce a database install"
+        . PHP_EOL . "--update \tUpdate the composer dependancies.";
     return $message;
   }
 }
