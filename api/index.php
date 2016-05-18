@@ -26,7 +26,6 @@ $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'),
                                  $configObject->get('cfg_db_webservice_user'), 
                                  $configObject->get('cfg_db_webservice_passwd'), 
                                  $configObject->get('cfg_db_database'), 
-                                 $configObject->get('cfg_db_charset'), 
                                  UserNotices::get_instance(), 
                                  $configObject->get('dbclass'));
                                      

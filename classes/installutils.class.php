@@ -49,7 +49,6 @@ Class InstallUtils {
   public static $cfg_db_username;
   public static $cfg_db_password;
   public static $cfg_db_charset;
-  public static $cfg_page_charset;
 
   public static $cfg_web_host;
   public static $cfg_rogo_data;
@@ -156,7 +155,6 @@ Class InstallUtils {
         <div><label for="web_host"><?php echo $string['webhost']; ?></label> <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" /></div>
         <div><label for="rogo_data"><?php echo $string['datadirectory']; ?></label> <input type="text" id="rogo_data" name="rogo_data" value="<?php echo dirname(__DIR__) . DIRECTORY_SEPARATOR ?>" /></div>
         <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" /></div>
-        <div style="clear: left"><label for="page_charset"><?php echo $string['pagecharset']; ?></label> <select id="page_charset" name="page_charset"><option value="UTF-8">UTF-8</option><option value="ISO-8859-1">ISO 8859-1</option></select></div>
 
       <table class="h"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><?php echo $string['needusername']; ?></div>
@@ -307,7 +305,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject = Config::get_instance();
     
     self::$cfg_company = $_POST['company_name'];
-    self::$cfg_page_charset = $_POST['page_charset'];
 
     self::$cfg_db_host = $_POST['mysql_db_host'];
     self::$cfg_db_charset = $_POST['mysql_db_charset'];
@@ -1763,7 +1760,6 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_web_root = get_root_path() . '/';
 \$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
-\$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
 \$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
@@ -1949,7 +1945,6 @@ CONFIG;
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
-    $config = str_replace('{cfg_page_charset}', self::$cfg_page_charset, $config);
     $config = str_replace('{cfg_company}', self::$cfg_company, $config);
 
     $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);

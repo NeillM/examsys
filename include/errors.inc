@@ -47,7 +47,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
   }
   
   if ($headers == false) {
-    echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>" . $error_title . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
+    echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />\n<title>" . $error_title . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
   }
   if ($display_support_email and $support_email != '') {
     $error_description .= '<br /><br /><span style="color:#808080">' . $string['errormsg'] . ' <a href="mailto:' . $support_email . '" style="color:blue">' . $support_email . '</a></span>';

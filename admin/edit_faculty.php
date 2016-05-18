@@ -56,7 +56,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><?php echo $string['editfaculty'] ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
@@ -78,7 +78,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><?php echo $string['editfaculty']; ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">

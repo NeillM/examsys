@@ -52,7 +52,6 @@ class oauth {
                                  $configObject->get('cfg_db_sysadmin_user'), 
                                  $configObject->get('cfg_db_sysadmin_passwd'), 
                                  $configObject->get('cfg_db_database'), 
-                                 $configObject->get('cfg_db_charset'), 
                                  \UserNotices::get_instance(), 
                                  $configObject->get('dbclass'));
         $dsn = "mysql:dbname=" . $configObject->get('cfg_db_database') . ";" . "host=" . $configObject->get('cfg_db_host');

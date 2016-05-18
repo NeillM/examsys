@@ -50,7 +50,6 @@ if ($action == 'getModulePaperList') {
                                      $configObject->get('cfg_db_staff_user'), 
                                      $configObject->get('cfg_db_staff_passwd'), 
                                      $configObject->get('cfg_db_database'), 
-                                     $configObject->get('cfg_db_charset'), 
                                      UserNotices::get_instance(), 
                                      $configObject->get('dbclass'));
    
