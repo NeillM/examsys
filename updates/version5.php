@@ -205,6 +205,10 @@ if (!isset($_POST['update'])) {
       $mysqli->next_result();
       if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
     }
+    // Ensure all help images are in the correct location.
+    $staffhelp = rogo_directory::get_directory('help_staff');
+    $staffhelp->create();
+    $staffhelp->copy_from_default();
     echo "<li>LOADED staff_help: " . $ext . "</li>\n";
   }
 
@@ -227,6 +231,10 @@ if (!isset($_POST['update'])) {
       $mysqli->next_result();
       if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
     }
+    // Ensure all help images are in the correct location.
+    $studenthelp = rogo_directory::get_directory('help_student');
+    $studenthelp->create();
+    $studenthelp->copy_from_default();
     echo "<li>LOADED student_help: " . $ext . "</li>\n";
   }
   $mysqli->commit();
