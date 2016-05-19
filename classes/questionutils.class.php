@@ -108,11 +108,11 @@ Class QuestionUtils {
    * @param $leadin
    * @return string
    */
-  static function clean_leadin($leadin) {
+  static function clean_leadin($leadin, $limit=160) {
     if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
       $leadin = strip_tags($leadin);                                     // No equation, strip all tags
-      if (mb_strlen($leadin) > 160) {
-        $leadin = mb_substr($leadin, 0, 160) . '...';
+      if (mb_strlen($leadin) > $limit and $limit != 0) {
+        $leadin = mb_substr($leadin, 0, $limit) . '...';
       }
     } else {
       $leadin = trim(str_replace('&nbsp;',' ', $leadin));

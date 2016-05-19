@@ -46,6 +46,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/adhocwindow.css" />
   <style type="text/css">
 		<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
@@ -56,6 +57,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+  <script type="text/javascript" src="../js/adhocwindow.js"></script>
   <script>
     function addQID(qID, clearall) {
       if (clearall) {
@@ -412,20 +414,24 @@ if (isset($_GET['submit'])) {
     } else {
       echo " id=\"l$display_no\" onclick=\"selL($q_id,'$q_type',$display_no,event)\">";
     }
-
-    $tmp_leadin = QuestionUtils::clean_leadin($leadin);
+    $fullText = QuestionUtils::clean_leadin($leadin, 0);
+    $tmp_leadin = QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length'));
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
     
     if ($q_type == 'sct') {
       $sct_parts = explode('~', $tmp_leadin);
       $tmp_leadin = $sct_parts[0];
     }
-
     if ($locked != '') {
-      echo '<td class="l">';
+      echo '<td class="l" ';
     } else {
-      echo '<td class="u">';      
+      echo '<td class="u" ';
     }
+    if(strlen($fullText) > $configObject->get('cfg_search_leadin_length')){
+      echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($fullText).'\');" ';
+      echo ' onmouseleave="hideAdHocWindow();" ';
+    }
+    echo '>';
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }

@@ -428,6 +428,7 @@ function check_latex_random($q_ids, $mysqli) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+  <link rel="stylesheet" type="text/css" href="../css/adhocwindow.css" />
   <!--[if lt IE 8]>
   <style type="text/css">
     td.ie-fullwidth {
@@ -458,6 +459,7 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
+  <script type="text/javascript" src="../js/adhocwindow.js"></script>
 <script defer="defer">
   var paperID = '<?php echo $paperID ?>';
 
@@ -765,7 +767,8 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no]['theme']           = $theme;
       $temp_array[$row_no]['screen']          = $screen;
       $temp_array[$row_no]['q_type']          = $q_type;
-      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin);
+      $temp_array[$row_no]['fulltext']        = QuestionUtils::clean_leadin($leadin, 0);
+      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length'));
       $temp_array[$row_no]['scenario']        = $scenario;
       $temp_array[$row_no]['p_id']            = $p_id;
       $temp_array[$row_no]['q_id']            = $q_id;
@@ -1085,7 +1088,12 @@ function check_latex_random($q_ids, $mysqli) {
       echo "<td class=\"q_no\">$question_number.</td>";
     }
 
-    echo "<td class=\"l\">";
+    echo "<td class=\"l\" ";
+    if(strlen($temp_array[$x]['fulltext']) > $configObject->get('cfg_search_leadin_length')){
+      echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($temp_array[$x]['fulltext']).'\');" ';
+      echo ' onmouseleave="hideAdHocWindow();" ';
+    }
+    echo '>';
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
