@@ -55,7 +55,7 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid']; ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
@@ -76,7 +76,7 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset'); ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

@@ -526,4 +526,31 @@ class rogo_directorytest extends UnitTest {
     $this->assertContains('&amp;', $url);
     $this->assertContains('forcedownload&equals;1', $url);
   }
+
+  /**
+   * Tests that the copy directory method copies files.
+   *
+   * @group rogo_directory
+   */
+  public function test_copy_from_default() {
+    // This test needs to mock more than just the abstract methods so we need to build our own mock object.
+    $methods = array('location', 'base_directory', 'default_base_directory');
+    $this->rogodirectory = $this->getMockForAbstractClass('rogo_directory', array(), '', true, true, true, $methods);
+    // Set up the configured location.
+    $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/files/');
+    $this->rogodirectory->expects($this->any())->method('base_directory')->willReturn($this->config->get('cfg_rogo_data') . '/');
+    // Setup the default location.
+    $fixtures = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'rogo_directory' . DIRECTORY_SEPARATOR;
+    $this->rogodirectory->expects($this->any())->method('default_base_directory')->willReturn($fixtures);
+    // Setup the data directory, with no files in it.
+    $structre = array(
+      'files' => array(),
+    );
+    vfsStream::setup(UnitTest::DATA_DIRECTORY, 0777, $structre);
+    $this->rogodirectory->copy_from_default();
+    // The two fixture files should be copied.
+    $this->assertCount(2, vfsStreamWrapper::getRoot()->getChild('files')->getChildren());
+    $this->assertTrue(vfsStreamWrapper::getRoot()->getChild('files')->hasChild('test.gif'));
+    $this->assertTrue(vfsStreamWrapper::getRoot()->getChild('files')->hasChild('testfile.txt'));
+  }
 }

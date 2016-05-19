@@ -449,7 +449,7 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
 
   // Query may fail if we try to insert while another statement is open.
   // Since we don't have a handle on the original statement, create another DB link
-  $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+  $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
   $log_error = $mysqli2->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
   $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $page, $querystring, $requestmethod, $paperID, $post_data, $variables, $backtrace);
   $log_error->execute();

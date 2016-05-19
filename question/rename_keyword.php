@@ -27,7 +27,7 @@
 ?>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Rename Keyword</title>
   <script>
     window.opener.document.getElementById('keytext<?php echo $_POST['index']; ?>').innerHTML = '<?php echo str_replace('"','&quot;',$_POST['new_keyword']); ?>';
@@ -41,7 +41,7 @@
 ?>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title>Rename Keyword</title>
   <script>
     function illegalChar(codeID) {

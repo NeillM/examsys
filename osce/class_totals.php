@@ -114,7 +114,7 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   
   <title>Rog&#333;: <?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   

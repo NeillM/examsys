@@ -26,7 +26,7 @@
   require "../include/load_config.php";
   $error = false;
   $notice = UserNotices::get_instance();
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $notice, $configObject->get('dbclass'));
   if (mysqli_connect_error()) {
     echo "ERROR::Can not Connect to MySQL on " . $configObject->get('cfg_db_host');
     $error = true;

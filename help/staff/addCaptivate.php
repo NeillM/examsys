@@ -23,7 +23,6 @@
 */
 
 require '../include/staff_auth.inc';
-$path = $cfg_web_root . 'staff_help/images/';
 
 function unique_filename($filename, $path) {
   if ($filename != '' and $filename != 'none') {
@@ -77,22 +76,22 @@ function unique_filename($filename, $path) {
 <?php
 if ($_FILES['FileName'] != '') {
     //proc upload
+    $helpdirectory = rogo_directory::get_directory('help_staff');
     
     $filename = $_FILES['FileName']['tmp_name'];
     //make the dirs
-    if(!file_exists($path)) {
-        mkdir($path, 0744);
-    }
-    //move orignal file 
-    $unique_name = unique_filename($_FILES['FileName']['name'], $path);
-     
-    $worked = move_uploaded_file($_FILES['FileName']['tmp_name'],$path . $unique_name);
+    $helpdirectory->create();
+    $unique_name = unique_filename($_FILES['FileName']['name'], $helpdirectory->location());
+    $path = $helpdirectory->fullpath($unique_name);
+
+    //move orignal file
+    $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path);
     if (!$worked) {
-      echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
+      echo "Failed to copy file to: " . $path;
       exit;
     }
 $html = '<div>
-  <table style="CURSOR: pointer" onclick="openTutorial(\'' . $_FILES['FileName']['name'] . '\')" border="0" cellspacing="0" cellpadding="0">
+  <table style="CURSOR: pointer" onclick="openTutorial(\'' . $helpdirectory->url($realname, false, false, true) . '\')" border="0" cellspacing="0" cellpadding="0">
    <tbody>
      <tr><td rowspan="2" style="width:70px"><img border="0" alt="Demo Movie" src="./large_play_icon.png" width="64" height="64" alt="play" /></td><td><div style="font-size:125%; color:blue">' . $_POST['title'] . '</div><div style="font-size:90%; color:#808080">Flash required</div></td></tr>
   </tbody>

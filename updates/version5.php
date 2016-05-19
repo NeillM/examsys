@@ -42,7 +42,7 @@ $old_version = $configObject->get('rogo_version');
 <html>
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
 
     <title>Rog&#333; <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
 
@@ -148,7 +148,7 @@ if (!isset($_POST['update'])) {
     $cfg_db_charset = $configObject->get('cfg_db_charset');
   }
 
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
   if ($mysqli->connect_error) {
     echo "<div>Failed to contect to MySQL using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
@@ -205,6 +205,10 @@ if (!isset($_POST['update'])) {
       $mysqli->next_result();
       if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
     }
+    // Ensure all help images are in the correct location.
+    $staffhelp = rogo_directory::get_directory('help_staff');
+    $staffhelp->create();
+    $staffhelp->copy_from_default();
     echo "<li>LOADED staff_help: " . $ext . "</li>\n";
   }
 
@@ -227,6 +231,10 @@ if (!isset($_POST['update'])) {
       $mysqli->next_result();
       if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
     }
+    // Ensure all help images are in the correct location.
+    $studenthelp = rogo_directory::get_directory('help_student');
+    $studenthelp->create();
+    $studenthelp->copy_from_default();
     echo "<li>LOADED student_help: " . $ext . "</li>\n";
   }
   $mysqli->commit();

@@ -82,7 +82,7 @@ abstract class rogo_directory {
     } else {
       // Data directory not configured, or flash question interfaces are defined.
       // We should return the root Rogo path.
-      $path = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+      $path = $this->default_base_directory();
     }
     return $path;
   }
@@ -116,6 +116,28 @@ abstract class rogo_directory {
   public function clear() {
     return $this->recursive_delete($this->location());
   }
+  
+  /**
+   * Copy files from the default location into the configured location.
+   * 
+   * @return void
+   */
+  public function copy_from_default() {
+    $datadir = $this->base_directory();
+    $default_datadir = $this->default_base_directory();
+    if ($datadir === $default_datadir) {
+      // Directory in the default location do nothing.
+      return;
+    }
+    $location = $this->location();
+    $default_location = str_replace($datadir, $default_datadir, $location);
+    // Get all the files in the default directory (this is not recursive)
+    $files = glob("$default_location*.*");
+    foreach ($files as $file) {
+      $filename = basename($file);
+      copy($default_location . $filename, $location . $filename);
+    }
+  }
 
   /**
    * Create the directory if it does not exist.
@@ -125,6 +147,15 @@ abstract class rogo_directory {
     if (!file_exists($directory) && !mkdir($directory, $this->filepermissions, true)) {
       throw new directory_not_found('rogo_data');
     }
+  }
+
+  /**
+   * Returns the default location of the Rogo data directory.
+   *
+   * @return string
+   */
+  protected function default_base_directory() {
+    return dirname(__DIR__) . DIRECTORY_SEPARATOR;
   }
 
   /**

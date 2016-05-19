@@ -23,14 +23,13 @@
 */
 
 require  '../../../../../../include/staff_auth.inc';
-$path = $cfg_web_root . 'help/staff/images/';
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
   <title>Add Captivate Tutorial</title>
 
@@ -44,21 +43,22 @@ $path = $cfg_web_root . 'help/staff/images/';
 <?php
 if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
+    $helpdirectory = rogo_directory::get_directory('help_staff');
 
     $filename = $_FILES['FileName']['tmp_name'];
 
     //make the dirs
-    if (!file_exists($path)) {
-      mkdir($path, 0744);
-    }
+    $helpdirectory->create();
+    $realname = $_FILES['FileName']['name'];
+    $path = $helpdirectory->fullpath($realname);
 
     //move orignal file
-    $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path . $_FILES['FileName']['name']);
+    $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path);
     if (!$worked) {
-      echo "Failed to copy file to: " . $path . $_FILES['FileName']['name'];
+      echo "Failed to copy file to: " . $path;
       exit;
     }
-    $html = '<div><table style="cursor:pointer" onclick="openTutorial(\'' . $_FILES['FileName']['name'] . '\')" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td rowspan="2" style="width:70px"><img border="0" alt="Demo Movie" src="/artwork/large_play_icon.png" width="64" height="64" alt="play" /></td><td><div style="font-size:125%; color:blue">' . $_POST['title'] . '</div><div style="font-size:90%; color:#808080">Flash required</div></td></tr></tbody></table></div>';
+    $html = '<div><table style="cursor:pointer" onclick="openTutorial(\'' . $helpdirectory->url($realname, false, false, true) . '\')" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td rowspan="2" style="width:70px"><img border="0" alt="Demo Movie" src="/artwork/large_play_icon.png" width="64" height="64" alt="play" /></td><td><div style="font-size:125%; color:blue">' . $_POST['title'] . '</div><div style="font-size:90%; color:#808080">Flash required</div></td></tr></tbody></table></div>';
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
         <script type="text/javascript" language="javascript">

@@ -33,7 +33,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 
   <title><?php echo $string['externalexaminers'] ?></title>
 

@@ -28,7 +28,7 @@ require_once '../include/errors.inc';
 require_once '../include/sct_review.inc';
 
 // Connect to the database as the SCT user.
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_sct_user'), $configObject->get('cfg_db_sct_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host') , $configObject->get('cfg_db_sct_user'), $configObject->get('cfg_db_sct_passwd'), $configObject->get('cfg_db_database'), $notice, $configObject->get('dbclass'));
 
 // Check for key parameters
 $form_fields = $_SESSION['authenticationObj']['loginformfields'];
@@ -116,7 +116,7 @@ require '../config/start.inc';
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><?php echo $string['sctreview'] ?></title>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <?php
