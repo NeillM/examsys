@@ -242,6 +242,10 @@ if (!isset($_POST['submit'])) {
           }
         }
       }
+      
+      if ($q_type == "extmatch") { // Above foreach loop remove empty q_media value, which is needed for mapping scenarios and its medias when display/editing a extmatch question.
+          $new_q_media = $q_media; // So here need its original value.
+      }
 
       if ($status_array[$status]->get_retired()) {
         $new_status = $default_status;
