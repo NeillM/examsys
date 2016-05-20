@@ -28,6 +28,7 @@ $string['longdatephp'] = 'Nezkrácené datum (%s)';
 $string['shortdatephp'] = 'Zkrácené datum (%s)';
 $string['longtimephp'] = 'Nezkrácený čas (%s)';
 $string['shorttimephp'] = 'Zkrácený čas (%s)';
+$string['searchleadinlength'] = 'Délka textu ve výsledcích vyhledávání';
 $string['currenttimezone'] = 'Aktuální časová zóna';
 $string['authentication'] = 'Ověřování';
 

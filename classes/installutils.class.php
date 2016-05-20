@@ -39,6 +39,7 @@ Class InstallUtils {
   public static $cfg_short_date_php;
   public static $cfg_long_time_php;
   public static $cfg_short_time_php;
+  public static $cfg_search_leadin_length;
   public static $cfg_timezone;
   public static $cfg_tmpdir;
   public static $cfg_tablesorter_date_time;
@@ -184,6 +185,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="cfg_short_date_php"><?php echo sprintf($string['shortdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" /></div>
         <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
         <div><label for="cfg_short_time_php"><?php echo sprintf($string['shorttimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" /></div>
+        <div><label for="cfg_search_leadin_length"><?php echo $string['searchleadinlength']; ?></label> <input type="text" id="cfg_search_leadin_length" name="cfg_search_leadin_length" value="160" /></div>
         <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
         <?php
           $default_timezone = date_default_timezone_get();
@@ -352,6 +354,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_short_date_php = $_POST['cfg_short_date_php'];
     self::$cfg_long_time_php = $_POST['cfg_long_time_php'];
     self::$cfg_short_time_php = $_POST['cfg_short_time_php'];
+    self::$cfg_search_leadin_length = $_POST['cfg_search_leadin_length'];
     self::$cfg_timezone = $_POST['cfg_timezone'];
     self::$cfg_tmpdir = $_POST['tmpdir'];
     if (self::$cfg_long_date_time == "%d/%m/%Y %H:%i") {
@@ -1449,6 +1452,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * Ensures that the rogo user directories are created.
    */
   public static function createDirectories() {
+    global $string;
     $errors = array();
     //media
     $mediadirectory = rogo_directory::get_directory('media');
@@ -1699,7 +1703,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         td.line {width:98%}
         input[type=text], input[type=password] {width:200px}
         form {padding:1em}
-        form div {padding-left:2em}
+        form div {padding-left:2em; clear:both;}
       </style>
 
       <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -1809,6 +1813,7 @@ require \$root . '/include/path_functions.inc.php';
   \$cfg_short_date_php = '{cfg_short_date_php}';
   \$cfg_long_time_php = '{cfg_long_time_php}';
   \$cfg_short_time_php = '{cfg_short_time_php}';
+  \$cfg_search_leadin_length = '{cfg_search_leadin_length}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 // cron user
@@ -1978,6 +1983,7 @@ CONFIG;
     $config = str_replace('{cfg_short_date_php}', self::$cfg_short_date_php, $config);
     $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
     $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
+    $config = str_replace('{cfg_search_leadin_length}', self::$cfg_search_leadin_length, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
     $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);

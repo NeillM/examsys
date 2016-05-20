@@ -1089,7 +1089,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
 
     echo "<td class=\"l\" ";
-    if(strlen($temp_array[$x]['fulltext']) > $configObject->get('cfg_search_leadin_length')){
+    if (strlen($temp_array[$x]['fulltext']) > $configObject->get('cfg_search_leadin_length')) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($temp_array[$x]['fulltext']).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }

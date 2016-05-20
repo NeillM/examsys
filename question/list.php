@@ -355,7 +355,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     } else {
       echo '<td class="l"';
     }
-    if(strlen($leadin) > $configObject->get('cfg_search_leadin_length')){
+    if (strlen($leadin) > $configObject->get('cfg_search_leadin_length')) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars(QuestionUtils::clean_leadin($leadin, 0)).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }

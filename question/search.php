@@ -427,7 +427,7 @@ if (isset($_GET['submit'])) {
     } else {
       echo '<td class="u" ';
     }
-    if(strlen($fullText) > $configObject->get('cfg_search_leadin_length')){
+    if (strlen($fullText) > $configObject->get('cfg_search_leadin_length')) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($fullText).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }
