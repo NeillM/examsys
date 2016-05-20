@@ -21,7 +21,6 @@
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-
 require '../include/staff_auth.inc';
 require_once '../include/sort.inc';
 require_once '../lang/' . $language . '/include/question_types.inc';
@@ -86,6 +85,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
+  <link rel="stylesheet" type="text/css" href="../css/adhocwindow.css" ?>
   <style type="text/css">
     label {padding-top:2px}
   <?php echo QuestionStatus::generate_status_css($status_array); ?>
@@ -99,6 +99,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
+  <script type="text/javascript" src="../js/adhocwindow.js"></script>
   <script>
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
@@ -348,21 +349,23 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     $leadin = str_replace("\n", '', $leadin);
     $leadin = str_replace("\r", '', $leadin);
     if (trim($leadin) == '') $leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
-    if (strlen($leadin) > 160) {
-      $leadin = mb_substr($leadin, 0, 160) . '...';
-    }
 
     if ($locked == '') {
-      echo '<td class="u">';
+      echo '<td class="u"';
     } else {
-      echo '<td class="l">';      
+      echo '<td class="l"';
     }
+    if (strlen($leadin) > $configObject->get('cfg_search_leadin_length')) {
+      echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars(QuestionUtils::clean_leadin($leadin, 0)).'\');" ';
+      echo ' onmouseleave="hideAdHocWindow();" ';
+    }
+    echo '>';
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }
     //sl change this from echo $leadin to below
-    echo  QuestionUtils::clean_leadin($leadin) . '</td>';
 	
+    echo QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length')) . '</td>';
     echo '<td class="nobr">' . $string[$q_type] . '</td>';
     if ($type == 'keyword' or $type == 'bloom') {
       echo '<td>' . $extra_field . '</td>';    

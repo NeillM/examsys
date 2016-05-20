@@ -42,6 +42,7 @@ $string['longdatephp'] = 'Long date (%s)';
 $string['shortdatephp'] = 'Short date (%s)';
 $string['longtimephp'] = 'Long time (%s)';
 $string['shorttimephp'] = 'Short time (%s)';
+$string['searchleadinlength'] = 'Search results lead-in length';
 $string['currenttimezone'] = 'Current Timezone';
 $string['authentication'] = 'Authentication';
 

@@ -42,6 +42,7 @@ $string['longdatephp'] = 'Długi format daty (PHP)';
 $string['shortdatephp'] = 'Krótki format daty (PHP)';
 $string['longtimephp'] = 'Długi format czasu (PHP)'; 
 $string['shorttimephp'] = 'Krótki format czasu (PHP)'; 
+$string['searchleadinlength'] = 'Długość tekstu w wynikach wyszukiwania';
 $string['currenttimezone'] = 'Aktualna strefa czasowa';
 $string['authentication'] = 'Uwierzytelnianie';
 
