@@ -106,6 +106,7 @@ Class QuestionUtils {
   /**
    * Strip tags from the leading string (if it doesn't contain equations) and trim length
    * @param $leadin
+   * @param $limit - character limit
    * @return string
    */
   static function clean_leadin($leadin, $limit=160) {
