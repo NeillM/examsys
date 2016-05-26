@@ -2037,9 +2037,16 @@ SQL;
         for ($label_no = 4; $label_no <= 200; $label_no += 4) {
           if (isset($tmp_second_split[$label_no])) {
             if (substr($tmp_second_split[$label_no],0,1) != '|') {
-              $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
-              if ($tmp_second_split[$label_no-2] >= 220) {
-                $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
+              // The label has text, i.e. is not blank.
+              // The stored answer coordinates are sometimes floating points, rather than integers.
+              // We need to round them to ensure they will always matach the coordiantes that are 
+              // stored in the user answers. If we do not do this frequency analysis for the question type
+              // will sometimes not work. See ROGO-1822.
+              $x_coordinate = round($tmp_second_split[$label_no-2]);
+              $y_coordiante = round($tmp_second_split[$label_no-1] - 25);
+              $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $x_coordinate . '|' . $y_coordiante;
+              if ($x_coordinate >= 220) {
+                $correct_buffer[] = $x_coordinate . 'x' . $y_coordiante;
               }
             }
           }
