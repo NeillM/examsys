@@ -135,6 +135,18 @@ function dStats($value, $qid, $part_no) {
   return $html;
 }
 
+/**
+ * Calculate the 'Pearson product-moment correlation coefficient'
+ * https://rogo-eassessment-docs.atlassian.net/wiki/pages/viewpage.action?pageId=1049586
+ * https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
+ *
+ * @param int $no_students The number of users in each cohort
+ * @param array $top_log_q_id The answers for a single question given by the high performing users.
+ * @param array $bottom_log_q_id The answers for a single question given by the low performing users.
+ * @param mixed $i The identifier for the part of the question being analysed.
+ * @param mixed $keys The correct answer, or an array of correct answers for the part.
+ * @return string
+ */
 function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i, $keys) {
   $top_key_value = 0;
   $bottom_key_value = 0;
