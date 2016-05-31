@@ -135,6 +135,18 @@ function dStats($value, $qid, $part_no) {
   return $html;
 }
 
+/**
+ * Calculate the 'Pearson product-moment correlation coefficient'
+ * https://rogo-eassessment-docs.atlassian.net/wiki/pages/viewpage.action?pageId=1049586
+ * https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient
+ *
+ * @param int $no_students The number of users in each cohort
+ * @param array $top_log_q_id The answers for a single question given by the high performing users.
+ * @param array $bottom_log_q_id The answers for a single question given by the low performing users.
+ * @param mixed $i The identifier for the part of the question being analysed.
+ * @param mixed $keys The correct answer, or an array of correct answers for the part.
+ * @return string
+ */
 function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i, $keys) {
   $top_key_value = 0;
   $bottom_key_value = 0;
@@ -2037,9 +2049,16 @@ SQL;
         for ($label_no = 4; $label_no <= 200; $label_no += 4) {
           if (isset($tmp_second_split[$label_no])) {
             if (substr($tmp_second_split[$label_no],0,1) != '|') {
-              $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
-              if ($tmp_second_split[$label_no-2] >= 220) {
-                $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
+              // The label has text, i.e. is not blank.
+              // The stored answer coordinates are sometimes floating points, rather than integers.
+              // We need to round them to ensure they will always matach the coordiantes that are 
+              // stored in the user answers. If we do not do this frequency analysis for the question type
+              // will sometimes not work. See ROGO-1822.
+              $x_coordinate = round($tmp_second_split[$label_no-2]);
+              $y_coordiante = round($tmp_second_split[$label_no-1] - 25);
+              $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $x_coordinate . '|' . $y_coordiante;
+              if ($x_coordinate >= 220) {
+                $correct_buffer[] = $x_coordinate . 'x' . $y_coordiante;
               }
             }
           }
