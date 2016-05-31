@@ -153,7 +153,7 @@ META;
             $checked = ' checked="checked"';
             $on = ' on';
           }
-          $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, 'UTF-8');
+          $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
       						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} $disabled/>{$enc_keyword}</label></li>
 
@@ -180,7 +180,7 @@ META;
             $checked = ' checked="checked"';
             $on = ' on';
           }
-          $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, 'UTF-8');
+          $enc_keyword = htmlentities($keyword['keyword'], ENT_COMPAT, $configObject->get('cfg_page_charset'));
           $html .= <<< META
       						<li><label for="keyword{$i}" class="fullwidth{$on}"><input id="keyword{$i}" name="keywords[]" value="{$keyword['keyword_id']}" type="checkbox"{$checked} $disabled/>{$enc_keyword}</label></li>
 
@@ -237,7 +237,7 @@ HEADING;
         $on = ' on';
       }
 
-      $enc_name = htmlentities($fullname, ENT_COMPAT, 'UTF-8');
+      $enc_name = htmlentities($fullname, ENT_COMPAT, $configObject->get('cfg_page_charset'));
       $html .= <<< META
                 	<li><label for="team{$i}" class="fullwidth{$on}"><input id="team{$i}" name="teams[]" value="{$team_idMod}" type="checkbox"{$checked} />{$team_id}: {$enc_name}</label></li>
 

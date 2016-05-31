@@ -43,7 +43,7 @@ $configObject = \Config::get_instance();
 if ($configObject->get('cfg_ims_enabled')) { 
     
     $mysqli = \DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
-        $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'),
+        $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),
         $notice, $configObject->get('dbclass'));
 
     $ims_enterprise = new ims_enterprise($mysqli);

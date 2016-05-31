@@ -36,7 +36,7 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 <html>
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
 	<title>Rog&#333;: <?php echo $string['feedbackstats'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 

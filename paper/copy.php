@@ -40,7 +40,7 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
   ?>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title>Rog&#333;</title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   </head>
@@ -488,7 +488,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
   <title>Rog&#333;: <?php echo $string['copypaper'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 

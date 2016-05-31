@@ -27,7 +27,7 @@ require_once '../include/auth.inc';
 
 $notice = UserNotices::get_instance();
 
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $notice, $configObject->get('dbclass'));
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 $password = $password_confirm = $email = '';
 $message = '';
@@ -115,7 +115,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
   <title><?php echo $string['resetpassword'] . ' ' . $configObject->get('cfg_install_type') ?></title>
 

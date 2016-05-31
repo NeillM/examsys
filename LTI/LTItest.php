@@ -21,7 +21,7 @@ $root = $root . '/../';
 require_once  $root . 'include/load_config.php';
 require_once $cfg_web_root . 'classes/dbutils.class.php';
 
-$mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $notice, $dbclass);
+$mysqli = DBUtils::get_mysqli_link($cfg_db_host, $cfg_db_username, $cfg_db_passwd, $cfg_db_database, $cfg_db_charset, $notice, $dbclass);
 
 $lti = new UoN_LTI($mysqli);
 $lti->init_lti0($mysqli);

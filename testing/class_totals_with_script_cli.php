@@ -35,7 +35,7 @@ $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
 
 // DB connection.
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
-  $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'),
+  $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),
   $configObject->get('notice'), $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
 // Exit if not on command line.

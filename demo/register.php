@@ -37,7 +37,7 @@ require_once '../include/mb_string.inc.php';
 require_once '../include/custom_error_handler.inc';
 
 $notice = UserNotices::get_instance();
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $notice, $configObject->get('dbclass'));
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 
 function adduser($course, $tmp_roles, $new_username, $mysqli) {
   $new_password = trim($_POST['new_password']);
@@ -159,7 +159,7 @@ MESSAGE;
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
     <title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
@@ -179,7 +179,7 @@ MESSAGE;
 <html>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
     <title>Rog&#333;: <?php echo $string['register'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
 
