@@ -37,6 +37,7 @@ while ($result->fetch()) {
 $result->close();
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
+$config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
 $config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $config['rogo_version'] = $configObject->get('rogo_version');
 $lang['title'] = $string['oauthclients'];

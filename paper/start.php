@@ -296,7 +296,7 @@ echo "<!DOCTYPE html>\n<html>\n<head>\n";
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $_GET['q_id'] . '&qNo=' . $_GET['qNo'] : '';
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="pragma" content="no-cache" />

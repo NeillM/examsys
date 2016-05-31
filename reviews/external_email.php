@@ -47,7 +47,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
   <title><?php echo $string['emailtemplate'] ?></title>
 
@@ -129,7 +129,7 @@ if (isset($_POST['submit'])) {
     $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; font-size:90%}\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
 
     $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
     $headers .= 'From: ' . $userObject->get_email() . "\r\n";
     if (trim($_POST['ccaddress']) != '') {
       $headers .= 'CC: ' . trim($_POST['ccaddress']) . "\r\n";
