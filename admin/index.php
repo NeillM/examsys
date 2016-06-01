@@ -157,7 +157,7 @@ require '../include/sysadmin_auth.inc';
   $menudata['systeminformation']    = array('system_info.php', 'information.png');
   $menudata['testing']              = array('../testing/', 'crash_test.png');
   $menudata['usermanagement']       = array('../users/search.php', 'user_accounts_icon.png');
-
+  $menudata['plugins']       = array('./plugins/list_plugins.php', 'plugins.png');
   if ($configObject->get('cfg_setting_icons_order')) {
     foreach($configObject->get('cfg_setting_icons_order') as $iconkey) {
         if (($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;

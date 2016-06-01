@@ -1,0 +1,13 @@
+config:
+  -
+    component: 'testplugin'
+    setting: 'installed'
+    value: 1
+  -
+    component: 'notestplugin'
+    setting: 'installed'
+    value: 0
+  -
+    component: 'testplugintype'
+    setting: 'enabled_plugin'
+    value: '["testplugin"]'

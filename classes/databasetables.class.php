@@ -1554,6 +1554,16 @@ $this->tableList['campus'] = <<<QUERY
             INDEX `campus_idx` (`name`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
+
+$this->tableList['plugins'] = <<<QUERY
+        CREATE TABLE `plugins` (
+            `component` VARCHAR(50) NOT NULL,
+            `version` VARCHAR(50) NOT NULL,
+            `type`  VARCHAR(50) NOT NULL,
+            `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`component`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
   }
   
   function next() {

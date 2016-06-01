@@ -38,11 +38,16 @@ class CM_UoNCM implements iCMAPI {
    * Return objectives from the University of Nottingham Curriculum Mapping system
    * @param string $moduleID the module code
    * @param int $session The year the academic year starts in
+   * @param mysqli $db database connection
    * @return mixed Array of session and objective data in format required by Rogō
    */
-  public function getObjectives($moduleID, $session) {
+  public function getObjectives($moduleID, $session, $db) {
     $configObject = Config::get_instance();
     $this->_sess_year = $session;
+    // Map module code if necessary.
+    if ($session < 2016) {  
+      $moduleID = \plugins\plugins_mapping::do_mapping($db, $moduleID);
+    }
     $this->_root_url = $configObject->get('cfg_cmap_url') . "/" . $this->_sess_year . "/index.php/";
     $this->_module_id = $moduleID;
     $this->_moodle_base_url = $configObject->get('cfg_moodle_base_url') . '/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';

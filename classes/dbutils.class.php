@@ -151,6 +151,38 @@ Class DBUtils {
     }
     return $db->insert_id;
   }
+
+  /**
+   * Run sql file
+   * @param string $file file location
+   * @param string $dbuser user to run db command
+   * @param string $dbpasswd password for user
+   * @return bool true on success
+   */
+  static function run_sql($file, $dbuser, $dbpasswd) {
+    $config = Config::get_instance();
+    $link = DBUtils::get_mysqli_link($config->get('cfg_db_host'), 
+      $dbuser, 
+      $dbpasswd, 
+      $config->get('cfg_db_database'), 
+      $config->get('cfg_db_charset'), 
+      UserNotices::get_instance(), 
+      $config->get('dbclass'));
+    $sql = file_get_contents($file);
+    if ($link->multi_query($sql)) {
+      while($link->more_results()) {
+        if(!$link->next_result()) {
+          $link->close();
+          return false;
+        }
+      } 
+      $link->close();
+    } else {
+      $link->close();
+      return false;
+    }
+    return true;
+  }
 }
 
 ?>
