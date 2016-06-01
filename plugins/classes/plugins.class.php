@@ -287,6 +287,8 @@ abstract class plugins {
                 return 'CURRENT_VERSION_HIGHER';
             } elseif ($current_plugin_version == $new_plugin_version) {
                 // Cannot install already installed.
+                // Not fatal so renable
+                $this->config->set_setting('installed', 1, $this->plugin);
                 return 'ALREADY_INSTALLED';
             }
         } else {
