@@ -23,10 +23,20 @@
 // @copyright Copyright (c) 2016 The University of Nottingham
 //
 
+/*
+ * Launch edit page
+ * @param integer plugin id
+ */
 function edit(id) {
     document.location.href='./edit_plugins.php?pid=' + id;
 }
 
+/*
+ * Plugin list functions:
+ * sort - order the list of plugins via the header
+ * highlight - highligts selected plugin
+ * double click - launches edit plugin on double click
+ */
 $(function () {
     if ($("#maindata").find("tr").size() > 1) {
         $("#maindata").tablesorter({ 

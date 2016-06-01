@@ -23,6 +23,11 @@
 // @copyright Copyright (c) 2016 The University of Nottingham
 //
 
+/*
+ * Plugin properties page functions:
+ * validate - enforces valid input
+ * cancel - close the properties page
+ */
 $(function () {
     $('#theform').validate({
         errorClass: 'errfield',
