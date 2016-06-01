@@ -33,21 +33,20 @@
     $error = true;
   }
 
-  $cfg_ldap_server = '';
+  $ldapserver = '';
   $auth_array = $configObject->get('authentication');
   foreach ($auth_array as $auth_settings) {
     if ($auth_settings[0] == 'ldap') {
-      $cfg_ldap_server = $auth_settings[1]['ldap_server'];
+      $ldapserver = $auth_settings[1]['ldap_server'];
+      $ldaprdn = $auth_settings[1]['ldap_bind_rdn'];
+      $ldappass = $auth_settings[1]['ldap_bind_password'];
     }
   }
   // Check access to LDAP.
-  if ($cfg_ldap_server == '') {
-    echo "ERROR::No LDAP server defined";
-    $error = true;
-  } else {
-    $ldap = ldap_connect($cfg_ldap_server);
-    if (!ldap_bind( $ldap ) ) {
-      echo "ERROR::Can not Connect to LDAP @ ". $cfg_ldap_server;
+  if ($ldapserver != '') {
+    $ldap = ldap_connect($ldapserver);
+    if (!ldap_bind($ldap, $ldaprdn, $ldappass)) {
+      echo "ERROR::Can not Connect to LDAP @ ". $ldapserver;
       $error = true;
     }
   }
