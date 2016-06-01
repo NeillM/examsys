@@ -39,6 +39,7 @@ class CM_NLE implements iCMAPI {
    */
   public function getObjectives($moduleID, $session, $db) {
     $configObject = Config::get_instance();
+    $originalmodid = $moduleID;
     // To create nle year paramerter. End year must be 2 digit.
     $endyear = $session + 1;
     $endyear = substr((string)$endyear, -2);
@@ -47,7 +48,9 @@ class CM_NLE implements iCMAPI {
     $moduleID = \plugins\plugins_mapping::do_mapping($db, $moduleID);
     $objectives = new RestRequest($configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$nle_year");
     $objectives->execute();
-    return $objectives->getResponseBody();
+    $response = $objectives->getResponseBody();
+    $mappedresponse = $this->map_response($response, $moduleID, $originalmodid);
+    return $mappedresponse;
   }
 
   /**
@@ -77,6 +80,24 @@ class CM_NLE implements iCMAPI {
   public function setMappingLevel($level) {
     // Ignore anything passed in, we only support session level mapping
     $this->_mapping_level = self::LEVEL_SESSION;
+  }
+  
+  /**
+   * Map new type modules codes to the old modules codes in NLE response
+   * @param string $response data from NLE
+   * @param string $newmodid new style module id
+   * @param string $oldmodid old style module id
+   * @return array NLE response mapped
+   */
+  private function map_response($response, $newmodid, $oldmodid) {
+      $decode = json_decode($response, true);
+      $keys = array_keys($decode);
+      $index = array_search($oldmodid, $keys);
+      if ($index !== false) {
+          $keys[$index] = $newmodid;
+          $mappedarray = array_combine($keys, $decode);
+      }
+      return json_encode($mappedarray);
   }
 }
 ?>

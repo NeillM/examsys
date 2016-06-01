@@ -289,13 +289,8 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
           $objsBySession_cache[$thisModuleid][$session] = $resp;
 				}
       }
-      $thisMappedModuleid = $thisModuleid;
-      // Map module code if necessary.
-      if (($vle_api == 'UoNCM' and $session < 2016) or $vle_api == 'NLE') {
-        $thisMappedModuleid = \plugins\plugins_mapping::do_mapping($db, $thisMappedModuleid);
-      }
-      if (isset($objsBySession_cache[$thisModuleid][$session][$thisMappedModuleid])) {
-        $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisMappedModuleid];
+      if (isset($objsBySession_cache[$thisModuleid][$session][$thisModuleid])) {
+        $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisModuleid];
       }
     } else {
       // Use Rogō's internally stored objectves

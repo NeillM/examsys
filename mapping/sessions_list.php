@@ -130,13 +130,6 @@ if (!$module) {
   $old_session = '';
   $id = 0;
   $first = true;
-  // Map module code if necessary.
-  $yearutils = new yearutils($mysqli);
-  $module_details = module_utils::get_full_details_by_ID($modID, $mysqli);
-  $currentyear = $yearutils->get_current_session($module_details['academic_year_start']);
-  if (($vle_api == 'UoNCM' and $currentyear < 2016) or $vle_api == 'NLE') {
-    $module = \plugins\plugins_mapping::do_mapping($mysqli, $module);
-  }
   if (count($objsBySession) > 0 and isset($objsBySession[$module])) {
     foreach ($objsBySession[$module] as $session) {
       if (isset($session['objectives'])) {
