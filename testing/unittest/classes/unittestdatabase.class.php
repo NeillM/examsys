@@ -61,6 +61,7 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
         // Open db connection.
         $this->db = new \mysqli($this->config->get('cfg_db_host'), $this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'),
             $this->config->get('cfg_db_database'), $this->config->get('cfg_db_port'));
+        $this->config->set_db_object($this->db);
     }
     
     /**
