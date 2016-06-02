@@ -94,19 +94,23 @@ class plugin_manager {
      */
     public function get_plugin_type_enabled($type) {
         $enabled = $this->config->get_setting($type, 'enabled_plugin');
-        $enabledarray = json_decode($enabled);
-        $newenabled = array();
-        $changed = false;
-        // Check existing enabled plugins and disable those not installed.
-        foreach ($enabledarray as $e) {
-            if ($this->plugin_installed($e)) {
-                $newenabled[] = $e;
-            } else {
-                $changed = true;
+        if (!is_null($enabled)) {
+            $enabledarray = json_decode($enabled);
+            $newenabled = array();
+            $changed = false;
+            // Check existing enabled plugins and disable those not installed.
+            foreach ($enabledarray as $e) {
+                if ($this->plugin_installed($e)) {
+                    $newenabled[] = $e;
+                } else {
+                    $changed = true;
+                }
             }
-        }
-        if ($changed) {
-            $this->config->set_setting('enabled_plugin', json_encode($newenabled), 'plugin_' . $type);
+            if ($changed) {
+                $this->config->set_setting('enabled_plugin', json_encode($newenabled), 'plugin_' . $type);
+            }
+        } else {
+            $newenabled = array();
         }
         return $newenabled;
     }
