@@ -160,12 +160,15 @@ Class DBUtils {
    * @return bool true on success
    */
   static function run_sql($file, $dbuser, $dbpasswd) {
+    $sql = file_get_contents($file);
+    // Check charset of sql.
+    $charset = mb_detect_encoding($sql, mb_list_encodings(), true);
     $config = Config::get_instance();
     $link = DBUtils::get_mysqli_link($config->get('cfg_db_host'), 
       $dbuser, 
       $dbpasswd, 
       $config->get('cfg_db_database'), 
-      $config->get('cfg_db_charset'), 
+      $charset, 
       UserNotices::get_instance(), 
       $config->get('dbclass'));
     $sql = file_get_contents($file);
