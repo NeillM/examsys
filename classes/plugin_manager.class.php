@@ -24,32 +24,25 @@
 /**
  * Plugin manager class.
  * 
- * This class implements plugins within rogo.
+ * This class manages plugins within rogo.
  */
 class plugin_manager {
     /**
      * Whitelist of plugin types supported by rogo.
-     * @var plugintypewhitelist
+     * @var PLUGINTYPE_WHITELIST
      */
-    private $plugintypewhitelist = array('mapping');
-    /**
-     * Constructor
-     */
-    public function __construct($mysqli) {
-        $this->config = \Config::get_instance();
-        $this->config->set_db_object($mysqli);
-    }
+    const PLUGINTYPE_WHITELIST = array('mapping');
     /**
      * List available plugins.
      * @return array available plugins (name => namespace)
      */
-    public function listplugins() {
+    static function listplugins() {
         $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
         $folders = glob($directory, GLOB_ONLYDIR);
         $plugins = array();
         foreach ($folders as $folder) {
             $type = basename($folder);
-            if (in_array($type, $this->plugintypewhitelist)) {
+            if (in_array($type, self::PLUGINTYPE_WHITELIST)) {
                 $sub = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . '*';
                 $subfolders = glob($sub, GLOB_ONLYDIR);
                 foreach ($subfolders as $subfolder) {
@@ -63,12 +56,12 @@ class plugin_manager {
      * List available plugin types.
      * @return array available plugin types
      */
-    public function listplugintypes() {
+    static function listplugintypes() {
         $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
         $folders = glob($directory, GLOB_ONLYDIR);
         $plugintype = array();
         foreach ($folders as $folder) {
-            if (in_array(basename($folder), $this->plugintypewhitelist)) {
+            if (in_array(basename($folder), self::PLUGINTYPE_WHITELIST)) {
                 $plugintype[] = 'plugin_' . basename($folder);
             }   
         }
@@ -78,11 +71,11 @@ class plugin_manager {
      * Get all enabled plugins
      * @return array list of enabeld plugins
      */
-    public function get_all_enabled_plugins() {
+    static function get_all_enabled_plugins() {
         $enabledplugins = array();
-        $plugintypes = $this->listplugintypes();
+        $plugintypes = self::listplugintypes();
         foreach ($plugintypes as $type) {
-            $enabled = $this->get_plugin_type_enabled($type);
+            $enabled = self::get_plugin_type_enabled($type);
             $enabledplugins = array_merge($enabledplugins, $enabled);
         }
         return $enabledplugins;
@@ -92,22 +85,23 @@ class plugin_manager {
      * @param string $type type of plugin
      * @return array list of plugins that are enabled of this type
      */
-    public function get_plugin_type_enabled($type) {
-        $enabled = $this->config->get_setting($type, 'enabled_plugin');
+    static function get_plugin_type_enabled($type) {
+        $config = Config::get_instance();
+        $enabled = $config->get_setting($type, 'enabled_plugin');
         if (!is_null($enabled)) {
             $enabledarray = json_decode($enabled);
             $newenabled = array();
             $changed = false;
             // Check existing enabled plugins and disable those not installed.
             foreach ($enabledarray as $e) {
-                if ($this->plugin_installed($e)) {
+                if (self::plugin_installed($e)) {
                     $newenabled[] = $e;
                 } else {
                     $changed = true;
                 }
             }
             if ($changed) {
-                $this->config->set_setting('enabled_plugin', json_encode($newenabled), 'plugin_' . $type);
+                $config->set_setting('enabled_plugin', json_encode($newenabled), 'plugin_' . $type);
             }
         } else {
             $newenabled = array();
@@ -119,8 +113,9 @@ class plugin_manager {
      * @param string $plugin name of plugin
      * @return bool true is installed false otherise.
      */
-    public function plugin_installed($plugin) {
-        $installed = $this->config->get_setting($plugin, 'installed');
+    static function plugin_installed($plugin) {
+        $config = Config::get_instance();
+        $installed = $config->get_setting($plugin, 'installed');
         if ($installed >= 1) {
             return true;
         } else {

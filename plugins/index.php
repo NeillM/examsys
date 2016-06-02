@@ -26,8 +26,7 @@ require_once '../include/sysadmin_auth.inc';
 require_once '../include/toprightmenu.inc';
 require_once '../include/errors.inc';
 
-$pm = new plugin_manager($mysqli);
-$pluginslist = $pm->listplugins();
+$pluginslist = plugin_manager::listplugins();
 
 if (isset($_POST['Uninstall']) or isset($_POST['Update'])) {
     $pluginarray = array();

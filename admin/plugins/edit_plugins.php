@@ -25,8 +25,7 @@ require '../../include/sysadmin_auth.inc';
 require_once '../../include/errors.inc';
 
 $plugin = check_var('pid', 'REQUEST', true, false, true);
-$pm = new plugin_manager($mysqli);
-$installed = $pm->plugin_installed($plugin);
+$installed = plugin_manager::plugin_installed($plugin);
 
 if ($installed === false) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
@@ -35,7 +34,7 @@ if ($installed === false) {
 }
 
 // Get all enabled plugins.
-$enabledplugins = $pm->get_all_enabled_plugins();
+$enabledplugins = plugin_manager::get_all_enabled_plugins();
 // Is plugin enabled.
 $pluginenabled = false;
 if (in_array($plugin, $enabledplugins)) {
@@ -43,7 +42,7 @@ if (in_array($plugin, $enabledplugins)) {
 }
 
 // Get plugin namespace.
-$pluginslist = $pm->listplugins();
+$pluginslist = plugin_manager::listplugins();
 if (isset($pluginslist[$plugin])) {
     $pluginns = $pluginslist[$plugin];
 }

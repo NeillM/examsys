@@ -27,14 +27,13 @@
 require '../../include/sysadmin_auth.inc';
 require '../../include/toprightmenu.inc';
 
-$pm = new plugin_manager($mysqli);
 // Get all enabled plugins.
-$enabledplugins = $pm->get_all_enabled_plugins();
+$enabledplugins = plugin_manager::get_all_enabled_plugins();
 // Get all plugins.
-$pluginslist = $pm->listplugins();
+$pluginslist = plugin_manager::listplugins();
 $pluginstatus = array();
 foreach ($pluginslist as $plugin => $pluginns) {
-    if ($pm->plugin_installed($plugin)) {
+    if (plugin_manager::plugin_installed($plugin)) {
         // Set plugin status array.
         if (in_array($plugin, $enabledplugins)) {
             $pluginstatus[$plugin] = array($plugin, "true");

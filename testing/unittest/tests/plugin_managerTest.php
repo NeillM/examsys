@@ -38,17 +38,15 @@ class plugin_managertest extends unittestdatabase {
      * @group plugins
      */
     public function test_get_plugin_type_enabled() {
-        $pm = new \plugin_manager($this->db);
-        $this->assertEquals(array('testplugin'), $pm->get_plugin_type_enabled('testplugintype'));
+        $this->assertEquals(array('testplugin'), plugin_manager::get_plugin_type_enabled('testplugintype'));
     }
     /**
      * Test plugin installed
      * @group plugins
      */
     public function test_plugin_installed() {
-        $pm = new \plugin_manager($this->db);
-        $this->assertTrue($pm->plugin_installed('testplugin'));
-        $this->assertFalse($pm->plugin_installed('notestplugin'));
-        $this->assertFalse($pm->plugin_installed('unknowntestplugin'));
+        $this->assertTrue(plugin_manager::plugin_installed('testplugin'));
+        $this->assertFalse(plugin_manager::plugin_installed('notestplugin'));
+        $this->assertFalse(plugin_manager::plugin_installed('unknowntestplugin'));
     }
 }

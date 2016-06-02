@@ -42,8 +42,7 @@ abstract class plugins_mapping extends \plugins\plugins {
      * @return string $target mapped variable
      */
     static function do_mapping($db, $source) {
-        $pm = new \plugin_manager($db);
-        $mappingplugin_name = $pm->get_plugin_type_enabled('plugin_mapping');
+        $mappingplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_mapping');
         // Only one mapping plugin should be enabeld at anyone time so the array 
         // returned by get_plugin_type_enabled should only be of length 1.
         if (count($mappingplugin_name) > 0) {
