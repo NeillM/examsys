@@ -25,7 +25,6 @@
 */
 
 require_once 'CMAPI.if.php';
-require_once dirname(dirname(__DIR__)) . '/webServices/RestRequest.class.php';
 
 class CM_UoNCM implements iCMAPI {
   private $_root_url;
@@ -52,13 +51,17 @@ class CM_UoNCM implements iCMAPI {
     $this->_root_url = $configObject->get('cfg_cmap_url') . "/" . $this->_sess_year . "/index.php/";
     $this->_module_id = $moduleID;
     $this->_moodle_base_url = $configObject->get('cfg_moodle_base_url') . '/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
-    $req = new RestRequest($this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attribute&attrib=code&output=module_session_obs");
-    $req->execute();
-
-    $res = $req->getResponseBody();
-    
-    $response = $req->getResponseInfo();
-    if ($response['http_code'] == 0) {
+    $url = $this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attribute&attrib=code&output=module_session_obs";
+    $req = new restful($db);
+    $options = array(CURLOPT_TIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_HTTPHEADER => array('Accept: application/json'),
+            CURLOPT_SSLVERSION => 3,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
+        );
+    $res = json_decode($req->get($url, $options), true);
+    if ($res == '') {
       $objectives = 'error';
     } else {
       switch ($this->_mapping_level) {

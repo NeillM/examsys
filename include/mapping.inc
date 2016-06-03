@@ -32,8 +32,6 @@
  *
  */
 
-require_once $cfg_web_root . 'webServices/RestRequest.class.php';
-
 function render_objectives_mapping_form($db, $paper_id, &$string) {
   global $vle_api_cache;
 
