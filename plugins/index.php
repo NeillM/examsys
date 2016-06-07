@@ -109,7 +109,7 @@ foreach ($pluginslist as $plugin => $pluginns) {
     $newversion = $p->get_file_version();
     $oldversion = $p->get_plugin_version();
     $update = "";
-    if ($p->is_version_higher($newversion, $oldversion) or $newversion === $oldversion or $oldversion == '') {
+    if ($p->is_version_higher($newversion, $oldversion) or $newversion === $oldversion or $oldversion === false) {
         $install = true;
         if (!empty($error[$plugin])) {
             $update = "<div class=\"error\">" . $error[$plugin] . "</div>";
