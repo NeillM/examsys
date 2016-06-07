@@ -102,14 +102,14 @@ $render->render_admin_content($breadcrumb, $lang);
         <table cellpadding="0" cellspacing="2" border="0">
         <?php
             if ($pluginenabled) { 
-            echo "<tr><td class=\"field\">" . $string['enabled'] . "</td><td><input type=\"checkbox\" name=\"enabledchk\" checked/></td></tr>";
+                echo "<tr><td class=\"field\"><label for=\"enabledchk\">" . $string['enabled'] . "</label></td><td><input type=\"checkbox\" name=\"enabledchk\" id=\"enabledchk\" checked/></td></tr>";
             } else {
-            echo "<tr><td class=\"field\">" . $string['enabled'] . "</td><td><input type=\"checkbox\" name=\"enabledchk\"/></td></tr>";
+                echo "<tr><td class=\"field\"><label for=\"enabledchk\">" . $string['enabled'] . "</label></td><td><input type=\"checkbox\" name=\"enabledchk\"/></td></tr>";
             }
             echo "<input type=\"hidden\" name=\"pid\" id=\"pid\" value=\"" . $plugin. "\"/>";
             foreach ($configObject->get_setting($plugin) as $setting => $value) {
                 if ($setting != "installed") {
-                    echo "<tr><td class=\"field\">" . $setting. "</td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" required /></td></tr>";
+                    echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" required /></td></tr>";
                 }
             }
         ?>
