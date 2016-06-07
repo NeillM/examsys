@@ -41,7 +41,7 @@ abstract class plugins_mapping extends \plugins\plugins {
      * @param string $source variable to map
      * @return string $target mapped variable
      */
-    static function do_mapping($db, $source) {
+    static public function do_mapping($db, $source) {
         $mappingplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_mapping');
         // Only one mapping plugin should be enabeld at anyone time so the array 
         // returned by get_plugin_type_enabled should only be of length 1.
@@ -59,5 +59,5 @@ abstract class plugins_mapping extends \plugins\plugins {
      * @param string $source
      * @return string source if mapping not found, target of mapping otherwise
      */
-    abstract function get_mapping($source);
+    abstract public function get_mapping($source);
 }
