@@ -108,8 +108,9 @@ foreach ($pluginslist as $plugin => $pluginns) {
     $p = new $pluginns($mysqli);
     $newversion = $p->get_file_version();
     $oldversion = $p->get_plugin_version();
-    if ($newversion >= $oldversion) {
-        $install = true;#
+    $update = "";
+    if ($p->is_version_higher($newversion, $oldversion) or $newversion === $oldversion) {
+        $install = true;
         if (!empty($error[$plugin])) {
             $update = "<div class=\"error\">" . $error[$plugin] . "</div>";
             $install = false;

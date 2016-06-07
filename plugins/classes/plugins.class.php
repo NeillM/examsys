@@ -85,36 +85,6 @@ abstract class plugins {
         return preg_match(self::PLUGIN_VERSION_FORMAT,$version);
     }
     /**
-     * Check if version is higher.
-     * @param string $new new version to check
-     * @param string $old old version to check
-     * @return boolean true new version higher than old, false otherwise
-     */
-    private function is_version_higher($new, $old) {
-        preg_match(self::PLUGIN_VERSION_FORMAT, $new, $newarray);
-        preg_match(self::PLUGIN_VERSION_FORMAT, $old, $oldarray);
-        if (count($newarray) > 0 and count($oldarray) > 0 ) {
-            if ($newarray['release'] > $oldarray['release']) {
-                // Higher release number.
-                return true;
-            } elseif ($newarray['release'] == $oldarray['release']) {
-                // Release number matches.
-                if ($newarray['major'] > $oldarray['major']) {
-                    // Higher major number.
-                    return true;
-                } elseif ($newarray['major'] == $oldarray['major']) {
-                    // Major number matches.
-                    if ($newarray['minor'] > $oldarray['minor']) {
-                        // Higher minor number.
-                        return true;
-                    }
-                }
-            }
-        }
-        // Old version is higher.
-        return false;
-    }
-    /**
      * Sort list of plugin version into ascending order
      * @param array list of versions
      * @return array sorted list of versions
@@ -162,6 +132,36 @@ abstract class plugins {
         $this->path = $this->get_path();
         // Load version info.
         require $this->path . DIRECTORY_SEPARATOR . 'version.php';
+    }
+    /**
+     * Check if version is higher.
+     * @param string $new new version to check
+     * @param string $old old version to check
+     * @return boolean true new version higher than old, false otherwise
+     */
+    public function is_version_higher($new, $old) {
+        preg_match(self::PLUGIN_VERSION_FORMAT, $new, $newarray);
+        preg_match(self::PLUGIN_VERSION_FORMAT, $old, $oldarray);
+        if (count($newarray) > 0 and count($oldarray) > 0 ) {
+            if ($newarray['release'] > $oldarray['release']) {
+                // Higher release number.
+                return true;
+            } elseif ($newarray['release'] == $oldarray['release']) {
+                // Release number matches.
+                if ($newarray['major'] > $oldarray['major']) {
+                    // Higher major number.
+                    return true;
+                } elseif ($newarray['major'] == $oldarray['major']) {
+                    // Major number matches.
+                    if ($newarray['minor'] > $oldarray['minor']) {
+                        // Higher minor number.
+                        return true;
+                    }
+                }
+            }
+        }
+        // Old version is higher.
+        return false;
     }
     /**
      * Install plugin.
