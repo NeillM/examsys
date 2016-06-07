@@ -50,10 +50,15 @@ abstract class plugins {
      */
     protected $plugin;
     /**
-     * Version of the plugin.
+     * Version of the plugin from file.
      * @var string
      */
     protected $version;
+    /**
+     * Installed version of the plugin.
+     * @var string
+     */
+    protected $installedversion;
     /**
      * Rogo version dependency of the plugin.
      * @var string
@@ -313,7 +318,7 @@ abstract class plugins {
             if ($this->db->errno != 0) {
                 return false;
             }
-            $this->version = $version;
+            $this->installedversion = $version;
         }
         // Installed so check if we are upgrading.
         if ($this->is_version_higher($currentversion, $version)) {
@@ -337,11 +342,11 @@ abstract class plugins {
      */
     public function get_plugin_version() {
         // If already set no need to query db.
-        if (!empty($this->version)) {
+        if (empty($this->installedversion)) {
             $sql = $this->db->prepare("SELECT version FROM plugins WHERE component = ?");
             $sql->bind_param('s', $this->plugin);
             $sql->execute();
-            $sql->bind_result($this->version);
+            $sql->bind_result($this->installedversion);
             $sql->store_result();
             $sql->fetch();
             if ($sql->num_rows == 0) {
@@ -350,7 +355,7 @@ abstract class plugins {
             }
             $sql->close();
         }
-        return $this->version;
+        return $this->installedversion;
     }
     /**
      * Get version of plugin from version file
