@@ -91,15 +91,15 @@ class CM_NLE implements iCMAPI {
   /**
    * Map new type modules codes to the old modules codes in NLE response
    * @param string $response data from NLE
-   * @param string $newmodid new style module id
-   * @param string $oldmodid old style module id
+   * @param string $newmodcode new style module code
+   * @param string $oldmodcode old style module code
    * @return array NLE response mapped
    */
-  private function map_response($response, $newmodid, $oldmodid) {
+  private function map_response($response, $newmodcode, $oldmodcode) {
       $keys = array_keys($response);
-      $index = array_search($oldmodid, $keys);
+      $index = array_search($oldmodcode, $keys);
       if ($index !== false) {
-          $keys[$index] = $newmodid;
+          $keys[$index] = $newmodcode;
           $mappedarray = array_combine($keys, $response);
       } else {
           $mappedarray = array();
