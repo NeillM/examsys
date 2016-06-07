@@ -316,10 +316,10 @@ abstract class plugins {
             $this->version = $version;
         }
         // Installed so check if we are upgrading.
-        if ($currentversion > $version) {
+        if ($this->is_version_higher($currentversion, $version)) {
             // Do not support rolling back plugins.
             return false;
-        } elseif ($currentversion < $version) {
+        } elseif ($this->is_version_higher($version, $currentversion)) {
             $updatesql = $this->db->prepare("UPDATE plugins SET version = ? WHERE component = ?");
             $updatesql->bind_param('ss', $version, $this->plugin);
             $updatesql->execute();
@@ -341,7 +341,7 @@ abstract class plugins {
             $sql = $this->db->prepare("SELECT version FROM plugins WHERE component = ?");
             $sql->bind_param('s', $this->plugin);
             $sql->execute();
-            $sql->bind_result($version);
+            $sql->bind_result($this->version);
             $sql->store_result();
             $sql->fetch();
             if ($sql->num_rows == 0) {
@@ -349,10 +349,8 @@ abstract class plugins {
                 return false;
             }
             $sql->close();
-            return $version;
-        } else {
-            return $this->version;
         }
+        return $this->version;
     }
     /**
      * Get version of plugin from version file
