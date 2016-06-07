@@ -57,7 +57,7 @@ class restful {
             $userid = $userObj->get_user_ID();
             $username = $userObj->get_username();
             $errorfile = $_SERVER['PHP_SELF'];
-            $errorline = __LINE__ - 5;
+            $errorline = __LINE__ - 7;
             $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl), $errorfile, $errorline);
             $response = '';
         }
