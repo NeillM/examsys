@@ -197,7 +197,7 @@ abstract class plugins {
                 try {
                     // Supports accumlative patches.
                     // Only runs patches for versions higher than currently installed version.
-                    if ($currentversion < $this->version) {
+                    if ($this->is_version_higher($this->version, $currentversion)) {
                         // Get update files available.
                         $updatefiles = glob($pluginpath . 'update*');
                         $fileversion = array();
@@ -313,6 +313,7 @@ abstract class plugins {
             if ($this->db->errno != 0) {
                 return false;
             }
+            $this->version = $version;
         }
         // Installed so check if we are upgrading.
         if ($currentversion > $version) {
@@ -335,18 +336,23 @@ abstract class plugins {
      * @return string|bool version of plugin or false
      */
     public function get_plugin_version() {
-        $sql = $this->db->prepare("SELECT version FROM plugins WHERE component = ?");
-        $sql->bind_param('s', $this->plugin);
-        $sql->execute();
-        $sql->bind_result($version);
-        $sql->store_result();
-        $sql->fetch();
-        if ($sql->num_rows == 0) {
+        // If already set no need to query db.
+        if (!empty($this->version)) {
+            $sql = $this->db->prepare("SELECT version FROM plugins WHERE component = ?");
+            $sql->bind_param('s', $this->plugin);
+            $sql->execute();
+            $sql->bind_result($version);
+            $sql->store_result();
+            $sql->fetch();
+            if ($sql->num_rows == 0) {
+                $sql->close();
+                return false;
+            }
             $sql->close();
-            return false;
+            return $version;
+        } else {
+            return $this->version;
         }
-        $sql->close();
-        return $version;
     }
     /**
      * Get version of plugin from version file
@@ -365,5 +371,5 @@ abstract class plugins {
     /**
      * Enable the plugin.
      */
-    abstract function enable_plugin();
+    abstract public function enable_plugin();
 }
