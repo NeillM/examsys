@@ -332,6 +332,7 @@ abstract class plugins {
             if ($this->db->errno != 0) {
                 return false;
             }
+            $this->installedversion = $version;
         }
         return true;
     }
