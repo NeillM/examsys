@@ -1642,11 +1642,9 @@ class PaperProperties {
    * @return $string encrypted passsword
    */
   public function encrypt_password($password) {
-    $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-    $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), $password, MCRYPT_MODE_ECB, $iv);
-    return trim(base64_encode($enc));
+    $encryp = new encryp();
+    return $encryp->mcrypt_password($password);
   }
-  
   /**
    * Decrypt the password.
    * 
@@ -1654,9 +1652,8 @@ class PaperProperties {
    * @return string decrypted passsword
    */
   public function decrypt_password($encpassword) {
-    $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-    $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), base64_decode($encpassword), MCRYPT_MODE_ECB, $iv);
-    return trim($dec);
+    $encryp = new encryp();
+    return $encryp->mdecrypt_password($encpassword);
   }
 
   /**

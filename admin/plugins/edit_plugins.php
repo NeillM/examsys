@@ -61,8 +61,15 @@ if (isset($_POST['submit'])) {
     // Configs.
     foreach ($configObject->get_setting($plugin) as $setting => $value) {
         if ($setting != "installed") {
+            // Password settings are encrypted.
+            if ($setting == "password") {
+                $encryp = new encryp();
+                $value = $encryp->mcrypt_password($_POST[$setting]);
+            } else {
+                $value = $_POST[$setting];
+            }
             if ($value != check_var($setting, 'POST', false, false, true)) {
-                $configObject->set_setting($setting, $_POST[$setting], $plugin);
+                $configObject->set_setting($setting, $value, $plugin);
             }
         }
     }
@@ -109,6 +116,11 @@ $render->render_admin_content($breadcrumb, $lang);
             echo "<input type=\"hidden\" name=\"pid\" id=\"pid\" value=\"" . $plugin. "\"/>";
             foreach ($configObject->get_setting($plugin) as $setting => $value) {
                 if ($setting != "installed") {
+                    // Password settings need to be decrypted.
+                    if ($setting == "password") {
+                        $encryp = new encryp();
+                        $value = $encryp->mdecrypt_password($value);
+                    }
                     echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" required /></td></tr>";
                 }
             }
