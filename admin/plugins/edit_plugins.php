@@ -64,12 +64,13 @@ if (isset($_POST['submit'])) {
             // Password settings are encrypted.
             if ($setting == "password") {
                 $encryp = new encryp();
-                $value = $encryp->mcrypt_password($_POST[$setting]);
-            } else {
-                $value = $_POST[$setting];
+                $value = $encryp->mdecrypt_password($value);
             }
             if ($value != check_var($setting, 'POST', false, false, true)) {
-                $configObject->set_setting($setting, $value, $plugin);
+                if ($setting == "password") {
+                    $_POST[$setting] = $encryp->mcrypt_password($_POST[$setting]);
+                }
+                $configObject->set_setting($setting, $_POST[$setting], $plugin);
             }
         }
     }
