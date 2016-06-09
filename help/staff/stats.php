@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+* Display usage information for the staff help pages.
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -22,7 +23,7 @@
 * @package
 */
 
-require '../../include/staff_auth.inc';
+require '../../include/sysadmin_auth.inc';
 
 $id = null;
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'staff', $language, $mysqli);
