@@ -66,11 +66,12 @@ if (isset($_POST['submit'])) {
                 $encryp = new encryp();
                 $value = $encryp->mdecrypt_password($value);
             }
-            if ($value != check_var($setting, 'POST', false, false, true)) {
+            $new_value = check_var($setting, 'POST', false, false, true);
+            if ($value != $new_value) {
                 if ($setting == "password") {
-                    $_POST[$setting] = $encryp->mcrypt_password($_POST[$setting]);
+                    $new_value = $encryp->mcrypt_password($new_value);
                 }
-                $configObject->set_setting($setting, $_POST[$setting], $plugin);
+                $configObject->set_setting($setting, $new_value, $plugin);
             }
         }
     }
