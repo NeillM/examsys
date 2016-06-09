@@ -252,6 +252,10 @@ Class webServiceRestAPI extends restAPI {
   }
 	
 	public function getQStatsLastWeek() {
+      $userObject=UserObject::get_instance();
+      if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+        return '';
+      }
 	  $papers = array();
 	
 	  $sql = "SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > SUBDATE(NOW(), INTERVAL 4 WEEK) AND end_date < NOW() AND deleted IS NULL ORDER BY start_date";
@@ -270,6 +274,11 @@ Class webServiceRestAPI extends restAPI {
 	}
 
   public function getQStatsbyPaper($paperID) {
+    $userObject=UserObject::get_instance();
+    if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+      return '';
+    }
+    
 	  $stats = array();
 		
 		$stat_no = 0;
