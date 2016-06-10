@@ -93,8 +93,6 @@ if (isset($_POST['submit'])) {
 
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu(741);
-$config['cfg_page_charset'] = $configObject->get('cfg_page_charset');
-$config['cfg_install_type'] = $configObject->get('cfg_install_type');
 $lang['title'] = $string['addoauthclient'];
 $lang['create'] = $string['addoauthclient'];
 $lang['view'] = $string['editoauthclient'];
@@ -119,7 +117,7 @@ $addtionalcss = "<style type=\"text/css\">
         </style>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['oauthkeys'] => "list_oauth.php" , $string['listoauthclient'] => "list_oauthclient.php");
 $action = $_SERVER['PHP_SELF'];
-$render->render_admin_header($lang, $config, $additionaljs, $addtionalcss);
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
 $render->render_admin_content($breadcrumb, $lang);
 ?>

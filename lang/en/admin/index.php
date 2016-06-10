@@ -45,4 +45,5 @@ $string['imslti'] = 'LTI Keys';
 $string['imssettings'] = 'IMS Settings';
 $string['academicsessions'] = 'Academic Sessions';
 $string['authentication'] = 'OAuth Authentication';
+$string['plugins'] = 'Plugins';
 ?>

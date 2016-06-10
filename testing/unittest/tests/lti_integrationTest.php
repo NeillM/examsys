@@ -44,7 +44,7 @@ class lti_integrationtest extends unittestdatabase {
         $data = array('SMS', 'B34ADD', 'UK', 'UNKNOWN School', 0, "SATURN MISSING:Advanced Drug Discovery");
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-        $expected = '/touchstone.ashx?campus=uk';
+        $expected = $this->config->get('cfg_sms_url') . '/touchstone.ashx?campus=uk';
         $this->assertEquals($expected, $lti_i->sms_api($data));
         // Fake module.
         $data = array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, "Fake module");
