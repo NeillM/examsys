@@ -29,9 +29,10 @@
 class plugin_manager {
     /**
      * Whitelist of plugin types supported by rogo.
-     * @var PLUGINTYPE_WHITELIST
+     * const array not supported in php below 5.6 so using a static
+     * @const PLUGINTYPE_WHITELIST
      */
-    const PLUGINTYPE_WHITELIST = array('mapping');
+    private static $PLUGINTYPE_WHITELIST = array('mapping');
     /**
      * List available plugins.
      * @return array available plugins (name => namespace)
@@ -42,7 +43,7 @@ class plugin_manager {
         $plugins = array();
         foreach ($folders as $folder) {
             $type = basename($folder);
-            if (in_array($type, self::PLUGINTYPE_WHITELIST)) {
+            if (in_array($type, self::$PLUGINTYPE_WHITELIST)) {
                 $sub = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . '*';
                 $subfolders = glob($sub, GLOB_ONLYDIR);
                 foreach ($subfolders as $subfolder) {
@@ -61,7 +62,7 @@ class plugin_manager {
         $folders = glob($directory, GLOB_ONLYDIR);
         $plugintype = array();
         foreach ($folders as $folder) {
-            if (in_array(basename($folder), self::PLUGINTYPE_WHITELIST)) {
+            if (in_array(basename($folder), self::$PLUGINTYPE_WHITELIST)) {
                 $plugintype[] = 'plugin_' . basename($folder);
             }   
         }
