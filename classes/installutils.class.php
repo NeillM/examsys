@@ -1776,6 +1776,11 @@ require \$root . '/include/path_functions.inc.php';
 \$cfg_web_root = get_root_path() . '/';
 \$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
+if (\$cfg_secure_connection) {
+    ini_set('session.cookie_secure', 1);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+}
 \$cfg_page_charset 	   = '{cfg_page_charset}';
 \$cfg_company = '{cfg_company}';
 \$cfg_academic_year_start = '07/01';
