@@ -116,7 +116,7 @@ Class Logger {
   }
 
   /**
-   * Record that a user tried to access a page and tried to was deined access.
+   * Record that a user tried to access a page and tried to was denied access.
    *
    * @param int $user_id The internal rogo id of the user
    * @param string $title The type of error
