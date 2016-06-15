@@ -65,10 +65,10 @@ Class DBUtils {
    */
   public static function supports_fulltext_search($table) {
     // Full text search is supported on MyISAM tables on all versions of MySQL
-    // InnoDB supports full text searching on
+    // InnoDB supports full text searching on MySQL 5.6 and above.
     if (!isset(self::$fulltext_search[$table])) {
       $config = Config::get_instance();
-      // Detect table type of staff_help and student_help
+      // Detect table type of the table.
       $engine_sql = 'SELECT ENGINE FROM information_schema.TABLES WHERE table_schema = ? AND table_name = ?';
       $schema = $config->get('cfg_db_database');
       $query = $config->db->prepare($engine_sql);
@@ -76,12 +76,14 @@ Class DBUtils {
       $query->execute();
       $query->bind_result($engine);
       $query->fetch();
+      // Work out if the table can support full text indexes.
       if ($engine === 'MyISAM') {
         self::$fulltext_search[$table] = true;
       } elseif ($engine === 'InnoDB' and $config->db->server_version >= 50600) {
         // MySQL 5.6 and greater support InnoDB full text search indexes.
         self::$fulltext_search[$table] = true;
       } else {
+        // All other table types do not.
         self::$fulltext_search[$table] = false;
       }
     }
