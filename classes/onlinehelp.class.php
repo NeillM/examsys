@@ -565,7 +565,7 @@ Class OnlineHelp {
 
     if ($this->type == 'student') {
       // Check if the database is using a non-standard table type that does not support full text indexing.
-      if (DBUtils::supports_fulltext_help_search('student_help')) {
+      if (DBUtils::supports_fulltext_search('student_help')) {
         $serachtext_student = "MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)";
       } else {
         $searchstring = '%' . $searchstring . '%';
@@ -575,7 +575,7 @@ Class OnlineHelp {
       $result = $this->db->prepare("SELECT articleid, title, " . $serachtext_student . " AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
     } else {
       // Check if the database is using a non-standard table type that does not support full text indexing.
-      if (DBUtils::supports_fulltext_help_search('staff_help')) {
+      if (DBUtils::supports_fulltext_search('staff_help')) {
         $serachtext_staff = "MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)";
       } else {
         $searchstring = '%' . $searchstring . '%';

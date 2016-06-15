@@ -63,7 +63,7 @@ Class DBUtils {
    * @param string $table The name of the table.
    * @return boolean
    */
-  public static function supports_fulltext_help_search($table) {
+  public static function supports_fulltext_search($table) {
     // Full text search is supported on MyISAM tables on all versions of MySQL
     // InnoDB supports full text searching on
     if (!isset(self::$fulltext_search[$table])) {
