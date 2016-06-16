@@ -566,21 +566,21 @@ Class OnlineHelp {
     if ($this->type == 'student') {
       // Check if the database is using a non-standard table type that does not support full text indexing.
       if (DBUtils::supports_fulltext_search('student_help')) {
-        $serachtext_student = "MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)";
+        $searchtext_student = "MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)";
       } else {
         $searchstring = '%' . $searchstring . '%';
-        // Relevanace has no meaing here so just set to 1.0 for all.
-        $serachtext_student = "1.0 AS relevance FROM student_help WHERE (LOWER(title) LIKE LOWER(?) OR LOWER(body_plain) LIKE LOWER(?))";
+        // Relevance has no meaning here so just set to 1.0 for all.
+        $searchtext_student = "1.0 AS relevance FROM student_help WHERE (LOWER(title) LIKE LOWER(?) OR LOWER(body_plain) LIKE LOWER(?))";
       }
-      $result = $this->db->prepare("SELECT articleid, title, " . $serachtext_student . " AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
+      $result = $this->db->prepare("SELECT articleid, title, " . $searchtext_student . " AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
     } else {
       // Check if the database is using a non-standard table type that does not support full text indexing.
       if (DBUtils::supports_fulltext_search('staff_help')) {
-        $serachtext_staff = "MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)";
+        $searchtext_staff = "MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)";
       } else {
         $searchstring = '%' . $searchstring . '%';
-        // Relevanace has no meaing here so just set to 1.0 for all.
-        $serachtext_staff = "1.0 AS relevance FROM staff_help WHERE (LOWER(title) LIKE LOWER(?) OR LOWER(body_plain) LIKE LOWER(?))";
+        // Relevance has no meaning here so just set to 1.0 for all.
+        $searchtext_staff = "1.0 AS relevance FROM staff_help WHERE (LOWER(title) LIKE LOWER(?) OR LOWER(body_plain) LIKE LOWER(?))";
       }
       // Return only types of pages related to the type of staff.
       if ($this->userObject->has_role('SysAdmin')) {
@@ -590,7 +590,7 @@ Class OnlineHelp {
       } else {
         $roles_check = 'AND roles="Staff"';
       }      
-      $result = $this->db->prepare("SELECT articleid, title, " . $serachtext_staff . " $roles_check AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
+      $result = $this->db->prepare("SELECT articleid, title, " . $searchtext_staff . " $roles_check AND deleted IS NULL AND language = ? ORDER BY relevance DESC");
     }
     $result->bind_param('sss', $searchstring, $searchstring, $this->language);
     $result->execute();
