@@ -17,5 +17,5 @@
 require '../../lang/' . $language . '/help/staff/index.php';
 
 $string['createlink'] = 'Vytvořit link';
-$string['msg'] = "Ukazatele umožňují přidat do obsahu "stránku" navíc, která vede k již existujícímu obsahu. Například, může být užitečné přidat ukazatel s názvem "Odstranění dokumentů", který bude odkazovat na stávající stránku "Dokumenty - jak odstranit".";
+$string['msg'] = "Ukazatele umožňují přidat do obsahu \"stránku\" navíc, která vede k již existujícímu obsahu. Například, může být užitečné přidat ukazatel s názvem \"Odstranění dokumentů\", který bude odkazovat na stávající stránku \"Dokumenty - jak odstranit\".";
 ?>
